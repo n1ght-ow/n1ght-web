@@ -516,6 +516,11 @@ if (!REDUCED) {
   splitHeadParallax("photo-head");
   splitHeadParallax("game-head");
   splitHeadParallax("about-head");
+  splitHeadParallax("poem-head");
+  splitHeadParallax("books-head");
+  splitHeadParallax("film-head");
+  splitHeadParallax("music-head");
+  splitHeadParallax("sports-head");
 
   // inner image parallax against the track movement
   gsap.utils.toArray(".hs-img-wrap img").forEach((img) => {
@@ -590,6 +595,66 @@ if (!REDUCED) {
       card.addEventListener("click", () => card.classList.toggle("is-flipped"));
     });
   }
+
+  /* ---------- book shelf: staggered entrance ---------- */
+
+  gsap.from(".book", {
+    y: 70,
+    autoAlpha: 0,
+    duration: 0.9,
+    stagger: { each: 0.1, from: "start" },
+    ease: "power4.out",
+    scrollTrigger: {
+      trigger: ".shelf",
+      start: "top 82%",
+      toggleActions: "play none none reverse",
+    },
+  });
+
+  /* ---------- film wall: staggered entrance ---------- */
+
+  gsap.from(".movie", {
+    y: 70,
+    autoAlpha: 0,
+    duration: 0.9,
+    stagger: { each: 0.08, from: "start" },
+    ease: "power4.out",
+    scrollTrigger: {
+      trigger: ".filmwall",
+      start: "top 82%",
+      toggleActions: "play none none reverse",
+    },
+  });
+
+  /* ---------- playlist: staggered entrance ---------- */
+
+  gsap.from(".genre", {
+    y: 70,
+    autoAlpha: 0,
+    duration: 0.9,
+    stagger: { each: 0.12, from: "start" },
+    ease: "power4.out",
+    scrollTrigger: {
+      trigger: ".playlist",
+      start: "top 82%",
+      toggleActions: "play none none reverse",
+    },
+  });
+
+  /* ---------- sport wall: staggered entrance ---------- */
+
+  gsap.from(".team", {
+    y: 70,
+    autoAlpha: 0,
+    duration: 0.9,
+    stagger: { each: 0.1, from: "start" },
+    ease: "power4.out",
+    scrollTrigger: {
+      trigger: ".teamwall",
+      start: "top 82%",
+      toggleActions: "play none none reverse",
+    },
+  });
 
   /* ---------- about body entrance ---------- */
 

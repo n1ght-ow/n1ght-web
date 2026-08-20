@@ -997,6 +997,341 @@ a:focus-visible, button:focus-visible {
   color: var(--slate);
 }
 
+/* ============ POEM ============ */
+.poem-inner {
+  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2.4rem, 6vh, 4rem);
+}
+
+.poem-notes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.6rem, 4vw, 3.5rem);
+  width: min(880px, 100%);
+}
+
+.poem-block { display: flex; flex-direction: column; gap: 0.85em; }
+
+.poem-sub {
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
+  background: var(--volt);
+  color: var(--bg);
+  padding: 0.5em 0.9em;
+  width: max-content;
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.poem-block:nth-child(2) .poem-sub { background: var(--punch); }
+
+.poem-block p {
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.poem-block em {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  color: var(--ink);
+}
+
+.poem-sheet {
+  position: relative;
+  width: min(880px, 100%);
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: 10px 10px 0 var(--volt);
+  padding: clamp(2.6rem, 5vw, 4.2rem) clamp(2rem, 4vw, 3.6rem) clamp(2rem, 4vw, 3.2rem);
+}
+
+.poem-stamp {
+  position: absolute;
+  top: -17px;
+  right: 24px;
+  background: var(--acid);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 0.5em 1em;
+  font-size: 0.58rem;
+  letter-spacing: 0.28em;
+  color: var(--ink);
+  transform: rotate(4deg);
+}
+
+.poem-text {
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.poem-text p + p { margin-top: 1.1em; }
+
+.poem-sign {
+  margin-top: 1.6rem;
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+/* ============ BOOK SHELF + FILM WALL ============ */
+.books { background: var(--bg); }
+.films { background: var(--bg-deep); }
+
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.4rem, 2.6vw, 2.4rem);
+  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
+}
+
+.filmwall {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1.2rem, 2.2vw, 2rem);
+  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
+}
+
+.book,
+.movie {
+  position: relative;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-md);
+  padding: clamp(1.6rem, 3vw, 2.6rem) clamp(1.4rem, 2.4vw, 2.2rem) clamp(1.8rem, 3.4vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85em;
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+
+.book:hover,
+.movie:hover { transform: translate(-3px, -3px); }
+
+.book-no {
+  position: absolute;
+  top: -15px;
+  left: 20px;
+  background: var(--volt);
+  color: var(--bg);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 0.4em 0.8em;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+}
+
+.book:nth-child(3n+2) .book-no,
+.movie:nth-child(3n+2) .book-no { background: var(--punch); }
+.book:nth-child(3n+3) .book-no,
+.movie:nth-child(3n+3) .book-no { background: var(--acid); color: var(--ink); }
+
+.book-title {
+  font-size: clamp(1.35rem, 1.9vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  margin-top: 0.4em;
+}
+
+.book-author {
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  color: var(--slate);
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 0.8em;
+}
+
+.book-line {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* ============ PLAYLIST ============ */
+.music { background: var(--bg); }
+
+.playlist {
+  columns: 2;
+  column-gap: clamp(1.4rem, 2.6vw, 2.4rem);
+  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
+}
+
+.genre {
+  break-inside: avoid;
+  margin-bottom: clamp(1.4rem, 2.6vw, 2.4rem);
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-md);
+  padding: clamp(1.6rem, 3vw, 2.4rem) clamp(1.4rem, 2.4vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.genre:hover { transform: translate(-3px, -3px); }
+
+.genre-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 3px solid var(--ink);
+  padding-bottom: 0.8rem;
+}
+
+.genre-title {
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.genre-count {
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  background: var(--volt);
+  color: var(--bg);
+  border: 2px solid var(--ink);
+  padding: 0.45em 0.8em;
+  box-shadow: 3px 3px 0 var(--ink);
+  white-space: nowrap;
+}
+
+.genre:nth-child(3n+2) .genre-count { background: var(--punch); }
+.genre:nth-child(3n+3) .genre-count { background: var(--acid); color: var(--ink); }
+
+.track-wall {
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+}
+
+.artist-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.artist-label {
+  font-size: 0.56rem;
+  letter-spacing: 0.26em;
+  color: var(--ink);
+  background: var(--bg-deep);
+  border-left: 4px solid var(--volt);
+  padding: 0.32em 0.7em;
+  width: max-content;
+}
+
+.genre:nth-child(3n+2) .artist-label { border-left-color: var(--punch); }
+.genre:nth-child(3n+3) .artist-label { border-left-color: var(--acid); }
+
+.track-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.track-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.65em;
+  border: 2px solid var(--ink);
+  background: var(--bg);
+  padding: 0.45em 0.8em;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink);
+  transition: background 0.25s var(--ease-out), color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.track-chip:hover {
+  background: var(--ink);
+  color: var(--bg);
+  transform: translate(-2px, -2px);
+}
+
+.track-artist {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--slate);
+  text-transform: uppercase;
+}
+
+.track-chip:hover .track-artist { color: var(--ice); }
+
+/* ============ SPORT WALL ============ */
+.sports { background: var(--bg-deep); }
+
+.teamwall {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(1.4rem, 2.6vw, 2.4rem);
+  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
+}
+
+.team {
+  position: relative;
+  flex: 1 1 clamp(280px, 30vw, 420px);
+  max-width: 480px;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-md);
+  padding: clamp(1.8rem, 3vw, 2.6rem) clamp(1.4rem, 2.4vw, 2.2rem) clamp(1.8rem, 3.4vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85em;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.team:hover { transform: translate(-3px, -3px); }
+
+.team-sport {
+  position: absolute;
+  top: -15px;
+  right: 20px;
+  background: var(--ink);
+  color: var(--bg);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--acid);
+  padding: 0.4em 0.8em;
+  font-size: 0.58rem;
+  letter-spacing: 0.24em;
+  transform: rotate(3deg);
+}
+
+.team:nth-child(3n+2) .team-sport { box-shadow: 3px 3px 0 var(--punch); }
+.team:nth-child(3n+3) .team-sport { box-shadow: 3px 3px 0 var(--volt); }
+
+.team .book-no { top: -15px; left: 20px; }
+
+.team-logo {
+  height: clamp(64px, 7vw, 96px);
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  align-self: center;
+  margin: 0.6rem 0 0.2rem;
+}
+
+.team-logo-wide {
+  height: auto;
+  width: min(260px, 72%);
+}
+
+.team .book-title { margin-top: 1rem; }
+
 /* ============ PHOTO LIGHTBOX ============ */
 .hs-card { cursor: pointer; }
 
@@ -1112,6 +1447,10 @@ a:focus-visible, button:focus-visible {
 .lb-next:hover { transform: translate(3px, -50%); }
 
 /* ============ RESPONSIVE ============ */
+@media (max-width: 1100px) {
+  .filmwall { grid-template-columns: repeat(3, 1fr); }
+}
+
 @media (max-width: 720px) {
   .nav { height: 56px; }
   .nav-links a { font-size: 0.56rem; letter-spacing: 0.14em; }
@@ -1155,11 +1494,23 @@ a:focus-visible, button:focus-visible {
 
   .about-inner { grid-template-columns: 1fr; }
 
+  .poem-inner { gap: 2.2rem; }
+  .poem-notes { grid-template-columns: 1fr; }
+  .poem-sheet { box-shadow: 6px 6px 0 var(--volt); padding: 2.2rem 1.4rem 1.6rem; }
+  .poem-text { font-size: 1.18rem; }
+  .poem-stamp { right: 12px; }
+
+  .shelf { grid-template-columns: repeat(2, 1fr); }
+  .filmwall { grid-template-columns: repeat(2, 1fr); }
+  .playlist { columns: 1; }
+
   .footer-top { align-items: flex-start; flex-direction: column; }
 }
 
 @media (max-width: 480px) {
   .hof-item { width: min(76vw, 300px); }
+  .shelf { grid-template-columns: 1fr; }
+  .filmwall { grid-template-columns: 1fr; }
 }
 
 /* ============ REDUCED MOTION ============ */
