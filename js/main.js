@@ -303,6 +303,83 @@ function spawnBubble() {
 
 for (let i = 0; i < BUBBLE_COUNT; i++) spawnBubble();
 
+/* ---------- photo lightbox: click a frame to see the full frame ---------- */
+
+const lightbox = document.getElementById("lightbox");
+const lbImg = document.getElementById("lb-img");
+const lbCap = document.getElementById("lb-cap");
+const lbCount = document.getElementById("lb-count");
+const lbCloseBtn = document.getElementById("lb-close");
+const lbPrevBtn = document.getElementById("lb-prev");
+const lbNextBtn = document.getElementById("lb-next");
+const photoCards = Array.from(document.querySelectorAll(".hs-card"));
+
+let lbIndex = 0;
+let isLbOpen = false;
+
+function lbLoad(i) {
+  lbIndex = ((i % photoCards.length) + photoCards.length) % photoCards.length;
+  const card = photoCards[lbIndex];
+  const img = card.querySelector("img");
+  const cap = card.querySelector(".hs-cap");
+  lbCount.textContent =
+    "FRAME " + String(lbIndex + 1).padStart(2, "0") + " / " + String(photoCards.length).padStart(2, "0");
+  lbCap.textContent = cap ? cap.textContent : "";
+  lbImg.alt = img ? img.alt : "";
+  lbImg.classList.remove("is-loaded");
+  lbImg.src = img.src.replace("/photo/", "/photo/full/");
+
+  // preload neighbours for instant arrows
+  [lbIndex + 1, lbIndex - 1].forEach((n) => {
+    const c = photoCards[((n % photoCards.length) + photoCards.length) % photoCards.length];
+    const pre = new Image();
+    pre.src = c.querySelector("img").src.replace("/photo/", "/photo/full/");
+  });
+}
+
+function lbOpenAt(i) {
+  if (!lightbox || !photoCards.length) return;
+  lbLoad(i);
+  lightbox.classList.add("is-open");
+  lightbox.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+  isLbOpen = true;
+  lbCloseBtn.focus();
+}
+
+function lbCloseFn() {
+  if (!lightbox) return;
+  lightbox.classList.remove("is-open");
+  lightbox.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+  lbImg.src = "";
+  isLbOpen = false;
+}
+
+if (lightbox && photoCards.length) {
+  photoCards.forEach((card, i) => {
+    card.addEventListener("click", () => lbOpenAt(i));
+  });
+
+  lbCloseBtn.addEventListener("click", lbCloseFn);
+  lbPrevBtn.addEventListener("click", () => lbLoad(lbIndex - 1));
+  lbNextBtn.addEventListener("click", () => lbLoad(lbIndex + 1));
+
+  // clicking the dark backdrop closes
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) lbCloseFn();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (!isLbOpen) return;
+    if (e.key === "Escape") lbCloseFn();
+    if (e.key === "ArrowLeft") lbLoad(lbIndex - 1);
+    if (e.key === "ArrowRight") lbLoad(lbIndex + 1);
+  });
+
+  lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
+}
+
 /* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
   /* ---------- hero: floating orbs + mouse parallax ---------- */
