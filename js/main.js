@@ -132,97 +132,127 @@ if (REDUCED) {
   }, 4500);
 }
 
-/* ---------- horizontal photography gallery ----------
-   Always active. The scroll-follow here is the core interaction of the
-   photography section, so it is NOT gated behind prefers-reduced-motion
-   (many desktop setups report it and used to kill the effect entirely). */
+/* ---------- horizontal scrollers (photo gallery + game roster) ----------
+   Always active. The scroll-follow is the core interaction of these
+   sections, so it is NOT gated behind prefers-reduced-motion (many desktop
+   setups report it and used to kill the effect entirely). */
 
-const hsWrap = document.getElementById("hs-wrap");
-const hsTrack = document.getElementById("hs-track");
+function makeHorizontalScroller(opts) {
+  const wrap = document.getElementById(opts.wrapId);
+  const track = document.getElementById(opts.trackId);
+  if (!wrap || !track) return null;
 
-const getDistance = () => Math.max(0, hsTrack.scrollWidth - window.innerWidth);
+  const getDistance = () => Math.max(0, track.scrollWidth - window.innerWidth);
 
-const hsTween = gsap.to(hsTrack, {
-  x: () => -getDistance(),
-  ease: "none",
-  scrollTrigger: {
-    trigger: hsWrap,
-    start: "top top",
-    end: () => "+=" + getDistance(),
-    pin: true,
-    scrub: REDUCED ? 0.5 : 1,
-    invalidateOnRefresh: true,
-    anticipatePin: 1,
-    onUpdate: (self) => {
-      if (!isDraggingBar) renderDragbar(self.progress);
+  const bar = document.getElementById(opts.barId);
+  const barTrack = document.getElementById(opts.barTrackId);
+  const barFill = document.getElementById(opts.barFillId);
+  const barHandle = document.getElementById(opts.barHandleId);
+  const barCount = document.getElementById(opts.barCountId);
+
+  let isDraggingBar = false;
+
+  function renderDragbar(progress) {
+    if (!bar || !barFill || !barHandle || !barCount) return;
+    const pct = Math.max(0, Math.min(1, progress)) * 100;
+    barFill.style.width = pct + "%";
+    barHandle.style.left = pct + "%";
+    const frame = Math.min(opts.itemCount, Math.max(1, Math.round(progress * (opts.itemCount - 1)) + 1));
+    barCount.textContent = opts.label + " " + String(frame).padStart(2, "0") + " / " + String(opts.itemCount).padStart(2, "0");
+  }
+
+  const tween = gsap.to(track, {
+    x: () => -getDistance(),
+    ease: "none",
+    scrollTrigger: {
+      trigger: wrap,
+      start: "top top",
+      end: () => "+=" + getDistance(),
+      pin: true,
+      scrub: REDUCED ? 0.5 : 1,
+      invalidateOnRefresh: true,
+      anticipatePin: 1,
+      onUpdate: (self) => {
+        if (!isDraggingBar) renderDragbar(self.progress);
+      },
     },
-  },
-});
+  });
 
-const hsST = hsTween.scrollTrigger;
+  const st = tween.scrollTrigger;
 
-/* ---------- gallery drag bar ---------- */
+  if (bar && barTrack) {
+    // keep handle in sync with scroll-driven progress
+    ScrollTrigger.create({
+      trigger: wrap,
+      start: "top top",
+      end: () => "+=" + getDistance(),
+      onEnter: () => bar.classList.add("is-active"),
+      onEnterBack: () => bar.classList.add("is-active"),
+      onLeave: () => bar.classList.remove("is-active"),
+      onLeaveBack: () => bar.classList.remove("is-active"),
+    });
 
-const dragbar = document.getElementById("hs-dragbar");
-const dragTrack = document.getElementById("hs-dragbar-track");
-const dragFill = document.getElementById("hs-dragbar-fill");
-const dragHandle = document.getElementById("hs-dragbar-handle");
-const dragCount = document.getElementById("hs-dragbar-count");
+    const barEventToProgress = (e) => {
+      const rect = barTrack.getBoundingClientRect();
+      return Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    };
 
-let isDraggingBar = false;
+    // scroll the page so the pinned scrub lands exactly on target progress
+    const seek = (progress) => {
+      const y = st.start + (st.end - st.start) * progress;
+      window.scrollTo(0, y);
+    };
 
-function renderDragbar(progress) {
-  const pct = Math.max(0, Math.min(1, progress)) * 100;
-  dragFill.style.width = pct + "%";
-  dragHandle.style.left = pct + "%";
-  const frame = Math.min(11, Math.max(1, Math.round(progress * 10) + 1));
-  dragCount.textContent = "FRAME " + String(frame).padStart(2, "0") + " / 11";
+    barTrack.addEventListener("pointerdown", (e) => {
+      isDraggingBar = true;
+      barTrack.classList.add("is-dragging");
+      barTrack.setPointerCapture(e.pointerId);
+      const p = barEventToProgress(e);
+      renderDragbar(p);
+      seek(p);
+    });
+
+    barTrack.addEventListener("pointermove", (e) => {
+      if (!isDraggingBar) return;
+      const p = barEventToProgress(e);
+      renderDragbar(p);
+      seek(p);
+    });
+
+    const endBarDrag = () => {
+      isDraggingBar = false;
+      barTrack.classList.remove("is-dragging");
+    };
+    barTrack.addEventListener("pointerup", endBarDrag);
+    barTrack.addEventListener("pointercancel", endBarDrag);
+  }
+
+  return tween;
 }
 
-function barEventToProgress(e) {
-  const rect = dragTrack.getBoundingClientRect();
-  return Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-}
-
-// scroll the page so the pinned scrub lands exactly on target progress
-function seekGallery(progress) {
-  const y = hsST.start + (hsST.end - hsST.start) * progress;
-  window.scrollTo(0, y);
-}
-
-// keep handle in sync with scroll-driven progress
-ScrollTrigger.create({
-  trigger: hsWrap,
-  start: "top top",
-  end: () => "+=" + getDistance(),
-  onEnter: () => dragbar.classList.add("is-active"),
-  onEnterBack: () => dragbar.classList.add("is-active"),
-  onLeave: () => dragbar.classList.remove("is-active"),
-  onLeaveBack: () => dragbar.classList.remove("is-active"),
+const hsTween = makeHorizontalScroller({
+  wrapId: "hs-wrap",
+  trackId: "hs-track",
+  barId: "hs-dragbar",
+  barTrackId: "hs-dragbar-track",
+  barFillId: "hs-dragbar-fill",
+  barHandleId: "hs-dragbar-handle",
+  barCountId: "hs-dragbar-count",
+  itemCount: 11,
+  label: "FRAME",
 });
 
-dragTrack.addEventListener("pointerdown", (e) => {
-  isDraggingBar = true;
-  dragTrack.classList.add("is-dragging");
-  dragTrack.setPointerCapture(e.pointerId);
-  const p = barEventToProgress(e);
-  renderDragbar(p);
-  seekGallery(p);
+const hofTween = makeHorizontalScroller({
+  wrapId: "hof-scroll",
+  trackId: "hof-row",
+  barId: "hof-dragbar",
+  barTrackId: "hof-dragbar-track",
+  barFillId: "hof-dragbar-fill",
+  barHandleId: "hof-dragbar-handle",
+  barCountId: "hof-dragbar-count",
+  itemCount: 7,
+  label: "CARD",
 });
-
-dragTrack.addEventListener("pointermove", (e) => {
-  if (!isDraggingBar) return;
-  const p = barEventToProgress(e);
-  renderDragbar(p);
-  seekGallery(p);
-});
-
-function endBarDrag() {
-  isDraggingBar = false;
-  dragTrack.classList.remove("is-dragging");
-}
-dragTrack.addEventListener("pointerup", endBarDrag);
-dragTrack.addEventListener("pointercancel", endBarDrag);
 
 /* ---------- mantra: big words drift apart on scroll (always active) ---------- */
 
@@ -263,6 +293,12 @@ if (mantra) {
 const bubbleField = document.getElementById("bubble-field");
 const BUBBLE_COUNT = window.innerWidth < 720 ? 14 : 24;
 
+const BUBBLE_TINTS = [
+  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(43,76,255,0.28) 42%, rgba(43,76,255,0.06) 100%)",
+  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(255,92,31,0.22) 42%, rgba(255,92,31,0.05) 100%)",
+  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(198,244,57,0.32) 42%, rgba(198,244,57,0.07) 100%)",
+];
+
 function spawnBubble() {
   if (!bubbleField) return;
   const b = document.createElement("div");
@@ -274,6 +310,7 @@ function spawnBubble() {
   b.style.left = 2 + Math.random() * 90 + "%";
   b.style.top = 4 + Math.random() * 88 + "%";
   b.style.opacity = 0.4 + Math.random() * 0.3;
+  b.style.background = BUBBLE_TINTS[Math.floor(Math.random() * BUBBLE_TINTS.length)];
   bubbleField.appendChild(b);
 
   // gentle bob/sway; bubbles never leave the hero
@@ -478,6 +515,7 @@ if (!REDUCED) {
 
   splitHeadParallax("photo-head");
   splitHeadParallax("game-head");
+  splitHeadParallax("about-head");
 
   // inner image parallax against the track movement
   gsap.utils.toArray(".hs-img-wrap img").forEach((img) => {
@@ -553,38 +591,7 @@ if (!REDUCED) {
     });
   }
 
-  /* ---------- about title char reveal (BR preserved as real line break) ---------- */
-
-  const aboutTitle = document.getElementById("about-title");
-  const aboutLines = [];
-  aboutTitle.childNodes.forEach((node) => {
-    if (node.nodeType === Node.TEXT_NODE) aboutLines.push(node.textContent);
-  });
-  aboutTitle.innerHTML = "";
-  aboutLines.forEach((line, i) => {
-    if (i > 0) aboutTitle.appendChild(document.createElement("br"));
-    const holder = document.createElement("span");
-    holder.style.display = "inline-block";
-    [...line].forEach((c) => {
-      const s = document.createElement("span");
-      s.className = "ch";
-      s.textContent = c;
-      holder.appendChild(s);
-    });
-    aboutTitle.appendChild(holder);
-  });
-
-  gsap.from(aboutTitle.querySelectorAll(".ch"), {
-    yPercent: 110,
-    duration: 1,
-    stagger: 0.025,
-    ease: "power4.out",
-    scrollTrigger: {
-      trigger: aboutTitle,
-      start: "top 80%",
-      toggleActions: "play none none reverse",
-    },
-  });
+  /* ---------- about body entrance ---------- */
 
   gsap.from(".about-body p", {
     y: 34,
@@ -619,3 +626,32 @@ if (!REDUCED) {
     document.fonts.ready.then(() => ScrollTrigger.refresh());
   }
 }
+
+/* ---------- nav active section + scroll progress (always active) ---------- */
+
+const navAnchors = Array.from(document.querySelectorAll(".nav-links a"));
+const navSections = navAnchors
+  .map((a) => document.querySelector(a.getAttribute("href")))
+  .filter(Boolean);
+
+const progressFill = document.getElementById("scroll-progress-fill");
+
+function updateNavAndProgress(self) {
+  const y = self.scroll() + window.innerHeight * 0.45;
+  let current = -1;
+  navSections.forEach((s, i) => {
+    if (s.offsetTop <= y) current = i;
+  });
+  if (self.scroll() + window.innerHeight >= document.documentElement.scrollHeight - 4) {
+    current = navSections.length - 1;
+  }
+  navAnchors.forEach((a, i) => a.classList.toggle("is-active", i === current));
+  if (progressFill) progressFill.style.transform = "scaleX(" + self.progress + ")";
+}
+
+ScrollTrigger.create({
+  start: 0,
+  end: "max",
+  onUpdate: updateNavAndProgress,
+  onRefresh: updateNavAndProgress,
+});

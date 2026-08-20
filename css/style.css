@@ -47,6 +47,11 @@ img { display: block; max-width: 100%; }
 
 a { color: inherit; text-decoration: none; }
 
+a:focus-visible, button:focus-visible {
+  outline: 3px solid var(--acid);
+  outline-offset: 2px;
+}
+
 /* ============ GRAIN ============ */
 .grain {
   position: fixed;
@@ -134,6 +139,27 @@ a { color: inherit; text-decoration: none; }
 .pre-shutter.s2 { background: var(--slate-2); }
 .pre-shutter.s3 { background: var(--bg); }
 
+/* ============ SCROLL PROGRESS ============ */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  z-index: 95;
+  pointer-events: none;
+}
+
+.scroll-progress-fill {
+  width: 100%;
+  height: 100%;
+  background: var(--acid);
+  border-bottom: 2px solid var(--ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
 /* ============ NAV ============ */
 .nav {
   position: fixed;
@@ -187,6 +213,13 @@ a { color: inherit; text-decoration: none; }
   transition: color 0.3s var(--ease-out), background 0.3s var(--ease-out);
 }
 
+.nav-links a i {
+  font-style: normal;
+  color: var(--slate-2);
+  margin-right: 0.55em;
+  font-size: 0.6rem;
+}
+
 .nav-links a::after {
   content: "";
   position: absolute;
@@ -194,7 +227,7 @@ a { color: inherit; text-decoration: none; }
   bottom: 0;
   width: 100%;
   height: 3px;
-  background: var(--volt);
+  background: var(--acid);
   transform: scaleX(0);
   transform-origin: right center;
   transition: transform 0.45s var(--ease-out);
@@ -202,6 +235,10 @@ a { color: inherit; text-decoration: none; }
 
 .nav-links a:hover { color: var(--ink); }
 .nav-links a:hover::after { transform: scaleX(1); transform-origin: left center; }
+
+.nav-links a.is-active { color: var(--ink); }
+.nav-links a.is-active i { color: var(--ink); }
+.nav-links a.is-active::after { transform: scaleX(1); transform-origin: left center; }
 
 /* ============ HERO ============ */
 .hero {
@@ -441,19 +478,25 @@ a { color: inherit; text-decoration: none; }
 
 .bh-left h2 {
   color: var(--bg);
-  background: var(--volt);
+  background: var(--ink);
   display: inline-block;
   padding: 0 0.08em;
-  text-shadow: 6px 6px 0 var(--ink);
+  text-shadow: 6px 6px 0 var(--volt);
 }
+
+#photo-head .bh-left h2 { background: var(--volt); }
+#game-head .bh-left h2 { background: var(--punch); }
 
 .bh-right { text-align: right; }
 
 .bh-right h2 {
   color: transparent;
   -webkit-text-stroke: 3px var(--ink);
-  text-shadow: 6px 6px 0 var(--punch);
+  text-shadow: 6px 6px 0 var(--volt);
 }
+
+#game-head .bh-right h2 { text-shadow: 6px 6px 0 var(--punch); }
+#about-head .bh-right h2 { text-shadow: 6px 6px 0 var(--acid); }
 
 .bh-meta {
   margin-top: clamp(1.6rem, 4vh, 3rem);
@@ -474,8 +517,26 @@ a { color: inherit; text-decoration: none; }
   width: max-content;
 }
 
-.bh-meta span:first-child { background: var(--acid); }
-.bh-meta span:last-child { background: var(--punch); color: var(--bg); }
+.bh-meta span:first-child { background: var(--volt); color: var(--bg); }
+#game-head .bh-meta span:first-child { background: var(--punch); }
+#about-head .bh-meta span:first-child { background: var(--acid); color: var(--ink); }
+.bh-meta span:last-child { background: var(--ink); color: var(--bg); }
+
+/* serif intro line under every section head */
+.sec-intro {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.7vw, 1.55rem);
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 56ch;
+  margin-top: clamp(1.4rem, 3.5vh, 2.4rem);
+  border-left: 4px solid var(--volt);
+  padding-left: 1.1rem;
+}
+
+#game-head .sec-intro { border-color: var(--punch); }
+#about-head .sec-intro { border-color: var(--acid); }
 
 /* ============ HORIZONTAL GALLERY ============ */
 .hs-section {
@@ -509,9 +570,7 @@ a { color: inherit; text-decoration: none; }
   box-shadow: var(--shadow-md);
 }
 
-.hs-card:nth-child(3n+1) .hs-img-wrap { box-shadow: 8px 8px 0 var(--volt); }
-.hs-card:nth-child(3n+2) .hs-img-wrap { box-shadow: 8px 8px 0 var(--punch); }
-.hs-card:nth-child(3n+3) .hs-img-wrap { box-shadow: 8px 8px 0 var(--acid); }
+.hs-card .hs-img-wrap { box-shadow: 8px 8px 0 var(--volt); }
 
 .hs-img-wrap img {
   width: 100%;
@@ -556,8 +615,8 @@ a { color: inherit; text-decoration: none; }
   padding-right: 4rem;
 }
 
-/* ============ GALLERY DRAG BAR ============ */
-.hs-dragbar {
+/* ============ DRAG BAR (shared by photo gallery + game roster) ============ */
+.dragbar {
   position: absolute;
   left: 50%;
   bottom: clamp(1.2rem, 4vh, 2.6rem);
@@ -569,12 +628,12 @@ a { color: inherit; text-decoration: none; }
   transition: opacity 0.4s var(--ease-out);
 }
 
-.hs-dragbar.is-active {
+.dragbar.is-active {
   opacity: 1;
   pointer-events: auto;
 }
 
-.hs-dragbar-track {
+.dragbar-track {
   position: relative;
   height: 28px;
   display: flex;
@@ -583,7 +642,7 @@ a { color: inherit; text-decoration: none; }
   touch-action: none;
 }
 
-.hs-dragbar-track::before {
+.dragbar-track::before {
   content: "";
   position: absolute;
   left: 0;
@@ -593,9 +652,9 @@ a { color: inherit; text-decoration: none; }
   background: rgba(110, 131, 158, 0.45);
 }
 
-.hs-dragbar-track.is-dragging { cursor: grabbing; }
+.dragbar-track.is-dragging { cursor: grabbing; }
 
-.hs-dragbar-fill {
+.dragbar-fill {
   position: absolute;
   left: 0;
   top: 50%;
@@ -605,16 +664,18 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 
-.hs-dragbar-handle {
+.hof-dragbar .dragbar-fill { background: var(--punch); }
+
+.dragbar-handle {
   position: absolute;
   top: 50%;
   left: 0%;
   width: 52px;
   height: 24px;
   transform: translate(-50%, -50%);
-  background: var(--punch);
+  background: var(--acid);
   border: 2px solid var(--ink);
-  color: var(--bg);
+  color: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -622,13 +683,13 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 
-.hs-dragbar-hint {
+.dragbar-hint {
   font-size: 0.46rem;
   letter-spacing: 0.22em;
   user-select: none;
 }
 
-.hs-dragbar-meta {
+.dragbar-meta {
   display: flex;
   justify-content: space-between;
   margin-top: 0.7rem;
@@ -637,34 +698,50 @@ a { color: inherit; text-decoration: none; }
   color: var(--slate);
 }
 
-.hs-track.is-dragging { transition: none; }
-
 /* ============ HALL OF FAME ============ */
+#games { background: var(--bg-deep); }
+
 .hof { padding-bottom: clamp(3rem, 8vh, 6rem); }
 
+.hof-scroll {
+  position: relative;
+  overflow: hidden;
+}
+
 .hof-row {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: clamp(1.6rem, 3.4vh, 3rem) clamp(1.2rem, 2vw, 2rem);
-  padding: 0 clamp(1.2rem, 4vw, 4rem);
-  align-items: start;
+  display: flex;
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4.5rem);
+  height: 100dvh;
+  padding: 0 clamp(1.5rem, 6vw, 6rem);
+  width: max-content;
+  will-change: transform;
 }
 
 .hof-item {
+  flex-shrink: 0;
+  width: clamp(280px, 30vw, 430px);
   display: flex;
   flex-direction: column;
   gap: 1rem;
   min-width: 0;
 }
 
-.hof-a, .hof-b, .hof-c { grid-column: span 4; }
-.hof-d, .hof-e, .hof-f, .hof-g { grid-column: span 3; }
+.hof-item:nth-child(even) { transform: translateY(clamp(1.5rem, 5vh, 3.5rem)); }
+.hof-item:nth-child(odd) { transform: translateY(clamp(-1rem, -3vh, -2.5rem)); }
 
-/* bento stagger: row two dips like a skyline */
-.hof-d { margin-top: clamp(3rem, 8vh, 6rem); }
-.hof-e { margin-top: clamp(1rem, 4vh, 3rem); }
-.hof-g { margin-top: clamp(2rem, 6vh, 4.5rem); }
-.hof-f { margin-top: 0; }
+.hof-end {
+  flex-shrink: 0;
+  width: clamp(220px, 24vw, 340px);
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--slate);
+  padding-right: 4rem;
+  transform: none;
+}
 
 .hof-card {
   perspective: 1400px;
@@ -677,16 +754,9 @@ a { color: inherit; text-decoration: none; }
   font-size: clamp(0.95rem, 1.15vw, 1.2rem);
   line-height: 1.5;
   color: var(--ink-soft);
-  border-left: 3px solid var(--volt);
+  border-left: 3px solid var(--punch);
   padding-left: 0.85rem;
 }
-
-.hof-b .hof-quote { border-color: var(--punch); }
-.hof-c .hof-quote { border-color: var(--acid); }
-.hof-d .hof-quote { border-color: var(--punch); }
-.hof-e .hof-quote { border-color: var(--volt); }
-.hof-f .hof-quote { border-color: var(--acid); }
-.hof-g .hof-quote { border-color: var(--volt); }
 
 .hof-inner {
   position: relative;
@@ -802,10 +872,9 @@ a { color: inherit; text-decoration: none; }
 .mantra {
   position: relative;
   margin-top: clamp(4rem, 10vh, 8rem);
-  background: var(--volt);
+  background: var(--ink);
   color: var(--bg);
   overflow: hidden;
-  border-block: 3px solid var(--ink);
 }
 
 .mantra-inner {
@@ -826,7 +895,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.01em;
   white-space: nowrap;
   color: var(--bg);
-  text-shadow: 8px 8px 0 var(--ink);
+  text-shadow: 8px 8px 0 var(--volt);
   will-change: transform;
 }
 
@@ -849,35 +918,21 @@ a { color: inherit; text-decoration: none; }
   z-index: 3;
 }
 
-.mantra-meta span:first-child { background: var(--ink); padding: 0.45em 0.9em; }
-.mantra-meta span:last-child { background: var(--punch); border: 2px solid var(--ink); padding: 0.45em 0.9em; color: var(--bg); }
+.mantra-meta span:first-child { background: var(--volt); border: 2px solid var(--bg); padding: 0.45em 0.9em; }
+.mantra-meta span:last-child { background: var(--acid); border: 2px solid var(--bg); padding: 0.45em 0.9em; color: var(--ink); }
 
 /* ============ ABOUT ============ */
 .about { background: var(--bg); }
 
 .about-inner {
-  padding: clamp(5rem, 14vh, 10rem) clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: start;
+  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
 }
-
-.about-title {
-  grid-column: 1 / -1;
-  font-size: clamp(2.6rem, 7.5vw, 7rem);
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: 0.01em;
-}
-
-.about-title .ch { display: inline-block; will-change: transform; }
 
 .about-body {
   display: flex;
   flex-direction: column;
   gap: 1.4em;
-  padding-top: clamp(1rem, 3vh, 2rem);
+  max-width: 62ch;
 }
 
 .about-body p {
@@ -887,7 +942,14 @@ a { color: inherit; text-decoration: none; }
   max-width: 52ch;
 }
 
-.about-sig-note { font-weight: 500; color: var(--ink); }
+.about-sig-note {
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--acid);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.25em;
+}
 
 /* ============ FOOTER ============ */
 .footer {
@@ -943,7 +1005,7 @@ a { color: inherit; text-decoration: none; }
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.5rem;
   letter-spacing: 0.28em;
-  color: var(--volt);
+  color: var(--acid);
   margin-top: 0.4em;
 }
 
@@ -1050,10 +1112,6 @@ a { color: inherit; text-decoration: none; }
 .lb-next:hover { transform: translate(3px, -50%); }
 
 /* ============ RESPONSIVE ============ */
-@media (max-width: 1100px) {
-  .hof-d, .hof-e, .hof-g { margin-top: clamp(1.5rem, 4vh, 3rem); }
-}
-
 @media (max-width: 720px) {
   .nav { height: 56px; }
   .nav-links a { font-size: 0.56rem; letter-spacing: 0.14em; }
@@ -1075,6 +1133,7 @@ a { color: inherit; text-decoration: none; }
   }
   .bh-meta { flex-direction: column; gap: 0.6em; }
   .bh-meta span { width: auto; }
+  .sec-intro { font-size: 0.95rem; }
 
   .hs-card { width: min(74vw, 340px); }
   .hs-card:nth-child(n) { transform: none; }
@@ -1084,8 +1143,10 @@ a { color: inherit; text-decoration: none; }
   .lb-stage figcaption { font-size: 0.55rem; }
   .lb-close { font-size: 0.56rem; }
 
-  .hof-row { grid-template-columns: repeat(2, 1fr); }
-  .hof-a, .hof-b, .hof-c, .hof-d, .hof-e, .hof-f, .hof-g { grid-column: auto; margin-top: 0; }
+  .hof-row { gap: clamp(1.5rem, 6vw, 2.5rem); padding: 0 clamp(1rem, 5vw, 1.5rem); }
+  .hof-item { width: min(70vw, 320px); }
+  .hof-item:nth-child(n) { transform: none; }
+  .hof-end { width: 220px; padding-right: 2rem; }
   .hof-back p { display: none; }
   .hof-quote { font-size: 0.85rem; }
 
@@ -1098,8 +1159,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 480px) {
-  .hof-row { grid-template-columns: 1fr; }
-  .hof-inner { aspect-ratio: 4 / 3.4; }
+  .hof-item { width: min(76vw, 300px); }
 }
 
 /* ============ REDUCED MOTION ============ */
