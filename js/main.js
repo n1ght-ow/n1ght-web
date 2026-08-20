@@ -39,7 +39,9 @@ const preLetters = document.querySelectorAll("#pre-letters span:not(.pre-gap)");
 const preBar = document.getElementById("pre-bar");
 const preCount = document.getElementById("pre-count");
 
-const images = Array.from(document.images);
+// only eager images gate the preloader; the lazy gallery images load on
+// demand as they approach the viewport and must not block the loader
+const images = Array.from(document.images).filter((img) => img.loading !== "lazy");
 let loaded = 0;
 const total = images.length;
 
@@ -127,10 +129,181 @@ if (REDUCED) {
   // hard fail-safe: never trap the user on the loader
   setTimeout(() => {
     if (document.body.contains(preloader)) finishPreload();
-  }, 9000);
+  }, 4500);
 }
 
-/* ---------- reduced motion: stop here, static site ---------- */
+/* ---------- horizontal photography gallery ----------
+   Always active. The scroll-follow here is the core interaction of the
+   photography section, so it is NOT gated behind prefers-reduced-motion
+   (many desktop setups report it and used to kill the effect entirely). */
+
+const hsWrap = document.getElementById("hs-wrap");
+const hsTrack = document.getElementById("hs-track");
+
+const getDistance = () => Math.max(0, hsTrack.scrollWidth - window.innerWidth);
+
+const hsTween = gsap.to(hsTrack, {
+  x: () => -getDistance(),
+  ease: "none",
+  scrollTrigger: {
+    trigger: hsWrap,
+    start: "top top",
+    end: () => "+=" + getDistance(),
+    pin: true,
+    scrub: REDUCED ? 0.5 : 1,
+    invalidateOnRefresh: true,
+    anticipatePin: 1,
+    onUpdate: (self) => {
+      if (!isDraggingBar) renderDragbar(self.progress);
+    },
+  },
+});
+
+const hsST = hsTween.scrollTrigger;
+
+/* ---------- gallery drag bar ---------- */
+
+const dragbar = document.getElementById("hs-dragbar");
+const dragTrack = document.getElementById("hs-dragbar-track");
+const dragFill = document.getElementById("hs-dragbar-fill");
+const dragHandle = document.getElementById("hs-dragbar-handle");
+const dragCount = document.getElementById("hs-dragbar-count");
+
+let isDraggingBar = false;
+
+function renderDragbar(progress) {
+  const pct = Math.max(0, Math.min(1, progress)) * 100;
+  dragFill.style.width = pct + "%";
+  dragHandle.style.left = pct + "%";
+  const frame = Math.min(11, Math.max(1, Math.round(progress * 10) + 1));
+  dragCount.textContent = "FRAME " + String(frame).padStart(2, "0") + " / 11";
+}
+
+function barEventToProgress(e) {
+  const rect = dragTrack.getBoundingClientRect();
+  return Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+}
+
+// scroll the page so the pinned scrub lands exactly on target progress
+function seekGallery(progress) {
+  const y = hsST.start + (hsST.end - hsST.start) * progress;
+  window.scrollTo(0, y);
+}
+
+// keep handle in sync with scroll-driven progress
+ScrollTrigger.create({
+  trigger: hsWrap,
+  start: "top top",
+  end: () => "+=" + getDistance(),
+  onEnter: () => dragbar.classList.add("is-active"),
+  onEnterBack: () => dragbar.classList.add("is-active"),
+  onLeave: () => dragbar.classList.remove("is-active"),
+  onLeaveBack: () => dragbar.classList.remove("is-active"),
+});
+
+dragTrack.addEventListener("pointerdown", (e) => {
+  isDraggingBar = true;
+  dragTrack.classList.add("is-dragging");
+  dragTrack.setPointerCapture(e.pointerId);
+  const p = barEventToProgress(e);
+  renderDragbar(p);
+  seekGallery(p);
+});
+
+dragTrack.addEventListener("pointermove", (e) => {
+  if (!isDraggingBar) return;
+  const p = barEventToProgress(e);
+  renderDragbar(p);
+  seekGallery(p);
+});
+
+function endBarDrag() {
+  isDraggingBar = false;
+  dragTrack.classList.remove("is-dragging");
+}
+dragTrack.addEventListener("pointerup", endBarDrag);
+dragTrack.addEventListener("pointercancel", endBarDrag);
+
+/* ---------- mantra: big words drift apart on scroll (always active) ---------- */
+
+const mantra = document.getElementById("mantra");
+if (mantra) {
+  const mLine1 = mantra.querySelector(".mantra-line-1");
+  const mLine2 = mantra.querySelector(".mantra-line-2");
+
+  gsap.fromTo(mLine1, { xPercent: 4 }, {
+    xPercent: -14,
+    ease: "none",
+    scrollTrigger: {
+      trigger: mantra,
+      start: "top top",
+      end: "+=1400",
+      pin: true,
+      scrub: REDUCED ? 0.5 : 1,
+      invalidateOnRefresh: true,
+      anticipatePin: 1,
+    },
+  });
+
+  gsap.fromTo(mLine2, { xPercent: -4 }, {
+    xPercent: 14,
+    ease: "none",
+    scrollTrigger: {
+      trigger: mantra,
+      start: "top top",
+      end: "+=1400",
+      scrub: REDUCED ? 0.5 : 1,
+      invalidateOnRefresh: true,
+    },
+  });
+}
+
+/* ---------- hero bubbles: click to pop, respawn at a random spot ---------- */
+
+const bubbleField = document.getElementById("bubble-field");
+const BUBBLE_COUNT = window.innerWidth < 720 ? 14 : 24;
+
+function spawnBubble() {
+  if (!bubbleField) return;
+  const b = document.createElement("div");
+  b.className = "bubble";
+  const small = window.innerWidth < 720;
+  const size = small ? 26 + Math.random() * 56 : 34 + Math.random() * 76;
+  b.style.width = size + "px";
+  b.style.height = size + "px";
+  b.style.left = 2 + Math.random() * 90 + "%";
+  b.style.top = 4 + Math.random() * 88 + "%";
+  b.style.opacity = 0.4 + Math.random() * 0.3;
+  bubbleField.appendChild(b);
+
+  // gentle bob/sway; bubbles never leave the hero
+  const bob = 14 + Math.random() * 30;
+  const dur = 4 + Math.random() * 5;
+
+  if (!REDUCED) {
+    gsap.to(b, {
+      y: -bob,
+      x: (Math.random() - 0.5) * 46,
+      duration: dur,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1,
+      delay: Math.random() * 2,
+    });
+  }
+
+  b.addEventListener("click", () => {
+    b.style.pointerEvents = "none";
+    gsap.killTweensOf(b);
+    gsap.timeline({
+      onComplete: () => { b.remove(); spawnBubble(); },
+    }).to(b, { scale: 1.9, autoAlpha: 0, duration: 0.28, ease: "power2.in" });
+  });
+}
+
+for (let i = 0; i < BUBBLE_COUNT; i++) spawnBubble();
+
+/* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
   /* ---------- hero: floating orbs + mouse parallax ---------- */
 
@@ -229,95 +402,6 @@ if (!REDUCED) {
   splitHeadParallax("photo-head");
   splitHeadParallax("game-head");
 
-  /* ---------- horizontal photography gallery ---------- */
-
-  const hsWrap = document.getElementById("hs-wrap");
-  const hsTrack = document.getElementById("hs-track");
-
-  const getDistance = () => Math.max(0, hsTrack.scrollWidth - window.innerWidth);
-
-  const hsTween = gsap.to(hsTrack, {
-    x: () => -getDistance(),
-    ease: "none",
-    scrollTrigger: {
-      trigger: hsWrap,
-      start: "top top",
-      end: () => "+=" + getDistance(),
-      pin: true,
-      scrub: 1,
-      invalidateOnRefresh: true,
-      anticipatePin: 1,
-      onUpdate: (self) => {
-        if (!isDraggingBar) renderDragbar(self.progress);
-      },
-    },
-  });
-
-  const hsST = hsTween.scrollTrigger;
-
-  /* ---------- gallery drag bar ---------- */
-
-  const dragbar = document.getElementById("hs-dragbar");
-  const dragTrack = document.getElementById("hs-dragbar-track");
-  const dragFill = document.getElementById("hs-dragbar-fill");
-  const dragHandle = document.getElementById("hs-dragbar-handle");
-  const dragCount = document.getElementById("hs-dragbar-count");
-
-  let isDraggingBar = false;
-
-  function renderDragbar(progress) {
-    const pct = Math.max(0, Math.min(1, progress)) * 100;
-    dragFill.style.width = pct + "%";
-    dragHandle.style.left = pct + "%";
-    const frame = Math.min(11, Math.max(1, Math.round(progress * 10) + 1));
-    dragCount.textContent = "FRAME " + String(frame).padStart(2, "0") + " / 11";
-  }
-
-  function barEventToProgress(e) {
-    const rect = dragTrack.getBoundingClientRect();
-    return Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-  }
-
-  // scroll the page so the pinned scrub lands exactly on target progress
-  function seekGallery(progress) {
-    const y = hsST.start + (hsST.end - hsST.start) * progress;
-    window.scrollTo(0, y);
-  }
-
-  // keep handle in sync with scroll-driven progress
-  ScrollTrigger.create({
-    trigger: hsWrap,
-    start: "top top",
-    end: () => "+=" + getDistance(),
-    onEnter: () => dragbar.classList.add("is-active"),
-    onEnterBack: () => dragbar.classList.add("is-active"),
-    onLeave: () => dragbar.classList.remove("is-active"),
-    onLeaveBack: () => dragbar.classList.remove("is-active"),
-  });
-
-  dragTrack.addEventListener("pointerdown", (e) => {
-    isDraggingBar = true;
-    dragTrack.classList.add("is-dragging");
-    dragTrack.setPointerCapture(e.pointerId);
-    const p = barEventToProgress(e);
-    renderDragbar(p);
-    seekGallery(p);
-  });
-
-  dragTrack.addEventListener("pointermove", (e) => {
-    if (!isDraggingBar) return;
-    const p = barEventToProgress(e);
-    renderDragbar(p);
-    seekGallery(p);
-  });
-
-  function endBarDrag() {
-    isDraggingBar = false;
-    dragTrack.classList.remove("is-dragging");
-  }
-  dragTrack.addEventListener("pointerup", endBarDrag);
-  dragTrack.addEventListener("pointercancel", endBarDrag);
-
   // inner image parallax against the track movement
   gsap.utils.toArray(".hs-img-wrap img").forEach((img) => {
     gsap.fromTo(img, { xPercent: -6 }, {
@@ -392,47 +476,6 @@ if (!REDUCED) {
     });
   }
 
-  /* ---------- featured game: pinned scrub showcase ---------- */
-
-  const featPanels = gsap.utils.toArray(".feat-panel");
-  const featImgs = [
-    document.querySelector(".feat-img-1"),
-    document.querySelector(".feat-img-2"),
-    document.querySelector(".feat-img-3"),
-  ];
-  const featCount = document.getElementById("feat-count");
-
-  gsap.set(featPanels[0], { autoAlpha: 1 });
-
-  const featTl = gsap.timeline({
-    scrollTrigger: {
-      trigger: "#featured",
-      start: "top top",
-      end: "+=2600",
-      pin: true,
-      scrub: 1,
-      invalidateOnRefresh: true,
-      anticipatePin: 1,
-      onUpdate: (self) => {
-        const idx = Math.min(2, Math.floor(self.progress * 3));
-        featCount.textContent = "CASE 0" + (idx + 1) + " / 03";
-      },
-    },
-  });
-
-  // panel 1 -> 2
-  featTl
-    .to(featPanels[0], { autoAlpha: 0, y: -46, duration: 0.6, ease: "power2.in" }, 0.55)
-    .to(featImgs[1], { clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power3.inOut" }, 0.7)
-    .fromTo(featImgs[1], { scale: 1.15 }, { scale: 1, duration: 1.4, ease: "power2.out" }, 0.7)
-    .fromTo(featPanels[1], { autoAlpha: 0, y: 46 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" }, 1.15)
-    // panel 2 -> 3
-    .to(featPanels[1], { autoAlpha: 0, y: -46, duration: 0.6, ease: "power2.in" }, 2.1)
-    .to(featImgs[2], { clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power3.inOut" }, 2.25)
-    .fromTo(featImgs[2], { scale: 1.15 }, { scale: 1, duration: 1.4, ease: "power2.out" }, 2.25)
-    .fromTo(featPanels[2], { autoAlpha: 0, y: 46 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" }, 2.7)
-    .to({}, { duration: 0.5 }); // hold on the final frame before release
-
   /* ---------- about title char reveal (BR preserved as real line break) ---------- */
 
   const aboutTitle = document.getElementById("about-title");
@@ -498,15 +541,4 @@ if (!REDUCED) {
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => ScrollTrigger.refresh());
   }
-} else {
-  /* reduced motion: everything visible, no pins or scrubs */
-  document.querySelectorAll(".feat-panel").forEach((p) => {
-    p.style.position = "relative";
-    p.style.opacity = 1;
-    p.style.visibility = "visible";
-  });
-  document.querySelectorAll(".feat-img").forEach((img, i) => {
-    img.style.position = i === 0 ? "relative" : "absolute";
-    img.style.clipPath = "none";
-  });
 }
