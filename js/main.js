@@ -254,40 +254,6 @@ const hofTween = makeHorizontalScroller({
   label: "CARD",
 });
 
-/* ---------- mantra: big words drift apart on scroll (always active) ---------- */
-
-const mantra = document.getElementById("mantra");
-if (mantra) {
-  const mLine1 = mantra.querySelector(".mantra-line-1");
-  const mLine2 = mantra.querySelector(".mantra-line-2");
-
-  gsap.fromTo(mLine1, { xPercent: 4 }, {
-    xPercent: -14,
-    ease: "none",
-    scrollTrigger: {
-      trigger: mantra,
-      start: "top top",
-      end: "+=1400",
-      pin: true,
-      scrub: REDUCED ? 0.5 : 1,
-      invalidateOnRefresh: true,
-      anticipatePin: 1,
-    },
-  });
-
-  gsap.fromTo(mLine2, { xPercent: -4 }, {
-    xPercent: 14,
-    ease: "none",
-    scrollTrigger: {
-      trigger: mantra,
-      start: "top top",
-      end: "+=1400",
-      scrub: REDUCED ? 0.5 : 1,
-      invalidateOnRefresh: true,
-    },
-  });
-}
-
 /* ---------- hero bubbles: click to pop, respawn at a random spot ---------- */
 
 const bubbleField = document.getElementById("bubble-field");

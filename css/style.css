@@ -176,9 +176,10 @@ a:focus-visible, button:focus-visible {
 }
 
 .nav-logo {
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.06em;
+  font-family: "Bungee", "Space Grotesk", sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
   white-space: nowrap;
 }
 
@@ -205,8 +206,9 @@ a:focus-visible, button:focus-visible {
 .nav-links { display: flex; gap: clamp(1rem, 3vw, 2.4rem); }
 
 .nav-links a {
+  font-family: "Notable", "Space Grotesk", sans-serif;
   font-size: 0.66rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.12em;
   color: var(--ink-soft);
   position: relative;
   padding: 0.3em 0;
@@ -309,25 +311,24 @@ a:focus-visible, button:focus-visible {
   user-select: none;
 }
 
-.ht-line { overflow: hidden; padding: 0.02em 0; }
+.ht-line { overflow: hidden; padding: 0.02em 0 0.06em; }
 
 .ht-word {
   display: inline-block;
-  font-size: clamp(4.6rem, 15vw, 15rem);
-  font-weight: 700;
-  letter-spacing: 0.015em;
+  font-family: "Vast Shadow", Georgia, serif;
+  font-size: clamp(3rem, 13vw, 13rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0;
   color: var(--ink);
   text-shadow: 10px 10px 0 var(--volt);
   will-change: transform;
 }
 
-.ht-word .ch { display: inline-block; will-change: transform; }
+.ht-line-2 { margin-top: -0.12em; }
+.ht-line-2 .ht-word { text-shadow: 8px 8px 0 var(--punch); }
 
-.ht-outline {
-  color: transparent;
-  -webkit-text-stroke: 3px var(--ink);
-  text-shadow: 8px 8px 0 var(--punch);
-}
+.ht-word .ch { display: inline-block; will-change: transform; }
 
 .hero-sub {
   margin-top: clamp(1.6rem, 4vh, 2.6rem);
@@ -399,12 +400,13 @@ a:focus-visible, button:focus-visible {
 
 /* ============ HERO STICKERS ============ */
 .sticker {
+  font-family: "Bungee", "Space Grotesk", sans-serif;
   position: absolute;
   z-index: 3;
-  padding: 0.55em 0.9em;
-  font-size: 0.66rem;
+  padding: 0.5em 0.8em;
+  font-size: 0.72rem;
   font-weight: 400;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.06em;
   border: 2px solid var(--ink);
   box-shadow: var(--shadow-sm);
   user-select: none;
@@ -438,10 +440,10 @@ a:focus-visible, button:focus-visible {
 }
 
 .ticker-group span {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Bungee", "Space Grotesk", sans-serif;
   font-weight: 400;
-  font-size: 0.7rem;
-  letter-spacing: 0.34em;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
   white-space: nowrap;
 }
 
@@ -469,10 +471,11 @@ a:focus-visible, button:focus-visible {
 .bh-line { overflow: hidden; }
 
 .bh-line h2 {
-  font-size: clamp(4.5rem, 16vw, 15rem);
-  font-weight: 700;
+  font-family: "Bungee", "Space Grotesk", sans-serif;
+  font-size: clamp(4rem, 13vw, 13rem);
+  font-weight: 400;
   line-height: 0.9;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   will-change: transform;
   white-space: nowrap;
 }
@@ -601,8 +604,9 @@ a:focus-visible, button:focus-visible {
 }
 
 .hs-cap {
+  font-family: "Notable", "Space Grotesk", sans-serif;
   font-size: clamp(0.95rem, 1.3vw, 1.15rem);
-  font-weight: 500;
+  font-weight: 400;
   color: var(--ink);
   max-width: 34ch;
 }
@@ -801,9 +805,10 @@ a:focus-visible, button:focus-visible {
 
 .hof-name {
   color: var(--bg);
-  font-weight: 600;
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-weight: 400;
   font-size: clamp(0.6rem, 0.85vw, 0.8rem);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   line-height: 1.25;
 }
 
@@ -813,60 +818,6 @@ a:focus-visible, button:focus-visible {
   color: var(--ice);
   letter-spacing: 0.12em;
 }
-
-/* ============ MANTRA (PINNED CODA) ============ */
-.mantra {
-  position: relative;
-  margin-top: clamp(4rem, 10vh, 8rem);
-  background: var(--ink);
-  color: var(--bg);
-  overflow: hidden;
-}
-
-.mantra-inner {
-  height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(0.6rem, 2vh, 1.6rem);
-  padding: 0 clamp(1.5rem, 6vw, 6rem);
-}
-
-.mantra-line { overflow: visible; }
-
-.mantra-line h3 {
-  font-size: clamp(2.6rem, 9vw, 9.5rem);
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  color: var(--bg);
-  text-shadow: 8px 8px 0 var(--volt);
-  will-change: transform;
-}
-
-.mantra-line-2 h3 {
-  color: transparent;
-  -webkit-text-stroke: 3px var(--bg);
-  text-shadow: none;
-}
-
-.mantra-meta {
-  position: absolute;
-  top: clamp(4.5rem, 9vh, 6rem);
-  left: clamp(1.5rem, 6vw, 6rem);
-  right: clamp(1.5rem, 6vw, 6rem);
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  color: var(--bg);
-  z-index: 3;
-}
-
-.mantra-meta span:first-child { background: var(--volt); border: 2px solid var(--bg); padding: 0.45em 0.9em; }
-.mantra-meta span:last-child { background: var(--acid); border: 2px solid var(--bg); padding: 0.45em 0.9em; color: var(--ink); }
 
 /* ============ ABOUT ============ */
 .about { background: var(--bg); }
@@ -916,9 +867,10 @@ a:focus-visible, button:focus-visible {
 }
 
 .footer-name {
+  font-family: "Bungee", "Space Grotesk", sans-serif;
   font-size: clamp(2rem, 6vw, 4.5rem);
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  letter-spacing: 0;
   line-height: 1;
 }
 
@@ -1136,6 +1088,30 @@ a:focus-visible, button:focus-visible {
   margin-top: 0.4em;
 }
 
+.shelf .book-title {
+  font-family: "Calistoga", Georgia, serif;
+  font-size: clamp(0.95rem, 1.05vw, 1.15rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+.filmwall .book-title {
+  font-family: "Calistoga", Georgia, serif;
+  font-size: clamp(0.95rem, 1.05vw, 1.15rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+.teamwall .book-title {
+  font-family: "Bungee", "Space Grotesk", sans-serif;
+  font-size: clamp(0.9rem, 0.95vw, 1.05rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
 .book-author {
   font-size: 0.72rem;
   font-weight: 400;
@@ -1187,10 +1163,11 @@ a:focus-visible, button:focus-visible {
 }
 
 .genre-title {
-  font-size: clamp(1.5rem, 2vw, 2rem);
-  font-weight: 700;
+  font-family: "Bungee", "Space Grotesk", sans-serif;
+  font-size: clamp(1.25rem, 1.7vw, 1.7rem);
+  font-weight: 400;
   color: var(--ink);
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
 }
 
 .genre-count {
@@ -1247,8 +1224,9 @@ a:focus-visible, button:focus-visible {
   border: 2px solid var(--ink);
   background: var(--bg);
   padding: 0.45em 0.8em;
-  font-size: 0.78rem;
-  font-weight: 500;
+  font-family: "Calistoga", Georgia, serif;
+  font-size: 0.68rem;
+  font-weight: 400;
   color: var(--ink);
   transition: background 0.25s var(--ease-out), color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
 }
@@ -1450,17 +1428,26 @@ a:focus-visible, button:focus-visible {
 .lb-next:hover { transform: translate(3px, -50%); }
 
 /* ============ RESPONSIVE ============ */
+@media (max-width: 1280px) {
+  .nav-links { gap: clamp(0.8rem, 1.8vw, 1.6rem); }
+  .nav-links a { font-size: 0.6rem; letter-spacing: 0.08em; }
+  .nav-links a i { display: none; }
+  .nav-tm { display: none; }
+}
+
 @media (max-width: 720px) {
   .nav { height: 56px; }
-  .nav-links a { font-size: 0.56rem; letter-spacing: 0.14em; }
+  .nav-links { gap: clamp(0.7rem, 3vw, 1.2rem); overflow-x: auto; scrollbar-width: none; }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a { font-size: 0.56rem; letter-spacing: 0.14em; white-space: nowrap; }
+  .nav-links a i { display: none; }
   .nav-tm { display: none; }
 
-  .ht-word { font-size: clamp(3.2rem, 15vw, 6rem); text-shadow: 5px 5px 0 var(--volt); }
-  .ht-outline { -webkit-text-stroke: 2.5px var(--ink); text-shadow: 4px 4px 0 var(--punch); }
+  .ht-word { font-size: clamp(2.6rem, 13vw, 6rem); text-shadow: 5px 5px 0 var(--volt); }
   .hero-sub { font-size: 0.58rem; letter-spacing: 0.14em; }
   .hero-sub span { box-shadow: 3px 3px 0 var(--ink); }
 
-  .sticker { font-size: 0.58rem; padding: 0.4em 0.7em; box-shadow: 3px 3px 0 var(--ink); }
+  .sticker { font-size: 0.62rem; padding: 0.4em 0.7em; box-shadow: 3px 3px 0 var(--ink); }
   .st-3 { display: none; }
 
   .bh-left h2 { text-shadow: 4px 4px 0 var(--ink); }
@@ -1486,9 +1473,6 @@ a:focus-visible, button:focus-visible {
   .hof-item:nth-child(n) { transform: none; }
   .hof-end { width: 220px; padding-right: 2rem; }
   .hof-quote { font-size: 0.85rem; }
-
-  .mantra-line h3 { font-size: clamp(1.9rem, 9.5vw, 3rem); white-space: normal; }
-  .mantra-meta { flex-direction: column; gap: 0.6em; }
 
   .about-inner { grid-template-columns: 1fr; }
 
