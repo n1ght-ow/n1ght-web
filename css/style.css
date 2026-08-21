@@ -352,6 +352,41 @@ a:focus-visible, button:focus-visible {
 .hero-sub span:first-child { background: var(--acid); }
 .hero-sub span:last-child { background: var(--volt); color: var(--bg); }
 
+/* ============ HERO SIGNATURE (SVG draw) ============ */
+.hero-sig {
+  position: relative;
+  width: min(620px, 82vw);
+  margin-top: clamp(1.4rem, 3.5vh, 2.4rem);
+  z-index: 2;
+}
+
+.hero-sig svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.hero-sig .sig-path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 46;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hero-sig .sig-fill {
+  fill: var(--ink);
+  opacity: 0;
+  fill-rule: nonzero;
+}
+
+.hero-sig-about {
+  width: min(520px, 78vw);
+  margin-top: clamp(2rem, 5vh, 3.2rem);
+  transform: rotate(-1.5deg);
+}
+
 .hero-scrollline {
   position: absolute;
   bottom: 0;
@@ -849,6 +884,60 @@ a:focus-visible, button:focus-visible {
   text-underline-offset: 0.25em;
 }
 
+.about-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9em;
+  margin-top: clamp(2rem, 5vh, 3.2rem);
+  max-width: 62ch;
+}
+
+.about-stats span {
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+  background: var(--bg-deep);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow-sm);
+  padding: 0.55em 0.9em;
+}
+
+.about-stats span:nth-child(2n) { background: var(--volt); color: var(--bg); }
+.about-stats span:nth-child(3n) { background: var(--acid); color: var(--ink); }
+
+/* ============ CODA ============ */
+.coda {
+  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(5rem, 12vh, 9rem);
+  text-align: center;
+}
+
+.coda-line { overflow: hidden; }
+
+.coda-title {
+  display: inline-block;
+  font-family: "Bungee", "Space Grotesk", sans-serif;
+  font-size: clamp(2.4rem, 8vw, 8rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0;
+  color: var(--ink);
+  will-change: transform;
+}
+
+.coda-title-2 {
+  color: transparent;
+  -webkit-text-stroke: 3px var(--ink);
+  text-shadow: 6px 6px 0 var(--punch);
+}
+
+.coda-mono {
+  margin-top: clamp(1.2rem, 3vh, 2rem);
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  color: var(--slate);
+}
+
 /* ============ FOOTER ============ */
 .footer {
   background: var(--ink);
@@ -965,9 +1054,10 @@ a:focus-visible, button:focus-visible {
 }
 
 .poem-text {
-  font-family: "Great Vibes", cursive;
-  font-size: clamp(1.35rem, 2vw, 1.9rem);
-  line-height: 1.7;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+  line-height: 1.75;
   color: var(--ink);
 }
 
@@ -975,29 +1065,20 @@ a:focus-visible, button:focus-visible {
 
 .poem-sign {
   margin-top: 1.6rem;
-  font-family: "Great Vibes", cursive;
-  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
   color: var(--ink-soft);
   text-align: right;
+  letter-spacing: 0.08em;
 }
 
-/* ============ BOOK SHELF + FILM WALL ============ */
-.books { background: var(--bg); }
-.films { background: var(--bg-deep); }
+/* ============ THE ARCHIVE (tabs: books / films / music / sport) ============ */
+.archive { background: var(--bg-deep); }
 
-.shelf {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(1.4rem, 2.6vw, 2.4rem);
-  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
-}
-
-.filmwall {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(2.6rem, 5.5vh, 4.2rem);
-  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
-}
+#archive-head .bh-left h2 { background: var(--acid); color: var(--ink); text-shadow: 6px 6px 0 var(--ink); }
+#archive-head .bh-right h2 { text-shadow: 6px 6px 0 var(--acid); }
+#archive-head .bh-meta span:first-child { background: var(--acid); color: var(--ink); }
+#archive-head .sec-intro { border-color: var(--acid); }
 
 .film-group {
   display: flex;
@@ -1034,108 +1115,270 @@ a:focus-visible, button:focus-visible {
   color: var(--ink);
 }
 
-.film-row {
+/* ---- tab bar ---- */
+.tabbar {
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(1.2rem, 2.2vw, 2rem);
+  gap: clamp(0.7rem, 1.6vw, 1.2rem);
+  align-items: center;
+  padding: 0 clamp(1.2rem, 6vw, 6rem);
+  margin-bottom: clamp(1.8rem, 4vh, 3rem);
 }
 
-.film-row .movie {
-  flex: 1 1 clamp(260px, 21vw, 360px);
-  max-width: 430px;
-}
-.book,
-.movie {
-  position: relative;
+.tab-btn {
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
   background: var(--paper);
-  border: 3px solid var(--ink);
-  box-shadow: var(--shadow-md);
-  padding: clamp(1.6rem, 3vw, 2.6rem) clamp(1.4rem, 2.4vw, 2.2rem) clamp(1.8rem, 3.4vw, 3rem);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow-sm);
+  padding: 0.65em 1.1em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  transition: background 0.3s var(--ease-out), color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+
+.tab-btn i {
+  font-style: normal;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  color: var(--slate-2);
+}
+
+.tab-btn:hover { transform: translate(-2px, -2px); color: var(--ink); }
+
+.tab-btn.is-active {
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: 4px 4px 0 var(--volt);
+}
+
+.tab-btn.is-active i { color: var(--acid); }
+
+/* ---- panels ---- */
+.tab-panels {
+  position: relative;
+  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.is-active {
+  display: block;
+}
+
+/* ---- index rows (books / films / teams) ---- */
+.idx-list {
   display: flex;
   flex-direction: column;
-  gap: 0.85em;
-  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+  gap: 0;
+  border-top: 3px solid var(--ink);
 }
 
-.book:hover,
-.movie:hover { transform: translate(-3px, -3px); }
+.idx-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.9rem, 2vw, 2.2rem);
+  padding: clamp(1.1rem, 2.4vh, 1.7rem) 0.4rem;
+  border-bottom: 2px solid var(--line);
+  transition: background 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
 
-.book-no {
-  position: absolute;
-  top: -15px;
-  left: 20px;
+.idx-row:nth-child(odd) { background: rgba(255, 255, 255, 0.35); }
+
+.idx-row:hover {
+  background: var(--paper);
+  transform: translateX(6px);
+}
+
+.idx-no {
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--ink);
   background: var(--volt);
   color: var(--bg);
   border: 2px solid var(--ink);
   box-shadow: 3px 3px 0 var(--ink);
-  padding: 0.45em 0.85em;
-  font-size: 0.68rem;
-  font-weight: 400;
-  letter-spacing: 0.14em;
+  padding: 0.4em 0.7em;
+  width: max-content;
+  transition: background 0.3s var(--ease-out);
 }
 
-.book:nth-child(3n+2) .book-no,
-.movie:nth-child(3n+2) .book-no { background: var(--punch); }
-.book:nth-child(3n+3) .book-no,
-.movie:nth-child(3n+3) .book-no { background: var(--acid); color: var(--ink); }
+.idx-row:nth-child(3n+2) .idx-no { background: var(--punch); }
+.idx-row:nth-child(3n+3) .idx-no { background: var(--acid); color: var(--ink); }
 
-.book-title {
-  font-size: clamp(1.35rem, 1.9vw, 1.9rem);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: 0.01em;
+.idx-row:hover .idx-no { background: var(--ink); color: var(--bg); }
+
+.idx-mid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  min-width: 0;
+}
+
+.idx-title {
+  font-family: "Calistoga", Georgia, serif;
+  font-size: clamp(1.05rem, 1.3vw, 1.4rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.2;
   color: var(--ink);
-  margin-top: 0.4em;
 }
 
-.shelf .book-title {
-  font-family: "Calistoga", Georgia, serif;
-  font-size: clamp(0.95rem, 1.05vw, 1.15rem);
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1.2;
-}
-
-.filmwall .book-title {
-  font-family: "Calistoga", Georgia, serif;
-  font-size: clamp(0.95rem, 1.05vw, 1.15rem);
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1.2;
-}
-
-.teamwall .book-title {
-  font-family: "Bungee", "Space Grotesk", sans-serif;
-  font-size: clamp(0.9rem, 0.95vw, 1.05rem);
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1.2;
-}
-
-.book-author {
-  font-size: 0.72rem;
+.idx-meta {
+  font-size: 0.66rem;
   font-weight: 400;
   letter-spacing: 0.18em;
-  color: var(--ink);
-  border-bottom: 2px solid var(--line);
-  padding-bottom: 0.8em;
-}
-
-.book-line {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-style: italic;
-  font-size: clamp(1rem, 1.25vw, 1.2rem);
-  line-height: 1.6;
   color: var(--ink-soft);
 }
 
-/* ============ PLAYLIST ============ */
-.music { background: var(--bg); }
+.idx-line {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 46ch;
+}
+
+/* sport rows */
+.idx-team .idx-mid { gap: 0.5em; }
+
+.idx-logo {
+  height: clamp(40px, 4.5vw, 60px);
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  margin-bottom: 0.2rem;
+}
+
+.idx-logo-wide {
+  height: auto;
+  width: min(160px, 60%);
+}
+
+.team-sport-idx {
+  position: absolute;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--bg);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--acid);
+  padding: 0.35em 0.7em;
+  transform: rotate(-2deg);
+  margin-left: 4.5rem;
+}
+
+/* ---- music picks ---- */
+.picks-head {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: var(--ink);
+  background: var(--acid);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 0.6em 1em;
+  width: max-content;
+  margin-bottom: 1.2rem;
+}
+
+.pick-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 3px solid var(--ink);
+  margin-bottom: clamp(1.8rem, 4vh, 3rem);
+}
+
+.pick-row {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.9rem, 2vw, 2.2rem);
+  padding: clamp(1rem, 2.2vh, 1.5rem) 0.4rem;
+  border-bottom: 2px solid var(--line);
+  transition: background 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+
+.pick-row:nth-child(odd) { background: rgba(255, 255, 255, 0.35); }
+
+.pick-row:hover {
+  background: var(--paper);
+  transform: translateX(6px);
+}
+
+.pick-no {
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+  background: var(--bg-deep);
+  border: 2px solid var(--ink);
+  padding: 0.4em 0.7em;
+  width: max-content;
+}
+
+.pick-row:hover .pick-no { background: var(--volt); color: var(--bg); }
+
+/* ---- music drawer ---- */
+.drawer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  width: 100%;
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: clamp(0.72rem, 0.95vw, 0.95rem);
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--bg);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--punch);
+  padding: 0.9em 1.2em;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.drawer-toggle:hover { transform: translate(-2px, -2px); }
+
+.drawer-toggle i {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  background: var(--acid);
+  margin-left: auto;
+  transform: rotate(45deg);
+  transition: transform 0.35s var(--ease-out);
+}
+
+.drawer-toggle[aria-expanded="true"] i { transform: rotate(135deg); }
+
+.music-drawer {
+  overflow: hidden;
+  height: 0;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.music-drawer.is-open {
+  opacity: 1;
+}
 
 .playlist {
   columns: 2;
   column-gap: clamp(1.4rem, 2.6vw, 2.4rem);
-  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
+  padding-top: clamp(1.8rem, 4vh, 3rem);
 }
 
 .genre {
@@ -1246,69 +1489,6 @@ a:focus-visible, button:focus-visible {
 }
 
 .track-chip:hover .track-artist { color: var(--ice); }
-
-/* ============ SPORT WALL ============ */
-.sports { background: var(--bg-deep); }
-
-.teamwall {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: clamp(1.4rem, 2.6vw, 2.4rem);
-  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
-}
-
-.team {
-  position: relative;
-  flex: 1 1 clamp(280px, 30vw, 420px);
-  max-width: 480px;
-  background: var(--paper);
-  border: 3px solid var(--ink);
-  box-shadow: var(--shadow-md);
-  padding: clamp(1.8rem, 3vw, 2.6rem) clamp(1.4rem, 2.4vw, 2.2rem) clamp(1.8rem, 3.4vw, 3rem);
-  display: flex;
-  flex-direction: column;
-  gap: 0.85em;
-  transition: transform 0.35s var(--ease-out);
-}
-
-.team:hover { transform: translate(-3px, -3px); }
-
-.team-sport {
-  position: absolute;
-  top: -15px;
-  right: 20px;
-  background: var(--ink);
-  color: var(--bg);
-  border: 2px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--acid);
-  padding: 0.45em 0.85em;
-  font-size: 0.66rem;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  transform: rotate(3deg);
-}
-
-.team:nth-child(3n+2) .team-sport { box-shadow: 3px 3px 0 var(--punch); }
-.team:nth-child(3n+3) .team-sport { box-shadow: 3px 3px 0 var(--volt); }
-
-.team .book-no { top: -15px; left: 20px; }
-
-.team-logo {
-  height: clamp(64px, 7vw, 96px);
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-  align-self: center;
-  margin: 0.6rem 0 0.2rem;
-}
-
-.team-logo-wide {
-  height: auto;
-  width: min(260px, 72%);
-}
-
-.team .book-title { margin-top: 1rem; }
 
 /* ============ PHOTO LIGHTBOX ============ */
 .hs-card { cursor: pointer; }
@@ -1482,15 +1662,21 @@ a:focus-visible, button:focus-visible {
   .poem-text { font-size: 1.18rem; }
   .poem-stamp { right: 12px; }
 
-  .shelf { grid-template-columns: repeat(2, 1fr); }
+  .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
+  .idx-line { grid-column: 2; }
+  .pick-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
+  .pick-row .idx-line { grid-column: 2; }
+  .team-sport-idx { margin-left: 3.2rem; font-size: 0.56rem; }
   .playlist { columns: 1; }
+  .coda-title { font-size: clamp(2rem, 11vw, 4rem); }
 
   .footer-top { align-items: flex-start; flex-direction: column; }
 }
 
 @media (max-width: 480px) {
   .hof-item { width: min(76vw, 300px); }
-  .shelf { grid-template-columns: 1fr; }
+  .tabbar { gap: 0.6rem; }
+  .tab-btn { padding: 0.55em 0.8em; font-size: 0.62rem; }
 }
 
 /* ============ REDUCED MOTION ============ */

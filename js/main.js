@@ -32,6 +32,93 @@ function splitChars(el) {
   return el.querySelectorAll(".ch");
 }
 
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+/* Build the signature SVG into a container from SIG_DATA.
+   Returns { svg, paths, fills } or null when data/container missing.
+   Each glyph outline is drawn twice:
+   - .sig-path  : stroked outline (stroke-dashoffset draw animation)
+   - .sig-fill  : solid fill that fades in after the draw lands
+*/
+function buildSignature(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container || typeof SIG_DATA === "undefined") return null;
+
+  const vb = SIG_DATA.viewBox;
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("viewBox", vb.x + " " + vb.y + " " + vb.w + " " + vb.h);
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", "N1GHT CHXN9");
+
+  const paths = [];
+  const fills = [];
+
+  SIG_DATA.glyphs.forEach((g) => {
+    const p = document.createElementNS(SVG_NS, "path");
+    p.setAttribute("d", g.d);
+    p.setAttribute("class", "sig-path");
+    svg.appendChild(p);
+    paths.push(p);
+
+    const f = document.createElementNS(SVG_NS, "path");
+    f.setAttribute("d", g.d);
+    f.setAttribute("class", "sig-fill");
+    svg.appendChild(f);
+    fills.push(f);
+  });
+
+  container.appendChild(svg);
+  return { svg, paths, fills };
+}
+
+// Measure every path, set up dasharray/dashoffset and return total length
+function setupSignatureDraw(sig) {
+  if (!sig) return null;
+  let totalLen = 0;
+  sig.paths.forEach((p) => {
+    const len = p.getTotalLength();
+    p.dataset.len = len;
+    totalLen += len;
+    p.style.strokeDasharray = len;
+    p.style.strokeDashoffset = len;
+  });
+  return totalLen;
+}
+
+function animateSignature(sig, opts) {
+  if (!sig || !sig.paths.length) return;
+  const o = opts || {};
+
+  if (REDUCED) {
+    sig.paths.forEach((p) => {
+      gsap.set(p, { strokeDashoffset: 0 });
+      p.style.strokeDasharray = "none";
+    });
+    gsap.set(sig.fills, { opacity: 1 });
+    if (o.onComplete) o.onComplete();
+    return;
+  }
+
+  const tl = gsap.timeline({
+    delay: o.delay || 0,
+    onComplete: o.onComplete,
+  });
+
+  tl.to(sig.paths, {
+    strokeDashoffset: 0,
+    duration: o.duration || 1.15,
+    ease: o.ease || "power2.inOut",
+    stagger: o.stagger || 0.085,
+  }, 0);
+
+  tl.to(sig.fills, {
+    opacity: 1,
+    duration: o.fillDuration || 0.7,
+    ease: "power2.out",
+    stagger: 0.05,
+  }, o.fillAt || "<0.25");
+}
+
 /* ---------- preloader ---------- */
 
 const preloader = document.getElementById("preloader");
@@ -51,6 +138,11 @@ document.querySelectorAll("[data-split]").forEach((el) => {
 });
 gsap.set(heroChars, { yPercent: 120 });
 gsap.set(".hero-sub span", { yPercent: 140, opacity: 0 });
+
+// build the hero signature before the reveal so it can draw right after
+const heroSig = buildSignature("sig-hero");
+const sigTotalLen = setupSignatureDraw(heroSig);
+gsap.set(heroSig ? heroSig.fills : [], { opacity: 0 });
 
 let preloadFinished = false;
 
@@ -75,6 +167,10 @@ function finishPreload() {
     tl.set(preloader, { display: "none" })
       .set(heroChars, { yPercent: 0 })
       .set(".hero-sub span", { yPercent: 0, opacity: 1 });
+    if (heroSig) {
+      heroSig.paths.forEach((p) => gsap.set(p, { strokeDashoffset: 0 }));
+      gsap.set(heroSig.fills, { opacity: 1 });
+    }
     return;
   }
 
@@ -91,6 +187,13 @@ function finishPreload() {
     // hero entrance
     .to(heroChars, { yPercent: 0, duration: 1.1, stagger: 0.035, ease: "power4.out" }, "-=0.45")
     .to(".hero-sub span", { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.12, ease: "power3.out" }, "<+0.4");
+
+  // signature draw starts as the shutters open
+  if (heroSig) {
+    tl.add(() => {
+      animateSignature(heroSig, { delay: 0, duration: 1.25, stagger: 0.09 });
+    }, "-=3.2");
+  }
 }
 
 // progress-driven letter ignition
@@ -383,6 +486,152 @@ if (lightbox && photoCards.length) {
   lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
 }
 
+/* ---------- The Archive: tab switching (clip-path wipe + row stagger) ---------- */
+
+function initArchiveTabs() {
+  const tabbar = document.getElementById("archive-tabbar");
+  if (!tabbar) return;
+  const tabs = Array.from(tabbar.querySelectorAll(".tab-btn"));
+  const panels = Array.from(document.querySelectorAll(".tab-panel"));
+  if (!tabs.length || !panels.length) return;
+
+  let current = tabs.findIndex((t) => t.classList.contains("is-active"));
+  if (current < 0) current = 0;
+
+  const showMeta = (idx) => {
+    tabs.forEach((t, i) => {
+      const on = i === idx;
+      t.classList.toggle("is-active", on);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    panels.forEach((p, i) => p.classList.toggle("is-active", i === idx));
+  };
+
+  const animateIn = (idx, rows) => {
+    const panel = panels[idx];
+    if (!panel) return;
+    if (!rows || !rows.length) return;
+    if (REDUCED) {
+      gsap.set(rows, { autoAlpha: 1, y: 0 });
+      return;
+    }
+    gsap.fromTo(panel,
+      { clipPath: "inset(0 0 0 100%)" },
+      {
+        clipPath: "inset(0 0 0 0%)",
+        duration: 0.8,
+        ease: "power4.inOut",
+      });
+    gsap.from(rows, {
+      y: 26,
+      autoAlpha: 0,
+      duration: 0.75,
+      stagger: { each: 0.06, from: "start" },
+      ease: "power3.out",
+      delay: 0.08,
+    });
+  };
+
+  const select = (idx, instant) => {
+    if (idx === current && !instant) return;
+    current = idx;
+    showMeta(idx);
+    const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .pick-row, .film-group, .genre")) : [];
+    if (instant) {
+      gsap.set(rows, { autoAlpha: 1, y: 0 });
+      gsap.set(panels[idx], { clipPath: "inset(0 0 0 0%)" });
+    } else {
+      animateIn(idx, rows);
+    }
+  };
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener("click", () => select(i));
+    tab.addEventListener("keydown", (e) => {
+      const isFirst = i === 0;
+      const isLast = i === tabs.length - 1;
+      if (e.key === "ArrowRight" || (e.key === "ArrowDown" && i < tabs.length - 1)) {
+        e.preventDefault();
+        const next = isLast ? 0 : i + 1;
+        tabs[next].focus();
+        select(next);
+      } else if (e.key === "ArrowLeft" || (e.key === "ArrowUp" && i > 0)) {
+        e.preventDefault();
+        const prev = isFirst ? tabs.length - 1 : i - 1;
+        tabs[prev].focus();
+        select(prev);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        tabs[0].focus();
+        select(0);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        tabs[tabs.length - 1].focus();
+        select(tabs.length - 1);
+      }
+    });
+  });
+
+  // first panel: baseline entrance on scroll into view
+  const firstPanel = panels[0];
+  const firstRows = Array.from(firstPanel.querySelectorAll(".idx-row, .pick-row, .film-group, .genre"));
+  if (firstRows.length) {
+    gsap.from(firstRows, {
+      y: 26,
+      autoAlpha: 0,
+      duration: 0.8,
+      stagger: { each: 0.06, from: "start" },
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: firstPanel,
+        start: "top 85%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  }
+}
+
+initArchiveTabs();
+
+/* ---------- music drawer: expand / collapse the full track list ---------- */
+
+function initMusicDrawer() {
+  const toggle = document.getElementById("music-drawer-toggle");
+  const drawer = document.getElementById("music-drawer");
+  if (!toggle || !drawer) return;
+
+  const open = () => {
+    drawer.classList.add("is-open");
+    toggle.setAttribute("aria-expanded", "true");
+    toggle.querySelector("span").textContent = "HIDE FULL LIST — 132 TRACKS";
+    gsap.to(drawer, {
+      height: () => drawer.scrollHeight,
+      duration: 0.75,
+      ease: "power3.inOut",
+      onComplete: () => ScrollTrigger.refresh(),
+    });
+  };
+
+  const close = () => {
+    drawer.classList.remove("is-open");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.querySelector("span").textContent = "FULL LIST — 132 TRACKS";
+    gsap.to(drawer, {
+      height: 0,
+      duration: 0.6,
+      ease: "power3.inOut",
+      onComplete: () => ScrollTrigger.refresh(),
+    });
+  };
+
+  toggle.addEventListener("click", () => {
+    if (toggle.getAttribute("aria-expanded") === "true") close();
+    else open();
+  });
+}
+
+initMusicDrawer();
+
 /* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
   /* ---------- hero: floating orbs + mouse parallax ---------- */
@@ -481,12 +730,9 @@ if (!REDUCED) {
 
   splitHeadParallax("photo-head");
   splitHeadParallax("game-head");
-  splitHeadParallax("about-head");
+  splitHeadParallax("archive-head");
   splitHeadParallax("poem-head");
-  splitHeadParallax("books-head");
-  splitHeadParallax("film-head");
-  splitHeadParallax("music-head");
-  splitHeadParallax("sports-head");
+  splitHeadParallax("about-head");
 
   // inner image parallax against the track movement
   gsap.utils.toArray(".hs-img-wrap img").forEach((img) => {
@@ -555,66 +801,6 @@ if (!REDUCED) {
     },
   });
 
-  /* ---------- book shelf: staggered entrance ---------- */
-
-  gsap.from(".book", {
-    y: 70,
-    autoAlpha: 0,
-    duration: 0.9,
-    stagger: { each: 0.1, from: "start" },
-    ease: "power4.out",
-    scrollTrigger: {
-      trigger: ".shelf",
-      start: "top 82%",
-      toggleActions: "play none none reverse",
-    },
-  });
-
-  /* ---------- film wall: staggered entrance ---------- */
-
-  gsap.from(".movie", {
-    y: 70,
-    autoAlpha: 0,
-    duration: 0.9,
-    stagger: { each: 0.08, from: "start" },
-    ease: "power4.out",
-    scrollTrigger: {
-      trigger: ".filmwall",
-      start: "top 82%",
-      toggleActions: "play none none reverse",
-    },
-  });
-
-  /* ---------- playlist: staggered entrance ---------- */
-
-  gsap.from(".genre", {
-    y: 70,
-    autoAlpha: 0,
-    duration: 0.9,
-    stagger: { each: 0.12, from: "start" },
-    ease: "power4.out",
-    scrollTrigger: {
-      trigger: ".playlist",
-      start: "top 82%",
-      toggleActions: "play none none reverse",
-    },
-  });
-
-  /* ---------- sport wall: staggered entrance ---------- */
-
-  gsap.from(".team", {
-    y: 70,
-    autoAlpha: 0,
-    duration: 0.9,
-    stagger: { each: 0.1, from: "start" },
-    ease: "power4.out",
-    scrollTrigger: {
-      trigger: ".teamwall",
-      start: "top 82%",
-      toggleActions: "play none none reverse",
-    },
-  });
-
   /* ---------- about body entrance ---------- */
 
   gsap.from(".about-body p", {
@@ -626,6 +812,98 @@ if (!REDUCED) {
     scrollTrigger: {
       trigger: ".about-body",
       start: "top 82%",
+      toggleActions: "play none none reverse",
+    },
+  });
+
+  /* ---------- about stats + signature entrance ---------- */
+
+  const aboutSig = buildSignature("sig-about");
+  if (aboutSig) {
+    setupSignatureDraw(aboutSig);
+    // draw when the about section scrolls into view; redraw each time
+    // (toggleActions reverse hides it again on the way up)
+    const st = ScrollTrigger.create({
+      trigger: "#about .about-stats",
+      start: "top 80%",
+      end: "bottom 40%",
+      toggleActions: "play pause reverse pause",
+      onEnter: () => {
+        gsap.set(aboutSig.fills, { opacity: 0 });
+        animateSignature(aboutSig, { duration: 1.1, stagger: 0.08, fillAt: "<0.2" });
+      },
+      onLeaveBack: () => {
+        aboutSig.paths.forEach((p) => gsap.set(p, { strokeDashoffset: p.dataset.len }));
+        gsap.set(aboutSig.fills, { opacity: 0 });
+      },
+      onEnterBack: () => {
+        gsap.set(aboutSig.fills, { opacity: 0 });
+        animateSignature(aboutSig, { duration: 1.1, stagger: 0.08, fillAt: "<0.2" });
+      },
+    });
+  }
+
+  gsap.from(".about-stats span", {
+    y: 22,
+    autoAlpha: 0,
+    duration: 0.7,
+    stagger: 0.08,
+    ease: "power3.out",
+    scrollTrigger: {
+      trigger: ".about-stats",
+      start: "top 85%",
+      toggleActions: "play none none reverse",
+    },
+  });
+
+  /* ---------- coda entrance ---------- */
+
+  gsap.from(".coda-title", {
+    yPercent: 110,
+    duration: 1.1,
+    stagger: 0.14,
+    ease: "power4.out",
+    scrollTrigger: {
+      trigger: ".coda",
+      start: "top 85%",
+      toggleActions: "play none none reverse",
+    },
+  });
+
+  gsap.from(".coda-mono", {
+    autoAlpha: 0,
+    duration: 1,
+    delay: 0.5,
+    scrollTrigger: {
+      trigger: ".coda",
+      start: "top 85%",
+      toggleActions: "play none none reverse",
+    },
+  });
+
+  /* ---------- poem sheet entrance ---------- */
+
+  gsap.from(".poem-sheet", {
+    y: 60,
+    autoAlpha: 0,
+    duration: 1,
+    ease: "power4.out",
+    scrollTrigger: {
+      trigger: ".poem-sheet",
+      start: "top 85%",
+      toggleActions: "play none none reverse",
+    },
+  });
+
+  gsap.from(".poem-block", {
+    y: 40,
+    autoAlpha: 0,
+    duration: 0.9,
+    stagger: 0.14,
+    ease: "power3.out",
+    scrollTrigger: {
+      trigger: ".poem-notes",
+      start: "top 86%",
       toggleActions: "play none none reverse",
     },
   });
