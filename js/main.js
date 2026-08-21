@@ -589,13 +589,6 @@ if (!REDUCED) {
     },
   });
 
-  // touch support: tap flips card instead of hover
-  if (window.matchMedia("(hover: none)").matches) {
-    document.querySelectorAll(".hof-card").forEach((card) => {
-      card.addEventListener("click", () => card.classList.toggle("is-flipped"));
-    });
-  }
-
   /* ---------- book shelf: staggered entrance ---------- */
 
   gsap.from(".book", {

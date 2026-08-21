@@ -195,9 +195,9 @@ a:focus-visible, button:focus-visible {
 
 .nav-tm {
   font-family: "IBM Plex Mono", monospace;
-  font-weight: 300;
-  font-size: 0.62rem;
-  letter-spacing: 0.2em;
+  font-weight: 400;
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
   color: var(--slate);
   margin-left: 0.7em;
 }
@@ -402,8 +402,9 @@ a:focus-visible, button:focus-visible {
   position: absolute;
   z-index: 3;
   padding: 0.55em 0.9em;
-  font-size: 0.62rem;
-  letter-spacing: 0.22em;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
   border: 2px solid var(--ink);
   box-shadow: var(--shadow-sm);
   user-select: none;
@@ -504,8 +505,10 @@ a:focus-visible, button:focus-visible {
   flex-direction: row;
   flex-wrap: wrap;
   gap: 0.9em;
-  font-size: 0.62rem;
-  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--ink);
 }
 
 .bh-meta span {
@@ -588,8 +591,9 @@ a:focus-visible, button:focus-visible {
 }
 
 .hs-no {
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
   color: var(--bg);
   background: var(--ink);
   padding: 0.4em 0.8em;
@@ -684,8 +688,9 @@ a:focus-visible, button:focus-visible {
 }
 
 .dragbar-hint {
-  font-size: 0.46rem;
-  letter-spacing: 0.22em;
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
   user-select: none;
 }
 
@@ -693,9 +698,10 @@ a:focus-visible, button:focus-visible {
   display: flex;
   justify-content: space-between;
   margin-top: 0.7rem;
-  font-size: 0.54rem;
-  letter-spacing: 0.26em;
-  color: var(--slate);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
 }
 
 /* ============ HALL OF FAME ============ */
@@ -744,7 +750,6 @@ a:focus-visible, button:focus-visible {
 }
 
 .hof-card {
-  perspective: 1400px;
   will-change: transform;
 }
 
@@ -760,23 +765,12 @@ a:focus-visible, button:focus-visible {
 
 .hof-inner {
   position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.75s var(--ease-out);
   aspect-ratio: 3 / 4.4;
   border: 3px solid var(--ink);
-}
-
-.hof-card:hover .hof-inner { transform: rotateY(180deg); }
-
-.hof-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  box-shadow: var(--shadow-md);
+  background: var(--bg-deep);
   overflow: hidden;
 }
-
-.hof-front { background: var(--bg-deep); box-shadow: var(--shadow-md); }
 
 .hof-img-wrap {
   position: absolute;
@@ -813,60 +807,12 @@ a:focus-visible, button:focus-visible {
   line-height: 1.25;
 }
 
-.hof-tag {
-  font-size: 0.5rem;
-  letter-spacing: 0.28em;
-  color: var(--ice);
-}
-
-.hof-back {
-  transform: rotateY(180deg);
-  background: var(--ink);
-  color: var(--bg);
-  padding: clamp(0.8rem, 1.4vw, 1.4rem);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 0.55em;
-}
-
-.hof-label {
-  font-size: 0.5rem;
-  letter-spacing: 0.3em;
-  color: var(--slate-2);
-  margin-bottom: auto;
-}
-
-.hof-back h3 {
-  font-size: clamp(0.85rem, 1.15vw, 1.1rem);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: 0.02em;
-}
-
 .hof-hours {
-  font-size: clamp(0.85rem, 1.2vw, 1.15rem);
+  font-size: clamp(0.7rem, 1vw, 0.95rem);
   font-weight: 400;
   color: var(--ice);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
 }
-
-.hof-back p {
-  font-size: clamp(0.62rem, 0.78vw, 0.75rem);
-  line-height: 1.55;
-  color: var(--slate-2);
-  max-width: 30ch;
-}
-
-.hof-genre {
-  font-size: 0.5rem;
-  letter-spacing: 0.26em;
-  color: var(--slate);
-  margin-top: 0.3em;
-}
-
-/* touch devices: tap flips */
-.hof-card.is-flipped .hof-inner { transform: rotateY(180deg); }
 
 /* ============ MANTRA (PINNED CODA) ============ */
 .mantra {
@@ -912,8 +858,9 @@ a:focus-visible, button:focus-visible {
   right: clamp(1.5rem, 6vw, 6rem);
   display: flex;
   justify-content: space-between;
-  font-size: 0.62rem;
-  letter-spacing: 0.3em;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
   color: var(--bg);
   z-index: 3;
 }
@@ -992,9 +939,10 @@ a:focus-visible, button:focus-visible {
   gap: 1rem;
   flex-wrap: wrap;
   padding-top: 1.4rem;
-  font-size: 0.58rem;
-  letter-spacing: 0.26em;
-  color: var(--slate);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--ice);
 }
 
 /* ============ POEM ============ */
@@ -1016,8 +964,9 @@ a:focus-visible, button:focus-visible {
 .poem-block { display: flex; flex-direction: column; gap: 0.85em; }
 
 .poem-sub {
-  font-size: 0.66rem;
-  letter-spacing: 0.3em;
+  font-size: 0.74rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
   background: var(--volt);
   color: var(--bg);
   padding: 0.5em 0.9em;
@@ -1092,12 +1041,57 @@ a:focus-visible, button:focus-visible {
 }
 
 .filmwall {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(1.2rem, 2.2vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.6rem, 5.5vh, 4.2rem);
   padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
 }
 
+.film-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+.film-group-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.film-group-label {
+  background: var(--ink);
+  color: var(--bg);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 0.5em 1em;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+}
+
+.fg-sci .film-group-label { box-shadow: 3px 3px 0 var(--volt); }
+.fg-drama .film-group-label { box-shadow: 3px 3px 0 var(--punch); }
+.fg-romance .film-group-label { box-shadow: 3px 3px 0 var(--acid); }
+
+.film-group-count {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+}
+
+.film-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.2rem, 2.2vw, 2rem);
+}
+
+.film-row .movie {
+  flex: 1 1 clamp(260px, 21vw, 360px);
+  max-width: 430px;
+}
 .book,
 .movie {
   position: relative;
@@ -1122,9 +1116,10 @@ a:focus-visible, button:focus-visible {
   color: var(--bg);
   border: 2px solid var(--ink);
   box-shadow: 3px 3px 0 var(--ink);
-  padding: 0.4em 0.8em;
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  padding: 0.45em 0.85em;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
 }
 
 .book:nth-child(3n+2) .book-no,
@@ -1142,9 +1137,10 @@ a:focus-visible, button:focus-visible {
 }
 
 .book-author {
-  font-size: 0.62rem;
-  letter-spacing: 0.3em;
-  color: var(--slate);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--ink);
   border-bottom: 2px solid var(--line);
   padding-bottom: 0.8em;
 }
@@ -1198,12 +1194,13 @@ a:focus-visible, button:focus-visible {
 }
 
 .genre-count {
-  font-size: 0.58rem;
-  letter-spacing: 0.25em;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
   background: var(--volt);
   color: var(--bg);
   border: 2px solid var(--ink);
-  padding: 0.45em 0.8em;
+  padding: 0.5em 0.9em;
   box-shadow: 3px 3px 0 var(--ink);
   white-space: nowrap;
 }
@@ -1224,8 +1221,9 @@ a:focus-visible, button:focus-visible {
 }
 
 .artist-label {
-  font-size: 0.56rem;
-  letter-spacing: 0.26em;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
   color: var(--ink);
   background: var(--bg-deep);
   border-left: 4px solid var(--volt);
@@ -1262,9 +1260,10 @@ a:focus-visible, button:focus-visible {
 }
 
 .track-artist {
-  font-size: 0.55rem;
-  letter-spacing: 0.2em;
-  color: var(--slate);
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--ink);
   text-transform: uppercase;
 }
 
@@ -1305,9 +1304,10 @@ a:focus-visible, button:focus-visible {
   color: var(--bg);
   border: 2px solid var(--ink);
   box-shadow: 3px 3px 0 var(--acid);
-  padding: 0.4em 0.8em;
-  font-size: 0.58rem;
-  letter-spacing: 0.24em;
+  padding: 0.45em 0.85em;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
   transform: rotate(3deg);
 }
 
@@ -1369,8 +1369,9 @@ a:focus-visible, button:focus-visible {
   align-items: center;
   gap: 1rem;
   padding: clamp(1rem, 3vh, 2rem) clamp(1.2rem, 4vw, 3rem);
-  font-size: 0.66rem;
-  letter-spacing: 0.3em;
+  font-size: 0.74rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
   color: var(--bg);
   z-index: 3;
 }
@@ -1383,8 +1384,9 @@ a:focus-visible, button:focus-visible {
 
 .lb-close {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.3em;
+  font-size: 0.74rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
   background: var(--punch);
   color: var(--bg);
   border: 2px solid var(--bg);
@@ -1419,9 +1421,10 @@ a:focus-visible, button:focus-visible {
 .lb-stage img.is-loaded { opacity: 1; }
 
 .lb-stage figcaption {
-  font-size: 0.62rem;
-  letter-spacing: 0.28em;
-  color: var(--slate-2);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--ice);
   text-align: center;
   max-width: 52ch;
 }
@@ -1447,10 +1450,6 @@ a:focus-visible, button:focus-visible {
 .lb-next:hover { transform: translate(3px, -50%); }
 
 /* ============ RESPONSIVE ============ */
-@media (max-width: 1100px) {
-  .filmwall { grid-template-columns: repeat(3, 1fr); }
-}
-
 @media (max-width: 720px) {
   .nav { height: 56px; }
   .nav-links a { font-size: 0.56rem; letter-spacing: 0.14em; }
@@ -1461,7 +1460,7 @@ a:focus-visible, button:focus-visible {
   .hero-sub { font-size: 0.58rem; letter-spacing: 0.14em; }
   .hero-sub span { box-shadow: 3px 3px 0 var(--ink); }
 
-  .sticker { font-size: 0.5rem; padding: 0.4em 0.7em; box-shadow: 3px 3px 0 var(--ink); }
+  .sticker { font-size: 0.58rem; padding: 0.4em 0.7em; box-shadow: 3px 3px 0 var(--ink); }
   .st-3 { display: none; }
 
   .bh-left h2 { text-shadow: 4px 4px 0 var(--ink); }
@@ -1479,14 +1478,13 @@ a:focus-visible, button:focus-visible {
 
   .lb-stage img { max-height: 64vh; box-shadow: 6px 6px 0 var(--volt); }
   .lb-nav { width: 40px; height: 40px; font-size: 1rem; }
-  .lb-stage figcaption { font-size: 0.55rem; }
-  .lb-close { font-size: 0.56rem; }
+  .lb-stage figcaption { font-size: 0.62rem; }
+  .lb-close { font-size: 0.66rem; }
 
   .hof-row { gap: clamp(1.5rem, 6vw, 2.5rem); padding: 0 clamp(1rem, 5vw, 1.5rem); }
   .hof-item { width: min(70vw, 320px); }
   .hof-item:nth-child(n) { transform: none; }
   .hof-end { width: 220px; padding-right: 2rem; }
-  .hof-back p { display: none; }
   .hof-quote { font-size: 0.85rem; }
 
   .mantra-line h3 { font-size: clamp(1.9rem, 9.5vw, 3rem); white-space: normal; }
@@ -1501,7 +1499,6 @@ a:focus-visible, button:focus-visible {
   .poem-stamp { right: 12px; }
 
   .shelf { grid-template-columns: repeat(2, 1fr); }
-  .filmwall { grid-template-columns: repeat(2, 1fr); }
   .playlist { columns: 1; }
 
   .footer-top { align-items: flex-start; flex-direction: column; }
@@ -1510,7 +1507,6 @@ a:focus-visible, button:focus-visible {
 @media (max-width: 480px) {
   .hof-item { width: min(76vw, 300px); }
   .shelf { grid-template-columns: 1fr; }
-  .filmwall { grid-template-columns: 1fr; }
 }
 
 /* ============ REDUCED MOTION ============ */
@@ -1518,7 +1514,6 @@ a:focus-visible, button:focus-visible {
   .grain { animation: none; }
   .hs-line { animation: none; }
   .ticker-track { animation: none; }
-  .hof-inner { transition: none; }
   .hof-img-wrap img { transition: none; }
   * { scroll-behavior: auto !important; }
 }
