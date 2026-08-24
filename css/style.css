@@ -1210,6 +1210,27 @@ a:focus-visible, button:focus-visible {
   transition: background 0.3s var(--ease-out), transform 0.3s var(--ease-out);
 }
 
+/* rows with a poster get a 4th column for the thumbnail */
+.idx-row:has(.idx-poster) {
+  grid-template-columns: 4.5rem 4.9rem minmax(0, 1.4fr) minmax(0, 1fr);
+}
+
+/* poster thumbnails in FILMS/SERIES rows */
+.idx-poster {
+  width: 72px;
+  height: 96px;
+  object-fit: cover;
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  background: var(--bg-deep);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+
+.idx-row:hover .idx-poster {
+  transform: scale(1.05);
+  box-shadow: 6px 6px 0 var(--punch);
+}
+
 .idx-row:nth-child(odd) { background: rgba(255, 255, 255, 0.35); }
 
 .idx-row:hover {
@@ -1686,6 +1707,10 @@ a:focus-visible, button:focus-visible {
 
   .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
   .idx-line { grid-column: 2; }
+  /* poster rows on mobile: number | poster | title, quote below */
+  .idx-row:has(.idx-poster) { grid-template-columns: 3.2rem 3.6rem minmax(0, 1fr); grid-template-rows: auto auto; }
+  .idx-row:has(.idx-poster) .idx-poster { width: 52px; height: 68px; }
+  .idx-row:has(.idx-poster) .idx-line { grid-column: 3; }
   /* music index rows on mobile: number | title, artist below title */
   #panel-music .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
   #panel-music .idx-artist { grid-column: 2; justify-self: start; text-align: left; }
