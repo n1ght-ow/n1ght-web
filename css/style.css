@@ -1270,6 +1270,11 @@ a:focus-visible, button:focus-visible {
 /* sport rows */
 .idx-team .idx-mid { gap: 0.5em; }
 
+/* center the logo on the crest column axis (had been left-floated, looked off) */
+.idx-team .idx-mid {
+  align-items: center;
+}
+
 .idx-logo {
   height: clamp(40px, 4.5vw, 60px);
   width: auto;
@@ -1281,20 +1286,6 @@ a:focus-visible, button:focus-visible {
 .idx-logo-wide {
   height: auto;
   width: min(160px, 60%);
-}
-
-.team-sport-idx {
-  position: absolute;
-  font-size: 0.62rem;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  color: var(--bg);
-  background: var(--ink);
-  border: 2px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--acid);
-  padding: 0.35em 0.7em;
-  transform: rotate(-2deg);
-  margin-left: 4.5rem;
 }
 
 /* ---- music drawer ---- */
@@ -1648,7 +1639,6 @@ a:focus-visible, button:focus-visible {
 
   .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
   .idx-line { grid-column: 2; }
-  .team-sport-idx { margin-left: 3.2rem; font-size: 0.56rem; }
   /* music index rows on mobile: number | title, artist below title */
   #panel-music .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
   #panel-music .idx-artist { grid-column: 2; justify-self: start; text-align: left; }
