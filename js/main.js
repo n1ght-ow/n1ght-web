@@ -645,10 +645,19 @@ function initNetEaseLinks() {
   const looksMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua);
   const isDesktop = /Win|Mac|Linux/.test(navigator.platform || "") && !looksMobile;
 
-  // Try to launch the desktop app via orpheus:// scheme (user gesture required).
-  // Returns true if the scheme navigation was issued without error.
+  // Launch the desktop app via the OFFICIAL orpheus:// deep-link format.
+  // NetEase's own web player uses:
+  //   location.href = "orpheus://" + base64(JSON.stringify({type,id,cmd:"play"}))
+  // (verified in music.163.com web core JS). This opens the app AND starts
+  // playing the exact song.
+  function buildAppUrl(id) {
+    const payload = JSON.stringify({ type: "song", id: id, cmd: "play" });
+    const b64 = btoa(unescape(encodeURIComponent(payload)));
+    return "orpheus://" + b64;
+  }
+
   function tryAppLaunch(id) {
-    const url = "orpheus://song/" + id + "/?autoplay=1";
+    const url = buildAppUrl(id);
     try {
       // anchor + click is the most reliable custom-scheme trigger
       const a = document.createElement("a");
