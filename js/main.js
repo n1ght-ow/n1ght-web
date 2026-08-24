@@ -593,46 +593,83 @@ function initArchiveTabs() {
 
 initArchiveTabs();
 
-/* ---------- music drawer: expand / collapse the full track list ---------- */
+/* ---------- group accordions: FILMS groups + MUSIC genres ----------
+   Mutually exclusive per panel: opening one group collapses its siblings.
+   Clicking an open group closes it (all closed is allowed). */
 
-function initMusicDrawer() {
-  const toggle = document.getElementById("music-drawer-toggle");
-  const drawer = document.getElementById("music-drawer");
-  if (!toggle || !drawer) return;
+function initGroupAccordion() {
+  // each entry: [panelSelector, headSelector, bodySelector]
+  const CONFIG = [
+    ["#panel-films", ".film-group-head", ".idx-list"],
+    ["#panel-music", ".genre-head", ".track-index"],
+  ];
 
-  const open = () => {
-    drawer.classList.add("is-open");
-    toggle.setAttribute("aria-expanded", "true");
-    toggle.querySelector("span").textContent = "HIDE FULL LIST — 232 TRACKS";
-    gsap.to(drawer, {
-      height: () => drawer.scrollHeight,
-      duration: 0.75,
-      ease: "power3.inOut",
-      onComplete: () => ScrollTrigger.refresh(),
+  CONFIG.forEach(([panelSel, headSel, bodySel]) => {
+    const panel = document.querySelector(panelSel);
+    if (!panel) return;
+
+    const groups = Array.from(panel.querySelectorAll(headSel)).map(head => ({
+      head,
+      body: head.nextElementSibling, // idx-list / track-index follows the head
+    }));
+    if (!groups.length) return;
+
+    groups.forEach((g) => {
+      g.head.classList.add("acc-head");
+      g.head.setAttribute("role", "button");
+      g.head.setAttribute("tabindex", "0");
+      g.head.setAttribute("aria-expanded", "false");
+      g.head.insertAdjacentHTML("beforeend", '<span class="acc-arrow mono">\u25B8</span>');
+
+      const setOpen = (open, animate) => {
+        if (g.open === open) return;
+        g.open = open;
+        g.head.setAttribute("aria-expanded", open ? "true" : "false");
+        g.head.classList.toggle("is-open", open);
+        if (open) {
+          gsap.set(g.body, { height: "auto" });
+          gsap.from(g.body, {
+            height: 0,
+            duration: animate && !REDUCED ? 0.65 : 0,
+            ease: "power3.inOut",
+            onComplete: () => {
+              gsap.set(g.body, { height: "auto" });
+              ScrollTrigger.refresh();
+            },
+          });
+        } else {
+          gsap.to(g.body, {
+            height: 0,
+            duration: animate && !REDUCED ? 0.5 : 0,
+            ease: "power3.inOut",
+            onComplete: () => ScrollTrigger.refresh(),
+          });
+        }
+      };
+      g.setOpen = setOpen;
+      g.open = false;
+
+      const toggle = () => {
+        const willOpen = !g.open;
+        // mutual exclusion inside the same panel
+        groups.forEach((other) => { if (other !== g && other.open) other.setOpen(false, true); });
+        setOpen(willOpen, true);
+      };
+
+      g.head.addEventListener("click", toggle);
+      g.head.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+      });
+
+      // start collapsed
+      gsap.set(g.body, { height: 0, overflow: "hidden" });
     });
-  };
-
-  const close = () => {
-    drawer.classList.remove("is-open");
-    toggle.setAttribute("aria-expanded", "false");
-    toggle.querySelector("span").textContent = "FULL LIST — 232 TRACKS";
-    gsap.to(drawer, {
-      height: 0,
-      duration: 0.6,
-      ease: "power3.inOut",
-      onComplete: () => ScrollTrigger.refresh(),
-    });
-  };
-
-  toggle.addEventListener("click", () => {
-    if (toggle.getAttribute("aria-expanded") === "true") close();
-    else open();
   });
 }
 
-initMusicDrawer();
+initGroupAccordion();
 
-/* ---------- similar tracks: click a row to open the song on NetEase ---------- */
+/* ---------- similar tracks: click a card to open the song on NetEase ---------- */
 
 function initNetEaseLinks() {
   const drawer = document.getElementById("music-drawer");
@@ -648,8 +685,6 @@ function initNetEaseLinks() {
   // Launch the desktop app via the OFFICIAL orpheus:// deep-link format.
   // NetEase's own web player uses:
   //   location.href = "orpheus://" + base64(JSON.stringify({type,id,cmd:"play"}))
-  // (verified in music.163.com web core JS). This opens the app AND starts
-  // playing the exact song.
   function buildAppUrl(id) {
     const payload = JSON.stringify({ type: "song", id: id, cmd: "play" });
     const b64 = btoa(unescape(encodeURIComponent(payload)));
@@ -659,7 +694,6 @@ function initNetEaseLinks() {
   function tryAppLaunch(id) {
     const url = buildAppUrl(id);
     try {
-      // anchor + click is the most reliable custom-scheme trigger
       const a = document.createElement("a");
       a.href = url;
       a.style.display = "none";
@@ -673,8 +707,6 @@ function initNetEaseLinks() {
   }
 
   // Dual strategy: prefer the desktop app; fall back to the web player.
-  // After issuing the scheme, wait a moment — if the app took focus the page
-  // will have been hidden (document.hidden), otherwise fall back to web.
   function openSong(id) {
     const webUrl = "https://music.163.com/#/song?id=" + id;
     if (!isDesktop) {
@@ -686,7 +718,6 @@ function initNetEaseLinks() {
       window.open(webUrl, "_blank", "noopener");
       return;
     }
-    // if the app opened, the page loses focus; poll briefly for that signal
     let stillVisible = true;
     const onHide = () => { stillVisible = false; };
     document.addEventListener("visibilitychange", onHide, { once: true });
@@ -695,13 +726,12 @@ function initNetEaseLinks() {
       document.removeEventListener("visibilitychange", onHide);
       window.removeEventListener("blur", onHide);
       if (stillVisible) {
-        // app not installed / scheme not handled — open the web player instead
         window.open(webUrl, "_blank", "noopener");
       }
     }, 1200);
   }
 
-  // event delegation: any .track-sim row with data-song-id opens the song
+  // event delegation: any .track-sim card with data-song-id opens the song
   drawer.addEventListener("click", (e) => {
     const row = e.target.closest(".track-sim");
     if (!row) return;

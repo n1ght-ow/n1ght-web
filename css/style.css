@@ -1356,49 +1356,8 @@ a:focus-visible, button:focus-visible {
   width: min(160px, 60%);
 }
 
-/* ---- music drawer ---- */
-.drawer-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.8em;
-  width: 100%;
-  font-family: "Notable", "Space Grotesk", sans-serif;
-  font-size: clamp(0.72rem, 0.95vw, 0.95rem);
-  font-weight: 400;
-  letter-spacing: 0.16em;
-  color: var(--bg);
-  background: var(--ink);
-  border: 2px solid var(--ink);
-  box-shadow: 4px 4px 0 var(--punch);
-  padding: 0.9em 1.2em;
-  cursor: pointer;
-  transition: transform 0.3s var(--ease-out);
-}
-
-.drawer-toggle:hover { transform: translate(-2px, -2px); }
-
-.drawer-toggle i {
-  flex-shrink: 0;
-  width: 10px;
-  height: 10px;
-  background: var(--acid);
-  margin-left: auto;
-  transform: rotate(45deg);
-  transition: transform 0.35s var(--ease-out);
-}
-
-.drawer-toggle[aria-expanded="true"] i { transform: rotate(135deg); }
-
-.music-drawer {
-  overflow: hidden;
-  height: 0;
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-out);
-}
-
-.music-drawer.is-open {
-  opacity: 1;
-}
+/* music drawer container: content shown directly (group accordion replaced
+   the old FULL LIST toggle — its button styles removed) */
 
 .playlist {
   display: flex;
@@ -1553,6 +1512,63 @@ a:focus-visible, button:focus-visible {
 .idx-card.track-sim:hover .idx-title::after {
   opacity: 1;
   transform: translate(2px, 0);
+}
+
+/* ---------- group accordion (FILMS groups + MUSIC genres) ---------- */
+.acc-head {
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+
+.acc-head:hover {
+  background: var(--paper);
+  transform: translateX(4px);
+}
+
+.acc-head:focus-visible {
+  outline: 3px solid var(--acid);
+  outline-offset: 2px;
+}
+
+/* arrow indicator at the far right of the head row */
+.acc-arrow {
+  margin-left: auto;
+  font-size: 0.9rem;
+  color: var(--ink);
+  transition: transform 0.35s var(--ease-out);
+}
+
+.acc-head.is-open .acc-arrow {
+  transform: rotate(90deg);
+}
+
+/* heads are flex rows so label + count + arrow lay out on one line */
+.film-group-head.acc-head,
+.genre-head.acc-head {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  padding: 0.55em 0.9em;
+  border: 2px solid var(--ink);
+  background: var(--bg-deep);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+/* count chip sits right before the arrow */
+.film-group-head.acc-head .film-group-count,
+.genre-head.acc-head .genre-count {
+  margin-left: auto;
+}
+
+.acc-head.is-open {
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--volt);
+}
+
+/* animated bodies must not leak while closed */
+.film-group .idx-list,
+.track-index {
+  overflow: hidden;
 }
 
 /* ============ PHOTO LIGHTBOX ============ */
