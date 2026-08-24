@@ -1342,14 +1342,13 @@ a:focus-visible, button:focus-visible {
 }
 
 .playlist {
-  columns: 2;
-  column-gap: clamp(1.4rem, 2.6vw, 2.4rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.6rem, 3.5vh, 2.6rem);
   padding-top: clamp(1.8rem, 4vh, 3rem);
 }
 
 .genre {
-  break-inside: avoid;
-  margin-bottom: clamp(1.4rem, 2.6vw, 2.4rem);
   background: var(--paper);
   border: 3px solid var(--ink);
   box-shadow: var(--shadow-md);
@@ -1394,67 +1393,54 @@ a:focus-visible, button:focus-visible {
 .genre:nth-child(3n+2) .genre-count { background: var(--punch); }
 .genre:nth-child(3n+3) .genre-count { background: var(--acid); color: var(--ink); }
 
-.track-wall {
+/* track index (music panel) — rows follow the .idx-row system */
+.track-index {
   display: flex;
   flex-direction: column;
-  gap: 1.05rem;
+  gap: clamp(1rem, 2.4vh, 1.6rem);
 }
 
-.artist-group {
+.artist-row {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
 }
 
+.artist-tracks {
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid var(--line);
+}
+
 .artist-label {
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 400;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   color: var(--ink);
   background: var(--bg-deep);
   border-left: 4px solid var(--volt);
-  padding: 0.32em 0.7em;
+  padding: 0.4em 0.8em;
   width: max-content;
 }
 
 .genre:nth-child(3n+2) .artist-label { border-left-color: var(--punch); }
 .genre:nth-child(3n+3) .artist-label { border-left-color: var(--acid); }
 
-.track-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
+/* music rows: number | title | artist, no italic quote column */
+#panel-music .idx-row {
+  grid-template-columns: 4.5rem minmax(0, 1.6fr) minmax(0, 0.9fr);
+  padding: clamp(0.85rem, 2vh, 1.25rem) 0.4rem;
 }
 
-.track-chip {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.65em;
-  border: 2px solid var(--ink);
-  background: var(--bg);
-  padding: 0.45em 0.8em;
-  font-family: "Calistoga", Georgia, serif;
-  font-size: 0.68rem;
+#panel-music .idx-artist {
+  font-size: 0.72rem;
   font-weight: 400;
-  color: var(--ink);
-  transition: background 0.25s var(--ease-out), color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
-}
-
-.track-chip:hover {
-  background: var(--ink);
-  color: var(--bg);
-  transform: translate(-2px, -2px);
-}
-
-.track-artist {
-  font-size: 0.62rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
-  color: var(--ink);
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
   text-transform: uppercase;
+  justify-self: end;
+  text-align: right;
 }
-
-.track-chip:hover .track-artist { color: var(--ice); }
 
 /* ============ PHOTO LIGHTBOX ============ */
 .hs-card { cursor: pointer; }
@@ -1631,7 +1617,10 @@ a:focus-visible, button:focus-visible {
   .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
   .idx-line { grid-column: 2; }
   .team-sport-idx { margin-left: 3.2rem; font-size: 0.56rem; }
-  .playlist { columns: 1; }
+  /* music index rows on mobile: number | title, artist below title */
+  #panel-music .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
+  #panel-music .idx-artist { grid-column: 2; justify-self: start; text-align: left; }
+  .playlist { gap: 1.4rem; }
   .coda-title { font-size: clamp(2rem, 11vw, 4rem); }
 
   .footer-top { align-items: flex-start; flex-direction: column; }
