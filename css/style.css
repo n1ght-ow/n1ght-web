@@ -1442,6 +1442,38 @@ a:focus-visible, button:focus-visible {
   text-align: right;
 }
 
+/* similar tracks: clickable rows with NetEase hint */
+.track-sim {
+  cursor: pointer;
+}
+
+.track-sim .idx-title {
+  position: relative;
+  transition: color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.track-sim .idx-title::after {
+  content: "↗";
+  display: inline-block;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.6em;
+  margin-left: 0.45em;
+  color: var(--slate-2);
+  opacity: 0;
+  transform: translate(-4px, 2px);
+  transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.track-sim:hover .idx-title {
+  color: var(--volt);
+}
+
+.track-sim:hover .idx-title::after {
+  opacity: 1;
+  transform: translate(0, 0);
+  color: var(--volt);
+}
+
 /* ============ PHOTO LIGHTBOX ============ */
 .hs-card { cursor: pointer; }
 

@@ -603,7 +603,7 @@ function initMusicDrawer() {
   const open = () => {
     drawer.classList.add("is-open");
     toggle.setAttribute("aria-expanded", "true");
-    toggle.querySelector("span").textContent = "HIDE FULL LIST — 132 TRACKS";
+    toggle.querySelector("span").textContent = "HIDE FULL LIST — 232 TRACKS";
     gsap.to(drawer, {
       height: () => drawer.scrollHeight,
       duration: 0.75,
@@ -615,7 +615,7 @@ function initMusicDrawer() {
   const close = () => {
     drawer.classList.remove("is-open");
     toggle.setAttribute("aria-expanded", "false");
-    toggle.querySelector("span").textContent = "FULL LIST — 132 TRACKS";
+    toggle.querySelector("span").textContent = "FULL LIST — 232 TRACKS";
     gsap.to(drawer, {
       height: 0,
       duration: 0.6,
@@ -631,6 +631,35 @@ function initMusicDrawer() {
 }
 
 initMusicDrawer();
+
+/* ---------- similar tracks: click a row to open the song on NetEase ---------- */
+
+function initNetEaseLinks() {
+  const drawer = document.getElementById("music-drawer");
+  if (!drawer) return;
+
+  // event delegation: any .track-sim row with data-song-id opens the song page
+  drawer.addEventListener("click", (e) => {
+    const row = e.target.closest(".track-sim");
+    if (!row) return;
+    const id = row.getAttribute("data-song-id");
+    if (!id) return;
+    window.open("https://music.163.com/#/song?id=" + id, "_blank", "noopener");
+  });
+
+  // keyboard accessibility: Enter/Space opens too
+  drawer.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const row = e.target.closest(".track-sim");
+    if (!row) return;
+    const id = row.getAttribute("data-song-id");
+    if (!id) return;
+    e.preventDefault();
+    window.open("https://music.163.com/#/song?id=" + id, "_blank", "noopener");
+  });
+}
+
+initNetEaseLinks();
 
 /* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
