@@ -1119,11 +1119,29 @@ a:focus-visible, button:focus-visible {
 .fg-drama .film-group-label { box-shadow: 3px 3px 0 var(--punch); }
 .fg-romance .film-group-label { box-shadow: 3px 3px 0 var(--acid); }
 
-/* series panel: alternate accent shadows per group */
-#panel-series .film-group:nth-child(4n+1) .film-group-label { box-shadow: 3px 3px 0 var(--volt); }
-#panel-series .film-group:nth-child(4n+2) .film-group-label { box-shadow: 3px 3px 0 var(--punch); }
-#panel-series .film-group:nth-child(4n+3) .film-group-label { box-shadow: 3px 3px 0 var(--acid); }
-#panel-series .film-group:nth-child(4n+4) .film-group-label { box-shadow: 3px 3px 0 var(--ice); }
+/* per-group accent backgrounds (FILMS): label box takes its own color */
+.fg-crime .film-group-label { background: var(--punch); border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.fg-sci .film-group-label { background: var(--volt); border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.fg-drama .film-group-label { background: var(--acid); color: var(--ink); border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+.fg-romance .film-group-label { background: var(--ice); color: var(--ink); border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+
+/* open accordion shadow follows the group accent */
+.fg-crime .acc-head.is-open { box-shadow: 4px 4px 0 var(--punch); }
+.fg-sci .acc-head.is-open { box-shadow: 4px 4px 0 var(--volt); }
+.fg-drama .acc-head.is-open { box-shadow: 4px 4px 0 var(--acid); }
+.fg-romance .acc-head.is-open { box-shadow: 4px 4px 0 var(--ice); }
+
+/* series panel: alternate accent shadows per group + colored label backgrounds */
+#panel-series .film-group:nth-child(4n+1) .film-group-label { background: var(--volt); box-shadow: 3px 3px 0 var(--ink); }
+#panel-series .film-group:nth-child(4n+2) .film-group-label { background: var(--punch); box-shadow: 3px 3px 0 var(--ink); }
+#panel-series .film-group:nth-child(4n+3) .film-group-label { background: var(--acid); color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+#panel-series .film-group:nth-child(4n+4) .film-group-label { background: var(--ice); color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+
+/* open accordion shadow follows the group accent */
+#panel-series .film-group:nth-child(4n+1) .acc-head.is-open { box-shadow: 4px 4px 0 var(--volt); }
+#panel-series .film-group:nth-child(4n+2) .acc-head.is-open { box-shadow: 4px 4px 0 var(--punch); }
+#panel-series .film-group:nth-child(4n+3) .acc-head.is-open { box-shadow: 4px 4px 0 var(--acid); }
+#panel-series .film-group:nth-child(4n+4) .acc-head.is-open { box-shadow: 4px 4px 0 var(--ice); }
 
 .film-group-count {
   font-size: 0.7rem;
@@ -1564,6 +1582,10 @@ a:focus-visible, button:focus-visible {
   background: var(--paper);
   box-shadow: 4px 4px 0 var(--volt);
 }
+
+/* music genres follow their count-chip color rotation */
+#panel-music .genre:nth-child(3n+2) .acc-head.is-open { box-shadow: 4px 4px 0 var(--punch); }
+#panel-music .genre:nth-child(3n+3) .acc-head.is-open { box-shadow: 4px 4px 0 var(--acid); }
 
 /* animated bodies must not leak while closed */
 .film-group .idx-list,
