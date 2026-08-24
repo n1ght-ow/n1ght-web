@@ -1119,6 +1119,12 @@ a:focus-visible, button:focus-visible {
 .fg-drama .film-group-label { box-shadow: 3px 3px 0 var(--punch); }
 .fg-romance .film-group-label { box-shadow: 3px 3px 0 var(--acid); }
 
+/* series panel: alternate accent shadows per group */
+#panel-series .film-group:nth-child(4n+1) .film-group-label { box-shadow: 3px 3px 0 var(--volt); }
+#panel-series .film-group:nth-child(4n+2) .film-group-label { box-shadow: 3px 3px 0 var(--punch); }
+#panel-series .film-group:nth-child(4n+3) .film-group-label { box-shadow: 3px 3px 0 var(--acid); }
+#panel-series .film-group:nth-child(4n+4) .film-group-label { box-shadow: 3px 3px 0 var(--ice); }
+
 .film-group-count {
   font-size: 0.7rem;
   font-weight: 400;
@@ -1237,7 +1243,7 @@ a:focus-visible, button:focus-visible {
 }
 
 .idx-title {
-  font-family: "Calistoga", Georgia, serif;
+  font-family: "Calistoga", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
   font-size: clamp(1.05rem, 1.3vw, 1.4rem);
   font-weight: 400;
   letter-spacing: 0;
@@ -1253,7 +1259,7 @@ a:focus-visible, button:focus-visible {
 }
 
 .idx-line {
-  font-family: "Instrument Serif", Georgia, serif;
+  font-family: "Instrument Serif", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
   font-style: italic;
   font-size: clamp(0.95rem, 1.15vw, 1.1rem);
   line-height: 1.55;
