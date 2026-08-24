@@ -638,13 +638,67 @@ function initNetEaseLinks() {
   const drawer = document.getElementById("music-drawer");
   if (!drawer) return;
 
-  // event delegation: any .track-sim row with data-song-id opens the song page
+  // desktop platform check: only try the orpheus:// app scheme on Win/Mac/Linux
+  // (belt-and-braces: check platform AND user agent so mobile browsers never
+  // get the desktop scheme even when the platform string is unreliable)
+  const ua = navigator.userAgent || "";
+  const looksMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua);
+  const isDesktop = /Win|Mac|Linux/.test(navigator.platform || "") && !looksMobile;
+
+  // Try to launch the desktop app via orpheus:// scheme (user gesture required).
+  // Returns true if the scheme navigation was issued without error.
+  function tryAppLaunch(id) {
+    const url = "orpheus://song/" + id + "/?autoplay=1";
+    try {
+      // anchor + click is the most reliable custom-scheme trigger
+      const a = document.createElement("a");
+      a.href = url;
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  // Dual strategy: prefer the desktop app; fall back to the web player.
+  // After issuing the scheme, wait a moment — if the app took focus the page
+  // will have been hidden (document.hidden), otherwise fall back to web.
+  function openSong(id) {
+    const webUrl = "https://music.163.com/#/song?id=" + id;
+    if (!isDesktop) {
+      window.open(webUrl, "_blank", "noopener");
+      return;
+    }
+    const launched = tryAppLaunch(id);
+    if (!launched) {
+      window.open(webUrl, "_blank", "noopener");
+      return;
+    }
+    // if the app opened, the page loses focus; poll briefly for that signal
+    let stillVisible = true;
+    const onHide = () => { stillVisible = false; };
+    document.addEventListener("visibilitychange", onHide, { once: true });
+    window.addEventListener("blur", onHide, { once: true });
+    setTimeout(() => {
+      document.removeEventListener("visibilitychange", onHide);
+      window.removeEventListener("blur", onHide);
+      if (stillVisible) {
+        // app not installed / scheme not handled — open the web player instead
+        window.open(webUrl, "_blank", "noopener");
+      }
+    }, 1200);
+  }
+
+  // event delegation: any .track-sim row with data-song-id opens the song
   drawer.addEventListener("click", (e) => {
     const row = e.target.closest(".track-sim");
     if (!row) return;
     const id = row.getAttribute("data-song-id");
     if (!id) return;
-    window.open("https://music.163.com/#/song?id=" + id, "_blank", "noopener");
+    openSong(id);
   });
 
   // keyboard accessibility: Enter/Space opens too
@@ -655,7 +709,7 @@ function initNetEaseLinks() {
     const id = row.getAttribute("data-song-id");
     if (!id) return;
     e.preventDefault();
-    window.open("https://music.163.com/#/song?id=" + id, "_blank", "noopener");
+    openSong(id);
   });
 }
 
