@@ -1452,7 +1452,7 @@ a:focus-visible, button:focus-visible {
 .genre:nth-child(3n+2) .genre-count { background: var(--punch); }
 .genre:nth-child(3n+3) .genre-count { background: var(--acid); color: var(--ink); }
 
-/* track index (music panel) — rows follow the .idx-row system */
+/* track cards (music panel): grid of small song cards, 3-5 per row */
 .track-index {
   display: flex;
   flex-direction: column;
@@ -1466,9 +1466,9 @@ a:focus-visible, button:focus-visible {
 }
 
 .artist-tracks {
-  display: flex;
-  flex-direction: column;
-  border-top: 2px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: clamp(0.7rem, 1.4vw, 1rem);
 }
 
 .artist-label {
@@ -1485,52 +1485,76 @@ a:focus-visible, button:focus-visible {
 .genre:nth-child(3n+2) .artist-label { border-left-color: var(--punch); }
 .genre:nth-child(3n+3) .artist-label { border-left-color: var(--acid); }
 
-/* music rows: number | title | artist, no italic quote column */
-#panel-music .idx-row {
-  grid-template-columns: 4.5rem minmax(0, 1.6fr) minmax(0, 0.9fr);
-  padding: clamp(0.85rem, 2vh, 1.25rem) 0.4rem;
+/* song card */
+.idx-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  padding: clamp(0.7rem, 1.3vw, 1rem) clamp(0.8rem, 1.4vw, 1.1rem);
+  background: var(--bg);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow-sm);
+  transition: background 0.3s var(--ease-out), transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
 }
 
-#panel-music .idx-artist {
-  font-size: 0.72rem;
+.idx-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.idx-card .idx-title {
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: clamp(0.72rem, 0.95vw, 0.92rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.idx-card .idx-artist {
+  font-size: 0.62rem;
   font-weight: 400;
   letter-spacing: 0.14em;
   color: var(--ink-soft);
   text-transform: uppercase;
-  justify-self: end;
-  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* similar tracks: clickable rows with NetEase hint */
-.track-sim {
+/* similar tracks: clickable cards with NetEase hint */
+.idx-card.track-sim {
   cursor: pointer;
 }
 
-.track-sim .idx-title {
-  position: relative;
-  transition: color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+.idx-card.track-sim:hover {
+  background: var(--acid);
 }
 
-.track-sim .idx-title::after {
+.idx-card.track-sim .idx-title {
+  position: relative;
+  padding-right: 0.8em;
+}
+
+.idx-card.track-sim .idx-title::after {
   content: "↗";
-  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 0;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.6em;
-  margin-left: 0.45em;
-  color: var(--slate-2);
-  opacity: 0;
-  transform: translate(-4px, 2px);
+  font-size: 0.62em;
+  color: var(--ink);
+  opacity: 0.4;
   transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out);
 }
 
-.track-sim:hover .idx-title {
-  color: var(--volt);
-}
-
-.track-sim:hover .idx-title::after {
+.idx-card.track-sim:hover .idx-title::after {
   opacity: 1;
-  transform: translate(0, 0);
-  color: var(--volt);
+  transform: translate(2px, 0);
 }
 
 /* ============ PHOTO LIGHTBOX ============ */
@@ -1711,9 +1735,8 @@ a:focus-visible, button:focus-visible {
   .idx-row:has(.idx-poster) { grid-template-columns: 3.2rem 3.6rem minmax(0, 1fr); grid-template-rows: auto auto; }
   .idx-row:has(.idx-poster) .idx-poster { width: 52px; height: 68px; }
   .idx-row:has(.idx-poster) .idx-line { grid-column: 3; }
-  /* music index rows on mobile: number | title, artist below title */
-  #panel-music .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
-  #panel-music .idx-artist { grid-column: 2; justify-self: start; text-align: left; }
+  /* music cards on mobile: single column fallback via minmax */
+  .artist-tracks { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
   .playlist { gap: 1.4rem; }
   .coda-title { font-size: clamp(2rem, 11vw, 4rem); }
 
