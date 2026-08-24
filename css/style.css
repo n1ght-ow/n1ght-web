@@ -1291,57 +1291,6 @@ a:focus-visible, button:focus-visible {
   margin-left: 4.5rem;
 }
 
-/* ---- music picks ---- */
-.picks-head {
-  font-size: 0.7rem;
-  font-weight: 400;
-  letter-spacing: 0.22em;
-  color: var(--ink);
-  background: var(--acid);
-  border: 2px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--ink);
-  padding: 0.6em 1em;
-  width: max-content;
-  margin-bottom: 1.2rem;
-}
-
-.pick-list {
-  display: flex;
-  flex-direction: column;
-  border-top: 3px solid var(--ink);
-  margin-bottom: clamp(1.8rem, 4vh, 3rem);
-}
-
-.pick-row {
-  display: grid;
-  grid-template-columns: 4.5rem minmax(0, 1.2fr) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(0.9rem, 2vw, 2.2rem);
-  padding: clamp(1rem, 2.2vh, 1.5rem) 0.4rem;
-  border-bottom: 2px solid var(--line);
-  transition: background 0.3s var(--ease-out), transform 0.3s var(--ease-out);
-}
-
-.pick-row:nth-child(odd) { background: rgba(255, 255, 255, 0.35); }
-
-.pick-row:hover {
-  background: var(--paper);
-  transform: translateX(6px);
-}
-
-.pick-no {
-  font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  color: var(--ink);
-  background: var(--bg-deep);
-  border: 2px solid var(--ink);
-  padding: 0.4em 0.7em;
-  width: max-content;
-}
-
-.pick-row:hover .pick-no { background: var(--volt); color: var(--bg); }
-
 /* ---- music drawer ---- */
 .drawer-toggle {
   display: flex;
@@ -1675,8 +1624,6 @@ a:focus-visible, button:focus-visible {
 
   .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
   .idx-line { grid-column: 2; }
-  .pick-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
-  .pick-row .idx-line { grid-column: 2; }
   .team-sport-idx { margin-left: 3.2rem; font-size: 0.56rem; }
   .playlist { columns: 1; }
   .coda-title { font-size: clamp(2rem, 11vw, 4rem); }

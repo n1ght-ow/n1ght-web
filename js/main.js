@@ -536,7 +536,7 @@ function initArchiveTabs() {
     if (idx === current && !instant) return;
     current = idx;
     showMeta(idx);
-    const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .pick-row, .film-group, .genre")) : [];
+    const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .film-group, .genre")) : [];
     if (instant) {
       gsap.set(rows, { autoAlpha: 1, y: 0 });
       gsap.set(panels[idx], { clipPath: "inset(0 0 0 0%)" });
@@ -574,7 +574,7 @@ function initArchiveTabs() {
 
   // first panel: baseline entrance on scroll into view
   const firstPanel = panels[0];
-  const firstRows = Array.from(firstPanel.querySelectorAll(".idx-row, .pick-row, .film-group, .genre"));
+  const firstRows = Array.from(firstPanel.querySelectorAll(".idx-row, .film-group, .genre"));
   if (firstRows.length) {
     gsap.from(firstRows, {
       y: 26,
