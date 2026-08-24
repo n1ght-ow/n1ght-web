@@ -601,6 +601,7 @@ function initGroupAccordion() {
   // each entry: [panelSelector, headSelector, bodySelector]
   const CONFIG = [
     ["#panel-films", ".film-group-head", ".idx-list"],
+    ["#panel-series", ".film-group-head", ".idx-list"],
     ["#panel-music", ".genre-head", ".track-index"],
   ];
 
