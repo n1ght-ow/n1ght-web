@@ -724,6 +724,39 @@ function initNetEaseLinks() {
 
 initNetEaseLinks();
 
+/* ---------- IMDb quick links: click a film/series row to open its IMDb page ---------- */
+
+function initImdbLinks() {
+  const panels = document.querySelectorAll("#panel-films, #panel-series");
+  if (!panels.length) return;
+
+  const openImdb = (row) => {
+    const id = row.getAttribute("data-imdb");
+    if (!id) return;
+    window.open("https://www.imdb.com/title/" + id + "/", "_blank", "noopener");
+  };
+
+  panels.forEach((panel) => {
+    // click delegation: only rows that carry data-imdb are clickable
+    panel.addEventListener("click", (e) => {
+      const row = e.target.closest(".idx-row[data-imdb]");
+      if (!row) return;
+      openImdb(row);
+    });
+
+    // keyboard accessibility (rows are plain articles -> make Enter/Space work)
+    panel.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const row = e.target.closest(".idx-row[data-imdb]");
+      if (!row) return;
+      e.preventDefault();
+      openImdb(row);
+    });
+  });
+}
+
+initImdbLinks();
+
 /* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
   /* ---------- hero: floating orbs + mouse parallax ---------- */

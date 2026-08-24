@@ -1200,6 +1200,7 @@ a:focus-visible, button:focus-visible {
 }
 
 .idx-row {
+  position: relative;
   display: grid;
   grid-template-columns: 4.5rem minmax(0, 1.4fr) minmax(0, 1fr);
   align-items: center;
@@ -1265,6 +1266,52 @@ a:focus-visible, button:focus-visible {
   line-height: 1.55;
   color: var(--ink-soft);
   max-width: 46ch;
+}
+
+/* IMDb quick-link rows: clickable with a small badge */
+.idx-row[data-imdb] { cursor: pointer; }
+
+.imdb-badge {
+  position: absolute;
+  right: clamp(0.6rem, 2vw, 1.6rem);
+  top: 50%;
+  transform: translateY(-50%) rotate(0deg);
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--bg);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--punch);
+  padding: 0.35em 0.7em;
+  width: max-content;
+  opacity: 0.55;
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), background 0.3s var(--ease-out);
+}
+
+.idx-row[data-imdb]:hover .imdb-badge {
+  opacity: 1;
+  transform: translateY(-50%) translateX(-2px);
+  background: var(--punch);
+}
+
+.idx-row[data-imdb] .idx-title::after {
+  content: "↗";
+  display: inline-block;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.6em;
+  margin-left: 0.45em;
+  color: var(--slate-2);
+  opacity: 0;
+  transform: translate(-4px, 2px);
+  transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.idx-row[data-imdb]:hover .idx-title::after {
+  opacity: 1;
+  transform: translate(0, 0);
+  color: var(--punch);
 }
 
 /* sport rows */
