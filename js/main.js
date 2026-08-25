@@ -710,6 +710,27 @@ function initNetEaseLinks() {
   // Dual strategy: prefer the desktop app; fall back to the web player.
   function openSong(id) {
     const webUrl = "https://music.163.com/#/song?id=" + id;
+
+    // ---- mobile: launch the phone app directly ----
+    if (looksMobile) {
+      if (/Android/i.test(ua)) {
+        // Android: intent:// lets Chrome launch the app and auto-fall back to
+        // the web player when the app isn't installed (no timer needed).
+        const fallback = encodeURIComponent(webUrl);
+        location.href =
+          "intent://song/" + id + "/#Intent;scheme=orpheus;package=com.netease.cloudmusic;S.browser_fallback_url=" + fallback + ";end";
+        return;
+      }
+      // iOS / other mobile: orpheus:// scheme pulls the app and plays;
+      // if nothing handles it, fall back to the web player after a beat.
+      location.href = "orpheus://song/" + id;
+      setTimeout(() => {
+        if (!document.hidden) window.open(webUrl, "_blank", "noopener");
+      }, 1500);
+      return;
+    }
+
+    // ---- desktop: unchanged dual strategy ----
     if (!isDesktop) {
       window.open(webUrl, "_blank", "noopener");
       return;
