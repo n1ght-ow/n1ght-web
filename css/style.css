@@ -52,6 +52,41 @@ a:focus-visible, button:focus-visible {
   outline-offset: 2px;
 }
 
+/* ============ CUSTOM CURSOR ============ */
+/* dot + expandable label; active only on fine pointers without reduced motion
+   (html.has-cursor is set from JS) */
+html.has-cursor,
+html.has-cursor * { cursor: none !important; }
+
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.custom-cursor .cc-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--ink);
+}
+
+.custom-cursor .cc-label {
+  position: absolute;
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+  color: var(--bg);
+  white-space: nowrap;
+  opacity: 0;
+}
+
 /* ============ GRAIN ============ */
 .grain {
   position: fixed;
@@ -466,6 +501,9 @@ a:focus-visible, button:focus-visible {
   animation: ticker-run 26s linear infinite;
 }
 
+/* JS owns the marquee loop when velocity-responsive (main.js adds this) */
+.ticker-track.is-js-driven { animation: none; }
+
 .ticker-group {
   display: flex;
   align-items: center;
@@ -618,7 +656,15 @@ a:focus-visible, button:focus-visible {
   height: 100%;
   object-fit: cover;
   transform: scale(1.12);
+  /* darkroom: archived frames sit undeveloped (mono); hover develops them */
+  filter: grayscale(1) brightness(0.94) contrast(1.02);
+  transition: filter 0.5s var(--ease-out);
   will-change: transform;
+}
+
+.hs-card:hover .hs-img-wrap img,
+.hs-card:focus-visible .hs-img-wrap img {
+  filter: grayscale(0) brightness(1) contrast(1);
 }
 
 .hs-card figcaption {
@@ -702,9 +748,12 @@ a:focus-visible, button:focus-visible {
   left: 0;
   top: 50%;
   height: 2px;
-  width: 0%;
+  width: 100%;
   background: var(--volt);
   pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
 }
 
 .hof-dragbar .dragbar-fill { background: var(--punch); }
@@ -788,6 +837,20 @@ a:focus-visible, button:focus-visible {
   transform: none;
 }
 
+/* pinned horizontal sections are directly grabbable (JS drag, fine pointers);
+   native grab cursor shows when the custom cursor is off (reduced motion) */
+.hs-section,
+.hof-scroll {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hs-section.is-grabbing,
+.hof-scroll.is-grabbing {
+  cursor: grabbing;
+}
+
 .hof-card {
   will-change: transform;
 }
@@ -827,12 +890,14 @@ a:focus-visible, button:focus-visible {
   transition: transform 0.55s var(--ease-out), filter 0.45s var(--ease-out);
 }
 
-.hof-card:hover .hof-img-wrap img {
+.hof-card:hover .hof-img-wrap img,
+.hof-item.is-active .hof-img-wrap img {
   transform: scale(1.06);
   filter: grayscale(0) brightness(1) contrast(1);
 }
 
-.hof-item:hover .hof-quote {
+.hof-item:hover .hof-quote,
+.hof-item.is-active .hof-quote {
   opacity: 1;
   transform: translateX(4px);
 }
@@ -901,6 +966,11 @@ a:focus-visible, button:focus-visible {
   gap: 0.9em;
   margin-top: clamp(2rem, 5vh, 3.2rem);
   max-width: 62ch;
+  /* mask for the yPercent rise; padding/negative margin keep the hard shadows unclipped */
+  overflow: hidden;
+  padding: 2px 10px 10px 2px;
+  margin-right: -10px;
+  margin-bottom: -10px;
 }
 
 .about-stats span {
@@ -1062,6 +1132,9 @@ a:focus-visible, button:focus-visible {
   letter-spacing: 0.28em;
   color: var(--ink);
   transform: rotate(4deg);
+  transform-origin: 50% 65%;
+  cursor: pointer;
+  user-select: none;
 }
 
 .poem-text {
@@ -1185,7 +1258,7 @@ a:focus-visible, button:focus-visible {
   color: var(--slate-2);
 }
 
-.tab-btn:hover { transform: translate(-2px, -2px); color: var(--ink); }
+.tab-btn:hover { color: var(--ink); }
 
 .tab-btn.is-active {
   background: var(--ink);
@@ -1254,6 +1327,22 @@ a:focus-visible, button:focus-visible {
 .idx-row:hover {
   background: var(--paper);
   transform: translateX(6px);
+}
+
+/* books/sport rows: GSAP owns the transform (press feedback), so drop the
+   CSS transform transition and give the pressed slab a hard accent shadow */
+.idx-row.is-pressable {
+  transition: background 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+
+.idx-row.is-pressable:hover { transform: none; }
+
+.idx-row.is-pressable.is-pressed {
+  box-shadow: 6px 6px 0 var(--acid);
+}
+
+#panel-sport .idx-row.is-pressable.is-pressed {
+  box-shadow: 6px 6px 0 var(--punch);
 }
 
 .idx-no {
@@ -1501,21 +1590,25 @@ a:focus-visible, button:focus-visible {
   white-space: nowrap;
 }
 
-/* similar tracks: clickable cards with NetEase hint */
-.idx-card.track-sim {
+/* clickable song cards: SIMILAR rows + own collected tracks */
+.idx-card.track-sim,
+.idx-card.track-own {
   cursor: pointer;
 }
 
-.idx-card.track-sim:hover {
+.idx-card.track-sim:hover,
+.idx-card.track-own:hover {
   background: var(--acid);
 }
 
-.idx-card.track-sim .idx-title {
+.idx-card.track-sim .idx-title,
+.idx-card.track-own .idx-title {
   position: relative;
   padding-right: 0.8em;
 }
 
-.idx-card.track-sim .idx-title::after {
+.idx-card.track-sim .idx-title::after,
+.idx-card.track-own .idx-title::after {
   content: "↗";
   position: absolute;
   right: 0;
@@ -1527,9 +1620,24 @@ a:focus-visible, button:focus-visible {
   transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out);
 }
 
-.idx-card.track-sim:hover .idx-title::after {
+.idx-card.track-sim:hover .idx-title::after,
+.idx-card.track-own:hover .idx-title::after {
   opacity: 1;
   transform: translate(2px, 0);
+}
+
+/* own tracks: volt flip instead of acid — they are the collection proper */
+.idx-card.track-own:hover {
+  background: var(--volt);
+}
+
+.idx-card.track-own:hover .idx-title,
+.idx-card.track-own:hover .idx-artist {
+  color: var(--bg);
+}
+
+.idx-card.track-own:hover .idx-title::after {
+  color: var(--bg);
 }
 
 /* ---------- group accordion (FILMS groups + MUSIC genres) ---------- */
@@ -1656,7 +1764,7 @@ a:focus-visible, button:focus-visible {
   transition: transform 0.2s var(--ease-out);
 }
 
-.lb-close:hover { transform: translate(-2px, -2px); }
+.lb-close:hover { filter: brightness(0.92); }
 
 .lb-stage {
   display: flex;
@@ -1789,6 +1897,27 @@ a:focus-visible, button:focus-visible {
   .grain { animation: none; }
   .hs-line { animation: none; }
   .ticker-track { animation: none; }
+  .ticker-track.is-js-driven { animation: none; }
   .hof-img-wrap img { transition: none; }
+  .hs-img-wrap img { transition: none; filter: none; }
+  .custom-cursor { display: none; }
   * { scroll-behavior: auto !important; }
+
+  /* hover micro-motion: freeze transforms/transitions, color feedback only */
+  .idx-row,
+  .idx-row:hover,
+  .idx-row.is-pressable,
+  .genre,
+  .genre:hover,
+  .idx-card,
+  .idx-card:hover { transform: none; transition-duration: 0s; }
+  .idx-poster,
+  .imdb-badge,
+  .tab-btn,
+  .acc-head,
+  .acc-arrow,
+  .lb-close,
+  .lb-nav,
+  .dragbar,
+  .bubble { transition-duration: 0s; }
 }

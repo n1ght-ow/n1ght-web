@@ -4,8 +4,32 @@
    ============================================================ */
 
 gsap.registerPlugin(ScrollTrigger);
+if (window.SplitText) gsap.registerPlugin(SplitText);
 
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const TOUCH = window.matchMedia("(pointer: coarse)").matches;
+const FINE_POINTER = window.matchMedia("(pointer: fine)").matches;
+
+/* ---------- smooth scrolling (Lenis, full-motion only) ----------
+   Native scroll under reduced motion. Programmatic jumps (dragbar seek,
+   anchors) route through lenis.scrollTo so the internal value stays in sync. */
+let lenis = null;
+if (!REDUCED && typeof Lenis !== "undefined") {
+  lenis = new Lenis({ autoRaf: false });
+  lenis.on("scroll", ScrollTrigger.update);
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener("click", (e) => {
+      const target = a.getAttribute("href");
+      if (target.length > 1 && document.querySelector(target)) {
+        e.preventDefault();
+        lenis.scrollTo(target, { duration: 1.4 });
+      }
+    });
+  });
+}
 
 /* ---------- helpers ---------- */
 
@@ -119,6 +143,72 @@ function animateSignature(sig, opts) {
   }, o.fillAt || "<0.25");
 }
 
+/* ---------- custom cursor + magnetic (fine pointers, motion allowed) ----------
+   One ink dot: grows on anything interactive, expands into a mono label on
+   [data-cursor] targets (VIEW / DRAG / OPEN / STAMP). Magnetic elements lean
+   toward the pointer and spring back on leave. */
+
+function initCursor() {
+  if (TOUCH || !FINE_POINTER || REDUCED) return;
+  const cursor = document.createElement("div");
+  cursor.className = "custom-cursor";
+  cursor.setAttribute("aria-hidden", "true");
+  cursor.innerHTML = '<div class="cc-dot"></div><span class="cc-label mono"></span>';
+  document.body.appendChild(cursor);
+  document.documentElement.classList.add("has-cursor");
+
+  const dot = cursor.querySelector(".cc-dot");
+  const label = cursor.querySelector(".cc-label");
+
+  gsap.set(cursor, { xPercent: -50, yPercent: -50, x: window.innerWidth / 2, y: window.innerHeight / 2 });
+  const cx = gsap.quickTo(cursor, "x", { duration: 0.32, ease: "power3.out" });
+  const cy = gsap.quickTo(cursor, "y", { duration: 0.32, ease: "power3.out" });
+  const grow = gsap.quickTo(dot, "scale", { duration: 0.35, ease: "power3.out" });
+
+  let baseScale = 1;
+
+  window.addEventListener("pointermove", (e) => { cx(e.clientX); cy(e.clientY); }, { passive: true });
+
+  document.addEventListener("mouseover", (e) => {
+    const labelled = e.target.closest("[data-cursor]");
+    if (labelled) {
+      label.textContent = labelled.getAttribute("data-cursor");
+      baseScale = 6;
+      gsap.to(label, { opacity: 1, duration: 0.18 });
+    } else if (e.target.closest("a, button, .acc-head, .hs-card, .hof-card, .idx-row, .idx-card")) {
+      baseScale = 2.6;
+      gsap.to(label, { opacity: 0, duration: 0.15 });
+    } else {
+      baseScale = 1;
+      gsap.to(label, { opacity: 0, duration: 0.15 });
+    }
+    grow(baseScale);
+  });
+
+  document.addEventListener("mousedown", () => gsap.to(dot, { scale: baseScale * 0.75, duration: 0.12, ease: "power2.in" }));
+  document.addEventListener("mouseup", () => gsap.to(dot, { scale: baseScale, duration: 0.3, ease: "back.out(2.5)" }));
+  document.documentElement.addEventListener("mouseleave", () => gsap.to(cursor, { autoAlpha: 0, duration: 0.2 }));
+  document.documentElement.addEventListener("mouseenter", () => gsap.to(cursor, { autoAlpha: 1, duration: 0.2 }));
+}
+initCursor();
+
+function initMagnetic() {
+  if (TOUCH || !FINE_POINTER || REDUCED) return;
+  gsap.utils.toArray(".nav-links a, .tab-btn, .lb-close, .lb-nav, .footer-links a").forEach((el) => {
+    const xTo = gsap.quickTo(el, "x", { duration: 0.4, ease: "power3.out" });
+    const yTo = gsap.quickTo(el, "y", { duration: 0.4, ease: "power3.out" });
+    el.addEventListener("pointermove", (e) => {
+      const r = el.getBoundingClientRect();
+      xTo((e.clientX - (r.left + r.width / 2)) * 0.3);
+      yTo((e.clientY - (r.top + r.height / 2)) * 0.3);
+    });
+    el.addEventListener("pointerleave", () => {
+      gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.45)" });
+    });
+  });
+}
+initMagnetic();
+
 /* ---------- preloader ---------- */
 
 const preloader = document.getElementById("preloader");
@@ -150,29 +240,37 @@ function finishPreload() {
   if (preloadFinished) return;
   preloadFinished = true;
 
-  const tl = gsap.timeline({
-    onComplete: () => {
-      preloader.remove();
-      // recalc once the reveal is done, then again after lazy gallery
-      // images settle so the pinned ranges stay accurate
-      ScrollTrigger.refresh();
-      setTimeout(() => ScrollTrigger.refresh(), 800);
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => ScrollTrigger.refresh());
-      }
-    },
-  });
+  const settle = () => {
+    // recalc once the reveal is done, then again after lazy gallery
+    // images settle so the pinned ranges stay accurate
+    ScrollTrigger.refresh();
+    setTimeout(() => ScrollTrigger.refresh(), 800);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => ScrollTrigger.refresh());
+    }
+  };
 
   if (REDUCED) {
-    tl.set(preloader, { display: "none" })
-      .set(heroChars, { yPercent: 0 })
-      .set(".hero-sub span", { yPercent: 0, opacity: 1 });
+    // static reveal: plain sets apply synchronously — the reduced-motion
+    // path must never depend on the animation ticker, or a paused rAF
+    // (background tab, throttled webview) would trap the user on the loader
+    gsap.set(heroChars, { yPercent: 0 });
+    gsap.set(".hero-sub span", { yPercent: 0, opacity: 1 });
     if (heroSig) {
       heroSig.paths.forEach((p) => gsap.set(p, { strokeDashoffset: 0 }));
       gsap.set(heroSig.fills, { opacity: 1 });
     }
+    preloader.remove();
+    settle();
     return;
   }
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      preloader.remove();
+      settle();
+    },
+  });
 
   tl.to("#preloader .pre-inner", { autoAlpha: 0, duration: 0.45, ease: "power2.in" })
     .to(".pre-shutter.s1", { y: "0%", duration: 0.55, ease: "power4.inOut" }, "-=0.15")
@@ -254,14 +352,20 @@ function makeHorizontalScroller(opts) {
   const barCount = document.getElementById(opts.barCountId);
 
   let isDraggingBar = false;
+  let isGrabbing = false;
 
+  let lastFrame = -1;
   function renderDragbar(progress) {
     if (!bar || !barFill || !barHandle || !barCount) return;
-    const pct = Math.max(0, Math.min(1, progress)) * 100;
-    barFill.style.width = pct + "%";
-    barHandle.style.left = pct + "%";
-    const frame = Math.min(opts.itemCount, Math.max(1, Math.round(progress * (opts.itemCount - 1)) + 1));
-    barCount.textContent = opts.label + " " + String(frame).padStart(2, "0") + " / " + String(opts.itemCount).padStart(2, "0");
+    const p = Math.max(0, Math.min(1, progress));
+    // transform write, not width: keeps the fill off the layout path
+    barFill.style.transform = "scaleX(" + p + ")";
+    barHandle.style.left = p * 100 + "%";
+    const frame = Math.min(opts.itemCount, Math.max(1, Math.round(p * (opts.itemCount - 1)) + 1));
+    if (frame !== lastFrame) {
+      lastFrame = frame;
+      barCount.textContent = opts.label + " " + String(frame).padStart(2, "0") + " / " + String(opts.itemCount).padStart(2, "0");
+    }
   }
 
   const tween = gsap.to(track, {
@@ -276,12 +380,19 @@ function makeHorizontalScroller(opts) {
       invalidateOnRefresh: true,
       anticipatePin: 1,
       onUpdate: (self) => {
-        if (!isDraggingBar) renderDragbar(self.progress);
+        if (!isDraggingBar && !isGrabbing) renderDragbar(self.progress);
       },
     },
   });
 
   const st = tween.scrollTrigger;
+
+  // scroll the page so the pinned scrub lands exactly on target progress
+  const seek = (progress) => {
+    const y = st.start + (st.end - st.start) * progress;
+    if (lenis) lenis.scrollTo(y, { immediate: true });
+    else window.scrollTo(0, y);
+  };
 
   if (bar && barTrack) {
     // keep handle in sync with scroll-driven progress
@@ -298,12 +409,6 @@ function makeHorizontalScroller(opts) {
     const barEventToProgress = (e) => {
       const rect = barTrack.getBoundingClientRect();
       return Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    };
-
-    // scroll the page so the pinned scrub lands exactly on target progress
-    const seek = (progress) => {
-      const y = st.start + (st.end - st.start) * progress;
-      window.scrollTo(0, y);
     };
 
     barTrack.addEventListener("pointerdown", (e) => {
@@ -328,6 +433,91 @@ function makeHorizontalScroller(opts) {
     };
     barTrack.addEventListener("pointerup", endBarDrag);
     barTrack.addEventListener("pointercancel", endBarDrag);
+  }
+
+  /* ---- direct grab-drag on the pinned section (desktop fine pointers) ----
+     Under DRAG_THRESHOLD px of travel it stays a normal click (lightbox etc.);
+     past it the drag captures the pointer and drives scroll through seek().
+     Release flings with inertia. Direct manipulation, so NOT gated by REDUCED. */
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const DRAG_THRESHOLD = 6;
+    let dragId = null, dragStartX = 0, dragStartP = 0, dragArmed = false, dragMoved = false;
+    let lastX = 0, lastT = 0, dragVel = 0; // px/ms, signed
+    let glideTween = null;
+
+    const suppressClick = (e) => { e.stopPropagation(); e.preventDefault(); };
+
+    wrap.addEventListener("dragstart", (e) => e.preventDefault());
+
+    wrap.addEventListener("pointerdown", (e) => {
+      if (isDraggingBar || e.button !== 0) return;
+      if (glideTween) { glideTween.kill(); glideTween = null; }
+      dragId = e.pointerId;
+      dragStartX = lastX = e.clientX;
+      lastT = performance.now();
+      dragVel = 0;
+      dragStartP = st.progress;
+      dragArmed = false;
+      dragMoved = false;
+    });
+
+    wrap.addEventListener("pointermove", (e) => {
+      if (e.pointerId !== dragId) return;
+      const dx = e.clientX - dragStartX;
+      if (!dragArmed) {
+        if (Math.abs(dx) < DRAG_THRESHOLD) return;
+        dragArmed = true;
+        dragMoved = true;
+        isGrabbing = true;
+        wrap.classList.add("is-grabbing");
+        wrap.setPointerCapture(dragId);
+      }
+      const now = performance.now();
+      const dt = now - lastT;
+      if (dt > 0) dragVel = 0.8 * dragVel + 0.2 * ((e.clientX - lastX) / dt);
+      lastX = e.clientX;
+      lastT = now;
+      const dist = getDistance();
+      if (!dist) return;
+      const p = Math.max(0, Math.min(1, dragStartP - dx / dist));
+      renderDragbar(p);
+      seek(p);
+    });
+
+    const endGrab = (e) => {
+      if (e.pointerId !== dragId) return;
+      dragId = null;
+      if (!dragArmed) return;
+      dragArmed = false;
+      isGrabbing = false;
+      wrap.classList.remove("is-grabbing");
+      // inertia: project release velocity onto progress and glide out
+      const dist = getDistance();
+      if (dist && Math.abs(dragVel) > 0.15) {
+        const from = st.progress;
+        const target = Math.max(0, Math.min(1, from - (dragVel * 140) / dist));
+        const proxy = { p: from };
+        glideTween = gsap.to(proxy, {
+          p: target,
+          duration: 0.9,
+          ease: "power3.out",
+          onUpdate: () => { renderDragbar(proxy.p); seek(proxy.p); },
+          onComplete: () => { glideTween = null; },
+        });
+      }
+      if (dragMoved) {
+        dragMoved = false;
+        // one-shot: eat the synthetic click this drag would produce
+        wrap.addEventListener("click", suppressClick, { capture: true, once: true });
+      }
+    };
+    wrap.addEventListener("pointerup", endGrab);
+    wrap.addEventListener("pointercancel", endGrab);
+
+    // wheeling away kills any glide immediately
+    wrap.addEventListener("wheel", () => {
+      if (glideTween) { glideTween.kill(); glideTween = null; }
+    }, { passive: true });
   }
 
   return tween;
@@ -449,6 +639,7 @@ function lbOpenAt(i) {
   lightbox.classList.add("is-open");
   lightbox.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
+  if (lenis) lenis.stop();
   isLbOpen = true;
   lbCloseBtn.focus();
 }
@@ -458,6 +649,7 @@ function lbCloseFn() {
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
+  if (lenis) lenis.start();
   lbImg.src = "";
   isLbOpen = false;
 }
@@ -482,6 +674,23 @@ if (lightbox && photoCards.length) {
     if (e.key === "ArrowLeft") lbLoad(lbIndex - 1);
     if (e.key === "ArrowRight") lbLoad(lbIndex + 1);
   });
+
+  // touch: horizontal swipe changes frames
+  let swipeX = 0, swipeY = 0, trackingSwipe = false;
+  lightbox.addEventListener("touchstart", (e) => {
+    swipeX = e.changedTouches[0].clientX;
+    swipeY = e.changedTouches[0].clientY;
+    trackingSwipe = true;
+  }, { passive: true });
+  lightbox.addEventListener("touchend", (e) => {
+    if (!trackingSwipe) return;
+    trackingSwipe = false;
+    const dx = e.changedTouches[0].clientX - swipeX;
+    const dy = e.changedTouches[0].clientY - swipeY;
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+      lbLoad(lbIndex + (dx < 0 ? 1 : -1));
+    }
+  }, { passive: true });
 
   lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
 }
@@ -512,7 +721,7 @@ function initArchiveTabs() {
     if (!panel) return;
     if (!rows || !rows.length) return;
     if (REDUCED) {
-      gsap.set(rows, { autoAlpha: 1, y: 0 });
+      gsap.set(rows, { y: 0 });
       return;
     }
     gsap.fromTo(panel,
@@ -523,12 +732,13 @@ function initArchiveTabs() {
         ease: "power4.inOut",
       });
     gsap.from(rows, {
-      y: 26,
-      autoAlpha: 0,
+      clipPath: "inset(0 0 100% 0)",
+      y: 14,
       duration: 0.75,
       stagger: { each: 0.06, from: "start" },
       ease: "power3.out",
       delay: 0.08,
+      clearProps: "clipPath",
     });
   };
 
@@ -538,7 +748,7 @@ function initArchiveTabs() {
     showMeta(idx);
     const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .film-group, .genre")) : [];
     if (instant) {
-      gsap.set(rows, { autoAlpha: 1, y: 0 });
+      gsap.set(rows, { y: 0, clearProps: "clipPath" });
       gsap.set(panels[idx], { clipPath: "inset(0 0 0 0%)" });
     } else {
       animateIn(idx, rows);
@@ -577,11 +787,12 @@ function initArchiveTabs() {
   const firstRows = Array.from(firstPanel.querySelectorAll(".idx-row, .film-group, .genre"));
   if (firstRows.length) {
     gsap.from(firstRows, {
-      y: 26,
-      autoAlpha: 0,
+      clipPath: "inset(0 0 100% 0)",
+      y: 14,
       duration: 0.8,
       stagger: { each: 0.06, from: "start" },
       ease: "power3.out",
+      clearProps: "clipPath",
       scrollTrigger: {
         trigger: firstPanel,
         start: "top 85%",
@@ -753,9 +964,10 @@ function initNetEaseLinks() {
     }, 1200);
   }
 
-  // event delegation: any .track-sim card with data-song-id opens the song
+  // event delegation: any card with data-song-id opens the song
+  // (.track-sim = SIMILAR rows, .track-own = personally collected tracks)
   drawer.addEventListener("click", (e) => {
-    const row = e.target.closest(".track-sim");
+    const row = e.target.closest("[data-song-id]");
     if (!row) return;
     const id = row.getAttribute("data-song-id");
     if (!id) return;
@@ -765,7 +977,7 @@ function initNetEaseLinks() {
   // keyboard accessibility: Enter/Space opens too
   drawer.addEventListener("keydown", (e) => {
     if (e.key !== "Enter" && e.key !== " ") return;
-    const row = e.target.closest(".track-sim");
+    const row = e.target.closest("[data-song-id]");
     if (!row) return;
     const id = row.getAttribute("data-song-id");
     if (!id) return;
@@ -808,6 +1020,41 @@ function initImdbLinks() {
 }
 
 initImdbLinks();
+
+/* ---------- game cards on touch: tap toggles the hover state ---------- */
+
+if (TOUCH) {
+  document.querySelectorAll(".hof-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      const wasOpen = item.classList.contains("is-active");
+      document.querySelectorAll(".hof-item.is-active").forEach((other) => other.classList.remove("is-active"));
+      if (!wasOpen) item.classList.add("is-active");
+    });
+  });
+}
+
+/* ---------- books/sport rows: physical press feedback (fine pointers) ----------
+   GSAP owns the transform for these rows (CSS transform transition is
+   dropped via .is-pressable): hover lifts the slab with a hard acid/punch
+   shadow, leave springs back; team crests pop with it. */
+
+(function initRowFeedback() {
+  if (REDUCED || TOUCH || !FINE_POINTER) return;
+  document.querySelectorAll("#panel-books .idx-row, #panel-sport .idx-row").forEach((row) => {
+    row.classList.add("is-pressable");
+    const logo = row.querySelector(".idx-logo");
+    row.addEventListener("mouseenter", () => {
+      gsap.to(row, { x: 8, y: -3, duration: 0.38, ease: "back.out(2)" });
+      row.classList.add("is-pressed");
+      if (logo) gsap.to(logo, { rotation: -7, scale: 1.07, duration: 0.4, ease: "back.out(2.4)" });
+    });
+    row.addEventListener("mouseleave", () => {
+      gsap.to(row, { x: 0, y: 0, duration: 0.75, ease: "elastic.out(1, 0.5)" });
+      row.classList.remove("is-pressed");
+      if (logo) gsap.to(logo, { rotation: 0, scale: 1, duration: 0.7, ease: "elastic.out(1.2, 0.45)" });
+    });
+  });
+})();
 
 /* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
@@ -892,11 +1139,12 @@ if (!REDUCED) {
       },
     });
     gsap.from(head.querySelectorAll(".bh-meta span"), {
-      y: 24,
-      autoAlpha: 0,
+      clipPath: "inset(0 0 100% 0)",
+      yPercent: 60,
       duration: 0.9,
       stagger: 0.1,
       ease: "power3.out",
+      clearProps: "clipPath",
       scrollTrigger: {
         trigger: head,
         start: "top 70%",
@@ -927,14 +1175,15 @@ if (!REDUCED) {
     });
   });
 
-  // caption reveal per card
+  // caption reveal per card (curtain + rise, no bare fade)
   gsap.utils.toArray(".hs-card figcaption").forEach((cap) => {
     gsap.from(cap.children, {
-      y: 18,
-      autoAlpha: 0,
+      clipPath: "inset(0 0 100% 0)",
+      yPercent: 70,
       duration: 0.7,
       stagger: 0.08,
       ease: "power3.out",
+      clearProps: "clipPath",
       scrollTrigger: {
         trigger: cap,
         containerAnimation: hsTween,
@@ -965,12 +1214,13 @@ if (!REDUCED) {
 
   gsap.from(".hof-card", {
     y: 90,
-    autoAlpha: 0,
     rotationX: -8,
+    clipPath: "inset(0 0 100% 0)",
     transformOrigin: "center bottom",
     duration: 1.1,
     stagger: { each: 0.09, from: "start" },
     ease: "power4.out",
+    clearProps: "clipPath",
     scrollTrigger: {
       trigger: ".hof-row",
       start: "top 82%",
@@ -978,20 +1228,36 @@ if (!REDUCED) {
     },
   });
 
-  /* ---------- about body entrance ---------- */
+  /* ---------- about body: SplitText line masks (curtain fallback) ---------- */
 
-  gsap.from(".about-body p", {
-    y: 34,
-    autoAlpha: 0,
-    duration: 0.9,
-    stagger: 0.14,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: ".about-body",
-      start: "top 82%",
-      toggleActions: "play none none reverse",
-    },
-  });
+  if (window.SplitText) {
+    const aboutSplit = SplitText.create(".about-body p", { type: "lines", mask: "lines", autoSplit: true });
+    gsap.from(aboutSplit.lines, {
+      yPercent: 110,
+      duration: 0.9,
+      stagger: 0.05,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: ".about-body",
+        start: "top 82%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  } else {
+    gsap.from(".about-body p", {
+      y: 16,
+      clipPath: "inset(0 0 100% 0)",
+      duration: 0.9,
+      stagger: 0.14,
+      ease: "power3.out",
+      clearProps: "clipPath",
+      scrollTrigger: {
+        trigger: ".about-body",
+        start: "top 82%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  }
 
   /* ---------- about stats + signature entrance ---------- */
 
@@ -1021,8 +1287,7 @@ if (!REDUCED) {
   }
 
   gsap.from(".about-stats span", {
-    y: 22,
-    autoAlpha: 0,
+    yPercent: 110,
     duration: 0.7,
     stagger: 0.08,
     ease: "power3.out",
@@ -1048,9 +1313,12 @@ if (!REDUCED) {
   });
 
   gsap.from(".coda-mono", {
-    autoAlpha: 0,
+    clipPath: "inset(0 0 100% 0)",
+    yPercent: 40,
     duration: 1,
     delay: 0.5,
+    ease: "power3.inOut",
+    clearProps: "clipPath",
     scrollTrigger: {
       trigger: ".coda",
       start: "top 85%",
@@ -1058,26 +1326,52 @@ if (!REDUCED) {
     },
   });
 
-  /* ---------- poem sheet entrance ---------- */
+  /* ---------- poem: stamp slam + ink-develop entrance (the section's signature) ---------- */
 
-  gsap.from(".poem-sheet", {
-    y: 60,
-    autoAlpha: 0,
-    duration: 1,
-    ease: "power4.out",
-    scrollTrigger: {
-      trigger: ".poem-sheet",
-      start: "top 85%",
-      toggleActions: "play none none reverse",
-    },
-  });
+  const poemSheet = document.querySelector(".poem-sheet");
+  const poemStamp = document.querySelector(".poem-stamp");
+  const poemLines = gsap.utils.toArray(".poem-text p");
+
+  if (poemSheet && poemStamp && poemLines.length) {
+    gsap.set(poemLines, { clipPath: "inset(0 100% 0 0)" });
+    gsap.set(poemStamp, { opacity: 0, scale: 1.9, rotation: 14 });
+
+    const slamStamp = () => {
+      gsap.timeline()
+        .to(poemStamp, { opacity: 1, scale: 1, rotation: 4, duration: 0.45, ease: "back.in(1.8)" })
+        .to(poemSheet, { y: 6, duration: 0.09, ease: "power2.in" }, ">-0.04")
+        .to(poemSheet, { y: 0, duration: 0.55, ease: "elastic.out(1.4, 0.3)" })
+        .to(poemLines, {
+          clipPath: "inset(0 0% 0 0)",
+          duration: 0.9,
+          stagger: 0.14,
+          ease: "power2.inOut",
+          clearProps: "clipPath",
+        }, "<0.1");
+    };
+
+    ScrollTrigger.create({
+      trigger: poemSheet,
+      start: "top 72%",
+      once: true,
+      onEnter: slamStamp,
+    });
+
+    // the stamp is a state machine: click to re-stamp, operation has consequence
+    poemStamp.addEventListener("click", () => {
+      gsap.set(poemLines, { clipPath: "inset(0 100% 0 0)" });
+      gsap.set(poemStamp, { opacity: 0, scale: 1.9, rotation: 14 });
+      slamStamp();
+    });
+  }
 
   gsap.from(".poem-block", {
     y: 40,
-    autoAlpha: 0,
+    clipPath: "inset(0 0 100% 0)",
     duration: 0.9,
     stagger: 0.14,
     ease: "power3.out",
+    clearProps: "clipPath",
     scrollTrigger: {
       trigger: ".poem-notes",
       start: "top 86%",
@@ -1085,13 +1379,49 @@ if (!REDUCED) {
     },
   });
 
+  /* ---------- ticker: scroll velocity drives speed + skew ----------
+     The marquee loop is owned by GSAP (CSS animation is disabled via
+     .is-js-driven) so fast scrolling can accelerate it; stop settles back. */
+
+  const tickerTracks = gsap.utils.toArray(".ticker-track");
+  if (tickerTracks.length) {
+    const skewSetters = tickerTracks.map((t) => gsap.quickTo(t, "skewX", { duration: 0.55, ease: "power3.out" }));
+    const marqueeTweens = tickerTracks.map((t) => {
+      t.classList.add("is-js-driven");
+      return gsap.to(t, { xPercent: -50, ease: "none", duration: 26, repeat: -1 });
+    });
+    let settleTweens = [];
+    let skewIdle;
+    ScrollTrigger.create({
+      start: 0,
+      end: "max",
+      onUpdate: (self) => {
+        settleTweens.forEach((t) => t.kill());
+        settleTweens = [];
+        const v = gsap.utils.clamp(-9, 9, self.getVelocity() / -300);
+        // velocity magnitude boosts the marquee: 1x idle → ~3.2x flat-out
+        const speed = 1 + (Math.abs(v) / 9) * 2.2;
+        marqueeTweens.forEach((tw) => tw.timeScale(speed));
+        skewSetters.forEach((fn) => fn(v));
+        clearTimeout(skewIdle);
+        skewIdle = setTimeout(() => {
+          settleTweens = marqueeTweens.map((tw) =>
+            gsap.to(tw, { timeScale: 1, duration: 0.9, ease: "power2.out" })
+          );
+          skewSetters.forEach((fn) => fn(0));
+        }, 140);
+      },
+    });
+  }
+
   /* ---------- footer entrance ---------- */
 
   gsap.from(".footer-name", {
+    clipPath: "inset(0 0 100% 0)",
     yPercent: 60,
-    autoAlpha: 0,
     duration: 1,
     ease: "power4.out",
+    clearProps: "clipPath",
     scrollTrigger: {
       trigger: ".footer",
       start: "top 85%",

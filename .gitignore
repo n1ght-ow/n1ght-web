@@ -5,3 +5,6 @@ __pycache__/
 nul
 .playwright-cli/
 output/
+_preview.html
+js/main.preview.js
+.zcode/
