@@ -163,7 +163,12 @@ function initCursor() {
   gsap.set(cursor, { xPercent: -50, yPercent: -50, x: window.innerWidth / 2, y: window.innerHeight / 2 });
   const cx = gsap.quickTo(cursor, "x", { duration: 0.32, ease: "power3.out" });
   const cy = gsap.quickTo(cursor, "y", { duration: 0.32, ease: "power3.out" });
-  const grow = gsap.quickTo(dot, "scale", { duration: 0.35, ease: "power3.out" });
+  // gsap.quickTo on the scaled `scale` alias does not tween the dot, so drive
+  // scaleX + scaleY (together with gsap.to on mousedown/mouseup) to expand the
+  // badge and keep the mono label centered inside it.
+  const growX = gsap.quickTo(dot, "scaleX", { duration: 0.35, ease: "power3.out" });
+  const growY = gsap.quickTo(dot, "scaleY", { duration: 0.35, ease: "power3.out" });
+  const grow = (v) => { growX(v); growY(v); };
 
   let baseScale = 1;
 
@@ -974,7 +979,7 @@ function initNetEaseLinks() {
     openSong(id);
   });
 
-  // keyboard accessibility: Enter/Space opens too
+  // keyboard accessibility: Enter/Space opens too (focusable cards only)
   drawer.addEventListener("keydown", (e) => {
     if (e.key !== "Enter" && e.key !== " ") return;
     const row = e.target.closest("[data-song-id]");
@@ -983,6 +988,17 @@ function initNetEaseLinks() {
     if (!id) return;
     e.preventDefault();
     openSong(id);
+  });
+
+  // turn song cards into focusable, screen-reader friendly links.
+  // Only add keyboard affordance to cards that actually carry an ID.
+  drawer.querySelectorAll("[data-song-id]").forEach((card) => {
+    card.setAttribute("role", "link");
+    card.setAttribute("tabindex", "0");
+    card.setAttribute(
+      "aria-label",
+      card.textContent.trim().replace(/\s+/g, " ") + ", open in NetEase Cloud Music"
+    );
   });
 }
 
@@ -1015,6 +1031,16 @@ function initImdbLinks() {
       if (!row) return;
       e.preventDefault();
       openImdb(row);
+    });
+
+    // focusable, screen-reader friendly links
+    panel.querySelectorAll(".idx-row[data-imdb]").forEach((row) => {
+      row.setAttribute("role", "link");
+      row.setAttribute("tabindex", "0");
+      row.setAttribute(
+        "aria-label",
+        row.textContent.trim().replace(/\s+/g, " ") + ", open on IMDb"
+      );
     });
   });
 }
@@ -1357,11 +1383,17 @@ if (!REDUCED) {
       onEnter: slamStamp,
     });
 
-    // the stamp is a state machine: click to re-stamp, operation has consequence
-    poemStamp.addEventListener("click", () => {
+    // the stamp is a state machine: click or Enter/Space to re-stamp
+    const restamp = () => {
       gsap.set(poemLines, { clipPath: "inset(0 100% 0 0)" });
       gsap.set(poemStamp, { opacity: 0, scale: 1.9, rotation: 14 });
       slamStamp();
+    };
+    poemStamp.addEventListener("click", restamp);
+    poemStamp.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      restamp();
     });
   }
 
