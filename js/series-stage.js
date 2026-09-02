@@ -5,9 +5,6 @@
   const REDUCED = window.matchMedia
     ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
     : false;
-  const COARSE = window.matchMedia
-    ? window.matchMedia("(pointer: coarse)").matches
-    : false;
 
   const states = new WeakMap();
   const pad = (n) => String(n).padStart(2, "0");
@@ -33,6 +30,47 @@
     }
   }
 
+  /* ---------- tape position ----------
+     The viewport is never a scroll container (overflow: hidden), so the
+     page wheel always moves the page — the tape only moves when the
+     range slider is dragged, or a card is clicked / keyboard-focused.
+     The strip is shifted with a transform; every write goes through the
+     single quickTo (never killTweensOf — that would kill quickTo itself).
+     state.x is the single source of truth. */
+
+  function maxX(state) {
+    return Math.max(0, state.strip.scrollWidth - state.viewport.clientWidth);
+  }
+
+  function setStrip(stage, state, x, animate) {
+    const max = maxX(state);
+    const target = Math.max(0, Math.min(x, max));
+    state.x = target;
+    state.viewport.scrollLeft = 0;
+    if (state.moveTo) {
+      state.moveTo(-target);
+    } else {
+      state.strip.style.transform = target
+        ? "translate3d(" + -target + "px, 0, 0)"
+        : "";
+    }
+    state.range.value = max ? String((target / max) * 100) : "0";
+    return target;
+  }
+
+  function revealCard(stage, state, card, animate) {
+    const max = maxX(state);
+    if (!max) return;
+    const contentX =
+      card.getBoundingClientRect().left -
+      state.strip.getBoundingClientRect().left;
+    const target = Math.max(
+      0,
+      Math.min(contentX - state.viewport.clientWidth * 0.25, max)
+    );
+    setStrip(stage, state, target, animate);
+  }
+
   function render(stage) {
     stage.innerHTML = "";
     stage.classList.add("series-stage");
@@ -49,7 +87,6 @@
     stage.appendChild(head);
 
     const viewport = el("div", "series-stage-viewport");
-    viewport.dataset.cursor = "DRAG";
     const strip = el("div", "series-stage-strip");
     viewport.appendChild(strip);
 
@@ -234,26 +271,20 @@
 
   function bindInteractions(stage, state) {
     const viewport = state.viewport;
-    const strip = state.strip;
     const range = state.range;
 
     viewport.addEventListener("click", (event) => {
       const card = event.target.closest(".series-card");
-      if (!card) return;
-      selectCard(stage, card, true);
-      const max = Math.max(0, strip.scrollWidth - viewport.clientWidth);
-      if (max && !state.tween) {
-        viewport.scrollTo({
-          left: Math.min(card.offsetLeft - viewport.clientWidth * 0.25, max),
-          behavior: REDUCED ? "auto" : "smooth"
-        });
+      if (card) {
+        selectCard(stage, card, true);
+        revealCard(stage, state, card, !REDUCED);
       }
     });
 
     viewport.addEventListener("keydown", (event) => {
       const target = event.target.closest && event.target.closest(".series-card");
       if (!target) return;
-      const cards = Array.from(strip.querySelectorAll(".series-card"));
+      const cards = Array.from(state.strip.querySelectorAll(".series-card"));
       const index = cards.indexOf(target);
       if (index < 0) return;
 
@@ -265,37 +296,15 @@
       if (next < 0) return;
 
       event.preventDefault();
-      cards[next].focus();
+      cards[next].focus({ preventScroll: true });
       selectCard(stage, cards[next], true);
-      if (!state.tween) {
-        cards[next].scrollIntoView({
-          inline: "nearest",
-          block: "nearest",
-          behavior: REDUCED ? "auto" : "smooth"
-        });
-      }
+      revealCard(stage, state, cards[next], !REDUCED);
     });
 
     range.addEventListener("input", () => {
       const ratio = parseFloat(range.value) / 100;
-      if (state.tween) {
-        state.tween.progress(ratio);
-        range.value = String(ratio * 100);
-      } else {
-        const max = Math.max(0, strip.scrollWidth - viewport.clientWidth);
-        viewport.scrollLeft = max ? ratio * max : 0;
-      }
+      setStrip(stage, state, ratio * maxX(state), !REDUCED);
     });
-
-    viewport.addEventListener(
-      "scroll",
-      () => {
-        if (state.tween) return;
-        const max = Math.max(0, strip.scrollWidth - viewport.clientWidth);
-        range.value = max ? String((viewport.scrollLeft / max) * 100) : "0";
-      },
-      { passive: true }
-    );
 
     stage.addEventListener("focusin", (event) => {
       const card = event.target.closest && event.target.closest(".series-card");
@@ -320,71 +329,27 @@
     });
   }
 
-  function isInActiveTab(stage) {
-    const panel = stage.closest(".tab-panel");
-    return !panel || panel.classList.contains("is-active");
-  }
-
   function setupMode(stage, state) {
-    const viewport = state.viewport;
-    const strip = state.strip;
-    const range = state.range;
-    const max = Math.max(0, strip.scrollWidth - viewport.clientWidth);
-    const visible =
-      document.body.contains(stage) &&
-      stage.offsetParent !== null &&
-      viewport.clientWidth > 0;
-    const shouldPin =
-      visible && max > 0 && isInActiveTab(stage) && !COARSE && canTween();
-
-    if (shouldPin && state.tween) {
-      viewport.classList.add("series-stage-viewport--driven");
-      if (state.tween.scrollTrigger) state.tween.scrollTrigger.refresh();
-      return;
-    }
-
-    if (shouldPin) {
-      viewport.classList.add("series-stage-viewport--driven");
-      viewport.scrollLeft = 0;
-      state.tween = window.gsap.to(strip, {
-        x: () => -Math.max(0, strip.scrollWidth - viewport.clientWidth),
-        ease: "none",
-        scrollTrigger: {
-          trigger: stage,
-          start: "top top",
-          end: () =>
-            "+=" + Math.max(0, strip.scrollWidth - viewport.clientWidth),
-          scrub: true,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            range.value = String(self.progress * 100);
-          }
-        }
-      });
-    } else {
-      if (state.tween) {
-        if (state.tween.scrollTrigger) state.tween.scrollTrigger.kill(true);
-        state.tween.kill();
-        state.tween = null;
-      }
-      viewport.classList.remove("series-stage-viewport--driven");
-      const pct = max ? (viewport.scrollLeft / max) * 100 : 0;
-      range.value = String(pct);
-      refreshScrollTrigger();
-    }
+    setStrip(stage, state, state.x || 0, false);
+    refreshScrollTrigger();
   }
 
   function init(container) {
     if (!container || states.has(container)) return;
     render(container);
 
+    const strip = q(container, ".series-stage-strip");
     const state = {
       viewport: q(container, ".series-stage-viewport"),
-      strip: q(container, ".series-stage-strip"),
+      strip: strip,
       range: q(container, ".series-stage-range"),
-      tween: null
+      x: 0,
+      moveTo: canTween()
+        ? window.gsap.quickTo(strip, "x", {
+            duration: 0.35,
+            ease: "power2.out"
+          })
+        : null
     };
     states.set(container, state);
 
@@ -424,9 +389,8 @@
   function destroy(container) {
     const state = states.get(container);
     if (!state) return;
-    if (state.tween) {
-      if (state.tween.scrollTrigger) state.tween.scrollTrigger.kill(true);
-      state.tween.kill();
+    if (state.moveTo && window.gsap) {
+      window.gsap.killTweensOf(state.strip, "x");
     }
     states.delete(container);
     container.innerHTML = "";

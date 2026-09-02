@@ -50,21 +50,11 @@
 }
 
 .film-stage-viewport {
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
+  overflow: hidden;
   background: var(--bg);
   border: 2px solid var(--ink);
   box-shadow: 5px 5px 0 var(--ink);
   touch-action: pan-x pan-y;
-}
-
-.film-stage-viewport::-webkit-scrollbar {
-  display: none;
-}
-
-.film-stage-viewport--driven {
-  overflow: hidden;
 }
 
 .film-stage-strip {
