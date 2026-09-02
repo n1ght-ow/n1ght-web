@@ -30,7 +30,7 @@
 
 - 视觉：`html.has-cursor` 下全局 `cursor: none`；ink 圆点随悬停放大成近黑圆形徽章，`cc-label` 白字大写、`letter-spacing: 0.22em`；进出用 `back.out` 缩放。仅在 FINE_POINTER 且非 REDUCED、非触摸时启用（`TOUCH || !FINE_POINTER || REDUCED` 直接跳过）。
 - PHOTOGRAPHY：悬停 `.hs-card`（可点开 lightbox）显示 `VIEW`；横向区容器 `#hs-wrap` 与 `.hs-dragbar-track` 显示 `DRAG`。
-- GAME ARCHIVE：`#hof-scroll` 与 `#hof-dragbar-track` 显示 `DRAG`（当前 `.hof-item` 未挂 `data-cursor`）。
+- GAME ARCHIVE：`#hof-scroll` 与 `#hof-dragbar-track` 显示 `DRAG`。
 - 新交互卡片只需挂对应 `data-cursor` 值（`VIEW`/`DRAG`/`OPEN`/`PLAY`…），无需改 JS/CSS。
 
 ## 视觉基调
@@ -54,5 +54,4 @@ hero → ticker → PHOTOGRAPHY（横向 pinned 画廊 11 帧 + lightbox 换 `ph
 
 ## 当前欠账（修完即删）
 
-- 音乐正主 7 首缺 `data-song-id`（网易云反复核实不到，需人工确认）：《We Don't Talk Anymore (Remix)》《Slow Down》Madnap、《S&M》Rihanna、《Come Back To Me》Utada Hikaru、《Turnin'》Young Rising Sons、《Try》P!nk、《Galway Girl》Ed Sheeran。
-- 文案 "232 SONGS" 与音乐区实际卡片数（332）不一致，属文案口径，改前确认。
+- `.hof-item` 未挂 `data-cursor`（GAME ARCHIVE 卡片悬停暂无光标徽章；`#hof-scroll` 与 `#hof-dragbar-track` 已有 `DRAG`）。

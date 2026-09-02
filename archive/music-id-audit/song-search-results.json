@@ -1,0 +1,2897 @@
+[
+  {
+    "title": "Bad Romance",
+    "artist": "Lady Gaga",
+    "query": "Bad Romance Lady Gaga",
+    "songs": [
+      {
+        "id": "1386002735",
+        "name": "Bad Romance",
+        "artists": "Lady Gaga",
+        "album": "The Fame Monster",
+        "fee": 1,
+        "mark": 17181188096
+      },
+      {
+        "id": "21038694",
+        "name": "Bad Romance (Radio Edit)",
+        "artists": "Lady Gaga",
+        "album": "Bad Romance",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2923285",
+        "name": "Bad Romance (Skrillex Remix)",
+        "artists": "Lady Gaga",
+        "album": "Bad Romance",
+        "fee": 1,
+        "mark": 17180663808
+      },
+      {
+        "id": "2923305",
+        "name": "Bad Romance (DJ Dan Remix)",
+        "artists": "Lady Gaga",
+        "album": "Bad Romance",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2923275",
+        "name": "Bad Romance (Chew Fu H1N1 Fix)",
+        "artists": "Lady Gaga",
+        "album": "Bad Romance",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "21038465",
+        "name": "Bad Romance",
+        "artists": "Lady Gaga",
+        "album": "The Fame Monster",
+        "fee": 1,
+        "mark": 17180663808
+      },
+      {
+        "id": "27162825",
+        "name": "Bad Romance (Radio Edit)",
+        "artists": "Lady Gaga",
+        "album": "The Singles",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "29897656",
+        "name": "Bad Romance (Live)",
+        "artists": "Lady Gaga",
+        "album": "The Monster Ball Tour",
+        "fee": 1,
+        "mark": 17181188096
+      }
+    ]
+  },
+  {
+    "title": "Paparazzi",
+    "artist": "Lady Gaga",
+    "query": "Paparazzi Lady Gaga",
+    "songs": [
+      {
+        "id": "21038711",
+        "name": "Paparazzi",
+        "artists": "Lady Gaga",
+        "album": "Paparazzi",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "21038475",
+        "name": "Paparazzi",
+        "artists": "Lady Gaga",
+        "album": "The Fame Monster",
+        "fee": 1,
+        "mark": 17181188096
+      },
+      {
+        "id": "21038712",
+        "name": "Paparazzi (Filthy Dukes Remix)",
+        "artists": "Lady Gaga",
+        "album": "Paparazzi",
+        "fee": 1,
+        "mark": 270336
+      },
+      {
+        "id": "29897652",
+        "name": "Paparazzi (Live)",
+        "artists": "Lady Gaga",
+        "album": "The Monster Ball Tour",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "472814364",
+        "name": "Paparazzi (Moto Blanco Remix / Radio Version)",
+        "artists": "Lady Gaga",
+        "album": "Paparazzi Remixes EP (Canada Version)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "27039581",
+        "name": "Paparazzi",
+        "artists": "Lady Gaga",
+        "album": "Paparazzi Remixes",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "26737447",
+        "name": "Paparazzi",
+        "artists": "Lady Gaga",
+        "album": "Paparazzi (The we Remix)",
+        "fee": 1,
+        "mark": 270336
+      },
+      {
+        "id": "2923072",
+        "name": "Paparazzi (Yuksek Remix)",
+        "artists": "Lady Gaga",
+        "album": "The Remix (Japan)",
+        "fee": 1,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "Just Give Me a Reason",
+    "artist": "P!nk / Nate Ruess",
+    "query": "Just Give Me a Reason P!nk / Nate Ruess",
+    "songs": [
+      {
+        "id": "21373645",
+        "name": "Just Give Me a Reason",
+        "artists": "P!nk/Nate Ruess",
+        "album": "The Truth About Love",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "3326838759",
+        "name": "Just Give Me A Reason",
+        "artists": "Neon Miracle/Oancea Tereza",
+        "album": "All Stars Side C",
+        "fee": 8,
+        "mark": 270336
+      },
+      {
+        "id": "31384304",
+        "name": "Just Give Me a Reason (feat. Nate Ruess)",
+        "artists": "P!nk/Nate Ruess",
+        "album": "Now That's What I Call Music! USA",
+        "fee": 8,
+        "mark": 270336
+      },
+      {
+        "id": "1427585980",
+        "name": "Just Give Me a Reason (In the Style of Pink feat. Nate Ruess) [Karaoke Backing Track]",
+        "artists": "Global Karaoke",
+        "album": "Just Give Me a Reason (In the Style of Pink feat. Nate Ruess) [Karaoke Backing Track]",
+        "fee": 8,
+        "mark": 270464
+      },
+      {
+        "id": "3349122362",
+        "name": "Just Give Me a Reason (Cover)",
+        "artists": "Neon Miracle/Oancea Tereza",
+        "album": "All Star Side C (Cover)",
+        "fee": 8,
+        "mark": 270464
+      },
+      {
+        "id": "565570657",
+        "name": "Just Give Me a Reason (Originally Performed by Pink & Nate Ruess) [Karaoke Version]",
+        "artists": "Voice Star Party",
+        "album": "Teen Karaoke 2013",
+        "fee": 0,
+        "mark": 262144
+      },
+      {
+        "id": "28242481",
+        "name": "Just Give Me a Reason",
+        "artists": "P!nk/Nate Ruess",
+        "album": "The BRIT Awards 2014",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "29313356",
+        "name": "Just Give Me a Reason (acoustic version)",
+        "artists": "Tyler Ward",
+        "album": "Web Cam Songs",
+        "fee": 0,
+        "mark": 262144
+      }
+    ]
+  },
+  {
+    "title": "If I Ain't Got You",
+    "artist": "Alicia Keys",
+    "query": "If I Ain't Got You Alicia Keys",
+    "songs": [
+      {
+        "id": "16434100",
+        "name": "If I Ain't Got You",
+        "artists": "Alicia Keys",
+        "album": "If I Ain't Got You",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "27159205",
+        "name": "If I Ain't Got You",
+        "artists": "Alicia Keys",
+        "album": "The Platinum Collection",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "2117355",
+        "name": "If I Ain't Got You (Kanye West Radio Mix #1)",
+        "artists": "Alicia Keys",
+        "album": "Remixed",
+        "fee": 8,
+        "mark": 270336
+      },
+      {
+        "id": "26550252",
+        "name": "If I Ain't Got You (live)",
+        "artists": "Alicia Keys",
+        "album": "Alicia Keys - VH1 Storytellers",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2044430093",
+        "name": "If I Ain't Got You (Orchestral)",
+        "artists": "Alicia Keys/Queen Charlotte's Global Orchestra",
+        "album": "If I Ain't Got You (Orchestral - from Queen Charlotte: A Bridgerton Story [Covers from the Netflix Series])",
+        "fee": 1,
+        "mark": 270336
+      },
+      {
+        "id": "27195480",
+        "name": "If I Ain't Got You",
+        "artists": "Alicia Keys",
+        "album": "Greatest Hits",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "2100819304",
+        "name": "If I Ain't Got You (Instrumental)",
+        "artists": "Alicia Keys",
+        "album": "If I Ain't Got You (Remixes)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "16432997",
+        "name": "If I Ain't Got You (Unplugged Live at the Brooklyn Academy of Music, Brooklyn, NY - July 2005)",
+        "artists": "Alicia Keys",
+        "album": "Unplugged",
+        "fee": 1,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "If I Were a Boy",
+    "artist": "Beyoncé",
+    "query": "If I Were a Boy Beyoncé",
+    "songs": [
+      {
+        "id": "2188283",
+        "name": "If I Were a Boy",
+        "artists": "Beyoncé",
+        "album": "I Am... Sasha Fierce (Deluxe Version)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2188495",
+        "name": "If I Were A Boy (Remix)(featuring R.Kelly)",
+        "artists": "Beyoncé/R. Kelly",
+        "album": "If I Were A Boy",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "441566935",
+        "name": "If I Were a Boy",
+        "artists": "Beyoncé",
+        "album": "If I Were A Boy",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "2187991",
+        "name": "If I Were A Boy (live)",
+        "artists": "Beyoncé",
+        "album": "I Am... Yours: An Intimate Performance at Wynn Las Vegas",
+        "fee": 8,
+        "mark": 270336
+      },
+      {
+        "id": "2188476",
+        "name": "If I Were A Boy (DJ Escape and capello Remix)",
+        "artists": "Beyoncé",
+        "album": "If I Were A Boy",
+        "fee": 8,
+        "mark": 270336
+      },
+      {
+        "id": "2188040",
+        "name": "If I Were A Boy (Instrumental)",
+        "artists": "Beyoncé",
+        "album": "I Am... Yours: An Intimate Performance at Wynn Las Vegas",
+        "fee": 0,
+        "mark": 131072
+      },
+      {
+        "id": "19550041",
+        "name": "If I Were a Boy",
+        "artists": "Beyoncé",
+        "album": "I AM...SASHA FIERCE",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2188127",
+        "name": "If I Were a Boy (Maurice Joshua Mojo UK Remix - Main)",
+        "artists": "Beyoncé",
+        "album": "Above And Beyoncé Dance Mixes",
+        "fee": 1,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "Dusk Till Dawn",
+    "artist": "ZAYN / Sia",
+    "query": "Dusk Till Dawn ZAYN / Sia",
+    "songs": [
+      {
+        "id": "504265014",
+        "name": "Dusk Till Dawn",
+        "artists": "ZAYN/Sia",
+        "album": "Dusk Till Dawn",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "504264023",
+        "name": "Dusk Till Dawn (Radio Edit)",
+        "artists": "ZAYN/Sia",
+        "album": "Dusk Till Dawn",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1832805607",
+        "name": "Dusk Till Dawn Zayn (cover)",
+        "artists": "FLOWMER",
+        "album": "Poder De lo Alto",
+        "fee": 0,
+        "mark": 262144
+      },
+      {
+        "id": "1476352185",
+        "name": "Dusk Till Dawn (Radio Edit)",
+        "artists": "ZAYN/Sia",
+        "album": "Dusk Till Dawn (Radio Edit)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1473751224",
+        "name": "Dusk Till Dawn",
+        "artists": "ZAYN/Sia",
+        "album": "Icarus Falls",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "509633388",
+        "name": "Dusk Till Dawn (Brooks Remix)",
+        "artists": "ZAYN/Sia/Brooks",
+        "album": "Dusk Till Dawn (The Remixes)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "509633390",
+        "name": "Dusk Till Dawn (John \"J-C\" Carr Mix)",
+        "artists": "ZAYN/Sia/John \"J-C\" Carr",
+        "album": "Dusk Till Dawn (The Remixes)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2043019869",
+        "name": "Dusk Till Dawn (Radio Edit)",
+        "artists": "ZAYN/Sia",
+        "album": "Coronation Party Songs",
+        "fee": 1,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "Young and Beautiful",
+    "artist": "Lana Del Rey",
+    "query": "Young and Beautiful Lana Del Rey",
+    "songs": [
+      {
+        "id": "26243686",
+        "name": "Young And Beautiful",
+        "artists": "Lana Del Rey",
+        "album": "Young And Beautiful",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "27545645",
+        "name": "Young and Beautiful (Kaskade Remix)",
+        "artists": "Lana Del Rey",
+        "album": "Lana Del Rey (Remixes)",
+        "fee": 0,
+        "mark": 262144
+      },
+      {
+        "id": "421160293",
+        "name": "Young and Beautiful (Serge Devant Remix)",
+        "artists": "Lana Del Rey/Serge Devant",
+        "album": "Lana Del Rey (Remixes)",
+        "fee": 0,
+        "mark": 262144
+      },
+      {
+        "id": "509126537",
+        "name": "Young and Beautiful",
+        "artists": "Eliza G/Lana Del Rey/Rick Nowels",
+        "album": "Young and Beautiful",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "1878190504",
+        "name": "Young And Beautiful",
+        "artists": "Lana Del Rey",
+        "album": "brokenhearted",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "28097575",
+        "name": "Young And Beautiful (Cedric Gervais Remix Radio Edit)",
+        "artists": "Lana Del Rey",
+        "album": "Running Trax Summer 2014",
+        "fee": 8,
+        "mark": 270336
+      },
+      {
+        "id": "36103584",
+        "name": "Young and Beautiful (No Pets Allowed Remix)",
+        "artists": "No Pets Allowed/Lana Del Rey",
+        "album": "Young and Beautiful (No Pets Allowed Remix)",
+        "fee": 0,
+        "mark": 262144
+      },
+      {
+        "id": "3362142539",
+        "name": "Young And Beautiful",
+        "artists": "阎其儿Jill",
+        "album": "Young And Beautiful",
+        "fee": 8,
+        "mark": 537141248
+      }
+    ]
+  },
+  {
+    "title": "Summertime Sadness",
+    "artist": "Lana Del Rey",
+    "query": "Summertime Sadness Lana Del Rey",
+    "songs": [
+      {
+        "id": "16593589",
+        "name": "Summertime Sadness",
+        "artists": "Lana Del Rey",
+        "album": "Born To Die (Deluxe Version)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "473119948",
+        "name": "Summertime Sadness",
+        "artists": "Lana Del Rey",
+        "album": "Born To Die",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "26621130",
+        "name": "Summertime Sadness (Adam Freeland Vox Mix)",
+        "artists": "Lana Del Rey",
+        "album": "Adam Freeland Remixes",
+        "fee": 8,
+        "mark": 270464
+      },
+      {
+        "id": "2726713469",
+        "name": "Summertime Sadness (Live)",
+        "artists": "Lana Del Rey",
+        "album": "Live at Splendour in the Grass Festival 2012 (Live)",
+        "fee": 8,
+        "mark": 270464
+      },
+      {
+        "id": "26203201",
+        "name": "Summertime Sadness (Asadinho Vocal Mix)",
+        "artists": "Lana Del Rey",
+        "album": "Summertime Sadness (Asadinho Remixes)",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "1984472526",
+        "name": "Summertime Sadness",
+        "artists": "Lana Del Rey",
+        "album": "Summertime Sadness (Sped Up)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1449742306",
+        "name": "Summertime Sadness (Ryan Hemsworth Remix)",
+        "artists": "Lana Del Rey",
+        "album": "Summertime Sadness (Ryan Hemsworth Remix)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "27090090",
+        "name": "Summertime Sadness(Cedric Gervais Remix)",
+        "artists": "Lana Del Rey/Cedric Gervais",
+        "album": "Summertime Sadness (Cedric Gervais Remix)",
+        "fee": 1,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "7 Years",
+    "artist": "Lukas Graham",
+    "query": "7 Years Lukas Graham",
+    "songs": [
+      {
+        "id": "405599119",
+        "name": "7 Years",
+        "artists": "Lukas Graham",
+        "album": "Lukas Graham",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1306995079",
+        "name": "7 Years",
+        "artists": "Lukas Graham",
+        "album": "Holiday Songs",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2004685839",
+        "name": "7 Years (Later) [Live]",
+        "artists": "Lukas Graham",
+        "album": "7 Years (Later) [Live]",
+        "fee": 1,
+        "mark": 17717010432
+      },
+      {
+        "id": "411259108",
+        "name": "7 Years (Instrumental)",
+        "artists": "Lukas Graham",
+        "album": "7 Years (Instrumental)",
+        "fee": 0,
+        "mark": 17180000256
+      },
+      {
+        "id": "415085035",
+        "name": "7 Years (LUCI Remix)",
+        "artists": "LUCI/Lukas Graham",
+        "album": "7 Years (LUCI Remix)",
+        "fee": 8,
+        "mark": 17180139584
+      },
+      {
+        "id": "1411935369",
+        "name": "7 Years",
+        "artists": "Lukas Graham",
+        "album": "100 Greatest 10s: The Best Songs of Last Decade",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "411314114",
+        "name": "7 Years (T-Mass Remix)",
+        "artists": "T-Mass/Lukas Graham/Toby Romeo",
+        "album": "7 Years (T-Mass Remix)",
+        "fee": 0,
+        "mark": 17180131456
+      },
+      {
+        "id": "563682740",
+        "name": "7 Years (Originally Performed by Lukas Graham) (Karaoke Instrumental Version)",
+        "artists": "Hit The Button Karaoke",
+        "album": "Karaoke Picks Vol. 7",
+        "fee": 8,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "Dance Monkey",
+    "artist": "Tones and I",
+    "query": "Dance Monkey Tones and I",
+    "songs": [
+      {
+        "id": "1364343491",
+        "name": "Dance Monkey",
+        "artists": "Tones and I",
+        "album": "Dance Monkey",
+        "fee": 1,
+        "mark": 17717010432
+      },
+      {
+        "id": "1386693749",
+        "name": "Dance Monkey",
+        "artists": "Tones and I",
+        "album": "The Kids Are Coming",
+        "fee": 1,
+        "mark": 17717010432
+      },
+      {
+        "id": "1397142579",
+        "name": "Dance Monkey (Stripped Back)",
+        "artists": "Tones and I",
+        "album": "Dance Monkey (Stripped Back)",
+        "fee": 1,
+        "mark": 17717010432
+      },
+      {
+        "id": "1398392881",
+        "name": "Dance Monkey (PJONAX Remix)",
+        "artists": "Tones and I/PJONAX",
+        "album": "Dance Monkey (PJONAX Remix)",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "1398393888",
+        "name": "Dance Monkey (PJONAX Extended Remix)",
+        "artists": "Tones and I/PJONAX",
+        "album": "Dance Monkey (PJONAX Remix)",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "1861249599",
+        "name": "Dance Monkey",
+        "artists": "Tones and I",
+        "album": "Welcome To The Madhouse (Deluxe)",
+        "fee": 1,
+        "mark": 17717010432
+      },
+      {
+        "id": "1495008014",
+        "name": "Dance Monkey (DFG Bootleg)",
+        "artists": "Tones and I",
+        "album": "",
+        "fee": 0,
+        "mark": 262144
+      },
+      {
+        "id": "1996735990",
+        "name": "Dance Monkey (Arabia Remix)",
+        "artists": "Tones and I",
+        "album": "Dance Monkey (Arabia Remix)",
+        "fee": 8,
+        "mark": 401408
+      }
+    ]
+  },
+  {
+    "title": "Señorita",
+    "artist": "Shawn Mendes / Camila Cabello",
+    "query": "Señorita Shawn Mendes / Camila Cabello",
+    "songs": []
+  },
+  {
+    "title": "I Don't Wanna Live Forever",
+    "artist": "ZAYN / Taylor Swift",
+    "query": "I Don't Wanna Live Forever ZAYN / Taylor Swift",
+    "songs": []
+  },
+  {
+    "title": "Waka Waka (This Time for Africa)",
+    "artist": "Shakira",
+    "query": "Waka Waka (This Time for Africa) Shakira",
+    "songs": []
+  },
+  {
+    "title": "Hips Don't Lie",
+    "artist": "Shakira",
+    "query": "Hips Don't Lie Shakira",
+    "songs": []
+  },
+  {
+    "title": "Unwritten",
+    "artist": "Natasha Bedingfield",
+    "query": "Unwritten Natasha Bedingfield",
+    "songs": []
+  },
+  {
+    "title": "Fight Song",
+    "artist": "Rachel Platten",
+    "query": "Fight Song Rachel Platten",
+    "songs": []
+  },
+  {
+    "title": "Marry You",
+    "artist": "Bruno Mars",
+    "query": "Marry You Bruno Mars",
+    "songs": []
+  },
+  {
+    "title": "Havana",
+    "artist": "Camila Cabello",
+    "query": "Havana Camila Cabello",
+    "songs": []
+  },
+  {
+    "title": "Beautiful Things",
+    "artist": "Benson Boone",
+    "query": "Beautiful Things Benson Boone",
+    "songs": []
+  },
+  {
+    "title": "Lose Control",
+    "artist": "Teddy Swims",
+    "query": "Lose Control Teddy Swims",
+    "songs": []
+  },
+  {
+    "title": "APT.",
+    "artist": "ROSÉ / Bruno Mars",
+    "query": "APT. ROSÉ / Bruno Mars",
+    "songs": []
+  },
+  {
+    "title": "Greedy",
+    "artist": "Tate McRae",
+    "query": "Greedy Tate McRae",
+    "songs": [
+      {
+        "id": "2080331573",
+        "name": "greedy",
+        "artists": "Tate McRae",
+        "album": "greedy",
+        "fee": 1,
+        "mark": 17181188096
+      },
+      {
+        "id": "2105586334",
+        "name": "greedy",
+        "artists": "Tate McRae",
+        "album": "THINK LATER",
+        "fee": 1,
+        "mark": 17181188096
+      },
+      {
+        "id": "2122765167",
+        "name": "greedy (Alok remix)",
+        "artists": "Tate McRae/Alok",
+        "album": "greedy (remixes)",
+        "fee": 1,
+        "mark": 17181188096
+      },
+      {
+        "id": "2089959730",
+        "name": "greedy (slowed down)",
+        "artists": "Tate McRae",
+        "album": "greedy",
+        "fee": 8,
+        "mark": 17181188096
+      },
+      {
+        "id": "2089959617",
+        "name": "greedy (sped up)",
+        "artists": "Tate McRae",
+        "album": "greedy",
+        "fee": 8,
+        "mark": 1318912
+      },
+      {
+        "id": "2081470111",
+        "name": "greedy",
+        "artists": "Tate McRae",
+        "album": "greedy",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2122765166",
+        "name": "greedy (Ian Asher Remix)",
+        "artists": "Tate McRae/Ian Asher",
+        "album": "greedy (remixes)",
+        "fee": 1,
+        "mark": 1318912
+      },
+      {
+        "id": "2122766033",
+        "name": "greedy (cassö remix)",
+        "artists": "Tate McRae/cassö",
+        "album": "greedy (remixes)",
+        "fee": 1,
+        "mark": 1318912
+      }
+    ]
+  },
+  {
+    "title": "What Was I Made For?",
+    "artist": "Billie Eilish",
+    "query": "What Was I Made For? Billie Eilish",
+    "songs": []
+  },
+  {
+    "title": "Calm Down",
+    "artist": "Rema / Selena Gomez",
+    "query": "Calm Down Rema / Selena Gomez",
+    "songs": []
+  },
+  {
+    "title": "Skyfall",
+    "artist": "Adele",
+    "query": "Skyfall Adele",
+    "songs": []
+  },
+  {
+    "title": "All By Myself",
+    "artist": "Celine Dion",
+    "query": "All By Myself Celine Dion",
+    "songs": []
+  },
+  {
+    "title": "When You Say Nothing At All",
+    "artist": "Ronan Keating",
+    "query": "When You Say Nothing At All Ronan Keating",
+    "songs": []
+  },
+  {
+    "title": "The Night We Met",
+    "artist": "Lord Huron",
+    "query": "The Night We Met Lord Huron",
+    "songs": []
+  },
+  {
+    "title": "Hey There Delilah",
+    "artist": "Plain White T's",
+    "query": "Hey There Delilah Plain White T's",
+    "songs": []
+  },
+  {
+    "title": "Make You Feel My Love",
+    "artist": "Adele",
+    "query": "Make You Feel My Love Adele",
+    "songs": []
+  },
+  {
+    "title": "Falling",
+    "artist": "Harry Styles",
+    "query": "Falling Harry Styles",
+    "songs": []
+  },
+  {
+    "title": "Sparks",
+    "artist": "Coldplay",
+    "query": "Sparks Coldplay",
+    "songs": []
+  },
+  {
+    "title": "All I Want",
+    "artist": "Kodaline",
+    "query": "All I Want Kodaline",
+    "songs": []
+  },
+  {
+    "title": "Chasing Cars",
+    "artist": "Snow Patrol",
+    "query": "Chasing Cars Snow Patrol",
+    "songs": []
+  },
+  {
+    "title": "How to Save a Life",
+    "artist": "The Fray",
+    "query": "How to Save a Life The Fray",
+    "songs": []
+  },
+  {
+    "title": "What a Wonderful World",
+    "artist": "Louis Armstrong",
+    "query": "What a Wonderful World Louis Armstrong",
+    "songs": []
+  },
+  {
+    "title": "Unchained Melody",
+    "artist": "The Righteous Brothers",
+    "query": "Unchained Melody The Righteous Brothers",
+    "songs": []
+  },
+  {
+    "title": "Yesterday",
+    "artist": "The Beatles",
+    "query": "Yesterday The Beatles",
+    "songs": []
+  },
+  {
+    "title": "Let It Be",
+    "artist": "The Beatles",
+    "query": "Let It Be The Beatles",
+    "songs": []
+  },
+  {
+    "title": "Hey Jude",
+    "artist": "The Beatles",
+    "query": "Hey Jude The Beatles",
+    "songs": []
+  },
+  {
+    "title": "The Sound of Silence",
+    "artist": "Simon & Garfunkel",
+    "query": "The Sound of Silence Simon & Garfunkel",
+    "songs": []
+  },
+  {
+    "title": "Scarborough Fair",
+    "artist": "Simon & Garfunkel",
+    "query": "Scarborough Fair Simon & Garfunkel",
+    "songs": []
+  },
+  {
+    "title": "Hotel California",
+    "artist": "Eagles",
+    "query": "Hotel California Eagles",
+    "songs": []
+  },
+  {
+    "title": "Yesterday Once More",
+    "artist": "Carpenters",
+    "query": "Yesterday Once More Carpenters",
+    "songs": []
+  },
+  {
+    "title": "Top of the World",
+    "artist": "Carpenters",
+    "query": "Top of the World Carpenters",
+    "songs": []
+  },
+  {
+    "title": "Moon River",
+    "artist": "Andy Williams",
+    "query": "Moon River Andy Williams",
+    "songs": []
+  },
+  {
+    "title": "Unforgettable",
+    "artist": "Nat King Cole",
+    "query": "Unforgettable Nat King Cole",
+    "songs": []
+  },
+  {
+    "title": "Can't Take My Eyes Off You",
+    "artist": "Frankie Valli",
+    "query": "Can't Take My Eyes Off You Frankie Valli",
+    "songs": []
+  },
+  {
+    "title": "Stand by Me",
+    "artist": "Ben E. King",
+    "query": "Stand by Me Ben E. King",
+    "songs": []
+  },
+  {
+    "title": "Nothing's Gonna Change My Love for You",
+    "artist": "Glenn Medeiros",
+    "query": "Nothing's Gonna Change My Love for You Glenn Medeiros",
+    "songs": []
+  },
+  {
+    "title": "Vincent (Starry Starry Night)",
+    "artist": "Don McLean",
+    "query": "Vincent (Starry Starry Night) Don McLean",
+    "songs": []
+  },
+  {
+    "title": "Hallelujah",
+    "artist": "Leonard Cohen",
+    "query": "Hallelujah Leonard Cohen",
+    "songs": []
+  },
+  {
+    "title": "Total Eclipse of the Heart",
+    "artist": "Bonnie Tyler",
+    "query": "Total Eclipse of the Heart Bonnie Tyler",
+    "songs": []
+  },
+  {
+    "title": "Take My Breath Away",
+    "artist": "Berlin",
+    "query": "Take My Breath Away Berlin",
+    "songs": []
+  },
+  {
+    "title": "Careless Whisper",
+    "artist": "George Michael",
+    "query": "Careless Whisper George Michael",
+    "songs": []
+  },
+  {
+    "title": "Billie Jean",
+    "artist": "Michael Jackson",
+    "query": "Billie Jean Michael Jackson",
+    "songs": []
+  },
+  {
+    "title": "Beat It",
+    "artist": "Michael Jackson",
+    "query": "Beat It Michael Jackson",
+    "songs": []
+  },
+  {
+    "title": "Heal the World",
+    "artist": "Michael Jackson",
+    "query": "Heal the World Michael Jackson",
+    "songs": []
+  },
+  {
+    "title": "Dancing Queen",
+    "artist": "ABBA",
+    "query": "Dancing Queen ABBA",
+    "songs": []
+  },
+  {
+    "title": "My Heart Will Go On",
+    "artist": "Celine Dion",
+    "query": "My Heart Will Go On Celine Dion",
+    "songs": []
+  },
+  {
+    "title": "I Don't Want to Miss a Thing",
+    "artist": "Aerosmith",
+    "query": "I Don't Want to Miss a Thing Aerosmith",
+    "songs": []
+  },
+  {
+    "title": "Tears in Heaven",
+    "artist": "Eric Clapton",
+    "query": "Tears in Heaven Eric Clapton",
+    "songs": []
+  },
+  {
+    "title": "Truly Madly Deeply",
+    "artist": "Savage Garden",
+    "query": "Truly Madly Deeply Savage Garden",
+    "songs": []
+  },
+  {
+    "title": "I Want It That Way",
+    "artist": "Backstreet Boys",
+    "query": "I Want It That Way Backstreet Boys",
+    "songs": []
+  },
+  {
+    "title": "You Raise Me Up",
+    "artist": "Westlife",
+    "query": "You Raise Me Up Westlife",
+    "songs": []
+  },
+  {
+    "title": "Big Big World",
+    "artist": "Emilia",
+    "query": "Big Big World Emilia",
+    "songs": []
+  },
+  {
+    "title": "Beautiful in White",
+    "artist": "Westlife",
+    "query": "Beautiful in White Westlife",
+    "songs": []
+  },
+  {
+    "title": "God Is a Girl",
+    "artist": "Groove Coverage",
+    "query": "God Is a Girl Groove Coverage",
+    "songs": []
+  },
+  {
+    "title": "Cry on My Shoulder",
+    "artist": "Alexander Klaws",
+    "query": "Cry on My Shoulder Alexander Klaws",
+    "songs": []
+  },
+  {
+    "title": "One Kiss",
+    "artist": "Calvin Harris / Dua Lipa",
+    "query": "One Kiss Calvin Harris / Dua Lipa",
+    "songs": []
+  },
+  {
+    "title": "Miracle",
+    "artist": "Calvin Harris / Ellie Goulding",
+    "query": "Miracle Calvin Harris / Ellie Goulding",
+    "songs": []
+  },
+  {
+    "title": "Animals",
+    "artist": "Martin Garrix",
+    "query": "Animals Martin Garrix",
+    "songs": []
+  },
+  {
+    "title": "Roses (Imanbek Remix)",
+    "artist": "The Chainsmokers / ROSÉ",
+    "query": "Roses (Imanbek Remix) The Chainsmokers / ROSÉ",
+    "songs": []
+  },
+  {
+    "title": "S&M",
+    "artist": "Rihanna（待核实 ID）",
+    "query": "S&M Rihanna",
+    "songs": []
+  },
+  {
+    "title": "Stay",
+    "artist": "Zedd / Alessia Cara",
+    "query": "Stay Zedd / Alessia Cara",
+    "songs": []
+  },
+  {
+    "title": "The Spectre",
+    "artist": "Alan Walker",
+    "query": "The Spectre Alan Walker",
+    "songs": []
+  },
+  {
+    "title": "All Falls Down",
+    "artist": "Alan Walker / Noah Cyrus",
+    "query": "All Falls Down Alan Walker / Noah Cyrus",
+    "songs": []
+  },
+  {
+    "title": "On the Floor",
+    "artist": "Jennifer Lopez / Pitbull",
+    "query": "On the Floor Jennifer Lopez / Pitbull",
+    "songs": []
+  },
+  {
+    "title": "Give Me Everything",
+    "artist": "Pitbull / Ne-Yo / Afrojack",
+    "query": "Give Me Everything Pitbull / Ne-Yo / Afrojack",
+    "songs": []
+  },
+  {
+    "title": "Timber",
+    "artist": "Pitbull / Ke$ha",
+    "query": "Timber Pitbull / Ke$ha",
+    "songs": []
+  },
+  {
+    "title": "Peaches",
+    "artist": "Justin Bieber / Daniel Caesar / GIVĒON",
+    "query": "Peaches Justin Bieber / Daniel Caesar / GIVĒON",
+    "songs": []
+  },
+  {
+    "title": "Love Lies",
+    "artist": "Khalid / Normani",
+    "query": "Love Lies Khalid / Normani",
+    "songs": []
+  },
+  {
+    "title": "Hrs & Hrs",
+    "artist": "Muni Long",
+    "query": "Hrs & Hrs Muni Long",
+    "songs": []
+  },
+  {
+    "title": "Adorn",
+    "artist": "Miguel",
+    "query": "Adorn Miguel",
+    "songs": []
+  },
+  {
+    "title": "Exchange",
+    "artist": "Bryson Tiller",
+    "query": "Exchange Bryson Tiller",
+    "songs": []
+  },
+  {
+    "title": "Pink + White",
+    "artist": "Frank Ocean",
+    "query": "Pink + White Frank Ocean",
+    "songs": []
+  },
+  {
+    "title": "Water",
+    "artist": "Tyla",
+    "query": "Water Tyla",
+    "songs": []
+  },
+  {
+    "title": "Unholy",
+    "artist": "Sam Smith / Kim Petras",
+    "query": "Unholy Sam Smith / Kim Petras",
+    "songs": []
+  },
+  {
+    "title": "Without Me",
+    "artist": "Eminem",
+    "query": "Without Me Eminem",
+    "songs": []
+  },
+  {
+    "title": "Rap God",
+    "artist": "Eminem",
+    "query": "Rap God Eminem",
+    "songs": []
+  },
+  {
+    "title": "Sunflower",
+    "artist": "Post Malone / Swae Lee",
+    "query": "Sunflower Post Malone / Swae Lee",
+    "songs": []
+  },
+  {
+    "title": "Can't Hold Us",
+    "artist": "Macklemore / Ryan Lewis",
+    "query": "Can't Hold Us Macklemore / Ryan Lewis",
+    "songs": []
+  },
+  {
+    "title": "Thrift Shop",
+    "artist": "Macklemore / Ryan Lewis",
+    "query": "Thrift Shop Macklemore / Ryan Lewis",
+    "songs": []
+  },
+  {
+    "title": "Old Town Road",
+    "artist": "Lil Nas X / Billy Ray Cyrus",
+    "query": "Old Town Road Lil Nas X / Billy Ray Cyrus",
+    "songs": []
+  },
+  {
+    "title": "Industry Baby",
+    "artist": "Lil Nas X / Jack Harlow",
+    "query": "Industry Baby Lil Nas X / Jack Harlow",
+    "songs": []
+  },
+  {
+    "title": "Party Rock Anthem",
+    "artist": "LMFAO",
+    "query": "Party Rock Anthem LMFAO",
+    "songs": [
+      {
+        "id": "16648207",
+        "name": "Party Rock Anthem",
+        "artists": "LMFAO/GoonRock/Lauren Bennett",
+        "album": "Sorry For Party Rocking",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "16648232",
+        "name": "Party Rock Anthem",
+        "artists": "LMFAO/Lauren Bennett/GoonRock",
+        "album": "Party Rock Anthem",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1435808765",
+        "name": "Party Rock Anthem",
+        "artists": "LMFAO",
+        "album": "Just Dance Video Game Hits, Vol. 1",
+        "fee": 8,
+        "mark": 537141376
+      },
+      {
+        "id": "25639030",
+        "name": "PARTY ROCK ANTHEM",
+        "artists": "LMFAO/GoonRock/Lauren Bennett",
+        "album": "2011 Hit Fm 年度百首单曲",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "27109833",
+        "name": "Party Rock Anthem",
+        "artists": "LMFAO",
+        "album": "Absolute Music 67",
+        "fee": 1,
+        "mark": 270336
+      },
+      {
+        "id": "23884322",
+        "name": "Party Rock Anthem (feat. Lauren Bennett & GoonRock)",
+        "artists": "LMFAO/Lauren Bennett & GoonRock",
+        "album": "Now That's What I Call Music! 79",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "3373832867",
+        "name": "Party Rock Anthem (DJ Enferno Remix)",
+        "artists": "LMFAO/Lauren Bennett/GoonRock",
+        "album": "Party Rock Anthem (Remixes)",
+        "fee": 8,
+        "mark": 270336
+      },
+      {
+        "id": "3373832643",
+        "name": "Party Rock Anthem (Cherry Cherry Boom Boom Bomber Refreak)",
+        "artists": "LMFAO/Lauren Bennett/GoonRock",
+        "album": "Party Rock Anthem (Remixes)",
+        "fee": 8,
+        "mark": 270336
+      }
+    ]
+  },
+  {
+    "title": "HUMBLE.",
+    "artist": "Kendrick Lamar",
+    "query": "HUMBLE. Kendrick Lamar",
+    "songs": [
+      {
+        "id": "469104548",
+        "name": "HUMBLE.",
+        "artists": "Kendrick Lamar",
+        "album": "HUMBLE.",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "472045054",
+        "name": "HUMBLE.",
+        "artists": "Kendrick Lamar",
+        "album": "DAMN.",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "526472695",
+        "name": "Humble (Vinarex Remix)",
+        "artists": "Vinarex/Kendrick Lamar",
+        "album": "Humble (Vinarex Remix)",
+        "fee": 0,
+        "mark": 262144
+      },
+      {
+        "id": "475279964",
+        "name": "Humble  (Devvon Terrell Remix)",
+        "artists": "Devvon Terrell/Kendrick Lamar",
+        "album": "Humble  (Devvon Terrell Remix)",
+        "fee": 0,
+        "mark": 786432
+      },
+      {
+        "id": "523030134",
+        "name": "HUMBLE.",
+        "artists": "Kendrick Lamar",
+        "album": "DAMN. COLLECTORS EDITION.",
+        "fee": 1,
+        "mark": 17181188096
+      },
+      {
+        "id": "518282827",
+        "name": "HUMBLE.(AVALON Remix)",
+        "artists": "Blue Mirror/Kendrick Lamar",
+        "album": "HUMBLE.(Remix)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "508319112",
+        "name": "HUMBLE. (SKRILLEX REMIX)",
+        "artists": "Skrillex/Kendrick Lamar",
+        "album": "HUMBLE. (SKRILLEX REMIX)",
+        "fee": 1,
+        "mark": 17181188096
+      },
+      {
+        "id": "518012027",
+        "name": "Humble (JETFIRE Remix)",
+        "artists": "JETFIRE/Skrillex/Kendrick Lamar",
+        "album": "Humble (JETFIRE Remix)",
+        "fee": 0,
+        "mark": 262144
+      }
+    ]
+  },
+  {
+    "title": "Sicko Mode",
+    "artist": "Travis Scott",
+    "query": "Sicko Mode Travis Scott",
+    "songs": [
+      {
+        "id": "1298432425",
+        "name": "SICKO MODE",
+        "artists": "Travis Scott",
+        "album": "ASTROWORLD",
+        "fee": 1,
+        "mark": 17181188096
+      },
+      {
+        "id": "1329664405",
+        "name": "SICKO MODE (Skrillex Remix)",
+        "artists": "Travis Scott/Skrillex",
+        "album": "SICKO MODE (Skrillex Remix)",
+        "fee": 1,
+        "mark": 17181188096
+      },
+      {
+        "id": "3318957478",
+        "name": "SICKO MODE",
+        "artists": "TravisScott",
+        "album": "tellmewhyn",
+        "fee": 0,
+        "mark": 537002112
+      },
+      {
+        "id": "1480728424",
+        "name": "SICKO MODE(Instrumental)",
+        "artists": "AZ Beats/Travis Scott",
+        "album": "ASTROWORLD",
+        "fee": 0,
+        "mark": 192
+      },
+      {
+        "id": "2158889954",
+        "name": "SICKO MODE(James Hype VIP Mix)",
+        "artists": "James Hype/Travis Scott",
+        "album": "SICKO MODE(James Hype VIP Mix)",
+        "fee": 0,
+        "mark": 262272
+      },
+      {
+        "id": "1824193373",
+        "name": "SICKO MODE (NOTYPE Bootleg)",
+        "artists": "NOTYPE/Travis Scott/Drake",
+        "album": "",
+        "fee": 0,
+        "mark": 262144
+      },
+      {
+        "id": "1838116567",
+        "name": "Sicko Mode Travis Scott (Instrumental)",
+        "artists": "S17AG",
+        "album": "Remakes Pt. 2",
+        "fee": 8,
+        "mark": 139328
+      },
+      {
+        "id": "1348323812",
+        "name": "SICKO MODE (NXSTY REMIX)",
+        "artists": "NXSTY/Travis Scott",
+        "album": "SICKO MODE (NXSTY REMIX)",
+        "fee": 0,
+        "mark": 537133056
+      }
+    ]
+  },
+  {
+    "title": "We Will Rock You",
+    "artist": "Queen",
+    "query": "We Will Rock You Queen",
+    "songs": [
+      {
+        "id": "1869271",
+        "name": "We Will Rock You",
+        "artists": "Queen",
+        "album": "Queen Rocks",
+        "fee": 1,
+        "mark": 17717010432
+      },
+      {
+        "id": "471969699",
+        "name": "We Will Rock You",
+        "artists": "Queen",
+        "album": "News Of The World",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "1318814926",
+        "name": "We Will Rock You (Movie Mix)",
+        "artists": "Queen",
+        "album": "Bohemian Rhapsody (The Original Soundtrack)",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "18317204",
+        "name": "We Will Rock You",
+        "artists": "Queen",
+        "album": "News Of The World (Deluxe Edition)",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "511332423",
+        "name": "We Will Rock You (Raw Sessions Version)",
+        "artists": "Queen",
+        "album": "We Will Rock You (Raw Sessions Version)",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "18317614",
+        "name": "We Will Rock You",
+        "artists": "Queen",
+        "album": "Greatest Hits",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "18317638",
+        "name": "We Will Rock You (Live At Milton Keynes Bowl / June 1982)",
+        "artists": "Queen",
+        "album": "On Fire: Live At The Bowl",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "18317329",
+        "name": "We Will Rock You (Live)",
+        "artists": "Queen",
+        "album": "Queen Rock Montreal",
+        "fee": 8,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "We Are the Champions",
+    "artist": "Queen",
+    "query": "We Are the Champions Queen",
+    "songs": [
+      {
+        "id": "27198672",
+        "name": "We Are The Champions",
+        "artists": "Queen",
+        "album": "Special Edition GOLD",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1408068151",
+        "name": "We Are The Champions",
+        "artists": "Dream Queen",
+        "album": "Killer Queen- Tribute To Queen",
+        "fee": 8,
+        "mark": 270464
+      },
+      {
+        "id": "1318814935",
+        "name": "We Are The Champions (Live Aid)",
+        "artists": "Queen",
+        "album": "Bohemian Rhapsody (The Original Soundtrack)",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "1869073",
+        "name": "We Are The Champions (Live In Sheffield / 2005)",
+        "artists": "Queen/Paul Rodgers",
+        "album": "Return of the Champions",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "18317330",
+        "name": "We Are The Champions (Live)",
+        "artists": "Queen",
+        "album": "Queen Rock Montreal",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "3405163655",
+        "name": "We Are The Champions",
+        "artists": "Queen",
+        "album": "We Are The Champions / We Will Rock You",
+        "fee": 8,
+        "mark": 270336
+      },
+      {
+        "id": "511332322",
+        "name": "We Are The Champions (Raw Sessions Version)",
+        "artists": "Queen",
+        "album": "We Are The Champions (Raw Sessions Version)",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "471968700",
+        "name": "We Are The Champions",
+        "artists": "Queen",
+        "album": "News Of The World",
+        "fee": 8,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "Enemy",
+    "artist": "Imagine Dragons / JIN",
+    "query": "Enemy Imagine Dragons / JIN",
+    "songs": [
+      {
+        "id": "1890494798",
+        "name": "Enemy (from the series Arcane League of Legends)",
+        "artists": "Imagine Dragons/JID/英雄联盟/双城之战",
+        "album": "Enemy (from the series Arcane League of Legends)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1894281388",
+        "name": "Enemy (from the series Arcane League of Legends)",
+        "artists": "Imagine Dragons/双城之战/英雄联盟",
+        "album": "Enemy (from the series Arcane League of Legends)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "3356620689",
+        "name": "Enemy (from the series Arcane League of Legends)",
+        "artists": "Imagine Dragons/JID/Arcane/League Of Legends",
+        "album": "“梦龙” LOOM TOUR 2026 中国巡演特别版",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2068089783",
+        "name": "Enemy (Live in Vegas)",
+        "artists": "Imagine Dragons",
+        "album": "Imagine Dragons Live in Vegas",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1338149101",
+        "name": "Believer",
+        "artists": "Imagine Dragons/Lil Wayne",
+        "album": "Believer",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1895879668",
+        "name": "Enemy (Arcane League of Legends) (Epic Version)",
+        "artists": "Krutikov Music",
+        "album": "Enemy (Arcane League of Legends) (Epic Version)",
+        "fee": 8,
+        "mark": 17180270720
+      },
+      {
+        "id": "1960360528",
+        "name": "Enemy (from the series Arcane League of Legends)",
+        "artists": "Imagine Dragons/JID/双城之战/英雄联盟",
+        "album": "Mercury - Acts 1 & 2",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "31789010",
+        "name": "Shots (Broiler Remix)",
+        "artists": "Imagine Dragons/Broiler",
+        "album": "Shots",
+        "fee": 1,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "She Will Be Loved",
+    "artist": "Maroon 5",
+    "query": "She Will Be Loved Maroon 5",
+    "songs": [
+      {
+        "id": "21253949",
+        "name": "She Will Be Loved",
+        "artists": "Maroon 5",
+        "album": "Songs About Jane",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "4173514",
+        "name": "She Will Be Loved (Acoustic)",
+        "artists": "Maroon 5",
+        "album": "1.22.03.Acoustic (Live)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "402437532",
+        "name": "She Will Be Loved (Radio Mix)",
+        "artists": "Maroon 5",
+        "album": "Songs About Jane: 10th Anniversary Edition",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "4173072",
+        "name": "She Will Be Loved (Live from Le Cabaret)",
+        "artists": "Maroon 5",
+        "album": "Live from Le Cabaret",
+        "fee": 0,
+        "mark": 262144
+      },
+      {
+        "id": "402437544",
+        "name": "She Will Be Loved (Demo)",
+        "artists": "Maroon 5",
+        "album": "Songs About Jane: 10th Anniversary Edition",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "4173397",
+        "name": "She Will Be Loved (Live)",
+        "artists": "Maroon 5",
+        "album": "Live Friday the 13th",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2672706347",
+        "name": "She Will Be Loved",
+        "artists": "Maroon 5",
+        "album": "Will Be Loved EP",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "4172764",
+        "name": "She Will Be Loved  (live)",
+        "artists": "Maroon 5",
+        "album": "iTunes Session",
+        "fee": 0,
+        "mark": 262144
+      }
+    ]
+  },
+  {
+    "title": "Try",
+    "artist": "P!nk（待核实 ID）",
+    "query": "Try P!nk",
+    "songs": [
+      {
+        "id": "27515086",
+        "name": "Try",
+        "artists": "P!nk",
+        "album": "Try",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "28123938",
+        "name": "Try (Live)",
+        "artists": "P!nk",
+        "album": "The Truth About Love Tour (Live From Melbourne)",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "21373644",
+        "name": "Try",
+        "artists": "P!nk",
+        "album": "The Truth About Love",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1364518844",
+        "name": "Try (Instrumental)",
+        "artists": "P!nk",
+        "album": "Try",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "26201340",
+        "name": "Try",
+        "artists": "P!nk",
+        "album": "Hit Mania Champions 2013",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "2731889598",
+        "name": "Try (DJ明洋版)",
+        "artists": "P!NK",
+        "album": "Lonely people",
+        "fee": 0,
+        "mark": 262272
+      },
+      {
+        "id": "26293941",
+        "name": "Try",
+        "artists": "P!nk",
+        "album": "Europa FM 2013",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "27515087",
+        "name": "My Signature Move",
+        "artists": "P!nk",
+        "album": "Try",
+        "fee": 8,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "It's My Life",
+    "artist": "Bon Jovi",
+    "query": "It's My Life Bon Jovi",
+    "songs": [
+      {
+        "id": "3950546",
+        "name": "It's My Life",
+        "artists": "Bon Jovi",
+        "album": "It's My Life",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "26971007",
+        "name": "It's my life",
+        "artists": "Bon Jovi",
+        "album": "It's My Life",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "3950508",
+        "name": "It's My Life (Live)",
+        "artists": "Bon Jovi",
+        "album": "Crush",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "465921569",
+        "name": "It's My Life (Live)",
+        "artists": "Bon Jovi",
+        "album": "Bon Jovi Live 03-04-2017 Phoenix",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "3950523",
+        "name": "It's My Life (UK Radio Edit)[Dave Bascombe Mix]",
+        "artists": "Bon Jovi",
+        "album": "Crush",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "16850346",
+        "name": "It's My Life",
+        "artists": "Bon Jovi",
+        "album": "This Left Feels Right",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "16850509",
+        "name": "It's My Life (Live In Toronto, Ontario/2000)",
+        "artists": "Bon Jovi",
+        "album": "One Wild Night Live 1985-2001",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "1347666359",
+        "name": "It's My Life (2003 Acoustic Version)",
+        "artists": "Bon Jovi",
+        "album": "It's My Life (2003)",
+        "fee": 1,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "Numb",
+    "artist": "Linkin Park",
+    "query": "Numb Linkin Park",
+    "songs": [
+      {
+        "id": "16686599",
+        "name": "Numb",
+        "artists": "Linkin Park",
+        "album": "Meteora",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "2036434778",
+        "name": "Numb",
+        "artists": "Linkin Park",
+        "album": "Meteora 20th Anniversary Edition",
+        "fee": 1,
+        "mark": 17717010432
+      },
+      {
+        "id": "16686465",
+        "name": "Numb (Live)",
+        "artists": "Linkin Park",
+        "album": "Road to Revolution (Live at Milton Keynes)",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "16686447",
+        "name": "Numb (Live)",
+        "artists": "Linkin Park",
+        "album": "Road To Revolution: Live At Milton Keynes (Audio Only)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "27285574",
+        "name": "Numb (Live)",
+        "artists": "Linkin Park",
+        "album": "2012-11-07 - Cape Town, South Africa, Cape Town Stadium",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "16686526",
+        "name": "Numb",
+        "artists": "Linkin Park",
+        "album": "Meteora (Bonus Edition)",
+        "fee": 1,
+        "mark": 17180139520
+      },
+      {
+        "id": "4152759",
+        "name": "Numb  (Live)",
+        "artists": "Linkin Park",
+        "album": "Live In Amneville",
+        "fee": 8,
+        "mark": 17180139520
+      },
+      {
+        "id": "1359349373",
+        "name": "Numb (One More Light Live)",
+        "artists": "Linkin Park",
+        "album": "One More Light Live",
+        "fee": 8,
+        "mark": 17180139520
+      }
+    ]
+  },
+  {
+    "title": "In the End",
+    "artist": "Linkin Park",
+    "query": "In the End Linkin Park",
+    "songs": []
+  },
+  {
+    "title": "21 Guns",
+    "artist": "Green Day",
+    "query": "21 Guns Green Day",
+    "songs": []
+  },
+  {
+    "title": "Wake Me Up When September Ends",
+    "artist": "Green Day",
+    "query": "Wake Me Up When September Ends Green Day",
+    "songs": []
+  },
+  {
+    "title": "Zombie",
+    "artist": "The Cranberries",
+    "query": "Zombie The Cranberries",
+    "songs": []
+  },
+  {
+    "title": "Smells Like Teen Spirit",
+    "artist": "Nirvana",
+    "query": "Smells Like Teen Spirit Nirvana",
+    "songs": []
+  },
+  {
+    "title": "Use Somebody",
+    "artist": "Kings of Leon",
+    "query": "Use Somebody Kings of Leon",
+    "songs": []
+  },
+  {
+    "title": "I Will Wait",
+    "artist": "Mumford & Sons",
+    "query": "I Will Wait Mumford & Sons",
+    "songs": []
+  },
+  {
+    "title": "The Rose",
+    "artist": "Bette Midler",
+    "query": "The Rose Bette Midler",
+    "songs": []
+  },
+  {
+    "title": "Best Day of My Life",
+    "artist": "American Authors",
+    "query": "Best Day of My Life American Authors",
+    "songs": []
+  },
+  {
+    "title": "Dandelions",
+    "artist": "Ruth B",
+    "query": "Dandelions Ruth B",
+    "songs": []
+  },
+  {
+    "title": "Until I Found You",
+    "artist": "Stephen Sanchez",
+    "query": "Until I Found You Stephen Sanchez",
+    "songs": []
+  },
+  {
+    "title": "Galway Girl",
+    "artist": "Ed Sheeran（待核实 ID）",
+    "query": "Galway Girl Ed Sheeran",
+    "songs": []
+  },
+  {
+    "title": "Jolene",
+    "artist": "Dolly Parton",
+    "query": "Jolene Dolly Parton",
+    "songs": []
+  },
+  {
+    "title": "晴天",
+    "artist": "周杰伦",
+    "query": "晴天 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "七里香",
+    "artist": "周杰伦",
+    "query": "七里香 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "简单爱",
+    "artist": "周杰伦",
+    "query": "简单爱 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "稻香",
+    "artist": "周杰伦",
+    "query": "稻香 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "青花瓷",
+    "artist": "周杰伦",
+    "query": "青花瓷 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "告白气球",
+    "artist": "周杰伦",
+    "query": "告白气球 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "夜曲",
+    "artist": "周杰伦",
+    "query": "夜曲 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "安静",
+    "artist": "周杰伦",
+    "query": "安静 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "蒲公英的约定",
+    "artist": "周杰伦",
+    "query": "蒲公英的约定 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "龙卷风",
+    "artist": "周杰伦",
+    "query": "龙卷风 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "说好的幸福呢",
+    "artist": "周杰伦",
+    "query": "说好的幸福呢 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "彩虹",
+    "artist": "周杰伦",
+    "query": "彩虹 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "江南",
+    "artist": "林俊杰",
+    "query": "江南 林俊杰",
+    "songs": []
+  },
+  {
+    "title": "可惜没如果",
+    "artist": "林俊杰",
+    "query": "可惜没如果 林俊杰",
+    "songs": []
+  },
+  {
+    "title": "修炼爱情",
+    "artist": "林俊杰",
+    "query": "修炼爱情 林俊杰",
+    "songs": []
+  },
+  {
+    "title": "她说",
+    "artist": "林俊杰",
+    "query": "她说 林俊杰",
+    "songs": []
+  },
+  {
+    "title": "一千年以后",
+    "artist": "林俊杰",
+    "query": "一千年以后 林俊杰",
+    "songs": []
+  },
+  {
+    "title": "那些你很冒险的梦",
+    "artist": "林俊杰",
+    "query": "那些你很冒险的梦 林俊杰",
+    "songs": []
+  },
+  {
+    "title": "大城小爱",
+    "artist": "王力宏",
+    "query": "大城小爱 王力宏",
+    "songs": []
+  },
+  {
+    "title": "你不知道的事",
+    "artist": "王力宏",
+    "query": "你不知道的事 王力宏",
+    "songs": []
+  },
+  {
+    "title": "依然爱你",
+    "artist": "王力宏",
+    "query": "依然爱你 王力宏",
+    "songs": []
+  },
+  {
+    "title": "十年",
+    "artist": "陈奕迅",
+    "query": "十年 陈奕迅",
+    "songs": []
+  },
+  {
+    "title": "好久不见",
+    "artist": "陈奕迅",
+    "query": "好久不见 陈奕迅",
+    "songs": []
+  },
+  {
+    "title": "红豆",
+    "artist": "王菲",
+    "query": "红豆 王菲",
+    "songs": []
+  },
+  {
+    "title": "我愿意",
+    "artist": "王菲",
+    "query": "我愿意 王菲",
+    "songs": []
+  },
+  {
+    "title": "匆匆那年",
+    "artist": "王菲",
+    "query": "匆匆那年 王菲",
+    "songs": []
+  },
+  {
+    "title": "人间",
+    "artist": "王菲",
+    "query": "人间 王菲",
+    "songs": []
+  },
+  {
+    "title": "遇见",
+    "artist": "孙燕姿",
+    "query": "遇见 孙燕姿",
+    "songs": []
+  },
+  {
+    "title": "天黑黑",
+    "artist": "孙燕姿",
+    "query": "天黑黑 孙燕姿",
+    "songs": []
+  },
+  {
+    "title": "开始懂了",
+    "artist": "孙燕姿",
+    "query": "开始懂了 孙燕姿",
+    "songs": []
+  },
+  {
+    "title": "可惜不是你",
+    "artist": "梁静茹",
+    "query": "可惜不是你 梁静茹",
+    "songs": []
+  },
+  {
+    "title": "暖暖",
+    "artist": "梁静茹",
+    "query": "暖暖 梁静茹",
+    "songs": []
+  },
+  {
+    "title": "光年之外",
+    "artist": "G.E.M.邓紫棋",
+    "query": "光年之外 G.E.M.邓紫棋",
+    "songs": []
+  },
+  {
+    "title": "泡沫",
+    "artist": "G.E.M.邓紫棋",
+    "query": "泡沫 G.E.M.邓紫棋",
+    "songs": []
+  },
+  {
+    "title": "小幸运",
+    "artist": "田馥甄",
+    "query": "小幸运 田馥甄",
+    "songs": []
+  },
+  {
+    "title": "你曾是少年",
+    "artist": "S.H.E",
+    "query": "你曾是少年 S.H.E",
+    "songs": []
+  },
+  {
+    "title": "月亮代表我的心",
+    "artist": "邓丽君",
+    "query": "月亮代表我的心 邓丽君",
+    "songs": []
+  },
+  {
+    "title": "甜蜜蜜",
+    "artist": "邓丽君",
+    "query": "甜蜜蜜 邓丽君",
+    "songs": []
+  },
+  {
+    "title": "我只在乎你",
+    "artist": "邓丽君",
+    "query": "我只在乎你 邓丽君",
+    "songs": []
+  },
+  {
+    "title": "但愿人长久",
+    "artist": "王菲",
+    "query": "但愿人长久 王菲",
+    "songs": []
+  },
+  {
+    "title": "吻别",
+    "artist": "张学友",
+    "query": "吻别 张学友",
+    "songs": []
+  },
+  {
+    "title": "她来听我的演唱会",
+    "artist": "张学友",
+    "query": "她来听我的演唱会 张学友",
+    "songs": []
+  },
+  {
+    "title": "一千个伤心的理由",
+    "artist": "张学友",
+    "query": "一千个伤心的理由 张学友",
+    "songs": []
+  },
+  {
+    "title": "忘情水",
+    "artist": "刘德华",
+    "query": "忘情水 刘德华",
+    "songs": []
+  },
+  {
+    "title": "朋友",
+    "artist": "周华健",
+    "query": "朋友 周华健",
+    "songs": []
+  },
+  {
+    "title": "爱如潮水",
+    "artist": "张信哲",
+    "query": "爱如潮水 张信哲",
+    "songs": []
+  },
+  {
+    "title": "过火",
+    "artist": "张信哲",
+    "query": "过火 张信哲",
+    "songs": []
+  },
+  {
+    "title": "信仰",
+    "artist": "张信哲",
+    "query": "信仰 张信哲",
+    "songs": []
+  },
+  {
+    "title": "至少还有你",
+    "artist": "林忆莲",
+    "query": "至少还有你 林忆莲",
+    "songs": []
+  },
+  {
+    "title": "听海",
+    "artist": "张惠妹",
+    "query": "听海 张惠妹",
+    "songs": []
+  },
+  {
+    "title": "分手快乐",
+    "artist": "梁静茹",
+    "query": "分手快乐 梁静茹",
+    "songs": []
+  },
+  {
+    "title": "勇气",
+    "artist": "梁静茹",
+    "query": "勇气 梁静茹",
+    "songs": []
+  },
+  {
+    "title": "小情歌",
+    "artist": "苏打绿",
+    "query": "小情歌 苏打绿",
+    "songs": []
+  },
+  {
+    "title": "童话",
+    "artist": "光良",
+    "query": "童话 光良",
+    "songs": []
+  },
+  {
+    "title": "当",
+    "artist": "动力火车",
+    "query": "当 动力火车",
+    "songs": []
+  },
+  {
+    "title": "隐形的翅膀",
+    "artist": "张韶涵",
+    "query": "隐形的翅膀 张韶涵",
+    "songs": []
+  },
+  {
+    "title": "王妃",
+    "artist": "萧敬腾",
+    "query": "王妃 萧敬腾",
+    "songs": []
+  },
+  {
+    "title": "日不落",
+    "artist": "蔡依林",
+    "query": "日不落 蔡依林",
+    "songs": []
+  },
+  {
+    "title": "第一次爱的人",
+    "artist": "王心凌",
+    "query": "第一次爱的人 王心凌",
+    "songs": []
+  },
+  {
+    "title": "漂洋过海来看你",
+    "artist": "娃娃",
+    "query": "漂洋过海来看你 娃娃",
+    "songs": []
+  },
+  {
+    "title": "山丘",
+    "artist": "李宗盛",
+    "query": "山丘 李宗盛",
+    "songs": []
+  },
+  {
+    "title": "给自己的歌",
+    "artist": "李宗盛",
+    "query": "给自己的歌 李宗盛",
+    "songs": []
+  },
+  {
+    "title": "很爱很爱你",
+    "artist": "刘若英",
+    "query": "很爱很爱你 刘若英",
+    "songs": []
+  },
+  {
+    "title": "后来",
+    "artist": "刘若英",
+    "query": "后来 刘若英",
+    "songs": []
+  },
+  {
+    "title": "最浪漫的事",
+    "artist": "赵咏华",
+    "query": "最浪漫的事 赵咏华",
+    "songs": []
+  },
+  {
+    "title": "征服",
+    "artist": "那英",
+    "query": "征服 那英",
+    "songs": []
+  },
+  {
+    "title": "一场游戏一场梦",
+    "artist": "王杰",
+    "query": "一场游戏一场梦 王杰",
+    "songs": []
+  },
+  {
+    "title": "记事本",
+    "artist": "周蕙",
+    "query": "记事本 周蕙",
+    "songs": []
+  },
+  {
+    "title": "西海情歌",
+    "artist": "刀郎",
+    "query": "西海情歌 刀郎",
+    "songs": []
+  },
+  {
+    "title": "起风了",
+    "artist": "买辣椒也用券",
+    "query": "起风了 买辣椒也用券",
+    "songs": []
+  },
+  {
+    "title": "孤勇者",
+    "artist": "陈奕迅",
+    "query": "孤勇者 陈奕迅",
+    "songs": []
+  },
+  {
+    "title": "如愿",
+    "artist": "王菲",
+    "query": "如愿 王菲",
+    "songs": []
+  },
+  {
+    "title": "大鱼",
+    "artist": "周深",
+    "query": "大鱼 周深",
+    "songs": []
+  },
+  {
+    "title": "年少有为",
+    "artist": "李荣浩",
+    "query": "年少有为 李荣浩",
+    "songs": []
+  },
+  {
+    "title": "乌梅子酱",
+    "artist": "李荣浩",
+    "query": "乌梅子酱 李荣浩",
+    "songs": []
+  },
+  {
+    "title": "演员",
+    "artist": "薛之谦",
+    "query": "演员 薛之谦",
+    "songs": []
+  },
+  {
+    "title": "刚刚好",
+    "artist": "薛之谦",
+    "query": "刚刚好 薛之谦",
+    "songs": []
+  },
+  {
+    "title": "消愁",
+    "artist": "毛不易",
+    "query": "消愁 毛不易",
+    "songs": []
+  },
+  {
+    "title": "像我这样的人",
+    "artist": "毛不易",
+    "query": "像我这样的人 毛不易",
+    "songs": []
+  },
+  {
+    "title": "有何不可",
+    "artist": "许嵩",
+    "query": "有何不可 许嵩",
+    "songs": []
+  },
+  {
+    "title": "清明雨上",
+    "artist": "许嵩",
+    "query": "清明雨上 许嵩",
+    "songs": []
+  },
+  {
+    "title": "唯一",
+    "artist": "告五人",
+    "query": "唯一 告五人",
+    "songs": []
+  },
+  {
+    "title": "爱人错过",
+    "artist": "告五人",
+    "query": "爱人错过 告五人",
+    "songs": []
+  },
+  {
+    "title": "小半",
+    "artist": "陈粒",
+    "query": "小半 陈粒",
+    "songs": []
+  },
+  {
+    "title": "少年",
+    "artist": "梦然",
+    "query": "少年 梦然",
+    "songs": []
+  },
+  {
+    "title": "你的答案",
+    "artist": "阿冗",
+    "query": "你的答案 阿冗",
+    "songs": []
+  },
+  {
+    "title": "大眠",
+    "artist": "王心凌",
+    "query": "大眠 王心凌",
+    "songs": []
+  },
+  {
+    "title": "错位时空",
+    "artist": "艾辰",
+    "query": "错位时空 艾辰",
+    "songs": []
+  },
+  {
+    "title": "漠河舞厅",
+    "artist": "柳爽",
+    "query": "漠河舞厅 柳爽",
+    "songs": []
+  },
+  {
+    "title": "向云端",
+    "artist": "小阿七",
+    "query": "向云端 小阿七",
+    "songs": []
+  },
+  {
+    "title": "罗刹海市",
+    "artist": "刀郎",
+    "query": "罗刹海市 刀郎",
+    "songs": []
+  },
+  {
+    "title": "若月亮没来",
+    "artist": "王宇宙Leto / 乔浚丞",
+    "query": "若月亮没来 王宇宙Leto / 乔浚丞",
+    "songs": []
+  },
+  {
+    "title": "可能",
+    "artist": "程响",
+    "query": "可能 程响",
+    "songs": []
+  },
+  {
+    "title": "倔强",
+    "artist": "五月天",
+    "query": "倔强 五月天",
+    "songs": []
+  },
+  {
+    "title": "突然好想你",
+    "artist": "五月天",
+    "query": "突然好想你 五月天",
+    "songs": []
+  },
+  {
+    "title": "知足",
+    "artist": "五月天",
+    "query": "知足 五月天",
+    "songs": []
+  },
+  {
+    "title": "温柔",
+    "artist": "五月天",
+    "query": "温柔 五月天",
+    "songs": []
+  },
+  {
+    "title": "恋爱ING",
+    "artist": "五月天",
+    "query": "恋爱ING 五月天",
+    "songs": []
+  },
+  {
+    "title": "后来的我们",
+    "artist": "五月天",
+    "query": "后来的我们 五月天",
+    "songs": []
+  },
+  {
+    "title": "你不是真正的快乐",
+    "artist": "五月天",
+    "query": "你不是真正的快乐 五月天",
+    "songs": []
+  },
+  {
+    "title": "干杯",
+    "artist": "五月天",
+    "query": "干杯 五月天",
+    "songs": []
+  },
+  {
+    "title": "夜空中最亮的星",
+    "artist": "逃跑计划",
+    "query": "夜空中最亮的星 逃跑计划",
+    "songs": []
+  },
+  {
+    "title": "平凡之路",
+    "artist": "朴树",
+    "query": "平凡之路 朴树",
+    "songs": []
+  },
+  {
+    "title": "那些花儿",
+    "artist": "朴树",
+    "query": "那些花儿 朴树",
+    "songs": []
+  },
+  {
+    "title": "生如夏花",
+    "artist": "朴树",
+    "query": "生如夏花 朴树",
+    "songs": []
+  },
+  {
+    "title": "蓝莲花",
+    "artist": "许巍",
+    "query": "蓝莲花 许巍",
+    "songs": []
+  },
+  {
+    "title": "曾经的你",
+    "artist": "许巍",
+    "query": "曾经的你 许巍",
+    "songs": []
+  },
+  {
+    "title": "春天里",
+    "artist": "汪峰",
+    "query": "春天里 汪峰",
+    "songs": []
+  },
+  {
+    "title": "你要跳舞吗",
+    "artist": "新裤子",
+    "query": "你要跳舞吗 新裤子",
+    "songs": []
+  },
+  {
+    "title": "没有理想的人不伤心",
+    "artist": "新裤子",
+    "query": "没有理想的人不伤心 新裤子",
+    "songs": []
+  },
+  {
+    "title": "追梦赤子心",
+    "artist": "GALA",
+    "query": "追梦赤子心 GALA",
+    "songs": []
+  },
+  {
+    "title": "一无所有",
+    "artist": "崔健",
+    "query": "一无所有 崔健",
+    "songs": []
+  },
+  {
+    "title": "无地自容",
+    "artist": "黑豹乐队",
+    "query": "无地自容 黑豹乐队",
+    "songs": []
+  },
+  {
+    "title": "公路之歌",
+    "artist": "痛仰乐队",
+    "query": "公路之歌 痛仰乐队",
+    "songs": []
+  },
+  {
+    "title": "杀死那个石家庄人",
+    "artist": "万能青年旅店",
+    "query": "杀死那个石家庄人 万能青年旅店",
+    "songs": []
+  },
+  {
+    "title": "死了都要爱",
+    "artist": "信乐团",
+    "query": "死了都要爱 信乐团",
+    "songs": []
+  },
+  {
+    "title": "我们的爱",
+    "artist": "F.I.R.飞儿乐团",
+    "query": "我们的爱 F.I.R.飞儿乐团",
+    "songs": []
+  },
+  {
+    "title": "成都",
+    "artist": "赵雷",
+    "query": "成都 赵雷",
+    "songs": []
+  },
+  {
+    "title": "我记得",
+    "artist": "赵雷",
+    "query": "我记得 赵雷",
+    "songs": []
+  },
+  {
+    "title": "南山南",
+    "artist": "马頔",
+    "query": "南山南 马頔",
+    "songs": []
+  },
+  {
+    "title": "傲寒",
+    "artist": "马頔",
+    "query": "傲寒 马頔",
+    "songs": []
+  },
+  {
+    "title": "斑马斑马",
+    "artist": "宋冬野",
+    "query": "斑马斑马 宋冬野",
+    "songs": []
+  },
+  {
+    "title": "安和桥",
+    "artist": "宋冬野",
+    "query": "安和桥 宋冬野",
+    "songs": []
+  },
+  {
+    "title": "贝加尔湖畔",
+    "artist": "李健",
+    "query": "贝加尔湖畔 李健",
+    "songs": []
+  },
+  {
+    "title": "传奇",
+    "artist": "李健",
+    "query": "传奇 李健",
+    "songs": []
+  },
+  {
+    "title": "一生有你",
+    "artist": "水木年华",
+    "query": "一生有你 水木年华",
+    "songs": []
+  },
+  {
+    "title": "同桌的你",
+    "artist": "老狼",
+    "query": "同桌的你 老狼",
+    "songs": []
+  },
+  {
+    "title": "菊花台",
+    "artist": "周杰伦",
+    "query": "菊花台 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "东风破",
+    "artist": "周杰伦",
+    "query": "东风破 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "烟花易冷",
+    "artist": "周杰伦",
+    "query": "烟花易冷 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "兰亭序",
+    "artist": "周杰伦",
+    "query": "兰亭序 周杰伦",
+    "songs": []
+  },
+  {
+    "title": "沧海一声笑",
+    "artist": "许冠杰",
+    "query": "沧海一声笑 许冠杰",
+    "songs": []
+  },
+  {
+    "title": "画心",
+    "artist": "张靓颖",
+    "query": "画心 张靓颖",
+    "songs": []
+  },
+  {
+    "title": "卷珠帘",
+    "artist": "霍尊",
+    "query": "卷珠帘 霍尊",
+    "songs": []
+  },
+  {
+    "title": "知否知否",
+    "artist": "胡夏 / 郁可唯",
+    "query": "知否知否 胡夏 / 郁可唯",
+    "songs": []
+  },
+  {
+    "title": "千年等一回",
+    "artist": "慧妮",
+    "query": "千年等一回 慧妮",
+    "songs": []
+  },
+  {
+    "title": "好汉歌",
+    "artist": "刘欢",
+    "query": "好汉歌 刘欢",
+    "songs": []
+  }
+]
