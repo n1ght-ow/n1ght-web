@@ -1409,9 +1409,15 @@ if (!REDUCED) {
     stagger: { each: 0.09, from: "start" },
     ease: "power4.out",
     clearProps: "clipPath",
+    // never hide the cards before the trigger fires: if the trigger is
+    // missed for any reason the cards stay visible instead of blanking.
+    immediateRender: false,
     scrollTrigger: {
-      trigger: ".hof-row",
-      start: "top 82%",
+      // trigger the OUTER .hof-scroll (in-flow, pre-pin measurements).
+      // the old trigger (.hof-row) sits inside the pinned element, so its
+      // start/end are degenerate and the entrance could stay stuck.
+      trigger: ".hof-scroll",
+      start: "top 70%",
       toggleActions: "play none none reverse",
     },
   });
