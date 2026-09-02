@@ -24,10 +24,18 @@
     return stage.querySelector(selector);
   }
 
+  /* Debounced global refresh: lazy poster loads settle in bursts, so many
+     load events inside 250ms collapse into one refresh pass. setupMode()
+     still runs per image; only the global recalc is batched. */
+  let refreshTimer = 0;
   function refreshScrollTrigger() {
-    if (window.ScrollTrigger && window.ScrollTrigger.refresh) {
-      window.ScrollTrigger.refresh();
-    }
+    if (!window.ScrollTrigger || !window.ScrollTrigger.refresh) return;
+    window.clearTimeout(refreshTimer);
+    refreshTimer = window.setTimeout(() => {
+      if (window.ScrollTrigger && window.ScrollTrigger.refresh) {
+        window.ScrollTrigger.refresh();
+      }
+    }, 250);
   }
 
   /* ---------- tape position ----------

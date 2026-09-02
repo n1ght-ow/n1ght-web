@@ -563,6 +563,10 @@ const BUBBLE_TINTS = [
   "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(198,244,57,0.32) 42%, rgba(198,244,57,0.07) 100%)",
 ];
 
+// Infinite decorative loops that should only tick while the hero is on
+// screen (bubbles + hero orbs). Paused tweens stop costing gsap.ticker.
+const heroLoopTweens = new Set();
+
 function spawnBubble() {
   if (!bubbleField) return;
   const b = document.createElement("div");
@@ -582,7 +586,7 @@ function spawnBubble() {
   const dur = 4 + Math.random() * 5;
 
   if (!REDUCED) {
-    gsap.to(b, {
+    heroLoopTweens.add(gsap.to(b, {
       y: -bob,
       x: (Math.random() - 0.5) * 46,
       duration: dur,
@@ -590,12 +594,15 @@ function spawnBubble() {
       yoyo: true,
       repeat: -1,
       delay: Math.random() * 2,
-    });
+    }));
   }
 
   b.addEventListener("click", () => {
     b.style.pointerEvents = "none";
     gsap.killTweensOf(b);
+    heroLoopTweens.forEach((tw) => {
+      if (tw.targets()[0] === b) heroLoopTweens.delete(tw);
+    });
     gsap.timeline({
       onComplete: () => { b.remove(); spawnBubble(); },
     }).to(b, { scale: 1.9, autoAlpha: 0, duration: 0.28, ease: "power2.in" });
@@ -1035,6 +1042,16 @@ function initMusicSearch() {
     return String(value || "").toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, " ").trim();
   }
 
+  // Normalized per-card haystack, built once at init: matchCard then only
+  // compares precomputed strings instead of re-querying and re-normalizing
+  // all 763 cards on every keystroke.
+  const cardHaystacks = cards.map((card) => {
+    const title = card.querySelector(".idx-title");
+    const artist = card.querySelector(".idx-artist");
+    const hay = normalize((title ? title.textContent : "") + " " + (artist ? artist.textContent : ""));
+    return { hay, compact: hay.replace(/\s+/g, ""), tokens: hay.split(" ").filter(Boolean) };
+  });
+
   function levenshtein(a, b) {
     const m = a.length;
     const n = b.length;
@@ -1054,14 +1071,11 @@ function initMusicSearch() {
     return dp[m][n];
   }
 
-  function matchCard(card, query) {
+  function matchCard(haystack, query) {
     const qNorm = normalize(query);
     if (!qNorm) return true;
 
-    const title = card.querySelector(".idx-title");
-    const artist = card.querySelector(".idx-artist");
-    const hay = normalize((title ? title.textContent : "") + " " + (artist ? artist.textContent : ""));
-    const compact = hay.replace(/\s+/g, "");
+    const { hay, compact, tokens } = haystack;
     const qCompact = qNorm.replace(/\s+/g, "");
 
     // Partial substring match: "lose" -> Lose Yourself, "kend" -> Kendrick Lamar.
@@ -1074,8 +1088,7 @@ function initMusicSearch() {
     // Single-word typo/suffix tolerance for short inputs like "emine" -> Eminem.
     if (qTokens.length === 1 && qTokens[0].length >= 5) {
       const target = qTokens[0];
-      const hayTokens = hay.split(" ").filter(Boolean);
-      return hayTokens.some((token) => {
+      return tokens.some((token) => {
         if (token.length < 4 || Math.abs(token.length - target.length) > 2) return false;
         const limit = target.length >= 6 ? 2 : 1;
         return levenshtein(token.slice(0, target.length), target) <= limit;
@@ -1102,8 +1115,16 @@ function initMusicSearch() {
     }
   }
 
+  // Global ScrollTrigger.refresh() walks ~40 triggers incl. two pinned
+  // horizontal sections: debounce it so keystroke bursts settle into a
+  // single refresh ~200ms after the last input.
+  let refreshTimer = 0;
   function refreshScroll() {
-    if (window.ScrollTrigger) ScrollTrigger.refresh();
+    if (!window.ScrollTrigger) return;
+    window.clearTimeout(refreshTimer);
+    refreshTimer = window.setTimeout(() => {
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    }, 200);
   }
 
   function applySearch() {
@@ -1119,8 +1140,8 @@ function initMusicSearch() {
     }
 
     let visible = 0;
-    cards.forEach((card) => {
-      const on = matchCard(card, trimmed);
+    cards.forEach((card, i) => {
+      const on = matchCard(cardHaystacks[i], trimmed);
       card.classList.toggle("is-search-hidden", !on);
       if (on) visible++;
     });
@@ -1259,9 +1280,24 @@ if (TOUCH) {
 if (!REDUCED) {
   /* ---------- hero: floating orbs + mouse parallax ---------- */
 
-  gsap.to(".orb-1", { y: 60, x: -30, duration: 14, repeat: -1, yoyo: true, ease: "sine.inOut" });
-  gsap.to(".orb-2", { y: -50, x: 40, duration: 11, repeat: -1, yoyo: true, ease: "sine.inOut" });
-  gsap.to(".orb-3", { y: 40, x: 25, duration: 9, repeat: -1, yoyo: true, ease: "sine.inOut" });
+  const orbLoops = [
+    gsap.to(".orb-1", { y: 60, x: -30, duration: 14, repeat: -1, yoyo: true, ease: "sine.inOut" }),
+    gsap.to(".orb-2", { y: -50, x: 40, duration: 11, repeat: -1, yoyo: true, ease: "sine.inOut" }),
+    gsap.to(".orb-3", { y: 40, x: 25, duration: 9, repeat: -1, yoyo: true, ease: "sine.inOut" }),
+  ];
+  orbLoops.forEach((tw) => heroLoopTweens.add(tw));
+
+  // Hibernate offscreen decor: pause the bubble/orb loops while the hero is
+  // out of view, resume in place when it returns. onRefresh re-syncs after
+  // global refreshes (e.g. a mid-page reload that restores scroll).
+  const heroHibernator = ScrollTrigger.create({
+    trigger: ".hero",
+    start: "top top",
+    end: "bottom top",
+    onToggle: (self) => heroLoopTweens.forEach((tw) => tw.paused(!self.isActive)),
+    onRefresh: (self) => heroLoopTweens.forEach((tw) => tw.paused(!self.isActive)),
+  });
+  heroLoopTweens.forEach((tw) => tw.paused(!heroHibernator.isActive));
 
   const hero = document.querySelector(".hero");
   const depthEls = gsap.utils.toArray("[data-depth]").map((el) => ({
@@ -1601,6 +1637,19 @@ if (!REDUCED) {
       t.classList.add("is-js-driven");
       return gsap.to(t, { xPercent: -50, ease: "none", duration: 26, repeat: -1 });
     });
+
+    // Pause each marquee while its ticker strip is offscreen and resume it in
+    // place on return. The velocity handler below skips paused tweens, so an
+    // offscreen ticker's timeScale stays untouched until it is visible again.
+    tickerTracks.forEach((track, i) => {
+      ScrollTrigger.create({
+        trigger: track.closest(".ticker") || track,
+        start: "top bottom",
+        end: "bottom top",
+        onToggle: (self) => marqueeTweens[i].paused(!self.isActive),
+      });
+    });
+
     let settleTweens = [];
     let skewIdle;
     ScrollTrigger.create({
@@ -1611,14 +1660,17 @@ if (!REDUCED) {
         settleTweens = [];
         const v = gsap.utils.clamp(-9, 9, self.getVelocity() / -300);
         // velocity magnitude boosts the marquee: 1x idle → ~3.2x flat-out
+        // (visible marquees only; offscreen ones stay paused and untouched)
         const speed = 1 + (Math.abs(v) / 9) * 2.2;
-        marqueeTweens.forEach((tw) => tw.timeScale(speed));
+        marqueeTweens.forEach((tw) => {
+          if (!tw.paused()) tw.timeScale(speed);
+        });
         skewSetters.forEach((fn) => fn(v));
         clearTimeout(skewIdle);
         skewIdle = setTimeout(() => {
-          settleTweens = marqueeTweens.map((tw) =>
-            gsap.to(tw, { timeScale: 1, duration: 0.9, ease: "power2.out" })
-          );
+          settleTweens = marqueeTweens
+            .filter((tw) => !tw.paused())
+            .map((tw) => gsap.to(tw, { timeScale: 1, duration: 0.9, ease: "power2.out" }));
           skewSetters.forEach((fn) => fn(0));
         }, 140);
       },
@@ -1656,12 +1708,20 @@ const navSections = navAnchors
 
 const progressFill = document.getElementById("scroll-progress-fill");
 
+// Section offsets are cached on ScrollTrigger refresh (and once at boot);
+// the per-scroll onUpdate only reads this array. Reading s.offsetTop on
+// every scroll event forces a synchronous layout each time.
+let navOffsets = navSections.map((s) => s.offsetTop);
+function cacheNavOffsets() {
+  navOffsets = navSections.map((s) => s.offsetTop);
+}
+
 function updateNavAndProgress(self) {
   const y = self.scroll() + window.innerHeight * 0.45;
   let current = -1;
-  navSections.forEach((s, i) => {
-    if (s.offsetTop <= y) current = i;
-  });
+  for (let i = 0; i < navOffsets.length; i++) {
+    if (navOffsets[i] <= y) current = i;
+  }
   if (self.scroll() + window.innerHeight >= document.documentElement.scrollHeight - 4) {
     current = navSections.length - 1;
   }
@@ -1673,5 +1733,8 @@ ScrollTrigger.create({
   start: 0,
   end: "max",
   onUpdate: updateNavAndProgress,
-  onRefresh: updateNavAndProgress,
+  onRefresh: (self) => {
+    cacheNavOffsets();
+    updateNavAndProgress(self);
+  },
 });
