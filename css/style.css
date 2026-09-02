@@ -1279,11 +1279,14 @@ html.has-cursor * { cursor: none !important; }
   padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
 }
 
-.tab-panel {
+/* High specificity on purpose: the films/series panels also carry
+   feature classes (.film-stage / .series-stage) that declare their own
+   display, so the hiding rule must outrank those regardless of load order. */
+.tab-panels .tab-panel {
   display: none;
 }
 
-.tab-panel.is-active {
+.tab-panels .tab-panel.is-active {
   display: block;
 }
 

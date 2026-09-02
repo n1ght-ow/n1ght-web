@@ -3,7 +3,8 @@
 .film-stage {
   --film-card-w: clamp(192px, 26vw, 268px);
   position: relative;
-  display: block;
+  /* no display rule here: this class also lands on the .tab-panel shell,
+     and a display:block would override the tab system's display:none */
   width: 100%;
 }
 

@@ -3,7 +3,8 @@
 .series-stage {
   --series-card-w: clamp(176px, 24vw, 248px);
   position: relative;
-  display: block;
+  /* no display rule here: this class also lands on the .tab-panel shell,
+     and a display:block would override the tab system's display:none */
   width: 100%;
 }
 
