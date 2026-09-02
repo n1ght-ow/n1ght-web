@@ -865,6 +865,7 @@ function initGroupAccordion() {
       };
       g.setOpen = setOpen;
       g.open = false;
+      g.head._accGroup = g;
 
       const toggle = () => {
         const willOpen = !g.open;
@@ -1003,6 +1004,168 @@ function initNetEaseLinks() {
 }
 
 initNetEaseLinks();
+
+/* ---------- music search: fuzzy title / artist filter inside MUSIC ---------- */
+
+function initMusicSearch() {
+  const panel = document.getElementById("panel-music");
+  const input = document.getElementById("music-search-input");
+  const clear = document.getElementById("music-search-clear");
+  const count = document.getElementById("music-search-count");
+  const empty = document.getElementById("music-search-empty");
+  if (!panel || !input || !clear || !count || !empty) return;
+
+  const cards = Array.from(panel.querySelectorAll(".idx-card[data-song-id]"));
+  const genres = Array.from(panel.querySelectorAll(".genre"));
+  const heads = Array.from(panel.querySelectorAll(".genre-head"));
+
+  let active = false;
+  let preOpen = new Set();
+
+  function normalize(value) {
+    return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  }
+
+  function levenshtein(a, b) {
+    const m = a.length;
+    const n = b.length;
+    if (!m) return n;
+    if (!n) return m;
+    const dp = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]);
+    for (let j = 1; j <= n; j++) dp[0][j] = j;
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        dp[i][j] = Math.min(
+          dp[i - 1][j] + 1,
+          dp[i][j - 1] + 1,
+          dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+        );
+      }
+    }
+    return dp[m][n];
+  }
+
+  function matchCard(card, query) {
+    const qNorm = normalize(query);
+    if (!qNorm) return true;
+
+    const title = card.querySelector(".idx-title");
+    const artist = card.querySelector(".idx-artist");
+    const hay = normalize((title ? title.textContent : "") + " " + (artist ? artist.textContent : ""));
+    const compact = hay.replace(/\s+/g, "");
+    const qCompact = qNorm.replace(/\s+/g, "");
+
+    // Partial substring match: "lose" -> Lose Yourself, "kend" -> Kendrick Lamar.
+    if (compact.includes(qCompact)) return true;
+
+    // Multi-token fuzzy match: "god plan" can find "God's Plan".
+    const qTokens = qNorm.split(" ").filter(Boolean);
+    if (qTokens.every((token) => hay.includes(token))) return true;
+
+    // Single-word typo/suffix tolerance for short inputs like "emine" -> Eminem.
+    if (qTokens.length === 1 && qTokens[0].length >= 5) {
+      const target = qTokens[0];
+      const hayTokens = hay.split(" ").filter(Boolean);
+      return hayTokens.some((token) => {
+        if (token.length < 4 || Math.abs(token.length - target.length) > 2) return false;
+        const limit = target.length >= 6 ? 2 : 1;
+        return levenshtein(token.slice(0, target.length), target) <= limit;
+      });
+    }
+
+    return false;
+  }
+
+  function headOpen(head) {
+    return head.getAttribute("aria-expanded") === "true";
+  }
+
+  function setHead(head, open, animate) {
+    const group = head._accGroup;
+    if (group) {
+      group.setOpen(open, animate);
+      return;
+    }
+    head.setAttribute("aria-expanded", open ? "true" : "false");
+    head.classList.toggle("is-open", open);
+    if (head.nextElementSibling) {
+      head.nextElementSibling.style.height = open ? "auto" : "0";
+    }
+  }
+
+  function refreshScroll() {
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+  }
+
+  function applySearch() {
+    const trimmed = input.value.trim();
+    if (!trimmed) {
+      clearSearch();
+      return;
+    }
+
+    if (!active) {
+      active = true;
+      preOpen = new Set(heads.filter(headOpen));
+    }
+
+    let visible = 0;
+    cards.forEach((card) => {
+      const on = matchCard(card, trimmed);
+      card.classList.toggle("is-search-hidden", !on);
+      if (on) visible++;
+    });
+
+    genres.forEach((genre) => {
+      const visibleInGenre = genre.querySelectorAll(".idx-card:not(.is-search-hidden)").length;
+      genre.classList.toggle("is-search-empty", visibleInGenre === 0);
+      const head = genre.querySelector(".genre-head");
+      if (visibleInGenre > 0 && head && !headOpen(head)) {
+        setHead(head, true, false);
+      }
+    });
+
+    count.hidden = false;
+    count.textContent = visible + " / " + cards.length;
+    empty.hidden = visible !== 0;
+    clear.hidden = false;
+    refreshScroll();
+  }
+
+  function clearSearch() {
+    if (active) {
+      active = false;
+      cards.forEach((card) => card.classList.remove("is-search-hidden"));
+      genres.forEach((genre) => {
+        genre.classList.remove("is-search-empty");
+        const head = genre.querySelector(".genre-head");
+        if (head && headOpen(head) && !preOpen.has(head)) {
+          setHead(head, false, false);
+        }
+      });
+      preOpen.forEach((head) => {
+        if (head && !headOpen(head)) setHead(head, true, false);
+      });
+      preOpen = new Set();
+    }
+    input.value = "";
+    count.hidden = true;
+    clear.hidden = true;
+    empty.hidden = true;
+    refreshScroll();
+  }
+
+  input.addEventListener("input", applySearch);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") clearSearch();
+  });
+  clear.addEventListener("click", () => {
+    clearSearch();
+    input.focus();
+  });
+}
+
+initMusicSearch();
 
 /* ---------- IMDb quick links: click a film/series row to open its IMDb page ---------- */
 

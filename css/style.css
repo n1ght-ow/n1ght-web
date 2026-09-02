@@ -1526,6 +1526,102 @@ html.has-cursor * { cursor: none !important; }
 /* music drawer container: content shown directly (group accordion replaced
    the old FULL LIST toggle — its button styles removed) */
 
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.music-search {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  padding-bottom: clamp(1.2rem, 2.4vh, 1.8rem);
+}
+
+.music-search-input {
+  flex: 1 1 260px;
+  max-width: 520px;
+  width: 100%;
+  padding: 0.85em 1em;
+  background: var(--bg);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: box-shadow 0.25s var(--ease-out), outline-color 0.25s var(--ease-out);
+}
+
+.music-search-input::placeholder {
+  color: var(--slate-2);
+  opacity: 0.85;
+}
+
+.music-search-input:focus {
+  outline: 3px solid var(--acid);
+  outline-offset: 2px;
+  box-shadow: 4px 4px 0 var(--volt);
+}
+
+.music-search-clear {
+  min-width: 2.4rem;
+  height: 2.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.music-search-clear:hover {
+  background: var(--punch);
+  transform: translate(-1px, -1px);
+}
+
+.music-search-count {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+  background: var(--acid);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 0.5em 0.9em;
+}
+
+.music-search-empty {
+  flex-basis: 100%;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--punch);
+  border-left: 4px solid var(--punch);
+  padding: 0.4em 0.8em;
+  margin: 0;
+}
+
+.idx-card.is-search-hidden {
+  display: none !important;
+}
+
+.genre.is-search-empty {
+  display: none !important;
+}
+
 .playlist {
   display: flex;
   flex-direction: column;
