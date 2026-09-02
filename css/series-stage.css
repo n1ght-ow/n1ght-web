@@ -1,0 +1,442 @@
+/* ============ SERIES STAGE: data-driven box tape ============ */
+
+.series-stage {
+  --series-card-w: clamp(176px, 24vw, 248px);
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.series-stage-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-top: 3px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 1.35rem;
+}
+
+.series-stage-head-left {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.series-stage-title {
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: clamp(1.65rem, 4vw, 3.8rem);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.series-stage-sub,
+.series-stage-count {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--slate-2);
+}
+
+.series-stage-head-right .series-stage-count {
+  background: var(--ink);
+  color: var(--bg);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--punch);
+  padding: 0.35em 0.7em;
+}
+
+.series-stage-viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  background: var(--bg);
+  border: 2px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  touch-action: pan-x pan-y;
+}
+
+.series-stage-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.series-stage-viewport--driven {
+  overflow: hidden;
+}
+
+.series-stage-strip {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  gap: clamp(0.9rem, 2vw, 1.7rem);
+  padding: clamp(1rem, 2vw, 1.6rem);
+  will-change: transform;
+}
+
+.series-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--series-card-w);
+  aspect-ratio: 3 / 4.15;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.series-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--volt);
+}
+
+.series-card:active {
+  transform: translate(2px, 2px) scale(0.985);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.series-card:focus-visible {
+  outline: 3px solid var(--acid);
+  outline-offset: 4px;
+}
+
+.series-card.is-active {
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: 8px 8px 0 var(--punch);
+  transform: translate(-2px, -2px);
+}
+
+.series-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: var(--bg-deep);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.series-card:hover .series-card-img,
+.series-card:focus-visible .series-card-img {
+  transform: scale(1.045);
+}
+
+.series-card.is-active .series-card-img {
+  transform: scale(1.03);
+}
+
+.series-card-no {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  z-index: 4;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--bg);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--acid);
+  padding: 0.3em 0.55em;
+}
+
+.series-card.is-active .series-card-no {
+  background: var(--acid);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--punch);
+}
+
+.series-card-meta {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  gap: 0.22rem;
+  padding: 0.9rem 0.95rem 1.25rem;
+  background: var(--bg);
+  border-top: 2px solid var(--ink);
+  transition: background 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.series-card.is-active .series-card-meta {
+  background: var(--ink);
+  border-top-color: var(--bg);
+}
+
+.series-card-title {
+  font-family: "Calistoga", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
+  font-size: clamp(1rem, 1.3vw, 1.35rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.1;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.series-card.is-active .series-card-title {
+  color: var(--bg);
+}
+
+.series-card-meta-line,
+.series-card-category {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--slate-2);
+}
+
+.series-card.is-active .series-card-meta-line,
+.series-card.is-active .series-card-category {
+  color: var(--ice);
+}
+
+.series-card-sleeve {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  height: 38%;
+  display: grid;
+  place-items: center;
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  background: var(--punch);
+  border-top: 2px solid var(--ink);
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.series-card:hover .series-card-sleeve,
+.series-card:focus-visible .series-card-sleeve,
+.series-card.is-active .series-card-sleeve {
+  clip-path: inset(0 0 0 0);
+}
+
+.series-stage-dragwrap {
+  margin-top: 1.15rem;
+  padding: 0.8rem clamp(0.8rem, 2vw, 1.4rem);
+  background: var(--bg-deep);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.series-stage-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 18px;
+  margin: 0;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+}
+
+.series-stage-range::-webkit-slider-runnable-track {
+  height: 12px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+.series-stage-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -7px;
+  background: var(--acid);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--volt);
+  cursor: grab;
+}
+
+.series-stage-range::-moz-range-track {
+  height: 12px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+.series-stage-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--acid);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--volt);
+  cursor: grab;
+}
+
+.series-stage-range:focus-visible {
+  outline: 3px solid var(--acid);
+  outline-offset: 3px;
+}
+
+.series-stage-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(1.2rem, 3vw, 3rem);
+  align-items: end;
+  margin-top: clamp(2rem, 5vh, 3.4rem);
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+  background: var(--bg);
+  border: 3px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.series-detail-poster {
+  position: relative;
+  width: min(100%, 340px);
+  aspect-ratio: 3 / 4.15;
+  background: var(--bg-deep);
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--punch);
+}
+
+.series-detail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: var(--bg-deep);
+}
+
+.series-detail-copy {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.series-detail-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.series-detail-category,
+.series-detail-years {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--bg);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--volt);
+  padding: 0.4em 0.75em;
+}
+
+.series-detail-years {
+  background: var(--bg);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--punch);
+}
+
+.series-detail-title {
+  font-family: "Calistoga", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
+  font-size: clamp(2rem, 5vw, 4.2rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.95;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.series-detail-seasons {
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+.series-detail-quote {
+  font-family: "Instrument Serif", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 46ch;
+}
+
+.series-detail-imdb {
+  justify-self: start;
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--bg);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--acid);
+  padding: 0.7em 1.1em;
+  text-decoration: none;
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.series-detail-imdb:hover,
+.series-detail-imdb:focus-visible {
+  background: var(--punch);
+  color: var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  transform: translate(-2px, -2px);
+  outline: none;
+}
+
+@media (max-width: 760px) {
+  .series-stage-detail {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .series-detail-poster {
+    width: min(100%, 240px);
+  }
+
+  .series-card {
+    width: min(66vw, 240px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .series-card,
+  .series-card:hover,
+  .series-card:focus-visible,
+  .series-card.is-active,
+  .series-detail-imdb,
+  .series-detail-imdb:hover,
+  .series-stage-range,
+  .series-card-sleeve,
+  .series-card-img {
+    transform: none !important;
+    transition-duration: 0s !important;
+  }
+
+  .series-card-sleeve {
+    clip-path: inset(0 0 0 0);
+  }
+}

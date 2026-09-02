@@ -816,8 +816,6 @@ initArchiveTabs();
 function initGroupAccordion() {
   // each entry: [panelSelector, headSelector, bodySelector]
   const CONFIG = [
-    ["#panel-films", ".film-group-head", ".idx-list"],
-    ["#panel-series", ".film-group-head", ".idx-list"],
     ["#panel-music", ".genre-head", ".track-index"],
   ];
 
@@ -1167,7 +1165,9 @@ function initMusicSearch() {
 
 initMusicSearch();
 
-/* ---------- IMDb quick links: click a film/series row to open its IMDb page ---------- */
+/* ---------- IMDb quick links: click a film/series row to open its IMDb page ----------
+   New film/series stages use dedicated .film-detail-imdb / .series-detail-imdb links,
+   so this legacy handler only manages encore rows if they are rendered back in markup. */
 
 function initImdbLinks() {
   const panels = document.querySelectorAll("#panel-films, #panel-series");
@@ -1180,23 +1180,22 @@ function initImdbLinks() {
   };
 
   panels.forEach((panel) => {
-    // click delegation: only rows that carry data-imdb are clickable
     panel.addEventListener("click", (e) => {
       const row = e.target.closest(".idx-row[data-imdb]");
+      if (e.target.closest(".film-detail-imdb, .series-detail-imdb")) return;
       if (!row) return;
       openImdb(row);
     });
 
-    // keyboard accessibility (rows are plain articles -> make Enter/Space work)
     panel.addEventListener("keydown", (e) => {
       if (e.key !== "Enter" && e.key !== " ") return;
       const row = e.target.closest(".idx-row[data-imdb]");
+      if (e.target.closest(".film-detail-imdb, .series-detail-imdb")) return;
       if (!row) return;
       e.preventDefault();
       openImdb(row);
     });
 
-    // focusable, screen-reader friendly links
     panel.querySelectorAll(".idx-row[data-imdb]").forEach((row) => {
       row.setAttribute("role", "link");
       row.setAttribute("tabindex", "0");

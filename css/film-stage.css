@@ -1,0 +1,475 @@
+/* ============ FILM STAGE: data-driven film reel ============ */
+
+.film-stage {
+  --film-card-w: clamp(192px, 26vw, 268px);
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.film-stage-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-top: 3px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 1.35rem;
+}
+
+.film-stage-head-left {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.film-stage-title {
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: clamp(1.65rem, 4vw, 3.8rem);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.film-stage-sub,
+.film-stage-count {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  color: var(--slate-2);
+}
+
+.film-stage-head-right .film-stage-count {
+  background: var(--ink);
+  color: var(--bg);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--acid);
+  padding: 0.35em 0.7em;
+}
+
+.film-stage-viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  background: var(--bg);
+  border: 2px solid var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+  touch-action: pan-x pan-y;
+}
+
+.film-stage-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.film-stage-viewport--driven {
+  overflow: hidden;
+}
+
+.film-stage-strip {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  gap: clamp(0.9rem, 2vw, 1.7rem);
+  padding: clamp(1rem, 2vw, 1.6rem);
+  will-change: transform;
+}
+
+.film-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--film-card-w);
+  aspect-ratio: 3 / 4.15;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.film-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--punch);
+}
+
+.film-card:active {
+  transform: translate(2px, 2px) scale(0.985);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+.film-card:focus-visible {
+  outline: 3px solid var(--acid);
+  outline-offset: 4px;
+}
+
+.film-card.is-active {
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: 8px 8px 0 var(--volt);
+  transform: translate(-2px, -2px);
+}
+
+.film-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: var(--bg-deep);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.film-card:hover .film-card-img,
+.film-card:focus-visible .film-card-img {
+  transform: scale(1.045);
+}
+
+.film-card.is-active .film-card-img {
+  transform: scale(1.03);
+}
+
+.film-card-no {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  z-index: 4;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--bg);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--punch);
+  padding: 0.3em 0.55em;
+}
+
+.film-card.is-active .film-card-no {
+  background: var(--punch);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--acid);
+}
+
+.film-card-meta {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  gap: 0.22rem;
+  padding: 0.9rem 0.95rem 1.25rem;
+  background: var(--bg);
+  border-top: 2px solid var(--ink);
+  transition: background 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.film-card.is-active .film-card-meta {
+  background: var(--ink);
+  border-top-color: var(--bg);
+}
+
+.film-card-title {
+  font-family: "Calistoga", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
+  font-size: clamp(1rem, 1.3vw, 1.35rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.1;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.film-card.is-active .film-card-title {
+  color: var(--bg);
+}
+
+.film-card-meta-line,
+.film-card-genre {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--slate-2);
+}
+
+.film-card.is-active .film-card-meta-line,
+.film-card.is-active .film-card-genre {
+  color: var(--ice);
+}
+
+.film-card-sleeve {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  height: 38%;
+  display: grid;
+  place-items: center;
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  background: var(--acid);
+  border-top: 2px solid var(--ink);
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.34s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.film-card:hover .film-card-sleeve,
+.film-card:focus-visible .film-card-sleeve,
+.film-card.is-active .film-card-sleeve {
+  clip-path: inset(0 0 0 0);
+}
+
+.film-stage-dragwrap {
+  margin-top: 1.15rem;
+  padding: 0.8rem clamp(0.8rem, 2vw, 1.4rem);
+  background: var(--bg-deep);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.film-stage-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 18px;
+  margin: 0;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+}
+
+.film-stage-range::-webkit-slider-runnable-track {
+  height: 12px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+.film-stage-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -7px;
+  background: var(--punch);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--acid);
+}
+
+.film-stage-range::-moz-range-track {
+  height: 12px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+.film-stage-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--punch);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--acid);
+}
+
+.film-stage-range:focus-visible {
+  outline: 3px solid var(--acid);
+  outline-offset: 4px;
+}
+
+.film-stage-detail {
+  display: grid;
+  grid-template-columns: minmax(160px, 250px) minmax(0, 1fr);
+  gap: clamp(1.2rem, 4vw, 3.4rem);
+  align-items: start;
+  margin-top: 2.2rem;
+  padding-top: 2rem;
+  border-top: 3px solid var(--ink);
+}
+
+.film-detail-poster {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: var(--bg-deep);
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--punch);
+}
+
+.film-detail-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--bg-deep);
+}
+
+.film-detail-poster::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 2px var(--paper);
+  pointer-events: none;
+}
+
+.film-detail-copy {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.film-detail-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+}
+
+.film-detail-genre {
+  color: var(--bg);
+  background: var(--volt);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 0.35em 0.65em;
+}
+
+.film-detail-year {
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 0.35em 0.65em;
+}
+
+.film-detail-title {
+  margin: 0;
+  font-family: "Calistoga", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
+  font-size: clamp(2rem, 5vw, 4.4rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.94;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.film-detail-director {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
+}
+
+.film-detail-quote {
+  max-width: 56ch;
+  margin: 0;
+  font-family: "Instrument Serif", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
+  font-size: clamp(1.02rem, 1.4vw, 1.3rem);
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.film-detail-imdb {
+  width: max-content;
+  font-family: "Notable", "Space Grotesk", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  color: var(--bg);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--punch);
+  padding: 0.7em 1.1em;
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.film-detail-imdb:hover {
+  transform: translate(-1px, -1px);
+  background: var(--punch);
+  box-shadow: 5px 5px 0 var(--acid);
+}
+
+.film-detail-imdb:focus-visible {
+  outline: 3px solid var(--acid);
+  outline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+  .film-stage-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .film-stage-title {
+    font-size: clamp(2rem, 12vw, 3rem);
+  }
+
+  .film-stage-strip {
+    padding: 0.9rem;
+    gap: 0.9rem;
+  }
+
+  .film-card {
+    width: clamp(176px, 58vw, 244px);
+  }
+
+  .film-stage-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .film-detail-poster {
+    width: min(48vw, 220px);
+  }
+
+  .film-detail-title {
+    font-size: clamp(2.1rem, 11vw, 3.4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film-stage *,
+  .film-stage *::before,
+  .film-stage *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .film-card:hover,
+  .film-card.is-active {
+    transform: none;
+  }
+
+  .film-card:hover .film-card-img,
+  .film-card:focus-visible .film-card-img {
+    transform: none;
+  }
+
+  .film-card-sleeve {
+    clip-path: inset(100% 0 0 0);
+  }
+
+  .film-card.is-active .film-card-sleeve {
+    clip-path: inset(0 0 0 0);
+  }
+}
