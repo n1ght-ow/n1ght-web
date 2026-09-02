@@ -1023,7 +1023,7 @@ function initMusicSearch() {
   let preOpen = new Set();
 
   function normalize(value) {
-    return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+    return String(value || "").toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, " ").trim();
   }
 
   function levenshtein(a, b) {
