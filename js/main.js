@@ -706,8 +706,19 @@ function initArchiveTabs() {
   const tabbar = document.getElementById("archive-tabbar");
   if (!tabbar) return;
   const tabs = Array.from(tabbar.querySelectorAll(".tab-btn"));
-  const panels = Array.from(document.querySelectorAll(".tab-panel"));
-  if (!tabs.length || !panels.length) return;
+  const tabPanels = tabbar.closest("#archive") && tabbar.closest("#archive").querySelector(":scope > .tab-panels");
+  if (!tabs.length || !tabPanels) return;
+
+  const panels = tabs.map((tab) =>
+    document.getElementById(tab.getAttribute("aria-controls"))
+  );
+  if (panels.some((panel) => !panel)) return;
+
+  // A panel must stay a direct child of .tab-panels. If a later edit nests it
+  // inside another panel or drawer, put it back before wiring tab clicks.
+  panels.forEach((panel) => {
+    if (panel.parentElement !== tabPanels) tabPanels.appendChild(panel);
+  });
 
   let current = tabs.findIndex((t) => t.classList.contains("is-active"));
   if (current < 0) current = 0;
