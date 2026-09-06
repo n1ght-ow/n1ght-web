@@ -687,6 +687,7 @@ html.has-cursor * { cursor: none !important; }
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft-md);
+  transition: box-shadow 0.35s var(--ease-out);
   width: max-content;
 }
 
@@ -707,19 +708,15 @@ html.has-cursor * { cursor: none !important; }
   height: auto;
   max-width: clamp(300px, 38vw, 560px);
   max-height: 74vh;
-  /* darkroom: archived frames sit undeveloped (mono); hover develops them */
-  filter: grayscale(1) brightness(0.96) contrast(1.02);
-  transition: filter 0.5s var(--ease-out);
 }
 
-.hs-card:hover .hs-img-wrap img,
-.hs-card:focus-visible .hs-img-wrap img {
-  filter: grayscale(0) brightness(1) contrast(1);
-}
-
+/* hovered frame gets the gold halo: tight ring + soft outer glow */
 .hs-card:hover .hs-img-wrap,
 .hs-card:focus-visible .hs-img-wrap {
-  box-shadow: var(--shadow-soft-lg), var(--glow-accent);
+  box-shadow:
+    0 0 0 1px var(--color-glow),
+    var(--shadow-soft-lg),
+    0 8px 32px rgba(221, 183, 107, 0.55);
 }
 
 .hs-card figcaption {
@@ -1963,8 +1960,6 @@ html.has-cursor * { cursor: none !important; }
   .ticker-track { animation: none; }
   .ticker-track.is-js-driven { animation: none; }
   .hof-img-wrap img { transition: none; }
-  /* keep the grayscale base look, only kill the transition */
-  .hs-img-wrap img { transition: none; }
   .custom-cursor { display: none; }
   * { scroll-behavior: auto !important; }
 
