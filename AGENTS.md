@@ -10,7 +10,7 @@
 
 ## 技术约束
 
-- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`sig-data.js` → `film-data.js` → `series-data.js`）→ stage（`film-stage.js` → `series-stage.js`）→ `main.js`。
+- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`sig-data.js` → `film-data.js` → `series-data.js` → `music-data.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js`）→ `main.js`。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
 - GSAP/ScrollTrigger/SplitText/Lenis 走本地 `js/vendor/`，`main.js` 已 `registerPlugin`。Lenis 仅非 REDUCED 启用（`autoRaf:false` + `gsap.ticker` 驱动）；锚点跳转统一走 `lenis.scrollTo`，REDUCED 下回退原生。
 - 动效只操作 `transform` / `opacity`（`clip-path: inset()` 幕帘等价允许）；所有 scrub 动画必须 `invalidateOnRefresh: true`，图片加载后调 `ScrollTrigger.refresh()`，加载风暴用 250ms debounce 合并。
@@ -24,8 +24,9 @@
 - 签名：`js/sig-data.js` 的 `SIG_DATA` 由 `buildSignature()` 渲染进 `#sig-hero` / `#sig-about`，描边绘制后填充淡入，REDUCED 下直接静态展示。
 - 影：`js/film-data.js`（`window.FILM_DATA`，16 部）→ `js/film-stage.js` 渲染进 `#panel-films[data-film-stage="auto"]`；样式在 `css/film-stage.css`。
 - 剧：`js/series-data.js`（`window.SERIES_DATA`，19 部）→ `js/series-stage.js` 渲染进 `#panel-series[data-series-stage="auto"]`；样式在 `css/series-stage.css`。
+- 音乐：`js/music-data.js`（`window.MUSIC_DATA`，763 首 16 组，字段 `{ id, zh, en, groupLang, tracks: [{ id, title, artist }] }`）→ `js/music-stage.js` 渲染 16 个 `.genre` 组进 `#music-drawer` 里的 `.playlist[data-music-stage="auto"]`；搜索框、`#music-drawer` 壳和 `#music-drawer` 之外的面板骨架留在 HTML。`.genre-count`「N 首」由渲染器按 `tracks.length` 自动生成；`zh` 段是否包 `<span lang="zh">`、整组是否挂 `lang="zh"`（华语组 `groupLang: "zh"`）也由渲染器按数据字段处理。
 - 影 / 剧条目字段：`{ id, imdb（ttID）, poster: "posters/<ttID>.jpg", title, director / years, year / seasons, genre / category, quote }`；reel 由 range 滑杆经单一 `quickTo` 驱动，海报卡 `data-cursor="OPEN"`、滑杆 `DRAG`、IMDb 按钮 `VIEW`。
-- 书、音乐、球队硬编码在 `index.html`；历史调研产物放 `archive/<topic>/`，不参与站点加载。
+- 书、球队硬编码在 `index.html`；历史调研产物放 `archive/<topic>/`，不参与站点加载。
 
 ## 动效准则
 
@@ -59,7 +60,7 @@ preloader → hero（`#hero`：签名描边 + 泡泡场，含 TICKER 01）→ PH
 - 摄影：横向区加 `.hs-card`，`photo/<name>.jpg` 与 `photo/full/<name>.jpg` 都放。
 - 游戏：GAME/ARCHIVE 区 `hof-item`，封面在 `covers/`。
 - 影视：海报放 `posters/<ttID>.jpg`，条目加进 `js/film-data.js` / `js/series-data.js`（`imdb` 字段即 ttID）。
-- 音乐：`data-song-id` 必须经网易云接口核实后再挂，**禁止凭记忆填造**；卡片结构 `.genre > .genre-head > .track-index > .artist-row > .artist-tracks > .idx-card[data-song-id][data-cursor="PLAY"]`，增删歌后同步该组 `.genre-count` 的「N 首」。
+- 音乐：`data-song-id` 必须经网易云接口核实后再挂，**禁止凭记忆填造**；条目加进 `js/music-data.js` 对应组的 `tracks`（结构 `.genre > .genre-head > .track-index > .artist-row > .artist-tracks > .idx-card[data-song-id][data-cursor="PLAY"]` 由 `music-stage.js` 渲染，不手写 HTML），增删歌后 `.genre-count` 自动同步，只需手改 `#about-stats` 的 SONGS 计数。
 - 球队：logo 放 `logos/`（svg）。
 - 增删任何内容后同步 `#about-stats` 计数（FRAMES / BOOKS / FILMS / SERIES / SONGS / TEAMS…）与 TICKER 04 的枚举。
 
