@@ -68,93 +68,6 @@ function splitChars(el) {
   return el.querySelectorAll(".ch");
 }
 
-const SVG_NS = "http://www.w3.org/2000/svg";
-
-/* Build the signature SVG into a container from SIG_DATA.
-   Returns { svg, paths, fills } or null when data/container missing.
-   Each glyph outline is drawn twice:
-   - .sig-path  : stroked outline (stroke-dashoffset draw animation)
-   - .sig-fill  : solid fill that fades in after the draw lands
-*/
-function buildSignature(containerId) {
-  const container = document.getElementById(containerId);
-  if (!container || typeof SIG_DATA === "undefined") return null;
-
-  const vb = SIG_DATA.viewBox;
-  const svg = document.createElementNS(SVG_NS, "svg");
-  svg.setAttribute("viewBox", vb.x + " " + vb.y + " " + vb.w + " " + vb.h);
-  svg.setAttribute("role", "img");
-  svg.setAttribute("aria-label", "N1GHT CHXN9");
-
-  const paths = [];
-  const fills = [];
-
-  SIG_DATA.glyphs.forEach((g) => {
-    const p = document.createElementNS(SVG_NS, "path");
-    p.setAttribute("d", g.d);
-    p.setAttribute("class", "sig-path");
-    svg.appendChild(p);
-    paths.push(p);
-
-    const f = document.createElementNS(SVG_NS, "path");
-    f.setAttribute("d", g.d);
-    f.setAttribute("class", "sig-fill");
-    svg.appendChild(f);
-    fills.push(f);
-  });
-
-  container.appendChild(svg);
-  return { svg, paths, fills };
-}
-
-// Measure every path, set up dasharray/dashoffset and return total length
-function setupSignatureDraw(sig) {
-  if (!sig) return null;
-  let totalLen = 0;
-  sig.paths.forEach((p) => {
-    const len = p.getTotalLength();
-    p.dataset.len = len;
-    totalLen += len;
-    p.style.strokeDasharray = len;
-    p.style.strokeDashoffset = len;
-  });
-  return totalLen;
-}
-
-function animateSignature(sig, opts) {
-  if (!sig || !sig.paths.length) return;
-  const o = opts || {};
-
-  if (REDUCED) {
-    sig.paths.forEach((p) => {
-      gsap.set(p, { strokeDashoffset: 0 });
-      p.style.strokeDasharray = "none";
-    });
-    gsap.set(sig.fills, { opacity: 1 });
-    if (o.onComplete) o.onComplete();
-    return;
-  }
-
-  const tl = gsap.timeline({
-    delay: o.delay || 0,
-    onComplete: o.onComplete,
-  });
-
-  tl.to(sig.paths, {
-    strokeDashoffset: 0,
-    duration: o.duration || 1.15,
-    ease: o.ease || "power2.inOut",
-    stagger: o.stagger || 0.085,
-  }, 0);
-
-  tl.to(sig.fills, {
-    opacity: 1,
-    duration: o.fillDuration || 0.7,
-    ease: "power2.out",
-    stagger: 0.05,
-  }, o.fillAt || "<0.25");
-}
-
 /* ---------- custom cursor + magnetic (fine pointers, motion allowed) ----------
    One ink dot: grows on anything interactive, expands into a mono label on
    [data-cursor] targets (VIEW / DRAG / OPEN / STAMP). Magnetic elements lean
@@ -1165,9 +1078,6 @@ if (TOUCH) {
    background + chip swap, no transform) — high-frequency interactions
    get instant feedback per the motion rules in AGENTS.md ---------- */
 
-/* ---------- about signature: build for everyone; REDUCED shows it statically ---------- */
-const aboutSig = buildSignature("sig-about");
-
 /* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
   /* ---------- hero: floating orbs + mouse parallax ---------- */
@@ -1363,31 +1273,7 @@ if (!REDUCED) {
     });
   }
 
-  /* ---------- about stats + signature entrance ---------- */
-
-  if (aboutSig) {
-    setupSignatureDraw(aboutSig);
-    // draw when the about section scrolls into view; redraw each time
-    // (toggleActions reverse hides it again on the way up)
-    const st = ScrollTrigger.create({
-      trigger: "#about .about-stats",
-      start: "top 80%",
-      end: "bottom 40%",
-      toggleActions: "play pause reverse pause",
-      onEnter: () => {
-        gsap.set(aboutSig.fills, { opacity: 0 });
-        animateSignature(aboutSig, { duration: 1.1, stagger: 0.08, fillAt: "<0.2" });
-      },
-      onLeaveBack: () => {
-        aboutSig.paths.forEach((p) => gsap.set(p, { strokeDashoffset: p.dataset.len }));
-        gsap.set(aboutSig.fills, { opacity: 0 });
-      },
-      onEnterBack: () => {
-        gsap.set(aboutSig.fills, { opacity: 0 });
-        animateSignature(aboutSig, { duration: 1.1, stagger: 0.08, fillAt: "<0.2" });
-      },
-    });
-  }
+  /* ---------- about stats entrance ---------- */
 
   gsap.from(".about-stats span", {
     yPercent: 110,
@@ -1408,20 +1294,6 @@ if (!REDUCED) {
     duration: 1.1,
     stagger: 0.14,
     ease: "power4.out",
-    scrollTrigger: {
-      trigger: ".coda",
-      start: "top 85%",
-      toggleActions: "play none none reverse",
-    },
-  });
-
-  gsap.from(".coda-mono", {
-    clipPath: "inset(0 0 100% 0)",
-    yPercent: 40,
-    duration: 1,
-    delay: 0.5,
-    ease: "power3.inOut",
-    clearProps: "clipPath",
     scrollTrigger: {
       trigger: ".coda",
       start: "top 85%",
@@ -1559,10 +1431,6 @@ if (!REDUCED) {
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(() => scheduleRefresh(100));
   }
-} else if (aboutSig) {
-  // reduced motion: show the about signature statically (no draw animation,
-  // no scroll-linked redraw)
-  gsap.set(aboutSig.fills, { opacity: 1 });
 }
 
 /* ---------- nav active section + scroll progress (always active) ---------- */

@@ -17,7 +17,7 @@
 
 ## 技术约束
 
-- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`sig-data.js` → `film-data.js` → `series-data.js` → `music-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js`）→ `main.js`。
+- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js`）→ `main.js`。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
 - GSAP/ScrollTrigger/SplitText/Lenis 走本地 `js/vendor/`。Lenis 仅非 REDUCED 启用；锚点跳转统一走 `lenis.scrollTo`。
 - 内容归属红线：`#panel-books / films / series / music / sport` 五个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token（books / films / series / music / sport）。
@@ -114,7 +114,7 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 ## 代码结构（新功能照此归属）
 
 - `js/main.js` 站点交互层：preloader、光标徽章、磁吸、`makeHorizontalScroller`、泡泡场、lightbox、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮 + 滚动进度、共享 `scheduleRefresh`。
-- 签名：`js/sig-data.js` 的 `SIG_DATA` 由 `buildSignature()` 渲染进 `#sig-about`，REDUCED 下静态展示；hero 不放签名（2026-09 用户裁定移除，连同 hero 副标语）。
+- 签名：已整体退役（2026-09 用户裁定，about 签名连带绘制代码一并移除）；`js/sig-data.js` 保留在仓库但不参与加载，仍是 fontTools 生成数据、禁止手改。
 - 影 / 剧：数据（`film-data.js` 16 部 / `series-data.js` 19 部，字段 `{ id, imdb（ttID）, poster, title, director / years, year / seasons, genre / category, quote }`）→ 配置适配器经 `js/reel-stage.js` 的 `createReelStage()` 工厂渲染进 `#panel-films` / `#panel-series`；共享机械样式在 `css/reel-stage.css`，面板 accent / detail 区 / 断点 / reduce 块在各自 css。class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑定。
 - 音乐：`js/music-data.js`（`window.MUSIC_DATA`，763 首 16 组，`{ id, zh, en, groupLang, tracks: [{ id, title, artist }] }`）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips；`.genre-count` 由渲染器自动生成。歌单默认**全展开、无手风琴**（2026-09 用户裁定）：浏览靠流派 chips 过滤（sticky）+ 搜索叠加 + 随机一首（从当前可见卡片抽取，走同一网易云深链）。
 - 书、球队硬编码在 `index.html`；历史调研产物放 `archive/<topic>/`，不参与站点加载。
