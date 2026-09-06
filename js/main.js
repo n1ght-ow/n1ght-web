@@ -245,12 +245,6 @@ document.querySelectorAll("[data-split]").forEach((el) => {
   heroChars.push(...splitChars(el));
 });
 gsap.set(heroChars, { yPercent: 120 });
-gsap.set(".hero-sub span", { yPercent: 140, opacity: 0 });
-
-// build the hero signature before the reveal so it can draw right after
-const heroSig = buildSignature("sig-hero");
-const sigTotalLen = setupSignatureDraw(heroSig);
-gsap.set(heroSig ? heroSig.fills : [], { opacity: 0 });
 
 let preloadFinished = false;
 
@@ -273,11 +267,6 @@ function finishPreload() {
     // path must never depend on the animation ticker, or a paused rAF
     // (background tab, throttled webview) would trap the user on the loader
     gsap.set(heroChars, { yPercent: 0 });
-    gsap.set(".hero-sub span", { yPercent: 0, opacity: 1 });
-    if (heroSig) {
-      heroSig.paths.forEach((p) => gsap.set(p, { strokeDashoffset: 0 }));
-      gsap.set(heroSig.fills, { opacity: 1 });
-    }
     preloader.remove();
     settle();
     return;
@@ -301,15 +290,7 @@ function finishPreload() {
     .to(".pre-shutter.s2", { y: "-101%", duration: 0.7, ease: "power4.inOut" }, "-=0.55")
     .to(".pre-shutter.s3", { y: "-101%", duration: 0.7, ease: "power4.inOut" }, "-=0.55")
     // hero entrance
-    .to(heroChars, { yPercent: 0, duration: 1.1, stagger: 0.035, ease: "power4.out" }, "-=0.45")
-    .to(".hero-sub span", { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.12, ease: "power3.out" }, "<+0.4");
-
-  // signature draw starts as the shutters open
-  if (heroSig) {
-    tl.add(() => {
-      animateSignature(heroSig, { delay: 0, duration: 1.25, stagger: 0.09 });
-    }, "-=3.2");
-  }
+    .to(heroChars, { yPercent: 0, duration: 1.1, stagger: 0.035, ease: "power4.out" }, "-=0.45");
 }
 
 // progress-driven letter ignition

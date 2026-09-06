@@ -113,8 +113,8 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 
 ## 代码结构（新功能照此归属）
 
-- `js/main.js` 站点交互层：preloader、hero 签名、光标徽章、磁吸、`makeHorizontalScroller`、泡泡场、lightbox、tab 切换、音乐手风琴 + 搜索、网易云外链、导航高亮 + 滚动进度、共享 `scheduleRefresh`。
-- 签名：`js/sig-data.js` 的 `SIG_DATA` 由 `buildSignature()` 渲染进 `#sig-hero` / `#sig-about`，REDUCED 下静态展示。
+- `js/main.js` 站点交互层：preloader、光标徽章、磁吸、`makeHorizontalScroller`、泡泡场、lightbox、tab 切换、音乐手风琴 + 搜索、网易云外链、导航高亮 + 滚动进度、共享 `scheduleRefresh`。
+- 签名：`js/sig-data.js` 的 `SIG_DATA` 由 `buildSignature()` 渲染进 `#sig-about`，REDUCED 下静态展示；hero 不放签名（2026-09 用户裁定移除，连同 hero 副标语）。
 - 影 / 剧：数据（`film-data.js` 16 部 / `series-data.js` 19 部，字段 `{ id, imdb（ttID）, poster, title, director / years, year / seasons, genre / category, quote }`）→ 配置适配器经 `js/reel-stage.js` 的 `createReelStage()` 工厂渲染进 `#panel-films` / `#panel-series`；共享机械样式在 `css/reel-stage.css`，面板 accent / detail 区 / 断点 / reduce 块在各自 css。class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑定。
 - 音乐：`js/music-data.js`（`window.MUSIC_DATA`，763 首 16 组，`{ id, zh, en, groupLang, tracks: [{ id, title, artist }] }`）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]`；`.genre-count` 由渲染器自动生成。
 - 书、球队硬编码在 `index.html`；历史调研产物放 `archive/<topic>/`，不参与站点加载。
@@ -125,7 +125,7 @@ taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()
 
 ## 站点结构（改动前核对实际现状）
 
-preloader → hero（签名描边 + 泡泡场）→ PHOTOGRAPHY（横向 pinned 画廊 11 帧）→ GAME ARCHIVE（HOF 7 卡）→ TICKER（收藏计数条）→ THE ARCHIVE（书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5，五 tab）→ TICKER（DO NOT GO GENTLE）→ POEM → ABOUT（签名 + 统计）→ footer。
+preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（横向 pinned 画廊 11 帧）→ GAME ARCHIVE（HOF 7 卡）→ TICKER（收藏计数条）→ THE ARCHIVE（书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5，五 tab）→ TICKER（DO NOT GO GENTLE）→ POEM → ABOUT（签名 + 统计）→ footer。
 
 TICKER 共 2 条（2026-09 用户拍板收敛：原 01/02 移除，保留计数条与诗条）；taste-skill marquee ≤1/页与本项目 2 条的出入记录为品牌特例，不再增配第三条。
 

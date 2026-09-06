@@ -85,7 +85,6 @@ body { -webkit-font-smoothing: antialiased; }
 /* glass surface recipe; solid fallback when transparency is reduced */
 .glass,
 .nav,
-.hero-sub span,
 .sticker,
 .bh-meta span,
 .tab-btn,
@@ -100,7 +99,6 @@ body { -webkit-font-smoothing: antialiased; }
 @media (prefers-reduced-transparency: reduce) {
   .glass,
   .nav,
-  .hero-sub span,
   .sticker,
   .bh-meta span,
   .tab-btn,
@@ -434,32 +432,6 @@ html.has-cursor * { cursor: none !important; }
 .ht-line-2 .ht-word { color: var(--color-accent-text); }
 
 .ht-word .ch { display: inline-block; }
-
-.hero-sub {
-  margin-top: clamp(1.6rem, 4vh, 2.6rem);
-  display: flex;
-  flex-direction: column;
-  gap: 0.55em;
-  align-items: center;
-  text-align: center;
-  font-size: 0.875rem;
-  color: var(--color-text);
-}
-
-.hero-sub span {
-  display: inline-block;
-  padding: 0.55em 1.1em;
-  border-radius: var(--radius-pill);
-  white-space: nowrap;
-}
-
-.hero-sub span:first-child {
-  background: var(--color-accent-solid);
-  color: var(--color-on-accent);
-  box-shadow: var(--ring-accent), var(--glow-accent);
-}
-
-.hero-sub span:last-child { color: var(--color-text-secondary); }
 
 /* ============ HERO SIGNATURE (SVG draw) ============ */
 .hero-sig {
@@ -1911,10 +1883,6 @@ html.has-cursor * { cursor: none !important; }
   .nav-tm { display: none; }
 
   .ht-word { font-size: clamp(2.6rem, 13vw, 6rem); }
-
-  .hero-sub { font-size: 0.8125rem; }
-  .hero-sub span { white-space: normal; border-radius: var(--radius-md); }
-  .hero-sub span:last-child { letter-spacing: 0.06em; }
 
   .sticker { font-size: 0.8125rem; padding: 0.4em 0.9em; }
   .st-3 { display: none; }
