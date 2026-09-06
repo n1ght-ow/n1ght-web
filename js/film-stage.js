@@ -24,6 +24,14 @@
     return stage.querySelector(selector);
   }
 
+  /* CJK-bearing lines get lang="zh" so the browser picks proper system
+     CJK fallback fonts (site fonts are latin-subset only). */
+  const CJK = /[\u3000-\u303f\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff00-\uffef]/;
+  function tagLang(node, text) {
+    if (CJK.test(String(text))) node.setAttribute("lang", "zh");
+    else node.removeAttribute("lang");
+  }
+
   /* Debounced global refresh: lazy poster loads settle in bursts, so many
      load events inside 250ms collapse into one refresh pass. setupMode()
      still runs per image; only the global recalc is batched. */
@@ -117,10 +125,12 @@
       img.referrerPolicy = "no-referrer";
 
       const meta = el("span", "film-card-meta");
-      meta.appendChild(el("span", "film-card-title", film.title));
-      meta.appendChild(
-        el("span", "film-card-meta-line", film.director + " / " + film.year)
-      );
+      const titleSpan = el("span", "film-card-title", film.title);
+      tagLang(titleSpan, film.title);
+      meta.appendChild(titleSpan);
+      const metaLine = el("span", "film-card-meta-line", film.director + " / " + film.year);
+      tagLang(metaLine, metaLine.textContent);
+      meta.appendChild(metaLine);
       meta.appendChild(el("span", "film-card-genre", film.genre));
 
       const sleeve = el("span", "film-card-sleeve");
@@ -208,8 +218,11 @@
     genre.textContent = film.genre;
     year.textContent = film.year;
     title.textContent = film.title;
+    tagLang(title, film.title);
     director.textContent = film.director;
+    tagLang(director, film.director);
     quote.textContent = film.quote;
+    tagLang(quote, film.quote);
     imdbButton.href = "https://www.imdb.com/title/" + film.imdb + "/";
 
     const revealParts = Array.from(

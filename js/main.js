@@ -33,6 +33,18 @@ if (!REDUCED && typeof Lenis !== "undefined") {
 
 /* ---------- helpers ---------- */
 
+// One shared scheduler for full ScrollTrigger.refresh passes: bursts of
+// layout-changing events (accordion toggles, image loads, font swaps)
+// collapse into a single recalc after the window quiets down.
+let refreshTimer = 0;
+function scheduleRefresh(delay) {
+  if (!window.ScrollTrigger || !window.ScrollTrigger.refresh) return;
+  window.clearTimeout(refreshTimer);
+  refreshTimer = window.setTimeout(() => {
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+  }, delay || 200);
+}
+
 // split text into chars inside .ch spans (preserves word wrappers)
 function splitChars(el) {
   const words = el.textContent.split(/(\s+)/);
@@ -179,21 +191,21 @@ function initCursor() {
     if (labelled) {
       label.textContent = labelled.getAttribute("data-cursor");
       baseScale = 6;
-      gsap.to(label, { opacity: 1, duration: 0.18 });
+      gsap.to(label, { opacity: 1, duration: 0.18, overwrite: "auto" });
     } else if (e.target.closest("a, button, .acc-head, .hs-card, .hof-card, .idx-row, .idx-card")) {
       baseScale = 2.6;
-      gsap.to(label, { opacity: 0, duration: 0.15 });
+      gsap.to(label, { opacity: 0, duration: 0.15, overwrite: "auto" });
     } else {
       baseScale = 1;
-      gsap.to(label, { opacity: 0, duration: 0.15 });
+      gsap.to(label, { opacity: 0, duration: 0.15, overwrite: "auto" });
     }
     grow(baseScale);
   });
 
-  document.addEventListener("mousedown", () => gsap.to(dot, { scale: baseScale * 0.75, duration: 0.12, ease: "power2.in" }));
-  document.addEventListener("mouseup", () => gsap.to(dot, { scale: baseScale, duration: 0.3, ease: "back.out(2.5)" }));
-  document.documentElement.addEventListener("mouseleave", () => gsap.to(cursor, { autoAlpha: 0, duration: 0.2 }));
-  document.documentElement.addEventListener("mouseenter", () => gsap.to(cursor, { autoAlpha: 1, duration: 0.2 }));
+  document.addEventListener("mousedown", () => gsap.to(dot, { scale: baseScale * 0.75, duration: 0.12, ease: "power2.in", overwrite: "auto" }));
+  document.addEventListener("mouseup", () => gsap.to(dot, { scale: baseScale, duration: 0.3, ease: "back.out(2.5)", overwrite: "auto" }));
+  document.documentElement.addEventListener("mouseleave", () => gsap.to(cursor, { autoAlpha: 0, duration: 0.2, overwrite: "auto" }));
+  document.documentElement.addEventListener("mouseenter", () => gsap.to(cursor, { autoAlpha: 1, duration: 0.2, overwrite: "auto" }));
 }
 initCursor();
 
@@ -208,7 +220,7 @@ function initMagnetic() {
       yTo((e.clientY - (r.top + r.height / 2)) * 0.3);
     });
     el.addEventListener("pointerleave", () => {
-      gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.45)" });
+      gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.45)", overwrite: "auto" });
     });
   });
 }
@@ -249,9 +261,9 @@ function finishPreload() {
     // recalc once the reveal is done, then again after lazy gallery
     // images settle so the pinned ranges stay accurate
     ScrollTrigger.refresh();
-    setTimeout(() => ScrollTrigger.refresh(), 800);
+    scheduleRefresh(800);
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => ScrollTrigger.refresh());
+      document.fonts.ready.then(() => scheduleRefresh(100));
     }
   };
 
@@ -326,7 +338,10 @@ if (REDUCED) {
   setTimeout(finishPreload, 350);
 } else {
   images.forEach((img) => {
-    if (img.complete && img.naturalWidth !== 0) onImgDone();
+    // complete === true also covers failed loads (the error listener below
+    // would never fire retroactively) — count them as done so the loader
+    // can't hang on a broken file
+    if (img.complete) onImgDone();
     else {
       img.addEventListener("load", onImgDone, { once: true });
       img.addEventListener("error", onImgDone, { once: true });
@@ -360,12 +375,24 @@ function makeHorizontalScroller(opts) {
   let isGrabbing = false;
 
   let lastFrame = -1;
+  // Handle X is a transform write (translateX). Track/handle widths are
+  // cached and re-measured on refresh/resize, so the per-frame path never
+  // reads layout between writes.
+  let barW = 0;
+  let handleHalf = 0;
+  const measureHandle = () => {
+    if (!barTrack || !barHandle) return;
+    barW = barTrack.clientWidth;
+    handleHalf = barHandle.offsetWidth / 2;
+  };
   function renderDragbar(progress) {
     if (!bar || !barFill || !barHandle || !barCount) return;
     const p = Math.max(0, Math.min(1, progress));
-    // transform write, not width: keeps the fill off the layout path
+    // transform writes only: fill via scaleX, handle via translateX
+    // (center of handle lands at p * trackWidth, matching the old left:%)
     barFill.style.transform = "scaleX(" + p + ")";
-    barHandle.style.left = p * 100 + "%";
+    if (!barW || !handleHalf) measureHandle();
+    barHandle.style.transform = "translate(" + (p * barW - handleHalf).toFixed(2) + "px, -50%)";
     const frame = Math.min(opts.itemCount, Math.max(1, Math.round(p * (opts.itemCount - 1)) + 1));
     if (frame !== lastFrame) {
       lastFrame = frame;
@@ -409,7 +436,11 @@ function makeHorizontalScroller(opts) {
       onEnterBack: () => bar.classList.add("is-active"),
       onLeave: () => bar.classList.remove("is-active"),
       onLeaveBack: () => bar.classList.remove("is-active"),
+      onRefresh: measureHandle,
     });
+
+    measureHandle();
+    window.addEventListener("resize", measureHandle);
 
     const barEventToProgress = (e) => {
       const rect = barTrack.getBoundingClientRect();
@@ -603,6 +634,12 @@ function spawnBubble() {
     heroLoopTweens.forEach((tw) => {
       if (tw.targets()[0] === b) heroLoopTweens.delete(tw);
     });
+    if (REDUCED) {
+      // no pop animation under reduced motion: swap in place
+      b.remove();
+      spawnBubble();
+      return;
+    }
     gsap.timeline({
       onComplete: () => { b.remove(); spawnBubble(); },
     }).to(b, { scale: 1.9, autoAlpha: 0, duration: 0.28, ease: "power2.in" });
@@ -624,6 +661,7 @@ const photoCards = Array.from(document.querySelectorAll(".hs-card"));
 
 let lbIndex = 0;
 let isLbOpen = false;
+let lbTrigger = null;
 
 function lbLoad(i) {
   lbIndex = ((i % photoCards.length) + photoCards.length) % photoCards.length;
@@ -647,6 +685,7 @@ function lbLoad(i) {
 
 function lbOpenAt(i) {
   if (!lightbox || !photoCards.length) return;
+  lbTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   lbLoad(i);
   lightbox.classList.add("is-open");
   lightbox.setAttribute("aria-hidden", "false");
@@ -662,13 +701,22 @@ function lbCloseFn() {
   lightbox.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
   if (lenis) lenis.start();
-  lbImg.src = "";
+  // empty src would re-request the page URL itself; drop the attribute
+  lbImg.removeAttribute("src");
   isLbOpen = false;
+  // hand focus back to the card that opened the lightbox
+  if (lbTrigger && document.contains(lbTrigger)) lbTrigger.focus();
+  lbTrigger = null;
 }
 
 if (lightbox && photoCards.length) {
   photoCards.forEach((card, i) => {
     card.addEventListener("click", () => lbOpenAt(i));
+    card.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      lbOpenAt(i);
+    });
   });
 
   lbCloseBtn.addEventListener("click", lbCloseFn);
@@ -685,6 +733,22 @@ if (lightbox && photoCards.length) {
     if (e.key === "Escape") lbCloseFn();
     if (e.key === "ArrowLeft") lbLoad(lbIndex - 1);
     if (e.key === "ArrowRight") lbLoad(lbIndex + 1);
+    if (e.key === "Tab") {
+      // simple focus trap: cycle the lightbox controls
+      const focusables = [lbCloseBtn, lbPrevBtn, lbNextBtn].filter(
+        (btn) => btn && btn.offsetParent !== null
+      );
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   });
 
   // touch: horizontal swipe changes frames
@@ -730,11 +794,15 @@ function initArchiveTabs() {
   let current = tabs.findIndex((t) => t.classList.contains("is-active"));
   if (current < 0) current = 0;
 
+  // roving tabindex: only the active tab participates in the Tab order
+  tabs.forEach((t, i) => { t.tabIndex = i === current ? 0 : -1; });
+
   const showMeta = (idx) => {
     tabs.forEach((t, i) => {
       const on = i === idx;
       t.classList.toggle("is-active", on);
       t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
     });
     panels.forEach((p, i) => p.classList.toggle("is-active", i === idx));
   };
@@ -805,23 +873,26 @@ function initArchiveTabs() {
     });
   });
 
-  // first panel: baseline entrance on scroll into view
-  const firstPanel = panels[0];
-  const firstRows = Array.from(firstPanel.querySelectorAll(".idx-row, .film-group, .genre"));
-  if (firstRows.length) {
-    gsap.from(firstRows, {
-      clipPath: "inset(0 0 100% 0)",
-      y: 14,
-      duration: 0.8,
-      stagger: { each: 0.06, from: "start" },
-      ease: "power3.out",
-      clearProps: "clipPath",
-      scrollTrigger: {
-        trigger: firstPanel,
-        start: "top 85%",
-        toggleActions: "play none none reverse",
-      },
-    });
+  // first panel: baseline entrance on scroll into view. Skipped under
+  // reduced motion — the rows simply render in their final position.
+  if (!REDUCED) {
+    const firstPanel = panels[0];
+    const firstRows = Array.from(firstPanel.querySelectorAll(".idx-row, .film-group, .genre"));
+    if (firstRows.length) {
+      gsap.from(firstRows, {
+        clipPath: "inset(0 0 100% 0)",
+        y: 14,
+        duration: 0.8,
+        stagger: { each: 0.06, from: "start" },
+        ease: "power3.out",
+        clearProps: "clipPath",
+        scrollTrigger: {
+          trigger: firstPanel,
+          start: "top 85%",
+          toggleActions: "play none none reverse",
+        },
+      });
+    }
   }
 }
 
@@ -867,7 +938,7 @@ function initGroupAccordion() {
             ease: "power3.inOut",
             onComplete: () => {
               gsap.set(g.body, { height: "auto" });
-              ScrollTrigger.refresh();
+              scheduleRefresh();
             },
           });
         } else {
@@ -875,7 +946,7 @@ function initGroupAccordion() {
             height: 0,
             duration: animate && !REDUCED ? 0.5 : 0,
             ease: "power3.inOut",
-            onComplete: () => ScrollTrigger.refresh(),
+            onComplete: () => scheduleRefresh(),
           });
         }
       };
@@ -1071,8 +1142,7 @@ function initMusicSearch() {
     return dp[m][n];
   }
 
-  function matchCard(haystack, query) {
-    const qNorm = normalize(query);
+  function matchCard(haystack, qNorm) {
     if (!qNorm) return true;
 
     const { hay, compact, tokens } = haystack;
@@ -1116,15 +1186,10 @@ function initMusicSearch() {
   }
 
   // Global ScrollTrigger.refresh() walks ~40 triggers incl. two pinned
-  // horizontal sections: debounce it so keystroke bursts settle into a
-  // single refresh ~200ms after the last input.
-  let refreshTimer = 0;
+  // horizontal sections — routed through the shared debounced scheduler so
+  // keystroke bursts settle into a single refresh.
   function refreshScroll() {
-    if (!window.ScrollTrigger) return;
-    window.clearTimeout(refreshTimer);
-    refreshTimer = window.setTimeout(() => {
-      if (window.ScrollTrigger) ScrollTrigger.refresh();
-    }, 200);
+    scheduleRefresh();
   }
 
   function applySearch() {
@@ -1139,9 +1204,12 @@ function initMusicSearch() {
       preOpen = new Set(heads.filter(headOpen));
     }
 
+    // normalize the query once; matchCard only compares precomputed haystacks
+    const qNorm = normalize(trimmed);
+
     let visible = 0;
     cards.forEach((card, i) => {
-      const on = matchCard(cardHaystacks[i], trimmed);
+      const on = matchCard(cardHaystacks[i], qNorm);
       card.classList.toggle("is-search-hidden", !on);
       if (on) visible++;
     });
@@ -1185,7 +1253,28 @@ function initMusicSearch() {
     refreshScroll();
   }
 
-  input.addEventListener("input", applySearch);
+  // Coalesce keystroke bursts: each frame applies at most one search pass
+  // over the 763 cards instead of one per input event.
+  let searchFrame = 0;
+  function requestApply() {
+    if (searchFrame) return;
+    searchFrame = requestAnimationFrame(() => {
+      searchFrame = 0;
+      applySearch();
+    });
+  }
+
+  // IME safety: skip filtering during pinyin/IME composition — every
+  // intermediate keystroke would otherwise run a full panel filter.
+  let composing = false;
+  input.addEventListener("compositionstart", () => { composing = true; });
+  input.addEventListener("compositionend", () => {
+    composing = false;
+    requestApply();
+  });
+  input.addEventListener("input", () => {
+    if (!composing) requestApply();
+  });
   input.addEventListener("keydown", (e) => {
     if (e.key === "Escape") clearSearch();
   });
@@ -1264,17 +1353,20 @@ if (TOUCH) {
     row.classList.add("is-pressable");
     const logo = row.querySelector(".idx-logo");
     row.addEventListener("mouseenter", () => {
-      gsap.to(row, { x: 8, y: -3, duration: 0.38, ease: "back.out(2)" });
+      gsap.to(row, { x: 8, y: -3, duration: 0.38, ease: "back.out(2)", overwrite: "auto" });
       row.classList.add("is-pressed");
-      if (logo) gsap.to(logo, { rotation: -7, scale: 1.07, duration: 0.4, ease: "back.out(2.4)" });
+      if (logo) gsap.to(logo, { rotation: -7, scale: 1.07, duration: 0.4, ease: "back.out(2.4)", overwrite: "auto" });
     });
     row.addEventListener("mouseleave", () => {
-      gsap.to(row, { x: 0, y: 0, duration: 0.75, ease: "elastic.out(1, 0.5)" });
+      gsap.to(row, { x: 0, y: 0, duration: 0.75, ease: "elastic.out(1, 0.5)", overwrite: "auto" });
       row.classList.remove("is-pressed");
-      if (logo) gsap.to(logo, { rotation: 0, scale: 1, duration: 0.7, ease: "elastic.out(1.2, 0.45)" });
+      if (logo) gsap.to(logo, { rotation: 0, scale: 1, duration: 0.7, ease: "elastic.out(1.2, 0.45)", overwrite: "auto" });
     });
   });
 })();
+
+/* ---------- about signature: build for everyone; REDUCED shows it statically ---------- */
+const aboutSig = buildSignature("sig-about");
 
 /* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
@@ -1335,8 +1427,8 @@ if (!REDUCED) {
   function splitHeadParallax(headId) {
     const head = document.getElementById(headId);
     if (!head) return;
-    const left = head.querySelector(".bh-left h2");
-    const right = head.querySelector(".bh-right h2");
+    const left = head.querySelector(".bh-left .bh-word");
+    const right = head.querySelector(".bh-right .bh-word");
 
     gsap.fromTo(left, { xPercent: -14 }, {
       xPercent: 6,
@@ -1362,7 +1454,7 @@ if (!REDUCED) {
     });
 
     // entrance: lines rise out of their overflow masks
-    gsap.from(head.querySelectorAll(".bh-line h2"), {
+    gsap.from(head.querySelectorAll(".bh-line .bh-word"), {
       yPercent: 110,
       duration: 1.2,
       stagger: 0.12,
@@ -1502,7 +1594,6 @@ if (!REDUCED) {
 
   /* ---------- about stats + signature entrance ---------- */
 
-  const aboutSig = buildSignature("sig-about");
   if (aboutSig) {
     setupSignatureDraw(aboutSig);
     // draw when the about section scrolls into view; redraw each time
@@ -1693,27 +1784,35 @@ if (!REDUCED) {
   });
 
   /* ---------- refresh after everything settles ---------- */
-  window.addEventListener("load", () => ScrollTrigger.refresh());
+  window.addEventListener("load", () => scheduleRefresh(100));
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(() => ScrollTrigger.refresh());
+    document.fonts.ready.then(() => scheduleRefresh(100));
   }
+} else if (aboutSig) {
+  // reduced motion: show the about signature statically (no draw animation,
+  // no scroll-linked redraw)
+  gsap.set(aboutSig.fills, { opacity: 1 });
 }
 
 /* ---------- nav active section + scroll progress (always active) ---------- */
 
 const navAnchors = Array.from(document.querySelectorAll(".nav-links a"));
-const navSections = navAnchors
-  .map((a) => document.querySelector(a.getAttribute("href")))
-  .filter(Boolean);
+// Pair each anchor with its section up front so a missing href target can
+// never shift the active-highlight index (anchor[i] vs section[i] drift).
+const navPairs = navAnchors
+  .map((a) => ({ anchor: a, section: document.querySelector(a.getAttribute("href")) }))
+  .filter((pair) => pair.section);
 
 const progressFill = document.getElementById("scroll-progress-fill");
 
 // Section offsets are cached on ScrollTrigger refresh (and once at boot);
-// the per-scroll onUpdate only reads this array. Reading s.offsetTop on
-// every scroll event forces a synchronous layout each time.
-let navOffsets = navSections.map((s) => s.offsetTop);
-function cacheNavOffsets() {
-  navOffsets = navSections.map((s) => s.offsetTop);
+// the per-scroll onUpdate only reads these. Reading offsetTop/scrollHeight
+// on every scroll event forces a synchronous layout each time.
+let navOffsets = navPairs.map((p) => p.section.offsetTop);
+let navMaxScroll = document.documentElement.scrollHeight - window.innerHeight;
+function cacheNavMetrics() {
+  navOffsets = navPairs.map((p) => p.section.offsetTop);
+  navMaxScroll = document.documentElement.scrollHeight - window.innerHeight;
 }
 
 function updateNavAndProgress(self) {
@@ -1722,10 +1821,10 @@ function updateNavAndProgress(self) {
   for (let i = 0; i < navOffsets.length; i++) {
     if (navOffsets[i] <= y) current = i;
   }
-  if (self.scroll() + window.innerHeight >= document.documentElement.scrollHeight - 4) {
-    current = navSections.length - 1;
+  if (self.scroll() >= navMaxScroll - 4) {
+    current = navPairs.length - 1;
   }
-  navAnchors.forEach((a, i) => a.classList.toggle("is-active", i === current));
+  navPairs.forEach((pair, i) => pair.anchor.classList.toggle("is-active", i === current));
   if (progressFill) progressFill.style.transform = "scaleX(" + self.progress + ")";
 }
 
@@ -1734,7 +1833,7 @@ ScrollTrigger.create({
   end: "max",
   onUpdate: updateNavAndProgress,
   onRefresh: (self) => {
-    cacheNavOffsets();
+    cacheNavMetrics();
     updateNavAndProgress(self);
   },
 });

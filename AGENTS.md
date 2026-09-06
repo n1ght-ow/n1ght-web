@@ -16,6 +16,7 @@
 - 动效只操作 `transform` / `opacity`（`clip-path: inset()` 幕帘等价允许）；所有 scrub 动画必须 `invalidateOnRefresh: true`，图片加载后调 `ScrollTrigger.refresh()`，加载风暴用 250ms debounce 合并。
 - 尊重 `prefers-reduced-motion`：JS `REDUCED` 分支与 CSS 媒体查询都要给静态降级。
 - 字体走 `css/fonts.css` 的本地 woff2（latin 子集）；中文内容行加 `lang="zh"`（回退系统字体）。
+- 内容归属红线：`#panel-books / films / series / music / sport` 五个面板各放本类内容（书 / 电影 / 剧 / 音乐 / 球队），**禁止跨面板搬移或新增内容**；标识符沿用现有 token（`books` / `films` / `series` / `music` / `sport`），不重命名、不改单复数。
 
 ## 代码结构（新功能照此归属）
 
@@ -40,7 +41,7 @@
 由 `main.js` 的 `initCursor()` + `.custom-cursor`（CSS）驱动，按 `data-cursor` 属性取值出徽章，不再手动写死。
 
 - 视觉：`html.has-cursor` 下全局 `cursor: none`；ink 圆点随悬停放大成近黑圆形徽章，`cc-label` 白字大写、`letter-spacing: 0.22em`；进出用 `back.out` 缩放。仅在 FINE_POINTER 且非 REDUCED、非触摸时启用（`TOUCH || !FINE_POINTER || REDUCED` 直接跳过）。
-- 现有挂点：`VIEW`（`.hs-card`、影/剧 IMDb 按钮）、`DRAG`（`#hs-wrap`、两条 dragbar-track、`#hof-scroll`、影/剧 range）、`PLAY`（音乐 `.idx-card`）、`OPEN`（影/剧海报卡）、`STAMP`（`.poem-stamp`）。
+- 现有挂点：`VIEW`（`.hs-card`、`.hof-item`、影/剧 IMDb 按钮）、`DRAG`（`#hs-wrap`、两条 dragbar-track、`#hof-scroll`、影/剧 range）、`PLAY`（音乐 `.idx-card`）、`OPEN`（影/剧海报卡）、`STAMP`（`.poem-stamp`）。
 - 新交互卡片只需挂对应 `data-cursor` 值（`VIEW`/`DRAG`/`OPEN`/`PLAY`/`STAMP`…），无需改 JS/CSS。
 
 ## 视觉基调
@@ -60,10 +61,6 @@ preloader → hero（`#hero`：签名描边 + 泡泡场，含 TICKER 01）→ PH
 - 影视：海报放 `posters/<ttID>.jpg`，条目加进 `js/film-data.js` / `js/series-data.js`（`imdb` 字段即 ttID）。
 - 音乐：`data-song-id` 必须经网易云接口核实后再挂，**禁止凭记忆填造**；卡片结构 `.genre > .genre-head > .track-index > .artist-row > .artist-tracks > .idx-card[data-song-id][data-cursor="PLAY"]`，增删歌后同步该组 `.genre-count` 的「N 首」。
 - 球队：logo 放 `logos/`（svg）。
-- 增删任何内容后同步 `#about-stats` 计数（FRAMES / BOOKS / FILMS / SONGS / TEAMS…）。
+- 增删任何内容后同步 `#about-stats` 计数（FRAMES / BOOKS / FILMS / SERIES / SONGS / TEAMS…）与 TICKER 04 的枚举。
 
 改完自检：双击可用、无外部 CDN、无新增长帧、reduced-motion 不破布局、引用资源无 404、`?v=` 已递增，提交并推送 `origin/main`。
-
-## 当前欠账（修完即删）
-
-- `.hof-item` 未挂 `data-cursor`（GAME ARCHIVE 卡片悬停暂无光标徽章；`#hof-scroll` 与 `#hof-dragbar-track` 已有 `DRAG`）。

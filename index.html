@@ -6,12 +6,18 @@
   <title>N1GHT CHXN9 - Photography & Game Archive</title>
   <meta name="description" content="The personal site of N1GHT CHXN9 — frames kept bright, seven favorite games, and everything that shaped the person behind both.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231B2430'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='16' font-weight='bold' fill='%23F4F6F9' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/VastShadow-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Bungee-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=8">
-  <link rel="stylesheet" href="css/style.css?v=33">
+  <link rel="stylesheet" href="css/style.css?v=34">
   <link rel="stylesheet" href="css/film-stage.css?v=3">
   <link rel="stylesheet" href="css/series-stage.css?v=3">
+  <noscript><style>#preloader { display: none !important; }</style></noscript>
 </head>
 <body>
+
+  <a class="skip-link mono" href="#hero">SKIP TO CONTENT</a>
 
   <!-- ============ SCROLL PROGRESS ============ -->
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"><div class="scroll-progress-fill" id="scroll-progress-fill"></div></div>
@@ -38,12 +44,12 @@
   <!-- ============ NAV ============ -->
   <header class="nav">
     <a class="nav-logo" href="#hero">N1GHT CHXN9<span class="nav-tm">/ LN4 STUDY</span></a>
-    <nav class="nav-links mono">
-      <a href="#photo"><i>01</i>PHOTOGRAPHY</a>
-      <a href="#games"><i>02</i>GAME ARCHIVE</a>
-      <a href="#archive"><i>03</i>THE ARCHIVE</a>
-      <a href="#poem"><i>04</i>POEM</a>
-      <a href="#about"><i>05</i>ABOUT</a>
+    <nav class="nav-links mono" aria-label="Primary">
+      <a href="#photo"><span class="no" aria-hidden="true">01</span>PHOTOGRAPHY</a>
+      <a href="#games"><span class="no" aria-hidden="true">02</span>GAME ARCHIVE</a>
+      <a href="#archive"><span class="no" aria-hidden="true">03</span>THE ARCHIVE</a>
+      <a href="#poem"><span class="no" aria-hidden="true">04</span>POEM</a>
+      <a href="#about"><span class="no" aria-hidden="true">05</span>ABOUT</a>
     </nav>
   </header>
 
@@ -65,14 +71,14 @@
       <div class="sticker st-3 mono">LN4 STUDY</div>
 
       <div class="hero-inner">
-        <div class="hero-title" aria-label="N1GHT CHXN9">
-          <div class="ht-line">
+        <h1 class="hero-title" aria-label="N1GHT CHXN9">
+          <span class="ht-line">
             <span class="ht-word" data-split>n1ght</span>
-          </div>
-          <div class="ht-line ht-line-2">
+          </span>
+          <span class="ht-line ht-line-2">
             <span class="ht-word" data-split>chxn9</span>
-          </div>
-        </div>
+          </span>
+        </h1>
 
         <div class="hero-sig" id="sig-hero" aria-hidden="true">
           <noscript><p class="mono">N1GHT CHXN9</p></noscript>
@@ -106,8 +112,10 @@
     <section class="section" id="photo">
       <div class="sec-mask">
         <div class="bighead" id="photo-head">
-          <div class="bh-line bh-left"><h2>PHOTO</h2></div>
-          <div class="bh-line bh-right"><h2>GRAPHY</h2></div>
+          <h2 class="bh-title">
+            <span class="bh-line bh-left"><span class="bh-word">PHOTO</span></span>
+            <span class="bh-line bh-right"><span class="bh-word">GRAPHY</span></span>
+          </h2>
           <div class="bh-meta mono">
             <span>WHAT I SEE.</span>
             <span>11 FRAMES FROM THE ROUTES I WALK.</span>
@@ -118,47 +126,47 @@
 
       <div class="hs-section" id="hs-wrap" data-cursor="DRAG">
         <div class="hs-track" id="hs-track">
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/1779456446198.jpg" alt="City frame 01" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 01</span><span class="hs-cap">The street that waves back when you slow down.</span></figcaption>
           </figure>
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/1779456446218.jpg" alt="City frame 02" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 02</span><span class="hs-cap">Storefront glow while the day packs up.</span></figcaption>
           </figure>
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/1779456446227.jpg" alt="City frame 03" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 03</span><span class="hs-cap">Corners that keep their promises.</span></figcaption>
           </figure>
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/1779456446231.jpg" alt="City frame 04" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 04</span><span class="hs-cap">A window lit for whoever passes by.</span></figcaption>
           </figure>
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/1779456446240.jpg" alt="City frame 05" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 05</span><span class="hs-cap">After the rain, the street smiles back.</span></figcaption>
           </figure>
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/1779456446245.jpg" alt="City frame 06" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 06</span><span class="hs-cap">Last bus home, first good song.</span></figcaption>
           </figure>
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/1779456446248.jpg" alt="City frame 07" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 07</span><span class="hs-cap">Shortcuts that feel like main streets.</span></figcaption>
           </figure>
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/SAVE_20260616_234154.jpg" alt="City frame 08" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 08</span><span class="hs-cap">Evening colors that don't know when to leave.</span></figcaption>
           </figure>
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/SAVE_20260616_234224.jpg" alt="City frame 09" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 09</span><span class="hs-cap">Long shadows, easy conversations.</span></figcaption>
           </figure>
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/SAVE_20260616_234337.jpg" alt="City frame 10" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 10</span><span class="hs-cap">Streetlights, warm air, slow steps.</span></figcaption>
           </figure>
-          <figure class="hs-card" data-cursor="VIEW">
+          <figure class="hs-card" data-cursor="VIEW" tabindex="0" role="button">
             <div class="hs-img-wrap"><img src="photo/SAVE_20260616_234423.jpg" alt="City frame 11" loading="lazy"></div>
             <figcaption><span class="mono hs-no">FRAME 11</span><span class="hs-cap">Where the day finally lands, soft.</span></figcaption>
           </figure>
@@ -199,8 +207,10 @@
     <section class="section" id="games">
       <div class="sec-mask">
         <div class="bighead" id="game-head">
-          <div class="bh-line bh-left"><h2>GAME</h2></div>
-          <div class="bh-line bh-right"><h2>ARCHIVE</h2></div>
+          <h2 class="bh-title">
+            <span class="bh-line bh-left"><span class="bh-word">GAME</span></span>
+            <span class="bh-line bh-right"><span class="bh-word">ARCHIVE</span></span>
+          </h2>
           <div class="bh-meta mono">
             <span>WHAT I RETURN TO.</span>
             <span>SEVEN WORLDS. HOURS ARE HONEST.</span>
@@ -212,7 +222,7 @@
       <div class="hof">
         <div class="hof-scroll" id="hof-scroll" data-cursor="DRAG">
           <div class="hof-row" id="hof-row">
-          <div class="hof-item hof-a" data-game="cs">
+          <div class="hof-item hof-a" data-game="cs" data-cursor="VIEW">
             <div class="hof-card">
               <div class="hof-inner">
                 <div class="hof-img-wrap"><img src="covers/counter-strike.jpg" alt="Counter-Strike cover" loading="lazy"></div>
@@ -222,7 +232,7 @@
             <p class="hof-quote">The dust settles the way it always has — on old angles and steady hands.</p>
           </div>
 
-          <div class="hof-item hof-b" data-game="rdr2">
+          <div class="hof-item hof-b" data-game="rdr2" data-cursor="VIEW">
             <div class="hof-card">
               <div class="hof-inner">
                 <div class="hof-img-wrap"><img src="covers/rdr2.jpg" alt="Red Dead Redemption 2 cover" loading="lazy"></div>
@@ -232,7 +242,7 @@
             <p class="hof-quote">The west ends like all good stories: slowly, and on a hill at sunset.</p>
           </div>
 
-          <div class="hof-item hof-c" data-game="cyberpunk">
+          <div class="hof-item hof-c" data-game="cyberpunk" data-cursor="VIEW">
             <div class="hof-card">
               <div class="hof-inner">
                 <div class="hof-img-wrap"><img src="covers/cyberpunk.jpg" alt="Cyberpunk 2077 cover" loading="lazy"></div>
@@ -242,7 +252,7 @@
             <p class="hof-quote">Every alley keeps a story, and the rain only makes the colors louder.</p>
           </div>
 
-          <div class="hof-item hof-d" data-game="gta5">
+          <div class="hof-item hof-d" data-game="gta5" data-cursor="VIEW">
             <div class="hof-card">
               <div class="hof-inner">
                 <div class="hof-img-wrap"><img src="covers/gta5.jpg" alt="Grand Theft Auto V cover" loading="lazy"></div>
@@ -252,7 +262,7 @@
             <p class="hof-quote">A city learned street by street, with satire sharper than its neon.</p>
           </div>
 
-          <div class="hof-item hof-e" data-game="forza">
+          <div class="hof-item hof-e" data-game="forza" data-cursor="VIEW">
             <div class="hof-card">
               <div class="hof-inner">
                 <div class="hof-img-wrap"><img src="covers/forza-horizon-4.jpg" alt="Forza Horizon 4 cover" loading="lazy"></div>
@@ -262,7 +272,7 @@
             <p class="hof-quote">Four seasons in one blur — Britain at three hundred per hour, and finally, quiet.</p>
           </div>
 
-          <div class="hof-item hof-f" data-game="detroit">
+          <div class="hof-item hof-f" data-game="detroit" data-cursor="VIEW">
             <div class="hof-card">
               <div class="hof-inner">
                 <div class="hof-img-wrap"><img src="covers/detroit.jpg" alt="Detroit Become Human cover" loading="lazy"></div>
@@ -272,7 +282,7 @@
             <p class="hof-quote">Three cities, three endings; the coin still flips somewhere inside me.</p>
           </div>
 
-          <div class="hof-item hof-g" data-game="fm">
+          <div class="hof-item hof-g" data-game="fm" data-cursor="VIEW">
             <div class="hof-card">
               <div class="hof-inner">
                 <div class="hof-img-wrap"><img src="covers/football-manager.jpg" alt="Football Manager cover" loading="lazy"></div>
@@ -307,10 +317,10 @@
     <div class="ticker" aria-hidden="true">
       <div class="ticker-track">
         <div class="ticker-group">
-          <span>SIX BOOKS</span><i></i><span>SIXTEEN FILMS</span><i></i><span>763 SONGS</span><i></i><span>FIVE TEAMS</span><i></i><span>WHAT SHAPED ME</span><i></i>
+          <span>SIX BOOKS</span><i></i><span>SIXTEEN FILMS</span><i></i><span>NINETEEN SERIES</span><i></i><span>763 SONGS</span><i></i><span>FIVE TEAMS</span><i></i><span>WHAT SHAPED ME</span><i></i>
         </div>
         <div class="ticker-group">
-          <span>SIX BOOKS</span><i></i><span>SIXTEEN FILMS</span><i></i><span>763 SONGS</span><i></i><span>FIVE TEAMS</span><i></i><span>WHAT SHAPED ME</span><i></i>
+          <span>SIX BOOKS</span><i></i><span>SIXTEEN FILMS</span><i></i><span>NINETEEN SERIES</span><i></i><span>763 SONGS</span><i></i><span>FIVE TEAMS</span><i></i><span>WHAT SHAPED ME</span><i></i>
         </div>
       </div>
     </div>
@@ -319,28 +329,30 @@
     <section class="section archive" id="archive">
       <div class="sec-mask">
         <div class="bighead" id="archive-head">
-          <div class="bh-line bh-left"><h2>THE</h2></div>
-          <div class="bh-line bh-right"><h2>ARCHIVE</h2></div>
+          <h2 class="bh-title">
+            <span class="bh-line bh-left"><span class="bh-word">THE</span></span>
+            <span class="bh-line bh-right"><span class="bh-word">ARCHIVE</span></span>
+          </h2>
           <div class="bh-meta mono">
             <span>WHAT SHAPED ME.</span>
             <span>READ, REWATCHED, REPEATED, ROOTED FOR.</span>
           </div>
-          <p class="sec-intro">Books, films, songs and teams — four shelves of things that didn't just stay, they built the person who keeps them.</p>
+          <p class="sec-intro">Books, films, series, music and sport — five shelves of things that didn't just stay, they built the person who keeps them.</p>
         </div>
       </div>
 
       <div class="tabbar" role="tablist" aria-label="Archive shelves" id="archive-tabbar">
-        <button class="tab-btn mono is-active" id="tab-books" type="button" role="tab" aria-selected="true" aria-controls="panel-books" data-tab="books"><i>01</i>BOOKS</button>
-        <button class="tab-btn mono" id="tab-films" type="button" role="tab" aria-selected="false" aria-controls="panel-films" data-tab="films"><i>02</i>FILMS</button>
-        <button class="tab-btn mono" id="tab-series" type="button" role="tab" aria-selected="false" aria-controls="panel-series" data-tab="series"><i>03</i>SERIES</button>
-        <button class="tab-btn mono" id="tab-music" type="button" role="tab" aria-selected="false" aria-controls="panel-music" data-tab="music"><i>04</i>MUSIC</button>
-        <button class="tab-btn mono" id="tab-sport" type="button" role="tab" aria-selected="false" aria-controls="panel-sport" data-tab="sport"><i>05</i>SPORT</button>
+        <button class="tab-btn mono is-active" id="tab-books" type="button" role="tab" aria-selected="true" aria-controls="panel-books" data-tab="books"><span class="no" aria-hidden="true">01</span>BOOKS</button>
+        <button class="tab-btn mono" id="tab-films" type="button" role="tab" aria-selected="false" aria-controls="panel-films" data-tab="films" tabindex="-1"><span class="no" aria-hidden="true">02</span>FILMS</button>
+        <button class="tab-btn mono" id="tab-series" type="button" role="tab" aria-selected="false" aria-controls="panel-series" data-tab="series" tabindex="-1"><span class="no" aria-hidden="true">03</span>SERIES</button>
+        <button class="tab-btn mono" id="tab-music" type="button" role="tab" aria-selected="false" aria-controls="panel-music" data-tab="music" tabindex="-1"><span class="no" aria-hidden="true">04</span>MUSIC</button>
+        <button class="tab-btn mono" id="tab-sport" type="button" role="tab" aria-selected="false" aria-controls="panel-sport" data-tab="sport" tabindex="-1"><span class="no" aria-hidden="true">05</span>SPORT</button>
       </div>
 
       <div class="tab-panels">
 
         <!-- PANEL 01: BOOKS -->
-        <div class="tab-panel is-active" id="panel-books" role="tabpanel" aria-labelledby="tab-books" data-panel="books">
+        <div class="tab-panel is-active" id="panel-books" role="tabpanel" aria-labelledby="tab-books" data-panel="books" tabindex="0">
           <div class="idx-list">
             <article class="idx-row">
               <span class="idx-no mono">01</span>
@@ -376,11 +388,11 @@
         </div>
 
         <!-- PANEL 02: FILMS -->
-        <div class="tab-panel" id="panel-films" role="tabpanel" aria-labelledby="tab-films" data-panel="films" data-film-stage="auto"></div>
+        <div class="tab-panel" id="panel-films" role="tabpanel" aria-labelledby="tab-films" data-panel="films" data-film-stage="auto" tabindex="0"></div>
         <!-- PANEL 03: SERIES -->
-        <div class="tab-panel" id="panel-series" role="tabpanel" aria-labelledby="tab-series" data-panel="series" data-series-stage="auto"></div>
+        <div class="tab-panel" id="panel-series" role="tabpanel" aria-labelledby="tab-series" data-panel="series" data-series-stage="auto" tabindex="0"></div>
         <!-- PANEL 04: MUSIC -->
-<div class="tab-panel" id="panel-music" role="tabpanel" aria-labelledby="tab-music" data-panel="music">
+<div class="tab-panel" id="panel-music" role="tabpanel" aria-labelledby="tab-music" data-panel="music" tabindex="0">
   <div class="music-drawer" id="music-drawer">
     <div class="music-search" id="music-search">
       <label class="sr-only" for="music-search-input">Search songs by title or artist</label>
@@ -392,7 +404,7 @@
     <div class="playlist">
       <div class="genre">
         <div class="genre-head">
-          <h3 class="genre-title">英语 · 流行 / POP</h3>
+          <h3 class="genre-title"><span lang="zh">英语 · 流行</span> / POP</h3>
           <span class="genre-count mono">108 首</span>
         </div>
         <div class="track-index">
@@ -836,7 +848,7 @@
       </div>
       <div class="genre">
         <div class="genre-head">
-          <h3 class="genre-title">英语 · 抒情 / BALLAD</h3>
+          <h3 class="genre-title"><span lang="zh">英语 · 抒情</span> / BALLAD</h3>
           <span class="genre-count mono">44 首</span>
         </div>
         <div class="track-index">
@@ -1024,7 +1036,7 @@
       </div>
       <div class="genre">
         <div class="genre-head">
-          <h3 class="genre-title">英语 · 黄金经典 / GOLDEN CLASSICS</h3>
+          <h3 class="genre-title"><span lang="zh">英语 · 黄金经典</span> / GOLDEN CLASSICS</h3>
           <span class="genre-count mono">32 首</span>
         </div>
         <div class="track-index">
@@ -1164,7 +1176,7 @@
       </div>
       <div class="genre">
         <div class="genre-head">
-          <h3 class="genre-title">英语 · 电音舞曲 / EDM &amp;amp; DANCE</h3>
+          <h3 class="genre-title"><span lang="zh">英语 · 电音舞曲</span> / EDM &amp; DANCE</h3>
           <span class="genre-count mono">48 首</span>
         </div>
         <div class="track-index">
@@ -1368,7 +1380,7 @@
       </div>
       <div class="genre">
         <div class="genre-head">
-          <h3 class="genre-title">英语 · 节奏灵魂 / R&amp;amp;B &amp;amp; SOUL</h3>
+          <h3 class="genre-title"><span lang="zh">英语 · 节奏灵魂</span> / R&amp;B &amp; SOUL</h3>
           <span class="genre-count mono">37 首</span>
         </div>
         <div class="track-index">
@@ -1528,7 +1540,7 @@
       </div>
       <div class="genre">
         <div class="genre-head">
-          <h3 class="genre-title">英语 · 嘻哈 / HIP-HOP</h3>
+          <h3 class="genre-title"><span lang="zh">英语 · 嘻哈</span> / HIP-HOP</h3>
           <span class="genre-count mono">100 首</span>
         </div>
         <div class="track-index">
@@ -1940,7 +1952,7 @@
       </div>
       <div class="genre">
         <div class="genre-head">
-          <h3 class="genre-title">英语 · 摇滚 / ROCK &amp;amp; POP ROCK</h3>
+          <h3 class="genre-title"><span lang="zh">英语 · 摇滚</span> / ROCK &amp; POP ROCK</h3>
           <span class="genre-count mono">49 首</span>
         </div>
         <div class="track-index">
@@ -2148,7 +2160,7 @@
       </div>
       <div class="genre">
         <div class="genre-head">
-          <h3 class="genre-title">英语 · 民谣独立 / FOLK &amp;amp; INDIE</h3>
+          <h3 class="genre-title"><span lang="zh">英语 · 民谣独立</span> / FOLK &amp; INDIE</h3>
           <span class="genre-count mono">25 首</span>
         </div>
         <div class="track-index">
@@ -2260,7 +2272,7 @@
       </div>
       <div class="genre">
         <div class="genre-head">
-          <h3 class="genre-title">英语 · 乡村 / COUNTRY</h3>
+          <h3 class="genre-title"><span lang="zh">英语 · 乡村</span> / COUNTRY</h3>
           <span class="genre-count mono">20 首</span>
         </div>
         <div class="track-index">
@@ -3432,7 +3444,7 @@
       </div>
       <div class="genre" lang="zh">
         <div class="genre-head">
-          <h3 class="genre-title">华语R&B / URBAN & RAP</h3>
+          <h3 class="genre-title">华语R&amp;B / URBAN &amp; RAP</h3>
           <span class="genre-count mono">25 首</span>
         </div>
         <div class="track-index">
@@ -3544,7 +3556,7 @@
       </div>
       <div class="genre" lang="zh">
         <div class="genre-head">
-          <h3 class="genre-title">华语影视原声 / OST & CHINESE STYLE</h3>
+          <h3 class="genre-title">华语影视原声 / OST &amp; CHINESE STYLE</h3>
           <span class="genre-count mono">20 首</span>
         </div>
         <div class="track-index">
@@ -3639,7 +3651,7 @@
   </div>
 
     <!-- END #panel-music / #music-drawer: SPORT must stay a direct child of .tab-panels -->
-    <div class="tab-panel" id="panel-sport" role="tabpanel" aria-labelledby="tab-sport" data-panel="sport">
+    <div class="tab-panel" id="panel-sport" role="tabpanel" aria-labelledby="tab-sport" data-panel="sport" tabindex="0">
       <div class="idx-list">
         <article class="idx-row idx-team">
           <span class="idx-no mono">01</span>
@@ -3687,8 +3699,10 @@
     <section class="section poem" id="poem">
       <div class="sec-mask">
         <div class="bighead" id="poem-head">
-          <div class="bh-line bh-left"><h2>POEM</h2></div>
-          <div class="bh-line bh-right"><h2>04</h2></div>
+          <h2 class="bh-title">
+            <span class="bh-line bh-left"><span class="bh-word">POEM</span></span>
+            <span class="bh-line bh-right"><span class="bh-word">04</span></span>
+          </h2>
           <div class="bh-meta mono">
             <span>DYLAN THOMAS, 1914 - 1953.</span>
             <span>A VILLANELLE, 1947.</span>
@@ -3699,7 +3713,7 @@
 
       <div class="poem-inner">
         <div class="poem-sheet">
-          <div class="poem-stamp mono" data-cursor="STAMP">DO NOT GO GENTLE</div>
+          <div class="poem-stamp mono" data-cursor="STAMP" tabindex="0" role="button" aria-label="Do not go gentle — stamp again">DO NOT GO GENTLE</div>
           <blockquote class="poem-text">
             <p>Do not go gentle into that good night,<br>
             Old age should burn and rave at close of day;<br>
@@ -3741,8 +3755,10 @@
     <section class="section about" id="about">
       <div class="sec-mask">
         <div class="bighead" id="about-head">
-          <div class="bh-line bh-left"><h2>ABOUT</h2></div>
-          <div class="bh-line bh-right"><h2>ME</h2></div>
+          <h2 class="bh-title">
+            <span class="bh-line bh-left"><span class="bh-word">ABOUT</span></span>
+            <span class="bh-line bh-right"><span class="bh-word">ME</span></span>
+          </h2>
           <div class="bh-meta mono">
             <span>THE PERSON BEHIND THE FRAMES.</span>
             <span>STILL COLLECTING GOOD HOURS.</span>
@@ -3762,6 +3778,7 @@
           <span>4,957 HRS</span>
           <span>6 BOOKS</span>
           <span>16 FILMS</span>
+          <span>19 SERIES</span>
           <span>763 SONGS</span>
           <span>5 TEAMS</span>
         </div>
@@ -3782,7 +3799,7 @@
   <footer class="footer">
     <div class="footer-top">
       <div class="footer-name">N1GHT CHXN9</div>
-      <nav class="footer-links mono">
+      <nav class="footer-links mono" aria-label="Footer">
         <a href="#photo">PHOTOGRAPHY</a>
         <a href="#games">GAME ARCHIVE</a>
         <a href="#archive">THE ARCHIVE</a>
@@ -3813,11 +3830,11 @@
   <script src="js/vendor/ScrollTrigger.min.js?v=2"></script>
   <script src="js/vendor/SplitText.min.js?v=2"></script>
   <script src="js/vendor/lenis.min.js?v=2"></script>
-  <script src="js/sig-data.js"></script>
-  <script src="js/film-data.js"></script>
-  <script src="js/film-stage.js?v=1"></script>
-  <script src="js/series-data.js"></script>
-  <script src="js/series-stage.js?v=1"></script>
-  <script src="js/main.js?v=24"></script>
+  <script src="js/sig-data.js?v=1"></script>
+  <script src="js/film-data.js?v=1"></script>
+  <script src="js/series-data.js?v=1"></script>
+  <script src="js/film-stage.js?v=2"></script>
+  <script src="js/series-stage.js?v=2"></script>
+  <script src="js/main.js?v=25"></script>
 </body>
 </html>

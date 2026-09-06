@@ -24,6 +24,14 @@
     return stage.querySelector(selector);
   }
 
+  /* CJK-bearing lines get lang="zh" so the browser picks proper system
+     CJK fallback fonts (site fonts are latin-subset only). */
+  const CJK = /[\u3000-\u303f\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff00-\uffef]/;
+  function tagLang(node, text) {
+    if (CJK.test(String(text))) node.setAttribute("lang", "zh");
+    else node.removeAttribute("lang");
+  }
+
   /* Debounced global refresh: lazy poster loads settle in bursts, so many
      load events inside 250ms collapse into one refresh pass. setupMode()
      still runs per image; only the global recalc is batched. */
@@ -117,10 +125,12 @@
       img.referrerPolicy = "no-referrer";
 
       const meta = el("span", "series-card-meta");
-      meta.appendChild(el("span", "series-card-title", item.title));
-      meta.appendChild(
-        el("span", "series-card-meta-line", item.years + " / " + item.seasons)
-      );
+      const titleSpan = el("span", "series-card-title", item.title);
+      tagLang(titleSpan, item.title);
+      meta.appendChild(titleSpan);
+      const metaLine = el("span", "series-card-meta-line", item.years + " / " + item.seasons);
+      tagLang(metaLine, metaLine.textContent);
+      meta.appendChild(metaLine);
       meta.appendChild(el("span", "series-card-category", item.category));
 
       const sleeve = el("span", "series-card-sleeve");
@@ -208,8 +218,11 @@
     category.textContent = item.category;
     years.textContent = item.years;
     title.textContent = item.title;
+    tagLang(title, item.title);
     seasons.textContent = item.seasons;
+    tagLang(seasons, item.seasons);
     quote.textContent = item.quote;
+    tagLang(quote, item.quote);
     imdbButton.href = "https://www.imdb.com/title/" + item.imdb + "/";
 
     const revealParts = Array.from(
