@@ -1312,7 +1312,9 @@ if (!REDUCED) {
     },
   });
 
-  /* ---------- big split headers: opposite-direction parallax ---------- */
+  /* ---------- big split headers: edge words slide to a centered lockup ----------
+     All header motion is scrub-locked to scroll position (no time-based
+     toggles), so fast scrolling can never leave the titles mid-animation. */
 
   function splitHeadParallax(headId) {
     const head = document.getElementById(headId);
@@ -1320,52 +1322,55 @@ if (!REDUCED) {
     const left = head.querySelector(".bh-left .bh-word");
     const right = head.querySelector(".bh-right .bh-word");
 
-    gsap.fromTo(left, { xPercent: -14 }, {
-      xPercent: 6,
-      ease: "none",
-      scrollTrigger: {
-        trigger: head,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-    gsap.fromTo(right, { xPercent: 14 }, {
-      xPercent: -6,
-      ease: "none",
-      scrollTrigger: {
-        trigger: head,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1,
-        invalidateOnRefresh: true,
-      },
-    });
+    // shift (in % of the word's own width) that centers the word in its line;
+    // left word slides right (+), right word slides left (-)
+    const slideToCenter = (word, sign) => () => {
+      const line = word.parentElement;
+      const lw = line.clientWidth;
+      const ww = word.offsetWidth;
+      if (!lw || !ww) return 0;
+      return (sign * ((lw - ww) / 2) * 100) / ww;
+    };
 
-    // entrance: lines rise out of their overflow masks
+    const converge = { start: "top 95%", end: "center center", scrub: true, invalidateOnRefresh: true };
+    if (left) {
+      gsap.fromTo(left, { xPercent: 0 }, {
+        xPercent: slideToCenter(left, 1),
+        ease: "none",
+        scrollTrigger: { trigger: head, ...converge },
+      });
+    }
+    if (right) {
+      gsap.fromTo(right, { xPercent: 0 }, {
+        xPercent: slideToCenter(right, -1),
+        ease: "none",
+        scrollTrigger: { trigger: head, ...converge },
+      });
+    }
+
+    // rise out of the overflow masks while converging
     gsap.from(head.querySelectorAll(".bh-line .bh-word"), {
       yPercent: 110,
-      duration: 1.2,
-      stagger: 0.12,
-      ease: "power4.out",
+      ease: "none",
       scrollTrigger: {
         trigger: head,
-        start: "top 78%",
-        toggleActions: "play none none reverse",
+        start: "top 98%",
+        end: "top 50%",
+        scrub: true,
+        invalidateOnRefresh: true,
       },
     });
     gsap.from(head.querySelectorAll(".bh-meta span"), {
       clipPath: "inset(0 0 100% 0)",
       yPercent: 60,
-      duration: 0.9,
-      stagger: 0.1,
-      ease: "power3.out",
-      clearProps: "clipPath",
+      ease: "none",
+      stagger: 0.08,
       scrollTrigger: {
         trigger: head,
-        start: "top 70%",
-        toggleActions: "play none none reverse",
+        start: "top 85%",
+        end: "top 42%",
+        scrub: true,
+        invalidateOnRefresh: true,
       },
     });
   }

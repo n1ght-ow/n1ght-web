@@ -601,7 +601,9 @@ html.has-cursor * { cursor: none !important; }
 
 .bh-right { text-align: right; }
 
+/* inline-block so the JS transform can actually apply to the word */
 .bh-right .bh-word {
+  display: inline-block;
   color: transparent;
   -webkit-text-stroke: 2px var(--color-text);
 }
