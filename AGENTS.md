@@ -139,7 +139,7 @@ TICKER 共 2 条（2026-09 用户拍板收敛：原 01/02 移除，保留计数�
 - 游戏：`hof-item`，封面 `covers/`。
 - 影视：海报 `posters/<ttID>.jpg`，条目进 `film-data.js` / `series-data.js`。
 - 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。
-- 球队：logo `logos/`。
+- 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`），新增队伍时连同官网 href 一起核实填写。
 - 增删内容同步 `#about-stats`、计数 TICKER。
 
 ## 改完自检
