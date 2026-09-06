@@ -807,8 +807,7 @@ html.has-cursor * { cursor: none !important; }
   color: var(--color-text-secondary);
 }
 
-/* ============ HALL OF FAME ============ */
-#games { background: var(--color-bg-deep); }
+/* ============ HALL OF FAME (now the GAMES tab inside THE ARCHIVE) ============ */
 
 .hof { padding-bottom: clamp(3rem, 8vh, 6rem); }
 
@@ -1055,7 +1054,23 @@ html.has-cursor * { cursor: none !important; }
 
 .footer-links a:hover { color: var(--color-accent-text); text-decoration: underline; text-underline-offset: 0.3em; }
 
-/* ============ POEM ============ */
+/* ============ POEM (tail of the PHOTOGRAPHY section) ============ */
+.poem-tail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2rem, 5vh, 3rem);
+  padding: clamp(3rem, 8vh, 5rem) 0 clamp(4rem, 10vh, 8rem);
+}
+
+.poem-tail-head {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.2rem, 3vh, 2rem);
+  width: min(880px, 100%);
+  padding: 0 clamp(1.2rem, 6vw, 6rem);
+}
+
 .poem-inner {
   padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
   display: flex;

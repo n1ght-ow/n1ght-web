@@ -703,7 +703,10 @@ function initArchiveTabs() {
     if (idx === current && !instant) return;
     current = idx;
     showMeta(idx);
-    const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre")) : [];
+    // the games panel measures lazily (it mounts display:none); refresh so
+    // the in-panel ScrollTrigger and the drag scroller re-measure
+    scheduleRefresh();
+    const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre, .hof-item")) : [];
     if (instant) {
       gsap.set(rows, { y: 0, clearProps: "clipPath" });
       gsap.set(panels[idx], { clipPath: "inset(0 0 0 0%)" });
@@ -1196,9 +1199,7 @@ if (!REDUCED) {
   }
 
   splitHeadParallax("photo-head");
-  splitHeadParallax("game-head");
   splitHeadParallax("archive-head");
-  splitHeadParallax("poem-head");
   splitHeadParallax("about-head");
 
   /* ---------- section mask reveals (curtain wipe) ---------- */

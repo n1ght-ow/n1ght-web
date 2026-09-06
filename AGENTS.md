@@ -20,7 +20,7 @@
 - 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js`）→ `main.js`。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
 - GSAP/ScrollTrigger/SplitText/Lenis 走本地 `js/vendor/`。Lenis 仅非 REDUCED 启用；锚点跳转统一走 `lenis.scrollTo`。
-- 内容归属红线：`#panel-books / films / series / music / sport` 五个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token（books / films / series / music / sport）。
+- 内容归属红线：`#panel-books / films / series / music / sport / games` 六个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token（books / films / series / music / sport / games）。
 - 中文内容行加 `lang="zh"`（回退系统字体）。
 - 动效与滚动监听的性能红线集中在下文「动效」一章。
 
@@ -125,11 +125,9 @@ taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()
 
 ## 站点结构（改动前核对实际现状）
 
-preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（横向拖拽画廊 11 帧）→ GAME ARCHIVE（HOF 18 卡）→ TICKER（收藏计数条）→ THE ARCHIVE（书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5，五 tab）→ TICKER（DO NOT GO GENTLE）→ POEM → ABOUT（签名 + 统计）→ footer。
+preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（横向拖拽画廊 11 帧 → DO NOT GO GENTLE 诗条 → Dylan Thomas 诗块收尾）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 HOF 18 卡）→ ABOUT（统计）→ footer。GAME ARCHIVE 独立区与独立 POEM 区已撤销（2026-09 用户裁定：游戏并入 archive 第六 tab，诗并入 photo 区尾）。
 
-两条横向画廊（photo / game）为**纯拖拽驱动**（2026-09 用户裁定）：页面滚轮垂直穿过，不 pin、不 scrub；横向移动只来自抓取拖拽（含触屏横滑）与拖动条，区块高按内容自然高度。卡片框贴合图片原始比例（`width: min-content` 收缩包裹，不加固定纵横比）。lightbox 展示 photo/ 低分辨率版本，不加载 photo/full/ 原图。
-
-五大标题（bighead）双词**从两侧边缘滑动到居中**（2026-09 用户裁定）：标题入场与汇聚全部 scrub 锁定滚动位置，禁用 time-based toggleActions——快滑永远不脱帧；右词需 `display: inline-block` 否则 transform 不生效。
+两条横向拖拽画廊（photo 画廊、archive 内游戏名册）为**纯拖拽驱动**：页面滚轮垂直穿过，不 pin、不 scrub；横向移动只来自抓取拖拽（含触屏横滑）与拖动条。卡片框贴合图片原始比例（`width: min-content` 收缩包裹）。lightbox 展示 photo/ 低分辨率版本，不加载 photo/full/ 原图。大标题（bighead）双词从两侧滑动居中，scrub 锁定。
 
 TICKER 共 2 条（2026-09 用户拍板收敛：原 01/02 移除，保留计数条与诗条）；taste-skill marquee ≤1/页与本项目 2 条的出入记录为品牌特例，不再增配第三条。
 
