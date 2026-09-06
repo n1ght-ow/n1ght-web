@@ -173,13 +173,13 @@ function initCursor() {
   const label = cursor.querySelector(".cc-label");
 
   gsap.set(cursor, { xPercent: -50, yPercent: -50, x: window.innerWidth / 2, y: window.innerHeight / 2 });
-  const cx = gsap.quickTo(cursor, "x", { duration: 0.32, ease: "power3.out" });
-  const cy = gsap.quickTo(cursor, "y", { duration: 0.32, ease: "power3.out" });
+  const cx = gsap.quickTo(cursor, "x", { duration: 0.18, ease: "power2.out" });
+  const cy = gsap.quickTo(cursor, "y", { duration: 0.18, ease: "power2.out" });
   // gsap.quickTo on the scaled `scale` alias does not tween the dot, so drive
   // scaleX + scaleY (together with gsap.to on mousedown/mouseup) to expand the
   // badge and keep the mono label centered inside it.
-  const growX = gsap.quickTo(dot, "scaleX", { duration: 0.35, ease: "power3.out" });
-  const growY = gsap.quickTo(dot, "scaleY", { duration: 0.35, ease: "power3.out" });
+  const growX = gsap.quickTo(dot, "scaleX", { duration: 0.25, ease: "power2.out" });
+  const growY = gsap.quickTo(dot, "scaleY", { duration: 0.25, ease: "power2.out" });
   const grow = (v) => { growX(v); growY(v); };
 
   let baseScale = 1;
@@ -203,7 +203,7 @@ function initCursor() {
   });
 
   document.addEventListener("mousedown", () => gsap.to(dot, { scale: baseScale * 0.75, duration: 0.12, ease: "power2.in", overwrite: "auto" }));
-  document.addEventListener("mouseup", () => gsap.to(dot, { scale: baseScale, duration: 0.3, ease: "back.out(2.5)", overwrite: "auto" }));
+  document.addEventListener("mouseup", () => gsap.to(dot, { scale: baseScale, duration: 0.25, ease: "power2.out", overwrite: "auto" }));
   document.documentElement.addEventListener("mouseleave", () => gsap.to(cursor, { autoAlpha: 0, duration: 0.2, overwrite: "auto" }));
   document.documentElement.addEventListener("mouseenter", () => gsap.to(cursor, { autoAlpha: 1, duration: 0.2, overwrite: "auto" }));
 }
@@ -212,15 +212,16 @@ initCursor();
 function initMagnetic() {
   if (TOUCH || !FINE_POINTER || REDUCED) return;
   gsap.utils.toArray(".nav-links a, .tab-btn, .lb-close, .lb-nav, .footer-links a").forEach((el) => {
-    const xTo = gsap.quickTo(el, "x", { duration: 0.4, ease: "power3.out" });
-    const yTo = gsap.quickTo(el, "y", { duration: 0.4, ease: "power3.out" });
+    // high-frequency drag-follow: tight near-instant follow, no elastic release
+    const xTo = gsap.quickTo(el, "x", { duration: 0.18, ease: "power2.out" });
+    const yTo = gsap.quickTo(el, "y", { duration: 0.18, ease: "power2.out" });
     el.addEventListener("pointermove", (e) => {
       const r = el.getBoundingClientRect();
       xTo((e.clientX - (r.left + r.width / 2)) * 0.3);
       yTo((e.clientY - (r.top + r.height / 2)) * 0.3);
     });
     el.addEventListener("pointerleave", () => {
-      gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.45)", overwrite: "auto" });
+      gsap.to(el, { x: 0, y: 0, duration: 0.3, ease: "power2.out", overwrite: "auto" });
     });
   });
 }
@@ -589,9 +590,9 @@ const bubbleField = document.getElementById("bubble-field");
 const BUBBLE_COUNT = window.innerWidth < 720 ? 14 : 24;
 
 const BUBBLE_TINTS = [
-  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(43,76,255,0.28) 42%, rgba(43,76,255,0.06) 100%)",
-  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(255,92,31,0.22) 42%, rgba(255,92,31,0.05) 100%)",
-  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(198,244,57,0.32) 42%, rgba(198,244,57,0.07) 100%)",
+  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(221,183,107,0.45) 42%, rgba(201,162,39,0.10) 100%)",
+  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(243,233,210,0.6) 42%, rgba(221,183,107,0.12) 100%)",
+  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(126,95,32,0.26) 42%, rgba(126,95,32,0.06) 100%)",
 ];
 
 // Infinite decorative loops that should only tick while the hero is on
@@ -1298,28 +1299,9 @@ if (TOUCH) {
   });
 }
 
-/* ---------- books/sport rows: physical press feedback (fine pointers) ----------
-   GSAP owns the transform for these rows (CSS transform transition is
-   dropped via .is-pressable): hover lifts the slab with a hard acid/punch
-   shadow, leave springs back; team crests pop with it. */
-
-(function initRowFeedback() {
-  if (REDUCED || TOUCH || !FINE_POINTER) return;
-  document.querySelectorAll("#panel-books .idx-row, #panel-sport .idx-row").forEach((row) => {
-    row.classList.add("is-pressable");
-    const logo = row.querySelector(".idx-logo");
-    row.addEventListener("mouseenter", () => {
-      gsap.to(row, { x: 8, y: -3, duration: 0.38, ease: "back.out(2)", overwrite: "auto" });
-      row.classList.add("is-pressed");
-      if (logo) gsap.to(logo, { rotation: -7, scale: 1.07, duration: 0.4, ease: "back.out(2.4)", overwrite: "auto" });
-    });
-    row.addEventListener("mouseleave", () => {
-      gsap.to(row, { x: 0, y: 0, duration: 0.75, ease: "elastic.out(1, 0.5)", overwrite: "auto" });
-      row.classList.remove("is-pressed");
-      if (logo) gsap.to(logo, { rotation: 0, scale: 1, duration: 0.7, ease: "elastic.out(1.2, 0.45)", overwrite: "auto" });
-    });
-  });
-})();
+/* ---------- books/sport rows: hover feedback is CSS-only (immediate
+   background + chip swap, no transform) — high-frequency interactions
+   get instant feedback per the motion rules in AGENTS.md ---------- */
 
 /* ---------- about signature: build for everyone; REDUCED shows it statically ---------- */
 const aboutSig = buildSignature("sig-about");

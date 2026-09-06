@@ -1,19 +1,15 @@
 /* ============ SERIES STAGE: reel identity + detail area ============
    Shared reel mechanics live in css/reel-stage.css; this file keeps
    the series panel's accent variables, its own carded detail-area
-   layout, the 760px breakpoint and the reduced-motion block. */
+   layout, the 760px breakpoint and the reduced-motion block.
+   Single-accent lock: the series panel shares the site gold family. */
 
 .series-stage {
   --reel-card-w: clamp(176px, 24vw, 248px);
-  --reel-count-sh: 3px 3px 0 var(--punch);
-  --reel-card-hover-sh: 7px 7px 0 var(--volt);
-  --reel-card-active-sh: 8px 8px 0 var(--punch);
-  --reel-no-sh: 3px 3px 0 var(--acid);
-  --reel-no-on-bg: var(--acid);
-  --reel-no-on-sh: 3px 3px 0 var(--punch);
-  --reel-sleeve-bg: var(--punch);
-  --reel-thumb-bg: var(--acid);
-  --reel-thumb-sh: 3px 3px 0 var(--volt);
+  --reel-hover-ring: 0 0 0 1px rgba(126, 95, 32, 0.3);
+  --reel-active-ring: 0 0 0 1px var(--color-accent-solid);
+  --reel-sleeve-bg: var(--color-accent-tint);
+  --reel-thumb-bg: var(--color-accent-solid);
   --reel-thumb-cursor: grab;
   --reel-focus-offset: 3px;
 }
@@ -24,19 +20,31 @@
   gap: clamp(1.2rem, 3vw, 3rem);
   align-items: end;
   margin-top: clamp(2rem, 5vh, 3.4rem);
-  padding: clamp(1.2rem, 3vw, 2.2rem);
-  background: var(--bg);
-  border: 3px solid var(--ink);
-  box-shadow: 8px 8px 0 var(--ink);
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-edge), var(--shadow-soft-md);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .series-stage-detail {
+    background: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: var(--shadow-soft-md);
+  }
 }
 
 .series-detail-poster {
   position: relative;
   width: min(100%, 340px);
   aspect-ratio: 3 / 4.15;
-  background: var(--bg-deep);
-  border: 2px solid var(--ink);
-  box-shadow: 6px 6px 0 var(--punch);
+  background: var(--color-bg-deep);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft-md);
+  overflow: hidden;
 }
 
 .series-detail-img {
@@ -44,7 +52,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  background: var(--bg-deep);
+  background: var(--color-bg-deep);
 }
 
 .series-detail-copy {
@@ -63,38 +71,36 @@
 .series-detail-category,
 .series-detail-years {
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.66rem;
-  font-weight: 400;
-  letter-spacing: 0.16em;
-  color: var(--bg);
-  background: var(--ink);
-  border: 2px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--volt);
-  padding: 0.4em 0.75em;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  padding: 0.4em 1em;
+  border-radius: var(--radius-pill);
+}
+
+.series-detail-category {
+  color: var(--color-accent-text);
+  background: var(--color-accent-tint);
 }
 
 .series-detail-years {
-  background: var(--bg);
-  color: var(--ink);
-  box-shadow: 3px 3px 0 var(--punch);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-deep);
 }
 
 .series-detail-title {
-  font-family: "Calistoga", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
-  font-size: clamp(2rem, 5vw, 4.2rem);
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 0.95;
-  color: var(--ink);
+  font-size: clamp(2rem, 5vw, 3.9rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--color-text);
   overflow-wrap: anywhere;
 }
 
 .series-detail-seasons {
-  font-family: "Notable", "Space Grotesk", sans-serif;
-  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  color: var(--ink);
+  font-size: clamp(0.95rem, 1.6vw, 1.3rem);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-text-secondary);
 }
 
 .series-detail-quote {
@@ -102,35 +108,39 @@
   font-style: italic;
   font-size: clamp(1rem, 1.8vw, 1.35rem);
   line-height: 1.5;
-  color: var(--ink-soft);
+  color: var(--color-text-secondary);
   max-width: 46ch;
 }
 
 .series-detail-imdb {
   justify-self: start;
-  font-family: "Notable", "Space Grotesk", sans-serif;
-  font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.16em;
-  color: var(--bg);
-  background: var(--ink);
-  border: 2px solid var(--ink);
-  box-shadow: 4px 4px 0 var(--acid);
-  padding: 0.7em 1.1em;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-on-accent);
+  background: var(--color-accent-solid);
+  border: 1px solid var(--color-accent-text);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glow-accent);
+  padding: 0.7em 1.3em;
   text-decoration: none;
   transition:
-    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.15s var(--ease-out),
+    box-shadow 0.15s var(--ease-out),
+    background 0.15s var(--ease-out);
 }
 
-.series-detail-imdb:hover,
+.series-detail-imdb:hover {
+  background: var(--color-glow);
+  box-shadow: var(--shadow-soft-md), 0 8px 30px rgba(221, 183, 107, 0.65);
+}
+
+.series-detail-imdb:active { transform: scale(0.96); }
+
 .series-detail-imdb:focus-visible {
-  background: var(--punch);
-  color: var(--ink);
-  box-shadow: 6px 6px 0 var(--ink);
-  transform: translate(-2px, -2px);
-  outline: none;
+  outline: 3px solid var(--color-accent-text);
+  outline-offset: 3px;
 }
 
 @media (max-width: 760px) {
