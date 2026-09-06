@@ -192,7 +192,7 @@ function initCursor() {
       label.textContent = labelled.getAttribute("data-cursor");
       baseScale = 6;
       gsap.to(label, { opacity: 1, duration: 0.18, overwrite: "auto" });
-    } else if (e.target.closest("a, button, .acc-head, .hs-card, .hof-card, .idx-row, .idx-card")) {
+    } else if (e.target.closest("a, button, .hs-card, .hof-card, .idx-row, .idx-card")) {
       baseScale = 2.6;
       gsap.to(label, { opacity: 0, duration: 0.15, overwrite: "auto" });
     } else {
@@ -851,83 +851,185 @@ function initArchiveTabs() {
 
 initArchiveTabs();
 
-/* ---------- group accordions: FILMS groups + MUSIC genres ----------
-   Mutually exclusive per panel: opening one group collapses its siblings.
-   Clicking an open group closes it (all closed is allowed). */
+/* ---------- music panel: genre filter + search + random pick ----------
+   The playlist renders fully expanded (no accordion); the chip row filters
+   by genre, the search filters within the visible genres, and the random
+   button plays one card from whatever is currently browsable. */
 
-function initGroupAccordion() {
-  // each entry: [panelSelector, headSelector, bodySelector]
-  const CONFIG = [
-    ["#panel-music", ".genre-head", ".track-index"],
-  ];
+function initMusicSearch() {
+  const panel = document.getElementById("panel-music");
+  const input = document.getElementById("music-search-input");
+  const clear = document.getElementById("music-search-clear");
+  const count = document.getElementById("music-search-count");
+  const empty = document.getElementById("music-search-empty");
+  const filterMount = document.getElementById("genre-filter");
+  const randomBtn = document.getElementById("music-random");
+  if (!panel || !input || !clear || !count || !empty) return;
 
-  CONFIG.forEach(([panelSel, headSel, bodySel]) => {
-    const panel = document.querySelector(panelSel);
-    if (!panel) return;
+  const cards = Array.from(panel.querySelectorAll(".idx-card[data-song-id]"));
+  const genres = Array.from(panel.querySelectorAll(".genre"));
+  const cardGenres = cards.map((card) => card.closest(".genre"));
+  // active genre index into `genres`; -1 = 全部
+  let activeGenre = -1;
 
-    const groups = Array.from(panel.querySelectorAll(headSel)).map(head => ({
-      head,
-      body: head.nextElementSibling, // idx-list / track-index follows the head
-    }));
-    if (!groups.length) return;
+  function normalize(value) {
+    return String(value || "").toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, " ").trim();
+  }
 
-    groups.forEach((g) => {
-      g.head.classList.add("acc-head");
-      g.head.setAttribute("role", "button");
-      g.head.setAttribute("tabindex", "0");
-      g.head.setAttribute("aria-expanded", "false");
-      g.head.insertAdjacentHTML("beforeend", '<span class="acc-arrow mono">\u25B8</span>');
+  // Normalized per-card haystack, built once at init: matchCard then only
+  // compares precomputed strings instead of re-querying and re-normalizing
+  // all 763 cards on every keystroke.
+  const cardHaystacks = cards.map((card) => {
+    const title = card.querySelector(".idx-title");
+    const artist = card.querySelector(".idx-artist");
+    const hay = normalize((title ? title.textContent : "") + " " + (artist ? artist.textContent : ""));
+    return { hay, compact: hay.replace(/\s+/g, ""), tokens: hay.split(" ").filter(Boolean) };
+  });
 
-      const setOpen = (open, animate) => {
-        if (g.open === open) return;
-        g.open = open;
-        g.head.setAttribute("aria-expanded", open ? "true" : "false");
-        g.head.classList.toggle("is-open", open);
-        if (open) {
-          gsap.set(g.body, { height: "auto" });
-          gsap.from(g.body, {
-            height: 0,
-            duration: animate && !REDUCED ? 0.65 : 0,
-            ease: "power3.inOut",
-            onComplete: () => {
-              gsap.set(g.body, { height: "auto" });
-              scheduleRefresh();
-            },
-          });
-        } else {
-          gsap.to(g.body, {
-            height: 0,
-            duration: animate && !REDUCED ? 0.5 : 0,
-            ease: "power3.inOut",
-            onComplete: () => scheduleRefresh(),
-          });
-        }
-      };
-      g.setOpen = setOpen;
-      g.open = false;
-      g.head._accGroup = g;
+  function levenshtein(a, b) {
+    const m = a.length;
+    const n = b.length;
+    if (!m) return n;
+    if (!n) return m;
+    const dp = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]);
+    for (let j = 1; j <= n; j++) dp[0][j] = j;
+    for (let i = 1; i <= m; i++) {
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+      );
+    }
+    return dp[m][n];
+  }
 
-      const toggle = () => {
-        const willOpen = !g.open;
-        // mutual exclusion inside the same panel
-        groups.forEach((other) => { if (other !== g && other.open) other.setOpen(false, true); });
-        setOpen(willOpen, true);
-      };
+  function matchCard(haystack, qNorm) {
+    if (!qNorm) return true;
 
-      g.head.addEventListener("click", toggle);
-      g.head.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+    const { hay, compact, tokens } = haystack;
+    const qCompact = qNorm.replace(/\s+/g, "");
+
+    // Partial substring match: "lose" -> Lose Yourself, "kend" -> Kendrick Lamar.
+    if (compact.includes(qCompact)) return true;
+
+    // Multi-token fuzzy match: "god plan" can find "God's Plan".
+    const qTokens = qNorm.split(" ").filter(Boolean);
+    if (qTokens.every((token) => hay.includes(token))) return true;
+
+    // Single-word typo/suffix tolerance for short inputs like "emine" -> Eminem.
+    if (qTokens.length === 1 && qTokens[0].length >= 5) {
+      const target = qTokens[0];
+      return tokens.some((token) => {
+        if (token.length < 4 || Math.abs(token.length - target.length) > 2) return false;
+        const limit = target.length >= 6 ? 2 : 1;
+        return levenshtein(token.slice(0, target.length), target) <= limit;
       });
+    }
 
-      // start collapsed
-      gsap.set(g.body, { height: 0, overflow: "hidden" });
+    return false;
+  }
+
+  // Global ScrollTrigger.refresh() walks the page's triggers — routed
+  // through the shared debounced scheduler so keystroke bursts settle
+  // into a single refresh.
+  function refreshScroll() {
+    scheduleRefresh();
+  }
+
+  // One visibility pass: the genre filter owns panel-level `hidden`, the
+  // search owns per-card `is-search-hidden`; the counter only credits cards
+  // inside genres the filter still shows.
+  function applySearch() {
+    const trimmed = input.value.trim();
+    const searching = Boolean(trimmed);
+    const qNorm = searching ? normalize(trimmed) : "";
+
+    let visible = 0;
+    cards.forEach((card, i) => {
+      const genreHidden = cardGenres[i] ? cardGenres[i].hidden : false;
+      const on = !genreHidden && matchCard(cardHaystacks[i], qNorm);
+      card.classList.toggle("is-search-hidden", !on);
+      if (on) visible++;
     });
+
+    genres.forEach((genre) => {
+      if (genre.hidden) return;
+      const visibleInGenre = genre.querySelectorAll(".idx-card:not(.is-search-hidden)").length;
+      genre.classList.toggle("is-search-empty", visibleInGenre === 0);
+    });
+
+    count.hidden = !searching && activeGenre === -1;
+    count.textContent = visible + " / " + cards.length;
+    empty.hidden = visible !== 0;
+    clear.hidden = !searching;
+    refreshScroll();
+  }
+
+  function clearSearch() {
+    input.value = "";
+    applySearch();
+  }
+
+  // ---- genre filter chips (rendered by music-stage.js) ----
+  if (filterMount) {
+    const chips = Array.from(filterMount.querySelectorAll(".genre-chip"));
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        activeGenre = parseInt(chip.getAttribute("data-genre"), 10);
+        chips.forEach((c) => {
+          const on = c === chip;
+          c.classList.toggle("is-active", on);
+          c.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        genres.forEach((genre, i) => {
+          genre.hidden = activeGenre !== -1 && i !== activeGenre;
+        });
+        applySearch();
+      });
+    });
+  }
+
+  // ---- random pick: play one card from whatever is currently browsable ----
+  if (randomBtn) {
+    randomBtn.addEventListener("click", () => {
+      const pool = cards.filter((card, i) =>
+        !(cardGenres[i] && cardGenres[i].hidden) && !card.classList.contains("is-search-hidden")
+      );
+      if (!pool.length) return;
+      pool[Math.floor(Math.random() * pool.length)].click();
+    });
+  }
+
+  // Coalesce keystroke bursts: each frame applies at most one search pass
+  // over the 763 cards instead of one per input event.
+  let searchFrame = 0;
+  function requestApply() {
+    if (searchFrame) return;
+    searchFrame = requestAnimationFrame(() => {
+      searchFrame = 0;
+      applySearch();
+    });
+  }
+
+  // IME safety: skip filtering during pinyin/IME composition — every
+  // intermediate keystroke would otherwise run a full panel filter.
+  let composing = false;
+  input.addEventListener("compositionstart", () => { composing = true; });
+  input.addEventListener("compositionend", () => {
+    composing = false;
+    requestApply();
+  });
+  input.addEventListener("input", () => {
+    if (!composing) requestApply();
+  });
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") clearSearch();
+  });
+  clear.addEventListener("click", () => {
+    clearSearch();
+    input.focus();
   });
 }
-
-initGroupAccordion();
-
-/* ---------- similar tracks: click a card to open the song on NetEase ---------- */
 
 function initNetEaseLinks() {
   const drawer = document.getElementById("music-drawer");
@@ -1044,198 +1146,6 @@ function initNetEaseLinks() {
 }
 
 initNetEaseLinks();
-
-/* ---------- music search: fuzzy title / artist filter inside MUSIC ---------- */
-
-function initMusicSearch() {
-  const panel = document.getElementById("panel-music");
-  const input = document.getElementById("music-search-input");
-  const clear = document.getElementById("music-search-clear");
-  const count = document.getElementById("music-search-count");
-  const empty = document.getElementById("music-search-empty");
-  if (!panel || !input || !clear || !count || !empty) return;
-
-  const cards = Array.from(panel.querySelectorAll(".idx-card[data-song-id]"));
-  const genres = Array.from(panel.querySelectorAll(".genre"));
-  const heads = Array.from(panel.querySelectorAll(".genre-head"));
-
-  let active = false;
-  let preOpen = new Set();
-
-  function normalize(value) {
-    return String(value || "").toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, " ").trim();
-  }
-
-  // Normalized per-card haystack, built once at init: matchCard then only
-  // compares precomputed strings instead of re-querying and re-normalizing
-  // all 763 cards on every keystroke.
-  const cardHaystacks = cards.map((card) => {
-    const title = card.querySelector(".idx-title");
-    const artist = card.querySelector(".idx-artist");
-    const hay = normalize((title ? title.textContent : "") + " " + (artist ? artist.textContent : ""));
-    return { hay, compact: hay.replace(/\s+/g, ""), tokens: hay.split(" ").filter(Boolean) };
-  });
-
-  function levenshtein(a, b) {
-    const m = a.length;
-    const n = b.length;
-    if (!m) return n;
-    if (!n) return m;
-    const dp = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]);
-    for (let j = 1; j <= n; j++) dp[0][j] = j;
-    for (let i = 1; i <= m; i++) {
-      for (let j = 1; j <= n; j++) {
-        dp[i][j] = Math.min(
-          dp[i - 1][j] + 1,
-          dp[i][j - 1] + 1,
-          dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
-        );
-      }
-    }
-    return dp[m][n];
-  }
-
-  function matchCard(haystack, qNorm) {
-    if (!qNorm) return true;
-
-    const { hay, compact, tokens } = haystack;
-    const qCompact = qNorm.replace(/\s+/g, "");
-
-    // Partial substring match: "lose" -> Lose Yourself, "kend" -> Kendrick Lamar.
-    if (compact.includes(qCompact)) return true;
-
-    // Multi-token fuzzy match: "god plan" can find "God's Plan".
-    const qTokens = qNorm.split(" ").filter(Boolean);
-    if (qTokens.every((token) => hay.includes(token))) return true;
-
-    // Single-word typo/suffix tolerance for short inputs like "emine" -> Eminem.
-    if (qTokens.length === 1 && qTokens[0].length >= 5) {
-      const target = qTokens[0];
-      return tokens.some((token) => {
-        if (token.length < 4 || Math.abs(token.length - target.length) > 2) return false;
-        const limit = target.length >= 6 ? 2 : 1;
-        return levenshtein(token.slice(0, target.length), target) <= limit;
-      });
-    }
-
-    return false;
-  }
-
-  function headOpen(head) {
-    return head.getAttribute("aria-expanded") === "true";
-  }
-
-  function setHead(head, open, animate) {
-    const group = head._accGroup;
-    if (group) {
-      group.setOpen(open, animate);
-      return;
-    }
-    head.setAttribute("aria-expanded", open ? "true" : "false");
-    head.classList.toggle("is-open", open);
-    if (head.nextElementSibling) {
-      head.nextElementSibling.style.height = open ? "auto" : "0";
-    }
-  }
-
-  // Global ScrollTrigger.refresh() walks the page's triggers — routed
-  // through the shared debounced scheduler so keystroke bursts settle
-  // into a single refresh.
-  function refreshScroll() {
-    scheduleRefresh();
-  }
-
-  function applySearch() {
-    const trimmed = input.value.trim();
-    if (!trimmed) {
-      clearSearch();
-      return;
-    }
-
-    if (!active) {
-      active = true;
-      preOpen = new Set(heads.filter(headOpen));
-    }
-
-    // normalize the query once; matchCard only compares precomputed haystacks
-    const qNorm = normalize(trimmed);
-
-    let visible = 0;
-    cards.forEach((card, i) => {
-      const on = matchCard(cardHaystacks[i], qNorm);
-      card.classList.toggle("is-search-hidden", !on);
-      if (on) visible++;
-    });
-
-    genres.forEach((genre) => {
-      const visibleInGenre = genre.querySelectorAll(".idx-card:not(.is-search-hidden)").length;
-      genre.classList.toggle("is-search-empty", visibleInGenre === 0);
-      const head = genre.querySelector(".genre-head");
-      if (visibleInGenre > 0 && head && !headOpen(head)) {
-        setHead(head, true, false);
-      }
-    });
-
-    count.hidden = false;
-    count.textContent = visible + " / " + cards.length;
-    empty.hidden = visible !== 0;
-    clear.hidden = false;
-    refreshScroll();
-  }
-
-  function clearSearch() {
-    if (active) {
-      active = false;
-      cards.forEach((card) => card.classList.remove("is-search-hidden"));
-      genres.forEach((genre) => {
-        genre.classList.remove("is-search-empty");
-        const head = genre.querySelector(".genre-head");
-        if (head && headOpen(head) && !preOpen.has(head)) {
-          setHead(head, false, false);
-        }
-      });
-      preOpen.forEach((head) => {
-        if (head && !headOpen(head)) setHead(head, true, false);
-      });
-      preOpen = new Set();
-    }
-    input.value = "";
-    count.hidden = true;
-    clear.hidden = true;
-    empty.hidden = true;
-    refreshScroll();
-  }
-
-  // Coalesce keystroke bursts: each frame applies at most one search pass
-  // over the 763 cards instead of one per input event.
-  let searchFrame = 0;
-  function requestApply() {
-    if (searchFrame) return;
-    searchFrame = requestAnimationFrame(() => {
-      searchFrame = 0;
-      applySearch();
-    });
-  }
-
-  // IME safety: skip filtering during pinyin/IME composition — every
-  // intermediate keystroke would otherwise run a full panel filter.
-  let composing = false;
-  input.addEventListener("compositionstart", () => { composing = true; });
-  input.addEventListener("compositionend", () => {
-    composing = false;
-    requestApply();
-  });
-  input.addEventListener("input", () => {
-    if (!composing) requestApply();
-  });
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") clearSearch();
-  });
-  clear.addEventListener("click", () => {
-    clearSearch();
-    input.focus();
-  });
-}
 
 initMusicSearch();
 

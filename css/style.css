@@ -67,7 +67,9 @@ html, body {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
-  overflow-x: hidden;
+  /* clip (not hidden): hidden would turn body into a scroll container and
+     kill position: sticky for the genre filter row */
+  overflow-x: clip;
 }
 
 body { -webkit-font-smoothing: antialiased; }
@@ -1687,59 +1689,76 @@ html.has-cursor * { cursor: none !important; }
 
 .idx-card:active { transform: scale(0.96); }
 
-/* ---------- group accordion (FILMS groups + MUSIC genres) ---------- */
-.acc-head {
-  cursor: pointer;
-  user-select: none;
-  transition: background 0.15s var(--ease-out), box-shadow 0.15s var(--ease-out);
-}
-
-.acc-head:hover {
-  background: rgba(255, 255, 255, 0.6);
-}
-
-.acc-head:focus-visible {
-  outline: 3px solid var(--color-accent-text);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
-
-/* arrow indicator at the far right of the head row */
-.acc-arrow {
-  margin-left: auto;
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
-  transition: transform 0.3s var(--ease-out);
-}
-
-.acc-head.is-open .acc-arrow {
-  transform: rotate(90deg);
-}
-
-/* heads are flex rows so label + count + arrow lay out on one line */
-.genre-head.acc-head {
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  padding: 0.55em 1em;
+/* ---------- genre filter + random pick (music panel) ---------- */
+/* sticky chip row: doubles as a table of contents while scrolling the
+   fully expanded playlist */
+.genre-filter {
+  position: sticky;
+  top: 84px;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  margin-bottom: clamp(1.2rem, 2.4vh, 1.8rem);
   border-radius: var(--radius-md);
-  background: var(--color-bg-deep);
-  box-shadow: var(--shadow-soft-sm);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+  box-shadow: var(--glass-edge), var(--shadow-soft-sm);
 }
 
-/* count chip sits right before the arrow */
-.genre-head.acc-head .genre-count {
-  margin-left: auto;
+@media (prefers-reduced-transparency: reduce) {
+  .genre-filter {
+    background: var(--color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: var(--shadow-soft-sm);
+  }
 }
 
-.acc-head.is-open {
+.genre-chip {
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
   background: var(--color-surface);
-  box-shadow: var(--shadow-soft-md), var(--ring-accent);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  padding: 0.45em 0.95em;
+  cursor: pointer;
+  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out), box-shadow 0.15s var(--ease-out);
 }
 
-/* animated bodies must not leak while closed */
-.track-index {
-  overflow: hidden;
+.genre-chip:hover { color: var(--color-text); }
+
+.genre-chip:active { transform: scale(0.96); }
+
+.genre-chip.is-active {
+  background: var(--color-accent-solid);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent-text);
+  box-shadow: var(--glow-accent);
 }
+
+.genre[hidden] { display: none; }
+
+.music-random {
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  color: var(--color-on-accent);
+  background: var(--color-accent-solid);
+  border: 1px solid var(--color-accent-text);
+  border-radius: var(--radius-pill);
+  padding: 0.7em 1.2em;
+  cursor: pointer;
+  box-shadow: var(--glow-accent);
+  transition: background 0.15s var(--ease-out), transform 0.15s var(--ease-out);
+  white-space: nowrap;
+}
+
+.music-random:hover { background: var(--color-glow); }
+
+.music-random:active { transform: scale(0.96); }
 
 /* ============ PHOTO LIGHTBOX ============ */
 .hs-card { cursor: pointer; }
@@ -1957,8 +1976,6 @@ html.has-cursor * { cursor: none !important; }
   .idx-card,
   .idx-card:hover { transform: none; transition-duration: 0s; }
   .tab-btn,
-  .acc-head,
-  .acc-arrow,
   .lb-close,
   .lb-nav,
   .dragbar,

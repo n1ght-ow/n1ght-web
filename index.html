@@ -12,7 +12,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D1B16'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='16' font-weight='bold' fill='%23C9A227' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=10">
-  <link rel="stylesheet" href="css/style.css?v=39">
+  <link rel="stylesheet" href="css/style.css?v=40">
   <link rel="stylesheet" href="css/reel-stage.css?v=2">
   <link rel="stylesheet" href="css/film-stage.css?v=5">
   <link rel="stylesheet" href="css/series-stage.css?v=5">
@@ -362,10 +362,12 @@
     <div class="music-search" id="music-search">
       <label class="sr-only" for="music-search-input">Search songs by title or artist</label>
       <input class="music-search-input" id="music-search-input" type="search" placeholder="SEARCH TITLE / ARTIST" autocomplete="off" spellcheck="false">
+      <button class="music-random mono" id="music-random" type="button" lang="zh">随机一首</button>
       <button class="music-search-clear mono" id="music-search-clear" type="button" aria-label="Clear search" hidden>&times;</button>
       <span class="music-search-count mono" id="music-search-count" hidden></span>
       <p class="music-search-empty mono" id="music-search-empty" hidden>NO MATCH</p>
     </div>
+    <div class="genre-filter" id="genre-filter" role="group" aria-label="按流派过滤"></div>
     <div class="playlist" data-music-stage="auto"></div>
   </div>
 </div>
@@ -557,7 +559,7 @@
   <script src="js/reel-stage.js?v=1"></script>
   <script src="js/film-stage.js?v=3"></script>
   <script src="js/series-stage.js?v=3"></script>
-  <script src="js/music-stage.js?v=1"></script>
-  <script src="js/main.js?v=30"></script>
+  <script src="js/music-stage.js?v=2"></script>
+  <script src="js/main.js?v=31"></script>
 </body>
 </html>

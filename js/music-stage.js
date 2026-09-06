@@ -77,6 +77,34 @@
         mount.replaceChildren();
         GROUPS.forEach((group) => mount.appendChild(renderGenre(group)));
       });
+    renderFilterChips(document.getElementById("genre-filter"));
+  }
+
+  /* Filter chips ("全部 · N" + one per genre). main.js binds the click
+     filtering against [data-genre]; chips carry their own counts so the
+     row doubles as a table of contents for the whole collection. */
+  function renderFilterChips(mount) {
+    if (!mount) return;
+    const total = GROUPS.reduce((sum, group) => sum + group.tracks.length, 0);
+
+    const all = el("button", "genre-chip mono is-active");
+    all.type = "button";
+    all.setAttribute("data-genre", "-1");
+    all.setAttribute("aria-pressed", "true");
+    all.setAttribute("lang", "zh");
+    all.textContent = "全部 · " + total;
+    mount.appendChild(all);
+
+    GROUPS.forEach((group, i) => {
+      const chip = el("button", "genre-chip mono");
+      chip.type = "button";
+      chip.setAttribute("data-genre", String(i));
+      chip.setAttribute("aria-pressed", "false");
+      const label = (group.groupLang === "zh" ? group.zh : group.en) + " · " + group.tracks.length;
+      chip.textContent = label;
+      tagLang(chip, label);
+      mount.appendChild(chip);
+    });
   }
 
   /* Render synchronously: this script sits after the #panel-music mount in
