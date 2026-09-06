@@ -538,7 +538,7 @@ makeHorizontalScroller({
   barFillId: "hof-dragbar-fill",
   barHandleId: "hof-dragbar-handle",
   barCountId: "hof-dragbar-count",
-  itemCount: 7,
+  itemCount: 18,
   label: "CARD",
 });
 
