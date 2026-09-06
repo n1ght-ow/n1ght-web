@@ -1179,65 +1179,6 @@ html.has-cursor * { cursor: none !important; }
 #archive-head .bh-meta span:first-child { background: var(--acid); color: var(--ink); }
 #archive-head .sec-intro { border-color: var(--acid); }
 
-.film-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1.3rem;
-}
-
-.film-group-head {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.film-group-label {
-  background: var(--ink);
-  color: var(--bg);
-  border: 2px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--ink);
-  padding: 0.5em 1em;
-  font-size: 0.78rem;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-}
-
-.fg-sci .film-group-label { box-shadow: 3px 3px 0 var(--volt); }
-.fg-drama .film-group-label { box-shadow: 3px 3px 0 var(--punch); }
-.fg-romance .film-group-label { box-shadow: 3px 3px 0 var(--acid); }
-
-/* per-group accent backgrounds (FILMS): label box takes its own color */
-.fg-crime .film-group-label { background: var(--punch); border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
-.fg-sci .film-group-label { background: var(--volt); border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
-.fg-drama .film-group-label { background: var(--acid); color: var(--ink); border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
-.fg-romance .film-group-label { background: var(--ice); color: var(--ink); border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
-
-/* open accordion shadow follows the group accent */
-.fg-crime .acc-head.is-open { box-shadow: 4px 4px 0 var(--punch); }
-.fg-sci .acc-head.is-open { box-shadow: 4px 4px 0 var(--volt); }
-.fg-drama .acc-head.is-open { box-shadow: 4px 4px 0 var(--acid); }
-.fg-romance .acc-head.is-open { box-shadow: 4px 4px 0 var(--ice); }
-
-/* series panel: alternate accent shadows per group + colored label backgrounds */
-#panel-series .film-group:nth-child(4n+1) .film-group-label { background: var(--volt); box-shadow: 3px 3px 0 var(--ink); }
-#panel-series .film-group:nth-child(4n+2) .film-group-label { background: var(--punch); box-shadow: 3px 3px 0 var(--ink); }
-#panel-series .film-group:nth-child(4n+3) .film-group-label { background: var(--acid); color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
-#panel-series .film-group:nth-child(4n+4) .film-group-label { background: var(--ice); color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
-
-/* open accordion shadow follows the group accent */
-#panel-series .film-group:nth-child(4n+1) .acc-head.is-open { box-shadow: 4px 4px 0 var(--volt); }
-#panel-series .film-group:nth-child(4n+2) .acc-head.is-open { box-shadow: 4px 4px 0 var(--punch); }
-#panel-series .film-group:nth-child(4n+3) .acc-head.is-open { box-shadow: 4px 4px 0 var(--acid); }
-#panel-series .film-group:nth-child(4n+4) .acc-head.is-open { box-shadow: 4px 4px 0 var(--ice); }
-
-.film-group-count {
-  font-size: 0.7rem;
-  font-weight: 400;
-  letter-spacing: 0.16em;
-  color: var(--ink);
-}
-
 /* ---- tab bar ---- */
 .tabbar {
   display: flex;
@@ -1320,26 +1261,6 @@ html.has-cursor * { cursor: none !important; }
 }
 
 /* rows with a poster get a 4th column for the thumbnail */
-.idx-row:has(.idx-poster) {
-  grid-template-columns: 4.5rem 4.9rem minmax(0, 1.4fr) minmax(0, 1fr);
-}
-
-/* poster thumbnails in FILMS/SERIES rows */
-.idx-poster {
-  width: 72px;
-  height: 96px;
-  object-fit: cover;
-  border: 2px solid var(--ink);
-  box-shadow: 4px 4px 0 var(--ink);
-  background: var(--bg-deep);
-  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
-}
-
-.idx-row:hover .idx-poster {
-  transform: scale(1.05);
-  box-shadow: 6px 6px 0 var(--punch);
-}
-
 .idx-row:nth-child(odd) { background: rgba(255, 255, 255, 0.35); }
 
 .idx-row:hover {
@@ -1414,17 +1335,10 @@ html.has-cursor * { cursor: none !important; }
   max-width: 46ch;
 }
 
-/* IMDb quick-link rows: clickable with a small badge */
-.idx-row[data-imdb] { cursor: pointer; }
-.idx-row[data-imdb]:focus-visible,
+/* music card focus states (books/sport rows handle focus via GSAP press) */
 .idx-card[data-song-id]:focus-visible {
   outline: 3px solid var(--acid);
   outline-offset: 3px;
-}
-
-.idx-row[data-imdb]:focus-visible {
-  background: var(--paper);
-  transform: translateX(6px);
 }
 
 .idx-card[data-song-id]:focus-visible {
@@ -1435,49 +1349,6 @@ html.has-cursor * { cursor: none !important; }
 .idx-card[data-song-id]:focus-visible .idx-artist,
 .idx-card[data-song-id]:focus-visible .idx-title::after {
   color: var(--bg);
-}
-
-.imdb-badge {
-  position: absolute;
-  right: clamp(0.6rem, 2vw, 1.6rem);
-  top: 50%;
-  transform: translateY(-50%) rotate(0deg);
-  font-family: "Notable", "Space Grotesk", sans-serif;
-  font-size: 0.6rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  color: var(--bg);
-  background: var(--ink);
-  border: 2px solid var(--ink);
-  box-shadow: 3px 3px 0 var(--punch);
-  padding: 0.35em 0.7em;
-  width: max-content;
-  opacity: 0.55;
-  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), background 0.3s var(--ease-out);
-}
-
-.idx-row[data-imdb]:hover .imdb-badge {
-  opacity: 1;
-  transform: translateY(-50%) translateX(-2px);
-  background: var(--punch);
-}
-
-.idx-row[data-imdb] .idx-title::after {
-  content: "↗";
-  display: inline-block;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.6em;
-  margin-left: 0.45em;
-  color: var(--slate-2);
-  opacity: 0;
-  transform: translate(-4px, 2px);
-  transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out);
-}
-
-.idx-row[data-imdb]:hover .idx-title::after {
-  opacity: 1;
-  transform: translate(0, 0);
-  color: var(--punch);
 }
 
 /* sport rows */
@@ -1855,7 +1726,6 @@ html.has-cursor * { cursor: none !important; }
 }
 
 /* heads are flex rows so label + count + arrow lay out on one line */
-.film-group-head.acc-head,
 .genre-head.acc-head {
   flex-wrap: nowrap;
   justify-content: flex-start;
@@ -1866,7 +1736,6 @@ html.has-cursor * { cursor: none !important; }
 }
 
 /* count chip sits right before the arrow */
-.film-group-head.acc-head .film-group-count,
 .genre-head.acc-head .genre-count {
   margin-left: auto;
 }
@@ -1881,7 +1750,6 @@ html.has-cursor * { cursor: none !important; }
 #panel-music .genre:nth-child(3n+3) .acc-head.is-open { box-shadow: 4px 4px 0 var(--acid); }
 
 /* animated bodies must not leak while closed */
-.film-group .idx-list,
 .track-index {
   overflow: hidden;
 }
@@ -2061,9 +1929,6 @@ html.has-cursor * { cursor: none !important; }
   .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
   .idx-line { grid-column: 2; }
   /* poster rows on mobile: number | poster | title, quote below */
-  .idx-row:has(.idx-poster) { grid-template-columns: 3.2rem 3.6rem minmax(0, 1fr); grid-template-rows: auto auto; }
-  .idx-row:has(.idx-poster) .idx-poster { width: 52px; height: 68px; }
-  .idx-row:has(.idx-poster) .idx-line { grid-column: 3; }
   /* music cards on mobile: flex-wrap handles sizing naturally */
   .playlist { gap: 1.4rem; }
   .coda-title { font-size: clamp(2rem, 11vw, 4rem); }
@@ -2097,8 +1962,6 @@ html.has-cursor * { cursor: none !important; }
   .genre:hover,
   .idx-card,
   .idx-card:hover { transform: none; transition-duration: 0s; }
-  .idx-poster,
-  .imdb-badge,
   .tab-btn,
   .acc-head,
   .acc-arrow,

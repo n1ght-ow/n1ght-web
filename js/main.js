@@ -837,7 +837,7 @@ function initArchiveTabs() {
     if (idx === current && !instant) return;
     current = idx;
     showMeta(idx);
-    const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .film-group, .genre")) : [];
+    const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre")) : [];
     if (instant) {
       gsap.set(rows, { y: 0, clearProps: "clipPath" });
       gsap.set(panels[idx], { clipPath: "inset(0 0 0 0%)" });
@@ -877,7 +877,7 @@ function initArchiveTabs() {
   // reduced motion — the rows simply render in their final position.
   if (!REDUCED) {
     const firstPanel = panels[0];
-    const firstRows = Array.from(firstPanel.querySelectorAll(".idx-row, .film-group, .genre"));
+    const firstRows = Array.from(firstPanel.querySelectorAll(".idx-row, .genre"));
     if (firstRows.length) {
       gsap.from(firstRows, {
         clipPath: "inset(0 0 100% 0)",
@@ -1285,50 +1285,6 @@ function initMusicSearch() {
 }
 
 initMusicSearch();
-
-/* ---------- IMDb quick links: click a film/series row to open its IMDb page ----------
-   New film/series stages use dedicated .film-detail-imdb / .series-detail-imdb links,
-   so this legacy handler only manages encore rows if they are rendered back in markup. */
-
-function initImdbLinks() {
-  const panels = document.querySelectorAll("#panel-films, #panel-series");
-  if (!panels.length) return;
-
-  const openImdb = (row) => {
-    const id = row.getAttribute("data-imdb");
-    if (!id) return;
-    window.open("https://www.imdb.com/title/" + id + "/", "_blank", "noopener");
-  };
-
-  panels.forEach((panel) => {
-    panel.addEventListener("click", (e) => {
-      const row = e.target.closest(".idx-row[data-imdb]");
-      if (e.target.closest(".film-detail-imdb, .series-detail-imdb")) return;
-      if (!row) return;
-      openImdb(row);
-    });
-
-    panel.addEventListener("keydown", (e) => {
-      if (e.key !== "Enter" && e.key !== " ") return;
-      const row = e.target.closest(".idx-row[data-imdb]");
-      if (e.target.closest(".film-detail-imdb, .series-detail-imdb")) return;
-      if (!row) return;
-      e.preventDefault();
-      openImdb(row);
-    });
-
-    panel.querySelectorAll(".idx-row[data-imdb]").forEach((row) => {
-      row.setAttribute("role", "link");
-      row.setAttribute("tabindex", "0");
-      row.setAttribute(
-        "aria-label",
-        row.textContent.trim().replace(/\s+/g, " ") + ", open on IMDb"
-      );
-    });
-  });
-}
-
-initImdbLinks();
 
 /* ---------- game cards on touch: tap toggles the hover state ---------- */
 

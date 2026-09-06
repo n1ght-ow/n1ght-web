@@ -10,7 +10,7 @@
 
 ## 技术约束
 
-- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`sig-data.js` → `film-data.js` → `series-data.js` → `music-data.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js`）→ `main.js`。
+- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`sig-data.js` → `film-data.js` → `series-data.js` → `music-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js`）→ `main.js`。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
 - GSAP/ScrollTrigger/SplitText/Lenis 走本地 `js/vendor/`，`main.js` 已 `registerPlugin`。Lenis 仅非 REDUCED 启用（`autoRaf:false` + `gsap.ticker` 驱动）；锚点跳转统一走 `lenis.scrollTo`，REDUCED 下回退原生。
 - 动效只操作 `transform` / `opacity`（`clip-path: inset()` 幕帘等价允许）；所有 scrub 动画必须 `invalidateOnRefresh: true`，图片加载后调 `ScrollTrigger.refresh()`，加载风暴用 250ms debounce 合并。
@@ -22,8 +22,9 @@
 
 - `js/main.js` 站点交互层：preloader（图片计数 + 签名描边进度）、hero 签名、光标徽章、磁吸、`makeHorizontalScroller`（照片 / 游戏共用的横向滚动 + 拖把双向同步）、泡泡场、lightbox、tab 切换、音乐手风琴 + 搜索、网易云 / IMDb 外链、导航高亮 + 滚动进度。
 - 签名：`js/sig-data.js` 的 `SIG_DATA` 由 `buildSignature()` 渲染进 `#sig-hero` / `#sig-about`，描边绘制后填充淡入，REDUCED 下直接静态展示。
-- 影：`js/film-data.js`（`window.FILM_DATA`，16 部）→ `js/film-stage.js` 渲染进 `#panel-films[data-film-stage="auto"]`；样式在 `css/film-stage.css`。
-- 剧：`js/series-data.js`（`window.SERIES_DATA`，19 部）→ `js/series-stage.js` 渲染进 `#panel-series[data-series-stage="auto"]`；样式在 `css/series-stage.css`。
+- 影：`js/film-data.js`（`window.FILM_DATA`，16 部）→ `js/film-stage.js`（配置适配器）经 `js/reel-stage.js` 的 `createReelStage()` 工厂渲染进 `#panel-films[data-film-stage="auto"]`；共享机械样式在 `css/reel-stage.css`，accent 变量 / detail 区 / 断点 / reduce 块在 `css/film-stage.css`。
+- 剧：`js/series-data.js`（`window.SERIES_DATA`，19 部）→ `js/series-stage.js`（配置适配器）经同一 `createReelStage()` 渲染进 `#panel-series[data-series-stage="auto"]`；CSS 分工同上（`css/series-stage.css`）。
+- reel-stage 工厂：影/剧共用的唯一实现（quickTo 舞台、键盘方向键、detail 揭示、防抖 refresh）。改 reel 行为只动 `js/reel-stage.js` / `css/reel-stage.css`；面板差异只改各自适配器的 config 或 accent 文件。DOM class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑定。
 - 音乐：`js/music-data.js`（`window.MUSIC_DATA`，763 首 16 组，字段 `{ id, zh, en, groupLang, tracks: [{ id, title, artist }] }`）→ `js/music-stage.js` 渲染 16 个 `.genre` 组进 `#music-drawer` 里的 `.playlist[data-music-stage="auto"]`；搜索框、`#music-drawer` 壳和 `#music-drawer` 之外的面板骨架留在 HTML。`.genre-count`「N 首」由渲染器按 `tracks.length` 自动生成；`zh` 段是否包 `<span lang="zh">`、整组是否挂 `lang="zh"`（华语组 `groupLang: "zh"`）也由渲染器按数据字段处理。
 - 影 / 剧条目字段：`{ id, imdb（ttID）, poster: "posters/<ttID>.jpg", title, director / years, year / seasons, genre / category, quote }`；reel 由 range 滑杆经单一 `quickTo` 驱动，海报卡 `data-cursor="OPEN"`、滑杆 `DRAG`、IMDb 按钮 `VIEW`。
 - 书、球队硬编码在 `index.html`；历史调研产物放 `archive/<topic>/`，不参与站点加载。
