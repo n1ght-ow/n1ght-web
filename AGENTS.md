@@ -36,7 +36,7 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 - **渐变**：允许克制的光泽渐变；插值空间 `in oklab`，双 hue 中间发灰时改 `in oklch`；禁 AI 紫渐变。
 - **纹理**：grain 噪点层退役，质感交给材质与光效。
 - **色彩遗训**：禁紫；无纯黑 `#000` / 纯白 `#fff`（用近黑近白）；accent hue = 可交互，静态文字不用它；每视图只一个实心填充主操作。
-- **具体色值待定**：重构时出 2-3 套亮色奢华候选（方向：钛银+香槟金 / 翡翠+烟灰 / 蓝宝石+石墨）供用户拍板，拍板后回填本节；回填前禁止在组件里硬编码新色值。
+- **色板（已拍板：钛银+香槟金，2026-09）**：原语 ramp `--sand-050 #F6F5F1` / `--sand-100 #EDEBE4` / `--sand-200 #DFDACE`、`--gold-100 #F3E9D2` / `--gold-300 #DDB76B` / `--gold-500 #C9A227` / `--gold-700 #7E5F20`、`--ink-900 #1D1B16` / `--ink-600 #4A463D` / `--ink-400 #6B675A`、面 `--paper #FCFBF8`；组件只准引用语义层（`--color-bg / -bg-deep / -surface / -text / -text-secondary / -text-muted / -line / -accent-solid / -accent-text / -accent-tint / -glow / -on-accent`）。gold-500 实心块必须配 1px gold-700 描边环（非文本 3:1）；关键对比对已实测（如 ink-900/sand-050 15.8:1、ink-400/sand-050 4.95:1、gold-700/sand-050 5.4:1、ink-900/gold-500 7.1:1）。
 - 图片描边沿用中性低透明度（`oklch(0 0 0 / 0.1)` 类），不用带色调灰。
 
 ## 动效（better-ui × taste-skill）
@@ -60,7 +60,7 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 - UI 文本 ≥14px（caption 13px，很少低于 12px）；mono 小标签同等受此下限约束；移动端输入框 16px（防 iOS 缩放）。
 - 正文用弯引号；范围用 en dash；省略号用单字符；文案按自然大小写存储、展示交给 `text-transform`。
 - 字重 <400 只给 ≥28px 展示场景；加载实际使用的字重，避免浏览器合成。
-- 字体：Space Grotesk + IBM Plex Mono 自托管；可增字重或展示字族，只能经 `css/fonts.css` 本地文件，禁外链。
+- 字体：Space Grotesk（300-700 可变，展示 + 正文）+ IBM Plex Mono（标签）+ Instrument Serif italic（衬线点缀）自托管；Vast Shadow / Bungee / Calistoga / Notable 已退役（文件留在 `fonts/` 但不再声明、不再预载）；可增字重或字族，只能经 `css/fonts.css` 本地文件，禁外链。
 - 英文文案禁 em-dash（用句号 / 逗号 / 冒号重写句子）；中文破折号不受限；en dash 只用于范围。
 
 ## 颜色（better-colors）
@@ -121,13 +121,13 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 
 ### 光标徽章（品牌特例）
 
-taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()` + `data-cursor` 取值出徽章，仅精指针且非 REDUCED 启用（`html.has-cursor` 由 JS 设置）。重构时升级为圆角胶囊 + 玻璃质感，徽章文字遵守 UI 文本 ≥14px 下限。挂点：`VIEW`（.hs-card、.hof-item、影/剧 IMDb 按钮）、`DRAG`（#hs-wrap、两条 dragbar-track、#hof-scroll、影/剧 range）、`PLAY`（音乐 .idx-card）、`OPEN`（影/剧海报卡）、`STAMP`（.poem-stamp）。新交互卡片挂对应值即可，无需改 JS/CSS。
+taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()` + `data-cursor` 取值出徽章，仅精指针且非 REDUCED 启用（`html.has-cursor` 由 JS 设置）。徽章为深墨圆角胶囊（dynamic-island 语汇），文字 0.875rem，跟随与展缩即时跟随（power2.out，无弹性）。挂点：`VIEW`（.hs-card、.hof-item、影/剧 IMDb 按钮）、`DRAG`（#hs-wrap、两条 dragbar-track、#hof-scroll、影/剧 range）、`PLAY`（音乐 .idx-card）、`OPEN`（影/剧海报卡）、`STAMP`（.poem-stamp）。新交互卡片挂对应值即可，无需改 JS/CSS。
 
 ## 站点结构（改动前核对实际现状）
 
-preloader → hero（签名描边 + 泡泡场，TICKER 01）→ PHOTOGRAPHY（横向 pinned 画廊 11 帧，TICKER 02）→ GAME ARCHIVE（HOF 7 卡，TICKER 03）→ THE ARCHIVE（书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5，五 tab，TICKER 04）→ POEM → ABOUT（签名 + 统计）→ footer。
+preloader → hero（签名描边 + 泡泡场）→ PHOTOGRAPHY（横向 pinned 画廊 11 帧）→ GAME ARCHIVE（HOF 7 卡）→ TICKER（收藏计数条）→ THE ARCHIVE（书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5，五 tab）→ TICKER（DO NOT GO GENTLE）→ POEM → ABOUT（签名 + 统计）→ footer。
 
-TICKER 01-04 与各节编号标签是现有节奏装置；taste-skill 下 marquee ≤1/页、编号 eyebrow 受限，重构时裁量收敛或经用户确认保留，不静默删。
+TICKER 共 2 条（2026-09 用户拍板收敛：原 01/02 移除，保留计数条与诗条）；taste-skill marquee ≤1/页与本项目 2 条的出入记录为品牌特例，不再增配第三条。
 
 ## 内容更新
 
@@ -136,20 +136,7 @@ TICKER 01-04 与各节编号标签是现有节奏装置；taste-skill 下 marque
 - 影视：海报 `posters/<ttID>.jpg`，条目进 `film-data.js` / `series-data.js`。
 - 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。
 - 球队：logo `logos/`。
-- 增删内容同步 `#about-stats`、TICKER 04 计数。
-
-## 重构范围（本次彻底重构一并清掉，修完即删）
-
-taste-skill redesign-overhaul 模式：内容与信息架构不动，视觉语言全换。按面板 / 章节分阶段提交，每阶段过 better-interface + taste-skill pre-flight：
-
-1. 出 2-3 套亮色奢华色板候选（钛银+香槟金 / 翡翠+烟灰 / 蓝宝石+石墨 方向）供用户拍板，拍板后落地两层 token（原语 + 语义），替换现色板并回填「视觉基调」。
-2. 硬偏移阴影 / 方角 / grain 退役，替换为 radius token + 软阴影 + 玻璃 + 光效材质体系。
-3. 全站 mono 标签 ≥14px（含光标徽章 0.5rem）。
-4. 照片卡 `figure role=button`、音乐卡 `role=link` 的 div-onClick 模式 → 真 `<button>` / `<a>`。
-5. 物理 `left/right` 属性 → 逻辑属性。
-6. 新色板下全量实测对比度达 WCAG AA（含现 `--slate-2` 标签 ~2.4:1 问题，玻璃面板按叠加后实际底色测）。
-7. books/sport 行 hover、磁吸等高频交互按「频率分治」重做（即时反馈或 ≤150ms opacity/color，按压 0.96）；弹性只留给低频入场与编排。
-8. TICKER×4 与编号 eyebrow 按 marquee ≤1/页、eyebrow 克制裁量收敛，结果经用户确认。
+- 增删内容同步 `#about-stats`、计数 TICKER。
 
 ## 改完自检
 
