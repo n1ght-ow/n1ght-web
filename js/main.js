@@ -254,7 +254,7 @@ function finishPreload() {
 
   const settle = () => {
     // recalc once the reveal is done, then again after lazy gallery
-    // images settle so the pinned ranges stay accurate
+    // images settle so the drag distances stay accurate
     ScrollTrigger.refresh();
     scheduleRefresh(800);
     if (document.fonts && document.fonts.ready) {
@@ -336,16 +336,18 @@ if (REDUCED) {
 }
 
 /* ---------- horizontal scrollers (photo gallery + game roster) ----------
-   Always active. The scroll-follow is the core interaction of these
-   sections, so it is NOT gated behind prefers-reduced-motion (many desktop
-   setups report it and used to kill the effect entirely). */
+   Drag-only: the page wheel scrolls vertically past these sections and
+   never drives the track. Horizontal movement comes from grabbing the
+   section, the scrubber bar, or touch drag (touch-action: pan-y lets
+   horizontal gestures through on touch). NOT gated by REDUCED — dragging
+   is direct user input. */
 
 function makeHorizontalScroller(opts) {
   const wrap = document.getElementById(opts.wrapId);
   const track = document.getElementById(opts.trackId);
   if (!wrap || !track) return null;
 
-  const getDistance = () => Math.max(0, track.scrollWidth - window.innerWidth);
+  const getDistance = () => Math.max(0, track.scrollWidth - wrap.clientWidth);
 
   const bar = document.getElementById(opts.barId);
   const barTrack = document.getElementById(opts.barTrackId);
@@ -355,7 +357,9 @@ function makeHorizontalScroller(opts) {
 
   let isDraggingBar = false;
   let isGrabbing = false;
+  let glideTween = null;
 
+  let progress = 0;
   let lastFrame = -1;
   // Handle X is a transform write (translateX). Track/handle widths are
   // cached and re-measured on refresh/resize, so the per-frame path never
@@ -367,62 +371,40 @@ function makeHorizontalScroller(opts) {
     barW = barTrack.clientWidth;
     handleHalf = barHandle.offsetWidth / 2;
   };
-  function renderDragbar(progress) {
+  function renderDragbar(p) {
     if (!bar || !barFill || !barHandle || !barCount) return;
-    const p = Math.max(0, Math.min(1, progress));
+    const clamped = Math.max(0, Math.min(1, p));
     // transform writes only: fill via scaleX, handle via translateX
     // (center of handle lands at p * trackWidth, matching the old left:%)
-    barFill.style.transform = "scaleX(" + p + ")";
+    barFill.style.transform = "scaleX(" + clamped + ")";
     if (!barW || !handleHalf) measureHandle();
-    barHandle.style.transform = "translate(" + (p * barW - handleHalf).toFixed(2) + "px, -50%)";
-    const frame = Math.min(opts.itemCount, Math.max(1, Math.round(p * (opts.itemCount - 1)) + 1));
+    barHandle.style.transform = "translate(" + (clamped * barW - handleHalf).toFixed(2) + "px, -50%)";
+    const frame = Math.min(opts.itemCount, Math.max(1, Math.round(clamped * (opts.itemCount - 1)) + 1));
     if (frame !== lastFrame) {
       lastFrame = frame;
       barCount.textContent = opts.label + " " + String(frame).padStart(2, "0") + " / " + String(opts.itemCount).padStart(2, "0");
     }
   }
 
-  const tween = gsap.to(track, {
-    x: () => -getDistance(),
-    ease: "none",
-    scrollTrigger: {
-      trigger: wrap,
-      start: "top top",
-      end: () => "+=" + getDistance(),
-      pin: true,
-      scrub: REDUCED ? 0.5 : 1,
-      invalidateOnRefresh: true,
-      anticipatePin: 1,
-      onUpdate: (self) => {
-        if (!isDraggingBar && !isGrabbing) renderDragbar(self.progress);
-      },
-    },
-  });
-
-  const st = tween.scrollTrigger;
-
-  // scroll the page so the pinned scrub lands exactly on target progress
-  const seek = (progress) => {
-    const y = st.start + (st.end - st.start) * progress;
-    if (lenis) lenis.scrollTo(y, { immediate: true });
-    else window.scrollTo(0, y);
+  // single write path: progress -> track transform + scrubber state
+  const render = (p) => {
+    progress = Math.max(0, Math.min(1, p));
+    gsap.set(track, { x: -getDistance() * progress });
+    renderDragbar(progress);
   };
 
   if (bar && barTrack) {
-    // keep handle in sync with scroll-driven progress
-    ScrollTrigger.create({
-      trigger: wrap,
-      start: "top top",
-      end: () => "+=" + getDistance(),
-      onEnter: () => bar.classList.add("is-active"),
-      onEnterBack: () => bar.classList.add("is-active"),
-      onLeave: () => bar.classList.remove("is-active"),
-      onLeaveBack: () => bar.classList.remove("is-active"),
-      onRefresh: measureHandle,
-    });
+    // the scrubber only shows while its section is on screen
+    new IntersectionObserver((entries) => {
+      entries.forEach((en) => bar.classList.toggle("is-active", en.isIntersecting));
+    }, { threshold: 0.15 }).observe(wrap);
 
     measureHandle();
-    window.addEventListener("resize", measureHandle);
+    window.addEventListener("resize", () => { measureHandle(); render(progress); });
+    // lazy images grow the track; keep the clamped position honest
+    if (typeof ResizeObserver === "function") {
+      new ResizeObserver(() => render(progress)).observe(track);
+    }
 
     const barEventToProgress = (e) => {
       const rect = barTrack.getBoundingClientRect();
@@ -433,16 +415,13 @@ function makeHorizontalScroller(opts) {
       isDraggingBar = true;
       barTrack.classList.add("is-dragging");
       barTrack.setPointerCapture(e.pointerId);
-      const p = barEventToProgress(e);
-      renderDragbar(p);
-      seek(p);
+      if (glideTween) { glideTween.kill(); glideTween = null; }
+      render(barEventToProgress(e));
     });
 
     barTrack.addEventListener("pointermove", (e) => {
       if (!isDraggingBar) return;
-      const p = barEventToProgress(e);
-      renderDragbar(p);
-      seek(p);
+      render(barEventToProgress(e));
     });
 
     const endBarDrag = () => {
@@ -453,15 +432,14 @@ function makeHorizontalScroller(opts) {
     barTrack.addEventListener("pointercancel", endBarDrag);
   }
 
-  /* ---- direct grab-drag on the pinned section (desktop fine pointers) ----
+  /* ---- direct grab-drag on the section (all pointers) ----
      Under DRAG_THRESHOLD px of travel it stays a normal click (lightbox etc.);
-     past it the drag captures the pointer and drives scroll through seek().
+     past it the drag captures the pointer and moves the track directly.
      Release flings with inertia. Direct manipulation, so NOT gated by REDUCED. */
-  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  {
     const DRAG_THRESHOLD = 6;
     let dragId = null, dragStartX = 0, dragStartP = 0, dragArmed = false, dragMoved = false;
     let lastX = 0, lastT = 0, dragVel = 0; // px/ms, signed
-    let glideTween = null;
 
     const suppressClick = (e) => { e.stopPropagation(); e.preventDefault(); };
 
@@ -474,7 +452,7 @@ function makeHorizontalScroller(opts) {
       dragStartX = lastX = e.clientX;
       lastT = performance.now();
       dragVel = 0;
-      dragStartP = st.progress;
+      dragStartP = progress;
       dragArmed = false;
       dragMoved = false;
     });
@@ -497,9 +475,7 @@ function makeHorizontalScroller(opts) {
       lastT = now;
       const dist = getDistance();
       if (!dist) return;
-      const p = Math.max(0, Math.min(1, dragStartP - dx / dist));
-      renderDragbar(p);
-      seek(p);
+      render(dragStartP - dx / dist);
     });
 
     const endGrab = (e) => {
@@ -512,14 +488,14 @@ function makeHorizontalScroller(opts) {
       // inertia: project release velocity onto progress and glide out
       const dist = getDistance();
       if (dist && Math.abs(dragVel) > 0.15) {
-        const from = st.progress;
+        const from = progress;
         const target = Math.max(0, Math.min(1, from - (dragVel * 140) / dist));
         const proxy = { p: from };
         glideTween = gsap.to(proxy, {
           p: target,
           duration: 0.9,
           ease: "power3.out",
-          onUpdate: () => { renderDragbar(proxy.p); seek(proxy.p); },
+          onUpdate: () => render(proxy.p),
           onComplete: () => { glideTween = null; },
         });
       }
@@ -538,10 +514,11 @@ function makeHorizontalScroller(opts) {
     }, { passive: true });
   }
 
-  return tween;
+  render(0);
+  return { render };
 }
 
-const hsTween = makeHorizontalScroller({
+makeHorizontalScroller({
   wrapId: "hs-wrap",
   trackId: "hs-track",
   barId: "hs-dragbar",
@@ -553,7 +530,7 @@ const hsTween = makeHorizontalScroller({
   label: "FRAME",
 });
 
-const hofTween = makeHorizontalScroller({
+makeHorizontalScroller({
   wrapId: "hof-scroll",
   trackId: "hof-row",
   barId: "hof-dragbar",
@@ -655,14 +632,8 @@ function lbLoad(i) {
   lbCap.textContent = cap ? cap.textContent : "";
   lbImg.alt = img ? img.alt : "";
   lbImg.classList.remove("is-loaded");
-  lbImg.src = img.src.replace("/photo/", "/photo/full/");
-
-  // preload neighbours for instant arrows
-  [lbIndex + 1, lbIndex - 1].forEach((n) => {
-    const c = photoCards[((n % photoCards.length) + photoCards.length) % photoCards.length];
-    const pre = new Image();
-    pre.src = c.querySelector("img").src.replace("/photo/", "/photo/full/");
-  });
+  // show the low-res archive copy, not the multi-MB full original
+  lbImg.src = img.src;
 }
 
 function lbOpenAt(i) {
@@ -1167,9 +1138,9 @@ function initMusicSearch() {
     }
   }
 
-  // Global ScrollTrigger.refresh() walks ~40 triggers incl. two pinned
-  // horizontal sections — routed through the shared debounced scheduler so
-  // keystroke bursts settle into a single refresh.
+  // Global ScrollTrigger.refresh() walks the page's triggers — routed
+  // through the shared debounced scheduler so keystroke bursts settle
+  // into a single refresh.
   function refreshScroll() {
     scheduleRefresh();
   }
@@ -1405,40 +1376,6 @@ if (!REDUCED) {
   splitHeadParallax("poem-head");
   splitHeadParallax("about-head");
 
-  // inner image parallax against the track movement
-  gsap.utils.toArray(".hs-img-wrap img").forEach((img) => {
-    gsap.fromTo(img, { xPercent: -6 }, {
-      xPercent: 6,
-      ease: "none",
-      scrollTrigger: {
-        trigger: img.closest(".hs-card"),
-        containerAnimation: hsTween,
-        start: "left right",
-        end: "right left",
-        scrub: true,
-        invalidateOnRefresh: true,
-      },
-    });
-  });
-
-  // caption reveal per card (curtain + rise, no bare fade)
-  gsap.utils.toArray(".hs-card figcaption").forEach((cap) => {
-    gsap.from(cap.children, {
-      clipPath: "inset(0 0 100% 0)",
-      yPercent: 70,
-      duration: 0.7,
-      stagger: 0.08,
-      ease: "power3.out",
-      clearProps: "clipPath",
-      scrollTrigger: {
-        trigger: cap,
-        containerAnimation: hsTween,
-        start: "left 85%",
-        toggleActions: "play none none reverse",
-      },
-    });
-  });
-
   /* ---------- section mask reveals (curtain wipe) ---------- */
 
   gsap.utils.toArray(".sec-mask").forEach((mask) => {
@@ -1471,9 +1408,9 @@ if (!REDUCED) {
     // missed for any reason the cards stay visible instead of blanking.
     immediateRender: false,
     scrollTrigger: {
-      // trigger the OUTER .hof-scroll (in-flow, pre-pin measurements).
-      // the old trigger (.hof-row) sits inside the pinned element, so its
-      // start/end are degenerate and the entrance could stay stuck.
+      // trigger the OUTER .hof-scroll: the row itself is a transform
+      // target, and triggers inside a transformed element measure
+      // degenerately.
       trigger: ".hof-scroll",
       start: "top 70%",
       toggleActions: "play none none reverse",

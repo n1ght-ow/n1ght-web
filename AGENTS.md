@@ -125,7 +125,9 @@ taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()
 
 ## 站点结构（改动前核对实际现状）
 
-preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（横向 pinned 画廊 11 帧）→ GAME ARCHIVE（HOF 7 卡）→ TICKER（收藏计数条）→ THE ARCHIVE（书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5，五 tab）→ TICKER（DO NOT GO GENTLE）→ POEM → ABOUT（签名 + 统计）→ footer。
+preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（横向拖拽画廊 11 帧）→ GAME ARCHIVE（HOF 7 卡）→ TICKER（收藏计数条）→ THE ARCHIVE（书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5，五 tab）→ TICKER（DO NOT GO GENTLE）→ POEM → ABOUT（签名 + 统计）→ footer。
+
+两条横向画廊（photo / game）为**纯拖拽驱动**（2026-09 用户裁定）：页面滚轮垂直穿过，不 pin、不 scrub；横向移动只来自抓取拖拽（含触屏横滑）与拖动条，区块高按内容自然高度。卡片框贴合图片原始比例（`width: min-content` 收缩包裹，不加固定纵横比）。lightbox 展示 photo/ 低分辨率版本，不加载 photo/full/ 原图。
 
 TICKER 共 2 条（2026-09 用户拍板收敛：原 01/02 移除，保留计数条与诗条）；taste-skill marquee ≤1/页与本项目 2 条的出入记录为品牌特例，不再增配第三条。
 
