@@ -1054,52 +1054,77 @@ html.has-cursor * { cursor: none !important; }
 
 .footer-links a:hover { color: var(--color-accent-text); text-decoration: underline; text-underline-offset: 0.3em; }
 
-/* ============ POEM (tail of the PHOTOGRAPHY section) ============ */
+/* ============ POEM (tail of the PHOTOGRAPHY section) ============
+   Editorial spread: centered eyebrow + serif title + standfirst, then a
+   two-column grid (poem sheet left, notes rail right). The only padding
+   system lives on .poem-tail itself. */
 .poem-tail {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(2rem, 5vh, 3rem);
-  padding: clamp(3rem, 8vh, 5rem) 0 clamp(4rem, 10vh, 8rem);
+  gap: clamp(2.8rem, 6vh, 4.5rem);
+  padding: clamp(4rem, 10vh, 7rem) clamp(1.2rem, 5vw, 4rem) clamp(4rem, 10vh, 8rem);
 }
 
-.poem-tail-head {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.2rem, 3vh, 2rem);
-  width: min(880px, 100%);
-  padding: 0 clamp(1.2rem, 6vw, 6rem);
-}
-
-.poem-inner {
-  padding: 0 clamp(1.2rem, 6vw, 6rem) clamp(4rem, 10vh, 8rem);
+.poem-head {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(2.4rem, 6vh, 4rem);
+  gap: clamp(0.9rem, 2vh, 1.4rem);
+  text-align: center;
+}
+
+.poem-eyebrow {
+  font-size: 0.875rem;
+  letter-spacing: 0.22em;
+  color: var(--color-text-muted);
+}
+
+.poem-title {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  text-wrap: balance;
+}
+
+.poem-standfirst {
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+
+.poem-spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(2.2rem, 4vw, 3.5rem);
+  align-items: start;
+  width: min(1160px, 100%);
 }
 
 .poem-notes {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(1.6rem, 4vw, 3.5rem);
-  width: min(880px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.4rem, 2.6vh, 2rem);
 }
 
-.poem-block { display: flex; flex-direction: column; gap: 0.85em; }
+.poem-block { display: flex; flex-direction: column; gap: 0.75em; }
 
-.poem-sub {
-  letter-spacing: 0.16em;
-  background: var(--color-accent-tint);
+.poem-block + .poem-block {
+  border-top: 1px solid var(--color-line);
+  padding-top: clamp(1.4rem, 2.6vh, 2rem);
+}
+
+.poem-note-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
   color: var(--color-accent-text);
-  padding: 0.5em 1em;
-  width: max-content;
-  border-radius: var(--radius-sm);
-}
-
-.poem-block:nth-child(2) .poem-sub {
-  background: var(--color-bg-deep);
-  color: var(--color-text);
 }
 
 .poem-block p {
@@ -1116,7 +1141,6 @@ html.has-cursor * { cursor: none !important; }
 
 .poem-sheet {
   position: relative;
-  width: min(880px, 100%);
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft-lg);
@@ -1148,6 +1172,10 @@ html.has-cursor * { cursor: none !important; }
 
 .poem-stamp:active { transform: rotate(4deg) scale(0.96); }
 
+/* reduced-motion: decorative-only stamp (JS strips its button semantics) */
+.poem-stamp.is-static { cursor: default; }
+.poem-stamp.is-static:active { transform: rotate(4deg); }
+
 .poem-stamp:focus-visible {
   outline: 3px solid var(--color-accent-text);
   outline-offset: 3px;
@@ -1162,6 +1190,10 @@ html.has-cursor * { cursor: none !important; }
 }
 
 .poem-text p + p { margin-top: 1.1em; }
+
+/* villanelle refrains in champagne gold — brand exception (user pick),
+   gold-700 on paper measured 5.7:1 (AA) */
+.refrain { color: var(--color-accent-text); }
 
 .poem-sign {
   margin-top: 1.6rem;
@@ -1887,8 +1919,7 @@ html.has-cursor * { cursor: none !important; }
 
   .about-inner { grid-template-columns: 1fr; }
 
-  .poem-inner { gap: 2.2rem; }
-  .poem-notes { grid-template-columns: 1fr; }
+  .poem-spread { grid-template-columns: 1fr; gap: 2.2rem; }
   .poem-sheet { padding: 2.4rem 1.4rem 1.6rem; }
   .poem-text { font-size: 1.18rem; }
   .poem-stamp { right: 12px; font-size: 0.8125rem; }

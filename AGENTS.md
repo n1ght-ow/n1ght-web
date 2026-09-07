@@ -68,7 +68,7 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 - 两层 token：原语按 hue（只进 token 层），组件只准用**语义层**；缺角色就新增语义 token，绝不借用近值。新色板落地时一并建立语义层。
 - 语义命名按用途（`--color-accent-solid` 类），禁按外观命名。
 - 对比度**实测不估算**（AA：正文 <24px 4.5:1、大字 ≥24px 与 UI 部件 3:1；AAA：7:1 / 4.5:1），测文字实际压着的背景——玻璃面板按叠加后的实际底色测；失败时报告色对 / 实测值 / 阈值，**颜色改动需用户拍板**。
-- 一色一义：accent hue = 可交互，静态文字不用它；同 hue 15° 内视为同色。
+- 一色一义：accent hue = 可交互，静态文字不用它；同 hue 15° 内视为同色。**品牌特例**：poem 区叠句（.refrain）用 gold-700 静态文字（2026-09 用户拍板；纸底实测 5.7:1，AA 达标）。
 - 每视图只一个实心填充主操作；修对比度动 lightness，不动 hue。
 - 新色板必须成 ramp：感知亮度等步、hue 恒定、鲜度中段最高两端回落、两端不碰纯黑纯白。
 - 辉光 / 光效色与所压背景的对比度同样实测。
@@ -125,7 +125,7 @@ taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()
 
 ## 站点结构（改动前核对实际现状）
 
-preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（横向拖拽画廊 11 帧 → DO NOT GO GENTLE 诗条 → Dylan Thomas 诗块收尾）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 HOF 18 卡）→ ABOUT（统计）→ footer。GAME ARCHIVE 独立区与独立 POEM 区已撤销（2026-09 用户裁定：游戏并入 archive 第六 tab，诗并入 photo 区尾）。
+preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（横向拖拽画廊 11 帧 → DO NOT GO GENTLE 诗条 → Dylan Thomas 诗块收尾）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 HOF 18 卡）→ ABOUT（统计）→ footer。GAME ARCHIVE 独立区与独立 POEM 区已撤销（2026-09 用户裁定：游戏并入 archive 第六 tab，诗并入 photo 区尾）。poem 块为杂志跨页排版：eyebrow + serif 大标题 + 导语居中开场，桌面诗笺左/注释栏右双栏（720px 单列堆叠），叠句金色贯穿。
 
 两条横向拖拽画廊（photo 画廊、archive 内游戏名册）为**纯拖拽驱动**：页面滚轮垂直穿过，不 pin、不 scrub；横向移动只来自抓取拖拽（含触屏横滑）与拖动条。卡片框贴合图片原始比例（`width: min-content` 收缩包裹）。lightbox 展示 photo/ 低分辨率版本，不加载 photo/full/ 原图。大标题（bighead）双词从两侧滑动居中，scrub 锁定。
 

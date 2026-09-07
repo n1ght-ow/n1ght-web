@@ -1081,6 +1081,20 @@ if (TOUCH) {
    background + chip swap, no transform) — high-frequency interactions
    get instant feedback per the motion rules in AGENTS.md ---------- */
 
+/* ---------- poem stamp under reduced motion: purely decorative ----------
+   The slam/restamp handlers live inside the !REDUCED guard below; without
+   this the stamp would render as a focusable button that does nothing. */
+if (REDUCED) {
+  const stamp = document.querySelector(".poem-stamp");
+  if (stamp) {
+    stamp.removeAttribute("tabindex");
+    stamp.removeAttribute("role");
+    stamp.setAttribute("aria-hidden", "true");
+    stamp.style.cursor = "default";
+    stamp.classList.add("is-static");
+  }
+}
+
 /* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
   /* ---------- hero: floating orbs + mouse parallax ---------- */
