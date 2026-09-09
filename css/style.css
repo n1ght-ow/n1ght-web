@@ -1590,7 +1590,103 @@ html.has-cursor * { cursor: none !important; }
   max-height: 60vh;
 }
 
+/* ---- favorites: star toggle on cards / rows ---- */
+.fav-btn {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 6;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft-sm);
+  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out), transform 0.15s var(--ease-out);
+}
+
+.fav-btn:hover { color: var(--color-text); }
+.fav-btn:active { transform: scale(0.96); }
+
+.fav-btn:focus-visible {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 2px;
+}
+
+.fav-btn[aria-pressed="true"] {
+  color: var(--color-on-accent);
+  background: var(--color-accent-solid);
+  border-color: var(--color-accent-text);
+  box-shadow: var(--glow-accent);
+}
+
+.photo-frame { position: relative; }
+
+.idx-row { padding-inline-end: 3.4rem; }
+
+.hof-item-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  width: min-content;
+}
+
+.idx-card-wrap {
+  position: relative;
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+
+.idx-card-wrap > .idx-card {
+  max-width: 100%;
+  padding-inline-end: 3.2rem;
+}
+
+#panel-books .idx-row.is-filter-hidden,
 #panel-sport .idx-row.is-filter-hidden { display: none !important; }
+
+#panel-games .hof-item-wrap.is-filter-hidden,
+#panel-games .hof-item.is-filter-hidden { display: none !important; }
+
+#panel-music .idx-card-wrap.is-filter-hidden,
+#panel-music .idx-card-wrap.is-search-hidden,
+#panel-music .idx-card.is-filter-hidden { display: none !important; }
+
+.archive-favorites-toggle {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  padding: 0.45em 0.95em;
+  cursor: pointer;
+  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out), box-shadow 0.15s var(--ease-out);
+}
+
+.archive-favorites-toggle:hover { color: var(--color-text); }
+.archive-favorites-toggle:active { transform: scale(0.96); }
+
+.archive-favorites-toggle:focus-visible {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 2px;
+}
+
+.archive-favorites-toggle[aria-pressed="true"] {
+  color: var(--color-on-accent);
+  background: var(--color-accent-solid);
+  border-color: var(--color-accent-text);
+  box-shadow: var(--glow-accent);
+}
 
 /* ---- panels ---- */
 .tab-panels {
@@ -2456,7 +2552,10 @@ html.has-cursor * { cursor: none !important; }
   .archive-toolbar-filters .genre-chip,
   .archive-sort,
   .archive-density-btn,
+  .archive-favorites-toggle,
   .archive-empty-clear { min-height: 44px; }
+  .fav-btn { width: 44px; height: 44px; }
+  .idx-card-wrap > .idx-card { padding-inline-end: 3.6rem; }
 
   .photo-roll { padding-inline: clamp(1rem, 4vw, 1.5rem); }
   .photo-roll-head { gap: 2rem; }
@@ -2552,5 +2651,7 @@ html.has-cursor * { cursor: none !important; }
   .archive-sort,
   .archive-density-btn,
   .archive-empty-clear,
+  .archive-favorites-toggle,
+  .fav-btn,
   .lb-meta-link { transition-duration: 0s; }
 }

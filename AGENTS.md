@@ -113,7 +113,8 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 
 ## 代码结构（新功能照此归属）
 
-- `js/main.js` 站点交互层：preloader、光标徽章、磁吸、`makeHorizontalScroller`、泡泡场、统一详情层（photo / film / series / game / music，共用 `#lightbox`）、tab 切换、ARCHIVE 共享工具条（filter / sort / density）、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮 + 滚动进度、共享 `scheduleRefresh`。
+- `js/main.js` 站点交互层：preloader、光标徽章、磁吸、`makeHorizontalScroller`、泡泡场、统一详情层（photo / film / series / game / music，共用 `#lightbox`）、tab 切换、ARCHIVE 共享工具条（filter / sort / density）、ARCHIVE 收藏 / 回访（`night:favorites` + `night:view`，星标 + FAVORITES ONLY）、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮 + 滚动进度、共享 `scheduleRefresh`。
+- 收藏与回访：`night:favorites` 存各类型收藏 id（照片文件名 / book & sport slug / `data-film-id` / `data-series-id` / `data-game` / `data-song-id`），`night:view` 存各 tab 的 filter / sort / density / favoritesOnly；只走 localStorage，不做云同步、不收集用户数据。清除浏览器存储即恢复默认。
 - 签名：已整体退役（2026-09 用户裁定，about 签名连带绘制代码一并移除）；`js/sig-data.js` 保留在仓库但不参与加载，仍是 fontTools 生成数据、禁止手改。
 - 影 / 剧：数据（`film-data.js` 16 部 / `series-data.js` 19 部，字段 `{ id, imdb（ttID）, poster, title, director / years, year / seasons, genre / category, quote }`）→ 配置适配器经 `js/reel-stage.js` 的 `createReelStage()` 工厂渲染进 `#panel-films` / `#panel-series`；共享机械样式在 `css/reel-stage.css`，面板 accent / detail 区 / 断点 / reduce 块在各自 css。工厂暴露 `setData()` 供 ARCHIVE 工具条重排 / 筛选，重排不改 class 前缀与数据层。class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑定。
 - 音乐：`js/music-data.js`（`window.MUSIC_DATA`，763 首 16 组，`{ id, zh, en, groupLang, tracks: [{ id, title, artist }] }`）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips；`.genre-count` 由渲染器自动生成。歌单默认**全展开、无手风琴**（2026-09 用户裁定）：浏览靠流派 chips 过滤（sticky）+ 搜索叠加 + 随机一首（从当前可见卡片抽取，走同一网易云深链）。
@@ -125,7 +126,7 @@ taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()
 
 ## 站点结构（改动前核对实际现状）
 
-preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（FIELD ROLL 编辑式双章节网格 11 帧 → DO NOT GO GENTLE 诗条 → Dylan Thomas 诗块收尾）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 HOF 18 卡；每 tab 带共享 filter / sort / density 工具条；照片 / 影 / 剧 / 游戏 / 音乐共用统一详情层）→ ABOUT（统计）→ footer。GAME ARCHIVE 独立区与独立 POEM 区已撤销（2026-09 用户裁定：游戏并入 archive 第六 tab，诗并入 photo 区尾）。poem 块为杂志跨页排版：eyebrow + serif 大标题 + 导语居中开场，桌面诗笺左/注释栏右双栏（720px 单列堆叠），叠句金色贯穿。
+preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（FIELD ROLL 编辑式双章节网格 11 帧 → DO NOT GO GENTLE 诗条 → Dylan Thomas 诗块收尾）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 HOF 18 卡；每 tab 带共享 filter / sort / density 工具条、收藏星标 / FAVORITES ONLY / 本地偏好持久化；照片 / 影 / 剧 / 游戏 / 音乐共用统一详情层）→ ABOUT（统计）→ footer。GAME ARCHIVE 独立区与独立 POEM 区已撤销（2026-09 用户裁定：游戏并入 archive 第六 tab，诗并入 photo 区尾）。poem 块为杂志跨页排版：eyebrow + serif 大标题 + 导语居中开场，桌面诗笺左/注释栏右双栏（720px 单列堆叠），叠句金色贯穿。
 
 archive 内的游戏名册为**纯拖拽驱动**：页面滚轮垂直穿过，不 pin、不 scrub；横向移动只来自抓取拖拽（含触屏横滑）与拖动条。游戏卡片框贴合图片原始比例（`width: min-content` 收缩包裹）。PHOTO 改为 FIELD ROLL 编辑式网格（BLOOM / HORIZON 双章节，不依赖横向拖拽）；lightbox 展示 photo/ 低分辨率版本，不加载 photo/full/ 原图。大标题（bighead）双词从两侧滑动居中，scrub 锁定。
 

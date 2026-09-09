@@ -271,6 +271,7 @@ function makeHorizontalScroller(opts) {
   let isDraggingBar = false;
   let isGrabbing = false;
   let glideTween = null;
+  let itemCount = opts.itemCount;
 
   let progress = 0;
   let lastFrame = -1;
@@ -292,10 +293,10 @@ function makeHorizontalScroller(opts) {
     barFill.style.transform = "scaleX(" + clamped + ")";
     if (!barW || !handleHalf) measureHandle();
     barHandle.style.transform = "translate(" + (clamped * barW - handleHalf).toFixed(2) + "px, -50%)";
-    const frame = Math.min(opts.itemCount, Math.max(1, Math.round(clamped * (opts.itemCount - 1)) + 1));
+    const frame = Math.min(itemCount, Math.max(1, Math.round(clamped * (itemCount - 1)) + 1));
     if (frame !== lastFrame) {
       lastFrame = frame;
-      barCount.textContent = opts.label + " " + String(frame).padStart(2, "0") + " / " + String(opts.itemCount).padStart(2, "0");
+      barCount.textContent = opts.label + " " + String(frame).padStart(2, "0") + " / " + String(itemCount).padStart(2, "0");
     }
   }
 
@@ -428,10 +429,17 @@ function makeHorizontalScroller(opts) {
   }
 
   render(0);
-  return { render };
+  return {
+    render,
+    setItemCount: (nextCount) => {
+      itemCount = Math.max(1, nextCount);
+      lastFrame = -1;
+      render(progress);
+    },
+  };
 }
 
-makeHorizontalScroller({
+const gameScroller = makeHorizontalScroller({
   wrapId: "hof-scroll",
   trackId: "hof-row",
   barId: "hof-dragbar",
@@ -1120,6 +1128,144 @@ function initArchiveTabs() {
 
 initArchiveTabs();
 
+/* ---------- archive favorites: localStorage-backed star toggles ---------- */
+
+const FAV_KEY = "night:favorites";
+const FAV_TYPES = ["photo", "book", "film", "series", "sport", "game", "music"];
+const favorites = {};
+FAV_TYPES.forEach((type) => { favorites[type] = new Set(); });
+
+function loadFavorites() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(FAV_KEY) || "{}");
+    FAV_TYPES.forEach((type) => {
+      favorites[type].clear();
+      if (Array.isArray(saved[type])) {
+        saved[type].forEach((id) => favorites[type].add(String(id)));
+      }
+    });
+  } catch (err) {
+    // private mode / corrupt JSON: keep the in-memory defaults
+  }
+}
+
+function saveFavorites() {
+  try {
+    const out = {};
+    FAV_TYPES.forEach((type) => { out[type] = Array.from(favorites[type]); });
+    localStorage.setItem(FAV_KEY, JSON.stringify(out));
+  } catch (err) {
+    // storage unavailable: favorites stay session-only
+  }
+}
+
+function isFavorite(type, id) {
+  return Boolean(favorites[type] && favorites[type].has(String(id)));
+}
+
+function toggleFavorite(type, id) {
+  const key = String(id);
+  if (!favorites[type]) favorites[type] = new Set();
+  if (favorites[type].has(key)) favorites[type].delete(key);
+  else favorites[type].add(key);
+  saveFavorites();
+}
+
+function favoriteSlug(value) {
+  return String(value || "").toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+function createFavoriteButton(type, id, name) {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "fav-btn";
+  btn.setAttribute("data-fav-type", type);
+  btn.setAttribute("data-fav-id", String(id));
+  btn.setAttribute("data-fav-name", name);
+  btn.setAttribute("aria-pressed", "false");
+  btn.setAttribute("aria-label", "Save " + name + " to favorites");
+  btn.textContent = "☆";
+  return btn;
+}
+
+function syncFavoriteButtons() {
+  document.querySelectorAll(".fav-btn[data-fav-type][data-fav-id]").forEach((btn) => {
+    const type = btn.getAttribute("data-fav-type");
+    const id = btn.getAttribute("data-fav-id");
+    const on = isFavorite(type, id);
+    const name = btn.getAttribute("data-fav-name") || "this item";
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    btn.textContent = on ? "★" : "☆";
+    btn.setAttribute("aria-label", (on ? "Remove " : "Save ") + name + (on ? " from favorites" : " to favorites"));
+  });
+}
+
+function addFavoriteButton(item, type, id, name) {
+  if (!item || item.querySelector(":scope > .fav-btn")) return;
+  item.appendChild(createFavoriteButton(type, id, name));
+}
+
+function wrapWithFavorite(item, wrapClass, type, id, name) {
+  if (!item) return;
+  const parent = item.parentElement;
+  if (parent && parent.classList.contains(wrapClass)) {
+    if (!parent.querySelector(":scope > .fav-btn")) {
+      parent.appendChild(createFavoriteButton(type, id, name));
+    }
+    return;
+  }
+  const wrap = document.createElement("div");
+  wrap.className = wrapClass;
+  parent.insertBefore(wrap, item);
+  wrap.appendChild(item);
+  wrap.appendChild(createFavoriteButton(type, id, name));
+}
+
+function initFavorites() {
+  loadFavorites();
+
+  Array.from(document.querySelectorAll(".photo-frame")).forEach((frame, i) => {
+    const img = frame.querySelector("img");
+    const id = img ? img.getAttribute("src").split("/").pop() : "photo-" + (i + 1);
+    addFavoriteButton(frame, "photo", id, "Frame " + String(i + 1).padStart(2, "0"));
+  });
+
+  Array.from(document.querySelectorAll("#panel-books .idx-row")).forEach((row) => {
+    const title = detailText(row, ".idx-title");
+    addFavoriteButton(row, "book", favoriteSlug(title), title);
+  });
+
+  Array.from(document.querySelectorAll("#panel-sport .idx-row")).forEach((row) => {
+    const title = detailText(row, ".idx-title");
+    addFavoriteButton(row, "sport", favoriteSlug(title), title);
+  });
+
+  Array.from(document.querySelectorAll("#panel-games .hof-item")).forEach((item) => {
+    const name = detailText(item, ".hof-name");
+    wrapWithFavorite(item, "hof-item-wrap", "game", item.getAttribute("data-game"), name);
+  });
+
+  Array.from(document.querySelectorAll("#panel-music .idx-card[data-song-id]")).forEach((card) => {
+    const title = detailText(card, ".idx-title");
+    const artist = detailText(card, ".idx-artist");
+    wrapWithFavorite(card, "idx-card-wrap", "music", card.getAttribute("data-song-id"), title + " by " + artist);
+  });
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".fav-btn");
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(btn.getAttribute("data-fav-type"), btn.getAttribute("data-fav-id"));
+    syncFavoriteButtons();
+    document.dispatchEvent(new CustomEvent("night:favorites-changed"));
+  });
+
+  document.addEventListener("night:reel-rendered", syncFavoriteButtons);
+  window.syncFavoriteButtons = syncFavoriteButtons;
+  syncFavoriteButtons();
+}
+
 /* ---------- The Archive: shared filter / sort / density toolbar ----------
    One toolbar above the panels, re-rendered for the active shelf. Sort and
    filter work on the existing DOM (books / sport / music / games) or on the
@@ -1134,6 +1280,7 @@ function initArchiveToolbar() {
   const emptyText = document.getElementById("archive-toolbar-empty-text");
   const emptyClear = document.getElementById("archive-toolbar-empty-clear");
   const sortSelect = document.getElementById("archive-sort");
+  const favoritesToggle = document.getElementById("archive-favorites-toggle");
   const densityButtons = Array.from(toolbar.querySelectorAll(".archive-density-btn"));
   if (!toolbar || !tabbar || !filterMount || !countEl || !sortSelect) return;
 
@@ -1158,7 +1305,7 @@ function initArchiveToolbar() {
   const CONFIG = {
     books: {
       label: "BOOKS",
-      count: (n) => n + " BOOKS",
+      count: (n, total) => (n === total ? n + " BOOKS" : n + " / " + total + " BOOKS"),
       sorts: [["curated", "CURATED"], ["title", "TITLE A-Z"], ["author", "AUTHOR A-Z"]],
       filters: null,
     },
@@ -1178,7 +1325,7 @@ function initArchiveToolbar() {
     },
     music: {
       label: "SONGS",
-      count: (n) => n + " SONGS",
+      count: (n, total) => (n === total ? n + " SONGS" : n + " / " + total + " SONGS"),
       sorts: [["curated", "CURATED"], ["title", "TITLE A-Z"], ["artist", "ARTIST A-Z"]],
       filters: null,
     },
@@ -1191,7 +1338,7 @@ function initArchiveToolbar() {
     },
     games: {
       label: "GAMES",
-      count: (n) => n + " GAMES",
+      count: (n, total) => (n === total ? n + " GAMES" : n + " / " + total + " GAMES"),
       sorts: [["curated", "CURATED"], ["hours", "HOURS ↓"], ["name", "NAME A-Z"]],
       filters: null,
     },
@@ -1199,11 +1346,32 @@ function initArchiveToolbar() {
 
   const state = {};
   Object.keys(CONFIG).forEach((key) => {
-    state[key] = { filter: "all", sort: "curated", density: "comfort" };
+    state[key] = { filter: "all", sort: "curated", density: "comfort", favoritesOnly: false };
   });
+  try {
+    const savedView = JSON.parse(localStorage.getItem("night:view") || "{}");
+    Object.keys(CONFIG).forEach((key) => {
+      const saved = savedView[key];
+      if (!saved) return;
+      if (typeof saved.filter === "string") state[key].filter = saved.filter;
+      if (typeof saved.sort === "string") state[key].sort = saved.sort;
+      if (typeof saved.density === "string") state[key].density = saved.density;
+      if (typeof saved.favoritesOnly === "boolean") state[key].favoritesOnly = saved.favoritesOnly;
+    });
+  } catch (err) {
+    // storage unavailable or corrupt JSON: keep defaults
+  }
+
+  function saveView() {
+    try {
+      localStorage.setItem("night:view", JSON.stringify(state));
+    } catch (err) {
+      // storage unavailable: keep the session state
+    }
+  }
   // films/series are already rendered in curated order; skip the first
   // redundant setData pass and only re-render when filter/sort changes.
-  const appliedReel = { films: "all|curated", series: "all|curated" };
+  const appliedReel = { films: "all|curated|all", series: "all|curated|all" };
 
   const originalOrder = new WeakMap();
   function recordOrder(container, selector) {
@@ -1258,6 +1426,22 @@ function initArchiveToolbar() {
     });
   }
 
+  function syncFavoritesToggle(token) {
+    if (!favoritesToggle) return;
+    const on = Boolean(state[token].favoritesOnly);
+    favoritesToggle.setAttribute("aria-pressed", on ? "true" : "false");
+    favoritesToggle.classList.toggle("is-active", on);
+    favoritesToggle.textContent = (on ? "★" : "☆") + " FAVORITES ONLY";
+  }
+
+  function bookId(row) {
+    return favoriteSlug(textOf(row, ".idx-title"));
+  }
+
+  function sportId(row) {
+    return favoriteSlug(textOf(row, ".idx-title"));
+  }
+
   function hideEmpty() {
     if (emptyEl) emptyEl.hidden = true;
   }
@@ -1278,27 +1462,36 @@ function initArchiveToolbar() {
       const panel = panels.books;
       const list = panel.querySelector(".idx-list");
       const rows = Array.from(list.querySelectorAll(".idx-row"));
-      rows.slice().sort((a, b) => {
+      rows.forEach((row) => {
+        const on = !s.favoritesOnly || isFavorite("book", bookId(row));
+        row.classList.toggle("is-filter-hidden", !on);
+      });
+      const visibleRows = rows.filter((row) => !row.classList.contains("is-filter-hidden"));
+      visibleRows.slice().sort((a, b) => {
         if (s.sort === "title") return textOf(a, ".idx-title").localeCompare(textOf(b, ".idx-title"));
         if (s.sort === "author") return textOf(a, ".idx-meta").localeCompare(textOf(b, ".idx-meta"));
         return originalOrder.get(a) - originalOrder.get(b);
       }).forEach((row) => list.appendChild(row));
       panel.classList.toggle("is-compact", s.density === "compact");
-      visible = rows.length;
+      visible = visibleRows.length;
       total = rows.length;
+      emptyMessage = "NO FAVORITES YET. OPEN A CARD TO SAVE ONE.";
     } else if (token === "films" || token === "series") {
       const panel = panels[token];
       const data = token === "films" ? (window.FILM_DATA || []) : (window.SERIES_DATA || []);
       const stage = token === "films" ? window.FilmStage : window.SeriesStage;
       const originalIndex = new Map(data.map((item, index) => [item, index]));
-      const filtered = data.filter((item) => s.filter === "all" || config.filterKey(item, s.filter));
+      const filtered = data.filter((item) =>
+        (s.filter === "all" || config.filterKey(item, s.filter)) &&
+        (!s.favoritesOnly || isFavorite(token === "films" ? "film" : "series", item.id))
+      );
       const sorted = filtered.slice().sort((a, b) => {
         if (s.sort === "title") return a.title.localeCompare(b.title);
         if (token === "films" && s.sort === "year") return startYear(b) - startYear(a);
         if (token === "series" && s.sort === "years") return startYear(b) - startYear(a);
         return originalIndex.get(a) - originalIndex.get(b);
       });
-      const signature = s.filter + "|" + s.sort;
+      const signature = s.filter + "|" + s.sort + "|" + (s.favoritesOnly ? "fav" : "all");
       if (sorted.length && stage && typeof stage.setData === "function" && appliedReel[token] !== signature) {
         stage.setData(sorted);
         appliedReel[token] = signature;
@@ -1312,21 +1505,39 @@ function initArchiveToolbar() {
       const panel = panels.music;
       Array.from(panel.querySelectorAll(".artist-tracks")).forEach((group) => {
         const cards = Array.from(group.querySelectorAll(".idx-card[data-song-id]"));
-        cards.slice().sort((a, b) => {
+        cards.forEach((card) => {
+          const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
+          const on = !s.favoritesOnly || isFavorite("music", card.getAttribute("data-song-id"));
+          wrap.classList.toggle("is-filter-hidden", !on);
+        });
+        const visibleCards = cards.filter((card) => {
+          const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
+          return !wrap.classList.contains("is-filter-hidden");
+        });
+        visibleCards.slice().sort((a, b) => {
           if (s.sort === "title") return textOf(a, ".idx-title").localeCompare(textOf(b, ".idx-title"));
           if (s.sort === "artist") return textOf(a, ".idx-artist").localeCompare(textOf(b, ".idx-artist"));
           return originalOrder.get(a) - originalOrder.get(b);
-        }).forEach((card) => group.appendChild(card));
+        }).forEach((card) => {
+          const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
+          group.appendChild(wrap);
+        });
       });
+      document.dispatchEvent(new CustomEvent("night:music-filter"));
       panel.classList.toggle("is-compact", s.density === "compact");
-      visible = panel.querySelectorAll(".idx-card[data-song-id]").length;
-      total = visible;
+      visible = Array.from(panel.querySelectorAll(".idx-card[data-song-id]")).filter((card) => {
+        const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
+        return !wrap.classList.contains("is-filter-hidden");
+      }).length;
+      total = panel.querySelectorAll(".idx-card[data-song-id]").length;
+      emptyMessage = "NO FAVORITES YET. OPEN A CARD TO SAVE ONE.";
     } else if (token === "sport") {
       const panel = panels.sport;
       const list = panel.querySelector(".idx-list");
       const rows = Array.from(list.querySelectorAll(".idx-row"));
       rows.forEach((row) => {
-        const on = s.filter === "all" || row.getAttribute("data-sport") === s.filter;
+        const on = (s.filter === "all" || row.getAttribute("data-sport") === s.filter) &&
+          (!s.favoritesOnly || isFavorite("sport", sportId(row)));
         row.classList.toggle("is-filter-hidden", !on);
       });
       const visibleRows = rows.filter((row) => !row.classList.contains("is-filter-hidden"));
@@ -1344,19 +1555,38 @@ function initArchiveToolbar() {
       const row = panel.querySelector("#hof-row");
       const end = row.querySelector(".hof-end");
       const items = Array.from(row.querySelectorAll(".hof-item"));
+      items.forEach((item) => {
+        const wrap = item.parentElement && item.parentElement.classList.contains("hof-item-wrap") ? item.parentElement : item;
+        const on = !s.favoritesOnly || isFavorite("game", item.getAttribute("data-game"));
+        wrap.classList.toggle("is-filter-hidden", !on);
+      });
+      const visibleItems = items.filter((item) => {
+        const wrap = item.parentElement && item.parentElement.classList.contains("hof-item-wrap") ? item.parentElement : item;
+        return !wrap.classList.contains("is-filter-hidden");
+      });
       items.slice().sort((a, b) => {
         if (s.sort === "hours") return hoursOf(b) - hoursOf(a);
         if (s.sort === "name") return textOf(a, ".hof-name").localeCompare(textOf(b, ".hof-name"));
         return originalOrder.get(a) - originalOrder.get(b);
-      }).forEach((item) => row.insertBefore(item, end));
+      }).forEach((item) => {
+        const wrap = item.parentElement && item.parentElement.classList.contains("hof-item-wrap") ? item.parentElement : item;
+        row.insertBefore(wrap, end);
+      });
+      if (gameScroller && gameScroller.setItemCount) {
+        gameScroller.setItemCount(visibleItems.length);
+      }
       panel.classList.toggle("is-compact", s.density === "compact");
-      visible = items.length;
+      visible = visibleItems.length;
       total = items.length;
+      emptyMessage = "NO FAVORITES YET. OPEN A CARD TO SAVE ONE.";
     }
 
     countEl.textContent = config.count(visible, total);
-    if (visible === 0 && emptyMessage) showEmpty(emptyMessage);
-    else hideEmpty();
+    if (visible === 0 && emptyMessage) {
+      showEmpty(s.favoritesOnly ? "NO FAVORITES YET. OPEN A CARD TO SAVE ONE." : emptyMessage);
+    } else {
+      hideEmpty();
+    }
     scheduleRefresh();
   }
 
@@ -1383,6 +1613,7 @@ function initArchiveToolbar() {
           other.classList.toggle("is-active", on);
           other.setAttribute("aria-pressed", on ? "true" : "false");
         });
+        saveView();
         apply(token);
       });
       filterMount.appendChild(chip);
@@ -1398,12 +1629,14 @@ function initArchiveToolbar() {
     sortSelect.value = s.sort;
 
     syncDensity(token);
+    syncFavoritesToggle(token);
     apply(token);
   }
 
   sortSelect.addEventListener("change", () => {
     const token = activeToken();
     state[token].sort = sortSelect.value;
+    saveView();
     apply(token);
   });
 
@@ -1412,14 +1645,32 @@ function initArchiveToolbar() {
       const token = activeToken();
       state[token].density = btn.getAttribute("data-density");
       syncDensity(token);
+      saveView();
       apply(token);
     });
+  });
+
+  if (favoritesToggle) {
+    favoritesToggle.addEventListener("click", () => {
+      const token = activeToken();
+      state[token].favoritesOnly = !state[token].favoritesOnly;
+      syncFavoritesToggle(token);
+      saveView();
+      apply(token);
+    });
+  }
+
+  document.addEventListener("night:favorites-changed", () => {
+    const token = activeToken();
+    if (state[token].favoritesOnly) apply(token);
   });
 
   if (emptyClear) {
     emptyClear.addEventListener("click", () => {
       const token = activeToken();
       state[token].filter = "all";
+      state[token].favoritesOnly = false;
+      saveView();
       render();
     });
   }
@@ -1526,8 +1777,11 @@ function initMusicSearch() {
     let visible = 0;
     cards.forEach((card, i) => {
       const genreHidden = cardGenres[i] ? cardGenres[i].hidden : false;
-      const on = !genreHidden && matchCard(cardHaystacks[i], qNorm);
+      const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
+      const filterHidden = wrap.classList.contains("is-filter-hidden");
+      const on = !genreHidden && !filterHidden && matchCard(cardHaystacks[i], qNorm);
       card.classList.toggle("is-search-hidden", !on);
+      wrap.classList.toggle("is-search-hidden", !on);
       if (on) visible++;
     });
 
@@ -1571,13 +1825,18 @@ function initMusicSearch() {
   // ---- random pick: play one card from whatever is currently browsable ----
   if (randomBtn) {
     randomBtn.addEventListener("click", () => {
-      const pool = cards.filter((card, i) =>
-        !(cardGenres[i] && cardGenres[i].hidden) && !card.classList.contains("is-search-hidden")
-      );
+      const pool = cards.filter((card, i) => {
+        const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
+        return !(cardGenres[i] && cardGenres[i].hidden) &&
+          !wrap.classList.contains("is-search-hidden") &&
+          !wrap.classList.contains("is-filter-hidden");
+      });
       if (!pool.length) return;
       pool[Math.floor(Math.random() * pool.length)].click();
     });
   }
+
+  document.addEventListener("night:music-filter", () => applySearch());
 
   // Coalesce keystroke bursts: each frame applies at most one search pass
   // over the 763 cards instead of one per input event.
@@ -1697,6 +1956,8 @@ function initNetEaseLinks() {
 }
 
 initNetEaseLinks();
+
+initFavorites();
 
 initMusicSearch();
 

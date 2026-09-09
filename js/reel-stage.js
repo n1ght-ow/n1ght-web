@@ -166,7 +166,19 @@
         card.appendChild(img);
         card.appendChild(meta);
         card.appendChild(sleeve);
-        strip.appendChild(card);
+        const wrap = el("div", prefix + "-card-wrap");
+        wrap.appendChild(card);
+        const fav = document.createElement("button");
+        fav.type = "button";
+        fav.className = "fav-btn";
+        fav.setAttribute("data-fav-type", prefix === "film" ? "film" : "series");
+        fav.setAttribute("data-fav-id", item.id);
+        fav.setAttribute("data-fav-name", item.title);
+        fav.setAttribute("aria-pressed", "false");
+        fav.setAttribute("aria-label", "Save " + item.title + " to favorites");
+        fav.textContent = "☆";
+        wrap.appendChild(fav);
+        strip.appendChild(wrap);
       });
 
       stage.appendChild(viewport);
@@ -460,6 +472,7 @@
           destroy(container);
           init(container);
         });
+      document.dispatchEvent(new CustomEvent("night:reel-rendered"));
     }
 
     function autoInit() {
