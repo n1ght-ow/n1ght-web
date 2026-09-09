@@ -34,7 +34,7 @@
   }
 
   window.createReelStage = function (options) {
-    const ITEMS = (options.data || []).slice();
+    let items = (options.data || []).slice();
     const REDUCED = window.matchMedia
       ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
       : false;
@@ -121,7 +121,7 @@
       headLeft.appendChild(el("span", prefix + "-stage-title", options.title));
       headLeft.appendChild(el("span", prefix + "-stage-sub", options.sub));
       const headRight = el("div", prefix + "-stage-head-right");
-      headRight.appendChild(el("span", prefix + "-stage-count", "01-" + pad(ITEMS.length)));
+      headRight.appendChild(el("span", prefix + "-stage-count", "01-" + pad(items.length)));
       head.appendChild(headLeft);
       head.appendChild(headRight);
       stage.appendChild(head);
@@ -130,7 +130,7 @@
       const strip = el("div", prefix + "-stage-strip");
       viewport.appendChild(strip);
 
-      ITEMS.forEach((item, index) => {
+      items.forEach((item, index) => {
         const card = document.createElement("button");
         card.type = "button";
         card.className = prefix + "-card";
@@ -198,7 +198,7 @@
       const copy = el("div", prefix + "-detail-copy");
       const kicker = el("div", prefix + "-detail-kicker");
       kicker.dataset[prefix + "Reveal"] = "";
-      options.detailKicker(ITEMS[0] || {}).forEach((part) => {
+      options.detailKicker(items[0] || {}).forEach((part) => {
         kicker.appendChild(el("span", part.cls, ""));
       });
 
@@ -313,7 +313,7 @@
         item.setAttribute("aria-pressed", on ? "true" : "false");
       });
 
-      renderDetail(stage, ITEMS[index], animate !== false);
+      renderDetail(stage, items[index], animate !== false);
     }
 
     function bindInteractions(stage, state) {
@@ -414,33 +414,52 @@
         requestAnimationFrame(boot);
       }
 
-      document.addEventListener(
-        "click",
-        (event) => {
-          const tab = event.target.closest && event.target.closest(".tab-btn[data-tab='" + options.tabToken + "']");
-          if (!tab) return;
-          window.setTimeout(() => setupMode(container, state), 420);
-        }
-      );
+      const onTabClick = (event) => {
+        const tab = event.target.closest && event.target.closest(".tab-btn[data-tab='" + options.tabToken + "']");
+        if (!tab) return;
+        window.setTimeout(() => setupMode(container, state), 420);
+      };
+      document.addEventListener("click", onTabClick);
 
       let resizeTimer = null;
-      window.addEventListener("resize", () => {
+      const onResize = () => {
         window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(() => {
           setupMode(container, state);
           refreshScrollTrigger();
         }, 160);
-      });
+      };
+      window.addEventListener("resize", onResize);
+
+      state.cleanup = () => {
+        document.removeEventListener("click", onTabClick);
+        window.removeEventListener("resize", onResize);
+        window.clearTimeout(resizeTimer);
+      };
     }
 
     function destroy(container) {
       const state = states.get(container);
       if (!state) return;
+      if (state.cleanup) state.cleanup();
       if (state.moveTo && window.gsap) {
         window.gsap.killTweensOf(state.strip, "x");
       }
       states.delete(container);
       container.innerHTML = "";
+    }
+
+    /* Re-render every mounted stage with a new data order. The archive
+       toolbar uses this for film/series filter + sort without rewriting
+       the data layer. */
+    function setData(nextItems) {
+      items = Array.isArray(nextItems) ? nextItems.slice() : [];
+      document
+        .querySelectorAll(options.mountSelector)
+        .forEach((container) => {
+          destroy(container);
+          init(container);
+        });
     }
 
     function autoInit() {
@@ -458,7 +477,10 @@
     return {
       init,
       destroy,
-      data: ITEMS
+      setData,
+      get data() {
+        return items.slice();
+      }
     };
   };
 })();

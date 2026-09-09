@@ -783,6 +783,9 @@ function initArchiveTabs() {
       t.tabIndex = on ? 0 : -1;
     });
     panels.forEach((p, i) => p.classList.toggle("is-active", i === idx));
+    tabbar.dispatchEvent(new CustomEvent("night:archive-tab", {
+      detail: { token: tabs[idx].getAttribute("data-tab"), index: idx },
+    }));
   };
 
   const animateIn = (idx, rows) => {
@@ -878,6 +881,316 @@ function initArchiveTabs() {
 }
 
 initArchiveTabs();
+
+/* ---------- The Archive: shared filter / sort / density toolbar ----------
+   One toolbar above the panels, re-rendered for the active shelf. Sort and
+   filter work on the existing DOM (books / sport / music / games) or on the
+   reel-stage data arrays (films / series); no content moves between panels. */
+
+function initArchiveToolbar() {
+  const toolbar = document.getElementById("archive-toolbar");
+  const tabbar = document.getElementById("archive-tabbar");
+  const filterMount = document.getElementById("archive-toolbar-filters");
+  const countEl = document.getElementById("archive-toolbar-count");
+  const emptyEl = document.getElementById("archive-toolbar-empty");
+  const emptyText = document.getElementById("archive-toolbar-empty-text");
+  const emptyClear = document.getElementById("archive-toolbar-empty-clear");
+  const sortSelect = document.getElementById("archive-sort");
+  const densityButtons = Array.from(toolbar.querySelectorAll(".archive-density-btn"));
+  if (!toolbar || !tabbar || !filterMount || !countEl || !sortSelect) return;
+
+  const panels = {
+    books: document.getElementById("panel-books"),
+    films: document.getElementById("panel-films"),
+    series: document.getElementById("panel-series"),
+    music: document.getElementById("panel-music"),
+    sport: document.getElementById("panel-sport"),
+    games: document.getElementById("panel-games"),
+  };
+  if (Object.keys(panels).some((key) => !panels[key])) return;
+
+  const SPORT_FILTERS = [
+    { value: "basketball", label: "BASKETBALL" },
+    { value: "football", label: "FOOTBALL" },
+    { value: "formula-1", label: "FORMULA 1" },
+    { value: "american-football", label: "AMERICAN FOOTBALL" },
+    { value: "esports", label: "ESPORTS" },
+  ];
+
+  const CONFIG = {
+    books: {
+      label: "BOOKS",
+      count: (n) => n + " BOOKS",
+      sorts: [["curated", "CURATED"], ["title", "TITLE A-Z"], ["author", "AUTHOR A-Z"]],
+      filters: null,
+    },
+    films: {
+      label: "FILMS",
+      count: (n, total) => (n === total ? n + " FILMS" : n + " / " + total + " FILMS"),
+      sorts: [["curated", "CURATED"], ["year", "YEAR ↓"], ["title", "TITLE A-Z"]],
+      filters: () => allStringFilters(uniqueValues((window.FILM_DATA || []).map((item) => item.genre))),
+      filterKey: (item, value) => item.genre === value,
+    },
+    series: {
+      label: "SERIES",
+      count: (n, total) => (n === total ? n + " SERIES" : n + " / " + total + " SERIES"),
+      sorts: [["curated", "CURATED"], ["years", "YEARS ↓"], ["title", "TITLE A-Z"]],
+      filters: () => allStringFilters(uniqueValues((window.SERIES_DATA || []).map((item) => item.category))),
+      filterKey: (item, value) => item.category === value,
+    },
+    music: {
+      label: "SONGS",
+      count: (n) => n + " SONGS",
+      sorts: [["curated", "CURATED"], ["title", "TITLE A-Z"], ["artist", "ARTIST A-Z"]],
+      filters: null,
+    },
+    sport: {
+      label: "TEAMS",
+      count: (n, total) => (n === total ? n + " TEAMS" : n + " / " + total + " TEAMS"),
+      sorts: [["curated", "CURATED"], ["name", "NAME A-Z"], ["city", "CITY A-Z"]],
+      filters: () => allObjectFilters(SPORT_FILTERS),
+      filterKey: (item, value) => item.getAttribute("data-sport") === value,
+    },
+    games: {
+      label: "GAMES",
+      count: (n) => n + " GAMES",
+      sorts: [["curated", "CURATED"], ["hours", "HOURS ↓"], ["name", "NAME A-Z"]],
+      filters: null,
+    },
+  };
+
+  const state = {};
+  Object.keys(CONFIG).forEach((key) => {
+    state[key] = { filter: "all", sort: "curated", density: "comfort" };
+  });
+  // films/series are already rendered in curated order; skip the first
+  // redundant setData pass and only re-render when filter/sort changes.
+  const appliedReel = { films: "all|curated", series: "all|curated" };
+
+  const originalOrder = new WeakMap();
+  function recordOrder(container, selector) {
+    Array.from(container.querySelectorAll(selector)).forEach((item, index) => {
+      originalOrder.set(item, index);
+    });
+  }
+  recordOrder(panels.books, ".idx-row");
+  recordOrder(panels.music, ".idx-card[data-song-id]");
+  recordOrder(panels.sport, ".idx-row");
+  recordOrder(panels.games, ".hof-item");
+
+  function textOf(root, selector) {
+    const node = root.querySelector(selector);
+    return node ? node.textContent.trim() : "";
+  }
+
+  function hoursOf(item) {
+    return parseInt(textOf(item, ".hof-hours").replace(/[^0-9]/g, ""), 10) || 0;
+  }
+
+  function startYear(item) {
+    const value = parseInt(String(item.year || item.years || ""), 10);
+    return Number.isFinite(value) ? value : -1;
+  }
+
+  function uniqueValues(values) {
+    return Array.from(new Set(values.filter(Boolean)));
+  }
+
+  function allStringFilters(values) {
+    return [{ value: "all", label: "ALL" }].concat(
+      values.map((value) => ({ value: value, label: value }))
+    );
+  }
+
+  function allObjectFilters(values) {
+    return [{ value: "all", label: "ALL" }].concat(values);
+  }
+
+  function activeToken() {
+    const active = tabbar.querySelector(".tab-btn.is-active");
+    return active ? active.getAttribute("data-tab") : "books";
+  }
+
+  function syncDensity(token) {
+    const value = state[token].density;
+    densityButtons.forEach((btn) => {
+      const on = btn.getAttribute("data-density") === value;
+      btn.classList.toggle("is-active", on);
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+
+  function hideEmpty() {
+    if (emptyEl) emptyEl.hidden = true;
+  }
+
+  function showEmpty(message) {
+    if (emptyText) emptyText.textContent = message;
+    if (emptyEl) emptyEl.hidden = false;
+  }
+
+  function apply(token) {
+    const config = CONFIG[token] || CONFIG.books;
+    const s = state[token];
+    let visible = 0;
+    let total = 0;
+    let emptyMessage = "";
+
+    if (token === "books") {
+      const panel = panels.books;
+      const list = panel.querySelector(".idx-list");
+      const rows = Array.from(list.querySelectorAll(".idx-row"));
+      rows.slice().sort((a, b) => {
+        if (s.sort === "title") return textOf(a, ".idx-title").localeCompare(textOf(b, ".idx-title"));
+        if (s.sort === "author") return textOf(a, ".idx-meta").localeCompare(textOf(b, ".idx-meta"));
+        return originalOrder.get(a) - originalOrder.get(b);
+      }).forEach((row) => list.appendChild(row));
+      panel.classList.toggle("is-compact", s.density === "compact");
+      visible = rows.length;
+      total = rows.length;
+    } else if (token === "films" || token === "series") {
+      const panel = panels[token];
+      const data = token === "films" ? (window.FILM_DATA || []) : (window.SERIES_DATA || []);
+      const stage = token === "films" ? window.FilmStage : window.SeriesStage;
+      const originalIndex = new Map(data.map((item, index) => [item, index]));
+      const filtered = data.filter((item) => s.filter === "all" || config.filterKey(item, s.filter));
+      const sorted = filtered.slice().sort((a, b) => {
+        if (s.sort === "title") return a.title.localeCompare(b.title);
+        if (token === "films" && s.sort === "year") return startYear(b) - startYear(a);
+        if (token === "series" && s.sort === "years") return startYear(b) - startYear(a);
+        return originalIndex.get(a) - originalIndex.get(b);
+      });
+      const signature = s.filter + "|" + s.sort;
+      if (sorted.length && stage && typeof stage.setData === "function" && appliedReel[token] !== signature) {
+        stage.setData(sorted);
+        appliedReel[token] = signature;
+      }
+      Array.from(panel.children).forEach((child) => { child.hidden = sorted.length === 0; });
+      panel.classList.toggle("is-compact", s.density === "compact");
+      visible = sorted.length;
+      total = data.length;
+      emptyMessage = "NO " + config.label + " IN THIS FILTER.";
+    } else if (token === "music") {
+      const panel = panels.music;
+      Array.from(panel.querySelectorAll(".artist-tracks")).forEach((group) => {
+        const cards = Array.from(group.querySelectorAll(".idx-card[data-song-id]"));
+        cards.slice().sort((a, b) => {
+          if (s.sort === "title") return textOf(a, ".idx-title").localeCompare(textOf(b, ".idx-title"));
+          if (s.sort === "artist") return textOf(a, ".idx-artist").localeCompare(textOf(b, ".idx-artist"));
+          return originalOrder.get(a) - originalOrder.get(b);
+        }).forEach((card) => group.appendChild(card));
+      });
+      panel.classList.toggle("is-compact", s.density === "compact");
+      visible = panel.querySelectorAll(".idx-card[data-song-id]").length;
+      total = visible;
+    } else if (token === "sport") {
+      const panel = panels.sport;
+      const list = panel.querySelector(".idx-list");
+      const rows = Array.from(list.querySelectorAll(".idx-row"));
+      rows.forEach((row) => {
+        const on = s.filter === "all" || row.getAttribute("data-sport") === s.filter;
+        row.classList.toggle("is-filter-hidden", !on);
+      });
+      const visibleRows = rows.filter((row) => !row.classList.contains("is-filter-hidden"));
+      visibleRows.slice().sort((a, b) => {
+        if (s.sort === "name") return textOf(a, ".idx-title").localeCompare(textOf(b, ".idx-title"));
+        if (s.sort === "city") return textOf(a, ".idx-meta").localeCompare(textOf(b, ".idx-meta"));
+        return originalOrder.get(a) - originalOrder.get(b);
+      }).forEach((row) => list.appendChild(row));
+      panel.classList.toggle("is-compact", s.density === "compact");
+      visible = visibleRows.length;
+      total = rows.length;
+      emptyMessage = "NO TEAMS IN THIS SPORT.";
+    } else if (token === "games") {
+      const panel = panels.games;
+      const row = panel.querySelector("#hof-row");
+      const end = row.querySelector(".hof-end");
+      const items = Array.from(row.querySelectorAll(".hof-item"));
+      items.slice().sort((a, b) => {
+        if (s.sort === "hours") return hoursOf(b) - hoursOf(a);
+        if (s.sort === "name") return textOf(a, ".hof-name").localeCompare(textOf(b, ".hof-name"));
+        return originalOrder.get(a) - originalOrder.get(b);
+      }).forEach((item) => row.insertBefore(item, end));
+      panel.classList.toggle("is-compact", s.density === "compact");
+      visible = items.length;
+      total = items.length;
+    }
+
+    countEl.textContent = config.count(visible, total);
+    if (visible === 0 && emptyMessage) showEmpty(emptyMessage);
+    else hideEmpty();
+    scheduleRefresh();
+  }
+
+  function render() {
+    const token = activeToken();
+    const config = CONFIG[token] || CONFIG.books;
+    const s = state[token];
+
+    filterMount.innerHTML = "";
+    const filters = config.filters ? config.filters() : [];
+    filterMount.hidden = filters.length === 0;
+    filters.forEach((filter) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "genre-chip mono";
+      chip.setAttribute("data-filter", filter.value);
+      chip.setAttribute("aria-pressed", filter.value === s.filter ? "true" : "false");
+      chip.classList.toggle("is-active", filter.value === s.filter);
+      chip.textContent = filter.label;
+      chip.addEventListener("click", () => {
+        s.filter = filter.value;
+        filterMount.querySelectorAll(".genre-chip").forEach((other) => {
+          const on = other.getAttribute("data-filter") === s.filter;
+          other.classList.toggle("is-active", on);
+          other.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        apply(token);
+      });
+      filterMount.appendChild(chip);
+    });
+
+    sortSelect.innerHTML = "";
+    config.sorts.forEach(([value, label]) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = label;
+      sortSelect.appendChild(option);
+    });
+    sortSelect.value = s.sort;
+
+    syncDensity(token);
+    apply(token);
+  }
+
+  sortSelect.addEventListener("change", () => {
+    const token = activeToken();
+    state[token].sort = sortSelect.value;
+    apply(token);
+  });
+
+  densityButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const token = activeToken();
+      state[token].density = btn.getAttribute("data-density");
+      syncDensity(token);
+      apply(token);
+    });
+  });
+
+  if (emptyClear) {
+    emptyClear.addEventListener("click", () => {
+      const token = activeToken();
+      state[token].filter = "all";
+      render();
+    });
+  }
+
+  tabbar.addEventListener("night:archive-tab", () => render());
+
+  toolbar.hidden = false;
+  render();
+}
 
 /* ---------- music panel: genre filter + search + random pick ----------
    The playlist renders fully expanded (no accordion); the chip row filters
@@ -1176,6 +1489,8 @@ function initNetEaseLinks() {
 initNetEaseLinks();
 
 initMusicSearch();
+
+initArchiveToolbar();
 
 /* ---------- game cards on touch: tap toggles the hover state ---------- */
 

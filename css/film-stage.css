@@ -14,6 +14,10 @@
   --reel-focus-offset: 4px;
 }
 
+.film-stage.is-compact {
+  --reel-card-w: clamp(150px, 20vw, 210px);
+}
+
 .film-stage-detail {
   display: grid;
   grid-template-columns: minmax(160px, 250px) minmax(0, 1fr);

@@ -17,6 +17,21 @@
   width: 100%;
 }
 
+/* empty-filter state: the archive toolbar hides the stage children while
+   the shared empty message is shown */
+.film-stage > [hidden],
+.series-stage > [hidden] { display: none !important; }
+
+.film-stage.is-compact .film-stage-strip,
+.series-stage.is-compact .series-stage-strip {
+  gap: clamp(0.6rem, 1.4vw, 1.1rem);
+}
+
+.film-stage.is-compact .film-card-meta,
+.series-stage.is-compact .series-card-meta {
+  padding: 0.7rem 0.8rem 0.95rem;
+}
+
 .film-stage-head,
 .series-stage-head {
   display: flex;

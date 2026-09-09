@@ -12,10 +12,10 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D1B16'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='16' font-weight='bold' fill='%23C9A227' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=10">
-  <link rel="stylesheet" href="css/style.css?v=46">
-  <link rel="stylesheet" href="css/reel-stage.css?v=2">
-  <link rel="stylesheet" href="css/film-stage.css?v=5">
-  <link rel="stylesheet" href="css/series-stage.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=47">
+  <link rel="stylesheet" href="css/reel-stage.css?v=3">
+  <link rel="stylesheet" href="css/film-stage.css?v=6">
+  <link rel="stylesheet" href="css/series-stage.css?v=6">
   <noscript><style>#preloader { display: none !important; }</style></noscript>
 </head>
 <body>
@@ -348,6 +348,23 @@
         <button class="tab-btn mono" id="tab-games" type="button" role="tab" aria-selected="false" aria-controls="panel-games" data-tab="games" tabindex="-1"><span class="no" aria-hidden="true">06</span>GAMES</button>
       </div>
 
+      <div class="archive-toolbar" id="archive-toolbar" hidden>
+        <div class="archive-toolbar-filters" id="archive-toolbar-filters" role="group" aria-label="Filter the current shelf"></div>
+        <p class="archive-toolbar-count mono" id="archive-toolbar-count" role="status" aria-live="polite"></p>
+        <p class="archive-toolbar-empty mono" id="archive-toolbar-empty" hidden>
+          <span id="archive-toolbar-empty-text" role="status" aria-live="polite"></span>
+          <button class="archive-empty-clear mono" id="archive-toolbar-empty-clear" type="button">SHOW ALL</button>
+        </p>
+        <div class="archive-toolbar-sort">
+          <label class="archive-toolbar-label mono" for="archive-sort">SORT</label>
+          <select class="archive-sort mono" id="archive-sort"></select>
+        </div>
+        <div class="archive-density" role="group" aria-label="Card density">
+          <button class="archive-density-btn mono is-active" type="button" data-density="comfort" aria-pressed="true">COMFORT</button>
+          <button class="archive-density-btn mono" type="button" data-density="compact" aria-pressed="false">COMPACT</button>
+        </div>
+      </div>
+
       <div class="tab-panels">
 
         <!-- PANEL 01: BOOKS -->
@@ -409,27 +426,27 @@
     <!-- END #panel-music / #music-drawer: SPORT must stay a direct child of .tab-panels -->
     <div class="tab-panel" id="panel-sport" role="tabpanel" aria-labelledby="tab-sport" data-panel="sport" tabindex="0">
       <div class="idx-list">
-        <article class="idx-row idx-team">
+        <article class="idx-row idx-team" data-sport="basketball">
           <span class="idx-no mono">01</span>
           <div class="idx-mid"><img class="idx-logo" src="logos/spurs.svg" alt="San Antonio Spurs official logo" loading="lazy"><h3 class="idx-title"><a href="https://www.nba.com/spurs" target="_blank" rel="noopener">San Antonio Spurs</a></h3><div class="idx-meta mono">SAN ANTONIO, TEXAS, USA</div></div>
           <p class="idx-line" lang="zh">五座冠军赢得悄无声息——联盟见过的最安静王朝。</p>
         </article>
-        <article class="idx-row idx-team">
+        <article class="idx-row idx-team" data-sport="football">
           <span class="idx-no mono">02</span>
           <div class="idx-mid"><img class="idx-logo" src="logos/mancity.svg" alt="Manchester City official crest" loading="lazy"><h3 class="idx-title"><a href="https://www.mancity.com" target="_blank" rel="noopener">Manchester City Football Club</a></h3><div class="idx-meta mono">MANCHESTER, ENGLAND</div></div>
           <p class="idx-line" lang="zh">连拿四座联赛冠军，足球仍像一堂关于如何建队的课。</p>
         </article>
-        <article class="idx-row idx-team">
+        <article class="idx-row idx-team" data-sport="formula-1">
           <span class="idx-no mono">03</span>
           <div class="idx-mid"><img class="idx-logo idx-logo-wide" src="logos/mclaren.svg" alt="McLaren Racing official logo" loading="lazy"><h3 class="idx-title"><a href="https://www.mclaren.com/racing/" target="_blank" rel="noopener">McLaren Formula 1 Team</a></h3><div class="idx-meta mono">WOKING, ENGLAND</div></div>
           <p class="idx-line" lang="zh">从头就是木瓜橙——六十年赛车，车库仍然相信下一圈。</p>
         </article>
-        <article class="idx-row idx-team">
+        <article class="idx-row idx-team" data-sport="american-football">
           <span class="idx-no mono">04</span>
           <div class="idx-mid"><img class="idx-logo" src="logos/ravens.svg" alt="Baltimore Ravens official logo" loading="lazy"><h3 class="idx-title"><a href="https://www.baltimoreravens.com" target="_blank" rel="noopener">Baltimore Ravens</a></h3><div class="idx-meta mono">BALTIMORE, MARYLAND, USA</div></div>
           <p class="idx-line" lang="zh">靠防守立身，靠沉稳前行——硬气与嚣张，平衡得刚刚好。</p>
         </article>
-        <article class="idx-row idx-team">
+        <article class="idx-row idx-team" data-sport="esports">
           <span class="idx-no mono">05</span>
           <div class="idx-mid"><img class="idx-logo" src="logos/spirit.svg" alt="Team Spirit official logo" loading="lazy"><h3 class="idx-title"><a href="https://teamspirit.gg" target="_blank" rel="noopener">Team Spirit</a></h3><div class="idx-meta mono">BELGRADE, SERBIA</div></div>
           <p class="idx-line" lang="zh">拒绝当弱者的弱者——从无名之辈打到世界冠军，而且赢了两次。</p>
@@ -731,10 +748,10 @@
   <script src="js/film-data.js?v=1"></script>
   <script src="js/series-data.js?v=1"></script>
   <script src="js/music-data.js?v=1"></script>
-  <script src="js/reel-stage.js?v=1"></script>
+  <script src="js/reel-stage.js?v=2"></script>
   <script src="js/film-stage.js?v=3"></script>
   <script src="js/series-stage.js?v=3"></script>
   <script src="js/music-stage.js?v=2"></script>
-  <script src="js/main.js?v=36"></script>
+  <script src="js/main.js?v=37"></script>
 </body>
 </html>
