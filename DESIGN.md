@@ -113,9 +113,9 @@
 | 卡片说明 | `.photo-frame-text` | `0.875rem` | `1.5` | `0` |
 | mono 标签 | `.mono` | `0.875rem` | — | `0.14em` |
 | mono 小标签 | `.photo-frame-no`、`.archive-toolbar-count` 等 | `0.8125rem` | — | `0.16em` 左右 |
-| 搜索输入框 | `.music-search-input` | `0.875rem` | — | `0.08em` |
+| 搜索输入框 | `.music-search-input` | `0.875rem`（桌面）/ `16px`（≤720px） | — | `0.08em` |
 
-> 已知偏差：`AGENTS.md` 要求移动端输入框 16px；当前 `.music-search-input` 未单独覆盖 16px，改动音乐搜索时按 `AGENTS.md` 处理。
+> 移动端输入框：`.music-search-input` 在 `≤720px` 下覆盖为 16px，避免 iOS 聚焦缩放。
 
 ### 2.3 排版硬规则
 

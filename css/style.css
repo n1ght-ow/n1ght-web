@@ -2599,6 +2599,8 @@ html.has-cursor * { cursor: none !important; }
   /* poster rows on mobile: number | poster | title, quote below */
   /* music cards on mobile: flex-wrap handles sizing naturally */
   .playlist { gap: 1.4rem; }
+  /* iOS zooms the page when a focused input is under 16px */
+  .music-search-input { font-size: 16px; }
   .coda-title { font-size: clamp(2rem, 11vw, 4rem); }
 
   .footer-top { align-items: flex-start; flex-direction: column; }
