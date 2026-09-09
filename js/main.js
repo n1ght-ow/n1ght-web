@@ -569,11 +569,24 @@ if (photoRoll && !REDUCED && window.ScrollTrigger) {
   });
 }
 
-/* ---------- photo lightbox: field-roll viewer ---------- */
+/* ---------- unified detail layer: photo / film / series / game / music ----------
+   One #lightbox serves every archive type. The photo viewer keeps its frame
+   rail; films/series add poster + meta + IMDb; games add cover + hours + quote;
+   music adds the NetEase link. Opening, closing, inert, focus trap and swipe
+   are shared. */
 
 const lightbox = document.getElementById("lightbox");
+const lbStage = document.getElementById("lb-stage");
 const lbImg = document.getElementById("lb-img");
 const lbCap = document.getElementById("lb-cap");
+const lbMusic = document.getElementById("lb-music");
+const lbMusicLabel = lbMusic ? lbMusic.querySelector(".lb-music-label") : null;
+const lbMeta = document.getElementById("lb-meta");
+const lbKicker = document.getElementById("lb-kicker");
+const lbTitle = document.getElementById("lb-title");
+const lbLines = document.getElementById("lb-lines");
+const lbQuote = document.getElementById("lb-quote");
+const lbLink = document.getElementById("lb-link");
 const lbCount = document.getElementById("lb-count");
 const lbAct = document.getElementById("lb-act");
 const lbCloseBtn = document.getElementById("lb-close");
@@ -587,18 +600,91 @@ let lbIndex = 0;
 let isLbOpen = false;
 let lbTrigger = null;
 let lbThumbs = [];
+let detailType = "photo";
+let detailItems = [];
+let openNetEaseSong = null;
+
+function detailText(root, selector) {
+  const node = root.querySelector(selector);
+  return node ? node.textContent.trim() : "";
+}
 
 function photoFrameData(frame) {
   const img = frame.querySelector("img");
   const cap = frame.querySelector(".photo-frame-text");
   const no = frame.querySelector(".photo-frame-no");
   return {
+    type: "photo",
     src: img ? img.getAttribute("src") : "",
     alt: img ? img.alt : "",
     caption: cap ? cap.textContent.trim() : "",
     number: no ? no.textContent.trim() : "",
     act: frame.closest(".photo-act-horizon") ? "HORIZON" : "BLOOM",
   };
+}
+
+function gameItemData(item) {
+  const img = item.querySelector("img");
+  const name = detailText(item, ".hof-name");
+  return {
+    type: "game",
+    id: item.getAttribute("data-game"),
+    name: name,
+    hours: detailText(item, ".hof-hours"),
+    quote: detailText(item, ".hof-quote"),
+    src: img ? img.getAttribute("src") : "",
+    alt: img ? img.alt : name,
+    rank: Array.from(document.querySelectorAll("#panel-games .hof-item")).indexOf(item) + 1,
+  };
+}
+
+function musicItemData(card) {
+  const genre = card.closest(".genre");
+  return {
+    type: "music",
+    id: card.getAttribute("data-song-id"),
+    title: detailText(card, ".idx-title"),
+    artist: detailText(card, ".idx-artist"),
+    genre: genre ? detailText(genre, ".genre-title") : "",
+  };
+}
+
+function detailItemsFor(type) {
+  if (type === "photo") return photoFrames.map(photoFrameData);
+  if (type === "film") {
+    return (window.FilmStage && window.FilmStage.data ? window.FilmStage.data : (window.FILM_DATA || [])).slice();
+  }
+  if (type === "series") {
+    return (window.SeriesStage && window.SeriesStage.data ? window.SeriesStage.data : (window.SERIES_DATA || [])).slice();
+  }
+  if (type === "game") {
+    return Array.from(document.querySelectorAll("#panel-games .hof-item")).map(gameItemData);
+  }
+  if (type === "music") {
+    const panel = document.getElementById("panel-music");
+    if (!panel) return [];
+    return Array.from(panel.querySelectorAll(".idx-card[data-song-id]"))
+      .filter((card) => card.offsetParent !== null)
+      .map(musicItemData);
+  }
+  return [];
+}
+
+function detailLabel(type) {
+  if (type === "film") return "FILM";
+  if (type === "series") return "SERIES";
+  if (type === "game") return "GAME";
+  if (type === "music") return "TRACK";
+  return "FRAME";
+}
+
+function detailAct(type, item) {
+  if (type === "photo") return item.act;
+  if (type === "film") return item.genre;
+  if (type === "series") return item.category;
+  if (type === "game") return "GAME";
+  if (type === "music") return item.genre || "TRACK";
+  return "";
 }
 
 function setPageInert(on) {
@@ -630,29 +716,104 @@ function lbBuildRail() {
   });
 }
 
-function lbSync() {
-  const data = photoFrameData(photoFrames[lbIndex]);
-  lbCount.textContent = "FRAME " + String(lbIndex + 1).padStart(2, "0") + " / " + String(photoFrames.length).padStart(2, "0");
-  if (lbAct) lbAct.textContent = data.act;
-  lbCap.textContent = data.caption;
-  lbImg.alt = data.alt;
+function setDetailVisibility(show) {
+  if (lbImg) lbImg.hidden = !show.image;
+  if (lbCap) lbCap.hidden = !show.caption;
+  if (lbMusic) lbMusic.hidden = !show.music;
+  if (lbMeta) lbMeta.hidden = !show.meta;
+  if (lbRail) lbRail.hidden = !show.rail;
+}
+
+function renderDetail() {
+  const item = detailItems[lbIndex];
+  if (!item) return;
+  const label = detailLabel(detailType);
+  const total = detailItems.length;
+  lbCount.textContent = label + " " + String(lbIndex + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0");
+  if (lbAct) lbAct.textContent = detailAct(detailType, item);
+  if (lbPrevBtn) lbPrevBtn.setAttribute("aria-label", "Previous " + label.toLowerCase());
+  if (lbNextBtn) lbNextBtn.setAttribute("aria-label", "Next " + label.toLowerCase());
+
+  if (detailType === "photo") {
+    setDetailVisibility({ image: true, caption: true, music: false, meta: false, rail: true });
+    lbImg.classList.remove("is-loaded");
+    lbImg.alt = item.alt;
+    lbImg.src = item.src;
+    lbCap.textContent = item.caption;
+    lbThumbs.forEach((btn, i) => {
+      if (i === lbIndex) btn.setAttribute("aria-current", "true");
+      else btn.removeAttribute("aria-current");
+    });
+    if (lbLive) {
+      lbLive.textContent = "Frame " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.act + ". " + item.caption;
+    }
+    return;
+  }
+
+  if (detailType === "music") {
+    setDetailVisibility({ image: false, caption: false, music: true, meta: true, rail: false });
+    if (lbMusicLabel) lbMusicLabel.textContent = "NETEASE CLOUD MUSIC";
+    lbKicker.textContent = item.genre;
+    lbTitle.textContent = item.title;
+    lbLines.textContent = item.artist;
+    lbQuote.textContent = "Open in NetEase Cloud Music to play this track.";
+    lbLink.hidden = false;
+    lbLink.textContent = "OPEN IN NETEASE ↗";
+    lbLink.href = "https://music.163.com/#/song?id=" + item.id;
+    lbLink.dataset.songId = item.id;
+    if (lbLive) {
+      lbLive.textContent = "Track " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + " by " + item.artist + ". " + item.genre;
+    }
+    return;
+  }
+
+  setDetailVisibility({ image: true, caption: false, music: false, meta: true, rail: false });
   lbImg.classList.remove("is-loaded");
-  // show the low-res archive copy, not the multi-MB full original
-  lbImg.src = data.src;
-  lbThumbs.forEach((btn, i) => {
-    if (i === lbIndex) btn.setAttribute("aria-current", "true");
-    else btn.removeAttribute("aria-current");
-  });
-  // polite screen-reader announcement for frame changes
-  if (lbLive) {
-    lbLive.textContent = "Frame " + String(lbIndex + 1).padStart(2, "0") + " of " + photoFrames.length + ", " + data.act + ". " + data.caption;
+  lbLink.dataset.songId = "";
+  if (detailType === "film") {
+    lbImg.alt = item.title + " poster";
+    lbImg.src = item.poster;
+    lbKicker.textContent = item.genre + " · " + item.year;
+    lbTitle.textContent = item.title;
+    lbLines.textContent = item.director;
+    lbQuote.textContent = item.quote;
+    lbLink.hidden = false;
+    lbLink.textContent = "OPEN ON IMDb ↗";
+    lbLink.href = "https://www.imdb.com/title/" + item.imdb + "/";
+    if (lbLive) {
+      lbLive.textContent = "Film " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + ". " + item.director + ", " + item.year + ". " + item.quote;
+    }
+  } else if (detailType === "series") {
+    lbImg.alt = item.title + " poster";
+    lbImg.src = item.poster;
+    lbKicker.textContent = item.category + " · " + item.years;
+    lbTitle.textContent = item.title;
+    lbLines.textContent = item.seasons;
+    lbQuote.textContent = item.quote;
+    lbLink.hidden = false;
+    lbLink.textContent = "OPEN ON IMDb ↗";
+    lbLink.href = "https://www.imdb.com/title/" + item.imdb + "/";
+    if (lbLive) {
+      lbLive.textContent = "Series " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + ". " + item.years + ", " + item.seasons + ". " + item.quote;
+    }
+  } else if (detailType === "game") {
+    lbImg.alt = item.alt;
+    lbImg.src = item.src;
+    lbKicker.textContent = "RANK " + String(item.rank).padStart(2, "0");
+    lbTitle.textContent = item.name;
+    lbLines.textContent = item.hours;
+    lbQuote.textContent = item.quote;
+    lbLink.hidden = true;
+    if (lbLive) {
+      lbLive.textContent = "Game " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.name + ". " + item.hours + ". " + item.quote;
+    }
   }
 }
 
 function lbLoad(i) {
-  if (!photoFrames.length) return;
-  lbIndex = ((i % photoFrames.length) + photoFrames.length) % photoFrames.length;
-  lbSync();
+  if (!detailItems.length) return;
+  lbIndex = ((i % detailItems.length) + detailItems.length) % detailItems.length;
+  renderDetail();
 }
 
 function lbFocusables() {
@@ -661,10 +822,16 @@ function lbFocusables() {
     .filter((el) => el.offsetParent !== null || el === document.activeElement);
 }
 
-function lbOpenAt(i) {
-  if (!lightbox || !photoFrames.length) return;
+function openDetail(type, index) {
+  if (!lightbox) return;
+  const items = detailItemsFor(type);
+  if (!items.length) return;
+  detailType = type;
+  detailItems = items;
+  lbIndex = Math.max(0, Math.min(Number(index) || 0, items.length - 1));
   lbTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-  lbLoad(i);
+  if (type === "photo" && !lbThumbs.length) lbBuildRail();
+  renderDetail();
   lightbox.classList.add("is-open");
   lightbox.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
@@ -674,7 +841,7 @@ function lbOpenAt(i) {
   lbCloseBtn.focus();
 }
 
-function lbCloseFn() {
+function closeDetail() {
   if (!lightbox) return;
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
@@ -684,33 +851,103 @@ function lbCloseFn() {
   // empty src would re-request the page URL itself; drop the attribute
   lbImg.removeAttribute("src");
   isLbOpen = false;
-  // hand focus back to the frame that opened the viewer
+  // hand focus back to the card that opened the detail layer
   if (lbTrigger && document.contains(lbTrigger)) lbTrigger.focus();
   lbTrigger = null;
 }
 
-if (lightbox && photoFrames.length) {
+function initUnifiedDetail() {
+  if (!lightbox) return;
   lbBuildRail();
 
   photoFrames.forEach((frame, i) => {
     const btn = frame.querySelector(".photo-frame-btn");
-    if (!btn) return;
-    btn.addEventListener("click", () => lbOpenAt(i));
+    if (btn) btn.addEventListener("click", () => openDetail("photo", i));
   });
 
-  lbCloseBtn.addEventListener("click", lbCloseFn);
+  [["films", "film"], ["series", "series"]].forEach(([token, type]) => {
+    const panel = document.getElementById("panel-" + token);
+    if (!panel) return;
+    panel.addEventListener("click", (e) => {
+      const card = e.target.closest(".film-card, .series-card");
+      if (!card) return;
+      const cards = Array.from(panel.querySelectorAll(".film-card, .series-card"));
+      const index = cards.indexOf(card);
+      if (index >= 0) openDetail(type, index);
+    });
+  });
+
+  const gamePanel = document.getElementById("panel-games");
+  if (gamePanel) {
+    Array.from(gamePanel.querySelectorAll(".hof-item")).forEach((item) => {
+      item.setAttribute("role", "button");
+      item.setAttribute("tabindex", "0");
+      item.setAttribute("aria-label", "Open details for " + detailText(item, ".hof-name") + ", " + detailText(item, ".hof-hours"));
+    });
+    const openGame = (item) => {
+      const items = Array.from(gamePanel.querySelectorAll(".hof-item"));
+      const index = items.indexOf(item);
+      if (index >= 0) openDetail("game", index);
+    };
+    gamePanel.addEventListener("click", (e) => {
+      const item = e.target.closest(".hof-item");
+      if (item) openGame(item);
+    });
+    gamePanel.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const item = e.target.closest(".hof-item");
+      if (!item) return;
+      e.preventDefault();
+      openGame(item);
+    });
+  }
+
+  const musicPanel = document.getElementById("panel-music");
+  if (musicPanel) {
+    Array.from(musicPanel.querySelectorAll(".idx-card[data-song-id]")).forEach((card) => {
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-label", "Open details for " + detailText(card, ".idx-title") + " by " + detailText(card, ".idx-artist"));
+    });
+    const openMusic = (card) => {
+      const visible = Array.from(musicPanel.querySelectorAll(".idx-card[data-song-id]")).filter((c) => c.offsetParent !== null);
+      const index = visible.indexOf(card);
+      if (index >= 0) openDetail("music", index);
+    };
+    musicPanel.addEventListener("click", (e) => {
+      const card = e.target.closest(".idx-card[data-song-id]");
+      if (card) openMusic(card);
+    });
+    musicPanel.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const card = e.target.closest(".idx-card[data-song-id]");
+      if (!card) return;
+      e.preventDefault();
+      openMusic(card);
+    });
+  }
+
+  lbCloseBtn.addEventListener("click", closeDetail);
   lbPrevBtn.addEventListener("click", () => lbLoad(lbIndex - 1));
   lbNextBtn.addEventListener("click", () => lbLoad(lbIndex + 1));
   lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
+  if (lbLink) {
+    lbLink.addEventListener("click", (e) => {
+      const songId = lbLink.dataset.songId;
+      if (!songId) return;
+      e.preventDefault();
+      if (typeof openNetEaseSong === "function") openNetEaseSong(songId);
+    });
+  }
 
   // clicking the dark backdrop closes
   lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) lbCloseFn();
+    if (e.target === lightbox) closeDetail();
   });
 
   document.addEventListener("keydown", (e) => {
     if (!isLbOpen) return;
-    if (e.key === "Escape") { e.preventDefault(); lbCloseFn(); return; }
+    if (e.key === "Escape") { e.preventDefault(); closeDetail(); return; }
     if (e.key === "ArrowLeft") { e.preventDefault(); lbLoad(lbIndex - 1); return; }
     if (e.key === "ArrowRight") { e.preventDefault(); lbLoad(lbIndex + 1); return; }
     if (e.key !== "Tab") return;
@@ -728,8 +965,7 @@ if (lightbox && photoFrames.length) {
     }
   });
 
-  // touch: horizontal swipe on the photo stage changes frames
-  const lbStage = lightbox.querySelector(".lb-stage");
+  // touch: horizontal swipe on the stage changes items
   if (lbStage) {
     let swipeX = 0, swipeY = 0, trackingSwipe = false;
     lbStage.addEventListener("touchstart", (e) => {
@@ -748,6 +984,8 @@ if (lightbox && photoFrames.length) {
     }, { passive: true });
   }
 }
+
+initUnifiedDetail();
 
 /* ---------- The Archive: tab switching (clip-path wipe + row stagger) ---------- */
 
@@ -1453,37 +1691,9 @@ function initNetEaseLinks() {
     }, 1200);
   }
 
-  // event delegation: any card with data-song-id opens the song
-  // (.track-sim = SIMILAR rows, .track-own = personally collected tracks)
-  drawer.addEventListener("click", (e) => {
-    const row = e.target.closest("[data-song-id]");
-    if (!row) return;
-    const id = row.getAttribute("data-song-id");
-    if (!id) return;
-    openSong(id);
-  });
-
-  // keyboard accessibility: Enter/Space opens too (focusable cards only)
-  drawer.addEventListener("keydown", (e) => {
-    if (e.key !== "Enter" && e.key !== " ") return;
-    const row = e.target.closest("[data-song-id]");
-    if (!row) return;
-    const id = row.getAttribute("data-song-id");
-    if (!id) return;
-    e.preventDefault();
-    openSong(id);
-  });
-
-  // turn song cards into focusable, screen-reader friendly links.
-  // Only add keyboard affordance to cards that actually carry an ID.
-  drawer.querySelectorAll("[data-song-id]").forEach((card) => {
-    card.setAttribute("role", "link");
-    card.setAttribute("tabindex", "0");
-    card.setAttribute(
-      "aria-label",
-      card.textContent.trim().replace(/\s+/g, " ") + ", open in NetEase Cloud Music"
-    );
-  });
+  // The music cards now open the unified detail layer; this function keeps
+  // the NetEase deep-link strategy for the detail layer's external link.
+  openNetEaseSong = openSong;
 }
 
 initNetEaseLinks();

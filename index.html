@@ -12,7 +12,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D1B16'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='16' font-weight='bold' fill='%23C9A227' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=10">
-  <link rel="stylesheet" href="css/style.css?v=47">
+  <link rel="stylesheet" href="css/style.css?v=48">
   <link rel="stylesheet" href="css/reel-stage.css?v=3">
   <link rel="stylesheet" href="css/film-stage.css?v=6">
   <link rel="stylesheet" href="css/series-stage.css?v=6">
@@ -724,19 +724,30 @@
     </div>
   </footer>
 
-  <!-- ============ PHOTO LIGHTBOX (click a frame to view it larger) ============ -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
+  <!-- ============ UNIFIED DETAIL LAYER (photo / film / series / game / music) ============ -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Archive detail viewer" aria-hidden="true">
     <div class="lb-top mono">
       <span id="lb-count">FRAME 01 / 11</span>
       <span id="lb-act" class="lb-act">BLOOM</span>
-      <button class="lb-close" id="lb-close" type="button" aria-label="Close photo viewer">CLOSE ✕</button>
+      <button class="lb-close" id="lb-close" type="button" aria-label="Close detail viewer">CLOSE ✕</button>
     </div>
-    <figure class="lb-stage">
+    <figure class="lb-stage" id="lb-stage">
       <img id="lb-img" alt="" loading="lazy" decoding="async">
+      <div class="lb-music" id="lb-music" hidden>
+        <span class="lb-music-glyph" aria-hidden="true">♪</span>
+        <span class="lb-music-label mono">NETEASE CLOUD MUSIC</span>
+      </div>
       <figcaption id="lb-cap" class="lb-cap"></figcaption>
     </figure>
-    <button class="lb-nav lb-prev" id="lb-prev" type="button" aria-label="Previous photo">←</button>
-    <button class="lb-nav lb-next" id="lb-next" type="button" aria-label="Next photo">→</button>
+    <div class="lb-meta" id="lb-meta" hidden>
+      <p class="lb-meta-kicker mono" id="lb-kicker"></p>
+      <h3 class="lb-meta-title" id="lb-title"></h3>
+      <p class="lb-meta-lines mono" id="lb-lines"></p>
+      <p class="lb-meta-quote" id="lb-quote"></p>
+      <a class="lb-meta-link mono" id="lb-link" href="#" target="_blank" rel="noopener" hidden>OPEN</a>
+    </div>
+    <button class="lb-nav lb-prev" id="lb-prev" type="button" aria-label="Previous item">←</button>
+    <button class="lb-nav lb-next" id="lb-next" type="button" aria-label="Next item">→</button>
     <div class="lb-rail" id="lb-rail" role="group" aria-label="Choose a frame"></div>
     <p class="sr-only" id="lb-live" role="status" aria-live="polite"></p>
   </div>
@@ -752,6 +763,6 @@
   <script src="js/film-stage.js?v=3"></script>
   <script src="js/series-stage.js?v=3"></script>
   <script src="js/music-stage.js?v=2"></script>
-  <script src="js/main.js?v=37"></script>
+  <script src="js/main.js?v=38"></script>
 </body>
 </html>

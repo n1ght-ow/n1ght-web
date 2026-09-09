@@ -1025,6 +1025,16 @@ html.has-cursor * { cursor: none !important; }
   box-shadow: var(--shadow-soft-lg), var(--glow-accent);
 }
 
+.hof-item:focus-visible {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 6px;
+  border-radius: var(--radius-lg);
+}
+
+.hof-item:focus-visible .hof-inner {
+  box-shadow: var(--shadow-soft-lg), 0 0 0 2px var(--color-accent-text);
+}
+
 .hof-img-wrap {
   position: relative;
   overflow: hidden;
@@ -2090,7 +2100,7 @@ html.has-cursor * { cursor: none !important; }
   inset: 0;
   z-index: 120;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
   gap: clamp(0.75rem, 2vh, 1.5rem);
   padding: clamp(1rem, 3vh, 2rem) clamp(1rem, 4vw, 3rem) clamp(1rem, 3vh, 2rem);
   background: rgba(24, 22, 18, 0.94);
@@ -2098,6 +2108,7 @@ html.has-cursor * { cursor: none !important; }
   backdrop-filter: blur(10px);
   opacity: 0;
   visibility: hidden;
+  overflow-y: auto;
   overscroll-behavior: contain;
   /* visibility flips instantly on open, waits for the fade on close */
   transition: opacity 0.25s var(--ease-out), visibility 0s linear 0.25s;
@@ -2118,13 +2129,16 @@ html.has-cursor * { cursor: none !important; }
 }
 
 .lb-top {
-  position: relative;
-  z-index: 3;
+  position: sticky;
+  top: 0;
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.8rem;
+  padding-bottom: 0.8rem;
+  background: linear-gradient(to bottom, rgba(24, 22, 18, 0.96), rgba(24, 22, 18, 0.82) 72%, rgba(24, 22, 18, 0));
   letter-spacing: 0.14em;
   color: var(--color-surface);
 }
@@ -2197,6 +2211,113 @@ html.has-cursor * { cursor: none !important; }
   text-align: center;
   font-size: 0.875rem;
   line-height: 1.5;
+  color: rgba(252, 251, 248, 0.82);
+}
+
+/* unified detail: image / music card / meta / rail are toggled per type */
+#lb-img[hidden],
+.lb-cap[hidden],
+.lb-music[hidden],
+.lb-meta[hidden],
+.lb-rail[hidden],
+.lb-meta-link[hidden] { display: none !important; }
+
+.lb-meta {
+  position: relative;
+  z-index: 2;
+  justify-self: center;
+  width: min(100%, 760px);
+  display: grid;
+  gap: 0.55rem;
+  text-align: center;
+}
+
+.lb-meta-kicker {
+  margin: 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.18em;
+  color: rgba(252, 251, 248, 0.72);
+}
+
+.lb-meta-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--color-surface);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.lb-meta-lines {
+  margin: 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  color: rgba(252, 251, 248, 0.82);
+}
+
+.lb-meta-quote {
+  max-width: 54ch;
+  margin: 0.2rem auto 0;
+  font-family: "Instrument Serif", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  line-height: 1.5;
+  color: rgba(252, 251, 248, 0.86);
+}
+
+.lb-meta-link {
+  justify-self: center;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--color-on-accent);
+  background: var(--color-accent-solid);
+  border: 1px solid var(--color-accent-text);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glow-accent);
+  padding: 0.7em 1.3em;
+  text-decoration: none;
+  transition: background 0.15s var(--ease-out), transform 0.15s var(--ease-out);
+}
+
+.lb-meta-link:hover { background: var(--color-glow); }
+.lb-meta-link:active { transform: scale(0.96); }
+
+.lb-meta-link:focus-visible {
+  outline: 2px solid var(--color-glow);
+  outline-offset: 2px;
+}
+
+.lb-music {
+  display: grid;
+  place-items: center;
+  gap: 0.7rem;
+  width: min(64vw, 340px);
+  aspect-ratio: 1;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(252, 251, 248, 0.2);
+  background: radial-gradient(circle at 50% 30%, rgba(221, 183, 107, 0.32), rgba(29, 27, 22, 0.92) 68%);
+  box-shadow: var(--shadow-soft-lg);
+  color: var(--color-surface);
+  text-align: center;
+}
+
+.lb-music-glyph {
+  font-size: clamp(3.5rem, 10vw, 5.5rem);
+  line-height: 1;
+  color: var(--color-glow);
+}
+
+.lb-music-label {
+  font-size: 0.8125rem;
+  letter-spacing: 0.18em;
   color: rgba(252, 251, 248, 0.82);
 }
 
@@ -2356,6 +2477,10 @@ html.has-cursor * { cursor: none !important; }
   .lb-cap { font-size: 0.8125rem; }
   .lb-rail { justify-content: flex-start; scroll-snap-type: x proximity; }
   .lb-thumb { scroll-snap-align: center; }
+  .lb-meta-title { font-size: clamp(1.3rem, 7vw, 2rem); }
+  .lb-meta-quote { font-size: 0.95rem; }
+  .lb-meta-link { min-height: 44px; }
+  .lb-music { width: min(70vw, 260px); padding: 1.4rem; }
 
   .hof-row { gap: clamp(1.5rem, 6vw, 2.5rem); padding: 1.5rem clamp(1rem, 5vw, 1.5rem) 6.5rem; }
   .hof-img-wrap img { max-width: min(70vw, 320px); max-height: 56vh; }
@@ -2408,6 +2533,7 @@ html.has-cursor * { cursor: none !important; }
   .photo-frame-btn:active img { transform: none; }
   .lb-thumb:active { transform: none; }
   .lightbox,
+  .lightbox.is-open,
   .lb-stage img,
   .lb-thumb { transition: none; }
 
@@ -2425,5 +2551,6 @@ html.has-cursor * { cursor: none !important; }
   .bubble,
   .archive-sort,
   .archive-density-btn,
-  .archive-empty-clear { transition-duration: 0s; }
+  .archive-empty-clear,
+  .lb-meta-link { transition-duration: 0s; }
 }
