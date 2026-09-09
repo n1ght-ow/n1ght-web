@@ -105,7 +105,7 @@ function initCursor() {
       label.textContent = labelled.getAttribute("data-cursor");
       baseScale = 6;
       gsap.to(label, { opacity: 1, duration: 0.18, overwrite: "auto" });
-    } else if (e.target.closest("a, button, .hs-card, .hof-card, .idx-row, .idx-card")) {
+    } else if (e.target.closest("a, button, .photo-frame-btn, .hof-card, .idx-row, .idx-card")) {
       baseScale = 2.6;
       gsap.to(label, { opacity: 0, duration: 0.15, overwrite: "auto" });
     } else {
@@ -248,7 +248,7 @@ if (REDUCED) {
   }, 4500);
 }
 
-/* ---------- horizontal scrollers (photo gallery + game roster) ----------
+/* ---------- horizontal scroller (game roster) ----------
    Drag-only: the page wheel scrolls vertically past these sections and
    never drives the track. Horizontal movement comes from grabbing the
    section, the scrubber bar, or touch drag (touch-action: pan-y lets
@@ -432,18 +432,6 @@ function makeHorizontalScroller(opts) {
 }
 
 makeHorizontalScroller({
-  wrapId: "hs-wrap",
-  trackId: "hs-track",
-  barId: "hs-dragbar",
-  barTrackId: "hs-dragbar-track",
-  barFillId: "hs-dragbar-fill",
-  barHandleId: "hs-dragbar-handle",
-  barCountId: "hs-dragbar-count",
-  itemCount: 11,
-  label: "FRAME",
-});
-
-makeHorizontalScroller({
   wrapId: "hof-scroll",
   trackId: "hof-row",
   barId: "hof-dragbar",
@@ -520,42 +508,167 @@ function spawnBubble() {
 
 for (let i = 0; i < BUBBLE_COUNT; i++) spawnBubble();
 
-/* ---------- photo lightbox: click a frame to see the full frame ---------- */
+/* ---------- photo field roll: entrance + progress line ---------- */
+
+const photoRoll = document.querySelector(".photo-roll");
+const photoMeterFill = document.getElementById("photo-roll-fill");
+const photoMeterAct = document.getElementById("photo-roll-act");
+const photoMeterCount = document.getElementById("photo-roll-count");
+
+if (photoRoll && !REDUCED && window.ScrollTrigger) {
+  // signature moment: the gold roll line fills as the chapter scrolls
+  if (photoMeterFill) {
+    let lastMeterFrame = 0;
+    let lastMeterAct = "";
+    gsap.fromTo(photoMeterFill, { scaleX: 0 }, {
+      scaleX: 1,
+      ease: "none",
+      scrollTrigger: {
+        trigger: photoRoll,
+        start: "top 72%",
+        end: "bottom 72%",
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const frame = Math.min(11, Math.max(1, Math.round(self.progress * 10) + 1));
+          if (frame !== lastMeterFrame) {
+            lastMeterFrame = frame;
+            if (photoMeterCount) photoMeterCount.textContent = "FRAME " + String(frame).padStart(2, "0") + " / 11";
+            const act = frame <= 7 ? "BLOOM" : "HORIZON";
+            if (act !== lastMeterAct) {
+              lastMeterAct = act;
+              if (photoMeterAct) photoMeterAct.textContent = act;
+            }
+          }
+        },
+      },
+    });
+  }
+
+  // entrance: each act reveals as a group; the lead frame joins the head
+  gsap.utils.toArray(".photo-act").forEach((act) => {
+    gsap.from(act.querySelectorAll(".photo-frame"), {
+      clipPath: "inset(0 0 100% 0)",
+      y: 24,
+      autoAlpha: 0,
+      duration: 0.85,
+      ease: "power3.out",
+      stagger: 0.09,
+      immediateRender: false,
+      scrollTrigger: { trigger: act, start: "top 78%", toggleActions: "play none none none" },
+    });
+  });
+  gsap.from(".photo-frame-lead", {
+    clipPath: "inset(0 0 100% 0)",
+    y: 24,
+    autoAlpha: 0,
+    duration: 0.85,
+    ease: "power3.out",
+    immediateRender: false,
+    scrollTrigger: { trigger: ".photo-roll-head", start: "top 82%", toggleActions: "play none none none" },
+  });
+}
+
+/* ---------- photo lightbox: field-roll viewer ---------- */
 
 const lightbox = document.getElementById("lightbox");
 const lbImg = document.getElementById("lb-img");
 const lbCap = document.getElementById("lb-cap");
 const lbCount = document.getElementById("lb-count");
+const lbAct = document.getElementById("lb-act");
 const lbCloseBtn = document.getElementById("lb-close");
 const lbPrevBtn = document.getElementById("lb-prev");
 const lbNextBtn = document.getElementById("lb-next");
-const photoCards = Array.from(document.querySelectorAll(".hs-card"));
+const lbRail = document.getElementById("lb-rail");
+const lbLive = document.getElementById("lb-live");
+const photoFrames = Array.from(document.querySelectorAll(".photo-frame"));
 
 let lbIndex = 0;
 let isLbOpen = false;
 let lbTrigger = null;
+let lbThumbs = [];
 
-function lbLoad(i) {
-  lbIndex = ((i % photoCards.length) + photoCards.length) % photoCards.length;
-  const card = photoCards[lbIndex];
-  const img = card.querySelector("img");
-  const cap = card.querySelector(".hs-cap");
-  lbCount.textContent =
-    "FRAME " + String(lbIndex + 1).padStart(2, "0") + " / " + String(photoCards.length).padStart(2, "0");
-  lbCap.textContent = cap ? cap.textContent : "";
-  lbImg.alt = img ? img.alt : "";
+function photoFrameData(frame) {
+  const img = frame.querySelector("img");
+  const cap = frame.querySelector(".photo-frame-text");
+  const no = frame.querySelector(".photo-frame-no");
+  return {
+    src: img ? img.getAttribute("src") : "",
+    alt: img ? img.alt : "",
+    caption: cap ? cap.textContent.trim() : "",
+    number: no ? no.textContent.trim() : "",
+    act: frame.closest(".photo-act-horizon") ? "HORIZON" : "BLOOM",
+  };
+}
+
+function setPageInert(on) {
+  Array.from(document.body.children).forEach((el) => {
+    if (el === lightbox || el.tagName === "SCRIPT") return;
+    if (on) el.setAttribute("inert", "");
+    else el.removeAttribute("inert");
+  });
+}
+
+function lbBuildRail() {
+  if (!lbRail) return;
+  lbRail.innerHTML = "";
+  lbThumbs = photoFrames.map((frame, i) => {
+    const data = photoFrameData(frame);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "lb-thumb";
+    btn.setAttribute("aria-label", "Frame " + String(i + 1).padStart(2, "0") + ": " + data.caption);
+    const thumbImg = document.createElement("img");
+    thumbImg.src = data.src;
+    thumbImg.alt = "";
+    thumbImg.loading = "lazy";
+    thumbImg.decoding = "async";
+    btn.appendChild(thumbImg);
+    btn.addEventListener("click", () => lbLoad(i));
+    lbRail.appendChild(btn);
+    return btn;
+  });
+}
+
+function lbSync() {
+  const data = photoFrameData(photoFrames[lbIndex]);
+  lbCount.textContent = "FRAME " + String(lbIndex + 1).padStart(2, "0") + " / " + String(photoFrames.length).padStart(2, "0");
+  if (lbAct) lbAct.textContent = data.act;
+  lbCap.textContent = data.caption;
+  lbImg.alt = data.alt;
   lbImg.classList.remove("is-loaded");
   // show the low-res archive copy, not the multi-MB full original
-  lbImg.src = img.src;
+  lbImg.src = data.src;
+  lbThumbs.forEach((btn, i) => {
+    if (i === lbIndex) btn.setAttribute("aria-current", "true");
+    else btn.removeAttribute("aria-current");
+  });
+  // polite screen-reader announcement for frame changes
+  if (lbLive) {
+    lbLive.textContent = "Frame " + String(lbIndex + 1).padStart(2, "0") + " of " + photoFrames.length + ", " + data.act + ". " + data.caption;
+  }
+}
+
+function lbLoad(i) {
+  if (!photoFrames.length) return;
+  lbIndex = ((i % photoFrames.length) + photoFrames.length) % photoFrames.length;
+  lbSync();
+}
+
+function lbFocusables() {
+  if (!lightbox) return [];
+  return Array.from(lightbox.querySelectorAll("button:not([disabled]), [href], [tabindex]:not([tabindex='-1'])"))
+    .filter((el) => el.offsetParent !== null || el === document.activeElement);
 }
 
 function lbOpenAt(i) {
-  if (!lightbox || !photoCards.length) return;
+  if (!lightbox || !photoFrames.length) return;
   lbTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   lbLoad(i);
   lightbox.classList.add("is-open");
   lightbox.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
+  setPageInert(true);
   if (lenis) lenis.stop();
   isLbOpen = true;
   lbCloseBtn.focus();
@@ -566,28 +679,29 @@ function lbCloseFn() {
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
+  setPageInert(false);
   if (lenis) lenis.start();
   // empty src would re-request the page URL itself; drop the attribute
   lbImg.removeAttribute("src");
   isLbOpen = false;
-  // hand focus back to the card that opened the lightbox
+  // hand focus back to the frame that opened the viewer
   if (lbTrigger && document.contains(lbTrigger)) lbTrigger.focus();
   lbTrigger = null;
 }
 
-if (lightbox && photoCards.length) {
-  photoCards.forEach((card, i) => {
-    card.addEventListener("click", () => lbOpenAt(i));
-    card.addEventListener("keydown", (e) => {
-      if (e.key !== "Enter" && e.key !== " ") return;
-      e.preventDefault();
-      lbOpenAt(i);
-    });
+if (lightbox && photoFrames.length) {
+  lbBuildRail();
+
+  photoFrames.forEach((frame, i) => {
+    const btn = frame.querySelector(".photo-frame-btn");
+    if (!btn) return;
+    btn.addEventListener("click", () => lbOpenAt(i));
   });
 
   lbCloseBtn.addEventListener("click", lbCloseFn);
   lbPrevBtn.addEventListener("click", () => lbLoad(lbIndex - 1));
   lbNextBtn.addEventListener("click", () => lbLoad(lbIndex + 1));
+  lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
 
   // clicking the dark backdrop closes
   lightbox.addEventListener("click", (e) => {
@@ -596,45 +710,43 @@ if (lightbox && photoCards.length) {
 
   document.addEventListener("keydown", (e) => {
     if (!isLbOpen) return;
-    if (e.key === "Escape") lbCloseFn();
-    if (e.key === "ArrowLeft") lbLoad(lbIndex - 1);
-    if (e.key === "ArrowRight") lbLoad(lbIndex + 1);
-    if (e.key === "Tab") {
-      // simple focus trap: cycle the lightbox controls
-      const focusables = [lbCloseBtn, lbPrevBtn, lbNextBtn].filter(
-        (btn) => btn && btn.offsetParent !== null
-      );
-      if (!focusables.length) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
+    if (e.key === "Escape") { e.preventDefault(); lbCloseFn(); return; }
+    if (e.key === "ArrowLeft") { e.preventDefault(); lbLoad(lbIndex - 1); return; }
+    if (e.key === "ArrowRight") { e.preventDefault(); lbLoad(lbIndex + 1); return; }
+    if (e.key !== "Tab") return;
+    // focus trap: cycle through every control inside the viewer
+    const focusables = lbFocusables();
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
     }
   });
 
-  // touch: horizontal swipe changes frames
-  let swipeX = 0, swipeY = 0, trackingSwipe = false;
-  lightbox.addEventListener("touchstart", (e) => {
-    swipeX = e.changedTouches[0].clientX;
-    swipeY = e.changedTouches[0].clientY;
-    trackingSwipe = true;
-  }, { passive: true });
-  lightbox.addEventListener("touchend", (e) => {
-    if (!trackingSwipe) return;
-    trackingSwipe = false;
-    const dx = e.changedTouches[0].clientX - swipeX;
-    const dy = e.changedTouches[0].clientY - swipeY;
-    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.4) {
-      lbLoad(lbIndex + (dx < 0 ? 1 : -1));
-    }
-  }, { passive: true });
-
-  lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
+  // touch: horizontal swipe on the photo stage changes frames
+  const lbStage = lightbox.querySelector(".lb-stage");
+  if (lbStage) {
+    let swipeX = 0, swipeY = 0, trackingSwipe = false;
+    lbStage.addEventListener("touchstart", (e) => {
+      swipeX = e.changedTouches[0].clientX;
+      swipeY = e.changedTouches[0].clientY;
+      trackingSwipe = true;
+    }, { passive: true });
+    lbStage.addEventListener("touchend", (e) => {
+      if (!trackingSwipe) return;
+      trackingSwipe = false;
+      const dx = e.changedTouches[0].clientX - swipeX;
+      const dy = e.changedTouches[0].clientY - swipeY;
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+        lbLoad(lbIndex + (dx < 0 ? 1 : -1));
+      }
+    }, { passive: true });
+  }
 }
 
 /* ---------- The Archive: tab switching (clip-path wipe + row stagger) ---------- */

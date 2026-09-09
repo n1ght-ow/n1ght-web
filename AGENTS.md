@@ -121,19 +121,19 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 
 ### 光标徽章（品牌特例）
 
-taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()` + `data-cursor` 取值出徽章，仅精指针且非 REDUCED 启用（`html.has-cursor` 由 JS 设置）。徽章为深墨圆角胶囊（dynamic-island 语汇），文字 0.875rem，跟随与展缩即时跟随（power2.out，无弹性）。挂点：`VIEW`（.hs-card、.hof-item、影/剧 IMDb 按钮）、`DRAG`（#hs-wrap、两条 dragbar-track、#hof-scroll、影/剧 range）、`PLAY`（音乐 .idx-card）、`OPEN`（影/剧海报卡）、`STAMP`（.poem-stamp）。新交互卡片挂对应值即可，无需改 JS/CSS。
+taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()` + `data-cursor` 取值出徽章，仅精指针且非 REDUCED 启用（`html.has-cursor` 由 JS 设置）。徽章为深墨圆角胶囊（dynamic-island 语汇），文字 0.875rem，跟随与展缩即时跟随（power2.out，无弹性）。挂点：`VIEW`（.photo-frame-btn、.hof-item、影/剧 IMDb 按钮）、`DRAG`（#hof-scroll、hof dragbar-track、影/剧 range）、`PLAY`（音乐 .idx-card）、`OPEN`（影/剧海报卡）、`STAMP`（.poem-stamp）。新交互卡片挂对应值即可，无需改 JS/CSS。
 
 ## 站点结构（改动前核对实际现状）
 
-preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（横向拖拽画廊 11 帧 → DO NOT GO GENTLE 诗条 → Dylan Thomas 诗块收尾）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 HOF 18 卡）→ ABOUT（统计）→ footer。GAME ARCHIVE 独立区与独立 POEM 区已撤销（2026-09 用户裁定：游戏并入 archive 第六 tab，诗并入 photo 区尾）。poem 块为杂志跨页排版：eyebrow + serif 大标题 + 导语居中开场，桌面诗笺左/注释栏右双栏（720px 单列堆叠），叠句金色贯穿。
+preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（FIELD ROLL 编辑式双章节网格 11 帧 → DO NOT GO GENTLE 诗条 → Dylan Thomas 诗块收尾）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 HOF 18 卡）→ ABOUT（统计）→ footer。GAME ARCHIVE 独立区与独立 POEM 区已撤销（2026-09 用户裁定：游戏并入 archive 第六 tab，诗并入 photo 区尾）。poem 块为杂志跨页排版：eyebrow + serif 大标题 + 导语居中开场，桌面诗笺左/注释栏右双栏（720px 单列堆叠），叠句金色贯穿。
 
-两条横向拖拽画廊（photo 画廊、archive 内游戏名册）为**纯拖拽驱动**：页面滚轮垂直穿过，不 pin、不 scrub；横向移动只来自抓取拖拽（含触屏横滑）与拖动条。卡片框贴合图片原始比例（`width: min-content` 收缩包裹）。lightbox 展示 photo/ 低分辨率版本，不加载 photo/full/ 原图。大标题（bighead）双词从两侧滑动居中，scrub 锁定。
+archive 内的游戏名册为**纯拖拽驱动**：页面滚轮垂直穿过，不 pin、不 scrub；横向移动只来自抓取拖拽（含触屏横滑）与拖动条。游戏卡片框贴合图片原始比例（`width: min-content` 收缩包裹）。PHOTO 改为 FIELD ROLL 编辑式网格（BLOOM / HORIZON 双章节，不依赖横向拖拽）；lightbox 展示 photo/ 低分辨率版本，不加载 photo/full/ 原图。大标题（bighead）双词从两侧滑动居中，scrub 锁定。
 
 TICKER 共 2 条（2026-09 用户拍板收敛：原 01/02 移除，保留计数条与诗条）；taste-skill marquee ≤1/页与本项目 2 条的出入记录为品牌特例，不再增配第三条。
 
 ## 内容更新
 
-- 摄影：`.hs-card`，`photo/` 与 `photo/full/` 都放。
+- 摄影：`.photo-frame`，`photo/` 与 `photo/full/` 都放。
 - 游戏：`hof-item`，封面 `covers/`。
 - 影视：海报 `posters/<ttID>.jpg`，条目进 `film-data.js` / `series-data.js`。
 - 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。
