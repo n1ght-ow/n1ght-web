@@ -45,6 +45,20 @@ function scheduleRefresh(delay) {
   }, delay || 200);
 }
 
+/* ---------- motion tokens ----------
+   One place for the site's reusable motion values. New interactions should
+   pick a category instead of inventing a one-off duration/ease:
+   - feedback: high-frequency hover / press / drag-follow, <=150ms
+   - enter: low-frequency entrances, 0.7-1.1s
+   - spring: low-frequency state changes only, never high-frequency
+   Every animation still needs a one-line motivation and a reduced-motion
+   static alternative at the call site. */
+const MOTION = {
+  feedback: { duration: 0.15, press: 0.12, ease: "power2.out" },
+  enter: { duration: 0.85, longDuration: 1.1, ease: "power3.out", heavyEase: "power4.out", stagger: 0.09 },
+  spring: { duration: 0.6, ease: "back.out(1.7)" },
+};
+
 // split text into chars inside .ch spans (preserves word wrappers)
 function splitChars(el) {
   const words = el.textContent.split(/(\s+)/);
@@ -86,13 +100,14 @@ function initCursor() {
   const label = cursor.querySelector(".cc-label");
 
   gsap.set(cursor, { xPercent: -50, yPercent: -50, x: window.innerWidth / 2, y: window.innerHeight / 2 });
-  const cx = gsap.quickTo(cursor, "x", { duration: 0.18, ease: "power2.out" });
-  const cy = gsap.quickTo(cursor, "y", { duration: 0.18, ease: "power2.out" });
+  // feedback: cursor follow is high-frequency direct manipulation
+  const cx = gsap.quickTo(cursor, "x", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
+  const cy = gsap.quickTo(cursor, "y", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
   // gsap.quickTo on the scaled `scale` alias does not tween the dot, so drive
   // scaleX + scaleY (together with gsap.to on mousedown/mouseup) to expand the
   // badge and keep the mono label centered inside it.
-  const growX = gsap.quickTo(dot, "scaleX", { duration: 0.25, ease: "power2.out" });
-  const growY = gsap.quickTo(dot, "scaleY", { duration: 0.25, ease: "power2.out" });
+  const growX = gsap.quickTo(dot, "scaleX", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
+  const growY = gsap.quickTo(dot, "scaleY", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
   const grow = (v) => { growX(v); growY(v); };
 
   let baseScale = 1;
@@ -104,21 +119,21 @@ function initCursor() {
     if (labelled) {
       label.textContent = labelled.getAttribute("data-cursor");
       baseScale = 6;
-      gsap.to(label, { opacity: 1, duration: 0.18, overwrite: "auto" });
+      gsap.to(label, { opacity: 1, duration: MOTION.feedback.duration, overwrite: "auto" });
     } else if (e.target.closest("a, button, .photo-frame-btn, .hof-card, .idx-row, .idx-card")) {
       baseScale = 2.6;
-      gsap.to(label, { opacity: 0, duration: 0.15, overwrite: "auto" });
+      gsap.to(label, { opacity: 0, duration: MOTION.feedback.duration, overwrite: "auto" });
     } else {
       baseScale = 1;
-      gsap.to(label, { opacity: 0, duration: 0.15, overwrite: "auto" });
+      gsap.to(label, { opacity: 0, duration: MOTION.feedback.duration, overwrite: "auto" });
     }
     grow(baseScale);
   });
 
-  document.addEventListener("mousedown", () => gsap.to(dot, { scale: baseScale * 0.75, duration: 0.12, ease: "power2.in", overwrite: "auto" }));
-  document.addEventListener("mouseup", () => gsap.to(dot, { scale: baseScale, duration: 0.25, ease: "power2.out", overwrite: "auto" }));
-  document.documentElement.addEventListener("mouseleave", () => gsap.to(cursor, { autoAlpha: 0, duration: 0.2, overwrite: "auto" }));
-  document.documentElement.addEventListener("mouseenter", () => gsap.to(cursor, { autoAlpha: 1, duration: 0.2, overwrite: "auto" }));
+  document.addEventListener("mousedown", () => gsap.to(dot, { scale: baseScale * 0.75, duration: MOTION.feedback.press, ease: "power2.in", overwrite: "auto" }));
+  document.addEventListener("mouseup", () => gsap.to(dot, { scale: baseScale, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" }));
+  document.documentElement.addEventListener("mouseleave", () => gsap.to(cursor, { autoAlpha: 0, duration: MOTION.feedback.duration, overwrite: "auto" }));
+  document.documentElement.addEventListener("mouseenter", () => gsap.to(cursor, { autoAlpha: 1, duration: MOTION.feedback.duration, overwrite: "auto" }));
 }
 initCursor();
 
@@ -126,15 +141,16 @@ function initMagnetic() {
   if (TOUCH || !FINE_POINTER || REDUCED) return;
   gsap.utils.toArray(".nav-links a, .tab-btn, .lb-close, .lb-nav, .footer-links a").forEach((el) => {
     // high-frequency drag-follow: tight near-instant follow, no elastic release
-    const xTo = gsap.quickTo(el, "x", { duration: 0.18, ease: "power2.out" });
-    const yTo = gsap.quickTo(el, "y", { duration: 0.18, ease: "power2.out" });
+    // feedback: magnetic follow is high-frequency direct manipulation
+    const xTo = gsap.quickTo(el, "x", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
+    const yTo = gsap.quickTo(el, "y", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
     el.addEventListener("pointermove", (e) => {
       const r = el.getBoundingClientRect();
       xTo((e.clientX - (r.left + r.width / 2)) * 0.3);
       yTo((e.clientY - (r.top + r.height / 2)) * 0.3);
     });
     el.addEventListener("pointerleave", () => {
-      gsap.to(el, { x: 0, y: 0, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+      gsap.to(el, { x: 0, y: 0, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
     });
   });
 }
@@ -405,6 +421,7 @@ function makeHorizontalScroller(opts) {
         const from = progress;
         const target = Math.max(0, Math.min(1, from - (dragVel * 140) / dist));
         const proxy = { p: from };
+        // one-off inertia glide: not an entrance, so it stays out of MOTION.enter
         glideTween = gsap.to(proxy, {
           p: target,
           duration: 0.9,
@@ -553,15 +570,15 @@ if (photoRoll && !REDUCED && window.ScrollTrigger) {
     });
   }
 
-  // entrance: each act reveals as a group; the lead frame joins the head
+  // enter: photo field roll is a low-frequency narrative entrance
   gsap.utils.toArray(".photo-act").forEach((act) => {
     gsap.from(act.querySelectorAll(".photo-frame"), {
       clipPath: "inset(0 0 100% 0)",
       y: 24,
       autoAlpha: 0,
-      duration: 0.85,
-      ease: "power3.out",
-      stagger: 0.09,
+      duration: MOTION.enter.duration,
+      ease: MOTION.enter.ease,
+      stagger: MOTION.enter.stagger,
       immediateRender: false,
       scrollTrigger: { trigger: act, start: "top 78%", toggleActions: "play none none none" },
     });
@@ -570,8 +587,8 @@ if (photoRoll && !REDUCED && window.ScrollTrigger) {
     clipPath: "inset(0 0 100% 0)",
     y: 24,
     autoAlpha: 0,
-    duration: 0.85,
-    ease: "power3.out",
+    duration: MOTION.enter.duration,
+    ease: MOTION.enter.ease,
     immediateRender: false,
     scrollTrigger: { trigger: ".photo-roll-head", start: "top 82%", toggleActions: "play none none none" },
   });
@@ -1042,6 +1059,8 @@ function initArchiveTabs() {
       gsap.set(rows, { y: 0 });
       return;
     }
+    // one-off state transition: tab wipe uses power4.inOut, deliberately
+    // different from MOTION.enter (it is a state change, not an entrance).
     gsap.fromTo(panel,
       { clipPath: "inset(0 0 0 100%)" },
       {
@@ -1105,6 +1124,7 @@ function initArchiveTabs() {
 
   // first panel: baseline entrance on scroll into view. Skipped under
   // reduced motion — the rows simply render in their final position.
+  // enter: dense rows use a tighter 0.06 stagger; duration/ease stay shared.
   if (!REDUCED) {
     const firstPanel = panels[0];
     const firstRows = Array.from(firstPanel.querySelectorAll(".idx-row, .genre"));
@@ -1112,9 +1132,9 @@ function initArchiveTabs() {
       gsap.from(firstRows, {
         clipPath: "inset(0 0 100% 0)",
         y: 14,
-        duration: 0.8,
+        duration: MOTION.enter.duration,
         stagger: { each: 0.06, from: "start" },
-        ease: "power3.out",
+        ease: MOTION.enter.ease,
         clearProps: "clipPath",
         scrollTrigger: {
           trigger: firstPanel,
@@ -2114,7 +2134,9 @@ if (!REDUCED) {
   splitHeadParallax("archive-head");
   splitHeadParallax("about-head");
 
-  /* ---------- section mask reveals (curtain wipe) ---------- */
+  /* ---------- section mask reveals (curtain wipe) ----------
+     one-off narrative curtain: 1.25s power4.inOut is intentionally longer
+     than MOTION.enter; the mask is a section-level reveal, not a card entrance. */
 
   gsap.utils.toArray(".sec-mask").forEach((mask) => {
     gsap.fromTo(mask,
@@ -2131,16 +2153,17 @@ if (!REDUCED) {
       });
   });
 
-  /* ---------- hall of fame cards: staggered entrance ---------- */
+  /* ---------- hall of fame cards: staggered entrance ----------
+     enter: HOF card reveal is the longest low-frequency entrance (top of range) */
 
   gsap.from(".hof-card", {
     y: 90,
     rotationX: -8,
     clipPath: "inset(0 0 100% 0)",
     transformOrigin: "center bottom",
-    duration: 1.1,
-    stagger: { each: 0.09, from: "start" },
-    ease: "power4.out",
+    duration: MOTION.enter.longDuration,
+    stagger: { each: MOTION.enter.stagger, from: "start" },
+    ease: MOTION.enter.heavyEase,
     clearProps: "clipPath",
     // never hide the cards before the trigger fires: if the trigger is
     // missed for any reason the cards stay visible instead of blanking.
@@ -2161,9 +2184,9 @@ if (!REDUCED) {
     const aboutSplit = SplitText.create(".about-body p", { type: "lines", mask: "lines", autoSplit: true });
     gsap.from(aboutSplit.lines, {
       yPercent: 110,
-      duration: 0.9,
+      duration: MOTION.enter.duration,
       stagger: 0.05,
-      ease: "power3.out",
+      ease: MOTION.enter.ease,
       scrollTrigger: {
         trigger: ".about-body",
         start: "top 82%",
@@ -2174,9 +2197,9 @@ if (!REDUCED) {
     gsap.from(".about-body p", {
       y: 16,
       clipPath: "inset(0 0 100% 0)",
-      duration: 0.9,
+      duration: MOTION.enter.duration,
       stagger: 0.14,
-      ease: "power3.out",
+      ease: MOTION.enter.ease,
       clearProps: "clipPath",
       scrollTrigger: {
         trigger: ".about-body",
@@ -2186,13 +2209,14 @@ if (!REDUCED) {
     });
   }
 
-  /* ---------- about stats entrance ---------- */
+  /* ---------- about stats entrance ----------
+     enter: low-frequency reveal; MOTION.enter.duration replaces the old 0.7s */
 
   gsap.from(".about-stats span", {
     yPercent: 110,
-    duration: 0.7,
+    duration: MOTION.enter.duration,
     stagger: 0.08,
-    ease: "power3.out",
+    ease: MOTION.enter.ease,
     scrollTrigger: {
       trigger: ".about-stats",
       start: "top 85%",
@@ -2200,13 +2224,14 @@ if (!REDUCED) {
     },
   });
 
-  /* ---------- coda entrance ---------- */
+  /* ---------- coda entrance ----------
+     enter: closing title is the longest low-frequency entrance (1.1s) */
 
   gsap.from(".coda-title", {
     yPercent: 110,
-    duration: 1.1,
+    duration: MOTION.enter.longDuration,
     stagger: 0.14,
-    ease: "power4.out",
+    ease: MOTION.enter.heavyEase,
     scrollTrigger: {
       trigger: ".coda",
       start: "top 85%",

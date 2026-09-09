@@ -42,6 +42,7 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 ## 动效（better-ui × taste-skill）
 
 - MOTION_INTENSITY 7：动效是站点身份，motion claimed = motion shown——声称的动效必须真的存在；每个动画要能一句话说出动机（层级 / 叙事 / 反馈 / 状态过渡），说不出的删。动效值是精确值：时长、曲线、缩放、blur 不写近似值。
+- 动效参数常量：`js/main.js` 的 `MOTION.feedback`（≤150ms，高频）、`MOTION.enter`（0.7–1.1s，低频入场）、`MOTION.spring`（仅低频状态切换）；新增动效优先复用，不再堆一次性时间线。
 - 性能红线：只动 `transform` / `opacity` / `filter`（`clip-path: inset()` 幕帘等价允许）；scrub 动画必须 `invalidateOnRefresh: true`；图片加载后的 refresh 用 250ms debounce 合并；滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis，禁裸 `window` scroll handler。
 - 可中断：交互状态变化用 CSS transition 或 GSAP + `overwrite`；keyframes 只用于一次性序列。
 - 频率分治：高频交互（hover / press / 拖拽跟随）即时反馈，或只对 opacity / color 做 ≤150ms 过渡；按压反馈 scale 严格 `0.96`。低频入场 / 编排 / 状态切换可用 spring 弹性（GSAP `back.out` / `elastic` 或 CSS 近似曲线）——弹性是品牌特例，只许低频。

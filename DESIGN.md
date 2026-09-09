@@ -204,6 +204,8 @@
 | ticker | 叙事 | 常驻 | 26s linear infinite | `animation: none` |
 | drag 惯性 | 反馈 | 拖拽释放 | 0.9s `power3.out` | 直接拖拽不受 reduced 影响 |
 
+> 代码侧统一常量：`js/main.js` 的 `MOTION.feedback`（0.15s / `power2.out`，press 0.12s）、`MOTION.enter`（0.85s / `power3.out`，`longDuration` 1.1s，`heavyEase` `power4.out`，stagger 0.09）、`MOTION.spring`（0.6s / `back.out(1.7)`，仅低频状态切换）。新增动效优先复用，不再堆一次性时间线。
+
 ### 5.2 性能红线
 
 - 只动 `transform` / `opacity` / `filter`；`clip-path: inset()` 幕帘等价允许。
