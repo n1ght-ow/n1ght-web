@@ -123,7 +123,7 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 
 ### 光标徽章（品牌特例）
 
-taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()` + `data-cursor` 取值出徽章，仅精指针且非 REDUCED 启用（`html.has-cursor` 由 JS 设置）。徽章为深墨圆角胶囊（dynamic-island 语汇），文字 0.875rem，跟随与展缩即时跟随（power2.out，无弹性）。挂点：`VIEW`（.photo-frame-btn、.hof-item、影/剧 IMDb 按钮）、`DRAG`（#hof-scroll、hof dragbar-track、影/剧 range）、`PLAY`（音乐 .idx-card）、`OPEN`（影/剧海报卡）、`STAMP`（.poem-stamp）。新交互卡片挂对应值即可，无需改 JS/CSS。
+taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()` + `data-cursor` 取值出徽章，仅精指针且非 REDUCED 启用（`html.has-cursor` 由 JS 设置）。指针为 10px 深墨圆点 + 30px 细 ink 环（ink@0.6 实测纸底 4.40:1 / 金底 3.20:1）；`[data-cursor]` 目标在圆点旁偏移出紧凑深墨胶囊标签（dynamic-island 语汇），标签文字 0.75rem mono 大写、字距 0.14em，跟随与状态切换即时（power2.out，无弹性），文本输入区恢复系统 I-beam。挂点：`VIEW`（.photo-frame-btn、.hof-item、影/剧 IMDb 按钮）、`DRAG`（#hof-scroll、hof dragbar-track、影/剧 range）、`PLAY`（音乐 .idx-card）、`OPEN`（影/剧海报卡）、`STAMP`（.poem-stamp）。新交互卡片挂对应值即可，无需改 JS/CSS。
 
 ## 站点结构（改动前核对实际现状）
 

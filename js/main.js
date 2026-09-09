@@ -83,55 +83,134 @@ function splitChars(el) {
 }
 
 /* ---------- custom cursor + magnetic (fine pointers, motion allowed) ----------
-   One ink dot: grows on anything interactive, expands into a mono label on
-   [data-cursor] targets (VIEW / DRAG / OPEN / STAMP). Magnetic elements lean
-   toward the pointer and spring back on leave. */
+   Ink needle + floating label: the dot stays small, a thin ring marks
+   interactive targets, and [data-cursor] targets (VIEW / DRAG / OPEN /
+   STAMP) show a compact mono pill offset from the pointer. Magnetic elements
+   lean toward the pointer and spring back on leave. */
 
 function initCursor() {
   if (TOUCH || !FINE_POINTER || REDUCED) return;
   const cursor = document.createElement("div");
   cursor.className = "custom-cursor";
   cursor.setAttribute("aria-hidden", "true");
-  cursor.innerHTML = '<div class="cc-dot"></div><span class="cc-label mono"></span>';
+  cursor.innerHTML = '<span class="cc-ring"></span><span class="cc-dot"></span><span class="cc-label mono"></span>';
   document.body.appendChild(cursor);
   document.documentElement.classList.add("has-cursor");
 
   const dot = cursor.querySelector(".cc-dot");
+  const ring = cursor.querySelector(".cc-ring");
   const label = cursor.querySelector(".cc-label");
 
-  gsap.set(cursor, { xPercent: -50, yPercent: -50, x: window.innerWidth / 2, y: window.innerHeight / 2 });
+  // the container is a 0x0 point; children center themselves on it
+  gsap.set(cursor, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+  gsap.set([dot, ring], { xPercent: -50, yPercent: -50 });
+  gsap.set(ring, { autoAlpha: 0, scale: 0.6 });
+  gsap.set(label, { autoAlpha: 0, scale: 0.94 });
+
   // feedback: cursor follow is high-frequency direct manipulation
   const cx = gsap.quickTo(cursor, "x", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
   const cy = gsap.quickTo(cursor, "y", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
-  // gsap.quickTo on the scaled `scale` alias does not tween the dot, so drive
-  // scaleX + scaleY (together with gsap.to on mousedown/mouseup) to expand the
-  // badge and keep the mono label centered inside it.
+  // quickTo on the `scale` alias does not tween reliably, so drive scaleX +
+  // scaleY on the dot and keep the label as a separate element.
   const growX = gsap.quickTo(dot, "scaleX", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
   const growY = gsap.quickTo(dot, "scaleY", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
   const grow = (v) => { growX(v); growY(v); };
 
+  let pointerX = window.innerWidth / 2;
+  let pointerY = window.innerHeight / 2;
   let baseScale = 1;
+  let ringScale = 0.6;
+  let activeEl = null;
+  let labelW = 0;
+  let labelH = 0;
+  let labelFlipX = false;
+  let labelFlipY = false;
 
-  window.addEventListener("pointermove", (e) => { cx(e.clientX); cy(e.clientY); }, { passive: true });
+  // the label docks beside the dot and flips near the viewport edges; only
+  // re-position when the flip state changes so pointermove stays cheap
+  const positionLabel = () => {
+    if (!labelW) return;
+    const gap = 20;
+    const flipX = pointerX + gap + labelW > window.innerWidth - 12;
+    const flipY = pointerY + gap + labelH > window.innerHeight - 12;
+    if (flipX === labelFlipX && flipY === labelFlipY) return;
+    labelFlipX = flipX;
+    labelFlipY = flipY;
+    gsap.set(label, {
+      x: flipX ? -(labelW + gap) : gap,
+      y: flipY ? -(labelH + gap) : gap,
+      transformOrigin: `${flipX ? "100%" : "0%"} ${flipY ? "100%" : "0%"}`
+    });
+  };
+
+  window.addEventListener("pointermove", (e) => {
+    pointerX = e.clientX;
+    pointerY = e.clientY;
+    cx(pointerX);
+    cy(pointerY);
+    if (activeEl && activeEl.hasAttribute("data-cursor")) positionLabel();
+  }, { passive: true });
+
+  const showLabel = (el) => {
+    label.textContent = el.getAttribute("data-cursor");
+    const gap = 20;
+    labelW = label.offsetWidth;
+    labelH = label.offsetHeight;
+    labelFlipX = pointerX + gap + labelW > window.innerWidth - 12;
+    labelFlipY = pointerY + gap + labelH > window.innerHeight - 12;
+    gsap.set(label, {
+      x: labelFlipX ? -(labelW + gap) : gap,
+      y: labelFlipY ? -(labelH + gap) : gap,
+      transformOrigin: `${labelFlipX ? "100%" : "0%"} ${labelFlipY ? "100%" : "0%"}`
+    });
+    gsap.to(label, { autoAlpha: 1, scale: 1, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
+  };
+
+  const hideLabel = () => {
+    gsap.to(label, { autoAlpha: 0, scale: 0.94, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
+  };
 
   document.addEventListener("mouseover", (e) => {
+    pointerX = e.clientX;
+    pointerY = e.clientY;
+    // text fields keep the native I-beam; hide the decorative cursor there
+    const overText = e.target.closest("input, textarea, select, [contenteditable='true']");
+    cursor.classList.toggle("is-hidden", Boolean(overText));
+    if (overText) return;
+
     const labelled = e.target.closest("[data-cursor]");
+    const interactive = e.target.closest("a, button, .photo-frame-btn, .hof-card, .hof-item, .idx-row, .idx-card");
+    const next = labelled || interactive || null;
+    if (next === activeEl) return;
+    activeEl = next;
+
     if (labelled) {
-      label.textContent = labelled.getAttribute("data-cursor");
-      baseScale = 6;
-      gsap.to(label, { opacity: 1, duration: MOTION.feedback.duration, overwrite: "auto" });
-    } else if (e.target.closest("a, button, .photo-frame-btn, .hof-card, .idx-row, .idx-card")) {
-      baseScale = 2.6;
-      gsap.to(label, { opacity: 0, duration: MOTION.feedback.duration, overwrite: "auto" });
+      baseScale = 1.35;
+      ringScale = 1.25;
+      showLabel(labelled);
+      gsap.to(ring, { autoAlpha: 0.6, scale: ringScale, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
+    } else if (interactive) {
+      baseScale = 1;
+      ringScale = 1;
+      hideLabel();
+      gsap.to(ring, { autoAlpha: 0.6, scale: ringScale, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
     } else {
       baseScale = 1;
-      gsap.to(label, { opacity: 0, duration: MOTION.feedback.duration, overwrite: "auto" });
+      ringScale = 0.6;
+      hideLabel();
+      gsap.to(ring, { autoAlpha: 0, scale: ringScale, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
     }
     grow(baseScale);
   });
 
-  document.addEventListener("mousedown", () => gsap.to(dot, { scale: baseScale * 0.75, duration: MOTION.feedback.press, ease: "power2.in", overwrite: "auto" }));
-  document.addEventListener("mouseup", () => gsap.to(dot, { scale: baseScale, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" }));
+  document.addEventListener("mousedown", () => {
+    grow(baseScale * 0.96);
+    gsap.to(ring, { scale: ringScale * 0.96, duration: MOTION.feedback.press, ease: "power2.in", overwrite: "auto" });
+  });
+  document.addEventListener("mouseup", () => {
+    grow(baseScale);
+    gsap.to(ring, { scale: ringScale, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
+  });
   document.documentElement.addEventListener("mouseleave", () => gsap.to(cursor, { autoAlpha: 0, duration: MOTION.feedback.duration, overwrite: "auto" }));
   document.documentElement.addEventListener("mouseenter", () => gsap.to(cursor, { autoAlpha: 1, duration: MOTION.feedback.duration, overwrite: "auto" }));
 }

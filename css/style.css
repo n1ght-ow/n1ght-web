@@ -148,40 +148,65 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 
 /* ============ CUSTOM CURSOR ============ */
-/* graphite pill (dynamic-island register); active only on fine pointers
-   without reduced motion (html.has-cursor is set from JS) */
+/* ink needle + floating label (dynamic-island register); active only on fine
+   pointers without reduced motion (html.has-cursor is set from JS) */
 html.has-cursor,
 html.has-cursor * { cursor: none !important; }
+
+/* text fields keep the platform cursor; the decorative layer hides in JS */
+html.has-cursor input,
+html.has-cursor textarea,
+html.has-cursor select,
+html.has-cursor [contenteditable="true"] { cursor: auto !important; }
 
 .custom-cursor {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 200;
-  width: 84px;
-  height: 84px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 0;
+  height: 0;
   pointer-events: none;
 }
 
+.custom-cursor.is-hidden { display: none; }
+
+.custom-cursor .cc-dot,
+.custom-cursor .cc-ring,
+.custom-cursor .cc-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
+
 .custom-cursor .cc-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: var(--radius-pill);
   background: var(--color-text);
-  box-shadow: 0 2px 10px rgba(29, 27, 22, 0.35);
+  box-shadow:
+    0 0 0 1.5px var(--color-surface),
+    var(--shadow-soft-sm);
+}
+
+.custom-cursor .cc-ring {
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid var(--color-text);
+  border-radius: var(--radius-pill);
+  opacity: 0;
 }
 
 .custom-cursor .cc-label {
-  position: absolute;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 400;
+  line-height: 1;
   letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--color-bg);
   background: var(--color-text);
-  padding: 0.45em 0.95em;
+  padding: 0.55em 0.85em;
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-soft-md);
   white-space: nowrap;

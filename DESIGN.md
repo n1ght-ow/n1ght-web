@@ -198,7 +198,7 @@
 | HOF 卡片入场 | 层级 | 滚动进入 | y / rotationX / clipPath 1.1s `power4.out`，stagger 0.09s | 静态 |
 | 统一详情层 | 状态过渡 | 打开 / 关闭 | opacity 0.25s `--ease-out`；visibility 0s（关闭延迟 0.25s） | `transition: none` |
 | toolbar / 收藏控件 | 反馈 | hover / press / 切换 | 0.15s 具体属性；press `scale(.96)` | `transition-duration: 0s` |
-| 光标徽章 | 反馈 | 指针移动 | GSAP quickTo 0.18s `power2.out` | 禁用光标 |
+| 光标徽章 | 反馈 | 指针移动 / 悬停 | GSAP quickTo 0.15s `power2.out`；环 / 标签 opacity + scale 0.15s | 禁用光标 |
 | 磁吸 | 反馈 | 指针移动 | GSAP quickTo 0.18s `power2.out` | 禁用 |
 | 泡泡 | 反馈 | 点击 | 0.28s `power2.in` | 静态 |
 | ticker | 叙事 | 常驻 | 26s linear infinite | `animation: none` |
