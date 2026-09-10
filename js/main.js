@@ -11,8 +11,8 @@ const TOUCH = window.matchMedia("(pointer: coarse)").matches;
 const FINE_POINTER = window.matchMedia("(pointer: fine)").matches;
 
 /* ---------- smooth scrolling (Lenis, full-motion only) ----------
-   Native scroll under reduced motion. Programmatic jumps (dragbar seek,
-   anchors) route through lenis.scrollTo so the internal value stays in sync. */
+   Native scroll under reduced motion. Programmatic jumps (anchors) route
+   through lenis.scrollTo so the internal value stays in sync. */
 let lenis = null;
 if (!REDUCED && typeof Lenis !== "undefined") {
   lenis = new Lenis({ autoRaf: false });
@@ -173,8 +173,8 @@ function initCursor() {
   document.addEventListener("mouseover", (e) => {
     pointerX = e.clientX;
     pointerY = e.clientY;
-    // text fields keep the native I-beam; hide the decorative cursor there
-    const overText = e.target.closest("input, textarea, select, [contenteditable='true']");
+    // text fields keep the native I-beam; range controls keep the custom cursor
+    const overText = e.target.closest("input:not([type='range']), textarea, select, [contenteditable='true']");
     cursor.classList.toggle("is-hidden", Boolean(overText));
     if (overText) return;
 
@@ -343,209 +343,6 @@ if (REDUCED) {
   }, 4500);
 }
 
-/* ---------- horizontal scroller (game roster) ----------
-   Drag-only: the page wheel scrolls vertically past these sections and
-   never drives the track. Horizontal movement comes from grabbing the
-   section, the scrubber bar, or touch drag (touch-action: pan-y lets
-   horizontal gestures through on touch). NOT gated by REDUCED — dragging
-   is direct user input. */
-
-function makeHorizontalScroller(opts) {
-  const wrap = document.getElementById(opts.wrapId);
-  const track = document.getElementById(opts.trackId);
-  if (!wrap || !track) return null;
-
-  const getDistance = () => Math.max(0, track.scrollWidth - wrap.clientWidth);
-
-  const bar = document.getElementById(opts.barId);
-  const barTrack = document.getElementById(opts.barTrackId);
-  const barFill = document.getElementById(opts.barFillId);
-  const barHandle = document.getElementById(opts.barHandleId);
-  const barCount = document.getElementById(opts.barCountId);
-
-  let isDraggingBar = false;
-  let isGrabbing = false;
-  let glideTween = null;
-  let itemCount = opts.itemCount;
-
-  let progress = 0;
-  let lastFrame = -1;
-  // Handle X is a transform write (translateX). Track/handle widths are
-  // cached and re-measured on refresh/resize, so the per-frame path never
-  // reads layout between writes.
-  let barW = 0;
-  let handleHalf = 0;
-  const measureHandle = () => {
-    if (!barTrack || !barHandle) return;
-    barW = barTrack.clientWidth;
-    handleHalf = barHandle.offsetWidth / 2;
-  };
-  function renderDragbar(p) {
-    if (!bar || !barFill || !barHandle || !barCount) return;
-    const clamped = Math.max(0, Math.min(1, p));
-    // transform writes only: fill via scaleX, handle via translateX
-    // (center of handle lands at p * trackWidth, matching the old left:%)
-    barFill.style.transform = "scaleX(" + clamped + ")";
-    if (!barW || !handleHalf) measureHandle();
-    barHandle.style.transform = "translate(" + (clamped * barW - handleHalf).toFixed(2) + "px, -50%)";
-    const frame = Math.min(itemCount, Math.max(1, Math.round(clamped * (itemCount - 1)) + 1));
-    if (frame !== lastFrame) {
-      lastFrame = frame;
-      barCount.textContent = opts.label + " " + String(frame).padStart(2, "0") + " / " + String(itemCount).padStart(2, "0");
-    }
-  }
-
-  // single write path: progress -> track transform + scrubber state
-  const render = (p) => {
-    progress = Math.max(0, Math.min(1, p));
-    gsap.set(track, { x: -getDistance() * progress });
-    renderDragbar(progress);
-  };
-
-  if (bar && barTrack) {
-    // the scrubber only shows while its section is on screen
-    new IntersectionObserver((entries) => {
-      entries.forEach((en) => bar.classList.toggle("is-active", en.isIntersecting));
-    }, { threshold: 0.15 }).observe(wrap);
-
-    measureHandle();
-    window.addEventListener("resize", () => { measureHandle(); render(progress); });
-    // lazy images grow the track; keep the clamped position honest
-    if (typeof ResizeObserver === "function") {
-      new ResizeObserver(() => render(progress)).observe(track);
-    }
-
-    const barEventToProgress = (e) => {
-      const rect = barTrack.getBoundingClientRect();
-      return Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    };
-
-    barTrack.addEventListener("pointerdown", (e) => {
-      isDraggingBar = true;
-      barTrack.classList.add("is-dragging");
-      barTrack.setPointerCapture(e.pointerId);
-      if (glideTween) { glideTween.kill(); glideTween = null; }
-      render(barEventToProgress(e));
-    });
-
-    barTrack.addEventListener("pointermove", (e) => {
-      if (!isDraggingBar) return;
-      render(barEventToProgress(e));
-    });
-
-    const endBarDrag = () => {
-      isDraggingBar = false;
-      barTrack.classList.remove("is-dragging");
-    };
-    barTrack.addEventListener("pointerup", endBarDrag);
-    barTrack.addEventListener("pointercancel", endBarDrag);
-  }
-
-  /* ---- direct grab-drag on the section (all pointers) ----
-     Under DRAG_THRESHOLD px of travel it stays a normal click (lightbox etc.);
-     past it the drag captures the pointer and moves the track directly.
-     Release flings with inertia. Direct manipulation, so NOT gated by REDUCED. */
-  {
-    const DRAG_THRESHOLD = 6;
-    let dragId = null, dragStartX = 0, dragStartP = 0, dragArmed = false, dragMoved = false;
-    let lastX = 0, lastT = 0, dragVel = 0; // px/ms, signed
-
-    const suppressClick = (e) => { e.stopPropagation(); e.preventDefault(); };
-
-    wrap.addEventListener("dragstart", (e) => e.preventDefault());
-
-    wrap.addEventListener("pointerdown", (e) => {
-      if (isDraggingBar || e.button !== 0) return;
-      if (glideTween) { glideTween.kill(); glideTween = null; }
-      dragId = e.pointerId;
-      dragStartX = lastX = e.clientX;
-      lastT = performance.now();
-      dragVel = 0;
-      dragStartP = progress;
-      dragArmed = false;
-      dragMoved = false;
-    });
-
-    wrap.addEventListener("pointermove", (e) => {
-      if (e.pointerId !== dragId) return;
-      const dx = e.clientX - dragStartX;
-      if (!dragArmed) {
-        if (Math.abs(dx) < DRAG_THRESHOLD) return;
-        dragArmed = true;
-        dragMoved = true;
-        isGrabbing = true;
-        wrap.classList.add("is-grabbing");
-        wrap.setPointerCapture(dragId);
-      }
-      const now = performance.now();
-      const dt = now - lastT;
-      if (dt > 0) dragVel = 0.8 * dragVel + 0.2 * ((e.clientX - lastX) / dt);
-      lastX = e.clientX;
-      lastT = now;
-      const dist = getDistance();
-      if (!dist) return;
-      render(dragStartP - dx / dist);
-    });
-
-    const endGrab = (e) => {
-      if (e.pointerId !== dragId) return;
-      dragId = null;
-      if (!dragArmed) return;
-      dragArmed = false;
-      isGrabbing = false;
-      wrap.classList.remove("is-grabbing");
-      // inertia: project release velocity onto progress and glide out
-      const dist = getDistance();
-      if (dist && Math.abs(dragVel) > 0.15) {
-        const from = progress;
-        const target = Math.max(0, Math.min(1, from - (dragVel * 140) / dist));
-        const proxy = { p: from };
-        // one-off inertia glide: not an entrance, so it stays out of MOTION.enter
-        glideTween = gsap.to(proxy, {
-          p: target,
-          duration: 0.9,
-          ease: "power3.out",
-          onUpdate: () => render(proxy.p),
-          onComplete: () => { glideTween = null; },
-        });
-      }
-      if (dragMoved) {
-        dragMoved = false;
-        // one-shot: eat the synthetic click this drag would produce
-        wrap.addEventListener("click", suppressClick, { capture: true, once: true });
-      }
-    };
-    wrap.addEventListener("pointerup", endGrab);
-    wrap.addEventListener("pointercancel", endGrab);
-
-    // wheeling away kills any glide immediately
-    wrap.addEventListener("wheel", () => {
-      if (glideTween) { glideTween.kill(); glideTween = null; }
-    }, { passive: true });
-  }
-
-  render(0);
-  return {
-    render,
-    setItemCount: (nextCount) => {
-      itemCount = Math.max(1, nextCount);
-      lastFrame = -1;
-      render(progress);
-    },
-  };
-}
-
-const gameScroller = makeHorizontalScroller({
-  wrapId: "hof-scroll",
-  trackId: "hof-row",
-  barId: "hof-dragbar",
-  barTrackId: "hof-dragbar-track",
-  barFillId: "hof-dragbar-fill",
-  barHandleId: "hof-dragbar-handle",
-  barCountId: "hof-dragbar-count",
-  itemCount: 18,
-  label: "CARD",
-});
 
 /* ---------- hero bubbles: click to pop, respawn at a random spot ---------- */
 
@@ -685,6 +482,8 @@ const lbImg = document.getElementById("lb-img");
 const lbCap = document.getElementById("lb-cap");
 const lbMusic = document.getElementById("lb-music");
 const lbMusicLabel = lbMusic ? lbMusic.querySelector(".lb-music-label") : null;
+const lbMusicCover = document.getElementById("lb-music-cover");
+const lbMusicGlyph = lbMusic ? lbMusic.querySelector(".lb-music-glyph") : null;
 const lbMeta = document.getElementById("lb-meta");
 const lbKicker = document.getElementById("lb-kicker");
 const lbTitle = document.getElementById("lb-title");
@@ -744,12 +543,14 @@ function gameItemData(item) {
 
 function musicItemData(card) {
   const genre = card.closest(".genre");
+  const id = card.getAttribute("data-song-id");
   return {
     type: "music",
-    id: card.getAttribute("data-song-id"),
+    id: id,
     title: detailText(card, ".idx-title"),
     artist: detailText(card, ".idx-artist"),
     genre: genre ? detailText(genre, ".genre-title") : "",
+    cover: window.MUSIC_COVERS && window.MUSIC_COVERS[id] ? "album-covers/" + window.MUSIC_COVERS[id] : "",
   };
 }
 
@@ -856,13 +657,27 @@ function renderDetail() {
 
   if (detailType === "music") {
     setDetailVisibility({ image: false, caption: false, music: true, meta: true, rail: false });
+    // real sleeve when the archive has artwork for this song, otherwise the
+    // placeholder sleeve keeps the layer honest instead of showing a broken img
+    if (lbMusicCover) {
+      if (item.cover) {
+        lbMusicCover.src = item.cover;
+        lbMusicCover.alt = item.title + " album cover";
+        lbMusicCover.hidden = false;
+      } else {
+        lbMusicCover.hidden = true;
+        lbMusicCover.removeAttribute("src");
+        lbMusicCover.removeAttribute("alt");
+      }
+    }
+    if (lbMusicGlyph) lbMusicGlyph.hidden = Boolean(item.cover);
     if (lbMusicLabel) lbMusicLabel.textContent = "NETEASE CLOUD MUSIC";
     lbKicker.textContent = item.genre;
     lbTitle.textContent = item.title;
     lbLines.textContent = item.artist;
     lbQuote.textContent = "Open in NetEase Cloud Music to play this track.";
     lbLink.hidden = false;
-    lbLink.textContent = "OPEN IN NETEASE ↗";
+    lbLink.textContent = "OPEN IN NETEASE";
     lbLink.href = "https://music.163.com/#/song?id=" + item.id;
     lbLink.dataset.songId = item.id;
     if (lbLive) {
@@ -882,7 +697,7 @@ function renderDetail() {
     lbLines.textContent = item.director;
     lbQuote.textContent = item.quote;
     lbLink.hidden = false;
-    lbLink.textContent = "OPEN ON IMDb ↗";
+    lbLink.textContent = "OPEN ON IMDb";
     lbLink.href = "https://www.imdb.com/title/" + item.imdb + "/";
     if (lbLive) {
       lbLive.textContent = "Film " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + ". " + item.director + ", " + item.year + ". " + item.quote;
@@ -895,7 +710,7 @@ function renderDetail() {
     lbLines.textContent = item.seasons;
     lbQuote.textContent = item.quote;
     lbLink.hidden = false;
-    lbLink.textContent = "OPEN ON IMDb ↗";
+    lbLink.textContent = "OPEN ON IMDb";
     lbLink.href = "https://www.imdb.com/title/" + item.imdb + "/";
     if (lbLive) {
       lbLive.textContent = "Series " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + ". " + item.years + ", " + item.seasons + ". " + item.quote;
@@ -1146,6 +961,10 @@ function initArchiveTabs() {
         clipPath: "inset(0 0 0 0%)",
         duration: 0.8,
         ease: "power4.inOut",
+        // the wipe is the reveal, not a permanent mask: any clip-path left on
+        // the panel also slices every focus ring / glow that reaches past the
+        // panel box (the search field sits flush with the panel's left edge)
+        clearProps: "clipPath",
       });
     gsap.from(rows, {
       clipPath: "inset(0 0 100% 0)",
@@ -1168,7 +987,7 @@ function initArchiveTabs() {
     const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre, .hof-item")) : [];
     if (instant) {
       gsap.set(rows, { y: 0, clearProps: "clipPath" });
-      gsap.set(panels[idx], { clipPath: "inset(0 0 0 0%)" });
+      gsap.set(panels[idx], { clearProps: "clipPath" });
     } else {
       animateIn(idx, rows);
     }
@@ -1227,558 +1046,6 @@ function initArchiveTabs() {
 
 initArchiveTabs();
 
-/* ---------- archive favorites: localStorage-backed star toggles ---------- */
-
-const FAV_KEY = "night:favorites";
-const FAV_TYPES = ["photo", "book", "film", "series", "sport", "game", "music"];
-const favorites = {};
-FAV_TYPES.forEach((type) => { favorites[type] = new Set(); });
-
-function loadFavorites() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(FAV_KEY) || "{}");
-    FAV_TYPES.forEach((type) => {
-      favorites[type].clear();
-      if (Array.isArray(saved[type])) {
-        saved[type].forEach((id) => favorites[type].add(String(id)));
-      }
-    });
-  } catch (err) {
-    // private mode / corrupt JSON: keep the in-memory defaults
-  }
-}
-
-function saveFavorites() {
-  try {
-    const out = {};
-    FAV_TYPES.forEach((type) => { out[type] = Array.from(favorites[type]); });
-    localStorage.setItem(FAV_KEY, JSON.stringify(out));
-  } catch (err) {
-    // storage unavailable: favorites stay session-only
-  }
-}
-
-function isFavorite(type, id) {
-  return Boolean(favorites[type] && favorites[type].has(String(id)));
-}
-
-function toggleFavorite(type, id) {
-  const key = String(id);
-  if (!favorites[type]) favorites[type] = new Set();
-  if (favorites[type].has(key)) favorites[type].delete(key);
-  else favorites[type].add(key);
-  saveFavorites();
-}
-
-function favoriteSlug(value) {
-  return String(value || "").toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, "-").replace(/^-+|-+$/g, "");
-}
-
-function createFavoriteButton(type, id, name) {
-  const btn = document.createElement("button");
-  btn.type = "button";
-  btn.className = "fav-btn";
-  btn.setAttribute("data-fav-type", type);
-  btn.setAttribute("data-fav-id", String(id));
-  btn.setAttribute("data-fav-name", name);
-  btn.setAttribute("aria-pressed", "false");
-  btn.setAttribute("aria-label", "Save " + name + " to favorites");
-  btn.textContent = "☆";
-  return btn;
-}
-
-function syncFavoriteButtons() {
-  document.querySelectorAll(".fav-btn[data-fav-type][data-fav-id]").forEach((btn) => {
-    const type = btn.getAttribute("data-fav-type");
-    const id = btn.getAttribute("data-fav-id");
-    const on = isFavorite(type, id);
-    const name = btn.getAttribute("data-fav-name") || "this item";
-    btn.setAttribute("aria-pressed", on ? "true" : "false");
-    btn.textContent = on ? "★" : "☆";
-    btn.setAttribute("aria-label", (on ? "Remove " : "Save ") + name + (on ? " from favorites" : " to favorites"));
-  });
-}
-
-function addFavoriteButton(item, type, id, name) {
-  if (!item || item.querySelector(":scope > .fav-btn")) return;
-  item.appendChild(createFavoriteButton(type, id, name));
-}
-
-function wrapWithFavorite(item, wrapClass, type, id, name) {
-  if (!item) return;
-  const parent = item.parentElement;
-  if (parent && parent.classList.contains(wrapClass)) {
-    if (!parent.querySelector(":scope > .fav-btn")) {
-      parent.appendChild(createFavoriteButton(type, id, name));
-    }
-    return;
-  }
-  const wrap = document.createElement("div");
-  wrap.className = wrapClass;
-  parent.insertBefore(wrap, item);
-  wrap.appendChild(item);
-  wrap.appendChild(createFavoriteButton(type, id, name));
-}
-
-function initFavorites() {
-  loadFavorites();
-
-  Array.from(document.querySelectorAll(".photo-frame")).forEach((frame, i) => {
-    const img = frame.querySelector("img");
-    const id = img ? img.getAttribute("src").split("/").pop() : "photo-" + (i + 1);
-    addFavoriteButton(frame, "photo", id, "Frame " + String(i + 1).padStart(2, "0"));
-  });
-
-  Array.from(document.querySelectorAll("#panel-books .idx-row")).forEach((row) => {
-    const title = detailText(row, ".idx-title");
-    addFavoriteButton(row, "book", favoriteSlug(title), title);
-  });
-
-  Array.from(document.querySelectorAll("#panel-sport .idx-row")).forEach((row) => {
-    const title = detailText(row, ".idx-title");
-    addFavoriteButton(row, "sport", favoriteSlug(title), title);
-  });
-
-  Array.from(document.querySelectorAll("#panel-games .hof-item")).forEach((item) => {
-    const name = detailText(item, ".hof-name");
-    wrapWithFavorite(item, "hof-item-wrap", "game", item.getAttribute("data-game"), name);
-  });
-
-  Array.from(document.querySelectorAll("#panel-music .idx-card[data-song-id]")).forEach((card) => {
-    const title = detailText(card, ".idx-title");
-    const artist = detailText(card, ".idx-artist");
-    wrapWithFavorite(card, "idx-card-wrap", "music", card.getAttribute("data-song-id"), title + " by " + artist);
-  });
-
-  document.addEventListener("click", (e) => {
-    const btn = e.target.closest(".fav-btn");
-    if (!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-    toggleFavorite(btn.getAttribute("data-fav-type"), btn.getAttribute("data-fav-id"));
-    syncFavoriteButtons();
-    document.dispatchEvent(new CustomEvent("night:favorites-changed"));
-  });
-
-  document.addEventListener("night:reel-rendered", syncFavoriteButtons);
-  window.syncFavoriteButtons = syncFavoriteButtons;
-  syncFavoriteButtons();
-}
-
-/* ---------- The Archive: shared filter / sort / density toolbar ----------
-   One toolbar above the panels, re-rendered for the active shelf. Sort and
-   filter work on the existing DOM (books / sport / music / games) or on the
-   reel-stage data arrays (films / series); no content moves between panels. */
-
-function initArchiveToolbar() {
-  const toolbar = document.getElementById("archive-toolbar");
-  const tabbar = document.getElementById("archive-tabbar");
-  const filterMount = document.getElementById("archive-toolbar-filters");
-  const countEl = document.getElementById("archive-toolbar-count");
-  const emptyEl = document.getElementById("archive-toolbar-empty");
-  const emptyText = document.getElementById("archive-toolbar-empty-text");
-  const emptyClear = document.getElementById("archive-toolbar-empty-clear");
-  const sortSelect = document.getElementById("archive-sort");
-  const favoritesToggle = document.getElementById("archive-favorites-toggle");
-  const densityButtons = Array.from(toolbar.querySelectorAll(".archive-density-btn"));
-  if (!toolbar || !tabbar || !filterMount || !countEl || !sortSelect) return;
-
-  const panels = {
-    books: document.getElementById("panel-books"),
-    films: document.getElementById("panel-films"),
-    series: document.getElementById("panel-series"),
-    music: document.getElementById("panel-music"),
-    sport: document.getElementById("panel-sport"),
-    games: document.getElementById("panel-games"),
-  };
-  if (Object.keys(panels).some((key) => !panels[key])) return;
-
-  const SPORT_FILTERS = [
-    { value: "basketball", label: "BASKETBALL" },
-    { value: "football", label: "FOOTBALL" },
-    { value: "formula-1", label: "FORMULA 1" },
-    { value: "american-football", label: "AMERICAN FOOTBALL" },
-    { value: "esports", label: "ESPORTS" },
-  ];
-
-  const CONFIG = {
-    books: {
-      label: "BOOKS",
-      count: (n, total) => (n === total ? n + " BOOKS" : n + " / " + total + " BOOKS"),
-      sorts: [["curated", "CURATED"], ["title", "TITLE A-Z"], ["author", "AUTHOR A-Z"]],
-      filters: null,
-    },
-    films: {
-      label: "FILMS",
-      count: (n, total) => (n === total ? n + " FILMS" : n + " / " + total + " FILMS"),
-      sorts: [["curated", "CURATED"], ["year", "YEAR ↓"], ["title", "TITLE A-Z"]],
-      filters: () => allStringFilters(uniqueValues((window.FILM_DATA || []).map((item) => item.genre))),
-      filterKey: (item, value) => item.genre === value,
-    },
-    series: {
-      label: "SERIES",
-      count: (n, total) => (n === total ? n + " SERIES" : n + " / " + total + " SERIES"),
-      sorts: [["curated", "CURATED"], ["years", "YEARS ↓"], ["title", "TITLE A-Z"]],
-      filters: () => allStringFilters(uniqueValues((window.SERIES_DATA || []).map((item) => item.category))),
-      filterKey: (item, value) => item.category === value,
-    },
-    music: {
-      label: "SONGS",
-      count: (n, total) => (n === total ? n + " SONGS" : n + " / " + total + " SONGS"),
-      sorts: [["curated", "CURATED"], ["title", "TITLE A-Z"], ["artist", "ARTIST A-Z"]],
-      filters: null,
-    },
-    sport: {
-      label: "TEAMS",
-      count: (n, total) => (n === total ? n + " TEAMS" : n + " / " + total + " TEAMS"),
-      sorts: [["curated", "CURATED"], ["name", "NAME A-Z"], ["city", "CITY A-Z"]],
-      filters: () => allObjectFilters(SPORT_FILTERS),
-      filterKey: (item, value) => item.getAttribute("data-sport") === value,
-    },
-    games: {
-      label: "GAMES",
-      count: (n, total) => (n === total ? n + " GAMES" : n + " / " + total + " GAMES"),
-      sorts: [["curated", "CURATED"], ["hours", "HOURS ↓"], ["name", "NAME A-Z"]],
-      filters: null,
-    },
-  };
-
-  const state = {};
-  Object.keys(CONFIG).forEach((key) => {
-    state[key] = { filter: "all", sort: "curated", density: "comfort", favoritesOnly: false };
-  });
-  try {
-    const savedView = JSON.parse(localStorage.getItem("night:view") || "{}");
-    Object.keys(CONFIG).forEach((key) => {
-      const saved = savedView[key];
-      if (!saved) return;
-      if (typeof saved.filter === "string") state[key].filter = saved.filter;
-      if (typeof saved.sort === "string") state[key].sort = saved.sort;
-      if (typeof saved.density === "string") state[key].density = saved.density;
-      if (typeof saved.favoritesOnly === "boolean") state[key].favoritesOnly = saved.favoritesOnly;
-    });
-  } catch (err) {
-    // storage unavailable or corrupt JSON: keep defaults
-  }
-
-  function saveView() {
-    try {
-      localStorage.setItem("night:view", JSON.stringify(state));
-    } catch (err) {
-      // storage unavailable: keep the session state
-    }
-  }
-  // films/series are already rendered in curated order; skip the first
-  // redundant setData pass and only re-render when filter/sort changes.
-  const appliedReel = { films: "all|curated|all", series: "all|curated|all" };
-
-  const originalOrder = new WeakMap();
-  function recordOrder(container, selector) {
-    Array.from(container.querySelectorAll(selector)).forEach((item, index) => {
-      originalOrder.set(item, index);
-    });
-  }
-  recordOrder(panels.books, ".idx-row");
-  recordOrder(panels.music, ".idx-card[data-song-id]");
-  recordOrder(panels.sport, ".idx-row");
-  recordOrder(panels.games, ".hof-item");
-
-  function textOf(root, selector) {
-    const node = root.querySelector(selector);
-    return node ? node.textContent.trim() : "";
-  }
-
-  function hoursOf(item) {
-    return parseInt(textOf(item, ".hof-hours").replace(/[^0-9]/g, ""), 10) || 0;
-  }
-
-  function startYear(item) {
-    const value = parseInt(String(item.year || item.years || ""), 10);
-    return Number.isFinite(value) ? value : -1;
-  }
-
-  function uniqueValues(values) {
-    return Array.from(new Set(values.filter(Boolean)));
-  }
-
-  function allStringFilters(values) {
-    return [{ value: "all", label: "ALL" }].concat(
-      values.map((value) => ({ value: value, label: value }))
-    );
-  }
-
-  function allObjectFilters(values) {
-    return [{ value: "all", label: "ALL" }].concat(values);
-  }
-
-  function activeToken() {
-    const active = tabbar.querySelector(".tab-btn.is-active");
-    return active ? active.getAttribute("data-tab") : "books";
-  }
-
-  function syncDensity(token) {
-    const value = state[token].density;
-    densityButtons.forEach((btn) => {
-      const on = btn.getAttribute("data-density") === value;
-      btn.classList.toggle("is-active", on);
-      btn.setAttribute("aria-pressed", on ? "true" : "false");
-    });
-  }
-
-  function syncFavoritesToggle(token) {
-    if (!favoritesToggle) return;
-    const on = Boolean(state[token].favoritesOnly);
-    favoritesToggle.setAttribute("aria-pressed", on ? "true" : "false");
-    favoritesToggle.classList.toggle("is-active", on);
-    favoritesToggle.textContent = (on ? "★" : "☆") + " FAVORITES ONLY";
-  }
-
-  function bookId(row) {
-    return favoriteSlug(textOf(row, ".idx-title"));
-  }
-
-  function sportId(row) {
-    return favoriteSlug(textOf(row, ".idx-title"));
-  }
-
-  function hideEmpty() {
-    if (emptyEl) emptyEl.hidden = true;
-  }
-
-  function showEmpty(message) {
-    if (emptyText) emptyText.textContent = message;
-    if (emptyEl) emptyEl.hidden = false;
-  }
-
-  function apply(token) {
-    const config = CONFIG[token] || CONFIG.books;
-    const s = state[token];
-    let visible = 0;
-    let total = 0;
-    let emptyMessage = "";
-
-    if (token === "books") {
-      const panel = panels.books;
-      const list = panel.querySelector(".idx-list");
-      const rows = Array.from(list.querySelectorAll(".idx-row"));
-      rows.forEach((row) => {
-        const on = !s.favoritesOnly || isFavorite("book", bookId(row));
-        row.classList.toggle("is-filter-hidden", !on);
-      });
-      const visibleRows = rows.filter((row) => !row.classList.contains("is-filter-hidden"));
-      visibleRows.slice().sort((a, b) => {
-        if (s.sort === "title") return textOf(a, ".idx-title").localeCompare(textOf(b, ".idx-title"));
-        if (s.sort === "author") return textOf(a, ".idx-meta").localeCompare(textOf(b, ".idx-meta"));
-        return originalOrder.get(a) - originalOrder.get(b);
-      }).forEach((row) => list.appendChild(row));
-      panel.classList.toggle("is-compact", s.density === "compact");
-      visible = visibleRows.length;
-      total = rows.length;
-      emptyMessage = "NO FAVORITES YET. OPEN A CARD TO SAVE ONE.";
-    } else if (token === "films" || token === "series") {
-      const panel = panels[token];
-      const data = token === "films" ? (window.FILM_DATA || []) : (window.SERIES_DATA || []);
-      const stage = token === "films" ? window.FilmStage : window.SeriesStage;
-      const originalIndex = new Map(data.map((item, index) => [item, index]));
-      const filtered = data.filter((item) =>
-        (s.filter === "all" || config.filterKey(item, s.filter)) &&
-        (!s.favoritesOnly || isFavorite(token === "films" ? "film" : "series", item.id))
-      );
-      const sorted = filtered.slice().sort((a, b) => {
-        if (s.sort === "title") return a.title.localeCompare(b.title);
-        if (token === "films" && s.sort === "year") return startYear(b) - startYear(a);
-        if (token === "series" && s.sort === "years") return startYear(b) - startYear(a);
-        return originalIndex.get(a) - originalIndex.get(b);
-      });
-      const signature = s.filter + "|" + s.sort + "|" + (s.favoritesOnly ? "fav" : "all");
-      if (sorted.length && stage && typeof stage.setData === "function" && appliedReel[token] !== signature) {
-        stage.setData(sorted);
-        appliedReel[token] = signature;
-      }
-      Array.from(panel.children).forEach((child) => { child.hidden = sorted.length === 0; });
-      panel.classList.toggle("is-compact", s.density === "compact");
-      visible = sorted.length;
-      total = data.length;
-      emptyMessage = "NO " + config.label + " IN THIS FILTER.";
-    } else if (token === "music") {
-      const panel = panels.music;
-      Array.from(panel.querySelectorAll(".artist-tracks")).forEach((group) => {
-        const cards = Array.from(group.querySelectorAll(".idx-card[data-song-id]"));
-        cards.forEach((card) => {
-          const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
-          const on = !s.favoritesOnly || isFavorite("music", card.getAttribute("data-song-id"));
-          wrap.classList.toggle("is-filter-hidden", !on);
-        });
-        const visibleCards = cards.filter((card) => {
-          const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
-          return !wrap.classList.contains("is-filter-hidden");
-        });
-        visibleCards.slice().sort((a, b) => {
-          if (s.sort === "title") return textOf(a, ".idx-title").localeCompare(textOf(b, ".idx-title"));
-          if (s.sort === "artist") return textOf(a, ".idx-artist").localeCompare(textOf(b, ".idx-artist"));
-          return originalOrder.get(a) - originalOrder.get(b);
-        }).forEach((card) => {
-          const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
-          group.appendChild(wrap);
-        });
-      });
-      document.dispatchEvent(new CustomEvent("night:music-filter"));
-      panel.classList.toggle("is-compact", s.density === "compact");
-      visible = Array.from(panel.querySelectorAll(".idx-card[data-song-id]")).filter((card) => {
-        const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
-        return !wrap.classList.contains("is-filter-hidden");
-      }).length;
-      total = panel.querySelectorAll(".idx-card[data-song-id]").length;
-      emptyMessage = "NO FAVORITES YET. OPEN A CARD TO SAVE ONE.";
-    } else if (token === "sport") {
-      const panel = panels.sport;
-      const list = panel.querySelector(".idx-list");
-      const rows = Array.from(list.querySelectorAll(".idx-row"));
-      rows.forEach((row) => {
-        const on = (s.filter === "all" || row.getAttribute("data-sport") === s.filter) &&
-          (!s.favoritesOnly || isFavorite("sport", sportId(row)));
-        row.classList.toggle("is-filter-hidden", !on);
-      });
-      const visibleRows = rows.filter((row) => !row.classList.contains("is-filter-hidden"));
-      visibleRows.slice().sort((a, b) => {
-        if (s.sort === "name") return textOf(a, ".idx-title").localeCompare(textOf(b, ".idx-title"));
-        if (s.sort === "city") return textOf(a, ".idx-meta").localeCompare(textOf(b, ".idx-meta"));
-        return originalOrder.get(a) - originalOrder.get(b);
-      }).forEach((row) => list.appendChild(row));
-      panel.classList.toggle("is-compact", s.density === "compact");
-      visible = visibleRows.length;
-      total = rows.length;
-      emptyMessage = "NO TEAMS IN THIS SPORT.";
-    } else if (token === "games") {
-      const panel = panels.games;
-      const row = panel.querySelector("#hof-row");
-      const end = row.querySelector(".hof-end");
-      const items = Array.from(row.querySelectorAll(".hof-item"));
-      items.forEach((item) => {
-        const wrap = item.parentElement && item.parentElement.classList.contains("hof-item-wrap") ? item.parentElement : item;
-        const on = !s.favoritesOnly || isFavorite("game", item.getAttribute("data-game"));
-        wrap.classList.toggle("is-filter-hidden", !on);
-      });
-      const visibleItems = items.filter((item) => {
-        const wrap = item.parentElement && item.parentElement.classList.contains("hof-item-wrap") ? item.parentElement : item;
-        return !wrap.classList.contains("is-filter-hidden");
-      });
-      items.slice().sort((a, b) => {
-        if (s.sort === "hours") return hoursOf(b) - hoursOf(a);
-        if (s.sort === "name") return textOf(a, ".hof-name").localeCompare(textOf(b, ".hof-name"));
-        return originalOrder.get(a) - originalOrder.get(b);
-      }).forEach((item) => {
-        const wrap = item.parentElement && item.parentElement.classList.contains("hof-item-wrap") ? item.parentElement : item;
-        row.insertBefore(wrap, end);
-      });
-      if (gameScroller && gameScroller.setItemCount) {
-        gameScroller.setItemCount(visibleItems.length);
-      }
-      panel.classList.toggle("is-compact", s.density === "compact");
-      visible = visibleItems.length;
-      total = items.length;
-      emptyMessage = "NO FAVORITES YET. OPEN A CARD TO SAVE ONE.";
-    }
-
-    countEl.textContent = config.count(visible, total);
-    if (visible === 0 && emptyMessage) {
-      showEmpty(s.favoritesOnly ? "NO FAVORITES YET. OPEN A CARD TO SAVE ONE." : emptyMessage);
-    } else {
-      hideEmpty();
-    }
-    scheduleRefresh();
-  }
-
-  function render() {
-    const token = activeToken();
-    const config = CONFIG[token] || CONFIG.books;
-    const s = state[token];
-
-    filterMount.innerHTML = "";
-    const filters = config.filters ? config.filters() : [];
-    filterMount.hidden = filters.length === 0;
-    filters.forEach((filter) => {
-      const chip = document.createElement("button");
-      chip.type = "button";
-      chip.className = "genre-chip mono";
-      chip.setAttribute("data-filter", filter.value);
-      chip.setAttribute("aria-pressed", filter.value === s.filter ? "true" : "false");
-      chip.classList.toggle("is-active", filter.value === s.filter);
-      chip.textContent = filter.label;
-      chip.addEventListener("click", () => {
-        s.filter = filter.value;
-        filterMount.querySelectorAll(".genre-chip").forEach((other) => {
-          const on = other.getAttribute("data-filter") === s.filter;
-          other.classList.toggle("is-active", on);
-          other.setAttribute("aria-pressed", on ? "true" : "false");
-        });
-        saveView();
-        apply(token);
-      });
-      filterMount.appendChild(chip);
-    });
-
-    sortSelect.innerHTML = "";
-    config.sorts.forEach(([value, label]) => {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = label;
-      sortSelect.appendChild(option);
-    });
-    sortSelect.value = s.sort;
-
-    syncDensity(token);
-    syncFavoritesToggle(token);
-    apply(token);
-  }
-
-  sortSelect.addEventListener("change", () => {
-    const token = activeToken();
-    state[token].sort = sortSelect.value;
-    saveView();
-    apply(token);
-  });
-
-  densityButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const token = activeToken();
-      state[token].density = btn.getAttribute("data-density");
-      syncDensity(token);
-      saveView();
-      apply(token);
-    });
-  });
-
-  if (favoritesToggle) {
-    favoritesToggle.addEventListener("click", () => {
-      const token = activeToken();
-      state[token].favoritesOnly = !state[token].favoritesOnly;
-      syncFavoritesToggle(token);
-      saveView();
-      apply(token);
-    });
-  }
-
-  document.addEventListener("night:favorites-changed", () => {
-    const token = activeToken();
-    if (state[token].favoritesOnly) apply(token);
-  });
-
-  if (emptyClear) {
-    emptyClear.addEventListener("click", () => {
-      const token = activeToken();
-      state[token].filter = "all";
-      state[token].favoritesOnly = false;
-      saveView();
-      render();
-    });
-  }
-
-  tabbar.addEventListener("night:archive-tab", () => render());
-
-  toolbar.hidden = false;
-  render();
-}
 
 /* ---------- music panel: genre filter + search + random pick ----------
    The playlist renders fully expanded (no accordion); the chip row filters
@@ -1791,15 +1058,24 @@ function initMusicSearch() {
   const clear = document.getElementById("music-search-clear");
   const count = document.getElementById("music-search-count");
   const empty = document.getElementById("music-search-empty");
+  const emptyText = document.getElementById("music-search-empty-text");
+  const jump = document.getElementById("music-search-jump");
   const filterMount = document.getElementById("genre-filter");
   const randomBtn = document.getElementById("music-random");
-  if (!panel || !input || !clear || !count || !empty) return;
+  if (!panel || !input || !clear || !count || !empty || !emptyText || !jump) return;
 
   const cards = Array.from(panel.querySelectorAll(".idx-card[data-song-id]"));
   const genres = Array.from(panel.querySelectorAll(".genre"));
   const cardGenres = cards.map((card) => card.closest(".genre"));
-  // active genre index into `genres`; -1 = 全部
-  let activeGenre = -1;
+  const genreIndexOf = cardGenres.map((genre) => genres.indexOf(genre));
+  // the chips are rendered by music-stage.js before this file runs and carry
+  // their own totals ("HIP-HOP · 100"); keep the bare genre names too, for
+  // the empty-state jump button
+  const chips = filterMount ? Array.from(filterMount.querySelectorAll(".genre-chip")) : [];
+  const chipLabels = chips.map((chip) => chip.textContent.replace(/\s*·\s*\d+\s*$/, "").trim());
+  // active genre index into `genres`; one genre is visible at a time and
+  // music-stage.js hides every group except index 0 on first render.
+  let activeGenre = 0;
 
   function normalize(value) {
     return String(value || "").toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, " ").trim();
@@ -1823,11 +1099,13 @@ function initMusicSearch() {
     const dp = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]);
     for (let j = 1; j <= n; j++) dp[0][j] = j;
     for (let i = 1; i <= m; i++) {
-      dp[i][j] = Math.min(
-        dp[i - 1][j] + 1,
-        dp[i][j - 1] + 1,
-        dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
-      );
+      for (let j = 1; j <= n; j++) {
+        dp[i][j] = Math.min(
+          dp[i - 1][j] + 1,
+          dp[i][j - 1] + 1,
+          dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+        );
+      }
     }
     return dp[m][n];
   }
@@ -1873,15 +1151,19 @@ function initMusicSearch() {
     const searching = Boolean(trimmed);
     const qNorm = searching ? normalize(trimmed) : "";
 
+    // one pass over all 763 cards: `hit` is genre-independent, so the same
+    // pass can credit genres other than the visible one and feed the
+    // "no match here, results elsewhere" jump button
+    const hitsByGenre = new Array(genres.length).fill(0);
     let visible = 0;
     cards.forEach((card, i) => {
+      const hit = matchCard(cardHaystacks[i], qNorm);
       const genreHidden = cardGenres[i] ? cardGenres[i].hidden : false;
-      const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
-      const filterHidden = wrap.classList.contains("is-filter-hidden");
-      const on = !genreHidden && !filterHidden && matchCard(cardHaystacks[i], qNorm);
-      card.classList.toggle("is-search-hidden", !on);
-      wrap.classList.toggle("is-search-hidden", !on);
-      if (on) visible++;
+      card.classList.toggle("is-search-hidden", !hit || genreHidden);
+      if (!hit) return;
+      const gi = genreIndexOf[i];
+      if (gi >= 0) hitsByGenre[gi]++;
+      if (!genreHidden) visible++;
     });
 
     genres.forEach((genre) => {
@@ -1890,11 +1172,40 @@ function initMusicSearch() {
       genre.classList.toggle("is-search-empty", visibleInGenre === 0);
     });
 
-    count.hidden = !searching && activeGenre === -1;
-    count.textContent = visible + " / " + cards.length;
-    empty.hidden = visible !== 0;
+    // the counter is a search readout: hidden while browsing a genre, and
+    // scoped to "matches / songs in the visible genre" while searching
+    const genreTotal = genres[activeGenre] ? genres[activeGenre].querySelectorAll(".idx-card[data-song-id]").length : 0;
+    count.hidden = !searching;
+    count.textContent = visible + " / " + genreTotal;
     clear.hidden = !searching;
+    updateEmpty(searching ? hitsByGenre : null);
     refreshScroll();
+  }
+
+  // A miss inside the active genre is not a dead end while another genre
+  // holds the results: name it, count it, and jump there on click.
+  function updateEmpty(hitsByGenre) {
+    const activeHits = hitsByGenre ? (hitsByGenre[activeGenre] || 0) : 0;
+    empty.hidden = !hitsByGenre || activeHits > 0;
+    if (!hitsByGenre || activeHits > 0) {
+      jump.hidden = true;
+      return;
+    }
+
+    let best = -1;
+    let bestCount = 0;
+    hitsByGenre.forEach((hits, gi) => {
+      if (gi !== activeGenre && hits > bestCount) {
+        best = gi;
+        bestCount = hits;
+      }
+    });
+
+    emptyText.textContent = best < 0 ? "NO MATCH" : "NO MATCH IN THIS GENRE";
+    jump.hidden = best < 0;
+    if (best < 0) return;
+    jump.setAttribute("data-genre", String(best));
+    jump.textContent = "查看 " + (chipLabels[best] || "其它流派") + " · " + bestCount;
   }
 
   function clearSearch() {
@@ -1903,39 +1214,50 @@ function initMusicSearch() {
   }
 
   // ---- genre filter chips (rendered by music-stage.js) ----
+  function selectGenre(index) {
+    if (!Number.isFinite(index) || index < 0 || index >= genres.length) return;
+    activeGenre = index;
+    chips.forEach((chip, i) => {
+      const on = i === index;
+      chip.classList.toggle("is-active", on);
+      chip.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    genres.forEach((genre, i) => {
+      genre.hidden = i !== index;
+    });
+    applySearch();
+  }
+
   if (filterMount) {
-    const chips = Array.from(filterMount.querySelectorAll(".genre-chip"));
     chips.forEach((chip) => {
       chip.addEventListener("click", () => {
-        activeGenre = parseInt(chip.getAttribute("data-genre"), 10);
-        chips.forEach((c) => {
-          const on = c === chip;
-          c.classList.toggle("is-active", on);
-          c.setAttribute("aria-pressed", on ? "true" : "false");
-        });
-        genres.forEach((genre, i) => {
-          genre.hidden = activeGenre !== -1 && i !== activeGenre;
-        });
-        applySearch();
+        selectGenre(parseInt(chip.getAttribute("data-genre"), 10));
       });
     });
+    // the chip row scrolls horizontally on phones; Chromium does not always
+    // bring a keyboard-focused chip fully into view, so do it explicitly
+    filterMount.addEventListener("focusin", (e) => {
+      const chip = e.target.closest(".genre-chip");
+      if (chip) chip.scrollIntoView({ block: "nearest", inline: "nearest" });
+    });
   }
+
+  jump.addEventListener("click", () => {
+    selectGenre(parseInt(jump.getAttribute("data-genre"), 10));
+    input.focus();
+  });
 
   // ---- random pick: play one card from whatever is currently browsable ----
   if (randomBtn) {
     randomBtn.addEventListener("click", () => {
       const pool = cards.filter((card, i) => {
-        const wrap = card.parentElement && card.parentElement.classList.contains("idx-card-wrap") ? card.parentElement : card;
         return !(cardGenres[i] && cardGenres[i].hidden) &&
-          !wrap.classList.contains("is-search-hidden") &&
-          !wrap.classList.contains("is-filter-hidden");
+          !card.classList.contains("is-search-hidden");
       });
       if (!pool.length) return;
       pool[Math.floor(Math.random() * pool.length)].click();
     });
   }
-
-  document.addEventListener("night:music-filter", () => applySearch());
 
   // Coalesce keystroke bursts: each frame applies at most one search pass
   // over the 763 cards instead of one per input event.
@@ -2056,11 +1378,7 @@ function initNetEaseLinks() {
 
 initNetEaseLinks();
 
-initFavorites();
-
 initMusicSearch();
-
-initArchiveToolbar();
 
 /* ---------- game cards on touch: tap toggles the hover state ---------- */
 
@@ -2248,10 +1566,9 @@ if (!REDUCED) {
     // missed for any reason the cards stay visible instead of blanking.
     immediateRender: false,
     scrollTrigger: {
-      // trigger the OUTER .hof-scroll: the row itself is a transform
-      // target, and triggers inside a transformed element measure
-      // degenerately.
-      trigger: ".hof-scroll",
+      // trigger the grid itself: the cards are laid out in one track, so the
+      // reveal plays once for the whole roster.
+      trigger: ".hof",
       start: "top 70%",
       toggleActions: "play none none reverse",
     },

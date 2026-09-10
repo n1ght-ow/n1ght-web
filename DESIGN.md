@@ -2,7 +2,7 @@
 
 > 面向实现的单一设计事实源。只记录现状，不发明新风格。
 > 约束、裁决顺序与验收纪律见 `AGENTS.md`；本文件回答“这个值 / 组件该怎么用”。
-> 最近核对：2026-09，对应 `css/style.css?v=49`、`css/reel-stage.css?v=4`、`main.js?v=39`。
+> 最近核对：2026-09，对应 `css/style.css?v=57`、`css/reel-stage.css?v=5`、`main.js?v=48`。
 
 ## 0. 品牌与 Design read
 
@@ -79,8 +79,7 @@
 
 | token | `.film-stage` | `.series-stage` | 说明 |
 | --- | --- | --- | --- |
-| `--reel-card-w` | `clamp(192px, 26vw, 268px)` | `clamp(176px, 24vw, 248px)` | 卡片宽 |
-| `--reel-card-w`（compact） | `clamp(150px, 20vw, 210px)` | `clamp(140px, 19vw, 200px)` | `.is-compact` 覆盖 |
+| `--reel-card-w` | `clamp(192px, 26vw, 268px)` | `clamp(176px, 24vw, 248px)` | 单一尺寸；density / `.is-compact` 已撤销 |
 | `--reel-hover-ring` | `0 0 0 1px rgba(126,95,32,.3)` | 同 | hover 环 |
 | `--reel-active-ring` | `0 0 0 1px var(--color-accent-solid)` | 同 | 激活环 |
 | `--reel-sleeve-bg` | `var(--color-accent-tint)` | 同 | OPEN 袖套底 |
@@ -112,7 +111,7 @@
 | 正文 / 描述 | `.photo-act-note` | `0.9375rem` | `1.55` | `0` |
 | 卡片说明 | `.photo-frame-text` | `0.875rem` | `1.5` | `0` |
 | mono 标签 | `.mono` | `0.875rem` | — | `0.14em` |
-| mono 小标签 | `.photo-frame-no`、`.archive-toolbar-count` 等 | `0.8125rem` | — | `0.16em` 左右 |
+| mono 小标签 | `.photo-frame-no`、`.music-search-count` 等 | `0.8125rem` | — | `0.16em` 左右 |
 | 搜索输入框 | `.music-search-input` | `0.875rem`（桌面）/ `16px`（≤720px） | — | `0.08em` |
 
 > 移动端输入框：`.music-search-input` 在 `≤720px` 下覆盖为 16px，避免 iOS 聚焦缩放。
@@ -172,7 +171,7 @@
 ### 4.3 玻璃
 
 - 配方：`backdrop-filter: blur(16px) saturate(150%)` + `--glass-edge` 内高光边 + `--shadow-soft-sm`。
-- 已用玻璃的元素：`.nav`、`.sticker`、`.bh-meta span`、`.tab-btn`、`.genre`、`.about-stats span`、`.genre-filter`、`.archive-toolbar`、`.series-stage-detail`。
+- 已用玻璃的元素：`.nav`、`.sticker`、`.bh-meta span`、`.tab-btn`、`.about-stats span`、`.genre-filter`、`.series-stage-detail`。（`.genre` 已退役为杂志式小头，不再走玻璃配方。）
 - 必须带 `@media (prefers-reduced-transparency: reduce)` 实底回退（`--color-surface`，去掉 backdrop-filter）。
 
 ### 4.4 光效（品牌特例）
@@ -197,12 +196,11 @@
 | tab 切换 | 状态过渡 | tab 点击 | clipPath 0.8s `power4.inOut` + row stagger 0.06s | 静态 |
 | HOF 卡片入场 | 层级 | 滚动进入 | y / rotationX / clipPath 1.1s `power4.out`，stagger 0.09s | 静态 |
 | 统一详情层 | 状态过渡 | 打开 / 关闭 | opacity 0.25s `--ease-out`；visibility 0s（关闭延迟 0.25s） | `transition: none` |
-| toolbar / 收藏控件 | 反馈 | hover / press / 切换 | 0.15s 具体属性；press `scale(.96)` | `transition-duration: 0s` |
+| 形态切换控件 | 反馈 | hover / press / 切换 | 0.15s 具体属性；press `scale(.96)` | `transition-duration: 0s` |
 | 光标徽章 | 反馈 | 指针移动 / 悬停 | GSAP quickTo 0.15s `power2.out`；环 / 标签 opacity + scale 0.15s | 禁用光标 |
 | 磁吸 | 反馈 | 指针移动 | GSAP quickTo 0.18s `power2.out` | 禁用 |
 | 泡泡 | 反馈 | 点击 | 0.28s `power2.in` | 静态 |
 | ticker | 叙事 | 常驻 | 26s linear infinite | `animation: none` |
-| drag 惯性 | 反馈 | 拖拽释放 | 0.9s `power3.out` | 直接拖拽不受 reduced 影响 |
 
 > 代码侧统一常量：`js/main.js` 的 `MOTION.feedback`（0.15s / `power2.out`，press 0.12s）、`MOTION.enter`（0.85s / `power3.out`，`longDuration` 1.1s，`heavyEase` `power4.out`，stagger 0.09）、`MOTION.spring`（0.6s / `back.out(1.7)`，仅低频状态切换）。新增动效优先复用，不再堆一次性时间线。
 
@@ -229,59 +227,48 @@
 
 | 组件 | 选择器 | 规则 |
 | --- | --- | --- |
-| 照片框 | `.photo-frame` + `.photo-frame-btn` | 原生 button；图片用 `--radius-md`；hover / focus 只 `scale(1.02)`；`position: relative` 供收藏星标定位 |
-| 影 / 剧卡 | `.film-card` / `.series-card` | reel-stage 工厂生成；外面套 `.film-card-wrap` / `.series-card-wrap`，收藏星标是兄弟节点，禁止 button 套 button |
-| 游戏卡 | `.hof-item` + `.hof-card` | `.hof-item` 是 `role="button"` + `tabindex="0"` + Enter/Space；外面套 `.hof-item-wrap` 放收藏星标 |
-| 音乐卡 | `.idx-card` | `role="button"` + `tabindex="0"`；外面套 `.idx-card-wrap` 放收藏星标；卡片右侧预留 `padding-inline-end` |
-| 书 / 球队行 | `.idx-row` | 非交互行；收藏星标绝对定位在右上；`padding-inline-end: 3.4rem` 避免压字 |
+| 照片框 | `.photo-frame` + `.photo-frame-btn` | 原生 button；图片用 `--radius-md`；hover / focus 只 `scale(1.02)` |
+| 影 / 剧卡 | `.film-card` / `.series-card` | reel-stage 工厂生成；卡片直接挂进 strip，无 wrapper |
+| 游戏卡 | `.hof-item` + `.hof-card` | `.hof-item` 是 `role="button"` + `tabindex="0"` + Enter/Space，`#hof-grid` 的网格子项（宽度由 `repeat(auto-fill, minmax(min(100%, 240px), 1fr))` 决定，不再固定 px）。封面 `.hof-img-wrap` 固定 16:9；`.hof-foot` 是两行网格：第一行 `::before` 画出的排名 + `.hof-hours`（两端对齐），第二行 `.hof-name` 独占整行并 `min-height` 预留两行，整排引文基线因此对齐；hover / `.is-active` 抬卡并加 `--glow-accent` 光晕 |
+| 音乐行 | `.idx-card` | 账本行：`grid` 三列（CSS counter 序号 / 歌名 / artist）；`role="button"` + `tabindex="0"`；行高由 `.artist-tracks` 的 `--music-row-min` 统一控制。行尾不带 `↗`（2026-09 用户裁定），点击仍打开详情层 |
+| 书 / 球队行 | `.idx-row` | 非交互行；三列网格（编号 / 标题 / 说明） |
 
 ### 6.2 按钮
 
 - 动作一律原生 `<button>`；导航一律 `<a href>`；禁 `<div onClick>`。
-- 图标按钮必须 `aria-label`；收藏按钮必须 `aria-pressed`。
+- 图标按钮必须 `aria-label`。
 - 主要按钮：`--color-accent-solid` 实底 + `--color-accent-text` 1px 描边 + `--glow-accent` + `--color-on-accent` 文字。
 - 次级按钮：`--color-surface` 底 + `--color-line` 边 + `--color-text-secondary` 文字。
 - 按压反馈 `scale(.96)`；hover / press 用具体属性的 0.15s 过渡。
-- 当前按钮族：`.photo-frame-btn`、`.lb-close`、`.lb-nav`、`.lb-thumb`、`.lb-meta-link`、`.archive-density-btn`、`.archive-favorites-toggle`、`.archive-empty-clear`、`.fav-btn`、`.music-random`、`.music-search-clear`、`.tab-btn`、`.genre-chip`。
+- 当前按钮族：`.photo-frame-btn`、`.lb-close`、`.lb-nav`、`.lb-thumb`、`.lb-meta-link`、`.music-random`、`.music-search-clear`、`.music-search-jump`、`.tab-btn`、`.genre-chip`。
 
 ### 6.3 Chips
 
-- `.genre-chip`：音乐流派过滤 + 归档工具条筛选共用；`aria-pressed` + `.is-active`；激活态有 `✓` 前缀，不只靠颜色。
+- `.genre-chip`：音乐流派过滤；`aria-pressed` + `.is-active`；激活态有 `✓` 前缀，不只靠颜色。无「全部」选项，默认选中首枚 POP，一次只亮一枚（单流派显示）。
+- `.music-search-jump`：空结果里的「去别组看」次级按钮；`--color-accent-tint` 底 + `--color-accent-text` 文字（实测 4.91:1）+ `--color-line` 1px 边，`min-height: 2.75rem`；与 `.genre-chip` 同为 pill，但不与主实心按钮 `.music-random` 争主操作位。
 - `.bh-meta span`：章节 eyebrow / meta 胶囊；玻璃底。
 - `.tab-btn`：归档 tab；roving tabindex，活动项 0 其余 -1；方向键 / Home / End 走 ARIA APG。
 
-### 6.4 工具条
-
-- 结构：`#archive-toolbar` > `#archive-toolbar-filters` + `#archive-toolbar-count` + `#archive-toolbar-empty` + `#archive-sort` + `.archive-density` + `#archive-favorites-toggle`。
-- `#archive-toolbar-count`：`role="status"` + `aria-live="polite"`；筛选后显示 `n / total`，如 `1 / 16 FILMS`。
-- `#archive-sort`：原生 `<select>`，可见 `<label for>` 是 SORT；选项按 tab 动态生成。
-- `.archive-density-btn` / `#archive-favorites-toggle`：`aria-pressed` + `✓` / `☆` / `★` 静态反馈。
-- 状态由 `night:view` 持久化：每个 tab 的 `filter / sort / density / favoritesOnly`。
-
-### 6.5 详情层
+### 6.4 详情层
 
 - 底座：唯一的 `#lightbox`（`role="dialog"`、`aria-modal="true"`）；五种类型共用，禁止新建第二个模态。
 - 打开：`openDetail(type, index)`；关闭：`closeDetail()`；`Esc`、背景点击、`inert`、焦点回触发源。
-- 类型布局：photo 显示图 + caption + 11 格 rail；film / series 显示海报 + meta + IMDb 外链；game 显示封面 + RANK + 时长 + quote；music 显示 NetEase 卡片 + 流派 / 歌名 / 艺人 + 网易云外链。
+- 类型布局：photo 显示图 + caption + 11 格 rail；film / series 显示海报 + meta + IMDb 外链；game 显示封面 + RANK + 时长 + quote；music 显示专辑封面 sleeve + 流派 / 歌名 / 艺人 + 网易云外链。外链按钮文案不带 `↗` 尾缀（2026-09 用户裁定），跳转能力不变。
+- music sleeve：`.lb-music` 是 1:1 方框，内嵌 `.lb-music-cover`（`album-covers/<file>`，`object-fit: cover`，靠 `.lb-stage .lb-music .lb-music-cover` 的更高特异性压过 `.lb-stage img` 的淡入与尺寸上限），底部标签骑在 `rgba(29,27,22,.72)` 的 scrim 上（689 张封面实测最差 6.57:1）；档案里没有封面的歌回落 ♪ 占位 sleeve。方框带 `--glow-accent` 香槟光晕，是本区唯一的光效落点。
 - 导航：左右方向键 + 前后按钮 + 移动端横滑；`#lb-count`、`#lb-act`、`#lb-live` 提供静态与读屏反馈。
 - 图片只加载 `photo/` 低分辨率版本，不加载 `photo/full/`；不嵌 iframe、不自动播放。
 
-### 6.6 拖拽条
-
-- `.dragbar` + `.dragbar-track` + `.dragbar-fill` + `.dragbar-handle` + `.dragbar-meta`：游戏名册专用（photo 已改为 FIELD ROLL，不再用拖拽条）。
-- 游戏名册是纯拖拽驱动：页面滚轮垂直穿过，不 pin、不 scrub；横向移动只来自抓取拖拽与拖动条。
-- `makeHorizontalScroller` 暴露 `render` / `setItemCount`；收藏筛选后拖动条计数要同步。
-
-### 6.7 玻璃面板
+### 6.6 玻璃面板
 
 - 玻璃 = `--glass-bg` + `backdrop-filter: blur(16px) saturate(150%)` + `--glass-edge` + `--shadow-soft-sm`。
 - `prefers-reduced-transparency: reduce` 下改 `--color-surface` 实底，去掉 backdrop-filter。
 - 玻璃面板内的文字对比度按叠加后的实际底色测。
 
-### 6.8 焦点环
+### 6.7 焦点环
 
 - 统一 `:focus-visible`；≥2px 实线；主色用 `--color-accent-text`；深色详情层用 `--color-glow`。
-- 已覆盖：`.photo-frame-btn`、`.film-card`、`.series-card`、`.hof-item`、`.genre-chip`、`.archive-sort`、`.archive-density-btn`、`.archive-favorites-toggle`、`.archive-empty-clear`、`.fav-btn`、`.lb-close`、`.lb-nav`、`.lb-thumb`、`.lb-meta-link`、`.music-search-input`、`.idx-card[data-song-id]`。
+- 搜索框聚焦 = 2px `--color-accent-text` 环 + `--glow-accent` 香槟光晕（与实心按钮同一对 token）；发光件不允许被祖先 `clip-path` / `overflow` 裁切，见 AGENTS.md 的 tab 幕帘备注。
+- 已覆盖：`.photo-frame-btn`、`.film-card`、`.series-card`、`.hof-item`、`.genre-chip`、`.lb-close`、`.lb-nav`、`.lb-thumb`、`.lb-meta-link`、`.music-search-input`、`.idx-card[data-song-id]`。
 
 ## 7. 无障碍 / reduced-motion 验收
 
@@ -300,7 +287,7 @@
 ### 7.3 目标尺寸
 
 - AA 基线 24×24；桌面 40×40；触摸 44×44。
-- `.fav-btn`、`.archive-sort`、`.archive-density-btn`、`.archive-favorites-toggle`、`.archive-empty-clear`、`.lb-close`、`.lb-nav`、`.lb-thumb` 在移动端 ≥44px。
+- `.lb-close`、`.lb-nav`、`.lb-thumb`、`.music-random`、`.genre-chip`、`.idx-card` 在移动端 ≥44px。
 
 ### 7.4 reduced-motion / reduced-transparency
 
@@ -311,9 +298,7 @@
 ### 7.5 读屏 / 状态
 
 - `#lb-live`：`role="status"` + `aria-live="polite"`，播报当前详情条目。
-- `#archive-toolbar-count`：`role="status"`，播报筛选结果数。
-- `#music-search-count`：搜索结果计数；`#music-search-empty` 给出空结果提示。
-- 收藏按钮：`aria-pressed` + 动态 `aria-label`（Save / Remove）；静态 `☆` / `★` 反馈。
+- `#music-search-count`：搜索结果计数（`<命中数> / <当前流派总数>`，浏览态隐藏）；`#music-search-empty` 是 `role="status"` 容器，给出空结果提示，并在别组有命中时挂出 `#music-search-jump`。
 
 ## 8. 改界面的最小检查清单
 

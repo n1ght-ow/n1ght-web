@@ -17,7 +17,7 @@
 
 ## 技术约束
 
-- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js`）→ `main.js`。
+- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js` → `music-covers.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js`）→ `main.js`。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
 - GSAP/ScrollTrigger/SplitText/Lenis 走本地 `js/vendor/`。Lenis 仅非 REDUCED 启用；锚点跳转统一走 `lenis.scrollTo`。
 - 内容归属红线：`#panel-books / films / series / music / sport / games` 六个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token（books / films / series / music / sport / games）。
@@ -45,6 +45,7 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 - 动效参数常量：`js/main.js` 的 `MOTION.feedback`（≤150ms，高频）、`MOTION.enter`（0.7–1.1s，低频入场）、`MOTION.spring`（仅低频状态切换）；新增动效优先复用，不再堆一次性时间线。
 - 性能红线：只动 `transform` / `opacity` / `filter`（`clip-path: inset()` 幕帘等价允许）；scrub 动画必须 `invalidateOnRefresh: true`；图片加载后的 refresh 用 250ms debounce 合并；滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis，禁裸 `window` scroll handler。
 - 可中断：交互状态变化用 CSS transition 或 GSAP + `overwrite`；keyframes 只用于一次性序列。
+- tab 切换的幕帘（`initArchiveTabs().animateIn()` 给 `.tab-panel` 上的 `clipPath`）必须带 `clearProps: "clipPath"`：`clip-path` 即使取值是 `inset(0)` 也会裁掉子元素画到面板框外的部分，搜索框左端与游戏首列卡片都贴着面板边缘，曾因此把焦点环切平。
 - 频率分治：高频交互（hover / press / 拖拽跟随）即时反馈，或只对 opacity / color 做 ≤150ms 过渡；按压反馈 scale 严格 `0.96`。低频入场 / 编排 / 状态切换可用 spring 弹性（GSAP `back.out` / `elastic` 或 CSS 近似曲线）——弹性是品牌特例，只许低频。
 - 光效动效（辉光呼吸、光泽扫过、spotlight border）只给 signature moment；每个动画状态变化必须有**静态反馈通道**（颜色 / 图标 / 文字）——动画不能是唯一信号。
 - 入场 stagger 只给不常见的分层进场，按语义分块约 `100ms`；退场比入场更柔和（小 translateY，两方向 ease-out）。
@@ -114,31 +115,32 @@ Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **�
 
 ## 代码结构（新功能照此归属）
 
-- `js/main.js` 站点交互层：preloader、光标徽章、磁吸、`makeHorizontalScroller`、泡泡场、统一详情层（photo / film / series / game / music，共用 `#lightbox`）、tab 切换、ARCHIVE 共享工具条（filter / sort / density）、ARCHIVE 收藏 / 回访（`night:favorites` + `night:view`，星标 + FAVORITES ONLY）、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮 + 滚动进度、共享 `scheduleRefresh`。
-- 收藏与回访：`night:favorites` 存各类型收藏 id（照片文件名 / book & sport slug / `data-film-id` / `data-series-id` / `data-game` / `data-song-id`），`night:view` 存各 tab 的 filter / sort / density / favoritesOnly；只走 localStorage，不做云同步、不收集用户数据。清除浏览器存储即恢复默认。
+- `js/main.js` 站点交互层：preloader、光标徽章、磁吸、泡泡场、统一详情层（photo / film / series / game / music，共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮 + 滚动进度、共享 `scheduleRefresh`。横向拖拽滚轴（`makeHorizontalScroller` / `.dragbar`）随游戏名册改平铺一并退役，不要再引入。
+- ARCHIVE 共享工具条（filter / sort / density）与收藏星标 / FAVORITES ONLY 已于 2026-09 按用户裁定整体撤销：`#archive-toolbar`、`night:favorites`、`night:view` 及相关 CSS / JS 全部移除，不再新增回访入口。表格类内容默认按 `index.html` 与数据文件里的原始顺序呈现。
 - 签名：已整体退役（2026-09 用户裁定，about 签名连带绘制代码一并移除）；`js/sig-data.js` 保留在仓库但不参与加载，仍是 fontTools 生成数据、禁止手改。
-- 影 / 剧：数据（`film-data.js` 16 部 / `series-data.js` 19 部，字段 `{ id, imdb（ttID）, poster, title, director / years, year / seasons, genre / category, quote }`）→ 配置适配器经 `js/reel-stage.js` 的 `createReelStage()` 工厂渲染进 `#panel-films` / `#panel-series`；共享机械样式在 `css/reel-stage.css`，面板 accent / detail 区 / 断点 / reduce 块在各自 css。工厂暴露 `setData()` 供 ARCHIVE 工具条重排 / 筛选，重排不改 class 前缀与数据层。class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑定。
-- 音乐：`js/music-data.js`（`window.MUSIC_DATA`，763 首 16 组，`{ id, zh, en, groupLang, tracks: [{ id, title, artist }] }`）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips；`.genre-count` 由渲染器自动生成。歌单默认**全展开、无手风琴**（2026-09 用户裁定）：浏览靠流派 chips 过滤（sticky）+ 搜索叠加 + 随机一首（从当前可见卡片抽取，走同一网易云深链）。
+- 影 / 剧：数据（`film-data.js` 16 部 / `series-data.js` 19 部，字段 `{ id, imdb（ttID）, poster, title, director / years, year / seasons, genre / category, quote }`）→ 配置适配器经 `js/reel-stage.js` 的 `createReelStage()` 工厂渲染进 `#panel-films` / `#panel-series`；共享机械样式在 `css/reel-stage.css`，面板 accent / detail 区 / 断点 / reduce 块在各自 css。卡片直接挂进 strip，不再包 wrapper。class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑定。
+- 音乐：`js/music-data.js`（`window.MUSIC_DATA`，763 首 16 组，`{ id, zh, en, groupLang, tracks: [{ id, title, artist }] }`）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips；`.genre-count` 由渲染器自动生成。专辑封面走 `js/music-covers.js`（`window.MUSIC_COVERS`，songId → 文件名，图在 `album-covers/`，生成文件勿手改），详情层 `.lb-music` 显示真实封面，缺图回落 ♪ 占位 sleeve。歌单默认**全展开、无手风琴**（2026-09 用户裁定）：浏览靠流派 chips 过滤（sticky）+ 搜索叠加 + 随机一首（从当前可见卡片抽取，走同一网易云深链）。
+- 音乐默认**单流派显示**（2026-09 用户裁定）：一次只显示一组，首屏是索引 0 的 POP（`music-stage.js` 渲染后隐藏其余组），chips 行没有「全部」选项，一次只有一枚 `aria-pressed="true"`。搜索只作用于当前流派；当前流派零命中而别处有结果时，`#music-search-empty` 给出 `NO MATCH IN THIS GENRE` 并渲染 `#music-search-jump`（`查看 <流派> · <命中数>`，取命中最多的一组），点击切组并保留关键词。切换流派统一走 `selectGenre()`。
 - 书、球队硬编码在 `index.html`；历史调研产物放 `archive/<topic>/`，不参与站点加载。
 
 ### 光标徽章（品牌特例）
 
-taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()` + `data-cursor` 取值出徽章，仅精指针且非 REDUCED 启用（`html.has-cursor` 由 JS 设置）。指针为 10px 深墨圆点 + 30px 细 ink 环（ink@0.6 实测纸底 4.40:1 / 金底 3.20:1）；`[data-cursor]` 目标在圆点旁偏移出紧凑深墨胶囊标签（dynamic-island 语汇），标签文字 0.75rem mono 大写、字距 0.14em，跟随与状态切换即时（power2.out，无弹性），文本输入区恢复系统 I-beam。挂点：`VIEW`（.photo-frame-btn、.hof-item、影/剧 IMDb 按钮）、`DRAG`（#hof-scroll、hof dragbar-track、影/剧 range）、`PLAY`（音乐 .idx-card）、`OPEN`（影/剧海报卡）、`STAMP`（.poem-stamp）。新交互卡片挂对应值即可，无需改 JS/CSS。
+taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()` + `data-cursor` 取值出徽章，仅精指针且非 REDUCED 启用（`html.has-cursor` 由 JS 设置）。指针为 10px 深墨圆点 + 30px 细 ink 环（ink@0.6 实测纸底 4.40:1 / 金底 3.20:1）；`[data-cursor]` 目标在圆点旁偏移出紧凑深墨胶囊标签（dynamic-island 语汇），标签文字 0.75rem mono 大写、字距 0.14em，跟随与状态切换即时（power2.out，无弹性），文本输入区恢复系统 I-beam。挂点：`VIEW`（.photo-frame-btn、.hof-item、影/剧 IMDb 按钮）、`DRAG`（影/剧 range）、`PLAY`（音乐 .idx-card）、`OPEN`（影/剧海报卡）、`STAMP`（.poem-stamp）。新交互卡片挂对应值即可，无需改 JS/CSS。
 
 ## 站点结构（改动前核对实际现状）
 
-preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（FIELD ROLL 编辑式双章节网格 11 帧 → DO NOT GO GENTLE 诗条 → Dylan Thomas 诗块收尾）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 HOF 18 卡；每 tab 带共享 filter / sort / density 工具条、收藏星标 / FAVORITES ONLY / 本地偏好持久化；照片 / 影 / 剧 / 游戏 / 音乐共用统一详情层）→ ABOUT（统计）→ footer。GAME ARCHIVE 独立区与独立 POEM 区已撤销（2026-09 用户裁定：游戏并入 archive 第六 tab，诗并入 photo 区尾）。poem 块为杂志跨页排版：eyebrow + serif 大标题 + 导语居中开场，桌面诗笺左/注释栏右双栏（720px 单列堆叠），叠句金色贯穿。
+preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（FIELD ROLL 编辑式双章节网格 11 帧 → DO NOT GO GENTLE 诗条 → Dylan Thomas 诗块收尾）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 HOF 18 卡；照片 / 影 / 剧 / 游戏 / 音乐共用统一详情层）→ ABOUT（统计）→ footer。GAME ARCHIVE 独立区与独立 POEM 区已撤销（2026-09 用户裁定：游戏并入 archive 第六 tab，诗并入 photo 区尾）。poem 块为杂志跨页排版：eyebrow + serif 大标题 + 导语居中开场，桌面诗笺左/注释栏右双栏（720px 单列堆叠），叠句金色贯穿。
 
-archive 内的游戏名册为**纯拖拽驱动**：页面滚轮垂直穿过，不 pin、不 scrub；横向移动只来自抓取拖拽（含触屏横滑）与拖动条。游戏卡片框贴合图片原始比例（`width: min-content` 收缩包裹）。PHOTO 改为 FIELD ROLL 编辑式网格（BLOOM / HORIZON 双章节，不依赖横向拖拽）；lightbox 展示 photo/ 低分辨率版本，不加载 photo/full/ 原图。大标题（bighead）双词从两侧滑动居中，scrub 锁定。
+archive 内的游戏名册为**平铺网格**（2026-09 用户裁定，取代原横向拖拽轨道与拖动条）：`#hof-grid` 是 `repeat(auto-fill, minmax(min(100%, 240px), 1fr))`，18 张全部同屏可扫，页面滚轮只需垂直穿过。卡片：封面 `.hof-img-wrap` 固定 16:9 裁切，其下 `.hof-foot` 第一行是「排名 + 时长」mono 元信息，第二行 `.hof-name` 独占整行并预留两行高度，让整排引文基线对齐；排名由 `.hof` 的 CSS counter 画出，不在 DOM 手写。引文常显，hover / `.is-active` 抬卡 + 香槟光晕（抬升与时长变色同时承载状态，光晕不是唯一信号）。PHOTO 改为 FIELD ROLL 编辑式网格（BLOOM / HORIZON 双章节，不依赖横向拖拽）；lightbox 展示 photo/ 低分辨率版本，不加载 photo/full/ 原图。大标题（bighead）双词从两侧滑动居中，scrub 锁定。
 
 TICKER 共 2 条（2026-09 用户拍板收敛：原 01/02 移除，保留计数条与诗条）；taste-skill marquee ≤1/页与本项目 2 条的出入记录为品牌特例，不再增配第三条。
 
 ## 内容更新
 
 - 摄影：`.photo-frame`，`photo/` 与 `photo/full/` 都放。
-- 游戏：`hof-item`，封面 `covers/`。
+- 游戏：`hof-item`（直接进 `#hof-grid` 平铺网格，不再有 `.hof-row` / 拖动条），封面 `covers/`。
 - 影视：海报 `posters/<ttID>.jpg`，条目进 `film-data.js` / `series-data.js`。
-- 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。
+- 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成；缺图就留空，详情层自动回落占位 sleeve。
 - 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`），新增队伍时连同官网 href 一起核实填写。
 - 增删内容同步 `#about-stats`、计数 TICKER。
 

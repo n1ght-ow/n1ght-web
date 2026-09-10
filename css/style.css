@@ -90,7 +90,6 @@ body { -webkit-font-smoothing: antialiased; }
 .sticker,
 .bh-meta span,
 .tab-btn,
-.genre,
 .about-stats span {
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(16px) saturate(150%);
@@ -104,7 +103,6 @@ body { -webkit-font-smoothing: antialiased; }
   .sticker,
   .bh-meta span,
   .tab-btn,
-  .genre,
   .about-stats span {
     background: var(--color-surface);
     -webkit-backdrop-filter: none;
@@ -154,10 +152,24 @@ html.has-cursor,
 html.has-cursor * { cursor: none !important; }
 
 /* text fields keep the platform cursor; the decorative layer hides in JS */
-html.has-cursor input,
+html.has-cursor input:not([type="range"]),
 html.has-cursor textarea,
 html.has-cursor select,
-html.has-cursor [contenteditable="true"] { cursor: auto !important; }
+html.has-cursor [contenteditable="true"] { cursor: text !important; }
+
+/* Range thumbs are painted by the UA outside the input's cursor context,
+   so the custom cursor needs an explicit override on the pseudo-element.
+   Keep vendor pseudo-elements in separate rules: an unknown selector in a
+   comma list can invalidate the whole rule in some Chromium/WebView builds. */
+html.has-cursor input[type="range"] { cursor: none !important; }
+
+html.has-cursor input[type="range"]::-webkit-slider-thumb {
+  cursor: none !important;
+}
+
+html.has-cursor input[type="range"]::-moz-range-thumb {
+  cursor: none !important;
+}
 
 .custom-cursor {
   position: fixed;
@@ -877,176 +889,50 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   color: var(--color-text-muted);
 }
 
-/* ============ DRAG BAR (game roster) ============ */
-.dragbar {
-  position: absolute;
-  left: 50%;
-  bottom: 1.1rem;
-  transform: translateX(-50%);
-  width: min(560px, 72vw);
-  z-index: 6;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s var(--ease-out);
-}
-
-.dragbar.is-active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.dragbar-track {
-  position: relative;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  cursor: grab;
-  touch-action: none;
-}
-
-.dragbar-track::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 1px;
-  background: rgba(107, 103, 90, 0.4);
-}
-
-.dragbar-track.is-dragging { cursor: grabbing; }
-
-.dragbar-fill {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  height: 2px;
-  width: 100%;
-  border-radius: var(--radius-pill);
-  background: var(--color-accent-solid);
-  pointer-events: none;
-  transform: scaleX(0);
-  transform-origin: left center;
-  will-change: transform;
-}
-
-.hof-dragbar .dragbar-fill { background: var(--color-accent-text); }
-
-.dragbar-handle {
-  position: absolute;
-  top: 50%;
-  left: 0%;
-  width: 56px;
-  height: 26px;
-  /* X position is owned by JS via translateX(px); Y centering stays here */
-  transform: translate(0, -50%);
-  background: var(--color-accent-solid);
-  border: 1px solid var(--color-accent-text);
-  border-radius: var(--radius-pill);
-  color: var(--color-on-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: grab;
-  pointer-events: none;
-  box-shadow: var(--glow-accent);
-}
-
-.dragbar-hint {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  user-select: none;
-}
-
-.dragbar-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.7rem;
-  color: var(--color-text-secondary);
-}
-
-/* ============ HALL OF FAME (now the GAMES tab inside THE ARCHIVE) ============ */
-
-.hof { padding-bottom: clamp(3rem, 8vh, 6rem); }
-
-.hof-scroll {
-  position: relative;
-  overflow: hidden;
-}
-
-.hof-row {
-  display: flex;
-  align-items: center;
-  gap: clamp(2rem, 4vw, 4.5rem);
-  /* bottom padding clears the scrubber bar */
-  padding: clamp(1.5rem, 3vh, 2.5rem) clamp(1.5rem, 6vw, 6rem) 7.5rem;
-  width: max-content;
-  will-change: transform;
+/* ============ ARCHIVE GAME ROSTER ============
+   A tile grid: all eighteen entries are visible at once, so none of them
+   hides behind a drag. The artwork is the only bordered surface; the hairline
+   strip under it draws rank + hours, and the quote closes the card. */
+.hof {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: clamp(1.8rem, 3.2vw, 2.8rem) clamp(1.2rem, 2.2vw, 2rem);
+  padding-block: clamp(1.6rem, 3.4vh, 2.4rem) clamp(2.6rem, 7vh, 5rem);
+  /* roster order is the ranking; the number is drawn, never authored */
+  counter-reset: hof-rank;
 }
 
 .hof-item {
-  flex-shrink: 0;
-  width: min-content;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   min-width: 0;
+  counter-increment: hof-rank;
 }
 
-.hof-item:nth-child(even) { transform: translateY(clamp(1.5rem, 5vh, 3.5rem)); }
-.hof-item:nth-child(odd) { transform: translateY(clamp(-1rem, -3vh, -2.5rem)); }
-
-.hof-end {
-  flex-shrink: 0;
-  width: clamp(220px, 24vw, 340px);
+/* the entry: cover on top, a hairline rank strip under it, and the closing
+   line on the page. Nothing is painted over the artwork. */
+.hof-card {
   display: flex;
   flex-direction: column;
-  gap: 1em;
-  letter-spacing: 0.24em;
-  color: var(--color-text-muted);
-  padding-right: 4rem;
-  transform: none;
-}
-
-/* pinned horizontal sections are directly grabbable (all pointers);
-   touch-action: pan-y hands horizontal drags to JS and vertical swipes
-   to the page. Native grab cursor shows when the custom cursor is off. */
-.hof-scroll {
-  cursor: grab;
-  touch-action: pan-y;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.hof-scroll.is-grabbing {
-  cursor: grabbing;
-}
-
-.hof-quote {
-  font-family: "Instrument Serif", Georgia, serif;
-  font-style: italic;
-  font-size: clamp(0.95rem, 1.15vw, 1.2rem);
-  line-height: 1.5;
-  color: var(--color-text-secondary);
-  border-left: 2px solid var(--color-accent-solid);
-  padding-left: 0.85rem;
-  opacity: 0.55;
-  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
 }
 
 .hof-inner {
   position: relative;
-  width: max-content;
+  display: flex;
+  flex-direction: column;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft-md);
-  background: var(--color-bg-deep);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft-sm);
   overflow: hidden;
-  transition: box-shadow 0.35s var(--ease-out);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
 }
 
 .hof-item:hover .hof-inner,
 .hof-item.is-active .hof-inner {
+  transform: translateY(-4px);
+  /* the card is the section's one interactive surface: it gets the
+     champagne halo, and the halo is never the only signal (lift + hours
+     colour carry the state too) */
   box-shadow: var(--shadow-soft-lg), var(--glow-accent);
 }
 
@@ -1056,62 +942,101 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   border-radius: var(--radius-lg);
 }
 
-.hof-item:focus-visible .hof-inner {
-  box-shadow: var(--shadow-soft-lg), 0 0 0 2px var(--color-accent-text);
-}
-
 .hof-img-wrap {
   position: relative;
+  display: block;
   overflow: hidden;
+  background: var(--color-bg-deep);
+  aspect-ratio: 16 / 9;
 }
 
+/* neutral hairline keeps the art from bleeding into the page */
 .hof-img-wrap::after {
   content: "";
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 0 1px rgba(29, 27, 22, 0.12);
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
   pointer-events: none;
   z-index: 1;
 }
 
 .hof-img-wrap img {
   display: block;
-  width: auto;
-  height: auto;
-  max-width: clamp(280px, 30vw, 430px);
-  max-height: 72vh;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.hof-item:hover .hof-img-wrap img,
+.hof-item.is-active .hof-img-wrap img {
+  transform: scale(1.04);
+}
+
+/* rank strip under the art: the meta line draws the position and the hours,
+   the title owns the full width underneath it, and two title lines are
+   reserved so every quote in the row starts on the same baseline */
+.hof-foot {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0.4rem 0.65em;
+  padding: 0.85rem 1rem 0.9rem;
+  border-block-start: 1px solid var(--color-line);
+}
+
+.hof-foot::before {
+  content: counter(hof-rank, decimal-leading-zero);
+  grid-column: 1;
+  grid-row: 1;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.hof-name {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  /* two title lines are reserved so the quotes below the cards line up
+     across the row, including the cards whose name wraps */
+  min-height: calc(2 * 1.25 * 0.9375rem);
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.hof-hours {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* the closing line of each entry; full contrast at rest, not a hover reveal */
+.hof-quote {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(0.95rem, 1.05vw, 1.0625rem);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin-top: 0.85rem;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--color-accent-solid);
+  transition: color 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
 }
 
 .hof-item:hover .hof-quote,
 .hof-item.is-active .hof-quote {
-  opacity: 1;
-  transform: translateX(4px);
-}
-
-.hof-foot {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 0.9rem 0.9rem 0.85rem;
-  background: linear-gradient(to top, rgba(29, 27, 22, 0.82), rgba(29, 27, 22, 0));
-  display: flex;
-  flex-direction: column;
-  gap: 0.3em;
-}
-
-.hof-name {
-  color: var(--color-surface);
-  font-weight: 600;
-  font-size: clamp(0.85rem, 1vw, 1rem);
-  letter-spacing: 0.02em;
-  line-height: 1.25;
-}
-
-.hof-hours {
-  font-size: clamp(0.85rem, 1vw, 1rem);
-  color: var(--color-glow);
-  letter-spacing: 0.12em;
+  color: var(--color-text);
+  border-left-color: var(--color-accent-text);
 }
 
 /* ============ ABOUT ============ */
@@ -1416,301 +1341,10 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
 
 .tab-btn.is-active .no { color: var(--color-on-accent); }
 
-/* ---- archive toolbar: filter / sort / density ---- */
-.archive-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.7rem 1rem;
-  margin: 0 clamp(1.2rem, 6vw, 6rem) clamp(1.2rem, 2.6vh, 1.8rem);
-  padding: 0.7rem 0.9rem;
-  border-radius: var(--radius-md);
-  background: var(--glass-bg);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  backdrop-filter: blur(16px) saturate(150%);
-  box-shadow: var(--glass-edge), var(--shadow-soft-sm);
-}
-
-.archive-toolbar[hidden] { display: none; }
-
-@media (prefers-reduced-transparency: reduce) {
-  .archive-toolbar {
-    background: var(--color-surface);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    box-shadow: var(--shadow-soft-sm);
-  }
-}
-
-.archive-toolbar-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  min-width: 0;
-}
-
-.archive-toolbar-filters[hidden] { display: none; }
-
-.archive-toolbar-filters .genre-chip {
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-}
-
+/* music genre chips (and any future chip row) mark the active item in text */
 .genre-chip.is-active::before {
   content: "✓";
   margin-inline-end: 0.35em;
-}
-
-.archive-toolbar-count {
-  color: var(--color-text-secondary);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.archive-toolbar-empty {
-  flex-basis: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.8rem;
-  margin: 0;
-  color: var(--color-text-secondary);
-  border-left: 2px solid var(--color-accent-solid);
-  padding: 0.4em 0.8em;
-}
-
-.archive-toolbar-empty[hidden] { display: none; }
-
-.archive-empty-clear {
-  min-height: 40px;
-  font-size: 0.8125rem;
-  letter-spacing: 0.06em;
-  color: var(--color-on-accent);
-  background: var(--color-accent-solid);
-  border: 1px solid var(--color-accent-text);
-  border-radius: var(--radius-pill);
-  padding: 0.5em 1em;
-  cursor: pointer;
-  box-shadow: var(--glow-accent);
-  transition: background 0.15s var(--ease-out), transform 0.15s var(--ease-out);
-}
-
-.archive-empty-clear:hover { background: var(--color-glow); }
-.archive-empty-clear:active { transform: scale(0.96); }
-
-.archive-empty-clear:focus-visible {
-  outline: 2px solid var(--color-accent-text);
-  outline-offset: 2px;
-}
-
-.archive-toolbar-sort {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-inline-start: auto;
-}
-
-.archive-toolbar-label {
-  color: var(--color-text-muted);
-  font-size: 0.8125rem;
-  letter-spacing: 0.14em;
-}
-
-.archive-sort {
-  min-height: 40px;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.8125rem;
-  letter-spacing: 0.06em;
-  color: var(--color-text);
-  background-color: var(--color-surface);
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--color-text-secondary) 50%),
-    linear-gradient(135deg, var(--color-text-secondary) 50%, transparent 50%);
-  background-position: calc(100% - 1.1em) 50%, calc(100% - 0.75em) 50%;
-  background-size: 0.35em 0.35em, 0.35em 0.35em;
-  background-repeat: no-repeat;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-pill);
-  padding: 0.45em 2.2em 0.45em 0.95em;
-  cursor: pointer;
-  appearance: none;
-}
-
-.archive-sort:focus-visible {
-  outline: 2px solid var(--color-accent-text);
-  outline-offset: 2px;
-}
-
-.archive-density {
-  display: flex;
-  gap: 0.35rem;
-}
-
-.archive-density-btn {
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.8125rem;
-  letter-spacing: 0.06em;
-  color: var(--color-text-secondary);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-pill);
-  padding: 0.45em 0.95em;
-  cursor: pointer;
-  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out), box-shadow 0.15s var(--ease-out);
-}
-
-.archive-density-btn:hover { color: var(--color-text); }
-.archive-density-btn:active { transform: scale(0.96); }
-
-.archive-density-btn.is-active {
-  background: var(--color-accent-solid);
-  color: var(--color-on-accent);
-  border-color: var(--color-accent-text);
-  box-shadow: var(--glow-accent);
-}
-
-.archive-density-btn.is-active::before {
-  content: "✓";
-  margin-inline-end: 0.35em;
-}
-
-.archive-density-btn:focus-visible {
-  outline: 2px solid var(--color-accent-text);
-  outline-offset: 2px;
-}
-
-/* density changes spacing and card size only, never type */
-#panel-books.is-compact .idx-row,
-#panel-sport.is-compact .idx-row {
-  padding-block: clamp(0.65rem, 1.4vh, 0.95rem);
-  gap: clamp(0.6rem, 1.4vw, 1.4rem);
-}
-
-#panel-music.is-compact .genre {
-  padding: clamp(1rem, 2vw, 1.6rem);
-}
-
-#panel-music.is-compact .artist-tracks {
-  gap: 0.5rem;
-}
-
-#panel-music.is-compact .idx-card {
-  padding: 0.55rem 0.75rem;
-}
-
-#panel-games.is-compact .hof-row {
-  gap: clamp(1.2rem, 3vw, 2.6rem);
-  padding-block: 1.2rem 5.5rem;
-}
-
-#panel-games.is-compact .hof-item {
-  gap: 0.7rem;
-}
-
-#panel-games.is-compact .hof-img-wrap img {
-  max-width: clamp(220px, 24vw, 340px);
-  max-height: 60vh;
-}
-
-/* ---- favorites: star toggle on cards / rows ---- */
-.fav-btn {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  z-index: 6;
-  width: 40px;
-  height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  color: var(--color-text-secondary);
-  font-size: 1.1rem;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: var(--shadow-soft-sm);
-  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out), transform 0.15s var(--ease-out);
-}
-
-.fav-btn:hover { color: var(--color-text); }
-.fav-btn:active { transform: scale(0.96); }
-
-.fav-btn:focus-visible {
-  outline: 2px solid var(--color-accent-text);
-  outline-offset: 2px;
-}
-
-.fav-btn[aria-pressed="true"] {
-  color: var(--color-on-accent);
-  background: var(--color-accent-solid);
-  border-color: var(--color-accent-text);
-  box-shadow: var(--glow-accent);
-}
-
-.photo-frame { position: relative; }
-
-.idx-row { padding-inline-end: 3.4rem; }
-
-.hof-item-wrap {
-  position: relative;
-  flex: 0 0 auto;
-  width: min-content;
-}
-
-.idx-card-wrap {
-  position: relative;
-  flex: 0 1 auto;
-  max-width: 100%;
-}
-
-.idx-card-wrap > .idx-card {
-  max-width: 100%;
-  padding-inline-end: 3.2rem;
-}
-
-#panel-books .idx-row.is-filter-hidden,
-#panel-sport .idx-row.is-filter-hidden { display: none !important; }
-
-#panel-games .hof-item-wrap.is-filter-hidden,
-#panel-games .hof-item.is-filter-hidden { display: none !important; }
-
-#panel-music .idx-card-wrap.is-filter-hidden,
-#panel-music .idx-card-wrap.is-search-hidden,
-#panel-music .idx-card.is-filter-hidden { display: none !important; }
-
-.archive-favorites-toggle {
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.8125rem;
-  letter-spacing: 0.06em;
-  color: var(--color-text-secondary);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-pill);
-  padding: 0.45em 0.95em;
-  cursor: pointer;
-  transition: background 0.15s var(--ease-out), color 0.15s var(--ease-out), box-shadow 0.15s var(--ease-out);
-}
-
-.archive-favorites-toggle:hover { color: var(--color-text); }
-.archive-favorites-toggle:active { transform: scale(0.96); }
-
-.archive-favorites-toggle:focus-visible {
-  outline: 2px solid var(--color-accent-text);
-  outline-offset: 2px;
-}
-
-.archive-favorites-toggle[aria-pressed="true"] {
-  color: var(--color-on-accent);
-  background: var(--color-accent-solid);
-  border-color: var(--color-accent-text);
-  box-shadow: var(--glow-accent);
 }
 
 /* ---- panels ---- */
@@ -1925,10 +1559,23 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   opacity: 0.9;
 }
 
+/* Chromium paints its own cancel ✕ inside type="search" fields. The panel
+   already ships a real clear button, so the native one is a duplicate in the
+   browser's blue, not ours. */
+.music-search-input::-webkit-search-cancel-button,
+.music-search-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
 .music-search-input:focus {
-  outline: 3px solid var(--color-accent-text);
+  /* a 2px solid ring for focus visibility plus the brand's own champagne glow
+     (the same --glow-accent pair the filled buttons carry) */
+  outline: 2px solid var(--color-accent-text);
   outline-offset: 2px;
   border-color: var(--color-accent-solid);
+  box-shadow: var(--glow-accent);
 }
 
 .music-search-clear {
@@ -1937,35 +1584,82 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-surface);
+  /* ghost at rest so the row keeps one filled control (随机一首); the
+     hairline and tint only appear on hover */
+  background: none;
   color: var(--color-text);
-  border: 1px solid var(--color-line);
+  border: 1px solid transparent;
   border-radius: var(--radius-pill);
   font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
-  transition: background 0.15s var(--ease-out);
+  transition: background 0.15s var(--ease-out), border-color 0.15s var(--ease-out);
 }
 
 .music-search-clear:hover {
   background: var(--color-accent-tint);
+  border-color: var(--color-line);
 }
 
 .music-search-clear:active { transform: scale(0.96); }
+
+/* the button is inline-flex, which would otherwise beat the hidden
+   attribute and leave an empty control in the tab order */
+.music-search-clear[hidden] { display: none; }
 
 .music-search-count {
   color: var(--color-accent-text);
   background: var(--color-accent-tint);
   padding: 0.5em 1em;
   border-radius: var(--radius-pill);
+  /* a readout that changes on every keystroke: never let it jitter */
+  font-variant-numeric: tabular-nums;
 }
 
 .music-search-empty {
   flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
   color: var(--color-text-secondary);
   border-left: 2px solid var(--color-accent-solid);
   padding: 0.4em 0.8em;
   margin: 0;
+}
+
+/* the flex row above would otherwise beat the hidden attribute and leave an
+   empty control in the tab order */
+.music-search-empty[hidden] { display: none; }
+
+/* the "the results live in another genre" escape hatch. Tinted outline, not
+   filled: the row's single filled primary is 随机一首 */
+.music-search-jump {
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+  color: var(--color-accent-text);
+  background: var(--color-accent-tint);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  padding: 0.45em 1.1em;
+  cursor: pointer;
+  transition: color 0.15s var(--ease-out);
+}
+
+/* inline-flex would otherwise beat the hidden attribute, leaving an empty
+   pill beside the plain "NO MATCH" line */
+.music-search-jump[hidden] { display: none; }
+
+.music-search-jump:hover { color: var(--color-text); }
+
+.music-search-jump:active { transform: scale(0.96); }
+
+.music-search-jump:focus-visible {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 2px;
 }
 
 .idx-card.is-search-hidden {
@@ -1984,60 +1678,76 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
 }
 
 .genre {
-  border-radius: var(--radius-lg);
-  padding: clamp(1.6rem, 3vw, 2.4rem) clamp(1.4rem, 2.4vw, 2rem);
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
-  transition: transform 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out);
-}
-
-.genre:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--glass-edge), var(--shadow-soft-md);
+  gap: clamp(0.8rem, 1.6vh, 1.2rem);
+  padding: 0;
+  border-radius: 0;
+  /* .genre also sits in the shared glass recipe list (top of file); the
+     music panel treats it as a plain magazine head, so the frosted card
+     styling is switched off rather than duplicated */
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  transition: none;
 }
 
 .genre-head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 1rem;
-  border-bottom: 1px solid var(--color-line);
-  padding-bottom: 0.8rem;
+  gap: 0.9rem;
+  border-block-end: 1px solid var(--color-line);
+  padding-block-end: 0.55rem;
 }
 
 .genre-title {
-  font-size: clamp(1.25rem, 1.7vw, 1.7rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-wrap: balance;
   color: var(--color-text);
 }
 
 .genre-count {
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
   color: var(--color-accent-text);
   background: var(--color-accent-tint);
-  padding: 0.5em 1em;
+  padding: 0.35em 0.85em;
   border-radius: var(--radius-pill);
   white-space: nowrap;
 }
 
-/* track cards (music panel): grid of small song cards, 3-5 per row */
+/* track ledger (music panel): two dense columns on desktop, one below 720px */
 .track-index {
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 2.4vh, 1.6rem);
+  gap: 0;
 }
 
 .artist-row {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0;
 }
 
 .artist-tracks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(0.7rem, 1.4vw, 1rem);
+  /* one row-height token drives both the row box and its favorite star
+     inset; COMPACT density and the mobile breakpoint only retune this */
+  --music-row-min: 48px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(1.4rem, 2.6vw, 2.4rem);
+  row-gap: 0;
+  counter-reset: track;
+}
+
+/* grid items default to min-width:auto, which would block the ellipsis */
+.artist-tracks > .idx-card {
+  min-width: 0;
 }
 
 .artist-label {
@@ -2049,77 +1759,66 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   width: max-content;
 }
 
-/* song card: width follows its content (short name -> short card) */
+/* song row: ledger line — number / title / artist */
 .idx-card {
   position: relative;
-  flex: 0 1 auto;
   max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.35em;
-  padding: clamp(0.7rem, 1.3vw, 1rem) clamp(0.9rem, 1.4vw, 1.2rem);
-  background: var(--color-surface);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-soft-sm);
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr) minmax(0, 1.25fr);
+  align-items: center;
+  column-gap: clamp(0.6rem, 1.2vw, 1rem);
+  min-height: var(--music-row-min, 48px);
+  padding: 0.35rem 0.4rem;
+  border-block-end: 1px solid var(--color-line);
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  counter-increment: track;
   transition: background 0.15s var(--ease-out), transform 0.15s var(--ease-out), box-shadow 0.15s var(--ease-out);
 }
 
 .idx-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-soft-md);
+  background: var(--color-accent-tint);
 }
 
 .idx-card .idx-title {
   font-size: 0.9375rem;
   font-weight: 600;
+  min-width: 0;
   letter-spacing: 0;
   line-height: 1.3;
   color: var(--color-text);
-  white-space: nowrap; /* full title, single line — never truncated */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .idx-card .idx-artist {
   font-size: 0.8125rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.06em;
   color: var(--color-text-muted);
   text-transform: uppercase;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* clickable song cards: SIMILAR rows + own collected tracks */
+/* CSS counter keeps the ledger numbering out of the renderer's DOM */
+.idx-card::before {
+  content: counter(track, decimal-leading-zero);
+  grid-column: 1;
+  justify-self: end;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
 .idx-card.track-sim,
 .idx-card.track-own {
   cursor: pointer;
-}
-
-.idx-card.track-sim:hover,
-.idx-card.track-own:hover {
-  background: var(--color-accent-tint);
-}
-
-.idx-card.track-sim .idx-title,
-.idx-card.track-own .idx-title {
-  position: relative;
-  padding-right: 0.8em;
-}
-
-.idx-card.track-sim .idx-title::after,
-.idx-card.track-own .idx-title::after {
-  content: "↗";
-  position: absolute;
-  right: 0;
-  top: 0;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.7em;
-  color: var(--color-text);
-  opacity: 0.4;
-  transition: opacity 0.15s var(--ease-out), transform 0.15s var(--ease-out);
-}
-
-.idx-card.track-sim:hover .idx-title::after,
-.idx-card.track-own:hover .idx-title::after {
-  opacity: 1;
-  transform: translate(2px, 0);
 }
 
 /* own tracks: solid gold flip — they are the collection proper */
@@ -2128,12 +1827,12 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   box-shadow: var(--ring-accent), var(--glow-accent);
 }
 
-.idx-card.track-own:hover .idx-title,
-.idx-card.track-own:hover .idx-artist {
+.idx-card.track-own:hover::before {
   color: var(--color-on-accent);
 }
 
-.idx-card.track-own:hover .idx-title::after {
+.idx-card.track-own:hover .idx-title,
+.idx-card.track-own:hover .idx-artist {
   color: var(--color-on-accent);
 }
 
@@ -2416,6 +2115,7 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
 }
 
 .lb-music {
+  position: relative;
   display: grid;
   place-items: center;
   gap: 0.7rem;
@@ -2425,9 +2125,40 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   border-radius: var(--radius-lg);
   border: 1px solid rgba(252, 251, 248, 0.2);
   background: radial-gradient(circle at 50% 30%, rgba(221, 183, 107, 0.32), rgba(29, 27, 22, 0.92) 68%);
-  box-shadow: var(--shadow-soft-lg);
+  /* the sleeve is the detail layer's signature moment: art + one champagne halo */
+  box-shadow: var(--shadow-soft-lg), var(--glow-accent);
   color: var(--color-surface);
   text-align: center;
+  overflow: hidden;
+}
+
+/* the cover is the sleeve: full bleed, hairline kept neutral over the art.
+   The extra class beats `.lb-stage img`, which holds every stage image at
+   opacity 0 until `.is-loaded` and caps it with max-width / max-height */
+.lb-stage .lb-music .lb-music-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  opacity: 1;
+  border-radius: 0;
+  box-shadow: none;
+  background: none;
+  transition: none;
+}
+
+.lb-music-cover[hidden] { display: none; }
+
+.lb-music::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(252, 251, 248, 0.16);
+  pointer-events: none;
 }
 
 .lb-music-glyph {
@@ -2436,10 +2167,32 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   color: var(--color-glow);
 }
 
+.lb-music-glyph[hidden] { display: none; }
+
+/* the label rides the art on a scrim: 0.72 ink keeps near-white text above
+   4.5:1 even over a white sleeve */
 .lb-music-label {
-  font-size: 0.8125rem;
+  position: absolute;
+  left: 50%;
+  bottom: 0.9rem;
+  transform: translateX(-50%);
+  padding: 0.4em 0.9em;
+  border-radius: var(--radius-pill);
+  background: rgba(29, 27, 22, 0.72);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  backdrop-filter: blur(8px) saturate(140%);
+  color: var(--color-surface);
+  font-size: 0.75rem;
   letter-spacing: 0.18em;
-  color: rgba(252, 251, 248, 0.82);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .lb-music-label {
+    background: #1d1b16;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 .lb-nav {
@@ -2572,16 +2325,6 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   .bh-meta span { width: auto; }
   .sec-intro { font-size: 0.95rem; }
 
-  .archive-toolbar { margin-inline: clamp(1rem, 4vw, 1.5rem); }
-  .archive-toolbar-sort { margin-inline-start: 0; }
-  .archive-toolbar-filters .genre-chip,
-  .archive-sort,
-  .archive-density-btn,
-  .archive-favorites-toggle,
-  .archive-empty-clear { min-height: 44px; }
-  .fav-btn { width: 44px; height: 44px; }
-  .idx-card-wrap > .idx-card { padding-inline-end: 3.6rem; }
-
   .photo-roll { padding-inline: clamp(1rem, 4vw, 1.5rem); }
   .photo-roll-head { gap: 2rem; }
   .photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
@@ -2606,11 +2349,8 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   .lb-meta-link { min-height: 44px; }
   .lb-music { width: min(70vw, 260px); padding: 1.4rem; }
 
-  .hof-row { gap: clamp(1.5rem, 6vw, 2.5rem); padding: 1.5rem clamp(1rem, 5vw, 1.5rem) 6.5rem; }
-  .hof-img-wrap img { max-width: min(70vw, 320px); max-height: 56vh; }
-  .hof-item:nth-child(n) { transform: none; }
-  .hof-end { width: 220px; padding-right: 2rem; }
-  .hof-quote { font-size: 0.85rem; }
+  .hof { gap: 1.6rem 1rem; padding-block: 1.2rem 2.6rem; }
+  .hof-quote { font-size: 0.9rem; }
 
   .about-inner { grid-template-columns: 1fr; }
 
@@ -2622,8 +2362,27 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   .idx-row { grid-template-columns: 3.2rem minmax(0, 1fr); grid-template-rows: auto auto; }
   .idx-line { grid-column: 2; }
   /* poster rows on mobile: number | poster | title, quote below */
-  /* music cards on mobile: flex-wrap handles sizing naturally */
+  /* music ledger on mobile: one column, number column tightens */
+  .artist-tracks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .idx-card { grid-template-columns: 2.2rem minmax(0, 1fr) minmax(0, 1.1fr); }
   .playlist { gap: 1.4rem; }
+  /* touch targets: every music ledger row and control reaches 44px */
+  #panel-music .artist-tracks { --music-row-min: 44px; }
+  .genre-chip,
+  .music-random { min-height: 44px; }
+  /* the chip row stays one line on phones: wrapping turned the sticky bar
+     into a 5-15 row block that covered most of the ledger */
+  .genre-filter {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    padding-inline-end: 1.6rem;
+  }
+  .genre-filter::-webkit-scrollbar { display: none; }
+  .genre-chip { flex: 0 0 auto; }
   /* iOS zooms the page when a focused input is under 16px */
   .music-search-input { font-size: 16px; }
   .coda-title { font-size: clamp(2rem, 11vw, 4rem); }
@@ -2634,7 +2393,7 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
 @media (max-width: 480px) {
   .photo-grid { grid-template-columns: 1fr; }
   .photo-end { flex-direction: column; }
-  .hof-img-wrap img { max-width: min(80vw, 300px); }
+  .hof { grid-template-columns: 1fr; }
   .tabbar { gap: 0.6rem; }
   .tab-btn { padding: 0.55em 0.9em; }
   .tab-btn .no { display: none; }
@@ -2669,16 +2428,14 @@ html.has-cursor [contenteditable="true"] { cursor: auto !important; }
   .genre,
   .genre:hover,
   .idx-card,
-  .idx-card:hover { transform: none; transition-duration: 0s; }
+  .idx-card:hover,
+  .hof-inner,
+  .hof-item:hover .hof-inner,
+  .hof-img-wrap img,
+  .hof-item:hover .hof-img-wrap img { transform: none; transition-duration: 0s; }
   .tab-btn,
   .lb-close,
   .lb-nav,
-  .dragbar,
   .bubble,
-  .archive-sort,
-  .archive-density-btn,
-  .archive-empty-clear,
-  .archive-favorites-toggle,
-  .fav-btn,
   .lb-meta-link { transition-duration: 0s; }
 }

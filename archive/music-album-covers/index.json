@@ -1,0 +1,6112 @@
+{
+  "generated": "2026-09-10T03:58:10.403Z",
+  "source": "NetEase Cloud Music song/detail API (picUrl), 500px",
+  "files": 689,
+  "songs": [
+    {
+      "songId": "410846246",
+      "title": "Send My Love (To Your New Lover)",
+      "artist": "Adele",
+      "album": "Send My Love (To Your New Lover)",
+      "albumId": 34676042,
+      "cover": "109951168981806326.jpg"
+    },
+    {
+      "songId": "5093684",
+      "title": "Just the Way You Are",
+      "artist": "Bruno Mars",
+      "album": "The Brit Awards Album 2011",
+      "albumId": 503736,
+      "cover": "2531075767177958.jpg"
+    },
+    {
+      "songId": "17112299",
+      "title": "Call Me Maybe",
+      "artist": "Carly Rae Jepsen",
+      "album": "Call Me Maybe",
+      "albumId": 1576473,
+      "cover": "109951166150786745.jpg"
+    },
+    {
+      "songId": "2065100107",
+      "title": "Dance The Night",
+      "artist": "Dua Lipa",
+      "album": "Barbie The Album",
+      "albumId": 169896931,
+      "cover": "109951168747690471.jpg"
+    },
+    {
+      "songId": "451703096",
+      "title": "Shape of You",
+      "artist": "Ed Sheeran",
+      "album": "Shape of You",
+      "albumId": 35114127,
+      "cover": "109951168805157389.jpg"
+    },
+    {
+      "songId": "1948620191",
+      "title": "As It Was",
+      "artist": "Harry Styles",
+      "album": "Harry's House",
+      "albumId": 145197663,
+      "cover": "109951167437895857.jpg"
+    },
+    {
+      "songId": "1805283634",
+      "title": "Another Day Of Sun",
+      "artist": "La La Land Cast",
+      "album": "Soundtracks",
+      "albumId": 120604597,
+      "cover": "109951168144657877.jpg"
+    },
+    {
+      "songId": "28756834",
+      "title": "All About That Bass",
+      "artist": "Meghan Trainor",
+      "album": "All About That Bass",
+      "albumId": 2887138,
+      "cover": "6006632023186889.jpg"
+    },
+    {
+      "songId": "17753288",
+      "title": "What Makes You Beautiful",
+      "artist": "One Direction",
+      "album": "What Makes You Beautiful",
+      "albumId": 1633272,
+      "cover": "109951165966017583.jpg"
+    },
+    {
+      "songId": "1964236604",
+      "title": "Nonsense",
+      "artist": "Sabrina Carpenter",
+      "album": "emails i can't send",
+      "albumId": 148164055,
+      "cover": "109951171960924275.jpg"
+    },
+    {
+      "songId": "29747526",
+      "title": "Who Says",
+      "artist": "Selena Gomez",
+      "album": "For You",
+      "albumId": 3065063,
+      "cover": "109951173335369445.jpg"
+    },
+    {
+      "songId": "473602620",
+      "title": "There's Nothing Holdin' Me Back",
+      "artist": "Shawn Mendes",
+      "album": "There's Nothing Holdin' Me Back",
+      "albumId": 35377237,
+      "cover": "18880813672259939.jpg"
+    },
+    {
+      "songId": "1859245776",
+      "title": "STAY",
+      "artist": "The Kid LAROI / Justin Bieber",
+      "album": "STAY",
+      "albumId": 130016223,
+      "cover": "109951166155165682.jpg"
+    },
+    {
+      "songId": "18638057",
+      "title": "Baby",
+      "artist": "Justin Bieber / Ludacris",
+      "album": "Baby",
+      "albumId": 1709614,
+      "cover": "710284511552973.jpg"
+    },
+    {
+      "songId": "36496695",
+      "title": "Love Yourself",
+      "artist": "Justin Bieber",
+      "album": "Purpose (Deluxe)",
+      "albumId": 3389146,
+      "cover": "109951171891446591.jpg"
+    },
+    {
+      "songId": "2617944302",
+      "title": "Die With A Smile",
+      "artist": "Lady Gaga / Bruno Mars",
+      "album": "Die With A Smile",
+      "albumId": 245237092,
+      "cover": "109951170009341937.jpg"
+    },
+    {
+      "songId": "21038723",
+      "title": "Poker Face",
+      "artist": "Lady Gaga",
+      "album": "Poker Face",
+      "albumId": 1947196,
+      "cover": "109951169006598917.jpg"
+    },
+    {
+      "songId": "2871217",
+      "title": "Firework",
+      "artist": "Katy Perry",
+      "album": "Firework",
+      "albumId": 289915,
+      "cover": "109951166231981772.jpg"
+    },
+    {
+      "songId": "27566922",
+      "title": "Roar",
+      "artist": "Katy Perry",
+      "album": "Roar",
+      "albumId": 2639215,
+      "cover": "3317226581214544.jpg"
+    },
+    {
+      "songId": "22441762",
+      "title": "Teenage Dream",
+      "artist": "Katy Perry",
+      "album": "Teenage Dream",
+      "albumId": 2054346,
+      "cover": "109951173212900455.jpg"
+    },
+    {
+      "songId": "473817398",
+      "title": "Attention",
+      "artist": "Charlie Puth",
+      "album": "Voicenotes",
+      "albumId": 38530129,
+      "cover": "109951165991701088.jpg"
+    },
+    {
+      "songId": "509728806",
+      "title": "How Long",
+      "artist": "Charlie Puth",
+      "album": "Voicenotes",
+      "albumId": 38530129,
+      "cover": "109951165991701088.jpg"
+    },
+    {
+      "songId": "34072434",
+      "title": "One Call Away",
+      "artist": "Charlie Puth",
+      "album": "Nine Track Mind",
+      "albumId": 3270972,
+      "cover": "109951169407176829.jpg"
+    },
+    {
+      "songId": "401249910",
+      "title": "We Don't Talk Anymore",
+      "artist": "Charlie Puth / Selena Gomez",
+      "album": "Nine Track Mind",
+      "albumId": 3270972,
+      "cover": "109951169407176829.jpg"
+    },
+    {
+      "songId": "28987626",
+      "title": "Animals",
+      "artist": "Maroon 5",
+      "album": "Animals",
+      "albumId": 2971089,
+      "cover": "109951167996715604.jpg"
+    },
+    {
+      "songId": "28661564",
+      "title": "Maps",
+      "artist": "Maroon 5",
+      "album": "Maps",
+      "albumId": 2866276,
+      "cover": "3394192437682072.jpg"
+    },
+    {
+      "songId": "21253966",
+      "title": "Moves Like Jagger",
+      "artist": "Maroon 5 / Christina Aguilera",
+      "album": "Moves Like Jagger",
+      "albumId": 1963867,
+      "cover": "109951163219132651.jpg"
+    },
+    {
+      "songId": "21253806",
+      "title": "One More Night",
+      "artist": "Maroon 5",
+      "album": "Overexposed (Deluxe)",
+      "albumId": 1963855,
+      "cover": "3222668584137511.jpg"
+    },
+    {
+      "songId": "4172700",
+      "title": "Payphone",
+      "artist": "Maroon 5 / Wiz Khalifa",
+      "album": "Payphone",
+      "albumId": 421888,
+      "cover": "2535473813685128.jpg"
+    },
+    {
+      "songId": "29019227",
+      "title": "Sugar",
+      "artist": "Maroon 5",
+      "album": "V",
+      "albumId": 2980029,
+      "cover": "19175482788569403.jpg"
+    },
+    {
+      "songId": "19292804",
+      "title": "22",
+      "artist": "Taylor Swift",
+      "album": "Red",
+      "albumId": 1770428,
+      "cover": "109951169270236134.jpg"
+    },
+    {
+      "songId": "29572505",
+      "title": "Bad Blood",
+      "artist": "Taylor Swift",
+      "album": "1989 (Deluxe)",
+      "albumId": 3029801,
+      "cover": "18771962022688349.jpg"
+    },
+    {
+      "songId": "1382576173",
+      "title": "Cruel Summer",
+      "artist": "Taylor Swift",
+      "album": "Lover",
+      "albumId": 80752440,
+      "cover": "109951164260234943.jpg"
+    },
+    {
+      "songId": "25648017",
+      "title": "I Knew You Were Trouble.",
+      "artist": "Taylor Swift",
+      "album": "I Knew You Were Trouble.",
+      "albumId": 2265005,
+      "cover": "109951163208497947.jpg"
+    },
+    {
+      "songId": "1382778514",
+      "title": "Lover",
+      "artist": "Taylor Swift",
+      "album": "Lover",
+      "albumId": 80752440,
+      "cover": "109951164260234943.jpg"
+    },
+    {
+      "songId": "29498911",
+      "title": "Out Of The Woods",
+      "artist": "Taylor Swift",
+      "album": "1989 (Deluxe)",
+      "albumId": 3029801,
+      "cover": "18771962022688349.jpg"
+    },
+    {
+      "songId": "28953033",
+      "title": "Shake It Off",
+      "artist": "Taylor Swift",
+      "album": "Shake It Off",
+      "albumId": 2957006,
+      "cover": "109951163071997318.jpg"
+    },
+    {
+      "songId": "29572502",
+      "title": "Style",
+      "artist": "Taylor Swift",
+      "album": "1989 (Deluxe)",
+      "albumId": 3029801,
+      "cover": "18771962022688349.jpg"
+    },
+    {
+      "songId": "1382781100",
+      "title": "The Man",
+      "artist": "Taylor Swift",
+      "album": "Lover",
+      "albumId": 80752440,
+      "cover": "109951164260234943.jpg"
+    },
+    {
+      "songId": "25787222",
+      "title": "We Are Never Ever Getting Back Together",
+      "artist": "Taylor Swift",
+      "album": "Red (Deluxe Edition)",
+      "albumId": 2320159,
+      "cover": "109951169270228460.jpg"
+    },
+    {
+      "songId": "29572506",
+      "title": "Wildest Dreams",
+      "artist": "Taylor Swift",
+      "album": "1989 (Deluxe)",
+      "albumId": 3029801,
+      "cover": "18771962022688349.jpg"
+    },
+    {
+      "songId": "29572501",
+      "title": "Blank Space",
+      "artist": "Taylor Swift",
+      "album": "1989 (Deluxe)",
+      "albumId": 3029801,
+      "cover": "18771962022688349.jpg"
+    },
+    {
+      "songId": "1990192694",
+      "title": "Anti-Hero",
+      "artist": "Taylor Swift",
+      "album": "Midnights (3am Edition)",
+      "albumId": 153345099,
+      "cover": "109951168178695711.jpg"
+    },
+    {
+      "songId": "1990192725",
+      "title": "Karma",
+      "artist": "Taylor Swift",
+      "album": "Midnights (3am Edition)",
+      "albumId": 153345099,
+      "cover": "109951168178695711.jpg"
+    },
+    {
+      "songId": "516818336",
+      "title": "Delicate",
+      "artist": "Taylor Swift",
+      "album": "reputation",
+      "albumId": 36709029,
+      "cover": "109951163054654501.jpg"
+    },
+    {
+      "songId": "1990192689",
+      "title": "Lavender Haze",
+      "artist": "Taylor Swift",
+      "album": "Midnights (3am Edition)",
+      "albumId": 153345099,
+      "cover": "109951168178695711.jpg"
+    },
+    {
+      "songId": "1400110511",
+      "title": "Don't Start Now",
+      "artist": "Dua Lipa",
+      "album": "Don't Start Now",
+      "albumId": 82863249,
+      "cover": "109951169044867703.jpg"
+    },
+    {
+      "songId": "1433934518",
+      "title": "Levitating",
+      "artist": "Dua Lipa",
+      "album": "Future Nostalgia",
+      "albumId": 86827685,
+      "cover": "109951169044863787.jpg"
+    },
+    {
+      "songId": "1418953604",
+      "title": "Physical",
+      "artist": "Dua Lipa",
+      "album": "Physical",
+      "albumId": 85218004,
+      "cover": "109951169044864799.jpg"
+    },
+    {
+      "songId": "2014200813",
+      "title": "Flowers",
+      "artist": "Miley Cyrus",
+      "album": "Flowers",
+      "albumId": 158181585,
+      "cover": "109951168231543153.jpg"
+    },
+    {
+      "songId": "1406633327",
+      "title": "Blinding Lights",
+      "artist": "The Weeknd",
+      "album": "Blinding Lights",
+      "albumId": 83768303,
+      "cover": "109951165370121751.jpg"
+    },
+    {
+      "songId": "1432456852",
+      "title": "Save Your Tears",
+      "artist": "The Weeknd",
+      "album": "After Hours",
+      "albumId": 86675621,
+      "cover": "109951173691743917.jpg"
+    },
+    {
+      "songId": "1404228064",
+      "title": "Watermelon Sugar",
+      "artist": "Harry Styles",
+      "album": "Fine Line",
+      "albumId": 84048922,
+      "cover": "109951164544144407.jpg"
+    },
+    {
+      "songId": "1407951508",
+      "title": "Adore You",
+      "artist": "Harry Styles",
+      "album": "Fine Line",
+      "albumId": 84048922,
+      "cover": "109951164544144407.jpg"
+    },
+    {
+      "songId": "1948618489",
+      "title": "Late Night Talking",
+      "artist": "Harry Styles",
+      "album": "Harry's House",
+      "albumId": 145197663,
+      "cover": "109951167437895857.jpg"
+    },
+    {
+      "songId": "2144901835",
+      "title": "Espresso",
+      "artist": "Sabrina Carpenter",
+      "album": "Espresso",
+      "albumId": 191993394,
+      "cover": "109951169490378888.jpg"
+    },
+    {
+      "songId": "2080218767",
+      "title": "vampire",
+      "artist": "Olivia Rodrigo",
+      "album": "GUTS",
+      "albumId": 174249941,
+      "cover": "109951168910224159.jpg"
+    },
+    {
+      "songId": "1846473650",
+      "title": "drivers license",
+      "artist": "Olivia Rodrigo",
+      "album": "SOUR",
+      "albumId": 127725764,
+      "cover": "109951169026653354.jpg"
+    },
+    {
+      "songId": "1958557540",
+      "title": "golden hour",
+      "artist": "JVKE",
+      "album": "this is what ____ feels like (Vol. 1-4)",
+      "albumId": 152231212,
+      "cover": "109951173628349420.jpg"
+    },
+    {
+      "songId": "27698223",
+      "title": "Royals",
+      "artist": "Lorde",
+      "album": "Royals",
+      "albumId": 2662029,
+      "cover": "18880813672421154.jpg"
+    },
+    {
+      "songId": "28306668",
+      "title": "Chandelier",
+      "artist": "Sia",
+      "album": "Chandelier",
+      "albumId": 2771038,
+      "cover": "109951165997274647.jpg"
+    },
+    {
+      "songId": "39224884",
+      "title": "Cheap Thrills",
+      "artist": "Sia",
+      "album": "This Is Acting",
+      "albumId": 3394107,
+      "cover": "109951165973312283.jpg"
+    },
+    {
+      "songId": "36990266",
+      "title": "Faded",
+      "artist": "Alan Walker",
+      "album": "Faded",
+      "albumId": 3406843,
+      "cover": "109951165976856263.jpg"
+    },
+    {
+      "songId": "1338098071",
+      "title": "Let Me Down Slowly",
+      "artist": "Alec Benjamin / Alessia Cara",
+      "album": "Let Me Down Slowly",
+      "albumId": 75079273,
+      "cover": "109951163781387914.jpg"
+    },
+    {
+      "songId": "1374329431",
+      "title": "Dancing With Your Ghost",
+      "artist": "Sasha Alex Sloan",
+      "album": "Dancing With Your Ghost",
+      "albumId": 80029518,
+      "cover": "109951165986777646.jpg"
+    },
+    {
+      "songId": "479223413",
+      "title": "I Like Me Better",
+      "artist": "LAUV",
+      "album": "I Like Me Better",
+      "albumId": 35536102,
+      "cover": "109951170007381434.jpg"
+    },
+    {
+      "songId": "564000295",
+      "title": "Paris in the Rain",
+      "artist": "LAUV",
+      "album": "I met you when I was 18. (the playlist)",
+      "albumId": 39087647,
+      "cover": "109951170007399086.jpg"
+    },
+    {
+      "songId": "400876320",
+      "title": "Unstoppable",
+      "artist": "Sia",
+      "album": "This Is Acting",
+      "albumId": 3394107,
+      "cover": "109951165973312283.jpg"
+    },
+    {
+      "songId": "2031003572",
+      "title": "Feather",
+      "artist": "Sabrina Carpenter",
+      "album": "emails i can’t send fwd:",
+      "albumId": 161982126,
+      "cover": "109951171960925193.jpg"
+    },
+    {
+      "songId": "2097627772",
+      "title": "Houdini",
+      "artist": "Dua Lipa",
+      "album": "Houdini",
+      "albumId": 178542785,
+      "cover": "109951169039499451.jpg"
+    },
+    {
+      "songId": "2126654120",
+      "title": "Training Season",
+      "artist": "Dua Lipa",
+      "album": "Training Season",
+      "albumId": 186016477,
+      "cover": "109951169338596465.jpg"
+    },
+    {
+      "songId": "28692519",
+      "title": "Photograph",
+      "artist": "Ed Sheeran",
+      "album": "x (Deluxe Edition)",
+      "albumId": 2840023,
+      "cover": "109951168544414132.jpg"
+    },
+    {
+      "songId": "1855475139",
+      "title": "Bad Habits",
+      "artist": "Ed Sheeran",
+      "album": "Bad Habits",
+      "albumId": 129369430,
+      "cover": "109951166300257339.jpg"
+    },
+    {
+      "songId": "1876212794",
+      "title": "Shivers",
+      "artist": "Ed Sheeran",
+      "album": "Shivers",
+      "albumId": 132878623,
+      "cover": "109951166364187589.jpg"
+    },
+    {
+      "songId": "441120471",
+      "title": "That's What I Like",
+      "artist": "Bruno Mars",
+      "album": "24K Magic",
+      "albumId": 34898697,
+      "cover": "109951166232338422.jpg"
+    },
+    {
+      "songId": "433681259",
+      "title": "24K Magic",
+      "artist": "Bruno Mars",
+      "album": "24K Magic",
+      "albumId": 34898697,
+      "cover": "109951166232338422.jpg"
+    },
+    {
+      "songId": "27514868",
+      "title": "Grenade",
+      "artist": "Bruno Mars",
+      "album": "Grenade",
+      "albumId": 2623215,
+      "cover": "109951163220488465.jpg"
+    },
+    {
+      "songId": "1830422741",
+      "title": "Ghost",
+      "artist": "Justin Bieber",
+      "album": "Justice (中国豪华特别版)",
+      "albumId": 123858074,
+      "cover": "109951165835207944.jpg"
+    },
+    {
+      "songId": "36921365",
+      "title": "Stitches",
+      "artist": "Shawn Mendes",
+      "album": "Handwritten (Revisited)",
+      "albumId": 3414123,
+      "cover": "109951166110737836.jpg"
+    },
+    {
+      "songId": "415904452",
+      "title": "Treat You Better",
+      "artist": "Shawn Mendes",
+      "album": "Treat You Better",
+      "albumId": 34726351,
+      "cover": "1391981732024962.jpg"
+    },
+    {
+      "songId": "27896574",
+      "title": "Story of My Life",
+      "artist": "One Direction",
+      "album": "Story of My Life",
+      "albumId": 2692023,
+      "cover": "109951165968719290.jpg"
+    },
+    {
+      "songId": "29719175",
+      "title": "Night Changes",
+      "artist": "One Direction",
+      "album": "Four",
+      "albumId": 3003016,
+      "cover": "109951165969533755.jpg"
+    },
+    {
+      "songId": "18981962",
+      "title": "Last Friday Night (T.G.I.F.)",
+      "artist": "Katy Perry",
+      "album": "Teenage Dream: The Complete Confection",
+      "albumId": 1738881,
+      "cover": "109951169008316205.jpg"
+    },
+    {
+      "songId": "27731239",
+      "title": "Dark Horse",
+      "artist": "Katy Perry / Juicy J",
+      "album": "Dark Horse",
+      "albumId": 2667031,
+      "cover": "109951163071997284.jpg"
+    },
+    {
+      "songId": "1386002735",
+      "title": "Bad Romance",
+      "artist": "Lady Gaga",
+      "album": "The Fame Monster",
+      "albumId": 81098777,
+      "cover": "109951173114580801.jpg"
+    },
+    {
+      "songId": "2677295798",
+      "title": "Paparazzi",
+      "artist": "Lady Gaga",
+      "album": "cleaning my room while dancing",
+      "albumId": 263586825,
+      "cover": "109951170503889688.jpg"
+    },
+    {
+      "songId": "21373645",
+      "title": "Just Give Me a Reason",
+      "artist": "P!nk / Nate Ruess",
+      "album": "The Truth About Love",
+      "albumId": 1973200,
+      "cover": "109951167487398037.jpg"
+    },
+    {
+      "songId": "16434100",
+      "title": "If I Ain't Got You",
+      "artist": "Alicia Keys",
+      "album": "If I Ain't Got You",
+      "albumId": 1515264,
+      "cover": "759762534800468.jpg"
+    },
+    {
+      "songId": "2188283",
+      "title": "If I Were a Boy",
+      "artist": "Beyoncé",
+      "album": "I Am... Sasha Fierce (Deluxe Version)",
+      "albumId": 220719,
+      "cover": "109951166050151637.jpg"
+    },
+    {
+      "songId": "504265014",
+      "title": "Dusk Till Dawn",
+      "artist": "ZAYN / Sia",
+      "album": "Dusk Till Dawn",
+      "albumId": 36150011,
+      "cover": "109951165982469757.jpg"
+    },
+    {
+      "songId": "26243686",
+      "title": "Young And Beautiful",
+      "artist": "Lana Del Rey",
+      "album": "Young And Beautiful",
+      "albumId": 2431159,
+      "cover": "109951169391591138.jpg"
+    },
+    {
+      "songId": "16593589",
+      "title": "Summertime Sadness",
+      "artist": "Lana Del Rey",
+      "album": "Born To Die (Deluxe Version)",
+      "albumId": 1530458,
+      "cover": "109951171770409475.jpg"
+    },
+    {
+      "songId": "1306995079",
+      "title": "7 Years",
+      "artist": "Lukas Graham",
+      "album": "Holiday Songs",
+      "albumId": 72935773,
+      "cover": "109951163909496426.jpg"
+    },
+    {
+      "songId": "1386693749",
+      "title": "Dance Monkey",
+      "artist": "Tones and I",
+      "album": "The Kids Are Coming",
+      "albumId": 81159672,
+      "cover": "109951164323457413.jpg"
+    },
+    {
+      "songId": "1832581859",
+      "title": "Señorita",
+      "artist": "Shawn Mendes / Camila Cabello",
+      "album": "Straight Up Anthems",
+      "albumId": 125187702,
+      "cover": "109951168209731217.jpg"
+    },
+    {
+      "songId": "458697629",
+      "title": "I Don’t Wanna Live Forever (Fifty Shades Darker)",
+      "artist": "ZAYN / Taylor Swift",
+      "album": "Fifty Shades Darker (Original Motion Picture Soundtrack)",
+      "albumId": 35150419,
+      "cover": "18735678139081268.jpg"
+    },
+    {
+      "songId": "34497413",
+      "title": "Waka Waka (This Time for Africa)",
+      "artist": "Shakira / Freshlyground",
+      "album": "Happiness Forever",
+      "albumId": 3286133,
+      "cover": "109951165972560991.jpg"
+    },
+    {
+      "songId": "24603573",
+      "title": "Hips Don't Lie",
+      "artist": "Shakira Ft. Wyclef Jean",
+      "album": "Now That's What I Call The 00's",
+      "albumId": 2189684,
+      "cover": "825733232489109.jpg"
+    },
+    {
+      "songId": "5253802",
+      "title": "Unwritten",
+      "artist": "Natasha Bedingfield",
+      "album": "Cf, Movie & Drama Hits 广告，开麦拉！",
+      "albumId": 511973,
+      "cover": "92358976750445.jpg"
+    },
+    {
+      "songId": "416903659",
+      "title": "Fight Song",
+      "artist": "Rachel Platten",
+      "album": "Ultimate... Summer",
+      "albumId": 34734362,
+      "cover": "18011099974740454.jpg"
+    },
+    {
+      "songId": "26377216",
+      "title": "Marry You",
+      "artist": "Bruno Mars",
+      "album": "Love Songs",
+      "albumId": 2468522,
+      "cover": "2333163674194267.jpg"
+    },
+    {
+      "songId": "1331707956",
+      "title": "Havana",
+      "artist": "Camila Cabello / Young Thug",
+      "album": "New Year's Eve - NYE 2018/2019",
+      "albumId": 74799733,
+      "cover": "109951165970660548.jpg"
+    },
+    {
+      "songId": "2117911937",
+      "title": "Beautiful Things",
+      "artist": "Benson Boone",
+      "album": "Beautiful Things",
+      "albumId": 183334167,
+      "cover": "109951169264112902.jpg"
+    },
+    {
+      "songId": "2081585861",
+      "title": "Lose Control",
+      "artist": "Teddy Swims",
+      "album": "I've Tried Everything But Therapy (Part 1)",
+      "albumId": 174612478,
+      "cover": "109951168910626928.jpg"
+    },
+    {
+      "songId": "2637558926",
+      "title": "APT.",
+      "artist": "ROSÉ / Bruno Mars",
+      "album": "APT.",
+      "albumId": 251077657,
+      "cover": "109951170052324935.jpg"
+    },
+    {
+      "songId": "2105586334",
+      "title": "greedy",
+      "artist": "Tate McRae",
+      "album": "THINK LATER",
+      "albumId": 180416213,
+      "cover": "109951169137311038.jpg"
+    },
+    {
+      "songId": "2065100111",
+      "title": "What Was I Made For? (From The Motion Picture \"Barbie\")",
+      "artist": "Billie Eilish",
+      "album": "Barbie The Album",
+      "albumId": 169896931,
+      "cover": "109951168747690471.jpg"
+    },
+    {
+      "songId": "2058865535",
+      "title": "Calm Down",
+      "artist": "Rema / Selena Gomez",
+      "album": "African Heatwave: Afrobeats Party Anthems",
+      "albumId": 168347998,
+      "cover": "109951168700131574.jpg"
+    },
+    {
+      "songId": "25657274",
+      "title": "Talking to the Moon",
+      "artist": "Bruno Mars",
+      "album": "It's Better If You Don't Understand",
+      "albumId": 2270046,
+      "cover": "109951163220494718.jpg"
+    },
+    {
+      "songId": "2411634",
+      "title": "A Thousand Years",
+      "artist": "Christina Perri",
+      "album": "A Thousand Years",
+      "albumId": 243354,
+      "cover": "109951167587259721.jpg"
+    },
+    {
+      "songId": "29966565",
+      "title": "Love Me Like You Do",
+      "artist": "Ellie Goulding",
+      "album": "Love Me Like You Do (From \"Fifty Shades of Grey\")",
+      "albumId": 3090199,
+      "cover": "6647647303036966.jpg"
+    },
+    {
+      "songId": "27556211",
+      "title": "All of Me",
+      "artist": "John Legend",
+      "album": "Love In The Future",
+      "albumId": 2635125,
+      "cover": "109951165968631390.jpg"
+    },
+    {
+      "songId": "16232697",
+      "title": "Because of You",
+      "artist": "Kelly Clarkson",
+      "album": "Because Of You",
+      "albumId": 1496741,
+      "cover": "109951172132026646.jpg"
+    },
+    {
+      "songId": "1803545978",
+      "title": "Someone You Loved",
+      "artist": "Lewis Capaldi",
+      "album": "Dalok Téli Reggelekre",
+      "albumId": 120320549,
+      "cover": "109951167997105906.jpg"
+    },
+    {
+      "songId": "460043703",
+      "title": "Perfect",
+      "artist": "Ed Sheeran",
+      "album": "÷ (Deluxe)",
+      "albumId": 35150843,
+      "cover": "109951166151204092.jpg"
+    },
+    {
+      "songId": "28680438",
+      "title": "Thinking out Loud",
+      "artist": "Ed Sheeran",
+      "album": "x (Deluxe Edition)",
+      "albumId": 2840023,
+      "cover": "109951168544414132.jpg"
+    },
+    {
+      "songId": "35847388",
+      "title": "Hello",
+      "artist": "Adele",
+      "album": "Hello",
+      "albumId": 3377030,
+      "cover": "109951168981824640.jpg"
+    },
+    {
+      "songId": "36841427",
+      "title": "Love In The Dark",
+      "artist": "Adele",
+      "album": "25",
+      "albumId": 3377045,
+      "cover": "109951168110232012.jpg"
+    },
+    {
+      "songId": "16435049",
+      "title": "Someone Like You",
+      "artist": "Adele",
+      "album": "Someone Like You",
+      "albumId": 1515348,
+      "cover": "109951168981902999.jpg"
+    },
+    {
+      "songId": "402073823",
+      "title": "When We Were Young",
+      "artist": "Adele",
+      "album": "When We Were Young",
+      "albumId": 34477270,
+      "cover": "109951168981826181.jpg"
+    },
+    {
+      "songId": "25657236",
+      "title": "When I Was Your Man",
+      "artist": "Bruno Mars",
+      "album": "Unorthodox Jukebox",
+      "albumId": 2270037,
+      "cover": "109951166652562200.jpg"
+    },
+    {
+      "songId": "25657241",
+      "title": "It Will Rain",
+      "artist": "Bruno Mars",
+      "album": "It Will Rain",
+      "albumId": 2270042,
+      "cover": "1771313232352633.jpg"
+    },
+    {
+      "songId": "1887190390",
+      "title": "Easy On Me",
+      "artist": "Adele",
+      "album": "30",
+      "albumId": 135740501,
+      "cover": "109951166639576807.jpg"
+    },
+    {
+      "songId": "2117009",
+      "title": "Set Fire to the Rain",
+      "artist": "Adele",
+      "album": "21",
+      "albumId": 213252,
+      "cover": "109951172658442765.jpg"
+    },
+    {
+      "songId": "36841428",
+      "title": "All I Ask",
+      "artist": "Adele",
+      "album": "25",
+      "albumId": 3377045,
+      "cover": "109951168110232012.jpg"
+    },
+    {
+      "songId": "1404805139",
+      "title": "Before You Go",
+      "artist": "Lewis Capaldi",
+      "album": "Before You Go",
+      "albumId": 83525619,
+      "cover": "109951164499108360.jpg"
+    },
+    {
+      "songId": "429528027",
+      "title": "Say You Won't Let Go",
+      "artist": "James Arthur",
+      "album": "Back from the Edge",
+      "albumId": 34928439,
+      "cover": "109951165975670328.jpg"
+    },
+    {
+      "songId": "25706371",
+      "title": "Impossible",
+      "artist": "James Arthur",
+      "album": "Impossible",
+      "albumId": 2285031,
+      "cover": "109951165967520873.jpg"
+    },
+    {
+      "songId": "18161816",
+      "title": "Let Her Go",
+      "artist": "Passenger",
+      "album": "All The Little Lights",
+      "albumId": 1668243,
+      "cover": "109951165708489729.jpg"
+    },
+    {
+      "songId": "28586064",
+      "title": "I'm Not the Only One",
+      "artist": "Sam Smith",
+      "album": "In The Lonely Hour",
+      "albumId": 2786650,
+      "cover": "109951166345379826.jpg"
+    },
+    {
+      "songId": "504492140",
+      "title": "Too Good At Goodbyes",
+      "artist": "Sam Smith",
+      "album": "The Thrill Of It All (Special Edition)",
+      "albumId": 36679143,
+      "cover": "109951163053555239.jpg"
+    },
+    {
+      "songId": "1350601781",
+      "title": "Arcade",
+      "artist": "Duncan Laurence",
+      "album": "Arcade",
+      "albumId": 75792452,
+      "cover": "109951163939876598.jpg"
+    },
+    {
+      "songId": "16435064",
+      "title": "Skyfall (Full Length)",
+      "artist": "Adele",
+      "album": "Skyfall (Full Length)",
+      "albumId": 1515354,
+      "cover": "109951165967325272.jpg"
+    },
+    {
+      "songId": "17081098",
+      "title": "Jar of Hearts",
+      "artist": "Christina Perri",
+      "album": "lovestrong.",
+      "albumId": 1574318,
+      "cover": "109951168212894447.jpg"
+    },
+    {
+      "songId": "28208046",
+      "title": "Say Something",
+      "artist": "A Great Big World",
+      "album": "Is There Anybody Out There?",
+      "albumId": 2728015,
+      "cover": "109951165969262879.jpg"
+    },
+    {
+      "songId": "28531849",
+      "title": "Stay With Me",
+      "artist": "Sam Smith",
+      "album": "Stay With Me",
+      "albumId": 2822279,
+      "cover": "109951166630334850.jpg"
+    },
+    {
+      "songId": "26608879",
+      "title": "Burn",
+      "artist": "Ellie Goulding",
+      "album": "Burn - Single",
+      "albumId": 2532193,
+      "cover": "4410141139021458.jpg"
+    },
+    {
+      "songId": "1470274244",
+      "title": "Can't Help Falling in Love",
+      "artist": "Elvis Presley",
+      "album": "Suspicious Minds: 60 Greatest Hits of Elvis Presley",
+      "albumId": 93819480,
+      "cover": "109951165226594436.jpg"
+    },
+    {
+      "songId": "26867112",
+      "title": "My Love",
+      "artist": "Westlife",
+      "album": "Het Beste Uit De Mega Top 100 '01",
+      "albumId": 2566360,
+      "cover": "109951164034044287.jpg"
+    },
+    {
+      "songId": "1374446646",
+      "title": "I Love You 3000",
+      "artist": "Stephanie Poetri",
+      "album": "I Love You 3000",
+      "albumId": 80044994,
+      "cover": "109951170496839853.jpg"
+    },
+    {
+      "songId": "21568021",
+      "title": "Right Here Waiting",
+      "artist": "Richard Marx",
+      "album": "Repeat Offender",
+      "albumId": 1987377,
+      "cover": "109951170708384669.jpg"
+    },
+    {
+      "songId": "1313096578",
+      "title": "Shallow",
+      "artist": "Lady Gaga / Bradley Cooper",
+      "album": "A Star Is Born Soundtrack",
+      "albumId": 73781284,
+      "cover": "109951169817866663.jpg"
+    },
+    {
+      "songId": "529569189",
+      "title": "All By Myself",
+      "artist": "Various Artists - Celine Dion Tribute",
+      "album": "A Gregorian Chant Tribute To Celine Dion",
+      "albumId": 37233410,
+      "cover": "109951163104642328.jpg"
+    },
+    {
+      "songId": "18548880",
+      "title": "When You Say Nothing At All",
+      "artist": "Ronan Keating",
+      "album": "10 Years Of Hits",
+      "albumId": 1702437,
+      "cover": "109951170938411673.jpg"
+    },
+    {
+      "songId": "2691123316",
+      "title": "The Night We Met",
+      "artist": "Lord Huron",
+      "album": "Strange Trails",
+      "albumId": 267995784,
+      "cover": "109951170686693997.jpg"
+    },
+    {
+      "songId": "5159010",
+      "title": "Hey There Delilah",
+      "artist": "Plain White T's",
+      "album": "2008 Grammy Nominees",
+      "albumId": 506607,
+      "cover": "2425522650894027.jpg"
+    },
+    {
+      "songId": "27412429",
+      "title": "Make You Feel My Love",
+      "artist": "Adele",
+      "album": "Your Songs: 40 Feel Good Favourites",
+      "albumId": 2608103,
+      "cover": "6628955604982607.jpg"
+    },
+    {
+      "songId": "1409093519",
+      "title": "Falling",
+      "artist": "Harry Styles",
+      "album": "Fine Line",
+      "albumId": 84048922,
+      "cover": "109951164544144407.jpg"
+    },
+    {
+      "songId": "1496239563",
+      "title": "Sparks",
+      "artist": "Coldplay",
+      "album": "Downtempo Classics",
+      "albumId": 98455981,
+      "cover": "109951165477811883.jpg"
+    },
+    {
+      "songId": "26330723",
+      "title": "All I Want",
+      "artist": "Kodaline",
+      "album": "Now That's What I Call Music! 46",
+      "albumId": 2451955,
+      "cover": "2398034860233084.jpg"
+    },
+    {
+      "songId": "27200688",
+      "title": "Chasing Cars",
+      "artist": "Snow Patrol",
+      "album": "Fast Forward: Indie Trax",
+      "albumId": 2589764,
+      "cover": "5644892697118422.jpg"
+    },
+    {
+      "songId": "19558690",
+      "title": "How to Save a Life",
+      "artist": "The Fray",
+      "album": "How To Save A Life",
+      "albumId": 1800999,
+      "cover": "109951165965449516.jpg"
+    },
+    {
+      "songId": "1649082",
+      "title": "What A Wonderful World (Single Version)",
+      "artist": "Louis Armstrong",
+      "album": "All Time Greatest Hits",
+      "albumId": 167383,
+      "cover": "109951169912228684.jpg"
+    },
+    {
+      "songId": "29491081",
+      "title": "Unchained Melody",
+      "artist": "The Righteous Brothers",
+      "album": "爱的主题曲 with love",
+      "albumId": 3034007,
+      "cover": "6648746813989568.jpg"
+    },
+    {
+      "songId": "1295571534",
+      "title": "Yesterday",
+      "artist": "The Beatles",
+      "album": "Only #s One / 29",
+      "albumId": 71964138,
+      "cover": "109951163418887144.jpg"
+    },
+    {
+      "songId": "5201829",
+      "title": "Let It Be",
+      "artist": "The Beatles",
+      "album": "不朽的声音(人生最难忘的歌)",
+      "albumId": 508745,
+      "cover": "1729531790501591.jpg"
+    },
+    {
+      "songId": "1811303184",
+      "title": "Hey Jude",
+      "artist": "The Beatles",
+      "album": "Solid Gold Hits, Vol. 17",
+      "albumId": 121505131,
+      "cover": "109951165622968609.jpg"
+    },
+    {
+      "songId": "21598355",
+      "title": "The Sound Of Silence",
+      "artist": "Simon & Garfunkel",
+      "album": "The Graduate",
+      "albumId": 1989891,
+      "cover": "109951165986563791.jpg"
+    },
+    {
+      "songId": "27102081",
+      "title": "Scarborough Fair (Canticle)",
+      "artist": "Simon & Garfunkel",
+      "album": "The Simon & Garfunkel Collection",
+      "albumId": 2586296,
+      "cover": "1250144720817664.jpg"
+    },
+    {
+      "songId": "27691870",
+      "title": "hotel california",
+      "artist": "Eagles",
+      "album": "Relax 70s & 80s Dos",
+      "albumId": 2660478,
+      "cover": "3200678348537898.jpg"
+    },
+    {
+      "songId": "3986241",
+      "title": "Yesterday Once More",
+      "artist": "Carpenters",
+      "album": "Yesterday Once More: Greatest Hits 1969-1983",
+      "albumId": 403181,
+      "cover": "19000660439857160.jpg"
+    },
+    {
+      "songId": "5201828",
+      "title": "Top Of The World",
+      "artist": "Carpenters",
+      "album": "不朽的声音(人生最难忘的歌)",
+      "albumId": 508745,
+      "cover": "1729531790501591.jpg"
+    },
+    {
+      "songId": "1376949250",
+      "title": "Moon river",
+      "artist": "Andy Williams",
+      "album": "Una Serata Di Amore",
+      "albumId": 80301201,
+      "cover": "109951164203322748.jpg"
+    },
+    {
+      "songId": "5042272",
+      "title": "Unforgettable",
+      "artist": "Nat King Cole",
+      "album": "Music From The Motion Picture Watchmen",
+      "albumId": 500725,
+      "cover": "109951173577869786.jpg"
+    },
+    {
+      "songId": "501605",
+      "title": "Can't Take My Eyes Off You",
+      "artist": "Frankie Valli",
+      "album": "Wild Palms (Original ABC Event Series Soundtrack)",
+      "albumId": 47816,
+      "cover": "943380976677944.jpg"
+    },
+    {
+      "songId": "5058719",
+      "title": "Stand by Me",
+      "artist": "Ben E. King",
+      "album": "Stand By Me [Original Motion Picture Soundtrack]",
+      "albumId": 501629,
+      "cover": "109951165612819566.jpg"
+    },
+    {
+      "songId": "18065802",
+      "title": "Nothing's Gonna Change My Love For You",
+      "artist": "Glenn Medeiros",
+      "album": "Glenn Medeiros",
+      "albumId": 1660671,
+      "cover": "109951167104267321.jpg"
+    },
+    {
+      "songId": "17261554",
+      "title": "Vincent (Starry, Starry Night)",
+      "artist": "Don McLean",
+      "album": "Rearview Mirror: An American Musical Journey",
+      "albumId": 1590835,
+      "cover": "109951164947651750.jpg"
+    },
+    {
+      "songId": "560838229",
+      "title": "Hallelujah",
+      "artist": "Leonard Cohen / Adam Hamilton / St. Martin’s Symphony Of Los Angeles",
+      "album": "Hallelujah Symphonic Celebration",
+      "albumId": 38786956,
+      "cover": "109951163297241090.jpg"
+    },
+    {
+      "songId": "26658200",
+      "title": "Total Eclipse Of The Heart",
+      "artist": "Bonnie Tyler",
+      "album": "Total Eclipse Of The Heart",
+      "albumId": 2549155,
+      "cover": "2093470139310137.jpg"
+    },
+    {
+      "songId": "567257658",
+      "title": "Take My Breath Away (Re-Recorded / Remastered)",
+      "artist": "Berlin",
+      "album": "Melodic Ballads",
+      "albumId": 39330461,
+      "cover": "109951163315145213.jpg"
+    },
+    {
+      "songId": "18003388",
+      "title": "Careless Whisper",
+      "artist": "George Michael",
+      "album": "Ladies And Gentlemen... The Best Of George Michael",
+      "albumId": 1655463,
+      "cover": "109951165966096010.jpg"
+    },
+    {
+      "songId": "26971703",
+      "title": "Billie Jean (Original 12' Version)",
+      "artist": "Michael Jackson",
+      "album": "Grand 12-Inches 4",
+      "albumId": 2573790,
+      "cover": "1330409069658812.jpg"
+    },
+    {
+      "songId": "27600491",
+      "title": "Beat It",
+      "artist": "Michael Jackson",
+      "album": "Running Hits 3",
+      "albumId": 2644122,
+      "cover": "2543170395431823.jpg"
+    },
+    {
+      "songId": "21177726",
+      "title": "Heal the World",
+      "artist": "Michael Jackson",
+      "album": "The Essential Michael Jackson",
+      "albumId": 1958167,
+      "cover": "109951165962423568.jpg"
+    },
+    {
+      "songId": "1871081119",
+      "title": "Dancing Queen",
+      "artist": "ABBA",
+      "album": "Dancing Queen",
+      "albumId": 132030754,
+      "cover": "109951171015103743.jpg"
+    },
+    {
+      "songId": "1484889",
+      "title": "My Heart Will Go On (Love Theme from \"Titanic\")",
+      "artist": "Céline Dion / James Horner",
+      "album": "Titanic: Music from the Motion Picture Soundtrack",
+      "albumId": 151601,
+      "cover": "109951165995444837.jpg"
+    },
+    {
+      "songId": "405337333",
+      "title": "I Don't Want To Miss A Thing (Album Version)",
+      "artist": "Diane Warren / Aerosmith",
+      "album": "Love Songs - 100 Hits: Ballads, sad songs and tear jerkers inc. Beyonce, Michael Jackson and John Legend",
+      "albumId": 34531794,
+      "cover": "109951163467318994.jpg"
+    },
+    {
+      "songId": "1299217",
+      "title": "Tears in Heaven",
+      "artist": "Eric Clapton",
+      "album": "Rush (Music from the Motion Picture Soundtrack)",
+      "albumId": 133947,
+      "cover": "109951166158397822.jpg"
+    },
+    {
+      "songId": "3404727",
+      "title": "Truly Madly Deeply",
+      "artist": "Savage Garden",
+      "album": "Truly Madly Completely",
+      "albumId": 345141,
+      "cover": "109951170298488733.jpg"
+    },
+    {
+      "songId": "16835293",
+      "title": "I Want It That Way",
+      "artist": "Backstreet Boys",
+      "album": "Playlist: The Very Best Of Backstreet Boys",
+      "albumId": 1550464,
+      "cover": "18344251998298994.jpg"
+    },
+    {
+      "songId": "20707713",
+      "title": "You Raise Me Up",
+      "artist": "Westlife",
+      "album": "You Raise Me Up",
+      "albumId": 1923830,
+      "cover": "18348650045094640.jpg"
+    },
+    {
+      "songId": "4874999",
+      "title": "Big Big World",
+      "artist": "Emilia",
+      "album": "剧力万钧 高收视主题曲精选",
+      "albumId": 489904,
+      "cover": "107752139538365.jpg"
+    },
+    {
+      "songId": "26957482",
+      "title": "God Is A Girl",
+      "artist": "Groove Coverage",
+      "album": "Clubland 13",
+      "albumId": 2574569,
+      "cover": "1991215557937854.jpg"
+    },
+    {
+      "songId": "1842927464",
+      "title": "Waiting For Love",
+      "artist": "Avicii",
+      "album": "Live A Life You Will Remember",
+      "albumId": 127031067,
+      "cover": "109951168146238319.jpg"
+    },
+    {
+      "songId": "26546088",
+      "title": "Wake Me Up (Radio Edit)",
+      "artist": "Avicii / Aloe Blacc",
+      "album": "Wake Me Up!",
+      "albumId": 2521812,
+      "cover": "109951163265778044.jpg"
+    },
+    {
+      "songId": "1826923389",
+      "title": "The Nights",
+      "artist": "Avicii",
+      "album": "Spring Break 2021",
+      "albumId": 124253771,
+      "cover": "109951168222679747.jpg"
+    },
+    {
+      "songId": "27713921",
+      "title": "Hey Brother",
+      "artist": "Avicii / Dan Tyminski",
+      "album": "True",
+      "albumId": 2643040,
+      "cover": "2535473814614183.jpg"
+    },
+    {
+      "songId": "28937926",
+      "title": "Levels",
+      "artist": "Avicii",
+      "album": "Tomorrowland 2014 : Music Will Unite Us Forever",
+      "albumId": 2952244,
+      "cover": "8904944673480538.jpg"
+    },
+    {
+      "songId": "411314681",
+      "title": "This Is What You Came For",
+      "artist": "Calvin Harris / Rihanna",
+      "album": "This Is What You Came For",
+      "albumId": 34686251,
+      "cover": "109951165975353611.jpg"
+    },
+    {
+      "songId": "16963280",
+      "title": "Feel So Close (Radio Edit)",
+      "artist": "Calvin Harris",
+      "album": "Feel So Close",
+      "albumId": 1562953,
+      "cover": "109951166749138726.jpg"
+    },
+    {
+      "songId": "28306554",
+      "title": "Summer",
+      "artist": "Calvin Harris",
+      "album": "Summer",
+      "albumId": 2771024,
+      "cover": "109951165969515325.jpg"
+    },
+    {
+      "songId": "2152133213",
+      "title": "One Kiss",
+      "artist": "Calvin Harris / Dua Lipa / Calvin Harris, Dua Lipa",
+      "album": "I Love America",
+      "albumId": 194487938,
+      "cover": "109951169556380093.jpg"
+    },
+    {
+      "songId": "2122380396",
+      "title": "Miracle",
+      "artist": "Calvin Harris / Ellie Goulding",
+      "album": "The Annual 2024 - Ministry of Sound",
+      "albumId": 184640886,
+      "cover": "109951169298308998.jpg"
+    },
+    {
+      "songId": "480426313",
+      "title": "There For You",
+      "artist": "Martin Garrix / Troye Sivan",
+      "album": "There For You",
+      "albumId": 35554106,
+      "cover": "109951165981772293.jpg"
+    },
+    {
+      "songId": "423227295",
+      "title": "In the Name of Love",
+      "artist": "Martin Garrix / Bebe Rexha",
+      "album": "In the Name of Love",
+      "albumId": 34791602,
+      "cover": "109951167200318373.jpg"
+    },
+    {
+      "songId": "456175020",
+      "title": "Scared to Be Lonely",
+      "artist": "Martin Garrix / Dua Lipa",
+      "album": "Scared to Be Lonely",
+      "albumId": 35158013,
+      "cover": "109951168595761385.jpg"
+    },
+    {
+      "songId": "28786054",
+      "title": "Animals",
+      "artist": "Martin Garrix",
+      "album": "Gold Skies",
+      "albumId": 2894009,
+      "cover": "6006632023218951.jpg"
+    },
+    {
+      "songId": "439076364",
+      "title": "Solo Dance",
+      "artist": "Martin Jensen",
+      "album": "Solo Dance",
+      "albumId": 34972068,
+      "cover": "109951168111022131.jpg"
+    },
+    {
+      "songId": "17706562",
+      "title": "Good Time",
+      "artist": "Owl City / Carly Rae Jepsen",
+      "album": "Good Time",
+      "albumId": 1627908,
+      "cover": "109951163221157827.jpg"
+    },
+    {
+      "songId": "515269424",
+      "title": "Wolves",
+      "artist": "Selena Gomez / Marshmello",
+      "album": "Wolves",
+      "albumId": 36672203,
+      "cover": "109951172129229313.jpg"
+    },
+    {
+      "songId": "1302290019",
+      "title": "Happier",
+      "artist": "Marshmello / Bastille",
+      "album": "Happier",
+      "albumId": 72343547,
+      "cover": "109951168896151700.jpg"
+    },
+    {
+      "songId": "497218032",
+      "title": "Silence",
+      "artist": "Marshmello / Khalid",
+      "album": "Silence",
+      "albumId": 35909473,
+      "cover": "109951169434616914.jpg"
+    },
+    {
+      "songId": "1297986663",
+      "title": "FRIENDS",
+      "artist": "Marshmello / Anne-Marie",
+      "album": "FRIENDS",
+      "albumId": 72084706,
+      "cover": "109951170495003003.jpg"
+    },
+    {
+      "songId": "423228325",
+      "title": "Closer",
+      "artist": "The Chainsmokers / Halsey",
+      "album": "Closer",
+      "albumId": 34796273,
+      "cover": "109951167389372164.jpg"
+    },
+    {
+      "songId": "461347998",
+      "title": "Something Just Like This",
+      "artist": "The Chainsmokers / Coldplay",
+      "album": "Something Just Like This",
+      "albumId": 35196287,
+      "cover": "109951167280335904.jpg"
+    },
+    {
+      "songId": "402070862",
+      "title": "Don't Let Me Down",
+      "artist": "The Chainsmokers / Daya",
+      "album": "Don't Let Me Down",
+      "albumId": 34477274,
+      "cover": "109951169034024852.jpg"
+    },
+    {
+      "songId": "453185808",
+      "title": "Paris",
+      "artist": "The Chainsmokers",
+      "album": "Paris",
+      "albumId": 35124156,
+      "cover": "109951167280373348.jpg"
+    },
+    {
+      "songId": "21562994",
+      "title": "S&M",
+      "artist": "Rihanna",
+      "album": "Loud",
+      "albumId": 1986937,
+      "cover": "109951171941104745.jpg"
+    },
+    {
+      "songId": "21562960",
+      "title": "We Found Love",
+      "artist": "Rihanna / Calvin Harris",
+      "album": "Talk That Talk",
+      "albumId": 1986934,
+      "cover": "109951171941127003.jpg"
+    },
+    {
+      "songId": "18637990",
+      "title": "Beauty And A Beat",
+      "artist": "Justin Bieber / Nicki Minaj",
+      "album": "Believe (Deluxe Edition)",
+      "albumId": 1709604,
+      "cover": "109951173480281688.jpg"
+    },
+    {
+      "songId": "35847559",
+      "title": "Sorry",
+      "artist": "Justin Bieber",
+      "album": "Sorry",
+      "albumId": 3378106,
+      "cover": "109951167909361041.jpg"
+    },
+    {
+      "songId": "34228719",
+      "title": "What Do You Mean?",
+      "artist": "Justin Bieber",
+      "album": "What Do You Mean?",
+      "albumId": 3275733,
+      "cover": "19122706230546496.jpg"
+    },
+    {
+      "songId": "19902364",
+      "title": "Clarity",
+      "artist": "Zedd / Foxes",
+      "album": "Clarity",
+      "albumId": 1836644,
+      "cover": "2539871861609412.jpg"
+    },
+    {
+      "songId": "1861580070",
+      "title": "Stay",
+      "artist": "Zedd / Alessia Cara",
+      "album": "Clean Pop Hits",
+      "albumId": 130446186,
+      "cover": "109951168226165539.jpg"
+    },
+    {
+      "songId": "531051690",
+      "title": "The Middle",
+      "artist": "Zedd / Grey / Maren Morris",
+      "album": "The Middle",
+      "albumId": 37251528,
+      "cover": "109951167775914802.jpg"
+    },
+    {
+      "songId": "19196451",
+      "title": "Don't You Worry Child",
+      "artist": "Swedish House Mafia / John Martin",
+      "album": "Don't You Worry Child",
+      "albumId": 1760516,
+      "cover": "109951166136786340.jpg"
+    },
+    {
+      "songId": "1319396100",
+      "title": "Where Are Ü Now",
+      "artist": "Skrillex / Diplo / Justin Bieber",
+      "album": "Purpose",
+      "albumId": 74010988,
+      "cover": "109951169008357055.jpg"
+    },
+    {
+      "songId": "444269135",
+      "title": "Alone",
+      "artist": "Alan Walker",
+      "album": "Alone",
+      "albumId": 35023284,
+      "cover": "109951167461073753.jpg"
+    },
+    {
+      "songId": "2011072415",
+      "title": "On My Way",
+      "artist": "Alan Walker / Sabrina Carpenter / Farruko",
+      "album": "On My Way",
+      "albumId": 157489546,
+      "cover": "109951168199128839.jpg"
+    },
+    {
+      "songId": "1398324033",
+      "title": "The Spectre",
+      "artist": "Alan Walker",
+      "album": "Sunday Morning Songs Vol.4",
+      "albumId": 82601229,
+      "cover": "109951164440978740.jpg"
+    },
+    {
+      "songId": "1331708845",
+      "title": "All Falls Down",
+      "artist": "Alan Walker / Noah Cyrus / Digital Farm Animals / Juliander",
+      "album": "New Year's Eve - NYE 2018/2019",
+      "albumId": 74799733,
+      "cover": "109951165970660548.jpg"
+    },
+    {
+      "songId": "29771432",
+      "title": "Firestone",
+      "artist": "Kygo / Conrad Sewell",
+      "album": "Firestone",
+      "albumId": 3076227,
+      "cover": "109951165972824110.jpg"
+    },
+    {
+      "songId": "31066470",
+      "title": "Stole the Show",
+      "artist": "Kygo / Parson James",
+      "album": "Stole the Show",
+      "albumId": 3109576,
+      "cover": "109951165972084508.jpg"
+    },
+    {
+      "songId": "3406918",
+      "title": "Titanium",
+      "artist": "David Guetta / Sia",
+      "album": "Best Of...",
+      "albumId": 345313,
+      "cover": "18726882045835681.jpg"
+    },
+    {
+      "songId": "1480204501",
+      "title": "Salt",
+      "artist": "Ava Max",
+      "album": "Heaven & Hell",
+      "albumId": 95589461,
+      "cover": "109951165324860695.jpg"
+    },
+    {
+      "songId": "29534449",
+      "title": "Unity",
+      "artist": "TheFatRat",
+      "album": "Unity",
+      "albumId": 3034131,
+      "cover": "109951169136663889.jpg"
+    },
+    {
+      "songId": "18803200",
+      "title": "On the Floor",
+      "artist": "Jennifer Lopez / Pitbull",
+      "album": "On the Floor",
+      "albumId": 1723013,
+      "cover": "109951163165825037.jpg"
+    },
+    {
+      "songId": "27072480",
+      "title": "Give Me Everything",
+      "artist": "Pitbull / Ne-Yo / Afrojack / Nayer",
+      "album": "NRJ Hits 2011 Vol.2",
+      "albumId": 2581848,
+      "cover": "5691072185474327.jpg"
+    },
+    {
+      "songId": "28331097",
+      "title": "Timber (Jump Smokers Club Mix)",
+      "artist": "Pitbull Feat. Ke$ha",
+      "album": "The Dome Vol.69",
+      "albumId": 2776824,
+      "cover": "7976956860378686.jpg"
+    },
+    {
+      "songId": "2076712142",
+      "title": "Cold Heart",
+      "artist": "Elton John / Dua Lipa",
+      "album": "Music to chillout",
+      "albumId": 173358478,
+      "cover": "109951168869542847.jpg"
+    },
+    {
+      "songId": "1449991947",
+      "title": "Rain On Me",
+      "artist": "Lady Gaga / Ariana Grande",
+      "album": "Rain On Me",
+      "albumId": 89791614,
+      "cover": "109951165007106098.jpg"
+    },
+    {
+      "songId": "16435051",
+      "title": "Rolling in the Deep",
+      "artist": "Adele",
+      "album": "Rolling in the Deep",
+      "albumId": 1515350,
+      "cover": "109951168981890417.jpg"
+    },
+    {
+      "songId": "2188235",
+      "title": "Halo",
+      "artist": "Beyoncé",
+      "album": "Halo",
+      "albumId": 220716,
+      "cover": "848822976687785.jpg"
+    },
+    {
+      "songId": "1907161101",
+      "title": "Peaches",
+      "artist": "Justin Bieber / Daniel Caesar / GIVĒON",
+      "album": "Valentine Pop Hits 2022",
+      "albumId": 138071399,
+      "cover": "109951169811105133.jpg"
+    },
+    {
+      "songId": "29722263",
+      "title": "Uptown Funk",
+      "artist": "Mark Ronson / Bruno Mars",
+      "album": "Uptown Funk",
+      "albumId": 3066178,
+      "cover": "109951165970627773.jpg"
+    },
+    {
+      "songId": "2004562490",
+      "title": "Kill Bill",
+      "artist": "SZA",
+      "album": "SOS",
+      "albumId": 156059897,
+      "cover": "109951168121859537.jpg"
+    },
+    {
+      "songId": "2004563430",
+      "title": "Snooze",
+      "artist": "SZA",
+      "album": "SOS",
+      "albumId": 156059897,
+      "cover": "109951168121859537.jpg"
+    },
+    {
+      "songId": "1806905006",
+      "title": "Good Days",
+      "artist": "SZA",
+      "album": "Good Days",
+      "albumId": 120854589,
+      "cover": "109951165566218472.jpg"
+    },
+    {
+      "songId": "2004563422",
+      "title": "SOS",
+      "artist": "SZA",
+      "album": "SOS",
+      "albumId": 156059897,
+      "cover": "109951168121859537.jpg"
+    },
+    {
+      "songId": "21563184",
+      "title": "Diamonds",
+      "artist": "Rihanna",
+      "album": "Diamonds",
+      "albumId": 1986950,
+      "cover": "3263350514797284.jpg"
+    },
+    {
+      "songId": "21563094",
+      "title": "Umbrella",
+      "artist": "Rihanna / JAŸ-Z",
+      "album": "Good Girl Gone Bad: Reloaded",
+      "albumId": 1986944,
+      "cover": "109951170439340644.jpg"
+    },
+    {
+      "songId": "401712020",
+      "title": "Love On The Brain",
+      "artist": "Rihanna",
+      "album": "ANTI (Deluxe)",
+      "albumId": 34468010,
+      "cover": "109951168261482167.jpg"
+    },
+    {
+      "songId": "485992658",
+      "title": "Wild Thoughts",
+      "artist": "DJ Khaled / Rihanna / Bryson Tiller",
+      "album": "Grateful",
+      "albumId": 35630878,
+      "cover": "109951165982012678.jpg"
+    },
+    {
+      "songId": "1855285578",
+      "title": "Kiss Me More",
+      "artist": "Doja Cat / SZA",
+      "album": "Planet Her",
+      "albumId": 129338347,
+      "cover": "109951168932382196.jpg"
+    },
+    {
+      "songId": "1401302504",
+      "title": "Say So",
+      "artist": "Doja Cat",
+      "album": "Hot Pink",
+      "albumId": 83017031,
+      "cover": "109951168930483402.jpg"
+    },
+    {
+      "songId": "1824927085",
+      "title": "Leave The Door Open",
+      "artist": "Bruno Mars / Anderson .Paak / Silk Sonic",
+      "album": "An Evening With Silk Sonic",
+      "albumId": 135905816,
+      "cover": "109951167091309142.jpg"
+    },
+    {
+      "songId": "514172235",
+      "title": "Best Part",
+      "artist": "Daniel Caesar / H.E.R.",
+      "album": "H.E.R.",
+      "albumId": 36515538,
+      "cover": "109951165983559757.jpg"
+    },
+    {
+      "songId": "441116182",
+      "title": "Get You",
+      "artist": "Daniel Caesar / Kali Uchis",
+      "album": "Get You",
+      "albumId": 34985570,
+      "cover": "18674105487785055.jpg"
+    },
+    {
+      "songId": "417250724",
+      "title": "Location",
+      "artist": "Khalid",
+      "album": "Location",
+      "albumId": 34739372,
+      "cover": "109951165975846770.jpg"
+    },
+    {
+      "songId": "1356131126",
+      "title": "Talk",
+      "artist": "Khalid",
+      "album": "Free Spirit",
+      "albumId": 78290042,
+      "cover": "109951165985707287.jpg"
+    },
+    {
+      "songId": "1960701524",
+      "title": "Love Lies",
+      "artist": "Khalid / Normani",
+      "album": "Chill sur la plage : Beach ambiance",
+      "albumId": 147504826,
+      "cover": "109951167613260324.jpg"
+    },
+    {
+      "songId": "1955153135",
+      "title": "Hrs & Hrs",
+      "artist": "Muni Long",
+      "album": "Def Jam: Viral Hits Vol. 2",
+      "albumId": 146368836,
+      "cover": "109951169907402422.jpg"
+    },
+    {
+      "songId": "1938344407",
+      "title": "About Damn Time",
+      "artist": "Lizzo",
+      "album": "About Damn Time",
+      "albumId": 143528129,
+      "cover": "109951167295553217.jpg"
+    },
+    {
+      "songId": "29816628",
+      "title": "Earned It",
+      "artist": "The Weeknd",
+      "album": "Earned It (Fifty Shades of Grey)",
+      "albumId": 3081465,
+      "cover": "109951166131295163.jpg"
+    },
+    {
+      "songId": "32337668",
+      "title": "The Hills",
+      "artist": "The Weeknd",
+      "album": "The Hills",
+      "albumId": 3154642,
+      "cover": "109951167086563993.jpg"
+    },
+    {
+      "songId": "431610014",
+      "title": "Starboy",
+      "artist": "The Weeknd / Daft Punk",
+      "album": "Starboy",
+      "albumId": 34881446,
+      "cover": "109951167103667631.jpg"
+    },
+    {
+      "songId": "442867526",
+      "title": "Die For You",
+      "artist": "The Weeknd",
+      "album": "Starboy",
+      "albumId": 34881446,
+      "cover": "109951167103667631.jpg"
+    },
+    {
+      "songId": "33599620",
+      "title": "Hotline Bling",
+      "artist": "Drake",
+      "album": "Hotline Bling",
+      "albumId": 3233085,
+      "cover": "3357908511357769.jpg"
+    },
+    {
+      "songId": "441489378",
+      "title": "Redbone",
+      "artist": "Childish Gambino",
+      "album": "\"Awaken, My Love!\"",
+      "albumId": 34985334,
+      "cover": "18502581673446504.jpg"
+    },
+    {
+      "songId": "2016284895",
+      "title": "Sure Thing",
+      "artist": "Miguel",
+      "album": "Sure Thing (Sped Up)",
+      "albumId": 158655485,
+      "cover": "109951168251189553.jpg"
+    },
+    {
+      "songId": "26395570",
+      "title": "Adorn (Groundislava Cool Mix)",
+      "artist": "Miguel",
+      "album": "Groundislava Treasure Chest",
+      "albumId": 2478637,
+      "cover": "2297979302111027.jpg"
+    },
+    {
+      "songId": "2142210969",
+      "title": "Exchange",
+      "artist": "Bryson Tiller",
+      "album": "R&B Summer",
+      "albumId": 191077600,
+      "cover": "109951169466268990.jpg"
+    },
+    {
+      "songId": "1424400870",
+      "title": "HEARTBREAK ANNIVERSARY",
+      "artist": "GIVĒON",
+      "album": "HEARTBREAK ANNIVERSARY",
+      "albumId": 85829468,
+      "cover": "109951164721112217.jpg"
+    },
+    {
+      "songId": "1340558332",
+      "title": "7 rings",
+      "artist": "Ariana Grande",
+      "album": "thank u, next",
+      "albumId": 75377200,
+      "cover": "109951165347857138.jpg"
+    },
+    {
+      "songId": "553814210",
+      "title": "no tears left to cry",
+      "artist": "Ariana Grande",
+      "album": "Sweetener",
+      "albumId": 72072332,
+      "cover": "109951168070581645.jpg"
+    },
+    {
+      "songId": "426194883",
+      "title": "Pink + White",
+      "artist": "Frank Ocean",
+      "album": "Blonde",
+      "albumId": 34818182,
+      "cover": "109951167817024864.jpg"
+    },
+    {
+      "songId": "2091578499",
+      "title": "Water",
+      "artist": "Tyla",
+      "album": "InterSpace Presents: Nigeria at 63",
+      "albumId": 177029692,
+      "cover": "109951168988835211.jpg"
+    },
+    {
+      "songId": "2030120910",
+      "title": "Unholy",
+      "artist": "Sam Smith / Kim Petras",
+      "album": "HITS Spring 2023",
+      "albumId": 161782213,
+      "cover": "109951168468366282.jpg"
+    },
+    {
+      "songId": "30953009",
+      "title": "See You Again",
+      "artist": "Wiz Khalifa / Charlie Puth",
+      "album": "Furious 7: Original Motion Picture Soundtrack (Deluxe)",
+      "albumId": 3104138,
+      "cover": "109951166715465943.jpg"
+    },
+    {
+      "songId": "1297841",
+      "title": "Love The Way You Lie",
+      "artist": "Eminem / Rihanna",
+      "album": "Life After Recovery",
+      "albumId": 133862,
+      "cover": "831230790642200.jpg"
+    },
+    {
+      "songId": "27902187",
+      "title": "The Monster",
+      "artist": "Eminem / Rihanna",
+      "album": "The Monster",
+      "albumId": 2692135,
+      "cover": "109951163251461103.jpg"
+    },
+    {
+      "songId": "5052317",
+      "title": "Lose Yourself",
+      "artist": "Eminem",
+      "album": "8 Mile",
+      "albumId": 501243,
+      "cover": "109951173366641451.jpg"
+    },
+    {
+      "songId": "1297699",
+      "title": "Not Afraid",
+      "artist": "Eminem",
+      "album": "Recovery (Deluxe Edition)",
+      "albumId": 133852,
+      "cover": "109951166198015914.jpg"
+    },
+    {
+      "songId": "17572558",
+      "title": "Mockingbird",
+      "artist": "Eminem",
+      "album": "Mockingbird",
+      "albumId": 1618530,
+      "cover": "109951166033211649.jpg"
+    },
+    {
+      "songId": "1322432164",
+      "title": "Without Me",
+      "artist": "Eminem",
+      "album": "Suicide Squad: The Album",
+      "albumId": 74220396,
+      "cover": "109951163909301156.jpg"
+    },
+    {
+      "songId": "1485777161",
+      "title": "Rap God",
+      "artist": "Eminem",
+      "album": "The Marshall Mathers LP2",
+      "albumId": 96565611,
+      "cover": "109951165378735128.jpg"
+    },
+    {
+      "songId": "1318733599",
+      "title": "Sunflower",
+      "artist": "Post Malone / Swae Lee",
+      "album": "Spider-Man: Into the Spider-Verse (Soundtrack From & Inspired by the Motion Picture)",
+      "albumId": 74878945,
+      "cover": "109951171748635952.jpg"
+    },
+    {
+      "songId": "1387574419",
+      "title": "Circles",
+      "artist": "Post Malone",
+      "album": "Circles",
+      "albumId": 81254419,
+      "cover": "109951169872426635.jpg"
+    },
+    {
+      "songId": "555974038",
+      "title": "Better Now",
+      "artist": "Post Malone",
+      "album": "beerbongs & bentleys",
+      "albumId": 38513012,
+      "cover": "109951169872913709.jpg"
+    },
+    {
+      "songId": "505828531",
+      "title": "rockstar",
+      "artist": "Post Malone / 21 Savage",
+      "album": "rockstar",
+      "albumId": 36169246,
+      "cover": "18347550533465073.jpg"
+    },
+    {
+      "songId": "3420781828",
+      "title": "God's Plan",
+      "artist": "Drake",
+      "album": "ZERO REGRETS",
+      "albumId": 392405839,
+      "cover": "109951173746228969.jpg"
+    },
+    {
+      "songId": "411349769",
+      "title": "One Dance",
+      "artist": "Drake / WizKid / Kyla",
+      "album": "Views",
+      "albumId": 34678261,
+      "cover": "109951167103661801.jpg"
+    },
+    {
+      "songId": "5100769",
+      "title": "Nothing On You",
+      "artist": "B.o.B / Bruno Mars",
+      "album": "Essential R&B - Summer 2010",
+      "albumId": 504055,
+      "cover": "1698745464926789.jpg"
+    },
+    {
+      "songId": "17793698",
+      "title": "Whistle",
+      "artist": "Flo Rida",
+      "album": "Whistle",
+      "albumId": 1637473,
+      "cover": "109951173145184379.jpg"
+    },
+    {
+      "songId": "26658058",
+      "title": "Right Round",
+      "artist": "Flo Rida / Kesha",
+      "album": "Absolute Summer Hits 2009",
+      "albumId": 2549146,
+      "cover": "2001111162580879.jpg"
+    },
+    {
+      "songId": "25677983",
+      "title": "Can't Hold Us",
+      "artist": "Macklemore & Ryan Lewis / Ray Dalton",
+      "album": "The Heist",
+      "albumId": 2273235,
+      "cover": "109951166715475208.jpg"
+    },
+    {
+      "songId": "26623199",
+      "title": "Thrift Shop",
+      "artist": "Macklemore / Macklemore & Ryan Lewis",
+      "album": "Maximum Hit Music 2013 Volume 2 (2013)",
+      "albumId": 2536399,
+      "cover": "2346357813736153.jpg"
+    },
+    {
+      "songId": "1416661690",
+      "title": "Old Town Road (feat. Billy Ray Cyrus) [Remix]",
+      "artist": "Lil Nas X / Billy Ray Cyrus",
+      "album": "2020 GRAMMY® Nominees",
+      "albumId": 84978224,
+      "cover": "109951164626136840.jpg"
+    },
+    {
+      "songId": "2037073798",
+      "title": "INDUSTRY BABY",
+      "artist": "Lil Nas X / Jack Harlow",
+      "album": "Summer Pool Party",
+      "albumId": 163241021,
+      "cover": "109951168528794440.jpg"
+    },
+    {
+      "songId": "1817961813",
+      "title": "Party Rock Anthem",
+      "artist": "LMFAO / Lauren Bennett / GoonRock",
+      "album": "Best of 00's - Anni Duemila",
+      "albumId": 122618428,
+      "cover": "109951168146245381.jpg"
+    },
+    {
+      "songId": "481873953",
+      "title": "HUMBLE.",
+      "artist": "Kendrick Lamar",
+      "album": "Hip Hop Hit List (Vol. 2)",
+      "albumId": 35558583,
+      "cover": "109951169873084408.jpg"
+    },
+    {
+      "songId": "1298432425",
+      "title": "SICKO MODE",
+      "artist": "Travis Scott",
+      "album": "ASTROWORLD",
+      "albumId": 72015396,
+      "cover": "109951165984655844.jpg"
+    },
+    {
+      "songId": "5221922",
+      "title": "Rapper's Delight",
+      "artist": "The Sugarhill Gang",
+      "album": "Greatest Hits Of The Millennium 70's Vol. 3",
+      "albumId": 509822,
+      "cover": "777354720881681.jpg"
+    },
+    {
+      "songId": "17990107",
+      "title": "The Message",
+      "artist": "Grandmaster Flash & the Furious Five",
+      "album": "The Message",
+      "albumId": 1654681,
+      "cover": "6670737046271578.jpg"
+    },
+    {
+      "songId": "3315202",
+      "title": "Walk This Way",
+      "artist": "Run-D.M.C. / Aerosmith",
+      "album": "Raising Hell",
+      "albumId": 335770,
+      "cover": "109951165971859329.jpg"
+    },
+    {
+      "songId": "29559708",
+      "title": "It's Tricky",
+      "artist": "Run-D.M.C.",
+      "album": "The Box Set Series",
+      "albumId": 3042718,
+      "cover": "2529976256809245.jpg"
+    },
+    {
+      "songId": "3955287",
+      "title": "(You Gotta ) Fight For Your Right (To Party)",
+      "artist": "Beastie Boys",
+      "album": "Anthology: The Sounds Of Science",
+      "albumId": 400067,
+      "cover": "109951170183641305.jpg"
+    },
+    {
+      "songId": "16855885",
+      "title": "No Sleep Till Brooklyn",
+      "artist": "Beastie Boys",
+      "album": "Licensed To Ill",
+      "albumId": 1553222,
+      "cover": "109951170074922835.jpg"
+    },
+    {
+      "songId": "16855986",
+      "title": "Sabotage",
+      "artist": "Beastie Boys",
+      "album": "Ill Communication",
+      "albumId": 1553244,
+      "cover": "109951166300360046.jpg"
+    },
+    {
+      "songId": "20189494",
+      "title": "Straight Outta Compton",
+      "artist": "N.W.A",
+      "album": "Straight Outta Compton",
+      "albumId": 1872168,
+      "cover": "109951170216848012.jpg"
+    },
+    {
+      "songId": "17112374",
+      "title": "Gangsta's Paradise",
+      "artist": "Coolio / L.V.",
+      "album": "Gangsta's Paradise",
+      "albumId": 1576482,
+      "cover": "109951172160154517.jpg"
+    },
+    {
+      "songId": "5135557",
+      "title": "I'll Be Missing You",
+      "artist": "Puff Daddy / Faith Evans",
+      "album": "R&B Lovesongs 2009",
+      "albumId": 505620,
+      "cover": "690493302287370.jpg"
+    },
+    {
+      "songId": "21268933",
+      "title": "N.Y. State of Mind",
+      "artist": "Nas",
+      "album": "Illmatic",
+      "albumId": 1965317,
+      "cover": "109951166095291597.jpg"
+    },
+    {
+      "songId": "1315168334",
+      "title": "Juicy",
+      "artist": "The Notorious B.I.G.",
+      "album": "Greatest Hits",
+      "albumId": 73768257,
+      "cover": "109951163585022233.jpg"
+    },
+    {
+      "songId": "21799569",
+      "title": "Big Poppa",
+      "artist": "The Notorious B.I.G.",
+      "album": "Ready To Die",
+      "albumId": 2005437,
+      "cover": "704786953415722.jpg"
+    },
+    {
+      "songId": "1320329093",
+      "title": "Hypnotize",
+      "artist": "The Notorious B.I.G.",
+      "album": "Playlist: Hip Hop",
+      "albumId": 74085514,
+      "cover": "109951163939443344.jpg"
+    },
+    {
+      "songId": "21799583",
+      "title": "Mo Money Mo Problems",
+      "artist": "The Notorious B.I.G. / Mase / Puff Daddy",
+      "album": "Life After Death",
+      "albumId": 2005438,
+      "cover": "2543170396274489.jpg"
+    },
+    {
+      "songId": "26921431",
+      "title": "California Love",
+      "artist": "2Pac",
+      "album": "Live",
+      "albumId": 2574155,
+      "cover": "109951166273625925.jpg"
+    },
+    {
+      "songId": "19375093",
+      "title": "Changes",
+      "artist": "2Pac / Talent",
+      "album": "Greatest Hits",
+      "albumId": 1781653,
+      "cover": "109951166422607334.jpg"
+    },
+    {
+      "songId": "19375098",
+      "title": "Dear Mama",
+      "artist": "2Pac",
+      "album": "Greatest Hits",
+      "albumId": 1781653,
+      "cover": "109951166422607334.jpg"
+    },
+    {
+      "songId": "2113762",
+      "title": "Hit 'Em Up",
+      "artist": "2Pac",
+      "album": "Greatest Hits Edited",
+      "albumId": 212980,
+      "cover": "109951164948683159.jpg"
+    },
+    {
+      "songId": "18353530",
+      "title": "It Was A Good Day",
+      "artist": "Ice Cube",
+      "album": "The Predator (World) (Clean)",
+      "albumId": 1685549,
+      "cover": "6622358534647598.jpg"
+    },
+    {
+      "songId": "3818257",
+      "title": "C.R.E.A.M.",
+      "artist": "Wu-Tang Clan",
+      "album": "Wu: The Story Of The Wu-Tang Clan",
+      "albumId": 386272,
+      "cover": "109951165992510834.jpg"
+    },
+    {
+      "songId": "17405587",
+      "title": "Still D.R.E.",
+      "artist": "Dr. Dre / Snoop Dogg",
+      "album": "2001",
+      "albumId": 1603658,
+      "cover": "109951167713170810.jpg"
+    },
+    {
+      "songId": "17405593",
+      "title": "Forgot About Dre",
+      "artist": "Dr. Dre / Eminem",
+      "album": "2001",
+      "albumId": 1603658,
+      "cover": "109951167713170810.jpg"
+    },
+    {
+      "songId": "1912757016",
+      "title": "Nuthin But A G'Thang",
+      "artist": "Snoop Dogg / Dr. Dre",
+      "album": "Black Mafia Family The Ultimate Hip Hop Compilation",
+      "albumId": 138982964,
+      "cover": "109951166942862944.jpg"
+    },
+    {
+      "songId": "26345370",
+      "title": "Gin and Juice",
+      "artist": "Snoop Dogg / Daz Dillinger",
+      "album": "Doggystyle",
+      "albumId": 2456506,
+      "cover": "109951168455508144.jpg"
+    },
+    {
+      "songId": "21614772",
+      "title": "Drop It Like It's Hot",
+      "artist": "Snoop Dogg / Pharrell Williams",
+      "album": "R&G (Rhythm & Gangsta): The Masterpiece",
+      "albumId": 1991190,
+      "cover": "109951167133261114.jpg"
+    },
+    {
+      "songId": "16158605",
+      "title": "In Da Club",
+      "artist": "50 Cent",
+      "album": "In Da Club",
+      "albumId": 1490862,
+      "cover": "717981092944708.jpg"
+    },
+    {
+      "songId": "16158507",
+      "title": "Candy Shop",
+      "artist": "50 Cent / Olivia",
+      "album": "The Massacre",
+      "albumId": 1490847,
+      "cover": "109951169006174195.jpg"
+    },
+    {
+      "songId": "16158638",
+      "title": "21 Questions",
+      "artist": "50 Cent / Nate Dogg",
+      "album": "21 Questions",
+      "albumId": 1490877,
+      "cover": "703687441783410.jpg"
+    },
+    {
+      "songId": "16158561",
+      "title": "Many Men (Wish Death)",
+      "artist": "50 Cent",
+      "album": "Get Rich Or Die Tryin",
+      "albumId": 1490850,
+      "cover": "684995744111176.jpg"
+    },
+    {
+      "songId": "19375081",
+      "title": "Hail Mary",
+      "artist": "2Pac",
+      "album": "Greatest Hits",
+      "albumId": 1781653,
+      "cover": "109951166422607334.jpg"
+    },
+    {
+      "songId": "1312062084",
+      "title": "Ambitionz Az A Ridah",
+      "artist": "2Pac",
+      "album": "All Eyez On Me",
+      "albumId": 73554727,
+      "cover": "109951166879032988.jpg"
+    },
+    {
+      "songId": "1300459",
+      "title": "The Real Slim Shady",
+      "artist": "Eminem",
+      "album": "The Real Slim Shady",
+      "albumId": 134033,
+      "cover": "109951163087319952.jpg"
+    },
+    {
+      "songId": "17572422",
+      "title": "Stan",
+      "artist": "Eminem / Dido",
+      "album": "The Marshall Mathers LP",
+      "albumId": 1618499,
+      "cover": "109951170271191404.jpg"
+    },
+    {
+      "songId": "17572426",
+      "title": "The Way I Am",
+      "artist": "Eminem",
+      "album": "The Marshall Mathers LP",
+      "albumId": 1618499,
+      "cover": "109951170271191404.jpg"
+    },
+    {
+      "songId": "17572251",
+      "title": "My Name Is",
+      "artist": "Eminem",
+      "album": "The Slim Shady LP",
+      "albumId": 1618491,
+      "cover": "109951169053715540.jpg"
+    },
+    {
+      "songId": "17572306",
+      "title": "Superman",
+      "artist": "Eminem / Dina Rae",
+      "album": "The Eminem Show",
+      "albumId": 1618493,
+      "cover": "109951171932974645.jpg"
+    },
+    {
+      "songId": "17572539",
+      "title": "Like Toy Soldiers",
+      "artist": "Eminem",
+      "album": "Curtain Call: The Hits (Deluxe Edition)",
+      "albumId": 1618522,
+      "cover": "109951169053679191.jpg"
+    },
+    {
+      "songId": "1297941",
+      "title": "Beautiful",
+      "artist": "Eminem",
+      "album": "Beautiful",
+      "albumId": 133873,
+      "cover": "109951163251458814.jpg"
+    },
+    {
+      "songId": "17572553",
+      "title": "When I'm Gone",
+      "artist": "Eminem",
+      "album": "When I'm Gone",
+      "albumId": 1618527,
+      "cover": "109951165495203421.jpg"
+    },
+    {
+      "songId": "17572437",
+      "title": "Criminal",
+      "artist": "Eminem",
+      "album": "The Marshall Mathers LP",
+      "albumId": 1618499,
+      "cover": "109951170271191404.jpg"
+    },
+    {
+      "songId": "21268935",
+      "title": "The World Is Yours",
+      "artist": "Nas",
+      "album": "Illmatic",
+      "albumId": 1965317,
+      "cover": "109951166095291597.jpg"
+    },
+    {
+      "songId": "21268845",
+      "title": "Made You Look",
+      "artist": "Nas",
+      "album": "God's Son",
+      "albumId": 1965311,
+      "cover": "109951166095271155.jpg"
+    },
+    {
+      "songId": "21268930",
+      "title": "If I Ruled the World (Imagine That)",
+      "artist": "Nas / Lauryn Hill",
+      "album": "It Was Written",
+      "albumId": 1965316,
+      "cover": "109951165992164786.jpg"
+    },
+    {
+      "songId": "2758461222",
+      "title": "Big Pimpin'",
+      "artist": "JAŸ-Z / UGK",
+      "album": "Vol. 3... Life And Times Of S. Carter",
+      "albumId": 289502498,
+      "cover": "109951172188653921.jpg"
+    },
+    {
+      "songId": "27238097",
+      "title": "Hard Knock Life (Ghetto Anthem)",
+      "artist": "JAŸ-Z",
+      "album": "Best Dance 1/99",
+      "albumId": 2594473,
+      "cover": "5803222371435984.jpg"
+    },
+    {
+      "songId": "18614115",
+      "title": "99 Problems",
+      "artist": "JAŸ-Z",
+      "album": "99 Problems / Dirt Off Your Shoulder",
+      "albumId": 1707446,
+      "cover": "749866930152791.jpg"
+    },
+    {
+      "songId": "18614153",
+      "title": "Empire State Of Mind",
+      "artist": "JAŸ-Z / Alicia Keys",
+      "album": "The Hits Collection Volume One [International Version (Explicit)]",
+      "albumId": 1707459,
+      "cover": "109951172151366758.jpg"
+    },
+    {
+      "songId": "18614146",
+      "title": "Run This Town",
+      "artist": "JAŸ-Z / Rihanna / Kanye West",
+      "album": "The Hits Collection Volume One [International Version (Explicit)]",
+      "albumId": 1707459,
+      "cover": "109951172151366758.jpg"
+    },
+    {
+      "songId": "17572494",
+      "title": "Renegade",
+      "artist": "Eminem / JAŸ-Z",
+      "album": "Lose Yourself",
+      "albumId": 1618515,
+      "cover": "2536573330159886.jpg"
+    },
+    {
+      "songId": "18614069",
+      "title": "Dead Presidents II",
+      "artist": "JAŸ-Z",
+      "album": "Reasonable Doubt",
+      "albumId": 1707437,
+      "cover": "18338754440253380.jpg"
+    },
+    {
+      "songId": "18613883",
+      "title": "Can I Get A...",
+      "artist": "JAŸ-Z / Amil / Ja Rule",
+      "album": "Vol. 2 Hard Knock Life",
+      "albumId": 1707425,
+      "cover": "109951173668390306.jpg"
+    },
+    {
+      "songId": "18969085",
+      "title": "Gold Digger",
+      "artist": "Kanye West / Jamie Foxx",
+      "album": "Late Registration",
+      "albumId": 1738262,
+      "cover": "109951170517268501.jpg"
+    },
+    {
+      "songId": "18969180",
+      "title": "Heartless",
+      "artist": "Kanye West",
+      "album": "808s & Heartbreak (Softback)",
+      "albumId": 1738268,
+      "cover": "18182623789335334.jpg"
+    },
+    {
+      "songId": "18969204",
+      "title": "POWER",
+      "artist": "Kanye West",
+      "album": "My Beautiful Dark Twisted Fantasy",
+      "albumId": 1738270,
+      "cover": "109951166027217441.jpg"
+    },
+    {
+      "songId": "18969136",
+      "title": "Jesus Walks",
+      "artist": "Kanye West",
+      "album": "The College Dropout",
+      "albumId": 1738265,
+      "cover": "109951170517260769.jpg"
+    },
+    {
+      "songId": "18969071",
+      "title": "Good Life",
+      "artist": "Kanye West / T-Pain",
+      "album": "Graduation",
+      "albumId": 1738261,
+      "cover": "109951167119530519.jpg"
+    },
+    {
+      "songId": "18969206",
+      "title": "All Of The Lights",
+      "artist": "Kanye West / Rihanna / Kid Cudi / Fergie",
+      "album": "My Beautiful Dark Twisted Fantasy",
+      "albumId": 1738270,
+      "cover": "109951166027217441.jpg"
+    },
+    {
+      "songId": "21215511",
+      "title": "Get Ur Freak On",
+      "artist": "Missy Elliott",
+      "album": "Miss E... So Addictive",
+      "albumId": 1960860,
+      "cover": "109951168652150833.jpg"
+    },
+    {
+      "songId": "21215284",
+      "title": "Work It",
+      "artist": "Missy Elliott",
+      "album": "Under Construction",
+      "albumId": 1960846,
+      "cover": "109951169686203734.jpg"
+    },
+    {
+      "songId": "21215697",
+      "title": "Lose Control (feat. Ciara & Fat Man Scoop)",
+      "artist": "Missy Elliott / Ciara / Fatman Scoop",
+      "album": "Lose Control",
+      "albumId": 1960888,
+      "cover": "109951170991061703.jpg"
+    },
+    {
+      "songId": "5249267",
+      "title": "LET ME BLOW YA MIND",
+      "artist": "Eve / Gwen Stefani",
+      "album": "Hip Hop VI-The Collection",
+      "albumId": 511716,
+      "cover": "54975581405893.jpg"
+    },
+    {
+      "songId": "2926297",
+      "title": "Doo Wop (That Thing)",
+      "artist": "Lauryn Hill",
+      "album": "The Miseducation of Lauryn Hill",
+      "albumId": 295502,
+      "cover": "109951165983052356.jpg"
+    },
+    {
+      "songId": "2926295",
+      "title": "Ex-Factor",
+      "artist": "Lauryn Hill",
+      "album": "The Miseducation of Lauryn Hill",
+      "albumId": 295502,
+      "cover": "109951165983052356.jpg"
+    },
+    {
+      "songId": "1302250733",
+      "title": "Ms. Jackson",
+      "artist": "OutKast",
+      "album": "Stankonia",
+      "albumId": 72342115,
+      "cover": "109951165991670296.jpg"
+    },
+    {
+      "songId": "26525804",
+      "title": "Hey Ya!",
+      "artist": "OutKast",
+      "album": "Just the Best Sommer Hits (1990-Heute)",
+      "albumId": 2516624,
+      "cover": "2335362697456584.jpg"
+    },
+    {
+      "songId": "17706068",
+      "title": "B.O.B.",
+      "artist": "OutKast",
+      "album": "Big Boi & Dre Present, Outkast",
+      "albumId": 1627858,
+      "cover": "109951163469616101.jpg"
+    },
+    {
+      "songId": "26605956",
+      "title": "So Fresh So Clean",
+      "artist": "OutKast",
+      "album": "Summertime Vol. 4 Mixtape",
+      "albumId": 2535148,
+      "cover": "4434330394835206.jpg"
+    },
+    {
+      "songId": "40237113",
+      "title": "A Milli",
+      "artist": "Lil Wayne",
+      "album": "Tha Carter III",
+      "albumId": 3433490,
+      "cover": "16630113370319023.jpg"
+    },
+    {
+      "songId": "27206226",
+      "title": "Lollipop",
+      "artist": "Lil Wayne / STATIC MAJOR",
+      "album": "Mr. Carter",
+      "albumId": 2592524,
+      "cover": "5714161929639799.jpg"
+    },
+    {
+      "songId": "20943184",
+      "title": "Mrs. Officer",
+      "artist": "Lil Wayne / Bobby V / Kidd Kidd",
+      "album": "Tha Carter III",
+      "albumId": 1940189,
+      "cover": "109951169341711155.jpg"
+    },
+    {
+      "songId": "31010336",
+      "title": "Alright",
+      "artist": "Kendrick Lamar",
+      "album": "To Pimp a Butterfly",
+      "albumId": 3109151,
+      "cover": "7848313999540641.jpg"
+    },
+    {
+      "songId": "472045048",
+      "title": "DNA.",
+      "artist": "Kendrick Lamar",
+      "album": "DAMN.",
+      "albumId": 35338681,
+      "cover": "109951170258095019.jpg"
+    },
+    {
+      "songId": "1643529",
+      "title": "Swimming Pools (Drank)",
+      "artist": "Kendrick Lamar",
+      "album": "Swimming Pools (Drank)",
+      "albumId": 166934,
+      "cover": "109951167113007768.jpg"
+    },
+    {
+      "songId": "18943532",
+      "title": "Money Trees",
+      "artist": "Kendrick Lamar / Jay Rock",
+      "album": "good kid, m.A.A.d city",
+      "albumId": 1734888,
+      "cover": "109951170271201605.jpg"
+    },
+    {
+      "songId": "2152805690",
+      "title": "Not Like Us",
+      "artist": "Kendrick Lamar",
+      "album": "Not Like Us",
+      "albumId": 194730881,
+      "cover": "109951169563204791.jpg"
+    },
+    {
+      "songId": "1299712163",
+      "title": "Bohemian Rhapsody",
+      "artist": "Queen",
+      "album": "Wayne's World (Music From The Motion Picture)",
+      "albumId": 72181856,
+      "cover": "109951163938064505.jpg"
+    },
+    {
+      "songId": "5104537",
+      "title": "We Will Rock You",
+      "artist": "Queen / 5ive",
+      "album": "Brit Awards 2010",
+      "albumId": 504223,
+      "cover": "1752621534687206.jpg"
+    },
+    {
+      "songId": "1868480",
+      "title": "We Are the Champions",
+      "artist": "Queen",
+      "album": "Absolute Greatest",
+      "albumId": 188637,
+      "cover": "798245441818276.jpg"
+    },
+    {
+      "songId": "17177324",
+      "title": "Yellow",
+      "artist": "Coldplay",
+      "album": "Yellow",
+      "albumId": 1582613,
+      "cover": "109951167815599264.jpg"
+    },
+    {
+      "songId": "3986017",
+      "title": "Viva La Vida",
+      "artist": "Coldplay",
+      "album": "Viva La Vida or Death and All His Friends",
+      "albumId": 403157,
+      "cover": "18569651881855121.jpg"
+    },
+    {
+      "songId": "28528999",
+      "title": "A Sky Full of Stars",
+      "artist": "Coldplay",
+      "album": "Ghost Stories",
+      "albumId": 2767188,
+      "cover": "109951163620484193.jpg"
+    },
+    {
+      "songId": "17177380",
+      "title": "Paradise",
+      "artist": "Coldplay",
+      "album": "Paradise",
+      "albumId": 1582636,
+      "cover": "109951166764173392.jpg"
+    },
+    {
+      "songId": "37240629",
+      "title": "Hymn For The Weekend",
+      "artist": "Coldplay / Beyoncé",
+      "album": "A Head Full of Dreams",
+      "albumId": 3419156,
+      "cover": "109951163780293240.jpg"
+    },
+    {
+      "songId": "36308623",
+      "title": "Adventure of a Lifetime",
+      "artist": "Coldplay",
+      "album": "Adventure of a Lifetime",
+      "albumId": 3395162,
+      "cover": "109951164142725167.jpg"
+    },
+    {
+      "songId": "17177367",
+      "title": "The Scientist",
+      "artist": "Coldplay",
+      "album": "The Scientist",
+      "albumId": 1582632,
+      "cover": "109951165924811590.jpg"
+    },
+    {
+      "songId": "3986326",
+      "title": "Fix You",
+      "artist": "Coldplay",
+      "album": "X&Y",
+      "albumId": 403188,
+      "cover": "109951163840992608.jpg"
+    },
+    {
+      "songId": "1338149101",
+      "title": "Believer",
+      "artist": "Imagine Dragons / Lil Wayne",
+      "album": "Believer",
+      "albumId": 75082998,
+      "cover": "109951163783209324.jpg"
+    },
+    {
+      "songId": "19945726",
+      "title": "Radioactive",
+      "artist": "Imagine Dragons",
+      "album": "Continued Silence EP",
+      "albumId": 1844255,
+      "cover": "19089720881705423.jpg"
+    },
+    {
+      "songId": "3356622540",
+      "title": "Thunder",
+      "artist": "Imagine Dragons",
+      "album": "“梦龙” LOOM TOUR 2026 中国巡演特别版",
+      "albumId": 365099080,
+      "cover": "109951172849777327.jpg"
+    },
+    {
+      "songId": "19945735",
+      "title": "Demons",
+      "artist": "Imagine Dragons",
+      "album": "Night Visions (Deluxe)",
+      "albumId": 1844256,
+      "cover": "109951167091295618.jpg"
+    },
+    {
+      "songId": "3356622542",
+      "title": "Whatever It Takes",
+      "artist": "Imagine Dragons",
+      "album": "“梦龙” LOOM TOUR 2026 中国巡演特别版",
+      "albumId": 365099080,
+      "cover": "109951172849777327.jpg"
+    },
+    {
+      "songId": "1927389937",
+      "title": "Bones",
+      "artist": "Imagine Dragons",
+      "album": "Bones",
+      "albumId": 141683700,
+      "cover": "109951171331729466.jpg"
+    },
+    {
+      "songId": "1977828161",
+      "title": "Enemy (from the series Arcane League of Legends)",
+      "artist": "Imagine Dragons / JID / 双城之战 / 英雄联盟",
+      "album": "卡点金曲大赏",
+      "albumId": 150859541,
+      "cover": "109951168151585938.jpg"
+    },
+    {
+      "songId": "21803604",
+      "title": "Apologize",
+      "artist": "Timbaland / OneRepublic",
+      "album": "Apologize",
+      "albumId": 2005757,
+      "cover": "109951169164062788.jpg"
+    },
+    {
+      "songId": "26060065",
+      "title": "Counting Stars",
+      "artist": "OneRepublic",
+      "album": "Native (Deluxe Version)",
+      "albumId": 2302008,
+      "cover": "109951170517214706.jpg"
+    },
+    {
+      "songId": "1946813580",
+      "title": "I Ain't Worried",
+      "artist": "OneRepublic",
+      "album": "I Ain’t Worried (Music From The Motion Picture \"Top Gun: Maverick\")",
+      "albumId": 144862479,
+      "cover": "109951167406781523.jpg"
+    },
+    {
+      "songId": "28406990",
+      "title": "Love Runs Out",
+      "artist": "OneRepublic",
+      "album": "Love Runs Out",
+      "albumId": 2786496,
+      "cover": "109951163219138105.jpg"
+    },
+    {
+      "songId": "31654490",
+      "title": "Stressed Out",
+      "artist": "twenty one pilots",
+      "album": "Blurryface",
+      "albumId": 3131123,
+      "cover": "109951169620305803.jpg"
+    },
+    {
+      "songId": "417911175",
+      "title": "Heathens",
+      "artist": "twenty one pilots",
+      "album": "Heathens",
+      "albumId": 34745382,
+      "cover": "109951164149165084.jpg"
+    },
+    {
+      "songId": "1852069909",
+      "title": "Memories",
+      "artist": "Maroon 5",
+      "album": "JORDI (Deluxe)",
+      "albumId": 128749721,
+      "cover": "109951171770750671.jpg"
+    },
+    {
+      "songId": "569214321",
+      "title": "Girls Like You",
+      "artist": "Maroon 5 / Cardi B",
+      "album": "Girls Like You",
+      "albumId": 39460060,
+      "cover": "109951172184270639.jpg"
+    },
+    {
+      "songId": "21253949",
+      "title": "She Will Be Loved",
+      "artist": "Maroon 5",
+      "album": "Songs About Jane",
+      "albumId": 1963864,
+      "cover": "109951170244653779.jpg"
+    },
+    {
+      "songId": "16232632",
+      "title": "Since U Been Gone",
+      "artist": "Kelly Clarkson",
+      "album": "Breakaway",
+      "albumId": 1496726,
+      "cover": "109951167307248988.jpg"
+    },
+    {
+      "songId": "2871299",
+      "title": "Breakaway",
+      "artist": "Kelly Clarkson",
+      "album": "Breakaway",
+      "albumId": 289923,
+      "cover": "109951167307142621.jpg"
+    },
+    {
+      "songId": "2870985",
+      "title": "Stronger (What Doesn't Kill You)",
+      "artist": "Kelly Clarkson",
+      "album": "Stronger (Japanese Edition)",
+      "albumId": 289886,
+      "cover": "109951163024444404.jpg"
+    },
+    {
+      "songId": "16431880",
+      "title": "Complicated",
+      "artist": "Avril Lavigne",
+      "album": "Let Go",
+      "albumId": 1515088,
+      "cover": "109951167596882130.jpg"
+    },
+    {
+      "songId": "1349964388",
+      "title": "Running Up That Hill",
+      "artist": "Meg Myers",
+      "album": "Running Up That Hill",
+      "albumId": 75765638,
+      "cover": "109951163903774663.jpg"
+    },
+    {
+      "songId": "1846473653",
+      "title": "good 4 u",
+      "artist": "Olivia Rodrigo",
+      "album": "SOUR",
+      "albumId": 127725764,
+      "cover": "109951169026653354.jpg"
+    },
+    {
+      "songId": "1846473652",
+      "title": "deja vu",
+      "artist": "Olivia Rodrigo",
+      "album": "SOUR",
+      "albumId": 127725764,
+      "cover": "109951169026653354.jpg"
+    },
+    {
+      "songId": "3392742809",
+      "title": "stupid song",
+      "artist": "Olivia Rodrigo",
+      "album": "you seem pretty sad for a girl so in love",
+      "albumId": 381252074,
+      "cover": "109951173380403022.jpg"
+    },
+    {
+      "songId": "415126537",
+      "title": "Just Like Fire",
+      "artist": "P!nk",
+      "album": "Alice Through The Looking Glass (Original Motion Picture Soundtrack)",
+      "albumId": 34700995,
+      "cover": "3400789466535963.jpg"
+    },
+    {
+      "songId": "3226001",
+      "title": "Raise Your Glass",
+      "artist": "P!nk",
+      "album": "Greatest Hits...So Far!!!",
+      "albumId": 326561,
+      "cover": "109951165991970619.jpg"
+    },
+    {
+      "songId": "21373644",
+      "title": "Try",
+      "artist": "P!nk",
+      "album": "The Truth About Love",
+      "albumId": 1973200,
+      "cover": "109951167487398037.jpg"
+    },
+    {
+      "songId": "21968164",
+      "title": "Seven Nation Army",
+      "artist": "The White Stripes",
+      "album": "Seven Nation Army",
+      "albumId": 2017933,
+      "cover": "109951165990597839.jpg"
+    },
+    {
+      "songId": "27928548",
+      "title": "Mr. Brightside",
+      "artist": "The Killers",
+      "album": "Direct Hits",
+      "albumId": 2696102,
+      "cover": "109951169146975250.jpg"
+    },
+    {
+      "songId": "3950546",
+      "title": "It's My Life",
+      "artist": "Bon Jovi",
+      "album": "It's My Life",
+      "albumId": 399653,
+      "cover": "1680053767249253.jpg"
+    },
+    {
+      "songId": "16686599",
+      "title": "Numb",
+      "artist": "Linkin Park",
+      "album": "Meteora",
+      "albumId": 1537646,
+      "cover": "109951166701647085.jpg"
+    },
+    {
+      "songId": "1426247184",
+      "title": "In The End",
+      "artist": "Linkin Park",
+      "album": "00s Rock Anthems",
+      "albumId": 86020000,
+      "cover": "109951164744223186.jpg"
+    },
+    {
+      "songId": "5041905",
+      "title": "21 Guns",
+      "artist": "Green Day",
+      "album": "Transformers: Revenge Of The Fallen The Album",
+      "albumId": 500703,
+      "cover": "109951166907649431.jpg"
+    },
+    {
+      "songId": "18127334",
+      "title": "Wake Me up When September Ends",
+      "artist": "Green Day",
+      "album": "American Idiot (Deluxe)",
+      "albumId": 1664909,
+      "cover": "109951169958771691.jpg"
+    },
+    {
+      "songId": "4330114",
+      "title": "Zombie",
+      "artist": "The Cranberries",
+      "album": "Stars: The Best of 1992-2002",
+      "albumId": 437570,
+      "cover": "1801000046307284.jpg"
+    },
+    {
+      "songId": "4208530",
+      "title": "Smells Like Teen Spirit",
+      "artist": "Nirvana",
+      "album": "Nevermind (Super Deluxe Edition)",
+      "albumId": 425552,
+      "cover": "109951165756442681.jpg"
+    },
+    {
+      "songId": "1950593309",
+      "title": "Use Somebody",
+      "artist": "Kings of Leon",
+      "album": "2009年维多利亚的秘密时尚内衣秀 电视原声带",
+      "albumId": 145521132,
+      "cover": "109951167474833618.jpg"
+    },
+    {
+      "songId": "27697195",
+      "title": "Wrecking Ball",
+      "artist": "Miley Cyrus",
+      "album": "Wrecking Ball",
+      "albumId": 2661028,
+      "cover": "109951163437479723.jpg"
+    },
+    {
+      "songId": "35724589",
+      "title": "Lemon Tree",
+      "artist": "Fool's Garden",
+      "album": "High Times - Best Of",
+      "albumId": 3364566,
+      "cover": "3265549604984979.jpg"
+    },
+    {
+      "songId": "27759600",
+      "title": "Five Hundred Miles",
+      "artist": "Justin Timberlake / Carey Mulligan / Stark Sands",
+      "album": "Inside Llewyn Davis: Original Soundtrack Recording",
+      "albumId": 2672349,
+      "cover": "2536573326765583.jpg"
+    },
+    {
+      "songId": "1496764168",
+      "title": "Heat Waves",
+      "artist": "Glass Animals",
+      "album": "ADULTHOOD",
+      "albumId": 98552638,
+      "cover": "109951168250206357.jpg"
+    },
+    {
+      "songId": "29129545",
+      "title": "Riptide",
+      "artist": "Vance Joy",
+      "album": "Dream Your Life Away",
+      "albumId": 2978001,
+      "cover": "109951163168880410.jpg"
+    },
+    {
+      "songId": "18611643",
+      "title": "I'm Yours",
+      "artist": "Jason Mraz",
+      "album": "I'm Yours",
+      "albumId": 1707274,
+      "cover": "109951167192586221.jpg"
+    },
+    {
+      "songId": "18611599",
+      "title": "Lucky",
+      "artist": "Jason Mraz / Colbie Caillat",
+      "album": "We Sing. We Dance. We Steal Things.",
+      "albumId": 1707258,
+      "cover": "109951166007196945.jpg"
+    },
+    {
+      "songId": "21803799",
+      "title": "Hey, Soul Sister",
+      "artist": "Train",
+      "album": "Save Me, San Francisco",
+      "albumId": 2005787,
+      "cover": "109951165965143111.jpg"
+    },
+    {
+      "songId": "19542337",
+      "title": "Hall of Fame",
+      "artist": "The Script / will.i.am",
+      "album": "#3 Deluxe Version",
+      "albumId": 1800243,
+      "cover": "109951165967126686.jpg"
+    },
+    {
+      "songId": "4170558",
+      "title": "Ho Hey",
+      "artist": "The Lumineers",
+      "album": "The Lumineers",
+      "albumId": 421655,
+      "cover": "109951169725712376.jpg"
+    },
+    {
+      "songId": "402668464",
+      "title": "Ophelia",
+      "artist": "The Lumineers",
+      "album": "Ophelia",
+      "albumId": 34480436,
+      "cover": "17797794719205057.jpg"
+    },
+    {
+      "songId": "17212643",
+      "title": "I Will Wait",
+      "artist": "Mumford & Sons",
+      "album": "Babel (Deluxe)",
+      "albumId": 1583938,
+      "cover": "109951166270711595.jpg"
+    },
+    {
+      "songId": "17810604",
+      "title": "Little Talks",
+      "artist": "Of Monsters And Men",
+      "album": "My Head Is An Animal",
+      "albumId": 1638416,
+      "cover": "109951166322991982.jpg"
+    },
+    {
+      "songId": "1345627501",
+      "title": "The Rose",
+      "artist": "Bette Midler",
+      "album": "Romantic Songs",
+      "albumId": 75527562,
+      "cover": "109951163940045332.jpg"
+    },
+    {
+      "songId": "27646851",
+      "title": "Best Day Of My Life",
+      "artist": "American Authors",
+      "album": "American Authors",
+      "albumId": 2646392,
+      "cover": "5507453743623390.jpg"
+    },
+    {
+      "songId": "1917843922",
+      "title": "Dandelions",
+      "artist": "Ruth B.",
+      "album": "Sad Bops",
+      "albumId": 139972675,
+      "cover": "109951167183338469.jpg"
+    },
+    {
+      "songId": "1874585362",
+      "title": "Until I Found You",
+      "artist": "Stephen Sanchez",
+      "album": "Until I Found You",
+      "albumId": 132607595,
+      "cover": "109951166347255254.jpg"
+    },
+    {
+      "songId": "27938268",
+      "title": "Budapest",
+      "artist": "George Ezra",
+      "album": "Did You Hear the Rain?",
+      "albumId": 2697735,
+      "cover": "109951165968713117.jpg"
+    },
+    {
+      "songId": "19292812",
+      "title": "Everything Has Changed",
+      "artist": "Taylor Swift / Ed Sheeran",
+      "album": "Red",
+      "albumId": 1770428,
+      "cover": "109951169270236134.jpg"
+    },
+    {
+      "songId": "460043704",
+      "title": "Galway Girl",
+      "artist": "Ed Sheeran",
+      "album": "÷ (Deluxe)",
+      "albumId": 35150843,
+      "cover": "109951166151204092.jpg"
+    },
+    {
+      "songId": "1989318036",
+      "title": "Stick Season",
+      "artist": "Noah Kahan",
+      "album": "Stick Season",
+      "albumId": 153199036,
+      "cover": "109951167964311304.jpg"
+    },
+    {
+      "songId": "2054154146",
+      "title": "Northern Attitude",
+      "artist": "Noah Kahan",
+      "album": "Stick Season (We'll All Be Here Forever)",
+      "albumId": 167278245,
+      "cover": "109951168666900730.jpg"
+    },
+    {
+      "songId": "2154850334",
+      "title": "BIRDS OF A FEATHER",
+      "artist": "Billie Eilish",
+      "album": "HIT ME HARD AND SOFT",
+      "albumId": 195498828,
+      "cover": "109951169679537837.jpg"
+    },
+    {
+      "songId": "2154851107",
+      "title": "WILDFLOWER",
+      "artist": "Billie Eilish",
+      "album": "HIT ME HARD AND SOFT",
+      "albumId": 195498828,
+      "cover": "109951169679537837.jpg"
+    },
+    {
+      "songId": "552448704",
+      "title": "lovely",
+      "artist": "Billie Eilish / Khalid",
+      "album": "lovely",
+      "albumId": 38307439,
+      "cover": "109951163255502377.jpg"
+    },
+    {
+      "songId": "399343818",
+      "title": "Ocean Eyes",
+      "artist": "Billie Eilish",
+      "album": "Ocean Eyes",
+      "albumId": 34403120,
+      "cover": "3236962236742663.jpg"
+    },
+    {
+      "songId": "27448352",
+      "title": "Take Me Home Country Roads",
+      "artist": "John Denver",
+      "album": "The Best of John Denver",
+      "albumId": 2608673,
+      "cover": "6621259023118418.jpg"
+    },
+    {
+      "songId": "31789305",
+      "title": "Tennessee Whiskey",
+      "artist": "Chris Stapleton",
+      "album": "Traveller",
+      "albumId": 3138118,
+      "cover": "109951166382279208.jpg"
+    },
+    {
+      "songId": "2030754234",
+      "title": "Fast Car",
+      "artist": "Luke Combs",
+      "album": "Gettin' Old",
+      "albumId": 161917708,
+      "cover": "109951168473380366.jpg"
+    },
+    {
+      "songId": "17217944",
+      "title": "The Climb",
+      "artist": "Miley Cyrus",
+      "album": "The Climb",
+      "albumId": 1587176,
+      "cover": "1420569033262145.jpg"
+    },
+    {
+      "songId": "1469748657",
+      "title": "Need You Now",
+      "artist": "Lady Antebellum",
+      "album": "Romantic Pop Songs",
+      "albumId": 93729416,
+      "cover": "109951170224242245.jpg"
+    },
+    {
+      "songId": "28157586",
+      "title": "If I Die Young",
+      "artist": "The Band Perry",
+      "album": "Double Cream 5: 20 Years of Nashville #1's 1992-2012",
+      "albumId": 2736374,
+      "cover": "6620159511658054.jpg"
+    },
+    {
+      "songId": "17110642",
+      "title": "Before He Cheats",
+      "artist": "Carrie Underwood",
+      "album": "Some Hearts",
+      "albumId": 1576406,
+      "cover": "109951165962976763.jpg"
+    },
+    {
+      "songId": "1873259",
+      "title": "Bless The Broken Road",
+      "artist": "Rascal Flatts",
+      "album": "Best Of Ballads",
+      "albumId": 189052,
+      "cover": "903798558083368.jpg"
+    },
+    {
+      "songId": "1394494933",
+      "title": "10,000 Hours",
+      "artist": "Dan + Shay / Justin Bieber",
+      "album": "10,000 Hours",
+      "albumId": 82090946,
+      "cover": "109951164400407084.jpg"
+    },
+    {
+      "songId": "497131617",
+      "title": "Meant to Be",
+      "artist": "Bebe Rexha / Florida Georgia Line",
+      "album": "All Your Fault: Pt. 2",
+      "albumId": 35919159,
+      "cover": "109951166252985405.jpg"
+    },
+    {
+      "songId": "26459553",
+      "title": "Jolene",
+      "artist": "Dolly Parton",
+      "album": "Pure (Legends)",
+      "albumId": 2503852,
+      "cover": "109951167487262143.jpg"
+    },
+    {
+      "songId": "19292984",
+      "title": "Love Story",
+      "artist": "Taylor Swift",
+      "album": "Fearless",
+      "albumId": 1770438,
+      "cover": "109951169217536854.jpg"
+    },
+    {
+      "songId": "19292987",
+      "title": "You Belong With Me",
+      "artist": "Taylor Swift",
+      "album": "Fearless",
+      "albumId": 1770438,
+      "cover": "109951169217536854.jpg"
+    },
+    {
+      "songId": "19292982",
+      "title": "Fearless",
+      "artist": "Taylor Swift",
+      "album": "Fearless",
+      "albumId": 1770438,
+      "cover": "109951169217536854.jpg"
+    },
+    {
+      "songId": "19292852",
+      "title": "Enchanted",
+      "artist": "Taylor Swift",
+      "album": "Speak Now (Deluxe Edition)",
+      "albumId": 1770431,
+      "cover": "109951169026164541.jpg"
+    },
+    {
+      "songId": "19293014",
+      "title": "Back To December",
+      "artist": "Taylor Swift",
+      "album": "Back To December",
+      "albumId": 1770441,
+      "cover": "6668538023378075.jpg"
+    },
+    {
+      "songId": "19293015",
+      "title": "Mine",
+      "artist": "Taylor Swift",
+      "album": "Mine",
+      "albumId": 1770442,
+      "cover": "6621259023379390.jpg"
+    },
+    {
+      "songId": "25787219",
+      "title": "All Too Well",
+      "artist": "Taylor Swift",
+      "album": "Red (Deluxe Edition)",
+      "albumId": 2320159,
+      "cover": "109951169270228460.jpg"
+    },
+    {
+      "songId": "19292800",
+      "title": "Red",
+      "artist": "Taylor Swift",
+      "album": "Red",
+      "albumId": 1770428,
+      "cover": "109951169270236134.jpg"
+    },
+    {
+      "songId": "19292807",
+      "title": "Stay Stay Stay",
+      "artist": "Taylor Swift",
+      "album": "Red",
+      "albumId": 1770428,
+      "cover": "109951169270236134.jpg"
+    },
+    {
+      "songId": "108914",
+      "title": "江南",
+      "artist": "林俊杰",
+      "album": "第二天堂",
+      "albumId": 10804,
+      "cover": "109951171891430447.jpg"
+    },
+    {
+      "songId": "29814898",
+      "title": "可惜没如果",
+      "artist": "林俊杰",
+      "album": "新地球 - 人 (Special Edition)",
+      "albumId": 3056951,
+      "cover": "109951170313536564.jpg"
+    },
+    {
+      "songId": "25727803",
+      "title": "修炼爱情",
+      "artist": "林俊杰",
+      "album": "因你而在",
+      "albumId": 2301158,
+      "cover": "109951163187408030.jpg"
+    },
+    {
+      "songId": "108242",
+      "title": "她说",
+      "artist": "林俊杰",
+      "album": "她说 概念自选辑",
+      "albumId": 10755,
+      "cover": "109951172024569374.jpg"
+    },
+    {
+      "songId": "108886",
+      "title": "一千年以后",
+      "artist": "林俊杰",
+      "album": "编号89757",
+      "albumId": 10799,
+      "cover": "109951171891432947.jpg"
+    },
+    {
+      "songId": "108138",
+      "title": "那些你很冒险的梦",
+      "artist": "林俊杰",
+      "album": "学不会",
+      "albumId": 10750,
+      "cover": "109951168271379420.jpg"
+    },
+    {
+      "songId": "5256109",
+      "title": "大城小爱",
+      "artist": "王力宏",
+      "album": "2006KTV点唱精选国语总排行",
+      "albumId": 512115,
+      "cover": "35184372105678.jpg"
+    },
+    {
+      "songId": "3352314052",
+      "title": "你不知道的事",
+      "artist": "Asasblue",
+      "album": "你不知道的事",
+      "albumId": 363200231,
+      "cover": "109951172496999853.jpg"
+    },
+    {
+      "songId": "66842",
+      "title": "十年",
+      "artist": "陈奕迅",
+      "album": "黑白灰",
+      "albumId": 6548,
+      "cover": "109951171836564936.jpg"
+    },
+    {
+      "songId": "406907058",
+      "title": "好久不见",
+      "artist": "陈奕迅",
+      "album": "跨年演唱会2012-2013 华语篇1",
+      "albumId": 34555386,
+      "cover": "3283141728643371.jpg"
+    },
+    {
+      "songId": "299936",
+      "title": "红豆",
+      "artist": "王菲",
+      "album": "唱游",
+      "albumId": 29725,
+      "cover": "109951171530948990.jpg"
+    },
+    {
+      "songId": "5244822",
+      "title": "我愿意",
+      "artist": "王菲",
+      "album": "国语经典101",
+      "albumId": 511483,
+      "cover": "109951163592976362.jpg"
+    },
+    {
+      "songId": "29713754",
+      "title": "匆匆那年",
+      "artist": "王菲",
+      "album": "匆匆那年",
+      "albumId": 3064113,
+      "cover": "2542070884980240.jpg"
+    },
+    {
+      "songId": "300062",
+      "title": "人间",
+      "artist": "王菲",
+      "album": "王菲",
+      "albumId": 29739,
+      "cover": "109951172128566941.jpg"
+    },
+    {
+      "songId": "454828887",
+      "title": "遇见",
+      "artist": "孙燕姿",
+      "album": "白羽毛之恋 华语典藏情歌 Vol.2",
+      "albumId": 35140205,
+      "cover": "17687843556430013.jpg"
+    },
+    {
+      "songId": "5269442",
+      "title": "天黑黑",
+      "artist": "郑秀文 / 孙燕姿",
+      "album": "天作之合34首",
+      "albumId": 512911,
+      "cover": "23089744200120.jpg"
+    },
+    {
+      "songId": "5246676",
+      "title": "开始懂了",
+      "artist": "孙燕姿",
+      "album": "情歌101",
+      "albumId": 511567,
+      "cover": "109951163311279628.jpg"
+    },
+    {
+      "songId": "5237823",
+      "title": "可惜不是你",
+      "artist": "梁静茹",
+      "album": "交换日记",
+      "albumId": 511065,
+      "cover": "109951163447808076.jpg"
+    },
+    {
+      "songId": "254078",
+      "title": "暖暖",
+      "artist": "梁静茹",
+      "album": "现在开始我爱你",
+      "albumId": 25381,
+      "cover": "109951168163257789.jpg"
+    },
+    {
+      "songId": "449818741",
+      "title": "光年之外",
+      "artist": "G.E.M.邓紫棋",
+      "album": "光年之外",
+      "albumId": 35093341,
+      "cover": "18587244069235039.jpg"
+    },
+    {
+      "songId": "233931",
+      "title": "泡沫",
+      "artist": "G.E.M.邓紫棋",
+      "album": "Xposed",
+      "albumId": 23497,
+      "cover": "109951163069323980.jpg"
+    },
+    {
+      "songId": "3343236872",
+      "title": "小幸运",
+      "artist": "田馥甄的小迷妹",
+      "album": "小幸运",
+      "albumId": 359727203,
+      "cover": "109951172646576953.jpg"
+    },
+    {
+      "songId": "1330348068",
+      "title": "起风了",
+      "artist": "冯沁苑(买辣椒也用券)",
+      "album": "起风了",
+      "albumId": 74715426,
+      "cover": "109951163699673355.jpg"
+    },
+    {
+      "songId": "1901371647",
+      "title": "孤勇者",
+      "artist": "陈奕迅",
+      "album": "孤勇者",
+      "albumId": 137142551,
+      "cover": "109951171836610847.jpg"
+    },
+    {
+      "songId": "2040551128",
+      "title": "如愿",
+      "artist": "王菲菲",
+      "album": "那些年",
+      "albumId": 156126128,
+      "cover": "109951168125688698.jpg"
+    },
+    {
+      "songId": "1468114204",
+      "title": "年少有为",
+      "artist": "李荣浩",
+      "album": "上一首情歌 (国语精选)",
+      "albumId": 93427116,
+      "cover": "109951172341406695.jpg"
+    },
+    {
+      "songId": "1997438791",
+      "title": "乌梅子酱",
+      "artist": "李荣浩",
+      "album": "纵横四海",
+      "albumId": 130148423,
+      "cover": "109951168159576909.jpg"
+    },
+    {
+      "songId": "32507038",
+      "title": "演员",
+      "artist": "薛之谦",
+      "album": "绅士",
+      "albumId": 3154175,
+      "cover": "109951168707343730.jpg"
+    },
+    {
+      "songId": "464009783",
+      "title": "刚刚好",
+      "artist": "薛之谦",
+      "album": "我与你的光年距离 网络剧原声带",
+      "albumId": 35235942,
+      "cover": "19217264230279490.jpg"
+    },
+    {
+      "songId": "167882",
+      "title": "清明雨上",
+      "artist": "许嵩",
+      "album": "自定义",
+      "albumId": 16953,
+      "cover": "109951172899966259.jpg"
+    },
+    {
+      "songId": "1807799505",
+      "title": "唯一",
+      "artist": "告五人",
+      "album": "运气来得若有似无",
+      "albumId": 120954841,
+      "cover": "109951165585701063.jpg"
+    },
+    {
+      "songId": "1400256289",
+      "title": "你的答案",
+      "artist": "阿冗",
+      "album": "你的答案",
+      "albumId": 82895847,
+      "cover": "109951168973212235.jpg"
+    },
+    {
+      "songId": "2068068886",
+      "title": "大眠",
+      "artist": "王心凌",
+      "album": "夏夜里响起的金曲",
+      "albumId": 170709912,
+      "cover": "109951168771963474.jpg"
+    },
+    {
+      "songId": "2100630469",
+      "title": "错位时空",
+      "artist": "艾辰",
+      "album": "错位时空",
+      "albumId": 179267704,
+      "cover": "109951169061629544.jpg"
+    },
+    {
+      "songId": "2119795491",
+      "title": "若月亮没来 (若是月亮还没来)",
+      "artist": "王宇宙Leto / 乔浚丞",
+      "album": "若月亮没来（若是月亮还没来）",
+      "albumId": 183856439,
+      "cover": "109951169278248355.jpg"
+    },
+    {
+      "songId": "3331941569",
+      "title": "可能",
+      "artist": "B-KLl",
+      "album": "可能",
+      "albumId": 355798864,
+      "cover": "109951172418898348.jpg"
+    },
+    {
+      "songId": "143235",
+      "title": "原来的我",
+      "artist": "齐秦",
+      "album": "爱情宣言",
+      "albumId": 14271,
+      "cover": "109951166655546649.jpg"
+    },
+    {
+      "songId": "142931",
+      "title": "夜夜夜夜",
+      "artist": "齐秦",
+      "album": "丝路",
+      "albumId": 14234,
+      "cover": "109951167406299397.jpg"
+    },
+    {
+      "songId": "27901965",
+      "title": "真心英雄",
+      "artist": "成龙 / 周华健 / 李宗盛",
+      "album": "热门华语50",
+      "albumId": 2692116,
+      "cover": "109951166361218466.jpg"
+    },
+    {
+      "songId": "35403523",
+      "title": "陪你度过漫长岁月",
+      "artist": "陈奕迅",
+      "album": "陪你度过漫长岁月",
+      "albumId": 3319407,
+      "cover": "109951166600775221.jpg"
+    },
+    {
+      "songId": "3324100026",
+      "title": "如果你也听说",
+      "artist": "张妹妹",
+      "album": "张妹妹Cover合集",
+      "albumId": 352839631,
+      "cover": "109951172375089717.jpg"
+    },
+    {
+      "songId": "108795",
+      "title": "曹操",
+      "artist": "林俊杰",
+      "album": "曹操",
+      "albumId": 10792,
+      "cover": "109951171415593434.jpg"
+    },
+    {
+      "songId": "26305541",
+      "title": "小酒窝",
+      "artist": "林俊杰",
+      "album": "他是…JJ林俊杰",
+      "albumId": 2448339,
+      "cover": "109951167894836691.jpg"
+    },
+    {
+      "songId": "108251",
+      "title": "当你",
+      "artist": "林俊杰",
+      "album": "她说 概念自选辑",
+      "albumId": 10755,
+      "cover": "109951172024569374.jpg"
+    },
+    {
+      "songId": "26305523",
+      "title": "就是我",
+      "artist": "林俊杰",
+      "album": "他是…JJ林俊杰",
+      "albumId": 2448339,
+      "cover": "109951167894836691.jpg"
+    },
+    {
+      "songId": "1405283464",
+      "title": "句号",
+      "artist": "G.E.M.邓紫棋",
+      "album": "摩天动物园",
+      "albumId": 84391762,
+      "cover": "109951164581432409.jpg"
+    },
+    {
+      "songId": "36270426",
+      "title": "来自天堂的魔鬼",
+      "artist": "G.E.M.邓紫棋",
+      "album": "新的心跳",
+      "albumId": 3189002,
+      "cover": "1364493930777368.jpg"
+    },
+    {
+      "songId": "3389754902",
+      "title": "再见",
+      "artist": "Sazablue",
+      "album": "不能忘记你",
+      "albumId": 379811858,
+      "cover": "109951173196514882.jpg"
+    },
+    {
+      "songId": "210042",
+      "title": "说爱你",
+      "artist": "蔡依林",
+      "album": "看我72变",
+      "albumId": 21349,
+      "cover": "109951172453712025.jpg"
+    },
+    {
+      "songId": "5233025",
+      "title": "倒带",
+      "artist": "蔡依林",
+      "album": "K情歌9",
+      "albumId": 510762,
+      "cover": "109951165641458451.jpg"
+    },
+    {
+      "songId": "209718",
+      "title": "舞娘",
+      "artist": "蔡依林",
+      "album": "舞娘",
+      "albumId": 21329,
+      "cover": "109951163251449978.jpg"
+    },
+    {
+      "songId": "66282",
+      "title": "浮夸",
+      "artist": "陈奕迅",
+      "album": "U87",
+      "albumId": 6491,
+      "cover": "109951171529987110.jpg"
+    },
+    {
+      "songId": "65334",
+      "title": "你的背包",
+      "artist": "陈奕迅",
+      "album": "你的陈奕迅 国语精选",
+      "albumId": 6423,
+      "cover": "82463372088816.jpg"
+    },
+    {
+      "songId": "65536",
+      "title": "爱情转移",
+      "artist": "陈奕迅",
+      "album": "认了吧",
+      "albumId": 6434,
+      "cover": "18782957139233959.jpg"
+    },
+    {
+      "songId": "67467",
+      "title": "K歌之王",
+      "artist": "陈奕迅",
+      "album": "打得火热",
+      "albumId": 6595,
+      "cover": "18632324046199371.jpg"
+    },
+    {
+      "songId": "64093",
+      "title": "孤独患者",
+      "artist": "陈奕迅",
+      "album": "？",
+      "albumId": 6341,
+      "cover": "18546562139313276.jpg"
+    },
+    {
+      "songId": "287057",
+      "title": "逆光",
+      "artist": "孙燕姿",
+      "album": "逆光",
+      "albumId": 28520,
+      "cover": "109951173219336672.jpg"
+    },
+    {
+      "songId": "1360465550",
+      "title": "第一天",
+      "artist": "孙燕姿",
+      "album": "My Story 2006 新歌+精选",
+      "albumId": 78686199,
+      "cover": "109951164015979601.jpg"
+    },
+    {
+      "songId": "254102",
+      "title": "情歌",
+      "artist": "梁静茹",
+      "album": "静茹&情歌",
+      "albumId": 25384,
+      "cover": "109951172232905539.jpg"
+    },
+    {
+      "songId": "254270",
+      "title": "燕尾蝶",
+      "artist": "梁静茹",
+      "album": "燕尾蝶",
+      "albumId": 25405,
+      "cover": "109951172232898857.jpg"
+    },
+    {
+      "songId": "254129",
+      "title": "崇拜",
+      "artist": "梁静茹",
+      "album": "崇拜",
+      "albumId": 25387,
+      "cover": "109951168163299080.jpg"
+    },
+    {
+      "songId": "254144",
+      "title": "亲亲",
+      "artist": "梁静茹",
+      "album": "亲亲",
+      "albumId": 25388,
+      "cover": "109951168144462962.jpg"
+    },
+    {
+      "songId": "299264",
+      "title": "旋木",
+      "artist": "王菲",
+      "album": "将爱",
+      "albumId": 29669,
+      "cover": "109951169790154351.jpg"
+    },
+    {
+      "songId": "110477",
+      "title": "精舞门",
+      "artist": "罗志祥",
+      "album": "Speshow",
+      "albumId": 10929,
+      "cover": "109951164090130753.jpg"
+    },
+    {
+      "songId": "110452",
+      "title": "爱转角",
+      "artist": "罗志祥",
+      "album": "Best Show",
+      "albumId": 10924,
+      "cover": "109951171315144488.jpg"
+    },
+    {
+      "songId": "25640392",
+      "title": "淋雨一直走",
+      "artist": "张韶涵",
+      "album": "有形的翅膀",
+      "albumId": 2262033,
+      "cover": "109951168308921434.jpg"
+    },
+    {
+      "songId": "327157",
+      "title": "欧若拉",
+      "artist": "张韶涵",
+      "album": "欧若拉",
+      "albumId": 32375,
+      "cover": "109951167379867279.jpg"
+    },
+    {
+      "songId": "326942",
+      "title": "看得最远的地方",
+      "artist": "张韶涵",
+      "album": "第5季",
+      "albumId": 32346,
+      "cover": "109951167430275623.jpg"
+    },
+    {
+      "songId": "543656129",
+      "title": "花心",
+      "artist": "周华健",
+      "album": "一人一首成名曲2",
+      "albumId": 37873033,
+      "cover": "109951163175731610.jpg"
+    },
+    {
+      "songId": "27678655",
+      "title": "李白",
+      "artist": "李荣浩",
+      "album": "模特",
+      "albumId": 2659088,
+      "cover": "109951163187393370.jpg"
+    },
+    {
+      "songId": "27731176",
+      "title": "模特",
+      "artist": "李荣浩",
+      "album": "模特",
+      "albumId": 2659088,
+      "cover": "109951163187393370.jpg"
+    },
+    {
+      "songId": "407450223",
+      "title": "爸爸妈妈",
+      "artist": "李荣浩",
+      "album": "有理想",
+      "albumId": 34567265,
+      "cover": "109951166562828988.jpg"
+    },
+    {
+      "songId": "306664",
+      "title": "身骑白马",
+      "artist": "徐佳莹",
+      "album": "LaLa首张创作专辑",
+      "albumId": 30452,
+      "cover": "109951168296446353.jpg"
+    },
+    {
+      "songId": "407002483",
+      "title": "浪费",
+      "artist": "徐佳莹",
+      "album": "我是歌手第四季 第10期",
+      "albumId": 34569090,
+      "cover": "3422779700149849.jpg"
+    },
+    {
+      "songId": "327096",
+      "title": "人质",
+      "artist": "张惠妹",
+      "album": "我要快乐？",
+      "albumId": 32363,
+      "cover": "109951171942873077.jpg"
+    },
+    {
+      "songId": "297778",
+      "title": "睫毛弯弯",
+      "artist": "王心凌",
+      "album": "Cyndi With U",
+      "albumId": 29556,
+      "cover": "109951172325735500.jpg"
+    },
+    {
+      "songId": "108445",
+      "title": "表达爱",
+      "artist": "林俊杰 / 廖君",
+      "album": "100天",
+      "albumId": 10766,
+      "cover": "109951171415599135.jpg"
+    },
+    {
+      "songId": "28949444",
+      "title": "喜欢你",
+      "artist": "G.E.M.邓紫棋",
+      "album": "喜欢你",
+      "albumId": 2956076,
+      "cover": "8896148580676276.jpg"
+    },
+    {
+      "songId": "83165",
+      "title": "千里之外",
+      "artist": "费玉清",
+      "album": "青青校树",
+      "albumId": 8184,
+      "cover": "573945069711143.jpg"
+    },
+    {
+      "songId": "1366052801",
+      "title": "新地球",
+      "artist": "林俊杰",
+      "album": "新地球",
+      "albumId": 79214796,
+      "cover": "109951164081863001.jpg"
+    },
+    {
+      "songId": "280118",
+      "title": "梦醒了",
+      "artist": "那英 / 王菲",
+      "album": "知英情歌 那英精选",
+      "albumId": 27835,
+      "cover": "109951165625481741.jpg"
+    },
+    {
+      "songId": "1465226146",
+      "title": "这就是爱",
+      "artist": "张杰",
+      "album": "听！我们的歌",
+      "albumId": 92927312,
+      "cover": "109951165164760011.jpg"
+    },
+    {
+      "songId": "26117675",
+      "title": "我的秘密",
+      "artist": "G.E.M.邓紫棋",
+      "album": "My Secret",
+      "albumId": 2391062,
+      "cover": "109951163069327659.jpg"
+    },
+    {
+      "songId": "297710",
+      "title": "爱你",
+      "artist": "王心凌",
+      "album": "Red Cyndi",
+      "albumId": 29550,
+      "cover": "109951172325719786.jpg"
+    },
+    {
+      "songId": "85621",
+      "title": "第一次",
+      "artist": "光良",
+      "album": "第1次个人创作专辑",
+      "albumId": 8405,
+      "cover": "109951163287267754.jpg"
+    },
+    {
+      "songId": "188660",
+      "title": "你好毒",
+      "artist": "张学友",
+      "album": "友情歌",
+      "albumId": 19093,
+      "cover": "109951171993687237.jpg"
+    },
+    {
+      "songId": "570839692",
+      "title": "世界第一等",
+      "artist": "刘德华",
+      "album": "BMG全家福Happy Family",
+      "albumId": 39553829,
+      "cover": "109951165994344537.jpg"
+    },
+    {
+      "songId": "5284736",
+      "title": "我的未来不是梦",
+      "artist": "张雨生",
+      "album": "6个朋友",
+      "albumId": 513946,
+      "cover": "109951170731356161.jpg"
+    },
+    {
+      "songId": "188057",
+      "title": "大海",
+      "artist": "张雨生",
+      "album": "大海",
+      "albumId": 19049,
+      "cover": "109951165517460254.jpg"
+    },
+    {
+      "songId": "188177",
+      "title": "天天想你",
+      "artist": "张雨生",
+      "album": "天天想你",
+      "albumId": 19058,
+      "cover": "111050674406314.jpg"
+    },
+    {
+      "songId": "3320618617",
+      "title": "口是心非",
+      "artist": "张雨生",
+      "album": "如燕盘旋而来的思念 张雨生全创作精选典藏 1966-1997",
+      "albumId": 351461553,
+      "cover": "109951172325720333.jpg"
+    },
+    {
+      "songId": "190072",
+      "title": "黄昏",
+      "artist": "周传雄",
+      "album": "Transfer",
+      "albumId": 19203,
+      "cover": "109951167366664357.jpg"
+    },
+    {
+      "songId": "189688",
+      "title": "寂寞沙洲冷",
+      "artist": "周传雄",
+      "album": "星空下的传说",
+      "albumId": 19174,
+      "cover": "109951169493340540.jpg"
+    },
+    {
+      "songId": "189540",
+      "title": "关不上的窗",
+      "artist": "周传雄",
+      "album": "恋人创世纪",
+      "albumId": 19164,
+      "cover": "109951169200522014.jpg"
+    },
+    {
+      "songId": "189545",
+      "title": "冬天的秘密",
+      "artist": "周传雄",
+      "album": "恋人创世纪",
+      "albumId": 19164,
+      "cover": "109951169200522014.jpg"
+    },
+    {
+      "songId": "4878608",
+      "title": "你是风儿我是沙",
+      "artist": "林心如 / 周杰",
+      "album": "还珠格格 音乐全记录",
+      "albumId": 490132,
+      "cover": "109951172006857717.jpg"
+    },
+    {
+      "songId": "1407551413",
+      "title": "麻雀",
+      "artist": "李荣浩",
+      "album": "麻雀",
+      "albumId": 83878976,
+      "cover": "109951165182029540.jpg"
+    },
+    {
+      "songId": "298838",
+      "title": "传奇",
+      "artist": "王菲",
+      "album": "传奇",
+      "albumId": 29647,
+      "cover": "19157890602644480.jpg"
+    },
+    {
+      "songId": "254499",
+      "title": "为爱痴狂",
+      "artist": "刘若英",
+      "album": "收获 新歌+精选",
+      "albumId": 25430,
+      "cover": "18511377767232313.jpg"
+    },
+    {
+      "songId": "2154945586",
+      "title": "青花瓷 (2016中国新歌声第7期现场)",
+      "artist": "费玉清",
+      "album": "",
+      "albumId": 0,
+      "cover": "109951169484091680.jpg"
+    },
+    {
+      "songId": "2023994371",
+      "title": "无与伦比的美丽 (苏打绿版)",
+      "artist": "苏打绿",
+      "album": "无与伦比的美丽 (苏打绿版)",
+      "albumId": 160402407,
+      "cover": "109951169158802816.jpg"
+    },
+    {
+      "songId": "2685528187",
+      "title": "你在烦恼什么 (故事未了版)",
+      "artist": "苏打绿",
+      "album": "冬 未了 (苏打绿版)",
+      "albumId": 266118456,
+      "cover": "109951170621471519.jpg"
+    },
+    {
+      "songId": "2149543676",
+      "title": "妥协",
+      "artist": "张叶蕾",
+      "album": "妥协",
+      "albumId": 193590945,
+      "cover": "109951169531525137.jpg"
+    },
+    {
+      "songId": "1887298378",
+      "title": "好想你",
+      "artist": "四叶草",
+      "album": "好想你",
+      "albumId": 134840855,
+      "cover": "109951166521975489.jpg"
+    },
+    {
+      "songId": "33599439",
+      "title": "爱就一个字",
+      "artist": "张信哲",
+      "album": "中国新声代 第三季 第四期",
+      "albumId": 3233067,
+      "cover": "3366704604374334.jpg"
+    },
+    {
+      "songId": "86369",
+      "title": "偏爱",
+      "artist": "张芸京",
+      "album": "仙剑奇侠传三 电视原声带",
+      "albumId": 8466,
+      "cover": "109951165351505570.jpg"
+    },
+    {
+      "songId": "2188846",
+      "title": "Listen",
+      "artist": "Beyoncé",
+      "album": "Listen",
+      "albumId": 220770,
+      "cover": "109951169037806968.jpg"
+    },
+    {
+      "songId": "357459",
+      "title": "晴天娃娃",
+      "artist": "黑Girl",
+      "album": "美眉私密的一天甜心轰炸机",
+      "albumId": 35291,
+      "cover": "109951167343282478.jpg"
+    },
+    {
+      "songId": "1932683020",
+      "title": "如果爱下去",
+      "artist": "赖仔Morris",
+      "album": "如果爱下去",
+      "albumId": 142585996,
+      "cover": "109951167211216883.jpg"
+    },
+    {
+      "songId": "198839",
+      "title": "牧歌",
+      "artist": "张毅 / 王珺",
+      "album": "第一元素Ⅴ",
+      "albumId": 19982,
+      "cover": "47279000011420.jpg"
+    },
+    {
+      "songId": "195896",
+      "title": "一条路",
+      "artist": "张行",
+      "album": "迟到",
+      "albumId": 19715,
+      "cover": "95657511633807.jpg"
+    },
+    {
+      "songId": "1847408145",
+      "title": "月亮代表我的心",
+      "artist": "邓丽君",
+      "album": "90年代粵語情歌集",
+      "albumId": 127855315,
+      "cover": "109951168146310081.jpg"
+    },
+    {
+      "songId": "1853812727",
+      "title": "甜蜜蜜",
+      "artist": "邓丽君",
+      "album": "宝丽金经典中文金曲",
+      "albumId": 129118618,
+      "cover": "109951168146393248.jpg"
+    },
+    {
+      "songId": "1888076998",
+      "title": "我只在乎你",
+      "artist": "邓丽君",
+      "album": "温情如水国语集",
+      "albumId": 134961153,
+      "cover": "109951168278838053.jpg"
+    },
+    {
+      "songId": "28853062",
+      "title": "但愿人长久",
+      "artist": "王菲",
+      "album": "福星高照2 将爱实现",
+      "albumId": 2901320,
+      "cover": "5986840813792842.jpg"
+    },
+    {
+      "songId": "5252636",
+      "title": "吻别",
+      "artist": "张学友",
+      "album": "壹 (1)",
+      "albumId": 511927,
+      "cover": "19195273997826288.jpg"
+    },
+    {
+      "songId": "1844385608",
+      "title": "她来听我的演唱会",
+      "artist": "张学友",
+      "album": "最爱华语K歌",
+      "albumId": 127290091,
+      "cover": "109951166684189724.jpg"
+    },
+    {
+      "songId": "486814713",
+      "title": "一千个伤心的理由",
+      "artist": "张学友",
+      "album": "宝丽金黄金时代精品典藏VOL.2",
+      "albumId": 35663493,
+      "cover": "19134800858377336.jpg"
+    },
+    {
+      "songId": "1438246130",
+      "title": "忘情水",
+      "artist": "刘德华",
+      "album": "国语浪漫情歌09 (Chinese Romantic Love Song)",
+      "albumId": 87703754,
+      "cover": "109951164877954978.jpg"
+    },
+    {
+      "songId": "5237991",
+      "title": "朋友",
+      "artist": "周华健",
+      "album": "一期一会",
+      "albumId": 511076,
+      "cover": "109951163447808538.jpg"
+    },
+    {
+      "songId": "402070181",
+      "title": "爱如潮水",
+      "artist": "张信哲",
+      "album": "梦想公益盛典原声",
+      "albumId": 34477033,
+      "cover": "1364493978227078.jpg"
+    },
+    {
+      "songId": "423406145",
+      "title": "过火",
+      "artist": "张信哲",
+      "album": "爱程集",
+      "albumId": 34798045,
+      "cover": "2946691201348447.jpg"
+    },
+    {
+      "songId": "25643328",
+      "title": "信仰",
+      "artist": "张信哲",
+      "album": "Jeff情歌精选",
+      "albumId": 2263172,
+      "cover": "109951163067344307.jpg"
+    },
+    {
+      "songId": "110711",
+      "title": "至少还有你",
+      "artist": "林忆莲",
+      "album": "林夕字传2",
+      "albumId": 10942,
+      "cover": "68169720928612.jpg"
+    },
+    {
+      "songId": "327584",
+      "title": "听海",
+      "artist": "张惠妹",
+      "album": "BAD BOY",
+      "albumId": 32413,
+      "cover": "109951172084716035.jpg"
+    },
+    {
+      "songId": "5237749",
+      "title": "分手快乐",
+      "artist": "梁静茹",
+      "album": "一夜长大",
+      "albumId": 511060,
+      "cover": "109951163447800775.jpg"
+    },
+    {
+      "songId": "5255344",
+      "title": "勇气",
+      "artist": "梁静茹",
+      "album": "幸福的天空2-我很想你",
+      "albumId": 512067,
+      "cover": "37383395361209.jpg"
+    },
+    {
+      "songId": "1952285469",
+      "title": "小情歌 (苏打绿版)",
+      "artist": "苏打绿",
+      "album": "小宇宙 (苏打绿版)",
+      "albumId": 145801010,
+      "cover": "109951169158810091.jpg"
+    },
+    {
+      "songId": "5246628",
+      "title": "童话",
+      "artist": "光良",
+      "album": "情歌101",
+      "albumId": 511567,
+      "cover": "109951163311279628.jpg"
+    },
+    {
+      "songId": "480579324",
+      "title": "当",
+      "artist": "动力火车 / 马鑫 / 付小墨 / 伊西永藏",
+      "album": "我想和你唱 第二季 第5期",
+      "albumId": 35559138,
+      "cover": "18863221486279073.jpg"
+    },
+    {
+      "songId": "2006730075",
+      "title": "隐形的翅膀",
+      "artist": "张韶涵",
+      "album": "闪亮2006 Hit FM年度百首单曲票选",
+      "albumId": 156574686,
+      "cover": "109951168146749956.jpg"
+    },
+    {
+      "songId": "27808900",
+      "title": "王妃",
+      "artist": "萧敬腾 / 肖懿航",
+      "album": "最美和声第一季 第十三期",
+      "albumId": 2681254,
+      "cover": "2119858418376882.jpg"
+    },
+    {
+      "songId": "5250072",
+      "title": "日不落",
+      "artist": "蔡依林",
+      "album": "Love国语情歌集",
+      "albumId": 511763,
+      "cover": "109951169280787823.jpg"
+    },
+    {
+      "songId": "2724692017",
+      "title": "第一次爱的人",
+      "artist": "王心凌",
+      "album": "逛街随身听 BGM",
+      "albumId": 277991634,
+      "cover": "109951171443739878.jpg"
+    },
+    {
+      "songId": "4877418",
+      "title": "漂洋过海来看你",
+      "artist": "娃娃",
+      "album": "涩女郎 电视原声带",
+      "albumId": 490063,
+      "cover": "109951163093296876.jpg"
+    },
+    {
+      "songId": "26598946",
+      "title": "山丘",
+      "artist": "李宗盛",
+      "album": "山丘",
+      "albumId": 2532111,
+      "cover": "109951163023734669.jpg"
+    },
+    {
+      "songId": "394670",
+      "title": "给自己的歌",
+      "artist": "李宗盛",
+      "album": "南下专线",
+      "albumId": 39083,
+      "cover": "120946279068589.jpg"
+    },
+    {
+      "songId": "5237795",
+      "title": "很爱很爱你",
+      "artist": "刘若英",
+      "album": "再见初恋",
+      "albumId": 511063,
+      "cover": "109951163447801974.jpg"
+    },
+    {
+      "songId": "254574",
+      "title": "后来",
+      "artist": "刘若英",
+      "album": "我等你",
+      "albumId": 25437,
+      "cover": "109951163351825356.jpg"
+    },
+    {
+      "songId": "5278704",
+      "title": "最浪漫的事",
+      "artist": "赵咏华",
+      "album": "枕边歌 优质情歌选",
+      "albumId": 513498,
+      "cover": "109951170169091419.jpg"
+    },
+    {
+      "songId": "5255644",
+      "title": "征服",
+      "artist": "那英",
+      "album": "我们的主打歌",
+      "albumId": 512088,
+      "cover": "64871186055842.jpg"
+    },
+    {
+      "songId": "5246609",
+      "title": "一场游戏一场梦",
+      "artist": "王杰",
+      "album": "情歌101",
+      "albumId": 511567,
+      "cover": "109951163311279628.jpg"
+    },
+    {
+      "songId": "77098",
+      "title": "西海情歌",
+      "artist": "刀郎",
+      "album": "刀郎Ⅲ",
+      "albumId": 7578,
+      "cover": "109951171011327609.jpg"
+    },
+    {
+      "songId": "453189433",
+      "title": "爱上一个不回家的人",
+      "artist": "林忆莲",
+      "album": "我爱经典系列: 林忆莲",
+      "albumId": 35120387,
+      "cover": "109951170708690956.jpg"
+    },
+    {
+      "songId": "255973",
+      "title": "短发",
+      "artist": "梁咏琪",
+      "album": "短发",
+      "albumId": 25564,
+      "cover": "109951168747944773.jpg"
+    },
+    {
+      "songId": "277817",
+      "title": "他不爱我",
+      "artist": "莫文蔚",
+      "album": "做自己",
+      "albumId": 27581,
+      "cover": "19045740416582430.jpg"
+    },
+    {
+      "songId": "108370",
+      "title": "当爱已成往事",
+      "artist": "李宗盛 / 林忆莲",
+      "album": "爱情论",
+      "albumId": 10759,
+      "cover": "109951163071276550.jpg"
+    },
+    {
+      "songId": "190458",
+      "title": "一路上有你",
+      "artist": "张学友",
+      "album": "吻别",
+      "albumId": 19243,
+      "cover": "109951172128628495.jpg"
+    },
+    {
+      "songId": "190473",
+      "title": "秋意浓",
+      "artist": "张学友",
+      "album": "吻别",
+      "albumId": 19243,
+      "cover": "109951172128628495.jpg"
+    },
+    {
+      "songId": "110184",
+      "title": "谢谢你的爱",
+      "artist": "刘德华",
+      "album": "经典重现",
+      "albumId": 10900,
+      "cover": "109951163031587156.jpg"
+    },
+    {
+      "songId": "3342010385",
+      "title": "心跳",
+      "artist": "王力宏的小迷妹",
+      "album": "心跳",
+      "albumId": 359292662,
+      "cover": "109951172627463823.jpg"
+    },
+    {
+      "songId": "327068",
+      "title": "记得",
+      "artist": "张惠妹",
+      "album": "张惠妹 爱的力量 10年情歌最精选",
+      "albumId": 32344,
+      "cover": "109951171942867677.jpg"
+    },
+    {
+      "songId": "5263860",
+      "title": "我可以抱你吗",
+      "artist": "张惠妹",
+      "album": "丰华十年 就爱好音乐",
+      "albumId": 512583,
+      "cover": "109951173312926908.jpg"
+    },
+    {
+      "songId": "2654774730",
+      "title": "爱久见人心",
+      "artist": "梁静茹",
+      "album": "",
+      "albumId": 0,
+      "cover": "109951170239844188.jpg"
+    },
+    {
+      "songId": "108269",
+      "title": "记得",
+      "artist": "林俊杰",
+      "album": "她说 概念自选辑",
+      "albumId": 10755,
+      "cover": "109951172024569374.jpg"
+    },
+    {
+      "songId": "307474",
+      "title": "爱笑的眼睛",
+      "artist": "徐若瑄",
+      "album": "狠狠爱",
+      "albumId": 30528,
+      "cover": "109951164170265162.jpg"
+    },
+    {
+      "songId": "481853239",
+      "title": "白月光",
+      "artist": "张信哲 / 陈沁",
+      "album": "我想和你唱 第二季 第6期",
+      "albumId": 35578049,
+      "cover": "18923694625814745.jpg"
+    },
+    {
+      "songId": "25641912",
+      "title": "直觉",
+      "artist": "张信哲",
+      "album": "张信哲选哲情歌二十载",
+      "albumId": 2263090,
+      "cover": "595935302298252.jpg"
+    },
+    {
+      "songId": "280098",
+      "title": "一笑而过",
+      "artist": "那英",
+      "album": "我不是天使",
+      "albumId": 27834,
+      "cover": "109951171866738500.jpg"
+    },
+    {
+      "songId": "3368053771",
+      "title": "男人哭吧不是罪",
+      "artist": "刘德华 / 王宝强",
+      "album": "男人哭吧不是罪",
+      "albumId": 370007093,
+      "cover": "109951173018072318.jpg"
+    },
+    {
+      "songId": "191232",
+      "title": "遥远的她",
+      "artist": "张学友",
+      "album": "遥远的她·Amour",
+      "albumId": 19316,
+      "cover": "109951171530606390.jpg"
+    },
+    {
+      "songId": "541687281",
+      "title": "慢慢喜欢你",
+      "artist": "莫文蔚",
+      "album": "我们在中场相遇",
+      "albumId": 39355990,
+      "cover": "109951165958895028.jpg"
+    },
+    {
+      "songId": "108640",
+      "title": "阴天",
+      "artist": "莫文蔚",
+      "album": "作品李宗盛",
+      "albumId": 10780,
+      "cover": "109951169614579889.jpg"
+    },
+    {
+      "songId": "326990",
+      "title": "亲爱的，那不是爱情",
+      "artist": "张韶涵",
+      "album": "Ang 5.0",
+      "albumId": 32350,
+      "cover": "109951170169025541.jpg"
+    },
+    {
+      "songId": "5239552",
+      "title": "眼泪知道",
+      "artist": "温岚",
+      "album": "K情歌8",
+      "albumId": 511168,
+      "cover": "109951165641468578.jpg"
+    },
+    {
+      "songId": "190526",
+      "title": "月亮惹的祸",
+      "artist": "张宇",
+      "album": "月亮 太阳",
+      "albumId": 19250,
+      "cover": "109951167893538409.jpg"
+    },
+    {
+      "songId": "190251",
+      "title": "雨一直下",
+      "artist": "张宇",
+      "album": "男人的好 新歌+精选",
+      "albumId": 19221,
+      "cover": "109951163829579339.jpg"
+    },
+    {
+      "songId": "60263",
+      "title": "他一定很爱你",
+      "artist": "阿杜",
+      "album": "天黑",
+      "albumId": 5863,
+      "cover": "109951163076301483.jpg"
+    },
+    {
+      "songId": "60238",
+      "title": "坚持到底",
+      "artist": "阿杜",
+      "album": "坚持到底",
+      "albumId": 5858,
+      "cover": "109951173734485011.jpg"
+    },
+    {
+      "songId": "190563",
+      "title": "每天爱你多一些",
+      "artist": "张学友",
+      "album": "爱你多一些 精选",
+      "albumId": 19255,
+      "cover": "109951169427393198.jpg"
+    },
+    {
+      "songId": "190328",
+      "title": "祝福",
+      "artist": "张学友",
+      "album": "祝福",
+      "albumId": 19234,
+      "cover": "109951169580579205.jpg"
+    },
+    {
+      "songId": "188429",
+      "title": "我真的受伤了",
+      "artist": "张学友",
+      "album": "学友 热",
+      "albumId": 19076,
+      "cover": "109951171536242805.jpg"
+    },
+    {
+      "songId": "188432",
+      "title": "如果这都不算爱",
+      "artist": "张学友",
+      "album": "学友 热",
+      "albumId": 19076,
+      "cover": "109951171536242805.jpg"
+    },
+    {
+      "songId": "274686",
+      "title": "煎熬",
+      "artist": "李佳薇",
+      "album": "感谢爱人",
+      "albumId": 27222,
+      "cover": "109951165674709422.jpg"
+    },
+    {
+      "songId": "1299550532",
+      "title": "倒数",
+      "artist": "G.E.M.邓紫棋",
+      "album": "另一个童话",
+      "albumId": 72709830,
+      "cover": "109951163523944497.jpg"
+    },
+    {
+      "songId": "570837792",
+      "title": "回家真好",
+      "artist": "刘德华",
+      "album": "BMG全家福Happy Family",
+      "albumId": 39553829,
+      "cover": "109951165994344537.jpg"
+    },
+    {
+      "songId": "5262391",
+      "title": "倔强",
+      "artist": "五月天",
+      "album": "Super 2004-2005 滚石超选集",
+      "albumId": 512509,
+      "cover": "109951163237131764.jpg"
+    },
+    {
+      "songId": "392713",
+      "title": "突然好想你",
+      "artist": "五月天",
+      "album": "《姊妹》电视剧原声带",
+      "albumId": 38900,
+      "cover": "109951168163060412.jpg"
+    },
+    {
+      "songId": "5237869",
+      "title": "知足",
+      "artist": "五月天",
+      "album": "狂飙青春",
+      "albumId": 511068,
+      "cover": "109951163447812860.jpg"
+    },
+    {
+      "songId": "5237943",
+      "title": "温柔",
+      "artist": "五月天",
+      "album": "风雨操场",
+      "albumId": 511073,
+      "cover": "109951163447813080.jpg"
+    },
+    {
+      "songId": "5237929",
+      "title": "恋爱ing",
+      "artist": "五月天",
+      "album": "恋爱学分",
+      "albumId": 511072,
+      "cover": "109951163447809644.jpg"
+    },
+    {
+      "songId": "422104138",
+      "title": "后来的我们",
+      "artist": "五月天",
+      "album": "自传",
+      "albumId": 34746073,
+      "cover": "3434874331529456.jpg"
+    },
+    {
+      "songId": "392735",
+      "title": "你不是真正的快乐",
+      "artist": "五月天",
+      "album": "《姊妹》电视剧原声带",
+      "albumId": 38900,
+      "cover": "109951168163060412.jpg"
+    },
+    {
+      "songId": "22197007",
+      "title": "干杯",
+      "artist": "五月天",
+      "album": "第二人生 (明日版)",
+      "albumId": 2040001,
+      "cover": "109951168162347102.jpg"
+    },
+    {
+      "songId": "1939557593",
+      "title": "夜空中最亮的星",
+      "artist": "水星逃跑计划 / 苏添泽",
+      "album": "夜空中最亮的星苏添泽",
+      "albumId": 142283718,
+      "cover": "109951167314112441.jpg"
+    },
+    {
+      "songId": "28815250",
+      "title": "平凡之路",
+      "artist": "朴树",
+      "album": "猎户星座",
+      "albumId": 35444067,
+      "cover": "18885211718782327.jpg"
+    },
+    {
+      "songId": "4877908",
+      "title": "那些花儿",
+      "artist": "朴树",
+      "album": "永远有多远 [电视连续剧原声大碟]",
+      "albumId": 490093,
+      "cover": "101155069770298.jpg"
+    },
+    {
+      "songId": "5265370",
+      "title": "生如夏花",
+      "artist": "朴树",
+      "album": "华纳影视歌曲精选辑 颂",
+      "albumId": 512668,
+      "cover": "54975581405868.jpg"
+    },
+    {
+      "songId": "168091",
+      "title": "蓝莲花",
+      "artist": "许巍",
+      "album": "时光.漫步",
+      "albumId": 16975,
+      "cover": "122045790684028.jpg"
+    },
+    {
+      "songId": "167975",
+      "title": "曾经的你",
+      "artist": "许巍",
+      "album": "每一刻都是崭新的",
+      "albumId": 16967,
+      "cover": "109951163092691594.jpg"
+    },
+    {
+      "songId": "155885",
+      "title": "春天里",
+      "artist": "汪峰",
+      "album": "信仰在空中飘扬",
+      "albumId": 15699,
+      "cover": "109951169278078950.jpg"
+    },
+    {
+      "songId": "1878860736",
+      "title": "你要跳舞吗",
+      "artist": "新裤子",
+      "album": "草莓星球来的人 第10期",
+      "albumId": 133364492,
+      "cover": "109951166422324368.jpg"
+    },
+    {
+      "songId": "28009051",
+      "title": "没有理想的人不伤心",
+      "artist": "新裤子",
+      "album": "生命因你而火热",
+      "albumId": 34555329,
+      "cover": "109951172945816490.jpg"
+    },
+    {
+      "songId": "355992",
+      "title": "追梦赤子心",
+      "artist": "GALA",
+      "album": "追梦痴子心",
+      "albumId": 35139,
+      "cover": "19061133579343591.jpg"
+    },
+    {
+      "songId": "63713",
+      "title": "花房姑娘",
+      "artist": "崔健",
+      "album": "新长征路上的摇滚",
+      "albumId": 6311,
+      "cover": "109951167411733685.jpg"
+    },
+    {
+      "songId": "357279",
+      "title": "无地自容",
+      "artist": "黑豹乐队",
+      "album": "黑豹",
+      "albumId": 35273,
+      "cover": "54975581405042.jpg"
+    },
+    {
+      "songId": "381825",
+      "title": "公路之歌",
+      "artist": "痛仰乐队",
+      "album": "不要停止我的音乐",
+      "albumId": 37797,
+      "cover": "109951169200439396.jpg"
+    },
+    {
+      "songId": "386844",
+      "title": "杀死那个石家庄人",
+      "artist": "万能青年旅店",
+      "album": "万能青年旅店 同名专辑",
+      "albumId": 38306,
+      "cover": "108851651165850.jpg"
+    },
+    {
+      "songId": "573982269",
+      "title": "死了都要爱",
+      "artist": "信乐团",
+      "album": "2006 KTV点唱精选国语总排行",
+      "albumId": 39743706,
+      "cover": "109951165671153883.jpg"
+    },
+    {
+      "songId": "354593",
+      "title": "我们的爱",
+      "artist": "F.I.R.",
+      "album": "飞儿乐团",
+      "albumId": 34988,
+      "cover": "109951167320242838.jpg"
+    },
+    {
+      "songId": "156374",
+      "title": "突然的自我",
+      "artist": "伍佰 & China Blue",
+      "album": "忘情1015精选辑",
+      "albumId": 15751,
+      "cover": "109951172477522630.jpg"
+    },
+    {
+      "songId": "5276979",
+      "title": "痛哭的人",
+      "artist": "伍佰",
+      "album": "新好男人3",
+      "albumId": 513373,
+      "cover": "109951163211257650.jpg"
+    },
+    {
+      "songId": "156915",
+      "title": "挪威的森林",
+      "artist": "伍佰",
+      "album": "滚石香港黄金十年 伍佰精选",
+      "albumId": 15791,
+      "cover": "109951170270558113.jpg"
+    },
+    {
+      "songId": "155908",
+      "title": "北京北京",
+      "artist": "汪峰",
+      "album": "勇敢的心",
+      "albumId": 15700,
+      "cover": "109951169277865483.jpg"
+    },
+    {
+      "songId": "155961",
+      "title": "飞得更高",
+      "artist": "汪峰",
+      "album": "笑着哭",
+      "albumId": 15706,
+      "cover": "109951167192693446.jpg"
+    },
+    {
+      "songId": "155886",
+      "title": "光明",
+      "artist": "汪峰",
+      "album": "信仰在空中飘扬",
+      "albumId": 15699,
+      "cover": "109951169278078950.jpg"
+    },
+    {
+      "songId": "25638240",
+      "title": "存在",
+      "artist": "汪峰",
+      "album": "生无所求",
+      "albumId": 2261053,
+      "cover": "109951167482896864.jpg"
+    },
+    {
+      "songId": "387758",
+      "title": "天高地厚",
+      "artist": "信乐团",
+      "album": "天高地厚",
+      "albumId": 38412,
+      "cover": "18723583511115606.jpg"
+    },
+    {
+      "songId": "387764",
+      "title": "离歌",
+      "artist": "信乐团",
+      "album": "天高地厚",
+      "albumId": 38412,
+      "cover": "18723583511115606.jpg"
+    },
+    {
+      "songId": "385556",
+      "title": "星空",
+      "artist": "五月天",
+      "album": "第二人生 (末日版)",
+      "albumId": 38214,
+      "cover": "109951168162296454.jpg"
+    },
+    {
+      "songId": "22197011",
+      "title": "诺亚方舟",
+      "artist": "五月天",
+      "album": "第二人生 (明日版)",
+      "albumId": 2040001,
+      "cover": "109951168162347102.jpg"
+    },
+    {
+      "songId": "386542",
+      "title": "拥抱",
+      "artist": "五月天",
+      "album": "我们是五月天",
+      "albumId": 38285,
+      "cover": "109951170702056876.jpg"
+    },
+    {
+      "songId": "209112",
+      "title": "太阳",
+      "artist": "陈绮贞",
+      "album": "太阳",
+      "albumId": 21275,
+      "cover": "109951163612079871.jpg"
+    },
+    {
+      "songId": "406737702",
+      "title": "生活因你而火热",
+      "artist": "新裤子",
+      "album": "生命因你而火热",
+      "albumId": 34555329,
+      "cover": "109951172945816490.jpg"
+    },
+    {
+      "songId": "387717",
+      "title": "海阔天空",
+      "artist": "信乐团",
+      "album": "海阔天空",
+      "albumId": 38408,
+      "cover": "109951164094157636.jpg"
+    },
+    {
+      "songId": "543965520",
+      "title": "浪人情歌",
+      "artist": "伍佰",
+      "album": "2021爱你爱一辈子",
+      "albumId": 37873301,
+      "cover": "109951163178049506.jpg"
+    },
+    {
+      "songId": "569200213",
+      "title": "消愁",
+      "artist": "毛不易",
+      "album": "平凡的一天",
+      "albumId": 39483040,
+      "cover": "109951163350929740.jpg"
+    },
+    {
+      "songId": "569213220",
+      "title": "像我这样的人",
+      "artist": "毛不易",
+      "album": "平凡的一天",
+      "albumId": 39483040,
+      "cover": "109951163350929740.jpg"
+    },
+    {
+      "songId": "1895661317",
+      "title": "漠河舞厅",
+      "artist": "柳爽",
+      "album": "漠河舞厅",
+      "albumId": 136233271,
+      "cover": "109951166629923582.jpg"
+    },
+    {
+      "songId": "2063487880",
+      "title": "罗刹海市",
+      "artist": "刀郎",
+      "album": "山歌寥哉",
+      "albumId": 169512732,
+      "cover": "109951168735465189.jpg"
+    },
+    {
+      "songId": "109998",
+      "title": "贝加尔湖畔",
+      "artist": "李健",
+      "album": "依然",
+      "albumId": 10888,
+      "cover": "109951163432562414.jpg"
+    },
+    {
+      "songId": "110411",
+      "title": "传奇",
+      "artist": "李健",
+      "album": "似水流年",
+      "albumId": 10921,
+      "cover": "109951170376526221.jpg"
+    },
+    {
+      "songId": "1991332085",
+      "title": "一生有你",
+      "artist": "水木年华",
+      "album": "靓点屋精选辑",
+      "albumId": 3387048,
+      "cover": "3240260771428789.jpg"
+    },
+    {
+      "songId": "5281327",
+      "title": "同桌的你",
+      "artist": "老狼",
+      "album": "校园民谣 1",
+      "albumId": 513675,
+      "cover": "109951163351799393.jpg"
+    },
+    {
+      "songId": "28196372",
+      "title": "北方的狼",
+      "artist": "齐秦 / 李维",
+      "album": "天下无双",
+      "albumId": 2508082,
+      "cover": "2281486627683301.jpg"
+    },
+    {
+      "songId": "28819044",
+      "title": "大约在冬季",
+      "artist": "齐秦",
+      "album": "摘金宝典",
+      "albumId": 2902015,
+      "cover": "109951169072000227.jpg"
+    },
+    {
+      "songId": "28996926",
+      "title": "白桦林",
+      "artist": "朴树",
+      "album": "我去2000年",
+      "albumId": 2975136,
+      "cover": "109951167411817871.jpg"
+    },
+    {
+      "songId": "202373",
+      "title": "南方姑娘",
+      "artist": "赵雷",
+      "album": "赵小雷",
+      "albumId": 20339,
+      "cover": "109951169213244790.jpg"
+    },
+    {
+      "songId": "29567189",
+      "title": "理想",
+      "artist": "赵雷",
+      "album": "吉姆餐厅",
+      "albumId": 3048030,
+      "cover": "109951169213425474.jpg"
+    },
+    {
+      "songId": "27646198",
+      "title": "董小姐",
+      "artist": "宋冬野",
+      "album": "安和桥北",
+      "albumId": 2646285,
+      "cover": "109951173825645527.jpg"
+    },
+    {
+      "songId": "110215",
+      "title": "风吹麦浪",
+      "artist": "李健",
+      "album": "想念你",
+      "albumId": 10908,
+      "cover": "109951163432573502.jpg"
+    },
+    {
+      "songId": "33248189",
+      "title": "假如爱有天意",
+      "artist": "李健",
+      "album": "李健 同名专辑",
+      "albumId": 3233232,
+      "cover": "7929677861304714.jpg"
+    },
+    {
+      "songId": "85567",
+      "title": "青春无悔",
+      "artist": "叶蓓 / 老狼",
+      "album": "青春无悔 (高晓松作品集)",
+      "albumId": 8400,
+      "cover": "52776558134030.jpg"
+    },
+    {
+      "songId": "108119",
+      "title": "恋恋风尘",
+      "artist": "老狼",
+      "album": "恋恋风尘",
+      "albumId": 10748,
+      "cover": "109951170118048373.jpg"
+    },
+    {
+      "songId": "38576323",
+      "title": "春风十里",
+      "artist": "鹿先森乐队",
+      "album": "所有的酒，都不如你",
+      "albumId": 34976129,
+      "cover": "109951163669459549.jpg"
+    },
+    {
+      "songId": "1363948882",
+      "title": "世间美好与你环环相扣",
+      "artist": "柏松",
+      "album": "听闻余生",
+      "albumId": 78938226,
+      "cover": "109951164071024476.jpg"
+    },
+    {
+      "songId": "37668008",
+      "title": "时间都去哪儿了",
+      "artist": "王铮亮",
+      "album": "故事岛",
+      "albumId": 3420234,
+      "cover": "109951169775153273.jpg"
+    },
+    {
+      "songId": "31445772",
+      "title": "理想三旬",
+      "artist": "陈鸿宇",
+      "album": "浓烟下的诗歌电台",
+      "albumId": 3116882,
+      "cover": "109951168090271827.jpg"
+    },
+    {
+      "songId": "29567192",
+      "title": "少年锦时",
+      "artist": "赵雷",
+      "album": "吉姆餐厅",
+      "albumId": 3048030,
+      "cover": "109951169213425474.jpg"
+    },
+    {
+      "songId": "1895377452",
+      "title": "同桌的你",
+      "artist": "老狼",
+      "album": "龙凤金歌榜",
+      "albumId": 136190130,
+      "cover": "109951166626440183.jpg"
+    },
+    {
+      "songId": "2690863733",
+      "title": "少年 (低频公益版)",
+      "artist": "梦然",
+      "album": "《听见“听不见”的音乐》低频公益专辑",
+      "albumId": 267901986,
+      "cover": "109951170683270889.jpg"
+    },
+    {
+      "songId": "167876",
+      "title": "有何不可",
+      "artist": "许嵩",
+      "album": "自定义",
+      "albumId": 16953,
+      "cover": "109951172899966259.jpg"
+    },
+    {
+      "songId": "1368754688",
+      "title": "爱人错过",
+      "artist": "告五人",
+      "album": "我肯定在几百年前就说过爱你",
+      "albumId": 79515295,
+      "cover": "109951172190059964.jpg"
+    },
+    {
+      "songId": "421423806",
+      "title": "小半",
+      "artist": "陈粒",
+      "album": "小梦大半",
+      "albumId": 34780579,
+      "cover": "1371091013186741.jpg"
+    },
+    {
+      "songId": "1888108371",
+      "title": "成都",
+      "artist": "赵雷",
+      "album": "那时年少",
+      "albumId": 134924114,
+      "cover": "109951166534520720.jpg"
+    },
+    {
+      "songId": "1974443814",
+      "title": "我记得",
+      "artist": "赵雷",
+      "album": "署前街少年",
+      "albumId": 150127127,
+      "cover": "109951169682871673.jpg"
+    },
+    {
+      "songId": "29436904",
+      "title": "南山南",
+      "artist": "马頔",
+      "album": "南山南",
+      "albumId": 3027098,
+      "cover": "6648746813825382.jpg"
+    },
+    {
+      "songId": "29715559",
+      "title": "傲寒",
+      "artist": "马頔",
+      "album": "孤岛",
+      "albumId": 3064210,
+      "cover": "109951172945818860.jpg"
+    },
+    {
+      "songId": "27646199",
+      "title": "斑马，斑马",
+      "artist": "宋冬野",
+      "album": "安和桥北",
+      "albumId": 2646285,
+      "cover": "109951173825645527.jpg"
+    },
+    {
+      "songId": "28053527",
+      "title": "安和桥",
+      "artist": "宋冬野",
+      "album": "麻油叶？不叫事儿！",
+      "albumId": 2718914,
+      "cover": "5788928720312004.jpg"
+    },
+    {
+      "songId": "30431366",
+      "title": "奇妙能力歌",
+      "artist": "陈粒",
+      "album": "如也",
+      "albumId": 3098832,
+      "cover": "7721870161993398.jpg"
+    },
+    {
+      "songId": "30431364",
+      "title": "光",
+      "artist": "陈粒",
+      "album": "如也",
+      "albumId": 3098832,
+      "cover": "7721870161993398.jpg"
+    },
+    {
+      "songId": "30431374",
+      "title": "如也",
+      "artist": "陈粒",
+      "album": "如也",
+      "albumId": 3098832,
+      "cover": "7721870161993398.jpg"
+    },
+    {
+      "songId": "150654",
+      "title": "爱，很简单",
+      "artist": "陶喆",
+      "album": "David Tao",
+      "albumId": 15199,
+      "cover": "109951169507121139.jpg"
+    },
+    {
+      "songId": "150430",
+      "title": "就是爱你",
+      "artist": "陶喆",
+      "album": "太平盛世",
+      "albumId": 15185,
+      "cover": "109951163803188844.jpg"
+    },
+    {
+      "songId": "150623",
+      "title": "普通朋友",
+      "artist": "陶喆",
+      "album": "I'm OK",
+      "albumId": 15196,
+      "cover": "109951169389595068.jpg"
+    },
+    {
+      "songId": "150633",
+      "title": "天天",
+      "artist": "陶喆",
+      "album": "I'm OK",
+      "albumId": 15196,
+      "cover": "109951169389595068.jpg"
+    },
+    {
+      "songId": "150564",
+      "title": "月亮代表谁的心",
+      "artist": "陶喆",
+      "album": "黑色柳丁",
+      "albumId": 15190,
+      "cover": "109951169237251638.jpg"
+    },
+    {
+      "songId": "150552",
+      "title": "黑色柳丁",
+      "artist": "陶喆",
+      "album": "黑色柳丁",
+      "albumId": 15190,
+      "cover": "109951169237251638.jpg"
+    },
+    {
+      "songId": "28029112",
+      "title": "三人游",
+      "artist": "方大同",
+      "album": "The Soulboy Collection",
+      "albumId": 2716009,
+      "cover": "109951167164989067.jpg"
+    },
+    {
+      "songId": "28403111",
+      "title": "特别的人",
+      "artist": "方大同",
+      "album": "危险世界",
+      "albumId": 2759704,
+      "cover": "109951172683046522.jpg"
+    },
+    {
+      "songId": "82453",
+      "title": "爱爱爱",
+      "artist": "方大同",
+      "album": "爱爱爱",
+      "albumId": 8133,
+      "cover": "109951168870794250.jpg"
+    },
+    {
+      "songId": "28029097",
+      "title": "春风吹",
+      "artist": "方大同",
+      "album": "The Soulboy Collection",
+      "albumId": 2716009,
+      "cover": "109951167164989067.jpg"
+    },
+    {
+      "songId": "186513",
+      "title": "私奔",
+      "artist": "郑钧",
+      "album": "长安长安",
+      "albumId": 18942,
+      "cover": "18932490718960959.jpg"
+    },
+    {
+      "songId": "29764562",
+      "title": "作曲家",
+      "artist": "李荣浩",
+      "album": "李荣浩",
+      "albumId": 3075071,
+      "cover": "109951166562838294.jpg"
+    },
+    {
+      "songId": "31654343",
+      "title": "不将就",
+      "artist": "李荣浩",
+      "album": "有理想",
+      "albumId": 34567265,
+      "cover": "109951166562828988.jpg"
+    },
+    {
+      "songId": "3349595639",
+      "title": "你就不要想起我",
+      "artist": "田馥甄的小迷妹",
+      "album": "你就不要想起我",
+      "albumId": 362058353,
+      "cover": "109951172741642131.jpg"
+    },
+    {
+      "songId": "109545",
+      "title": "光阴的故事",
+      "artist": "罗大佑",
+      "album": "之乎者也",
+      "albumId": 10855,
+      "cover": "109951172346449536.jpg"
+    },
+    {
+      "songId": "1383023894",
+      "title": "玫瑰少年",
+      "artist": "五月天",
+      "album": "玫瑰少年",
+      "albumId": 80852840,
+      "cover": "109951168165039248.jpg"
+    },
+    {
+      "songId": "168500",
+      "title": "你是我的眼",
+      "artist": "萧煌奇",
+      "album": "你是我的眼",
+      "albumId": 17009,
+      "cover": "109951163240608867.jpg"
+    },
+    {
+      "songId": "31473269",
+      "title": "默",
+      "artist": "那英",
+      "album": "默",
+      "albumId": 3122021,
+      "cover": "109951173833470273.jpg"
+    },
+    {
+      "songId": "169185",
+      "title": "认真的雪",
+      "artist": "薛之谦",
+      "album": "未完成的歌",
+      "albumId": 17074,
+      "cover": "109951171269232420.jpg"
+    },
+    {
+      "songId": "27808044",
+      "title": "丑八怪",
+      "artist": "薛之谦",
+      "album": "意外",
+      "albumId": 2681139,
+      "cover": "109951164499974026.jpg"
+    },
+    {
+      "songId": "287063",
+      "title": "我怀念的",
+      "artist": "孙燕姿",
+      "album": "逆光",
+      "albumId": 28520,
+      "cover": "109951173219336672.jpg"
+    },
+    {
+      "songId": "35528482",
+      "title": "一半",
+      "artist": "薛之谦",
+      "album": "一半",
+      "albumId": 3316028,
+      "cover": "109951168707346683.jpg"
+    },
+    {
+      "songId": "543965427",
+      "title": "我是一只小小鸟",
+      "artist": "任贤齐",
+      "album": "滚石国语1歌",
+      "albumId": 37873297,
+      "cover": "109951163178030064.jpg"
+    },
+    {
+      "songId": "530986012",
+      "title": "差不多先生过新年",
+      "artist": "MC HotDog 热狗",
+      "album": "差不多先生过新年",
+      "albumId": 37253337,
+      "cover": "109951163109913156.jpg"
+    },
+    {
+      "songId": "135022",
+      "title": "贫民百万歌星",
+      "artist": "MC HotDog 热狗",
+      "album": "贫民百万歌星",
+      "albumId": 13352,
+      "cover": "119846767440816.jpg"
+    },
+    {
+      "songId": "516823132",
+      "title": "大鱼 (唱片版)",
+      "artist": "周深",
+      "album": "深的深",
+      "albumId": 36726020,
+      "cover": "109951171292487969.jpg"
+    },
+    {
+      "songId": "5255713",
+      "title": "沧海一声笑",
+      "artist": "许冠杰",
+      "album": "乐坛班霸",
+      "albumId": 512090,
+      "cover": "109951165816561425.jpg"
+    },
+    {
+      "songId": "481853241",
+      "title": "画心",
+      "artist": "张靓颖 / 卢昶宇 / 王艺陶 / 李秉成",
+      "album": "我想和你唱 第二季 第6期",
+      "albumId": 35578049,
+      "cover": "18923694625814745.jpg"
+    },
+    {
+      "songId": "28754846",
+      "title": "卷珠帘",
+      "artist": "霍尊",
+      "album": "天韵·霍尊",
+      "albumId": 2886264,
+      "cover": "19202970579205912.jpg"
+    },
+    {
+      "songId": "236387",
+      "title": "千年等一回",
+      "artist": "高胜美",
+      "album": "经典金选3 如果你是我的传说",
+      "albumId": 23683,
+      "cover": "109951167387939221.jpg"
+    },
+    {
+      "songId": "1298511555",
+      "title": "好汉歌",
+      "artist": "刘欢",
+      "album": "歌声伴随您---向改革开放30年致礼（16）",
+      "albumId": 72113949,
+      "cover": "109951163438961529.jpg"
+    },
+    {
+      "songId": "154480",
+      "title": "月光爱人",
+      "artist": "李玟",
+      "album": "卧虎藏龙 电影原声带",
+      "albumId": 15514,
+      "cover": "109951167370022503.jpg"
+    },
+    {
+      "songId": "167732",
+      "title": "千百度",
+      "artist": "许嵩",
+      "album": "苏格拉没有底",
+      "albumId": 16937,
+      "cover": "109951172321467110.jpg"
+    },
+    {
+      "songId": "167827",
+      "title": "素颜",
+      "artist": "许嵩 / 何曼婷",
+      "album": "素颜",
+      "albumId": 16949,
+      "cover": "109951169829246225.jpg"
+    },
+    {
+      "songId": "97357",
+      "title": "那些年",
+      "artist": "胡夏",
+      "album": "那些年，我们一起追的女孩 电影原声带",
+      "albumId": 9502,
+      "cover": "109951165966760453.jpg"
+    },
+    {
+      "songId": "26562741",
+      "title": "时间煮雨",
+      "artist": "郁可唯",
+      "album": "小时代 电影原声带",
+      "albumId": 2523061,
+      "cover": "19034745300240313.jpg"
+    },
+    {
+      "songId": "1334818132",
+      "title": "知否知否",
+      "artist": "胡夏 / 郁可唯",
+      "album": "知否知否",
+      "albumId": 74914998,
+      "cover": "109951163745342408.jpg"
+    },
+    {
+      "songId": "483671599",
+      "title": "追光者",
+      "artist": "岑宁儿",
+      "album": "夏至未至 影视原声带",
+      "albumId": 35644242,
+      "cover": "19149094509535913.jpg"
+    },
+    {
+      "songId": "109039",
+      "title": "凤凰于飞",
+      "artist": "刘欢",
+      "album": "甄嬛传影视音乐原声大碟",
+      "albumId": 10813,
+      "cover": "109951170353656924.jpg"
+    },
+    {
+      "songId": "4875127",
+      "title": "美丽的神话",
+      "artist": "成龙 / 金喜善",
+      "album": "神话 电影原声带",
+      "albumId": 489913,
+      "cover": "19064432114028522.jpg"
+    },
+    {
+      "songId": "25707139",
+      "title": "一生所爱",
+      "artist": "卢冠廷 / 莫文蔚",
+      "album": "齐天周大圣之西游双记 电影歌乐游唱版",
+      "albumId": 2286009,
+      "cover": "109951171875226384.jpg"
+    },
+    {
+      "songId": "28285910",
+      "title": "岁月神偷",
+      "artist": "金玟岐",
+      "album": "完美世界",
+      "albumId": 34985451,
+      "cover": "18815942487303143.jpg"
+    },
+    {
+      "songId": "441491828",
+      "title": "水星记",
+      "artist": "郭顶",
+      "album": "飞行器的执行周期",
+      "albumId": 35005583,
+      "cover": "2946691248081599.jpg"
+    },
+    {
+      "songId": "28996922",
+      "title": "那些花儿",
+      "artist": "朴树",
+      "album": "我去2000年",
+      "albumId": 2975136,
+      "cover": "109951167411817871.jpg"
+    },
+    {
+      "songId": "1889205264",
+      "title": "凉凉",
+      "artist": "曾高兴 / 樊一阳",
+      "album": "三生三世十里桃花",
+      "albumId": 135155777,
+      "cover": "109951166548217513.jpg"
+    }
+  ],
+  "declaredSongs": 763,
+  "mappedSongs": 761,
+  "uniqueCoverFiles": 689,
+  "unresolved": [
+    {
+      "songId": "25781197",
+      "title": "一起走过的日子",
+      "artist": "刘德华",
+      "reason": "NetEase song/detail returns empty (region/removed)"
+    },
+    {
+      "songId": "276610",
+      "title": "我是不是你最疼爱的人",
+      "artist": "潘越云",
+      "reason": "NetEase song/detail returns empty (region/removed)"
+    }
+  ]
+}

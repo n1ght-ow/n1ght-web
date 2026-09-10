@@ -166,19 +166,7 @@
         card.appendChild(img);
         card.appendChild(meta);
         card.appendChild(sleeve);
-        const wrap = el("div", prefix + "-card-wrap");
-        wrap.appendChild(card);
-        const fav = document.createElement("button");
-        fav.type = "button";
-        fav.className = "fav-btn";
-        fav.setAttribute("data-fav-type", prefix === "film" ? "film" : "series");
-        fav.setAttribute("data-fav-id", item.id);
-        fav.setAttribute("data-fav-name", item.title);
-        fav.setAttribute("aria-pressed", "false");
-        fav.setAttribute("aria-label", "Save " + item.title + " to favorites");
-        fav.textContent = "☆";
-        wrap.appendChild(fav);
-        strip.appendChild(wrap);
+        strip.appendChild(card);
       });
 
       stage.appendChild(viewport);
@@ -230,7 +218,7 @@
       imdbButton.rel = "noopener";
       imdbButton.dataset.cursor = "VIEW";
       imdbButton.dataset[prefix + "Reveal"] = "";
-      imdbButton.textContent = "OPEN ON IMDb ↗";
+      imdbButton.textContent = "OPEN ON IMDb";
 
       copy.appendChild(kicker);
       copy.appendChild(title);
@@ -461,20 +449,6 @@
       container.innerHTML = "";
     }
 
-    /* Re-render every mounted stage with a new data order. The archive
-       toolbar uses this for film/series filter + sort without rewriting
-       the data layer. */
-    function setData(nextItems) {
-      items = Array.isArray(nextItems) ? nextItems.slice() : [];
-      document
-        .querySelectorAll(options.mountSelector)
-        .forEach((container) => {
-          destroy(container);
-          init(container);
-        });
-      document.dispatchEvent(new CustomEvent("night:reel-rendered"));
-    }
-
     function autoInit() {
       document
         .querySelectorAll(options.mountSelector)
@@ -490,7 +464,6 @@
     return {
       init,
       destroy,
-      setData,
       get data() {
         return items.slice();
       }

@@ -12,10 +12,10 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D1B16'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='16' font-weight='bold' fill='%23C9A227' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=10">
-  <link rel="stylesheet" href="css/style.css?v=51">
-  <link rel="stylesheet" href="css/reel-stage.css?v=4">
-  <link rel="stylesheet" href="css/film-stage.css?v=6">
-  <link rel="stylesheet" href="css/series-stage.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=57">
+  <link rel="stylesheet" href="css/reel-stage.css?v=5">
+  <link rel="stylesheet" href="css/film-stage.css?v=7">
+  <link rel="stylesheet" href="css/series-stage.css?v=7">
   <noscript><style>#preloader { display: none !important; }</style></noscript>
 </head>
 <body>
@@ -348,24 +348,6 @@
         <button class="tab-btn mono" id="tab-games" type="button" role="tab" aria-selected="false" aria-controls="panel-games" data-tab="games" tabindex="-1"><span class="no" aria-hidden="true">06</span>GAMES</button>
       </div>
 
-      <div class="archive-toolbar" id="archive-toolbar" hidden>
-        <div class="archive-toolbar-filters" id="archive-toolbar-filters" role="group" aria-label="Filter the current shelf"></div>
-        <p class="archive-toolbar-count mono" id="archive-toolbar-count" role="status" aria-live="polite"></p>
-        <p class="archive-toolbar-empty mono" id="archive-toolbar-empty" hidden>
-          <span id="archive-toolbar-empty-text" role="status" aria-live="polite"></span>
-          <button class="archive-empty-clear mono" id="archive-toolbar-empty-clear" type="button">SHOW ALL</button>
-        </p>
-        <div class="archive-toolbar-sort">
-          <label class="archive-toolbar-label mono" for="archive-sort">SORT</label>
-          <select class="archive-sort mono" id="archive-sort"></select>
-        </div>
-        <div class="archive-density" role="group" aria-label="Card density">
-          <button class="archive-density-btn mono is-active" type="button" data-density="comfort" aria-pressed="true">COMFORT</button>
-          <button class="archive-density-btn mono" type="button" data-density="compact" aria-pressed="false">COMPACT</button>
-        </div>
-        <button class="archive-favorites-toggle mono" id="archive-favorites-toggle" type="button" aria-pressed="false">☆ FAVORITES ONLY</button>
-      </div>
-
       <div class="tab-panels">
 
         <!-- PANEL 01: BOOKS -->
@@ -417,7 +399,10 @@
       <button class="music-random mono" id="music-random" type="button" lang="zh">随机一首</button>
       <button class="music-search-clear mono" id="music-search-clear" type="button" aria-label="Clear search" hidden>&times;</button>
       <span class="music-search-count mono" id="music-search-count" hidden></span>
-      <p class="music-search-empty mono" id="music-search-empty" hidden>NO MATCH</p>
+      <p class="music-search-empty mono" id="music-search-empty" role="status" aria-live="polite" hidden>
+        <span id="music-search-empty-text">NO MATCH</span>
+        <button class="music-search-jump mono" id="music-search-jump" type="button" hidden></button>
+      </p>
     </div>
     <div class="genre-filter" id="genre-filter" role="group" aria-label="按流派过滤"></div>
     <div class="playlist" data-music-stage="auto"></div>
@@ -459,213 +444,190 @@
         <!-- PANEL 06: GAMES (moved from the standalone GAME ARCHIVE section) -->
         <div class="tab-panel" id="panel-games" role="tabpanel" aria-labelledby="tab-games" data-panel="games" tabindex="0">
           <p class="sec-intro">Eighteen games that shaped how I have fun. The hours are honest, and so is the ranking — every one of them earned its place twice over.</p>
-          <div class="hof">
-            <div class="hof">
-        <div class="hof-scroll" id="hof-scroll" data-cursor="DRAG">
-          <div class="hof-row" id="hof-row">
-          <div class="hof-item hof-a" data-game="cs" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/counter-strike.jpg" alt="Counter-Strike cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">COUNTER-STRIKE</span><span class="mono hof-hours">2,340 HRS</span></div>
+          <div class="hof" id="hof-grid">
+            <div class="hof-item" data-game="cs" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/counter-strike.jpg" alt="Counter-Strike cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">COUNTER-STRIKE</span><span class="mono hof-hours">2,340 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">The dust settles the way it always has — on old angles and steady hands.</p>
             </div>
-            <p class="hof-quote">The dust settles the way it always has — on old angles and steady hands.</p>
-          </div>
 
-          <div class="hof-item hof-b" data-game="rdr2" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/rdr2.jpg" alt="Red Dead Redemption 2 cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">RED DEAD REDEMPTION 2</span><span class="mono hof-hours">412 HRS</span></div>
+            <div class="hof-item hof-b" data-game="rdr2" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/rdr2.jpg" alt="Red Dead Redemption 2 cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">RED DEAD REDEMPTION 2</span><span class="mono hof-hours">412 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">The west ends like all good stories: slowly, and on a hill at sunset.</p>
             </div>
-            <p class="hof-quote">The west ends like all good stories: slowly, and on a hill at sunset.</p>
-          </div>
 
-          <div class="hof-item hof-c" data-game="cyberpunk" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/cyberpunk.jpg" alt="Cyberpunk 2077 cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">CYBERPUNK 2077</span><span class="mono hof-hours">287 HRS</span></div>
+            <div class="hof-item hof-c" data-game="cyberpunk" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/cyberpunk.jpg" alt="Cyberpunk 2077 cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">CYBERPUNK 2077</span><span class="mono hof-hours">287 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">Every alley keeps a story, and the rain only makes the colors louder.</p>
             </div>
-            <p class="hof-quote">Every alley keeps a story, and the rain only makes the colors louder.</p>
-          </div>
 
-          <div class="hof-item hof-d" data-game="gta5" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/gta5.jpg" alt="Grand Theft Auto V cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">GRAND THEFT AUTO V</span><span class="mono hof-hours">536 HRS</span></div>
+            <div class="hof-item hof-d" data-game="gta5" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/gta5.jpg" alt="Grand Theft Auto V cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">GRAND THEFT AUTO V</span><span class="mono hof-hours">536 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">A city learned street by street, with satire sharper than its neon.</p>
             </div>
-            <p class="hof-quote">A city learned street by street, with satire sharper than its neon.</p>
-          </div>
 
-          <div class="hof-item hof-e" data-game="forza" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/forza-horizon-4.jpg" alt="Forza Horizon 4 cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">FORZA HORIZON 4</span><span class="mono hof-hours">198 HRS</span></div>
+            <div class="hof-item hof-e" data-game="forza" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/forza-horizon-4.jpg" alt="Forza Horizon 4 cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">FORZA HORIZON 4</span><span class="mono hof-hours">198 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">Four seasons in one blur — Britain at three hundred per hour, and finally, quiet.</p>
             </div>
-            <p class="hof-quote">Four seasons in one blur — Britain at three hundred per hour, and finally, quiet.</p>
-          </div>
 
-          <div class="hof-item hof-f" data-game="detroit" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/detroit.jpg" alt="Detroit Become Human cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">DETROIT: BECOME HUMAN</span><span class="mono hof-hours">64 HRS</span></div>
+            <div class="hof-item hof-f" data-game="detroit" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/detroit.jpg" alt="Detroit Become Human cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">DETROIT: BECOME HUMAN</span><span class="mono hof-hours">64 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">Three cities, three endings; the coin still flips somewhere inside me.</p>
             </div>
-            <p class="hof-quote">Three cities, three endings; the coin still flips somewhere inside me.</p>
-          </div>
 
-          <div class="hof-item hof-g" data-game="fm" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/football-manager.jpg" alt="Football Manager cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">FOOTBALL MANAGER</span><span class="mono hof-hours">1,120 HRS</span></div>
+            <div class="hof-item hof-g" data-game="fm" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/football-manager.jpg" alt="Football Manager cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">FOOTBALL MANAGER</span><span class="mono hof-hours">1,120 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">A spreadsheet with a heartbeat — third tier to Europe, one Sunday at a time.</p>
             </div>
-            <p class="hof-quote">A spreadsheet with a heartbeat — third tier to Europe, one Sunday at a time.</p>
-          </div>
 
-          <div class="hof-item hof-h" data-game="fc26" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/fc26.jpg" alt="EA SPORTS FC 26 cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">EA SPORTS FC 26</span><span class="mono hof-hours">386 HRS</span></div>
+            <div class="hof-item hof-h" data-game="fc26" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/fc26.jpg" alt="EA SPORTS FC 26 cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">EA SPORTS FC 26</span><span class="mono hof-hours">386 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">Same pitch, new numbers — the grass still bends for a well-weighted through ball.</p>
             </div>
-            <p class="hof-quote">Same pitch, new numbers — the grass still bends for a well-weighted through ball.</p>
-          </div>
 
-          <div class="hof-item hof-i" data-game="sekiro" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/sekiro.jpg" alt="Sekiro: Shadows Die Twice cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">SEKIRO</span><span class="mono hof-hours">142 HRS</span></div>
+            <div class="hof-item hof-i" data-game="sekiro" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/sekiro.jpg" alt="Sekiro: Shadows Die Twice cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">SEKIRO</span><span class="mono hof-hours">142 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">Hesitation is defeat. Everything else is just footwork.</p>
             </div>
-            <p class="hof-quote">Hesitation is defeat. Everything else is just footwork.</p>
-          </div>
 
-          <div class="hof-item hof-j" data-game="elden-ring" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/elden-ring.jpg" alt="Elden Ring cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">ELDEN RING</span><span class="mono hof-hours">415 HRS</span></div>
+            <div class="hof-item hof-j" data-game="elden-ring" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/elden-ring.jpg" alt="Elden Ring cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">ELDEN RING</span><span class="mono hof-hours">415 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">In the Lands Between, dying is a detour, not a defeat.</p>
             </div>
-            <p class="hof-quote">In the Lands Between, dying is a detour, not a defeat.</p>
-          </div>
 
-          <div class="hof-item hof-k" data-game="bg3" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/baldurs-gate-3.jpg" alt="Baldur's Gate 3 cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">BALDUR'S GATE 3</span><span class="mono hof-hours">528 HRS</span></div>
+            <div class="hof-item hof-k" data-game="bg3" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/baldurs-gate-3.jpg" alt="Baldur's Gate 3 cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">BALDUR'S GATE 3</span><span class="mono hof-hours">528 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">Every dice roll is a promise the story keeps — fail beautifully, reload rarely.</p>
             </div>
-            <p class="hof-quote">Every dice roll is a promise the story keeps — fail beautifully, reload rarely.</p>
-          </div>
 
-          <div class="hof-item hof-l" data-game="wukong" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/black-myth-wukong.jpg" alt="Black Myth: Wukong cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">BLACK MYTH: WUKONG</span><span class="mono hof-hours">187 HRS</span></div>
+            <div class="hof-item hof-l" data-game="wukong" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/black-myth-wukong.jpg" alt="Black Myth: Wukong cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">BLACK MYTH: WUKONG</span><span class="mono hof-hours">187 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">The staff remembers every sky it has broken. So do you.</p>
             </div>
-            <p class="hof-quote">The staff remembers every sky it has broken. So do you.</p>
-          </div>
 
-          <div class="hof-item hof-m" data-game="human-fall-flat" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/human-fall-flat.jpg" alt="Human Fall Flat cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">HUMAN FALL FLAT</span><span class="mono hof-hours">73 HRS</span></div>
+            <div class="hof-item hof-m" data-game="human-fall-flat" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/human-fall-flat.jpg" alt="Human Fall Flat cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">HUMAN FALL FLAT</span><span class="mono hof-hours">73 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">No legs, no plan — gravity just wants a hug.</p>
             </div>
-            <p class="hof-quote">No legs, no plan — gravity just wants a hug.</p>
-          </div>
 
-          <div class="hof-item hof-n" data-game="bfv" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/battlefield-v.avif" alt="Battlefield V cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">BATTLEFIELD V</span><span class="mono hof-hours">264 HRS</span></div>
+            <div class="hof-item hof-n" data-game="bfv" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/battlefield-v.avif" alt="Battlefield V cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">BATTLEFIELD V</span><span class="mono hof-hours">264 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">The war table is chaos; the squad makes it a story.</p>
             </div>
-            <p class="hof-quote">The war table is chaos; the squad makes it a story.</p>
-          </div>
 
-          <div class="hof-item hof-o" data-game="dying-light-2" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/dying%20light.webp" alt="Dying Light 2 Stay Human cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">DYING LIGHT 2</span><span class="mono hof-hours">221 HRS</span></div>
+            <div class="hof-item hof-o" data-game="dying-light-2" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/dying%20light.webp" alt="Dying Light 2 Stay Human cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">DYING LIGHT 2</span><span class="mono hof-hours">221 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">Parkour over the day, run from the night — the city bites either way.</p>
             </div>
-            <p class="hof-quote">Parkour over the day, run from the night — the city bites either way.</p>
-          </div>
 
-          <div class="hof-item hof-p" data-game="hitman-2" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/hitman.jpg" alt="Hitman 2 cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">HITMAN 2</span><span class="mono hof-hours">158 HRS</span></div>
+            <div class="hof-item hof-p" data-game="hitman-2" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/hitman.jpg" alt="Hitman 2 cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">HITMAN 2</span><span class="mono hof-hours">158 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">Forty-seven ways to vanish — patience is the loudest one.</p>
             </div>
-            <p class="hof-quote">Forty-seven ways to vanish — patience is the loudest one.</p>
-          </div>
 
-          <div class="hof-item hof-q" data-game="it-takes-two" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/it%20takes%20two.jpg" alt="It Takes Two cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">IT TAKES TWO</span><span class="mono hof-hours">46 HRS</span></div>
+            <div class="hof-item hof-q" data-game="it-takes-two" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/it%20takes%20two.jpg" alt="It Takes Two cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">IT TAKES TWO</span><span class="mono hof-hours">46 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">Love is a co-op game: you fail together, you fly together.</p>
             </div>
-            <p class="hof-quote">Love is a co-op game: you fail together, you fly together.</p>
-          </div>
 
-          <div class="hof-item hof-r" data-game="nba2k" data-cursor="VIEW">
-            <div class="hof-card">
-              <div class="hof-inner">
-                <div class="hof-img-wrap"><img src="covers/nba-2k.avif" alt="NBA 2K cover" loading="lazy"></div>
-                <div class="hof-foot"><span class="hof-name">NBA 2K</span><span class="mono hof-hours">603 HRS</span></div>
+            <div class="hof-item hof-r" data-game="nba2k" data-cursor="VIEW">
+              <div class="hof-card">
+                <div class="hof-inner">
+                  <div class="hof-img-wrap"><img src="covers/nba-2k.avif" alt="NBA 2K cover" loading="lazy"></div>
+                  <div class="hof-foot"><span class="hof-name">NBA 2K</span><span class="mono hof-hours">603 HRS</span></div>
+                </div>
               </div>
+              <p class="hof-quote">The clock never lies; the ankle-breaker writes poetry.</p>
             </div>
-            <p class="hof-quote">The clock never lies; the ankle-breaker writes poetry.</p>
-          </div>
 
-          <div class="hof-end mono">
-            <span>END OF ROSTER.</span>
-            <span>START OVER ABOVE.</span>
-          </div>
-          </div>
-
-          <div class="dragbar hof-dragbar" id="hof-dragbar" aria-hidden="true">
-            <div class="dragbar-track" id="hof-dragbar-track" data-cursor="DRAG">
-              <div class="dragbar-fill" id="hof-dragbar-fill"></div>
-              <div class="dragbar-handle" id="hof-dragbar-handle">
-                <span class="mono dragbar-hint">DRAG</span>
-              </div>
-            </div>
-            <div class="dragbar-meta mono">
-              <span id="hof-dragbar-count">CARD 01 / 18</span>
-              <span>DRAG TO PAN</span>
-            </div>
           </div>
         </div>
       </div>
-          </div>
-        </div>
-  </div>
 </section>
 
     <!-- ============ TICKER 04 ============ -->
@@ -736,6 +698,7 @@
     <figure class="lb-stage" id="lb-stage">
       <img id="lb-img" alt="" loading="lazy" decoding="async">
       <div class="lb-music" id="lb-music" hidden>
+        <img class="lb-music-cover" id="lb-music-cover" alt="" decoding="async" hidden>
         <span class="lb-music-glyph" aria-hidden="true">♪</span>
         <span class="lb-music-label mono">NETEASE CLOUD MUSIC</span>
       </div>
@@ -761,10 +724,11 @@
   <script src="js/film-data.js?v=1"></script>
   <script src="js/series-data.js?v=1"></script>
   <script src="js/music-data.js?v=1"></script>
-  <script src="js/reel-stage.js?v=3"></script>
+  <script src="js/music-covers.js?v=1"></script>
+  <script src="js/reel-stage.js?v=5"></script>
   <script src="js/film-stage.js?v=3"></script>
   <script src="js/series-stage.js?v=3"></script>
-  <script src="js/music-stage.js?v=2"></script>
-  <script src="js/main.js?v=41"></script>
+  <script src="js/music-stage.js?v=3"></script>
+  <script src="js/main.js?v=48"></script>
 </body>
 </html>
