@@ -1,23 +1,22 @@
-# N1GHT CHXN9 — DESIGN.md
+# N1GHT CHXN9 - DESIGN.md
 
-> 面向实现的单一设计事实源。只记录现状，不发明新风格。
-> 约束、裁决顺序与验收纪律见 `AGENTS.md`；本文件回答“这个值 / 组件该怎么用”。
-> 最近核对：2026-09，对应 `css/style.css?v=57`、`css/reel-stage.css?v=5`、`main.js?v=48`。
+> 面向实现的单一设计事实源（V2，2026）。只记录现状，不发明新风格。
+> 结构与裁决见 `AGENTS.md`；研究留档见 `archive/design-research/` 与 `archive/premium-techniques/`。
+> 最近核对：`css/style.css?v=58`、`css/glass.css?v=1`、`js/main.js?v=49`。
 
 ## 0. 品牌与 Design read
 
-**一句话**：一个明亮、克制、带 iOS 质感的个人收藏档案站；照片是主角，归档是索引，光效只给交互和每区唯一的 signature moment。
+**一句话**：一个编辑式影像档案。纸感中性底、克制的排版、全屏影像，液态玻璃只出现在浮在内容之上的控件上。
 
-**Design read**：personal collection / archive site，受众是同好与自己；语气是 bright-luxury editorial archive，不是作品集官网、不是仪表盘、不是深色科技站。
+**Design read**：personal archive / photography，受众是同好与自己。语气是**编辑式画廊**，不是作品集官网、不是仪表盘、不是科技感暗色站。
 
-**Dial**
+**核心判断**：站点最贵的资产是 11 张照片、16 张海报、689 张专辑封面。界面不得与这些图片抢注意力。**照片是页面上唯一被允许彩色的事物。**
 
-| 范围 | DESIGN_VARIANCE | MOTION_INTENSITY | VISUAL_DENSITY |
-| --- | --- | --- | --- |
-| 全站基线 | 7 | 7 | 4 |
-| PHOTOGRAPHY 章节 override | 8 | 6 | 3 |
+**Dial**：DESIGN_VARIANCE 6 / MOTION_INTENSITY 4 / VISUAL_DENSITY 4。
 
-**主题锁**：全站亮色单主题，任何分区不得反转为暗色。`#lightbox` 的深色遮罩是模态 scrim，不是分区主题。
+**主题锁**：正文页全亮色纸面。暗色只用于三处：全屏影像 hero、`#lightbox` 详情层、`.footer`。它们都是「影像与落幕」语汇，不是分区反转。
+
+---
 
 ## 1. Token 层
 
@@ -27,288 +26,264 @@
 
 | 原语 | 值 | 说明 |
 | --- | --- | --- |
-| `--sand-050` | `#F6F5F1` | 页面底色 |
-| `--sand-100` | `#EDEBE4` | 深一档底色 / ticker / 归档区 |
-| `--sand-200` | `#DFDACE` | 分隔线 |
-| `--gold-100` | `#F3E9D2` | accent tint |
-| `--gold-300` | `#DDB76B` | glow / 光效 |
-| `--gold-500` | `#C9A227` | accent solid |
-| `--gold-700` | `#7E5F20` | accent text / 描边 |
-| `--ink-900` | `#1D1B16` | 主文字 |
-| `--ink-600` | `#4A463D` | 次级文字 |
-| `--ink-400` | `#6B675A` | muted 文字 |
-| `--paper` | `#FCFBF8` | 卡片面 |
+| `--paper-000` | `#FCFCFA` | 面 / 卡片 |
+| `--paper-050` | `#F7F7F4` | 页面底 |
+| `--paper-100` | `#EFEFEA` | 深一档底（归档区） |
+| `--paper-200` | `#E3E2DC` | 分隔线 |
+| `--ink-950` | `#101010` | 暗层底 / 实心墨块 |
+| `--ink-900` | `#141412` | 正文 / 标题（**不是纯黑**） |
+| `--ink-600` | `#4C4C48` | 次级文字 |
+| `--ink-500` | `#6A6966` | muted（**唯一可用于小字的灰**） |
+| `--on-dark` | `#F2F2EF` | 暗层上的文字（**不是纯白**） |
+| `--gold-400` | `#C9A227` | 强调实底 |
+| `--gold-700` | `#7E5F20` | 强调文字 / 描边 |
+| `--gold-100` | `#F0E6CC` | 强调浅底 |
+
+原语 ramp 保持暖中性（R>G>B），所以读起来是纸而不是冷灰。**禁纯黑 `#000`、禁纯白 `#fff`。**
 
 ### 1.2 语义层（组件只准用这层）
 
-| 语义 token | 指向 | 使用场景 |
+| 语义 token | 指向 | 用途 |
 | --- | --- | --- |
-| `--color-bg` | `--sand-050` | 页面背景 |
-| `--color-bg-deep` | `--sand-100` | ticker、归档区、深一档面 |
-| `--color-surface` | `--paper` | 卡片、输入框、实底回退 |
-| `--color-text` | `--ink-900` | 正文、标题 |
-| `--color-text-secondary` | `--ink-600` | 描述、caption、次级信息 |
-| `--color-text-muted` | `--ink-400` | 标签、编号、辅助信息 |
-| `--color-line` | `--sand-200` | 分隔线、输入框边 |
-| `--color-accent-solid` | `--gold-500` | 唯一实心主操作 / 激活态 |
-| `--color-accent-text` | `--gold-700` | accent 文字、描边、焦点环 |
-| `--color-accent-tint` | `--gold-100` | accent 浅底 |
-| `--color-glow` | `--gold-300` | 光效、hover 环 |
-| `--color-on-accent` | `--ink-900` | 压在 accent 实底上的文字 |
+| `--color-bg` | paper-050 | 页面背景 |
+| `--color-bg-deep` | paper-100 | 归档区、深一档面 |
+| `--color-surface` | paper-000 | 卡片、输入框、实底回退 |
+| `--color-text` | ink-900 | 正文、标题 |
+| `--color-text-secondary` | ink-600 | 描述、次级信息 |
+| `--color-text-muted` | ink-500 | 标签、编号、meta |
+| `--color-line` | paper-200 | 分隔线 |
+| `--color-line-soft` | `oklch(0 0 0 / .055)` | 密集数据行分隔 |
+| `--color-accent` | gold-400 | 强调实底 |
+| `--color-accent-text` | gold-700 | 强调文字 / 焦点环 |
+| `--color-accent-tint` | gold-100 | 强调浅底 |
+| `--color-ink` | ink-950 | 实心墨块（激活 tab、主按钮） |
+| `--color-on-dark` | on-dark | 暗层文字 |
+| `--color-on-dark-muted` | `oklch(1 0 0 / .62)` | 暗层次级文字 |
 
-**硬规则**：组件里出现 `--sand-*` / `--gold-*` / `--ink-*` 就是违规；缺角色就新增语义 token，绝不借近值。
+---
 
-### 1.3 形状 / 阴影 / 玻璃 / 光效
+## 2. 排版
 
-| token | 值 | 规则 |
+### 2.1 字体族（全部本地自托管，禁外链）
+
+| 字体 | 文件 | 用途 |
 | --- | --- | --- |
-| `--radius-sm` | `10px` | 小控件、缩略图、内层 |
-| `--radius-md` | `16px` | 图片、面板、工具条 |
-| `--radius-lg` | `24px` | 大卡片、详情容器 |
-| `--radius-pill` | `999px` | 按钮、chip、tab |
-| `--shadow-soft-sm` | `0 1px 2px rgba(29,27,22,.06), 0 3px 10px rgba(29,27,22,.08)` | 轻浮层 |
-| `--shadow-soft-md` | `0 2px 4px rgba(29,27,22,.05), 0 10px 26px rgba(29,27,22,.11)` | 卡片 hover |
-| `--shadow-soft-lg` | `0 4px 10px rgba(29,27,22,.06), 0 24px 52px rgba(29,27,22,.15)` | 详情层 / 大浮层 |
-| `--glow-accent` | `0 6px 24px rgba(221,183,107,.5), 0 2px 8px rgba(201,162,39,.22)` | accent 光效；必须配 1px accent 描边 |
-| `--ring-accent` | `0 0 0 1px var(--color-accent-text)` | 实心块的非文本 3:1 描边环 |
-| `--glass-bg` | `linear-gradient(135deg, rgba(255,255,255,.82), rgba(255,255,255,.58))` | 玻璃面板底 |
-| `--glass-edge` | `inset 0 1px 0 rgba(255,255,255,.9), inset 0 0 0 1px rgba(255,255,255,.55)` | 玻璃内高光边 |
-| `--ease-out` | `cubic-bezier(0.16, 1, 0.3, 1)` | 全站主 ease |
+| Space Grotesk | `fonts/SpaceGrotesk-latin.woff2`（300-700 可变） | 展示 + 正文 + UI |
+| IBM Plex Mono | `fonts/IBMPlexMono-{300,400}-latin.woff2` | 标签、元信息、导航 |
+| Instrument Serif | `fonts/InstrumentSerif-italic-latin.woff2`（400 italic） | 编辑式引言、诗 |
 
-### 1.4 组件级 token：reel stage
+### 2.2 双寄存器字号系统（**10 个声明角色，封顶**）
 
-| token | `.film-stage` | `.series-stage` | 说明 |
-| --- | --- | --- | --- |
-| `--reel-card-w` | `clamp(192px, 26vw, 268px)` | `clamp(176px, 24vw, 248px)` | 单一尺寸；density / `.is-compact` 已撤销 |
-| `--reel-hover-ring` | `0 0 0 1px rgba(126,95,32,.3)` | 同 | hover 环 |
-| `--reel-active-ring` | `0 0 0 1px var(--color-accent-solid)` | 同 | 激活环 |
-| `--reel-sleeve-bg` | `var(--color-accent-tint)` | 同 | OPEN 袖套底 |
-| `--reel-thumb-bg` | `var(--color-accent-solid)` | 同 | range thumb |
-| `--reel-focus-offset` | `4px` | `3px` | focus outline 偏移 |
+这是 V2 最重要的结构决定：字号不是一条连续 ramp，而是**两个寄存器**——一套紧凑的 UI 档，一套模数化的展示档。两者之间的空档是刻意的。
 
-## 2. 字体与排版
+**UI 寄存器**（紧凑，步进小）：
 
-### 2.1 字体族
+| token | 值 | 用途 |
+| --- | --- | --- |
+| `--fs-label` | 0.6875rem / 11px | mono 眉标 |
+| `--fs-meta` | 0.75rem / 12px | mono 元信息、导航 |
+| `--fs-caption` | 0.8125rem / 13px | 图片说明 |
+| `--fs-small` | 0.9375rem / 15px | 次级正文、账本行标题 |
+| `--fs-body` | 1rem / 16px | 正文 |
 
-| 字体 | 文件 | 字重 / 样式 | 用途 |
-| --- | --- | --- | --- |
-| Space Grotesk | `fonts/SpaceGrotesk-latin.woff2` | 300–700 variable | 展示 + 正文 + UI |
-| IBM Plex Mono | `fonts/IBMPlexMono-300-latin.woff2`、`IBMPlexMono-400-latin.woff2` | 300 / 400 | 标签、编号、meta、按钮 |
-| Instrument Serif | `fonts/InstrumentSerif-italic-latin.woff2` | 400 italic | 编辑式引言、诗、quote |
+**展示寄存器**（模数 **1.25 / Major Third**）：
 
-只经 `css/fonts.css` 本地加载；禁外链字体。Vast Shadow / Bungee / Calistoga / Notable 已退役，文件留在 `fonts/` 但不再声明、不再预载。
+| token | 值 | 用途 |
+| --- | --- | --- |
+| `--fs-h4` | 1.25rem / 20px | 条目标题、卡片标题 |
+| `--fs-h3` | `clamp(1.25rem, 1.15rem + .45vw, 1.5625rem)` / 20→25 | 区段小标题 |
+| `--fs-h2` | `clamp(1.9375rem, 1.5rem + 1.9vw, 3.0625rem)` / 31→49 | 区标题 |
+| `--fs-display` | `clamp(2.4375rem, 1.5rem + 4.2vw, 4.75rem)` / 39→76 | hero、coda |
 
-### 2.2 角色 scale
+> 审计时统计**声明角色数**（10），不要统计计算值——clamp 在同一断点会产出中间值（例如 `--fs-h3` 在 1440px 计算为 24.88px），那是同一个角色。
 
-| 角色 | 代表选择器 | 字号 | 行高 | 字距 |
-| --- | --- | --- | --- | --- |
-| 超大标题 | `.bh-word` | `clamp(3.4rem, 12vw, 11.5rem)` | `0.98` | `-0.04em` |
-| Hero 标题 | `.ht-word` | `clamp(3.2rem, 12.5vw, 11rem)` | `1.05` | `-0.04em` |
-| 诗标题 | `.poem-title` | `clamp(2.4rem, 8vw, 7.5rem)` | `1.08` | `-0.03em` |
-| 详情标题 | `.film-detail-title` / `.series-detail-title` | `clamp(2rem, 5vw, 4rem)` / `clamp(2rem, 5vw, 3.9rem)` | `1` | `-0.03em` |
-| 章节标题 | `.photo-act-title` | `clamp(1.6rem, 3.2vw, 2.6rem)` | `1.1` | `-0.02em` |
-| 归档行标题 | `.idx-title` | `clamp(1.05rem, 1.3vw, 1.35rem)` | `1.2` | `-0.01em` |
-| 正文 / 描述 | `.photo-act-note` | `0.9375rem` | `1.55` | `0` |
-| 卡片说明 | `.photo-frame-text` | `0.875rem` | `1.5` | `0` |
-| mono 标签 | `.mono` | `0.875rem` | — | `0.14em` |
-| mono 小标签 | `.photo-frame-no`、`.music-search-count` 等 | `0.8125rem` | — | `0.16em` 左右 |
-| 搜索输入框 | `.music-search-input` | `0.875rem`（桌面）/ `16px`（≤720px） | — | `0.08em` |
+### 2.3 字距
 
-> 移动端输入框：`.music-search-input` 在 `≤720px` 下覆盖为 16px，避免 iOS 聚焦缩放。
+- 展示字号负字距随字号增大：`--track-display -0.045em` → `--track-h2 -0.038em` → `--track-h3 -0.02em`。
+- 小号大写标签正字距：`--track-label 0.16em`；元信息 `--track-meta 0.08em`。
+- 阅读尺寸正文两者都不加。
 
-### 2.3 排版硬规则
+### 2.4 光学边距
 
-- `line-height` 一律 unitless；标题约 `1.1`，正文 `1.5–1.6`，任何 ≥3 行换行文本 ≥ `1.4`。
-- 长文行长 60–75ch；标题 `text-wrap: balance`，描述 `pretty`，长词 `overflow-wrap: break-word`，标签 / 徽章 `nowrap`。
-- 会变化的数字一律 `font-variant-numeric: tabular-nums`（`.mono` 已内置）。
-- UI 文本 ≥14px；caption 13px；很少低于 12px；mono 小标签同样受此下限约束。
-- 大号标题轻微负字距；小号大写标签轻微正字距；阅读尺寸正文两者都不加。
-- 英文文案禁 em dash；范围用 en dash；正文用弯引号；省略号用单字符。
-- 字重 <400 只给 ≥28px 展示场景；加载实际使用的字重，避免浏览器合成。
+`text-box-trim: trim-both` + `text-box-edge: cap alphabetic` **只给展示档标题**（`.display` / `.sec-title` / `.coda-title` / `.footer-name`）。
 
-## 3. 颜色与对比度
+> **红线**：`text-box-trim` 会把行盒裁到 cap-height/alphabetic，**移除降部空间**。任何同时 `overflow: hidden`（省略号截断）的元素绝不能加它，否则每个降部都会被切掉——「Maybe」会渲染成「Maube」。V2 曾因此踩坑。
+
+### 2.5 排版硬规则
+
+- `line-height` 一律 unitless；展示档 0.95-1.1，正文 1.6-1.7。
+- 长文行长 60-75ch；标题 `text-wrap: balance`，描述 `pretty`。
+- 会变化的数字一律 `tabular-nums`。
+- UI 文本 ≥14px；caption 13px；mono 小标签 11px（仅限大写、正字距的标签场景）。
+- 移动端输入框 16px（防 iOS 聚焦缩放）。
+- 英文文案禁 em dash（用句号 / 逗号 / 冒号重写）；**中文破折号不受限**；en dash 只用于范围；正文用弯引号。
+- 字重只用 400 / 500；700 不出现。层级由字号与留白承担，不由加粗承担。
+
+---
+
+## 3. 颜色
 
 ### 3.1 一色一义
 
-- accent hue = 可交互。静态文字不用 accent；唯一品牌特例是 poem 区叠句 `.refrain` 用 `--color-accent-text`（gold-700）。
-- 每视图只一个实心填充主操作；`--color-accent-solid` 实心块必须配 `--ring-accent` 或 1px `--color-accent-text` 描边环。
-- 同 hue 15° 内视为同色；禁紫、禁纯黑 `#000`、禁纯白 `#fff`。
+- **accent = 可交互**。静态文字**只有一处**例外：诗区叠句 `.refrain` 用 `--color-accent-text`（品牌特例，用户拍板）。
+- **每视图只一个实心填充主操作**。
+- 全站强调色命中元素数**上限 25**（V1 是 182）。新增强调色用法即为回归。
 - 修对比度只动 lightness，不动 hue；颜色改动需用户拍板。
 
-### 3.2 实测对比度（WCAG）
+### 3.2 实测对比度（WCAG，本次测算，2026）
 
-| 前景 / 背景 | 实测 | 阈值 | 用途 |
+| 前景 / 背景 | 实测 | 阈值 |
+| --- | --- | --- |
+| ink-900 / paper-050 | 17.18:1 | AAA |
+| ink-900 / paper-000 | 17.96:1 | AAA |
+| ink-600 / paper-050 | 8.04:1 | AAA |
+| **ink-500 / paper-050** | **5.11:1** | AA |
+| **ink-500 / paper-100** | **4.76:1** | AA |
+| gold-700 / paper-050 | 5.52:1 | AA |
+| gold-700 / paper-100 | 5.14:1 | AA |
+| gold-700 / gold-100 | 4.77:1 | AA |
+| ink-900 / gold-400 | 7.62:1 | AAA |
+| on-dark / ink-950 | 16.96:1 | AAA |
+| on-dark@0.62 / ink-950 | 8.18:1 | AAA |
+| 导航玻璃 α0.78，最差照片（#101010）叠加后 ink-900 | 10.11:1 | AAA |
+| hero 白字 / scrim α0.80，最差（纯白照片） | 11.55:1 | AAA |
+| 卡片说明白字 / scrim α0.62，最差（纯白照片） | 5.66:1 | AA |
+
+> **三条必须照做的推论**：
+> 1. 导航玻璃底色不透明度**必须 ≥ 0.76**。实测 α0.60 时最差照片上 ink-600 只有 3.10:1。
+> 2. `--ink-400` 这一类浅灰**不能用于小字**；muted 一律 `--ink-500`。
+> 3. hero 白字依赖 scrim α0.80，任何削弱 scrim 的改动都要重新实测。
+
+---
+
+## 4. 液态玻璃（`css/glass.css`，唯一配方来源）
+
+### 4.1 四层 + 一层增强
+
+| 层 | 选择器 | 作用 | 可靠性 |
 | --- | --- | --- | --- |
-| ink-900 / sand-050 | 15.8:1 | AA / AAA | 主文字 |
-| ink-400 / sand-050 | 4.95:1 | AA | muted 标签 |
-| gold-700 / sand-050 | 5.4:1 | AA | accent 文字 / 描边 |
-| ink-900 / gold-500 | 7.1:1 | AAA | accent 实底上的文字 |
-| ink-600 / sand-050 | 8.61:1 | AAA | caption / 描述（2026-09 复测） |
-| `rgba(252,251,248,.82)` / lightbox scrim | 10.56:1 | AAA | 详情层 caption（2026-09 复测） |
-| `--color-surface` / lightbox scrim | 15.09:1 | AAA | 详情层标题（2026-09 复测） |
+| 1 磨砂主体 | `.glass__body` | `blur(20px) saturate(1.7) brightness(1.05)` | 全浏览器 |
+| 2 镜片边 | `.glass__edge` | 13px 环，`blur(3px) brightness(1.14)` + `mask-composite: exclude` | 全浏览器 |
+| 3 镜面高光 | `.glass` 的 inset 阴影 | 顶部亮斜面 + 底部暗边 + 内晕染 | 全浏览器 |
+| 4 渐变发丝边 | `.glass::before` | 1px 渐变描边，亮侧近白、暗侧转中性深 | Chrome 120+ / Safari 15.4+ / Firefox 53+ |
+| 5 增强：SVG 折射 | `.glass--refract` | `feTurbulence` → `feDisplacementMap` | **仅 Chromium** |
 
-玻璃面板按叠加后的实际底色测；不估算。
+**第 2 层的原理**：每个元素的 backdrop 包含**先前绘制的兄弟节点**，所以边缘环采样到的已经是模糊过的主体，渲染出来必然更锐更亮。这个不连续就是镜片边的读感，且只用 Baseline 特性。
 
-### 3.3 渐变与纹理
+### 4.2 三个必须遵守的约束
 
-- 允许克制的光泽渐变；插值空间优先 `in oklab`，双 hue 中间发灰时改 `in oklch`；禁 AI 紫渐变。
-- grain 噪点层退役；质感交给材质与光效。
-- 图片描边用中性低透明度（`oklch(0 0 0 / .1)` 类），不用带色调灰。
+1. **祖先背景根陷阱**：祖先元素上的 `filter` / `opacity < 1` / `transform` / `mask` / `mix-blend-mode` 会建立新的 backdrop root，玻璃会退化成「无模糊」。**绝不在玻璃元素的祖先上做 opacity / transform 动画**——只动玻璃自身或其内部内容。
+2. **`@supports` 对折射不可靠**：Safari 能解析 `backdrop-filter: url()` 并让 `@supports` 返回 true，但不渲染，会静默连模糊一起丢掉。所以**模糊声明永远写在增强之前**，增强用 `-webkit-backdrop-filter` 存在性做门。
+3. **不要在横向滚动容器里放多层玻璃**：滚动时 backdrop 跟随移动，且绝对定位的玻璃层会随按钮一起滚。`≤720px` 的 tab 条因此改实底。
 
-## 4. 圆角 / 阴影 / 玻璃 / 光效
+### 4.3 三重回退（研究发现的规范漏洞）
 
-### 4.1 圆角
+`prefers-reduced-transparency` **只有 Chromium 支持**（Safari 明确拒绝，Firefox 未实现），所以它不能是唯一回退。三条独立机制：
 
-- 全站一套 radius token：`--radius-sm / -md / -lg / -pill`；同站禁混用方角与圆角两套体系。
-- 嵌套容器遵守 concentric radius：外圆角 = 内圆角 + padding。
-- 按钮允许全圆 pill；图片用 `--radius-md`；缩略图用 `--radius-sm`，内图用 `calc(var(--radius-sm) - 1px)`。
+1. `@supports not (backdrop-filter: blur(1px))` → 实底
+2. `@media (prefers-reduced-transparency: reduce), (prefers-contrast: more)` → 实底
+3. `html[data-transparency="solid"]` → 实底（JS 显式开关，覆盖前两条都不生效的浏览器）
 
-### 4.2 阴影
+### 4.4 使用范围
 
-- 只用分层透明软阴影 `--shadow-soft-*`；色相贴基底 hue；禁纯黑投影、禁硬偏移阴影。
-- 边框负责结构（分隔线、选中、焦点），阴影负责深度。
+玻璃**只给浮在内容之上的控件**：`.nav`、`.tabbar`（>720px）、以及未来的浮层控件。纸面上的按钮（`.music-random`、`.genre-chip`、`.lb-meta-link`）用实心色，不用玻璃——纸上的玻璃没有可折射的内容，只会发灰。
 
-### 4.3 玻璃
+### 4.5 指针跟随高光
 
-- 配方：`backdrop-filter: blur(16px) saturate(150%)` + `--glass-edge` 内高光边 + `--shadow-soft-sm`。
-- 已用玻璃的元素：`.nav`、`.sticker`、`.bh-meta span`、`.tab-btn`、`.about-stats span`、`.genre-filter`、`.series-stage-detail`。（`.genre` 已退役为杂志式小头，不再走玻璃配方。）
-- 必须带 `@media (prefers-reduced-transparency: reduce)` 实底回退（`--color-surface`，去掉 backdrop-filter）。
+`.glass--spot` 的 `--mx` / `--my` 由 JS 每帧一次 `setProperty` 写入（rAF 节流）。**不能用 GSAP `quickTo`**——它只补间 transform 数值属性，不补间自定义属性。仅精指针且非 REDUCED 启用。
 
-### 4.4 光效（品牌特例）
+---
 
-- 覆盖 taste-skill “NO neon / outer glows”默认值；accent 柔光辉光、radial 光斑、光泽渐变只给交互件与每区唯一 signature moment。
-- 不上正文文字；辉光必须有静态可见形态，动画不能是唯一信号。
-- 当前 signature moments：photo roll line、详情层 radial glow、accent 实心按钮的 `--glow-accent`、reel 卡片激活环。
+## 5. 形状 / 阴影 / 间距
 
-## 5. 动效清单
+| 类别 | 值 |
+| --- | --- |
+| 圆角 | `--radius-sm 8px` / `--radius-md 14px` / `--radius-lg 22px` / `--radius-pill` |
+| 阴影 | **只有一条**：`--shadow-lift` |
+| 间距 | `--sp-1`..`--sp-11`（0.25 / 0.5 / 0.75 / 1 / 1.5 / 2 / 3 / 4 / 5 / 6 / 7.5rem） |
+| 区间距 | `--section-y: clamp(5rem, 9vw, 7.5rem)` |
+| 边距 | `--gutter: clamp(1.25rem, 4.5vw, 4.5rem)` |
+| 容器 | `--shell 1440px`；正文 `--measure 62ch` |
 
-### 5.1 动机分类
+- **一个阴影 token**。深度由边框、玻璃与留白承担，不由堆叠阴影承担。
+- 圆角只有三档 + pill，嵌套遵守 concentric（外圆角 = 内圆角 + padding）。
+- 分隔线是密集数据的最后手段：账本行用 `--color-line-soft`，其余分组靠间距（组间距 ≥ 组内 2×）。
 
-| 动效 | 动机 | 触发 | 时长 / 曲线 | reduced-motion 替代 |
+---
+
+## 6. 动效
+
+### 6.1 四条命名缓动，无一次性曲线
+
+`--ease-out` `cubic-bezier(.16,1,.3,1)` · `--ease-soft` `cubic-bezier(.22,1,.36,1)` · `--ease-in-out` `cubic-bezier(.65,0,.35,1)` · `--ease-snap` `cubic-bezier(.2,.9,.3,1)`
+
+### 6.2 动效清单（每个都有动机）
+
+| 动效 | 动机 | 触发 | 参数 | reduced-motion |
 | --- | --- | --- | --- | --- |
-| preloader 字符升起 | 层级 | 首屏 | GSAP timeline | 静态显示 |
-| bighead 双词居中 | 层级 / 叙事 | 滚动 scrub | `xPercent` / `yPercent` / clipPath，`invalidateOnRefresh` | 静态居中 |
-| section mask 幕帘 | 叙事 | 滚动进入 | `clip-path` 1.25s `power4.inOut` | 静态 |
-| photo roll 入场 | 层级 | 章节进入 | clipPath + y 0.85s `power3.out`，stagger 0.09s | 静态 |
-| photo roll line | 叙事 | 滚动 scrub | `scaleX`，scrub | 静态分段线 |
-| reel 卡片 hover | 反馈 | hover / focus | transform 0.35s `cubic-bezier(.22,1,.36,1)` | 无位移 |
-| reel 详情揭示 | 层级 | 选中卡片 | clipPath + y 0.7s `power3.out`，stagger 0.07s | 静态 |
-| tab 切换 | 状态过渡 | tab 点击 | clipPath 0.8s `power4.inOut` + row stagger 0.06s | 静态 |
-| HOF 卡片入场 | 层级 | 滚动进入 | y / rotationX / clipPath 1.1s `power4.out`，stagger 0.09s | 静态 |
-| 统一详情层 | 状态过渡 | 打开 / 关闭 | opacity 0.25s `--ease-out`；visibility 0s（关闭延迟 0.25s） | `transition: none` |
-| 形态切换控件 | 反馈 | hover / press / 切换 | 0.15s 具体属性；press `scale(.96)` | `transition-duration: 0s` |
-| 光标徽章 | 反馈 | 指针移动 / 悬停 | GSAP quickTo 0.15s `power2.out`；环 / 标签 opacity + scale 0.15s | 禁用光标 |
-| 磁吸 | 反馈 | 指针移动 | GSAP quickTo 0.18s `power2.out` | 禁用 |
-| 泡泡 | 反馈 | 点击 | 0.28s `power2.in` | 静态 |
-| ticker | 叙事 | 常驻 | 26s linear infinite | `animation: none` |
+| hero 影像入场 | 层级 | 首屏 | scale 1.06 → 1，1.6s `power2.out` | 静态 |
+| hero 文字升起 | 层级 | 首屏 | y + autoAlpha，0.7-1.1s | 静态 |
+| hero 影像视差 | 叙事 | 滚动 scrub | `yPercent 8` + scale，`invalidateOnRefresh` | 静态 |
+| 照片批入场 | 层级 | 滚动进入 | `ScrollTrigger.batch`，y 18 + autoAlpha，0.55s，stagger 0.06 | 静态 |
+| 图片 hover 去饱和 | 反馈 | hover / focus | `filter 0.6s` + `scale 1.035` | 无位移 |
+| 游戏卡入场 | 层级 | 滚动进入 | y 28 + autoAlpha，1.1s `power4.out`，stagger 0.09 | 静态 |
+| 表格行 hover | 反馈 | hover | 背景 0.2s，无位移 | 仅颜色 |
+| 计数上升 | 叙事 | 滚动进入一次 | 补间纯对象 + `snap`，1.2s | 直接写终值 |
+| tab 幕帘 | 状态过渡 | 点击 | `clipPath` 0.8s `power4.inOut`，**必须 `clearProps`** | 静态 |
+| 详情层 | 状态过渡 | 打开 / 关闭 | opacity 0.28s；visibility 延迟 | `transition: none` |
+| 玻璃高光 | 反馈 | 指针移动 | 每帧一次自定义属性写入 | 禁用 |
 
-> 代码侧统一常量：`js/main.js` 的 `MOTION.feedback`（0.15s / `power2.out`，press 0.12s）、`MOTION.enter`（0.85s / `power3.out`，`longDuration` 1.1s，`heavyEase` `power4.out`，stagger 0.09）、`MOTION.spring`（0.6s / `back.out(1.7)`，仅低频状态切换）。新增动效优先复用，不再堆一次性时间线。
-
-### 5.2 性能红线
+### 6.3 性能红线
 
 - 只动 `transform` / `opacity` / `filter`；`clip-path: inset()` 幕帘等价允许。
 - scrub 动画必须 `invalidateOnRefresh: true`。
 - 图片加载后的 refresh 用 250ms debounce 合并（`scheduleRefresh`）。
 - 滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis；禁裸 `window` scroll handler。
 - `transition-property` 写具体属性；禁 `transition: all`。
-- `will-change` 仅限 transform / opacity / filter，且只在实测首帧卡顿时加。
+- `filter` 会创建**包含块**：图片滤镜只能加在图片本身，绝不能加在任何含 `position: fixed` 后代的容器上（`#lightbox` 是 fixed）。
 
-### 5.3 频率分治
+### 6.4 频率分治
 
-- 高频交互（hover / press / 拖拽跟随）即时反馈，或只对 opacity / color 做 ≤150ms 过渡。
-- 按压反馈 `scale(.96)`，严格 0.96。
-- 低频入场 / 编排 / 状态切换可用 spring（GSAP `back.out` / `elastic` 或 CSS 近似曲线）；弹性只许低频。
-- 入场 stagger 只给不常见的分层进场，约 100ms；退场比入场更柔和。
-- 每个动画状态变化必须有静态反馈通道（颜色 / 图标 / 文字）；动画不能是唯一信号。
+- 高频（hover / press / 指针跟随）即时反馈或 ≤0.2s 颜色过渡；按压 `scale(.96)`。
+- 低频入场 0.55-1.1s；退场比入场柔和。
+- **弹性（spring）已退役**。V2 用 `power3/4.out` 与 `expo` 系曲线；不再出现 `back.out` / `elastic`。
+- 每个动画状态变化必须有**静态反馈通道**（颜色 / 文字 / 图标）。
 
-## 6. 组件边界
+---
 
-### 6.1 卡片
+## 7. 站点结构
 
-| 组件 | 选择器 | 规则 |
-| --- | --- | --- |
-| 照片框 | `.photo-frame` + `.photo-frame-btn` | 原生 button；图片用 `--radius-md`；hover / focus 只 `scale(1.02)` |
-| 影 / 剧卡 | `.film-card` / `.series-card` | reel-stage 工厂生成；卡片直接挂进 strip，无 wrapper |
-| 游戏卡 | `.hof-item` + `.hof-card` | `.hof-item` 是 `role="button"` + `tabindex="0"` + Enter/Space，`#hof-grid` 的网格子项（宽度由 `repeat(auto-fill, minmax(min(100%, 240px), 1fr))` 决定，不再固定 px）。封面 `.hof-img-wrap` 固定 16:9；`.hof-foot` 是两行网格：第一行 `::before` 画出的排名 + `.hof-hours`（两端对齐），第二行 `.hof-name` 独占整行并 `min-height` 预留两行，整排引文基线因此对齐；hover / `.is-active` 抬卡并加 `--glow-accent` 光晕 |
-| 音乐行 | `.idx-card` | 账本行：`grid` 三列（CSS counter 序号 / 歌名 / artist）；`role="button"` + `tabindex="0"`；行高由 `.artist-tracks` 的 `--music-row-min` 统一控制。行尾不带 `↗`（2026-09 用户裁定），点击仍打开详情层 |
-| 书 / 球队行 | `.idx-row` | 非交互行；三列网格（编号 / 标题 / 说明） |
+hero（全屏影像）→ PHOTOGRAPHY（编辑式 12 栏网格 11 帧 + 诗区）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 18）→ ABOUT（统计）→ footer。
 
-### 6.2 按钮
+- 照片 / 影 / 剧 / 游戏 / 音乐共用唯一的 `#lightbox`。
+- 照片网格**只放横构图 plate**（11 张全部是 1600×1067 = 3:2）：21:9 全幅 + 3:2 七五分栏 + 3:2 三分栏。
+- 音乐默认单流派显示，首屏 POP；chips 无「全部」，一次只亮一枚。
+- 游戏名册是 `repeat(auto-fill, minmax(min(100%, 250px), 1fr))` 平铺网格，16:9 封面。
+- `.tab-panels` **必须是 `#archive` 的直接子元素**（`initArchiveTabs()` 用 `:scope > .tab-panels` 定位，找不到就整体不工作）；它的容器约束写在 CSS 里。
 
-- 动作一律原生 `<button>`；导航一律 `<a href>`；禁 `<div onClick>`。
-- 图标按钮必须 `aria-label`。
-- 主要按钮：`--color-accent-solid` 实底 + `--color-accent-text` 1px 描边 + `--glow-accent` + `--color-on-accent` 文字。
-- 次级按钮：`--color-surface` 底 + `--color-line` 边 + `--color-text-secondary` 文字。
-- 按压反馈 `scale(.96)`；hover / press 用具体属性的 0.15s 过渡。
-- 当前按钮族：`.photo-frame-btn`、`.lb-close`、`.lb-nav`、`.lb-thumb`、`.lb-meta-link`、`.music-random`、`.music-search-clear`、`.music-search-jump`、`.tab-btn`、`.genre-chip`。
+---
 
-### 6.3 Chips
+## 8. 无障碍基线
 
-- `.genre-chip`：音乐流派过滤；`aria-pressed` + `.is-active`；激活态有 `✓` 前缀，不只靠颜色。无「全部」选项，默认选中首枚 POP，一次只亮一枚（单流派显示）。
-- `.music-search-jump`：空结果里的「去别组看」次级按钮；`--color-accent-tint` 底 + `--color-accent-text` 文字（实测 4.91:1）+ `--color-line` 1px 边，`min-height: 2.75rem`；与 `.genre-chip` 同为 pill，但不与主实心按钮 `.music-random` 争主操作位。
-- `.bh-meta span`：章节 eyebrow / meta 胶囊；玻璃底。
-- `.tab-btn`：归档 tab；roving tabindex，活动项 0 其余 -1；方向键 / Home / End 走 ARIA APG。
-
-### 6.4 详情层
-
-- 底座：唯一的 `#lightbox`（`role="dialog"`、`aria-modal="true"`）；五种类型共用，禁止新建第二个模态。
-- 打开：`openDetail(type, index)`；关闭：`closeDetail()`；`Esc`、背景点击、`inert`、焦点回触发源。
-- 类型布局：photo 显示图 + caption + 11 格 rail；film / series 显示海报 + meta + IMDb 外链；game 显示封面 + RANK + 时长 + quote；music 显示专辑封面 sleeve + 流派 / 歌名 / 艺人 + 网易云外链。外链按钮文案不带 `↗` 尾缀（2026-09 用户裁定），跳转能力不变。
-- music sleeve：`.lb-music` 是 1:1 方框，内嵌 `.lb-music-cover`（`album-covers/<file>`，`object-fit: cover`，靠 `.lb-stage .lb-music .lb-music-cover` 的更高特异性压过 `.lb-stage img` 的淡入与尺寸上限），底部标签骑在 `rgba(29,27,22,.72)` 的 scrim 上（689 张封面实测最差 6.57:1）；档案里没有封面的歌回落 ♪ 占位 sleeve。方框带 `--glow-accent` 香槟光晕，是本区唯一的光效落点。
-- 导航：左右方向键 + 前后按钮 + 移动端横滑；`#lb-count`、`#lb-act`、`#lb-live` 提供静态与读屏反馈。
-- 图片只加载 `photo/` 低分辨率版本，不加载 `photo/full/`；不嵌 iframe、不自动播放。
-
-### 6.6 玻璃面板
-
-- 玻璃 = `--glass-bg` + `backdrop-filter: blur(16px) saturate(150%)` + `--glass-edge` + `--shadow-soft-sm`。
-- `prefers-reduced-transparency: reduce` 下改 `--color-surface` 实底，去掉 backdrop-filter。
-- 玻璃面板内的文字对比度按叠加后的实际底色测。
-
-### 6.7 焦点环
-
-- 统一 `:focus-visible`；≥2px 实线；主色用 `--color-accent-text`；深色详情层用 `--color-glow`。
-- 搜索框聚焦 = 2px `--color-accent-text` 环 + `--glow-accent` 香槟光晕（与实心按钮同一对 token）；发光件不允许被祖先 `clip-path` / `overflow` 裁切，见 AGENTS.md 的 tab 幕帘备注。
-- 已覆盖：`.photo-frame-btn`、`.film-card`、`.series-card`、`.hof-item`、`.genre-chip`、`.lb-close`、`.lb-nav`、`.lb-thumb`、`.lb-meta-link`、`.music-search-input`、`.idx-card[data-song-id]`。
-
-## 7. 无障碍 / reduced-motion 验收
-
-### 7.1 键盘
-
-- 所有动作可 Tab 到达；组合件走 ARIA APG；`Esc` 关浮层；方向键在 tab / reel / 详情层内移动；Enter / Space 激活。
-- `tabindex` 只用 0 和 -1；归档 tab 用 roving tabindex。
-- 焦点陷阱覆盖详情层内所有可见控件；关闭后焦点回到触发卡片。
-
-### 7.2 结构
-
+- 焦点：`:focus-visible` + 2px 实线 `--color-accent-text` 环，`outline-offset: 3px`；禁无替代的 `outline: none`。
+- 键盘走 ARIA APG：Esc 关层、方向键在 tab / reel / 详情层、roving tabindex、Enter/Space 激活；`tabindex` 只用 0 和 -1。
+- 不做 `<div onClick>`：动作 `<button>`、导航 `<a href>`。
+- 目标尺寸：桌面 40×40，触摸 44×44。
 - 一个 `<h1>` 不跳级；一个 `<main>`；skip link 是第一个可聚焦元素。
-- 模态背景 `inert`；`overscroll-behavior: contain`；详情层短屏可滚动、顶部栏 sticky。
-- 320px 无横向滚动；200% 缩放可用；文本容器用 `min-height` 而非固定 `height`。
+- reduced-motion：视差与入场全静态化，hover 位移取消，信息不丢失。
+- `[hidden]` 用 `display: none !important` 兜底——组件自带 `display` 会静默压过 UA 规则。
 
-### 7.3 目标尺寸
+---
 
-- AA 基线 24×24；桌面 40×40；触摸 44×44。
-- `.lb-close`、`.lb-nav`、`.lb-thumb`、`.music-random`、`.genre-chip`、`.idx-card` 在移动端 ≥44px。
+## 9. 改界面的最小检查清单
 
-### 7.4 reduced-motion / reduced-transparency
-
-- `prefers-reduced-motion: reduce`：视差与自动播放全移除；scrub / pinned 动画静态化；图片 hover 缩放取消；photo roll line 变静态分段线；详情层 `transition: none`；光标禁用；ticker 停止。
-- `prefers-reduced-transparency: reduce`：所有玻璃面板改实底，去掉 backdrop-filter。
-- 自动播放媒体有可见暂停控件；本项目不自动播放音视频。
-
-### 7.5 读屏 / 状态
-
-- `#lb-live`：`role="status"` + `aria-live="polite"`，播报当前详情条目。
-- `#music-search-count`：搜索结果计数（`<命中数> / <当前流派总数>`，浏览态隐藏）；`#music-search-empty` 是 `role="status"` 容器，给出空结果提示，并在别组有命中时挂出 `#music-search-jump`。
-
-## 8. 改界面的最小检查清单
-
-1. 主题锁：全站亮色不反转；`#lightbox` 是模态 scrim，不算暗色分区。
-2. 单 accent 锁：accent 只给可交互 / 激活态；静态文字不用 accent（poem `.refrain` 是唯一品牌特例）。
-3. 形状一致性：只用 `--radius-*`；嵌套用 concentric；按钮可 pill。
-4. 动效有动机：层级 / 叙事 / 反馈 / 状态过渡四选一，说不出的删。
-5. 性能：只动 transform / opacity / filter；scrub `invalidateOnRefresh`；滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis。
-6. reduced-motion / reduced-transparency 两条都要过；静态反馈通道必须存在。
-7. 对比度实测，不估算；玻璃按叠加底色测。
-8. 键盘 + 读屏两次走查；320px / 200% 不裁剪；目标尺寸达标。
-9. 文案自审：按钮动词先行；错误说明怎么修；空状态给出下一步；英文禁 em dash。
-10. 改完递增所有改动过的 `?v=N` 资源版本号。
+1. 主题锁：正文亮色；暗色只在 hero / lightbox / footer 三处。
+2. 单 accent 锁：强调色命中元素 ≤ 25；静态文字只有诗区叠句例外。
+3. 形状锁：只用三档 radius + pill；嵌套 concentric。
+4. 排版锁：只从 10 个角色里选；`text-box-trim` 不与 `overflow: hidden` 同用。
+5. 动效有动机；只动 transform / opacity / filter；scrub 带 `invalidateOnRefresh`。
+6. 玻璃：模糊声明在增强之前；不在玻璃祖先上做 opacity / transform 动画；不放进横向滚动容器。
+7. 对比度实测不估算；玻璃按叠加后底色测。
+8. 键盘 + 读屏两次走查；320px / 200% 不裁剪。
+9. 文案自审；英文禁 em dash。
+10. 改完递增所有改动过的 `?v=N`。

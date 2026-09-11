@@ -197,3 +197,87 @@
     clip-path: inset(0 0 0 0);
   }
 }
+
+
+/* ============ V2 VISUAL LAYER ============ */
+.film-stage-detail {
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.film-detail-poster {
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+}
+
+.film-detail-poster::after { box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1); }
+
+.film-detail-kicker {
+  font-size: var(--fs-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+}
+
+.film-detail-genre,
+.film-detail-year {
+  background: none;
+  color: var(--color-text-muted);
+  padding: 0;
+  border-radius: 0;
+}
+
+.film-detail-title {
+  font-size: var(--fs-h2);
+  font-weight: 500;
+  letter-spacing: var(--track-h2);
+  line-height: 1.02;
+}
+
+.film-detail-director {
+  font-size: var(--fs-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+}
+
+.film-detail-quote {
+  font-size: clamp(1.02rem, 1.4vw, 1.3rem);
+  line-height: 1.55;
+}
+
+.film-detail-imdb {
+  font-size: var(--fs-meta);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--color-ink);
+  color: var(--color-on-dark);
+  border: 0;
+  box-shadow: none;
+  padding: 0.85em 1.4em;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.film-detail-imdb:hover {
+  background: var(--ink-900);
+  box-shadow: none;
+}
+
+
+
+/* ============ V2 SIZE CONSOLIDATION ============
+   These components still carried their own clamp() ladders from the old
+   system, which reintroduced off-scale sizes (20.16 / 20.8 / 21.6 / 24.88px)
+   next to the tokens. Snapped to the nearest role. */
+.film-card-title,
+.series-card-title { font-size: var(--fs-h4); }
+
+.film-detail-quote,
+.series-detail-quote { font-size: var(--fs-h4); }
+
+.series-detail-seasons { font-size: var(--fs-h4); }
+
+.film-detail-kicker,
+.series-detail-kicker { font-size: var(--fs-meta); }
+

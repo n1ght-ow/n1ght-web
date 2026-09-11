@@ -1,0 +1,257 @@
+﻿
+#################### f8c92b6b-a3a7-4141-ae61-3d865a106761    
+theme=light industry=design
+northStar: Oversized masthead on white paper — a 295px geometric letterform pressed against a vast white wall, with tiny serif footnotes and pill-shaped navigation floating below.
+northStarDetail: 
+DESCRIPTION: Ingmar Coenen's portfolio operates as an editorial gallery wall: a single colossal Megazoid wordmark dominates the top of the page like a magazine masthead, then the system retreats into ruthless white-space and tiny Swiss-type UI. The entire color palette is binary — pure black on pure white with one warm stone-gray for ghost controls — because the work itself is supposed to carry the color. Typography is the brand: a 295px geometric display face (Megazoid) for monumental headings, ITC Garamond Light Condensed for reflective serif body copy, and Neue Haas Unica Pro at 12-13px with negative tracking for all interface chrome. Components are minimal and rounded — 100px pill buttons, 12px cards — creating a tension between the heavy display voice and the soft, almost cartoonish corner radii. Density is compact at the UI level (4-14px gaps) but generous in layout (80-120px section breathing room).
+LAYOUT: The page opens with a full-bleed monumental wordmark (INGMAR at 295px) that bleeds past both viewport edges, establishing a magazine-cover hierarchy. Below the masthead, a floating sticky nav bar sits as a horizontal island. The about paragraph is right-anchored to the right margin, creating a deliberate asymmetry against the left-aligned logo. The work section uses a 2-column grid of project cards with varying aspect ratios — image cards on one side, typographic cards on the other — creating a checkerboard rhythm. Cards use 12px radius and no visible borders; separation is achieved through white space alone. At the page bottom, a compact Grid/List toggle anchors the layout. Section gaps are 80-120px, generous enough to let the massive type breathe while keeping the UI itself compact. Navigation is a single sticky top bar with no sidebar, no mega-menu, no footer beyond the view toggle.
+IMAGERY: Photography is product-focused and tightly cropped — objects fill the frame with no lifestyle context or environmental staging. The wood furniture piece in the work grid is shot against a neutral studio ground with dramatic shadow, treating the object as sculpture. There is no people photography, no color-grading beyond natural tones, and no decorative illustration. Type-only project cards (like the 'Haven-1' circular composition) replace imagery when the project IS the typography. The visual density is overwhelmingly text-and-object — no atmospheric or environmental photography appears anywhere.
+-- COLORS
+  [neutral] Pure Black #000000 :: Primary text, logo wordmark, filled pill buttons, hairline borders — the structural ink that holds every element together
+  [neutral] Canvas White #ffffff :: Page background, card surfaces, button text on dark fills — the paper everything sits on
+  [neutral] Charcoal Slate #3a4042 :: Secondary text, link color, body copy, subtle borders — slightly softened black for hierarchy below the primary text level
+  [neutral] Pale Stone #f2f2f2 :: Ghost button and segmented toggle background — the only non-white surface, used for inactive controls like the Grid/List switcher
+  [neutral] Mid Gray #919191 :: Muted helper text, low-emphasis borders, disabled states
+  [neutral] Silver #cccccc :: Lightest border tone, placeholder outlines, decorative strokes
+-- SURFACES
+  L1 Canvas #ffffff :: Default page background, the dominant visual field
+  L2 Stone Fill #f2f2f2 :: Ghost controls and inactive toggle segments
+  L3 Ink Surface #000000 :: Filled pill buttons and the inverted logo zone
+-- TYPE
+  FAM sans-serif | sizes=12px | w=400 | lh=1.2 | ls= | sub= | feat=
+      ROLE: sans-serif — detected in extracted data but not described by AI
+  FAM Megazoid | sizes=295px | w=400 | lh=0.90 | ls= | sub=Druk Wide, Antonio Bold, or a heavy geometric display like Objektiv Blk | feat=
+      ROLE: Monumental display wordmark for the site title and any project-level hero headings. Ultra-heavy geometric letterforms at near-zero line-height, used sparingly as a single full-bleed statement that bleeds past container edges. The Fill variant is used for filled/knockout versions of the same glyphs.
+  FAM ITC Garamond Std Light Condensed | sizes=36px | w=400 | lh=0.94 | ls= | sub=Cormorant Garamond Light, EB Garamond Light, or Playfair Display | feat=
+      ROLE: Editorial serif for reflective about/bio paragraphs and any long-form copy that needs a literary voice. The Light Condensed cut is deliberately anti-corporate — it reads as a thoughtful side note against the massive Megazoid masthead, not as marketing prose.
+  FAM Neue Haas Unica Pro | sizes=12px, 13px | w=400 | lh=1.10 | ls=-0.02em | sub=Inter, Neue Haas Grotesk, or Helvetica Neue Medium | feat=
+      ROLE: Primary UI and body typeface — the workhorse for navigation labels, project metadata, links, and inline annotations. Set extremely tight at -0.02em letter-spacing and 1.1 line-height, giving labels a compact, Swiss-catalog density.
+  FAM Megazoid Regular | sizes=295px | w=400 | lh=0.9 | ls= | sub= | feat=
+      ROLE: Megazoid Regular — detected in extracted data but not described by AI
+  SCALE caption = 12px / lh 1.2 / ls 
+  SCALE heading = 36px / lh 0.94 / ls 
+  SCALE display = 295px / lh 0.9 / ls 
+-- SPACING
+  baseUnit= density= elementGap=10px sectionGap=80px cardPadding=14px pageMaxWidth=
+  radius: {"cards":"12px","images":"12px","buttons":"100px","smallElements":"4px"}
+-- ELEVATION
+  Floating Navigation Bar => 0 2px 12px rgba(0,0,0,0.06)
+-- COMPONENTS
+  + Sticky Navigation Bar :: Persistent top header with rounded pill nav items and a CTA
+      Full-width white bar with no visible border, floated 8px from the top edge. Left cluster: three pill-shaped nav links ('Work', 'About', 'Capabilities') with 100px radius, 9px top padding, 14px horizontal padding, 12px Neue Haas Unica Pro Medium text in #000000. Right cluster: a filled black 'Start a project' pill button with white text. The bar sits as a floating island on scroll with subtle shadow or just edge proximity.
+  + Filled Pill Button :: Primary action — the only chromatic-strength CTA in the system
+      100px border-radius, #000000 background, #ffffff text. Horizontal padding 14px, vertical padding 9px. Neue Haas Unica Pro 12px medium, letter-spacing -0.02em. No border. The fully rounded shape softens what would otherwise be an aggressive black block — a signature decision that makes the CTA feel friendly despite the monochrome severity.
+  + Ghost Nav Pill :: Inactive or default nav link
+      Same 100px radius and 12px Neue Haas Unica Pro text as the filled button, but transparent background and #000000 text. On hover or active state, background fills to #000000 with text inverting to #ffffff — a single-color toggle rather than introducing any new hue.
+  + Segmented View Toggle :: Grid/List layout switcher at page bottom
+      Two adjacent pill segments ('Grid' and 'List') in a shared capsule. Active segment: #000000 background with #ffffff text. Inactive segment: #f2f2f2 background with #000000 text. 100px radius on outer container, shared internal gap of 4px. 12px Neue Haas Unica Pro labels.
+  + Work Card — Image :: Project tile with a product/photograph area
+      Full-bleed image inside a 12px-radius container, no visible card border. Metadata (project name, client, number) overlaid in white Neue Haas Unica Pro 12px at lower-left of the image, set with -0.02em tracking. Aspect ratio varies per project but always cropped tight — the object is the hero, no decorative framing.
+  + Work Card — Typographic :: Project tile expressed as type-only artwork
+      Cream/warm-white background surface within a 12px-radius card. Central content is a circular arrangement of repeated text (e.g. 'Haven-1' rotating around a circle) with a small caps center label ('MICROGRAVITY RESEARCH LAB') set in Neue Haas Unica Pro 12px. No photographic element — the typography itself is the project artifact.
+  + About Paragraph Block :: Long-form bio copy
+      Right-aligned or right-anchored text block set in ITC Garamond Std Light Condensed 36px, line-height 0.94, #000000. No max-width constraint — text sits as a narrow column aligned to the right margin. The extremely tight line-height at display size gives the paragraph a compressed, almost headline-like weight despite being body copy.
+  + Masthead Wordmark :: The site identity — a full-bleed display heading
+      Megazoid Regular at 295px, line-height 0.9, #000000, set flush-left and bleeding past viewport edges. Single line. No margin above or below — it IS the page. The Megazoid Fill variant may be used for knock-out or reversed treatments on dark surfaces.
+  + Link with Underline :: Inline link in body or nav context
+      Neue Haas Unica Pro 12px, #3a4042 text, 1px solid #3a4042 underline offset ~4px from baseline. No hover state color change — only weight or underline thickness shifts. Underline acts as a hairline divider rather than decorative emphasis.
+  + Card Metadata Label :: Small caps project metadata overlaid on images
+      Neue Haas Unica Pro 12px, letter-spacing -0.02em, uppercase, #ffffff on dark images or #3a4042 on light surfaces. Set in a tight two-line stack (name on line 1, detail on line 2) with ~4px row gap.
+-- DOS
+  DO Use Megazoid at 295px with line-height 0.9 for any site-level display heading — it is the only element that earns full-bleed real estate
+  DO Set all UI text in Neue Haas Unica Pro 12-13px with letter-spacing -0.02em and line-height 1.1
+  DO Use 100px border-radius on every interactive element (buttons, nav pills, toggles) to soften the monochrome severity
+  DO Reach for ITC Garamond Light Condensed 36px for any reflective or editorial paragraph longer than two lines
+  DO Maintain 80-120px vertical breathing room between major layout sections
+  DO Keep the entire palette to black, white, charcoal, and pale stone — let project imagery supply any color
+  DO Use 12px radius for all cards and image containers, 4px for inline elements and hairline details
+-- DONTS
+  DONT Never introduce a chromatic color — the 0% colorfulness is structural to the brand
+  DONT Never set body copy below 12px or above 36px (the type system is intentionally a two-scale system: tiny UI and monumental display)
+  DONT Never use box-shadows for elevation — rely on the stark black/white contrast and 12px corner radius for surface separation
+  DONT Never center-align the Garamond about paragraph — it lives right-anchored as a deliberate editorial decision
+  DONT Never use a system font for body or nav — Neue Haas Unica Pro's tight tracking is the signature, not a fallback
+  DONT Never add decorative gradients, textures, or background patterns to cards or surfaces
+  DONT Never use line-height above 1.2 on Neue Haas Unica Pro — the tight 1.1 is part of the Swiss-catalog character
+-- CUSTOM
+  [Agent Prompt Guide] $1c
+  [Typographic Philosophy] The system runs on a three-voice type hierarchy that creates deliberate tension: Megazoid shouts at 295px as a once-per-page masthead, Garamond Light Condensed whispers at 36px in editorial paragraphs, and Neue Haas Unica Pro at 12px with -0.02em tracking handles all functional UI. No font bridges these three scales — there is no 40px or 60px intermediate. This means any new page either commits to the monumental register (Megazoid) or the micro-catalog register (Unica), and Garamond only appears for human-voiced, reflective copy. The negative letter-spacing on the UI font and the extreme tightness of the display line-heights (0.9-0.94) are the signature: the type feels compressed and confident rather than airy and friendly.
+-- SIMILAR
+  ~ Pentagram because Same editorial-portfolio approach: massive type as identity, monochromatic severity, work presented as generous full-bleed case study cards
+  ~ Rauno Freiberg because Same Swiss-grid minimalism with oversized display type dominating a white canvas and tiny UI labels in a tight sans-serif
+  ~ Locomotive (locomotive.ca) because Same dark-text-on-white discipline with a large custom wordmark, pill-shaped navigation, and project-grid card layouts
+  ~ Manuel Bortoletti because Same monolithic typographic identity — a single oversized display letterform at the top of the page against a vast white field
+  ~ Haus because Same pill-button navigation over a minimal white portfolio layout with tight Swiss sans-serif UI labels
+
+#################### 97bbc1bd-873f-4048-b4cc-b20ea2e70097    
+theme=light industry=design
+northStar: warm editorial magazine on cream paper
+northStarDetail: 
+DESCRIPTION: Flutterwave Design operates as a warm editorial canvas — cream paper (#fff9f1) instead of clinical white, with a single golden amber accent (#f5a623) acting like a highlighter stroke across otherwise monochrome content. Headings opt for deep midnight indigo (#12122c) rather than pure black, giving text a velvet weight against the warm ground. Typography is compact and confident: a bold display cut (Millik) at 60px carries the hero, while Moderat handles everything from 12px captions to 22px subheads with uniformly tight tracking. Layout breathes like a magazine spread — generous vertical section gaps, centered max-width container, illustration-driven cards in a horizontal carousel and 3-column grid. Components stay small and unfussy: 5px radius everywhere, no shadows, thin borders, color reserved for content art rather than chrome.
+LAYOUT: Centered max-width container (1200px) on a full-bleed cream canvas. The hero is a centered typographic block — no imagery above the fold, just a large Millik headline and body intro stacked vertically with generous breathing room. Below the hero, a horizontal scrolling carousel of full-bleed illustration cards peeks in from the edges, creating a sense of motion and overflow. The main content section uses a 3-column grid for story cards, with a left-aligned section header and a right-aligned 'View All' ghost link. A full-width Peach Blush band breaks the cream rhythm for featured/Vibes content. Navigation is a single top bar with no sticky behavior visible. Overall density is spacious — 60px+ between sections, compact within sections.
+IMAGERY: Illustration-driven: every story card and section visual is a custom flat illustration with vivid colors (greens, purples, oranges, pinks, teals). Illustrations are full-bleed, filling the card edge-to-edge with no padding or framing. The style is geometric and slightly abstract — hands, objects, UI elements, nature motifs — with flat color fills and minimal shading. No photography is used in the visible sections. Icons in the UI are simple outlined shapes (circles, arrows) in Ink Black. The illustrations carry all the color personality of the site; the interface itself stays monochrome with single-amber accents.
+-- COLORS
+  [neutral] Cream Paper #fff9f1 :: Primary page canvas, card surfaces, nav background — the warm ground tone every screen sits on
+  [neutral] Ink Black #171717 :: Primary text, body copy, icon strokes, hairline borders — the dominant ink across the system
+  [neutral] Steel Gray #b5b5b5 :: Muted card backgrounds, disabled surfaces, secondary fills
+  [neutral] Graphite #8b8b8b :: Tertiary surface, subtle background blocks, inactive dividers
+  [neutral] True Black #000000 :: Hard borders on icons, nav emphasis, button outlines where maximum contrast is needed
+  [brand] Midnight Indigo #12122c :: Display headings, link text, heading borders — deep violet-black replacing pure black for warmth and brand character
+  [brand] Golden Amber #f5a623 :: Primary action fill, logo heart mark, highlighter accents — the single warm punctuation color in an otherwise cool monochrome system
+  [accent] Peach Blush #fcd2ba :: Accent section band backgrounds (Vibes, features) — warm wash that breaks cream monotony without introducing a new hue
+-- SURFACES
+  L1 Cream Canvas #fff9f1 :: Default page background, nav bar, most card surfaces
+  L2 Peach Band #fcd2ba :: Featured section backgrounds that need warmth and visual separation from cream
+  L3 Steel Surface #b5b5b5 :: Muted card or container backgrounds for secondary content blocks
+  L4 Graphite Surface #8b8b8b :: Tertiary background, subtle decorative blocks
+-- TYPE
+  FAM Millik | sizes=32px, 60px | w=700, 800 | lh=1.20 | ls=-1.5px at 60px, -0.42px at 32px | sub=Recoleta, Tiempos Headline, GT Super | feat=
+      ROLE: Display and heading font — used only for the hero headline and section titles. Heavy weight (700-800) with -0.025em tracking at 60px creates a poster-like authority. Custom serif-adjacent display cut gives the site its editorial magazine voice; substitute with Recoleta or Tiempos Headline if Millik is unavailable.
+  FAM Moderat | sizes=12px, 14px, 16px, 18px, 20px, 22px | w=400, 500, 600, 700 | lh=1.18, 1.20, 1.60, 1.63 | ls=-0.43px at 12px, -0.5px at 14px, -0.58px at 16px, -0.65px at 18px, -0.72px at 20px, -0.79px at 22px | sub=Inter, General Sans, Söhne | feat=
+      ROLE: Primary UI and body font — covers everything from 12px captions to 22px subheads. Geometrical sans with uniformly tight -0.036em tracking that keeps even small text compact and editorial. 400 for body, 500 for nav/links, 600 for labels, 700 for emphasis. Substitute with Inter or General Sans for closest match.
+  FAM Flutterwave | sizes=14px, 16px | w=400 | lh=1.20 | ls=normal | sub=Flutterwave brand font (proprietary) | feat=
+      ROLE: Reserved for the Flutterwave wordmark and icon glyphs — not a general-purpose text face. Limited to brand marks and the small heart logo.
+  SCALE caption = 12px / lh 1.2 / ls -0.43
+  SCALE body-sm = 14px / lh 1.2 / ls -0.5
+  SCALE body = 16px / lh 1.2 / ls -0.58
+  SCALE body-lg = 18px / lh 1.2 / ls -0.65
+  SCALE subheading = 20px / lh 1.2 / ls -0.72
+  SCALE heading-sm = 22px / lh 1.18 / ls -0.79
+  SCALE heading = 32px / lh 1.2 / ls -0.42
+  SCALE display = 60px / lh 1.2 / ls -1.5
+-- SPACING
+  baseUnit= density= elementGap=10px sectionGap=60px cardPadding=20px pageMaxWidth=1200px
+  radius: {"tags":"5px","cards":"5px","inputs":"5px","buttons":"5px"}
+-- ELEVATION
+-- COMPONENTS
+  + Top Navigation Bar :: Site-wide header
+      Horizontal bar on cream canvas with 5px bottom hairline border in #171717. Left: wordmark 'Design' (Moderat 14-16px weight 500, Ink Black) with small amber heart icon. Center: nav links (Moderat 14px weight 400, Ink Black) spaced 26-30px apart. Right: theme toggle (two small circles, one outlined, one filled black).
+  + Display Hero Headline :: Primary page-level headline
+      Millik 60px weight 700, color Midnight Indigo (#12122c), line-height 1.2, letter-spacing -1.5px. Centered on cream canvas. No gradient or decoration — pure typographic statement. Typically 2 lines, with emoji or inline element mid-sentence.
+  + Hero Body Text :: Intro paragraph below hero headline
+      Moderat 16-18px weight 400, Ink Black (#171717), centered, max-width ~600px. Tight -0.58px tracking keeps the paragraph compact.
+  + Story Carousel Card :: Horizontal scrolling story preview
+      Full-bleed illustration (no padding around image) with overlay or below-card title in Millik or Moderat bold. 5px border-radius on container. Cards are wider than grid cards (roughly 280-340px wide), no border or shadow, colored illustration fills the card edge-to-edge.
+  + Story Grid Card :: 3-column editorial story card
+      Top: full-color illustration filling card width with 5px top-radius. Below illustration: 20px padding. Content stack: category label (Moderat 12px weight 600, uppercase, letter-spacing normal, Ink Black), title (Moderat 20px weight 600, Ink Black, 2-line clamp), meta line (Moderat 12px weight 400, uppercase, gray). No border, no shadow — sits directly on cream canvas.
+  + Category Tag :: Small uppercase label above story titles
+      Moderat 12px weight 600, uppercase, Ink Black (#171717), normal letter-spacing. No background, no border — just typographic. Reads as editorial section labels (e.g. 'DESIGN THINKING').
+  + Author Byline :: Credit line below story title
+      Moderat 14px weight 400, Ink Black. Format: 'By [Author Name]' with author name in weight 500 for subtle emphasis. Sits 8-10px below title.
+  + Section Header :: Section title with optional action link
+      Left: Millik 32px weight 700, Midnight Indigo. Right: 'VIEW ALL STORIES' in Moderat 12px weight 600, uppercase, with a small circle-arrow icon. Spaced across the max-width container with 30px+ gap between title and action.
+  + Peach Section Band :: Full-bleed warm content section
+      Full-width band with background #fcd2ba, 60px+ vertical padding. Contains headings in Midnight Indigo and body text in Ink Black. Used to break cream monotony and signal a different content mode (Vibes, featured).
+  + Theme Toggle :: Light/dark mode switcher in nav
+      Two small circles side by side in the top-right of nav. Active mode is filled (#171717), inactive is outlined (1px #171717 border, cream fill). ~16px diameter, 5px gap between circles.
+  + Golden Amber CTA Button :: Primary action button
+      Background #f5a623 (Golden Amber), text Ink Black (#171717), Moderat 14-16px weight 600. 5px border-radius. Padding 10px 20px. No border, no shadow. The single warm color in the system — used sparingly for primary actions only.
+  + Ghost Link Button :: Secondary text-based action
+      No background, no border. Moderat 12-14px weight 600, uppercase, Ink Black. Often paired with a small arrow or circle icon. Used for 'View all', 'Read more', navigation prompts.
+  + Heart Logo Mark :: Brand identity icon
+      Small amber/golden heart icon (~16px) positioned left of the 'Design' wordmark in the nav. Solid fill in Golden Amber (#f5a623). The only instance of the brand color as a decorative mark.
+-- DOS
+  DO Use #fff9f1 (Cream Paper) as the default canvas for every page — never switch to pure white.
+  DO Set display headlines in Millik 60px weight 700 with -1.5px letter-spacing and Midnight Indigo (#12122c) color.
+  DO Apply 5px border-radius to all cards, buttons, inputs, and tags — consistency is the point.
+  DO Reserve Golden Amber (#f5a623) for the primary CTA fill and the heart logo only — it is accent punctuation, not a surface color.
+  DO Use the Peach Blush (#fcd2ba) band to separate major content sections from the cream default.
+  DO Set all text to Ink Black (#171717) for body and Midnight Indigo (#12122c) for headings — do not mix pure black into the heading hierarchy.
+  DO Keep all tracking negative — Moderat at -0.036em, Millik at -0.025em — to preserve the compact editorial density.
+-- DONTS
+  DONT Do not introduce drop shadows, glows, or blurs to cards or buttons — elevation comes from color contrast alone.
+  DONT Do not use Golden Amber for backgrounds, panels, or large fills — it loses its punch as a accent if it covers more than button-sized areas.
+  DONT Do not use pure white (#ffffff) as a surface — cream (#fff9f1) is the canvas, white breaks the warm system.
+  DONT Do not set headings in pure black (#000000) — Midnight Indigo (#12122c) is the heading color, it carries the brand character.
+  DONT Do not use border-radius values other than 5px — no pills, no 0px sharp corners, no 8-12px rounded cards.
+  DONT Do not add gradients, patterns, or decorative backgrounds to UI chrome — illustrations on cards are where visual interest lives.
+  DONT Do not set body text above 20px in Moderat — for larger sizes, switch to Millik to maintain the type hierarchy.
+-- CUSTOM
+  [Agent Prompt Guide] $1c
+-- SIMILAR
+  ~ Notion because Same warm off-white canvas and minimal monochrome interface where illustration and content carry all the color
+  ~ Stripe because Similar editorial restraint — cream-tinted background, single accent color, bold display typography paired with clean sans body
+  ~ Pitch because Same compact density, tight letter-spacing, and 5px-radius card aesthetic in a light-mode editorial layout
+  ~ Arc browser because Shared warm-paper canvas and trust in a single vivid accent (amber/orange) against an otherwise monochrome UI
+  ~ Figma Config because Same illustration-driven content cards with full-bleed art and minimal typographic chrome in the frame
+
+#################### fdcd4cbb-4db6-4138-9cfd-964795f1e1d6    
+theme=light industry=ecommerce
+northStar: Cinematic open-road diorama. Warm cream gallery walls with oversized landscape photographs pinned at gentle radii, thin black type whispering across the frames, one ember-orange accent breaking the monochrome like a campfire in a meadow.
+northStarDetail: 
+DESCRIPTION: Lightship is a photography-first editorial system built on a warm cream canvas (#faf6ef) with full-bleed cinematic imagery doing all the storytelling. The UI is deliberately invisible: a single custom geometric sans (F37Bolton) with tight negative tracking, hairline borders, 20px rounded photo cards, and pill-shaped navigation chips. The entire palette is near-monochrome with one warm orange (#fa5c40) reserved as a rare surface accent. Density is generous — large breathing room around elements, 100px section gaps — letting landscape photography and short editorial headlines command attention. No shadows, no gradients, no decorative chrome: the product and the places it goes are the interface.
+LAYOUT: Hero is full-viewport (100vw × 100vh) with a single cinematic photograph and a two-column headline split (left statement + right statement at opposite viewport edges). The navigation bar sits transparently over the hero with three zones (left nav / centered wordmark / right utility links). Below the hero, the layout shifts to an asymmetric photo mosaic on the warm cream canvas — images of varying sizes offset vertically rather than aligned to a strict grid, with generous 100px vertical breathing room between major sections. Content blocks alternate between editorial two-column (text + image) and pure photography passages. The layout is max-width contained at 1440px for content areas but allows sections to break to full-bleed when the visual demands it. There is no sidebar, no sticky header that persists aggressively, and no footer chrome visible in the initial scroll.
+IMAGERY: Photography is the dominant visual element — full-bleed cinematic landscape shots (mountains, meadows, open roads) serve as hero backdrops, while asymmetric collages of lifestyle and product photography populate content sections. All photographs share a warm, slightly desaturated treatment that complements the cream canvas. Product shots show the trailer in use: towed on mountain roads, parked at campsites, integrated into family life. No illustrations, no 3D renders, no abstract graphics. Images are framed with 20px border-radius, never sharp-cornered, and are placed in off-grid compositions with varying vertical offsets. Icons are minimal thin-line (1.5–2px stroke) monochrome.
+-- COLORS
+  [neutral] Warm Cream #faf6ef :: Primary page canvas, card surfaces — warm off-white replaces stark white to soften the photography-first layout and avoid the cold SaaS feel
+  [neutral] Pure White #ffffff :: Image borders, elevated card surfaces, contrast panel behind embedded media
+  [neutral] Obsidian #000000 :: Primary text, hairline borders, icon strokes, navigation typography — the structural anchor of the entire system
+  [neutral] Pebble #999999 :: Muted body text, secondary borders, disabled states — the one step above placeholder gray
+  [neutral] Driftwood #a1a1a1 :: Helper text, low-emphasis captions, subtle dividers
+  [neutral] Mist #d9d9d9 :: Light hairline dividers, nav separators, input borders in resting state
+  [accent] Ember Orange #fa5c40 :: Orange wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color
+-- SURFACES
+  L1 Canvas #faf6ef :: Full-page warm cream background
+  L2 Card #ffffff :: Elevated white surface for content cards, image frames, embedded panels
+  L3 Accent Wash #fa5c40 :: Rare ember-orange highlight strip or focused-state surface
+-- TYPE
+  FAM F37Bolton | sizes=12, 14, 16, 20, 22, 24, 34, 48, 64, 72, 75px | w=400, 700 | lh=1.00, 1.20, 1.25 | ls=-0.05em at 48px and above, -0.03em at 34px and below | sub=Söhne, Inter, or DM Sans — pick the variant with the most geometric (non-humanist) character to preserve the industrial tone | feat=
+      ROLE: Sole typeface across the entire system. Custom geometric sans with tight aperture and industrial DNA. Weight 400 for body, 700 only for display headlines and the wordmark. Tracking runs -0.05em at display sizes down to -0.03em at body, giving headlines a compressed editorial feel and body text a quiet, compact rhythm
+  SCALE caption = 12px / lh 1.2 / ls -0.36
+  SCALE body-sm = 14px / lh 1.2 / ls -0.42
+  SCALE body = 16px / lh 1.25 / ls -0.48
+  SCALE body-lg = 20px / lh 1.25 / ls -0.6
+  SCALE subheading = 22px / lh 1.2 / ls -0.66
+  SCALE heading-sm = 24px / lh 1.2 / ls -0.72
+  SCALE heading = 34px / lh 1.2 / ls -1.02
+  SCALE heading-lg = 48px / lh 1 / ls -2.4
+  SCALE display = 72px / lh 1 / ls -3.6
+-- SPACING
+  baseUnit= density= elementGap=16px sectionGap=100px cardPadding=24px pageMaxWidth=1440px
+  radius: {"cards":"20px","images":"20px","inputs":"100px","buttons":"100px"}
+-- ELEVATION
+-- COMPONENTS
+  + Full-Bleed Hero Frame :: Cinematic opening image spanning the entire viewport
+      100vw × 100vh image, no border-radius, no overlay tint. Text sits directly on the photograph in white (#ffffff) at 72px / 75px display weight 400, letter-spacing -3.6px, line-height 1.0. Headline and supporting phrase anchor to opposite edges of the viewport (left + right split) to create compositional tension against the centered image.
+  + Navigation Bar :: Minimal top bar over hero and subsequent sections
+      Three-zone layout: left cluster (hamburger icon + nav links: AE1, Technology, Specs), centered wordmark (LIGHTSHIP at 16px weight 400, letter-spacing 0.4em for the brand mark treatment), right cluster (Experience, Buy it now as text links). All type at 14px, weight 400, #ffffff over hero / #000000 over cream sections. No background fill — sits transparently over content.
+  + Pill Navigation Link :: Text link styled as a rounded chip
+      14px F37Bolton weight 400, no background fill, no border. Sits inline within the nav bar. The 100px radius token governs interactive elements (links, buttons) when a pill shape is needed.
+  + Photo Mosaic Card :: Asymmetrically arranged editorial photo block
+      Photograph framed with 20px border-radius, no border, no shadow. Cards are placed in an off-grid collage layout (not equal columns) at varying sizes and vertical offsets. The 20px radius is the signature — it softens editorial photography without looking app-like or corporate.
+  + Editorial Headline Pair :: Two-line complementary headline layout
+      Left-aligned statement (
+  + Hamburger Menu Trigger :: Mobile/utility menu opener
+      Two thin horizontal lines, #ffffff over hero / #000000 over cream, 2px stroke weight, 24px wide. Sits in a pill-shaped touch target (100px radius) with 12px padding all sides.
+  + Scroll Indicator :: Fixed-bottom-right prompt to continue reading
+      Small downward arrow icon (1.5px stroke, #ffffff) above 12px caption text (
+  + Ghost Text Button :: Secondary action link (Buy it now, Experience)
+      Text-only, no fill, no border. 14px F37Bolton weight 400, #000000 or #ffffff depending on surface. Underline appears on hover. This is the system's only interactive pattern — there are no filled buttons anywhere on the site.
+  + Hairline Divider :: Section separator
+      1px solid #d9d9d9 or #000000 horizontal rule. Used sparingly — the system prefers whitespace and full-bleed image transitions over visible dividers.
+  + Pill Input Field :: Form input (newsletter, configuration)
+      100px border-radius, 1px border in #d9d9d9 resting state, focus shifts border to #000000. Cream or white fill, 16px F37Bolton weight 400, generous 20px horizontal padding.
+-- DOS
+  DO Let photography fill the viewport — use full-bleed images (100vw) with no border-radius for hero and section breaks
+  DO Use 20px border-radius on all framed photographs and content cards — this is the system's signature softness
+  DO Use 100px border-radius for all interactive elements (nav links, buttons, inputs) to create the pill geometry
+  DO Set type at -0.05em letter-spacing on anything 48px and above, -0.03em on 34px and below — tight tracking is non-negotiable for the editorial feel
+  DO Keep the entire UI monochromatic — black text, white/cream surfaces, hairline borders. The only chromatic color in the system is #fa5c40, used as a surface accent strip, not as a button fill
+  DO Separate hero text to opposite viewport edges (left + right split) at 72–75px display weight to create compositional tension across the photograph
+  DO Use whitespace as the primary separator between sections — 100px vertical gaps, no visible dividers needed
+-- DONTS
+  DONT Do not use filled buttons or saturated CTA backgrounds — the system has no primary action color; interactions are ghost text links and pill nav items
+  DONT Do not introduce shadows or elevation effects — the design is intentionally flat, relying on border-radius and whitespace for depth
+  DONT Do not use gradients anywhere — surfaces are solid (cream, white, black, or ember orange)
+  DONT Do not use rounded type, decorative serifs, or display scripts — F37Bolton's geometric sans is the only voice
+  DONT Do not place content in equal-width grid columns — photo layouts use asymmetric, offset collage positioning
+  DONT Do not use #ffffff as the page background — the warm cream #faf6ef is the canvas; pure white is reserved for card elevation
+  DONT Do not use the ember orange #fa5c40 at large surface areas — it should appear only as small accent strips or focused-state washes
+-- CUSTOM
+  [Agent Prompt Guide] ## Quick Color Reference\n- Canvas: #faf6ef (warm cream)\n- Card surface: #ffffff (pure white)\n- Primary text: #000000\n- Hairline border: #d9d9d9\n- Muted text: #999999\n- Accent: #fa5c40 (ember orange — surface washes only)\n- primary action: no distinct CTA color
+-- SIMILAR
+  ~ Patagonia because Same full-bleed landscape photography as the primary visual, warm/natural color palette, minimal text overlay, editorial headline weight on product pages
+  ~ Airstream because Same product-lifestyle photography approach with cinematic outdoor settings, generous whitespace, and near-monochrome UI that lets the product imagery lead
+  ~ Rivian because Same premium adventure-brand visual language: large display type with tight tracking, photography-first layout, minimal UI chrome, warm accent restraint
+  ~ Fellow (fellowproducts.com) because Same warm cream canvas, custom geometric sans with tight tracking, rounded product photography, and near-invisible UI chrome that lets product imagery dominate
+

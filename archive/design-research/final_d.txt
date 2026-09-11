@@ -1,0 +1,315 @@
+﻿
+#################### eb804e3a-1b75-446c-8374-114bbabaf0cd    
+theme=light industry=design
+northStar: Linen gallery wall with floating polaroids
+northStarDetail: 
+DESCRIPTION: Cosmos is a gallery-wrapped canvas for visual discovery: a warm cream background (#f7f5f3) that reads like unprimed linen, black ink typography, and a strict monochrome UI where color only intrudes through user-curated imagery. The product believes in restraint — the chrome is invisible so the images can shout. Type is a single custom serif-influenced face (cosmosOracle) pulled tight with negative tracking, using weight 350 for hero copy to create editorial softness rather than marketing aggression. Surfaces are flat with a single signature radius (16px) repeated across cards, inputs, and video containers. The hero scatters image tiles in a free-form collage that frames centered copy, and the rest of the page settles into a three-column grid of image-led feature cards. There are no gradients, no shadows beyond what the collage cards cast naturally, and no chromatic accents in the interface itself.
+LAYOUT: Page is centered with a ~1280px max-width content well, though the hero uses full-bleed positioning for the scattered image tiles. The hero is a centered text stack: eyebrow ('COSMOS') → 74px headline → two-button row, all vertically and horizontally centered while image tiles float around the periphery at varied rotations. Below the hero, the video container spans the full content width at 16px radius. The feature row is a strict 3-column grid with 24px gap, each cell leading with an image and trailing with a 18px label. Navigation is a single floating pill bar that hovers near the top of the viewport on every page, containing logo, two text links, centered search, theme toggle, and Login/Sign up — it never duplicates into a secondary bar. Vertical rhythm between sections is generous (80px+), giving each band room to breathe like separate gallery rooms.
+IMAGERY: Imagery is the product, not decoration. The hero scatters small cropped image tiles (60–140px) at 12px radius around the centered text like polaroids pinned to a gallery wall. The three feature cards lead with edge-to-edge photography and collage — vivid red florals, warm beige bag silhouettes, and moody purple portraiture — each carrying the only chromatic color in the interface. The video container uses a cinematic still (green-tiled interior, soft focus) with a 9-dot loading animation overlaid in white. There are no illustrations, no abstract graphics, no 3D renders. Icons are minimal stroked linework in Ink Black, used sparingly (magnifier, play triangle, sun/moon, social glyphs). Photography style across the collage feels curated and editorial: high contrast, varied subjects, no unified color treatment — the variety is the point.
+-- COLORS
+  [neutral] Linen Canvas #f7f5f3 :: Page background — warm off-white, never pure #ffffff at the root, gives the interface a paper-like, gallery-wall base
+  [neutral] Ink Black #0d0d0d :: Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color; Borders, dividers, outlined button strokes — used at low opacity to create subtle structural lines, always Ink Black rather than a separate gray
+  [neutral] Paper White #ffffff :: Light supporting surface for subtle backgrounds and section separation. Do not promote it to the primary CTA color
+  [neutral] Stone #6e6a69 :: Body text, secondary icons, inactive UI — warm mid-gray for body copy and supporting metadata
+  [neutral] Pebble #9a9796 :: Muted helper text, disabled states, tertiary icon strokes — lightest readable gray in the neutral ramp
+-- SURFACES
+  L0 Linen Canvas #f7f5f3 :: Root page background, the gallery wall
+  L1 Paper White #ffffff :: Cards, inputs, outlined buttons — the only elevated surface in the system
+-- TYPE
+  FAM cosmosOracle | sizes=14, 15, 16, 18, 24, 26, 33, 38, 58, 66, 74 | w=350, 400, 500 | lh=0.80, 1.00, 1.06, 1.08, 1.10, 1.20, 1.25, 1.29, 1.50 | ls=-0.0500em at 74/66/58px, -0.0400em at 38/33px, -0.0200em at 24/26px, -0.0110em at 18/16px, 0 at 14/15px | sub=GT Super, Fraunces, or any high-contrast didone-influenced serif with optical sizing; fall back to 'Georgia' if no serif is available | feat=Opt for old-style figures and discretionary ligatures if cosmosOracle exposes them; the typeface behaves like a didone-meets-grotesque hybrid
+      ROLE: Single custom face used for everything. Weight 350 is the signature — hero and display copy use this whisper-weight instead of the conventional 700, creating editorial calm. Weight 400 for body, weight 500 reserved for buttons and labels. Negative tracking scales with size: tightest (-0.05em) on the 74px display, opening to normal at 14px. The low line-heights on large sizes (0.80–1.10) hug the baseline tightly so headlines read as deliberate blocks, not airy paragraphs.
+  SCALE caption = 14px / lh 1.5 / ls 0
+  SCALE body = 16px / lh 1.5 / ls -0.18
+  SCALE subheading = 18px / lh 1.29 / ls -0.2
+  SCALE heading-sm = 24px / lh 1.2 / ls -0.48
+  SCALE heading = 33px / lh 1.1 / ls -1.32
+  SCALE heading-lg = 38px / lh 1.08 / ls -1.52
+  SCALE display = 58px / lh 1.06 / ls -2.32
+  SCALE display-xl = 74px / lh 0.8 / ls -3.7
+-- SPACING
+  baseUnit= density= elementGap=24px sectionGap=80px cardPadding=16px pageMaxWidth=1280px
+  radius: {"cards":"16px","inputs":"16px","buttons":"16px","imageTiles":"12px","videoContainer":"16px"}
+-- ELEVATION
+-- COMPONENTS
+  + Primary Filled Button :: Main conversion action (Sign up)
+      Ink Black (#0d0d0d) fill, Paper White (#ffffff) text, cosmosOracle weight 500, 16px font-size, 16px border-radius, 16px vertical / 24px horizontal padding. Tight, pill-like but squared at the radius. No shadow, no border.
+  + Secondary Outlined Button :: Secondary action (Get the app, Login)
+      Paper White (#ffffff) fill, 1px Ink Black border at ~15% opacity, Ink Black text, 16px radius, 16px/24px padding. Identical sizing to the primary button so they pair as a two-button row.
+  + Pill Navigation Bar :: Top-of-page floating navigation
+      A single horizontal pill containing the logo (8-dot cluster glyph), Explore / Careers links, centered search input, and Login / Sign up. Background is Paper White with subtle border, 9999px radius, hovers just below the top edge of the viewport with no shadow.
+  + Search Input :: Global search inside the nav pill
+      Borderless text input with a leading magnifier icon, placeholder 'Search Cosmos...' in Stone (#6e6a69). Transparent fill so it sits flush inside the nav pill. 16px text, weight 400.
+  + Floating Image Tile :: Scattered collage images in the hero
+      User-content image cropped to ~12px border-radius, floating at slight rotations or in a loose grid around the hero text. No caption, no border, no shadow — the image is the component. Sized 60–140px, positioned absolutely around the centered headline.
+  + Feature Image Card :: Three-up feature row showing product capabilities
+      Large image-first card with a 16px radius. The image fills the card edge-to-edge; below it sits a cosmosOracle weight 400 label at 18px (e.g. 'By color'). No visible border, no shadow, no background color — the image defines the card. Three cards sit in a 3-column grid with 24px gap.
+  + Video Container :: Full-bleed film/video embed
+      A 16px-radius container spanning the page max-width, holding a video poster with a 9-dot loading animation overlaid in white at center. Split text overlay: 'Watch' left-aligned and 'the film' right-aligned at 38px weight 350, with a play triangle between. Small caption 'featuring Odessa Azion' centered near the bottom.
+  + AI Content Detection Overlay :: AI-generated image warning card
+      Paper White surface with 12px radius, ~280px wide, positioned top-right inside a feature card. Title 'AI content' in Ink Black 16px weight 500, body 'Content detected as likely generated by AI' in Stone 14px. Below: three text buttons — 'Show' (Ink Black, 16px radius, white fill), 'Blur' (neutral), 'Hide' (neutral).
+  + Text Link with Play Icon :: Inline call-to-action link (Watch our new film)
+      Inline at 18px weight 400, Ink Black, preceded by a small triangle play icon. No underline by default; subtle color shift on hover. Used for tertiary navigation cues that should not compete with the button row.
+  + Theme Toggle :: Light/dark mode switch in the nav
+      A small icon-only button (sun/moon glyph) at the right edge of the nav pill, before the Login/Sign up cluster. 32×32px hit area, no visible border, 9999px radius on hover background.
+  + Eyebrow Label :: Small uppercase section pre-title
+      cosmosOracle weight 500, 15–16px, tracked at 0em, rendered as 'COSMOS' above the hero headline. Sets the editorial tone: small, all-caps, almost a stamp rather than a label.
+  + Dot Cluster Logo :: Brand mark in nav and favicon
+      Eight small black dots arranged in a 3×3 grid with the center dot removed, reading as a tiny flower or asterisk. Always Ink Black on Linen Canvas, always at ~18px in the nav, larger at marketing contexts.
+-- DOS
+  DO Use only Linen Canvas (#f7f7f5f3) as the root background — never pure white at the page level; white is reserved for cards and inputs.
+  DO Apply 16px border-radius to every container, button, and input — this is the single signature radius of the system.
+  DO Set hero and display copy at weight 350 with letter-spacing between -0.04em and -0.05em; do not bold headlines above 400.
+  DO Pair every primary filled button with an outlined secondary at identical padding and radius so they read as a set.
+  DO Let user imagery carry all chromatic content; the UI palette stays at black/white/cream/gray.
+  DO Use 24px gaps between grid cards and 16px padding inside cards as the default content rhythm.
+  DO Position the nav as a single floating pill with 9999px radius at the top of every page.
+-- DONTS
+  DONT Do not introduce accent colors (red, blue, green) into interface chrome — color belongs only in user content.
+  DONT Do not use weights above 500 in cosmosOracle; the face is not designed for bold display and will feel chunky.
+  DONT Do not apply shadows to cards or buttons; the system is deliberately flat and relies on radius and surface contrast.
+  DONT Do not set body text larger than 18px or below 14px; cosmosOracle was sized for a tight 14–18px body range.
+  DONT Do not mix border-radius values within a single page (avoid 8px or 24px radii) — 16px is the rule, 12px only for image tiles.
+  DONT Do not use pure #000000; always #0d0d0d so the black warms against the cream canvas.
+  DONT Do not place colored backgrounds behind text; all text sits on Linen Canvas, Paper White, or directly on imagery.
+-- CUSTOM
+  [Agent Prompt Guide] $1c
+  [Typography Signature] The defining typographic choice is using a whisper-weight (350) serif at display sizes. Most modern product sites reach for 600–800 on hero copy; Cosmos goes the other way, letting the serif's high stroke contrast and tight tracking carry authority without volume. The negative letter-spacing scales aggressively with size (-0.05em at 74px, 0 at 14px), which is what makes the large headlines feel architectural rather than decorative. When recreating pages, never substitute a bold sans for the display — the soft serif is the entire brand voice.
+  [Image-First Component Rule] Cosmos is a visual product, so the component system intentionally limits UI chrome and lets images do the work. The rule: if a component is not navigation, input, or a button, it is probably an image card with a small text label. Resist building dashboards, tables, or data-dense UI; this system is for galleries, feeds, and discovery surfaces where the image is the unit of value.
+-- SIMILAR
+  ~ Are.na because Same warm cream canvas, monochrome UI that stays out of the way of user-curated imagery, and an editorial single-typeface approach to a visual bookmarking product
+  ~ Pinterest because Image-led grid systems and the philosophy that color belongs to user content, not the interface chrome
+  ~ VSCO because Gallery-wall aesthetic with floating image tiles, minimal text UI, and a single warm neutral background that frames rather than competes with photography
+  ~ Cargo (cargo.site) because Portfolio-first visual discovery tools that use restrained typography and generous whitespace to let creator imagery dominate
+
+#################### 1b293bed-e6fc-4880-9691-2dbf04339bd5    
+theme=dark industry=design
+northStar: midnight monochrome atelier — a designer's darkroom where white type and saturated photography are the only light
+northStarDetail: 
+DESCRIPTION: thms.works is a monochrome dark-mode portfolio built on absolute restraint. The entire interface is three colors: a near-black canvas, white type, and one muted gray for secondary information. A single custom typeface — HelveticaNowDisplay-Light — carries every word on the site, with tight negative tracking that tightens further at display sizes. The layout is spacious and editorial: large left-aligned headlines, generous 120px section gaps, and a two-column project grid where full-bleed photography is the only chromatic content. There are no buttons, no shadows, no accent colors, no border radii — just type, image, and negative space doing all the work.
+LAYOUT: Full-bleed single-page layout with no max-width constraint. Navigation is a minimal top bar (text links left, name right) with no background fill. The hero is a left-aligned multi-line headline at display size (56px) with a section label below it, both flush to the left edge. Below the hero, a two-column project grid displays portfolio entries — each entry is a full-bleed image stacked with a title and one-line description, with no card chrome. Vertical rhythm is built on 120px section gaps between the hero and the grid, and 60px padding around the grid container. The layout is strictly left-justified with a consistent left margin; no centered compositions, no asymmetric splits, no overlapping layers. Navigation stays at the top, no sticky behavior, no sidebar.
+IMAGERY: Photography is the sole source of color and visual energy. Project images are full-bleed with sharp 0px corners, sitting edge-to-edge in the grid. The photography style varies by project — editorial fashion (KAEMA), lifestyle/portraiture (Airbuds), product/technology (Samsung Serif TV, Kard) — but all images are high-contrast, saturated, and unframed. No illustrations, no icons, no abstract graphics, no product screenshots with chrome. The images do not overlap text or each other; they are isolated tiles in a clean grid. Photography functions as both content and decoration — the chromatic counterpoint to the otherwise monochrome interface.
+-- COLORS
+  [neutral] Obsidian Canvas #171717 :: Page background, all surface layers — the flat dark base every element sits on
+  [neutral] Chalk #ffffff :: Headlines, primary body text, active nav text, active nav underline border, project titles
+  [neutral] Ash #9a9a9a :: Muted secondary text — project descriptions, section labels, inactive supporting copy
+-- SURFACES
+  L0 Obsidian Canvas #171717 :: Single flat surface — the entire page is one plane, no card elevations
+-- TYPE
+  FAM HelveticaNowDisplay-Light | sizes=16px, 20px, 24px, 28px, 32px, 56px | w=400 | lh=1.00, 1.20, 1.40, 1.50 | ls=Scales from -0.05px at 16px to -0.56px at 56px; tighter as size grows | sub=Helvetica Neue, Inter, Söhne | feat=
+      ROLE: Sole typeface for the entire site — headlines, body, navigation, descriptions. The single weight (400, marketed as 'Light') at tight negative tracking gives the site its quiet, editorial voice. Display sizes pull in to -0.010em while body sits at -0.003em, creating a compression gradient that intensifies at scale.
+  SCALE body = 16px / lh 1.5 / ls -0.05
+  SCALE subheading = 20px / lh 1.4 / ls -0.1
+  SCALE heading-sm = 24px / lh 1.4 / ls -0.14
+  SCALE heading = 28px / lh 1.2 / ls -0.2
+  SCALE heading-lg = 32px / lh 1.2 / ls -0.26
+  SCALE display = 56px / lh 1 / ls -0.56
+-- SPACING
+  baseUnit= density= elementGap=20px sectionGap=120px cardPadding=0px pageMaxWidth=
+  radius: {"tags":"0px","cards":"0px","images":"0px","buttons":"0px"}
+-- ELEVATION
+-- COMPONENTS
+  + Top Navigation Bar :: Site-wide navigation
+      Full-width transparent bar on #171717 canvas. Left side: text links (Work, Biography, Lab, Life) at 16px, weight 400, tracking -0.05px. Right side: name label in #9a9a9a muted gray. No background, no border, no shadow. Padding: 5px top, 10px bottom. Uses HelveticaNowDisplay-Light exclusively.
+  + Active Nav Link :: Current page indicator
+      16px white text (#ffffff) with a 1-2px white bottom border acting as underline. The only use of a visible border in the system — it replaces the convention of bolding or coloring the active state. Padding-bottom: 10px to create space for the underline.
+  + Inactive Nav Link :: Secondary navigation items
+      16px white text (#ffffff), no underline, no styling. Hover state not defined — the design relies on the persistent active indicator rather than hover affordance.
+  + Hero Headline Block :: Opening statement / page introduction
+      Left-aligned display text at 56px, weight 400, line-height 1.0, letter-spacing -0.56px in #ffffff. Multi-line, wraps naturally. Sits directly on the #171717 canvas with generous breathing room above and below. No background treatment, no border, no max-width constraint — text fills its column naturally.
+  + Section Indicator :: Section label with scroll cue
+      Small uppercase or sentence-case label like '↓ Selected projects' at 16px in #9a9a9a. Includes a downward arrow character (↓) as a scroll affordance. Positioned below the hero headline, left-aligned, with 20-40px gap above. Functions as both label and directional cue.
+  + Project Card :: Portfolio entry — image with title and description
+      Two-column grid card with no background, no border, no shadow, no padding. Structure: full-bleed project image (0px border-radius, sharp corners) on top, then 20px gap, then project title in #ffffff at 20px, then 5px gap, then one-line description in #9a9a9a at 16px. The image IS the card — there is no container styling.
+  + Project Card Image :: Visual entry point for each project
+      Full-bleed, edge-to-edge photography with 0px border-radius. Images maintain natural aspect ratios (roughly 3:2 or 4:3). High-contrast, saturated photography — the only source of color on the entire site. No overlay, no tint, no caption baked in.
+  + Project Card Title :: Project name label
+      20px, weight 400, #ffffff, letter-spacing -0.1px, line-height 1.4. Appears directly below the project image with 20px gap. Sentence case. Functions as the primary identifier for each portfolio entry.
+  + Project Card Description :: One-line project summary
+      16px, weight 400, #9a9a9a, letter-spacing -0.05px, line-height 1.5. Sits 5px below the project title. Single line, truncated by column width. Muted gray deliberately recedes so the title and image carry the weight.
+-- DOS
+  DO Use only three colors: #171717 for canvas, #ffffff for primary text, #9a9a9a for muted text. No accent colors, no brand color, no semantic states.
+  DO Set all type in HelveticaNowDisplay-Light at weight 400. Never introduce a second typeface or weight variation.
+  DO Apply border-radius: 0 to all elements. Images, cards, buttons, tags — all sharp corners.
+  DO Use 120px vertical gaps between major page sections and 20px gaps between text elements. Spaciousness is structural.
+  DO Set letter-spacing to -0.010em at 56px, -0.008em at 32px, -0.007em at 28px, -0.006em at 24px, -0.005em at 20px, and -0.003em at 16px. Tracking compresses as size increases.
+  DO Let full-bleed photography provide all chromatic content. Images are edge-to-edge with no frame, padding, or border.
+  DO Left-align all text. The layout is strictly left-justified — no centered headings, no justified blocks.
+-- DONTS
+  DONT Do not add a CTA button, filled action, or accent color. The system has no interactive controls beyond text links.
+  DONT Do not use shadows, glows, or any elevation effect. The surface is flat by design.
+  DONT Do not add border-radius to images, cards, or containers. All corners stay sharp at 0px.
+  DONT Do not introduce a second font weight, a bold variant, or italic. The system runs on a single weight (400).
+  DONT Do not use color to signal state. Active navigation is indicated by a white underline, not a color shift.
+  DONT Do not center-align headings or body text. Everything is left-aligned to the same edge.
+  DONT Do not add card backgrounds, borders, or containers around content blocks. Elements sit directly on the canvas.
+-- CUSTOM
+  [Agent Prompt Guide] $1c
+-- SIMILAR
+  ~ rauno.me because Same extreme monochrome dark-mode approach with a single typeface and zero accent colors — type and whitespace do all the work
+  ~ cobeisfresh.com because Similar minimal dark portfolio structure with left-aligned type and project grid, no UI chrome beyond text
+  ~ philippebarriere.com because Dark editorial portfolio aesthetic with full-bleed photography and restrained typography in a tight two-column grid
+  ~ linear.app because Shared commitment to a near-black canvas (#171717-family) and single-weight display type at tight tracking, though Linear adds accent color
+
+#################### ef44a995-6745-4dc7-86ab-f7227f108f81    
+theme=light industry=
+northStar: Grayscale specimen board — a printer's proof sheet where typographic weight IS color.
+northStarDetail: 
+DESCRIPTION: Mobbin runs on pure achromatic restraint — zero chroma across the entire palette, forcing hierarchy through weight, size, and tone alone. The page is white space interrupted by near-black ink (#141414) at display sizes and warm-gray (#707070, #adadad) for secondary text. The custom 'saans' typeface is the single differentiator: fractional weights (440, 456, 652) that don't exist in any system font, creating headline mass that sits between regular and semibold — typography doing the work of color. 9999px pill shapes appear on every interactive element while card content sits on 16-24px rounded rectangles, making buttons feel like badges in a sea of contained thumbnails. The content itself — mobile app screenshots in grayscale cards — IS the visual texture of the page.
+LAYOUT: Max-width centered (~1280px), white background throughout. Hero is vertically centered text stack — large display headline (80px) over a subtitle paragraph over two pill CTAs side by side, with a featured app icon above the headline as a specimen. Below the hero: full-width trust logo bar with muted gray brand logos. The gallery section introduces a sticky secondary nav (app type tabs, search bar, filter row) above a 3-column card grid with comfortable 16-20px gutters. Testimonials section uses a 4-column masonry-style text card grid on white. Navigation is a floating top bar with logo left, text links center, CTA pill right — switches from transparent to white/f2f2f2 on scroll. Section vertical rhythm is consistently 80px between major blocks. No alternating dark/light bands — the entire page is white with card grids providing visual texture.
+IMAGERY: Content IS the imagery: grayscale mobile app screenshots displayed as contained cards in a 3-column grid. Screenshots are cropped to phone frames, placed on white card backgrounds with 16px radius, and rendered in desaturated tones that match the achromatic brand palette — colorful apps appear muted because the surrounding UI demands it. No lifestyle photography, no illustrations, no abstract graphics. Partner/customer logos (Uber, Meta, Airbnb, etc.) appear as flat monochrome SVGs in a trust bar. The Revolut-style app icon in the hero (rounded square, 24px radius, green fill with white symbol) is the only chromatic element on the page — a deliberate specimen of the content being showcased, not a brand choice. Icon style throughout the UI is outlined, thin stroke (~1.5px), monochrome #141414.
+-- COLORS
+  [neutral] Midnight Ink #141414 :: Primary text, headings, filled CTA buttons, nav items, icon strokes — the single chromatic workhorse of an achromatic system
+  [neutral] Pure Canvas #ffffff :: Page background, card surfaces, button text on dark fills
+  [neutral] Graphite #707070 :: Body copy, secondary links, descriptive text
+  [neutral] Ash #adadad :: Tertiary text, disabled/muted button borders, placeholder icons
+  [neutral] Fog #ededed :: Dividers, subtle borders, card outlines
+  [neutral] Mist #f2f2f2 :: Nav background tint, input fields, inner surface elevation
+  [neutral] Silver #c2c2c2 :: Skeleton loaders, inactive UI fills
+  [neutral] Slate Shadow #e0e0e0 :: Inset button shadow ring (rgba(64,64,64,0.16) 0px 0px 0px 1px)
+-- SURFACES
+  L0 Page #ffffff :: Root page background
+  L1 Card #ffffff :: Gallery cards, testimonial cards — differentiated from page by 1px #ededed border, not background change
+  L2 Input / Chip #f2f2f2 :: Search bars, nav tint, inner UI fills
+  L3 Overlay Dropdown #ffffff :: Category mega-menu, floating panels — elevated via rgba(0,0,0,0.04) 0px 8px 40px shadow
+-- TYPE
+  FAM saans | sizes=12px, 14px, 16px, 20px, 32px, 56px, 80px | w=400, 440, 456, 600, 652 | lh=1.00–1.50 (tight 1.00–1.15 at display, looser 1.38–1.50 at body) | ls=-0.88px at 80px (-0.011em), -0.39px at 56px (-0.007em), +0.21px at 16px (+0.013em), +0.28px at 20px (+0.014em), +0.20px at 12px (+0.017em) | sub=Inter Variable or Geist (closest variable-axis fallbacks with comparable optical geometry) | feat="calt" 0, "dlig", "ss07"
+      ROLE: Every text element on the site. Fractional weights (440, 456, 652) are the signature — they occupy visual mass between Regular and Semibold that no variable-axis font exposes as named stops. Display headlines at 80px/56px run weight 600–652 at lineHeight 1.00–1.13 with negative letter-spacing (-0.011em at large sizes). Body runs 14–16px at weight 400 with tracking +0.013–0.017em for small-size legibility.
+  SCALE caption = 12px / lh 16 / ls 0.2
+  SCALE body-sm = 14px / lh 20 / ls 
+  SCALE body = 16px / lh 22 / ls 0.21
+  SCALE subheading = 20px / lh 28 / ls 0.28
+  SCALE heading = 32px / lh 42 / ls 
+  SCALE heading-lg = 56px / lh 63 / ls -0.39
+  SCALE display = 80px / lh 80 / ls -0.88
+-- SPACING
+  baseUnit= density= elementGap=8-16px sectionGap=80px cardPadding=16-24px pageMaxWidth=1280px
+  radius: {"tags":"9999px","cards":"16-24px","inputs":"9999px","modals":"24px","buttons":"9999px","thumbnails":"16px"}
+-- ELEVATION
+-- COMPONENTS
+  + Button Group — Primary, Outlined & Muted :: 
+  + Search Input with Filter Pills :: 
+  + Testimonial Cards :: 
+  + Primary Filled Button :: Main CTA — 'Join for free'
+      Background #141414, text #ffffff, radius 9999px, padding 0px 16px (height set by line-height), font saans weight 600 at 14–16px. Inset shadow ring rgba(64,64,64,0.16) 0px 0px 0px 1px on hover state.
+  + Outlined Pill Button :: Secondary action — 'See our plans'
+      Background transparent, text #141414, border 1px solid #141414, radius 9999px, padding 0px 16px. Sits beside primary CTA as a lighter-weight alternative.
+  + Muted Pill Button :: Tertiary / inactive filter tabs
+      Background transparent, text #adadad, border 1px solid #adadad, radius 9999px, padding 0px 12px. Used for unselected tab filters like 'Most popular', 'Top rated'.
+  + Inline Underline Link :: Inline text action with no pill shape
+      Background transparent, text #141414, border-radius 0px, padding 2px on all sides. No background, no border — purely typographic. Used for secondary in-text navigation.
+  + App Screenshot Card :: Primary content unit in the gallery grid
+      White background, border 1px solid #ededed, radius 16px, padding 16px. Contains a mobile phone screenshot image (radius 12–16px on the image itself), a 'New' or 'Updated' badge (9999px pill, #141414 fill, white text, 12px font), and app name in saans 14px weight 440 #141414.
+  + Category Navigation Menu :: Mega-dropdown showing filter categories
+      White background, box-shadow rgba(0,0,0,0.04) 0px 8px 40px 0px, radius 24px, padding 24-32px. Four-column grid layout with category labels in saans 12px weight 400 #adadad uppercase, and category items in saans 16px weight 440 #141414.
+  + Top Navigation Bar :: Sticky global navigation
+      Background #ffffff or #f2f2f2 tint, padding 0 24px, height 60px. Logo left-aligned, nav links (saans 14px weight 440 #141414) center, 'Join for free' filled pill button right. All nav links are plain text — no underline, no border.
+  + Filter Pill / Tab Row :: Horizontal scrollable filter bar above the gallery
+      Row of pill buttons. Active: background #141414 text #ffffff radius 9999px padding 4px 12px. Inactive: background transparent text #141414 border 1px solid #141414 radius 9999px padding 4px 12px. Font saans 14px weight 440. Gap 8px between pills.
+  + Search Input :: App/screen search bar
+      Background #f2f2f2, border none, radius 9999px, padding 8px 16px, placeholder text saans 14px #adadad, input text saans 14px #141414. Search icon left-inset, 'Text in Screenshot' toggle pill right-inset.
+  + Section Stat Display :: Hero library size counter
+      Display number at 56–80px saans weight 652, letter-spacing -0.88px, line-height 1.00, color #141414. Label text below at 16–20px weight 440 #707070. Numbers are the visual centerpiece — no decorative elements.
+-- DOS
+  DO Use #141414 as the only 'color' — every UI accent, icon, filled button, and active state is this near-black, never a chromatic hue.
+  DO Apply 9999px radius to every interactive pill element: buttons, tags, search inputs, filter chips. Non-interactive content containers use 16–24px radius.
+  DO Set display headlines (56–80px) at saans weight 600–652 with letter-spacing -0.007em to -0.011em and lineHeight 1.00–1.13.
+  DO Use font-feature-settings: '"calt" 0, "dlig", "ss07"' on all saans text to activate the custom ligature and stylistic set that distinguish it from fallback sans-serifs.
+  DO Differentiate card elevation with 1px solid #ededed borders only — never box-shadow on cards. Reserve box-shadow exclusively for floating dropdowns.
+  DO Use fractional saans weights: 440 for UI labels/nav, 456 for mid-emphasis body, 652 for hero numerics — never round to 400/500/600 at sizes where the fractional weight is available.
+  DO Maintain 80px vertical section rhythm between major content blocks, with 24px internal card padding as the baseline.
+-- DONTS
+  DONT Never introduce a chromatic accent color — not blue for links, not green for success states, not any hue. The entire brand palette is achromatic.
+  DONT Never use box-shadow on cards or gallery thumbnails — borders do that work; shadows on content cards would compete with the screenshot imagery inside them.
+  DONT Never use font-weight 700 or 800 — the heaviest weight is 652. Heavier weights would break the typographic restraint that defines the system.
+  DONT Never use radius values other than 9999px (interactive), 24px (large containers), 16px (cards/images), or 8px (inline badges) — arbitrary intermediate values destroy the shape vocabulary.
+  DONT Never place colored backgrounds behind sections — alternating band layouts should use #ffffff vs #f2f2f2 at most, never tinted or chromatic fills.
+  DONT Never left-align hero headlines — the centered display type at 80px/56px is the layout anchor; shifting it breaks the symmetry that makes the screenshot grid feel organized.
+  DONT Never remove letter-spacing from display type — at 80px, the -0.88px tracking is what makes saans feel like a custom typeface rather than a generic web font.
+-- CUSTOM
+  [Agent Prompt Guide] $1f
+  [Fractional Weight System] Saans exposes five weight stops that map to semantic roles:
+- 400: long-form body copy, footnotes
+- 440: UI labels, nav links, card metadata, button text on secondary actions
+- 456: mid-emphasis body, subheadings, feature descriptions
+- 600: headlines, section titles, CTA button text
+- 652: hero display numerics, maximum-emphasis headlines at 56–80px
+
+The gap between 440 and 456 is subtle but intentional — 456 is used where 440 reads too light on white at 16–20px, but 600 would feel heavy. Never substitute weight 500 or 700 — no stops exist between 456 and 600 in the intended rendering.
+-- SIMILAR
+  ~ Screenlane because Same achromatic gallery-of-screenshots model with white backgrounds and card-border-only elevation
+  ~ Dribbble because Pill-button navigation and 3-column content grid for design inspiration browsing
+  ~ Lookup.design because Identical concept — no-chroma UI wrapping colorful screenshot content — with similar nav and filter-pill patterns
+  ~ Linear because Fractional-weight custom typography as the primary brand differentiator in an otherwise near-monochrome system
+  ~ Refero.design because App screenshot library with the same white/gray achromatic chrome and pill-shaped filter chips above a grid
+
+#################### a7891223-a93e-4731-a1aa-4079f1ee928b    
+theme=dark industry=design
+northStar: Midnight engineer's terminal with floating chrome artifacts. A single bone-white light source illuminates a dark workshop where text and 3D objects share the stage at maximum density.
+northStarDetail: 
+DESCRIPTION: Yinger's personal site operates as a midnight engineer's terminal: a near-black canvas with warm bone-white type, a single hero 3D artifact floating in negative space, and text pushed aggressively to the edges of the viewport. The system is brutally compact — 4px gaps, 12px labels, 80px displays — creating a cockpit density where every pixel is load-bearing. Color is nearly absent: one warm off-white does all the work, with a whisper of pink-coral bleeding from the 3D rendering as the only chromatic punctuation. Typography is the personality: a chunky custom display face for the masthead and time, a monospaced technical face for telemetry-style labels, and a contrast face for readable prose.
+LAYOUT: Full-bleed edge-to-edge layout with no max-width container. Content is distributed to viewport corners: top-left holds the wordmark, bottom-left holds the time readout and bio cluster, bottom-right holds social pill links, and center holds the 3D hero artifact. Sections are not separated by visual dividers — they flow with 64px vertical padding between groups. Navigation is minimal: no traditional menu, just the four social pills and the wordmark functioning as home link. The grid is a corner-anchored z-pattern, not a centered column layout.
+IMAGERY: Single hero element: isometric 3D-rendered cube cluster floating in negative space, treated in bone-white with soft rose-pink edge-lighting. No photography, no illustration, no product screenshots. The 3D artifact IS the imagery — it occupies the visual center while all text clusters to the edges. Icons are absent; social links are text-only pill buttons. The visual language is one of restraint: a single rendered object, one warm light source, and everything else is type.
+-- COLORS
+  [neutral] Midnight Carbon #12130f :: Dark supporting neutral for text, icons, and strong contrast. Do not promote it to the primary CTA color
+  [neutral] Bone Glow #e4dfda :: Primary text, headings, button text, all body copy. Warm off-white used at every size from 12px telemetry to 80px displays. The only color that does real work
+  [neutral] Charcoal Vein #3c3c38 :: Secondary borders, dividers, subdued UI chrome. Warm mid-gray that registers on the dark canvas without competing with bone-white text
+  [accent] Rose Quartz Bloom #f5c2c8 :: Accent glow on 3D rendered objects, ambient lighting bleed from the hero artifact. Never used on UI chrome — appears only as the soft pink edge-light on cubes
+-- SURFACES
+  L1 Canvas #12130f :: Full-bleed page background, all sections
+  L2 Recessed #12130f :: Cards and content blocks sit flush with the canvas — no elevation differentiation, only spacing and border treatment separate regions
+-- TYPE
+  FAM Arbeit Technik | sizes=12px | w=400 | lh=1.25 | ls=-0.0500em | sub=JetBrains Mono, IBM Plex Mono | feat=
+      ROLE: Telemetry and label text — timestamps, location, status indicators, small caps annotations. 12px only, monospaced, with aggressive -0.6px letter-spacing that makes each character feel stamped. The 'HUD font' for all meta-information.
+  FAM Inline VF | sizes=80px | w=400 | lh=0.70 | ls= | sub=Departure Mono, VT323 | feat=
+      ROLE: Hero display — the time readout and masthead block-letter wordmark. Ultra-condensed vertical metrics (0.70) compress the type into dense rectangular shapes. The signature voice: blocky, digital, unapologetic.
+  FAM Arbeit Contrast | sizes=16px, 30px, 80px | w=400 | lh=0.70, 1.13, 1.25 | ls= | sub=Inter, Söhne, Untitled Sans | feat=
+      ROLE: Readable prose at 16px (body, links), section headings at 30px, and secondary display at 80px. Contrast cuts in the strokes give it authority at every size without increasing weight. The workhorse typeface.
+  SCALE caption = 12px / lh 15 / ls -0.6
+  SCALE body = 16px / lh 20 / ls 0
+  SCALE subheading = 30px / lh 34 / ls 0
+  SCALE display = 80px / lh 56 / ls 0
+-- SPACING
+  baseUnit= density= elementGap=4px sectionGap=64px cardPadding=12px pageMaxWidth=
+  radius: {"tags":"9999px","cards":"0px","links":"2px","buttons":"9999px"}
+-- ELEVATION
+-- COMPONENTS
+  + Pill Link Button :: Social/external navigation buttons (Github, LinkedIn, Twitter/X, Email)
+      9999px border-radius (full pill). Transparent background with #e4dfda text. No border, no fill — ghost style. ~12px vertical padding, 16-20px horizontal padding. Text in Arbeit Technik at 12px, letter-spacing -0.6px. Sits flush against the edge of the viewport.
+  + Underlined Inline Link :: Inline links within body prose
+      2px border-radius (near-square). No background. Text inherits bone-white color with a 2px underline in #e4dfda. Arbeit Contrast 16px. The underline is the only interactive signifier — no color change on hover.
+  + Telemetry Label :: Status/section labels (LOCAL TIME, FORT COLLINS COLORADO, UI Engineer bio)
+      Arbeit Technik 12px, letter-spacing -0.6px, line-height 1.25, all-caps. Bone-white (#e4dfda). Sits at the top of content clusters like a HUD annotation.
+  + Digital Time Readout :: Hero time display showing local time
+      Inline VF at 80px, line-height 0.70, weight 400. Bone-white (#e4dfda). Paired with a smaller 'AM' suffix at ~30px. The most visually dominant element after the 3D hero — communicates 'live, real-time, running'.
+  + Masthead Wordmark :: Brand name in top-left corner
+      Inline VF or custom display face at ~30-40px, bone-white. Tight letter-spacing, blocky letterforms. Functions as a compact brand stamp, not a decorative logo.
+  + 3D Hero Artifact :: Central visual element — isometric rendered cubes
+      Isometric cube cluster rendered in #e4dfda with soft #f5c2c8 (Rose Quartz Bloom) edge-lighting. Floats centered in negative space, viewport-sized. No container, no border, no shadow — the geometry is the component.
+  + Cluster Card :: Tight content groupings (bio block, social links cluster)
+      No background, no border, no padding other than 4-8px gaps between lines. Content is a stack of labels and text. The card is defined by the 4px gap rhythm, not a visual container.
+  + Performance Annotation :: Small technical data callouts (resolution '1440 x 900', FPS '~1210 FPS')
+      Arbeit Technik 12px, bone-white, monospaced alignment with the time readout. Appears as inline-data tags adjacent to the main display — reads like engine telemetry.
+-- DOS
+  DO Use #e4dfda for all text and #12130f for all backgrounds — the two-color system is the system.
+  DO Use 9999px border-radius on all interactive elements (buttons, tags, status indicators).
+  DO Use 2px border-radius on underlined inline links only.
+  DO Set element gaps to 4px and card padding to 12px. Compactness is the aesthetic.
+  DO Use Inline VF at 80px with line-height 0.70 for all hero-scale displays.
+  DO Use Arbeit Technik at 12px with letter-spacing -0.6px for all labels and annotations.
+  DO Push content to the viewport edges — top-left for brand, bottom-left for bio, bottom-right for socials, center for hero.
+-- DONTS
+  DONT Don't introduce new accent colors. Rose Quartz Bloom exists only as 3D rendering bleed, never on UI chrome.
+  DONT Don't use box-shadows or drop-shadows. Depth comes from the 3D artifact, not from CSS elevation.
+  DONT Don't use line-height above 1.25 for any text size. The compressed vertical metrics are signature.
+  DONT Don't center content or add max-width containers. Full-bleed edge-to-edge layout only.
+  DONT Don't use borders on cards or content blocks. Spatial separation comes from 4-8px gaps alone.
+  DONT Don't introduce secondary weights (bold, semibold). Weight 400 at every size — contrast comes from typeface, not weight.
+  DONT Don't use pure white (#ffffff) or pure black (#000000). The warm off-white and warm carbon are the palette.
+-- CUSTOM
+  [Agent Prompt Guide] $1c
+-- SIMILAR
+  ~ Bruno Simon because Same dark-canvas 3D-hero-as-identity approach, single rendered artifact as visual centerpiece, minimal text pushed to viewport edges
+  ~ Vercel Portfolio Templates because Same full-bleed no-container layout, corner-anchored content distribution, and ulta-compact spacing
+  ~ Active Theory because Same dark terminal aesthetic with real-time 3D artifacts and monospaced telemetry-style labels
+  ~ Robin Mastromarino because Same bone-white-on-near-black monochrome palette with 3D rendered hero and compressed technical typography
+

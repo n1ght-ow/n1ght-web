@@ -59,416 +59,124 @@ const MOTION = {
   spring: { duration: 0.6, ease: "back.out(1.7)" },
 };
 
-// split text into chars inside .ch spans (preserves word wrappers)
-function splitChars(el) {
-  const words = el.textContent.split(/(\s+)/);
-  el.innerHTML = "";
-  words.forEach((w) => {
-    if (/^\s+$/.test(w) || w === "") {
-      el.appendChild(document.createTextNode(" "));
-      return;
-    }
-    const wordSpan = document.createElement("span");
-    wordSpan.style.display = "inline-block";
-    wordSpan.style.whiteSpace = "nowrap";
-    [...w].forEach((c) => {
-      const s = document.createElement("span");
-      s.className = "ch";
-      s.textContent = c;
-      wordSpan.appendChild(s);
-    });
-    el.appendChild(wordSpan);
-  });
-  return el.querySelectorAll(".ch");
+/* ---------- hero entrance ----------
+   The one entrance that runs without being scrolled into view: the image
+   settles out of a slight overscale while the type rises. Transform and
+   opacity only, and skipped entirely under reduced motion. */
+
+const heroMedia = document.querySelector(".hero-media img");
+
+if (!REDUCED) {
+  const heroTl = gsap.timeline({ defaults: { ease: MOTION.enter.ease } });
+  if (heroMedia) heroTl.from(heroMedia, { scale: 1.06, autoAlpha: 0, duration: 1.6, ease: "power2.out" });
+  heroTl
+    .from(".hero-eyebrow", { y: 14, autoAlpha: 0, duration: 0.7 }, 0.2)
+    .from(".hero-title", { y: 30, autoAlpha: 0, duration: MOTION.enter.longDuration }, 0.3)
+    .from(".hero-stats > div", { y: 14, autoAlpha: 0, duration: 0.7, stagger: 0.07 }, 0.5);
 }
 
-/* ---------- custom cursor + magnetic (fine pointers, motion allowed) ----------
-   Ink needle + floating label: the dot stays small, a thin ring marks
-   interactive targets, and [data-cursor] targets (VIEW / DRAG / OPEN /
-   STAMP) show a compact mono pill offset from the pointer. Magnetic elements
-   lean toward the pointer and spring back on leave. */
+/* ---------- photography: short entry fade ----------
+   The references reveal imagery with a short fade rather than a long
+   choreography: a photo grid reads as more premium the less it performs.
+   ScrollTrigger.batch gives one trigger per screenful, not one per card. */
 
-function initCursor() {
-  if (TOUCH || !FINE_POINTER || REDUCED) return;
-  const cursor = document.createElement("div");
-  cursor.className = "custom-cursor";
-  cursor.setAttribute("aria-hidden", "true");
-  cursor.innerHTML = '<span class="cc-ring"></span><span class="cc-dot"></span><span class="cc-label mono"></span>';
-  document.body.appendChild(cursor);
-  document.documentElement.classList.add("has-cursor");
-
-  const dot = cursor.querySelector(".cc-dot");
-  const ring = cursor.querySelector(".cc-ring");
-  const label = cursor.querySelector(".cc-label");
-
-  // the container is a 0x0 point; children center themselves on it
-  gsap.set(cursor, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
-  gsap.set([dot, ring], { xPercent: -50, yPercent: -50 });
-  gsap.set(ring, { autoAlpha: 0, scale: 0.6 });
-  gsap.set(label, { autoAlpha: 0, scale: 0.94 });
-
-  // feedback: cursor follow is high-frequency direct manipulation
-  const cx = gsap.quickTo(cursor, "x", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
-  const cy = gsap.quickTo(cursor, "y", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
-  // quickTo on the `scale` alias does not tween reliably, so drive scaleX +
-  // scaleY on the dot and keep the label as a separate element.
-  const growX = gsap.quickTo(dot, "scaleX", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
-  const growY = gsap.quickTo(dot, "scaleY", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
-  const grow = (v) => { growX(v); growY(v); };
-
-  let pointerX = window.innerWidth / 2;
-  let pointerY = window.innerHeight / 2;
-  let baseScale = 1;
-  let ringScale = 0.6;
-  let activeEl = null;
-  let labelW = 0;
-  let labelH = 0;
-  let labelFlipX = false;
-  let labelFlipY = false;
-
-  // the label docks beside the dot and flips near the viewport edges; only
-  // re-position when the flip state changes so pointermove stays cheap
-  const positionLabel = () => {
-    if (!labelW) return;
-    const gap = 20;
-    const flipX = pointerX + gap + labelW > window.innerWidth - 12;
-    const flipY = pointerY + gap + labelH > window.innerHeight - 12;
-    if (flipX === labelFlipX && flipY === labelFlipY) return;
-    labelFlipX = flipX;
-    labelFlipY = flipY;
-    gsap.set(label, {
-      x: flipX ? -(labelW + gap) : gap,
-      y: flipY ? -(labelH + gap) : gap,
-      transformOrigin: `${flipX ? "100%" : "0%"} ${flipY ? "100%" : "0%"}`
-    });
-  };
-
-  window.addEventListener("pointermove", (e) => {
-    pointerX = e.clientX;
-    pointerY = e.clientY;
-    cx(pointerX);
-    cy(pointerY);
-    if (activeEl && activeEl.hasAttribute("data-cursor")) positionLabel();
-  }, { passive: true });
-
-  const showLabel = (el) => {
-    label.textContent = el.getAttribute("data-cursor");
-    const gap = 20;
-    labelW = label.offsetWidth;
-    labelH = label.offsetHeight;
-    labelFlipX = pointerX + gap + labelW > window.innerWidth - 12;
-    labelFlipY = pointerY + gap + labelH > window.innerHeight - 12;
-    gsap.set(label, {
-      x: labelFlipX ? -(labelW + gap) : gap,
-      y: labelFlipY ? -(labelH + gap) : gap,
-      transformOrigin: `${labelFlipX ? "100%" : "0%"} ${labelFlipY ? "100%" : "0%"}`
-    });
-    gsap.to(label, { autoAlpha: 1, scale: 1, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
-  };
-
-  const hideLabel = () => {
-    gsap.to(label, { autoAlpha: 0, scale: 0.94, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
-  };
-
-  document.addEventListener("mouseover", (e) => {
-    pointerX = e.clientX;
-    pointerY = e.clientY;
-    // text fields keep the native I-beam; range controls keep the custom cursor
-    const overText = e.target.closest("input:not([type='range']), textarea, select, [contenteditable='true']");
-    cursor.classList.toggle("is-hidden", Boolean(overText));
-    if (overText) return;
-
-    const labelled = e.target.closest("[data-cursor]");
-    const interactive = e.target.closest("a, button, .photo-frame-btn, .hof-card, .hof-item, .idx-row, .idx-card");
-    const next = labelled || interactive || null;
-    if (next === activeEl) return;
-    activeEl = next;
-
-    if (labelled) {
-      baseScale = 1.35;
-      ringScale = 1.25;
-      showLabel(labelled);
-      gsap.to(ring, { autoAlpha: 0.6, scale: ringScale, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
-    } else if (interactive) {
-      baseScale = 1;
-      ringScale = 1;
-      hideLabel();
-      gsap.to(ring, { autoAlpha: 0.6, scale: ringScale, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
-    } else {
-      baseScale = 1;
-      ringScale = 0.6;
-      hideLabel();
-      gsap.to(ring, { autoAlpha: 0, scale: ringScale, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
-    }
-    grow(baseScale);
+if (!REDUCED && window.ScrollTrigger) {
+  ScrollTrigger.batch(".photo-frame", {
+    start: "top 90%",
+    once: true,
+    onEnter: (batch) =>
+      gsap.from(batch, {
+        y: 18,
+        autoAlpha: 0,
+        duration: 0.55,
+        ease: MOTION.enter.ease,
+        stagger: 0.06,
+        overwrite: true,
+      }),
   });
-
-  document.addEventListener("mousedown", () => {
-    grow(baseScale * 0.96);
-    gsap.to(ring, { scale: ringScale * 0.96, duration: MOTION.feedback.press, ease: "power2.in", overwrite: "auto" });
-  });
-  document.addEventListener("mouseup", () => {
-    grow(baseScale);
-    gsap.to(ring, { scale: ringScale, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
-  });
-  document.documentElement.addEventListener("mouseleave", () => gsap.to(cursor, { autoAlpha: 0, duration: MOTION.feedback.duration, overwrite: "auto" }));
-  document.documentElement.addEventListener("mouseenter", () => gsap.to(cursor, { autoAlpha: 1, duration: MOTION.feedback.duration, overwrite: "auto" }));
 }
-initCursor();
 
-function initMagnetic() {
-  if (TOUCH || !FINE_POINTER || REDUCED) return;
-  gsap.utils.toArray(".nav-links a, .tab-btn, .lb-close, .lb-nav, .footer-links a").forEach((el) => {
-    // high-frequency drag-follow: tight near-instant follow, no elastic release
-    // feedback: magnetic follow is high-frequency direct manipulation
-    const xTo = gsap.quickTo(el, "x", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
-    const yTo = gsap.quickTo(el, "y", { duration: MOTION.feedback.duration, ease: MOTION.feedback.ease });
-    el.addEventListener("pointermove", (e) => {
-      const r = el.getBoundingClientRect();
-      xTo((e.clientX - (r.left + r.width / 2)) * 0.3);
-      yTo((e.clientY - (r.top + r.height / 2)) * 0.3);
-    });
+/* ---------- glass spotlight ----------
+   One rAF-throttled style write per frame. GSAP quickTo cannot tween a
+   custom property, so this is hand-rolled on purpose. Fine pointers only:
+   there is no hover to track on touch. */
+
+function initGlassSpotlight() {
+  if (REDUCED || !FINE_POINTER) return;
+  document.querySelectorAll(".glass--spot").forEach((el) => {
+    let frame = 0;
+    let px = 50;
+    let py = 50;
+    const apply = () => {
+      frame = 0;
+      el.style.setProperty("--mx", px + "%");
+      el.style.setProperty("--my", py + "%");
+    };
+    el.addEventListener(
+      "pointermove",
+      (e) => {
+        const r = el.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        px = ((e.clientX - r.left) / r.width) * 100;
+        py = ((e.clientY - r.top) / r.height) * 100;
+        if (!frame) frame = requestAnimationFrame(apply);
+      },
+      { passive: true }
+    );
     el.addEventListener("pointerleave", () => {
-      gsap.to(el, { x: 0, y: 0, duration: MOTION.feedback.duration, ease: MOTION.feedback.ease, overwrite: "auto" });
+      if (frame) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      }
+      el.style.removeProperty("--mx");
+      el.style.removeProperty("--my");
     });
   });
 }
-initMagnetic();
 
-/* ---------- preloader ---------- */
+initGlassSpotlight();
 
-const preloader = document.getElementById("preloader");
-const preLetters = document.querySelectorAll("#pre-letters span:not(.pre-gap)");
-const preBar = document.getElementById("pre-bar");
-const preCount = document.getElementById("pre-count");
+/* ---------- counters ----------
+   textContent is not a tweenable property, so a plain object is tweened
+   with snap and written back on update. The values are tabular-nums, so
+   the digits do not reflow while they climb. */
 
-// only eager images gate the preloader; the lazy gallery images load on
-// demand as they approach the viewport and must not block the loader
-const images = Array.from(document.images).filter((img) => img.loading !== "lazy");
-let loaded = 0;
-const total = images.length;
+function initCounters() {
+  const nodes = Array.from(document.querySelectorAll("#about-stats b[data-count]"));
+  if (!nodes.length) return;
 
-const heroChars = [];
-document.querySelectorAll("[data-split]").forEach((el) => {
-  heroChars.push(...splitChars(el));
-});
-gsap.set(heroChars, { yPercent: 120 });
-
-let preloadFinished = false;
-
-function finishPreload() {
-  if (preloadFinished) return;
-  preloadFinished = true;
-
-  const settle = () => {
-    // recalc once the reveal is done, then again after lazy gallery
-    // images settle so the drag distances stay accurate
-    ScrollTrigger.refresh();
-    scheduleRefresh(800);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => scheduleRefresh(100));
-    }
+  const write = (el, value) => {
+    const n = Math.round(value);
+    el.textContent = el.dataset.sep === "1" ? n.toLocaleString("en-US") : String(n);
   };
 
-  if (REDUCED) {
-    // static reveal: plain sets apply synchronously — the reduced-motion
-    // path must never depend on the animation ticker, or a paused rAF
-    // (background tab, throttled webview) would trap the user on the loader
-    gsap.set(heroChars, { yPercent: 0 });
-    preloader.remove();
-    settle();
+  if (REDUCED || !window.ScrollTrigger) {
+    nodes.forEach((el) => write(el, Number(el.dataset.count)));
     return;
   }
 
-  const tl = gsap.timeline({
-    onComplete: () => {
-      preloader.remove();
-      settle();
+  ScrollTrigger.create({
+    trigger: "#about-stats",
+    start: "top 88%",
+    once: true,
+    onEnter: () => {
+      nodes.forEach((el) => {
+        const box = { v: 0 };
+        gsap.to(box, {
+          v: Number(el.dataset.count) || 0,
+          duration: 1.2,
+          ease: "power2.out",
+          snap: { v: 1 },
+          onUpdate: () => write(el, box.v),
+        });
+      });
     },
   });
-
-  tl.to("#preloader .pre-inner", { autoAlpha: 0, duration: 0.45, ease: "power2.in" })
-    .to(".pre-shutter.s1", { y: "0%", duration: 0.55, ease: "power4.inOut" }, "-=0.15")
-    .to(".pre-shutter.s2", { y: "0%", duration: 0.55, ease: "power4.inOut" }, "-=0.42")
-    .to(".pre-shutter.s3", { y: "0%", duration: 0.55, ease: "power4.inOut" }, "-=0.42")
-    .add(() => {
-      gsap.set(".pre-shutter", { zIndex: 5 });
-    })
-    .to(".pre-shutter.s1", { y: "-101%", duration: 0.7, ease: "power4.inOut" })
-    .to(".pre-shutter.s2", { y: "-101%", duration: 0.7, ease: "power4.inOut" }, "-=0.55")
-    .to(".pre-shutter.s3", { y: "-101%", duration: 0.7, ease: "power4.inOut" }, "-=0.55")
-    // hero entrance
-    .to(heroChars, { yPercent: 0, duration: 1.1, stagger: 0.035, ease: "power4.out" }, "-=0.45");
 }
 
-// progress-driven letter ignition
-function setProgress(ratio) {
-  const pct = Math.round(ratio * 100);
-  preCount.textContent = String(pct).padStart(3, "0");
-  gsap.to(preBar, { scaleX: ratio, duration: 0.3, ease: "power2.out", overwrite: true });
-  const lit = Math.floor(ratio * preLetters.length);
-  preLetters.forEach((el, i) => {
-    if (i < lit && !el.dataset.lit) {
-      el.dataset.lit = "1";
-      gsap.to(el, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" });
-    }
-  });
-}
-
-function onImgDone() {
-  loaded++;
-  setProgress(loaded / total);
-  if (loaded >= total) setTimeout(finishPreload, 350);
-}
-
-if (REDUCED) {
-  finishPreload();
-} else if (total === 0) {
-  setProgress(1);
-  setTimeout(finishPreload, 350);
-} else {
-  images.forEach((img) => {
-    // complete === true also covers failed loads (the error listener below
-    // would never fire retroactively) — count them as done so the loader
-    // can't hang on a broken file
-    if (img.complete) onImgDone();
-    else {
-      img.addEventListener("load", onImgDone, { once: true });
-      img.addEventListener("error", onImgDone, { once: true });
-    }
-  });
-  // hard fail-safe: never trap the user on the loader
-  setTimeout(() => {
-    if (document.body.contains(preloader)) finishPreload();
-  }, 4500);
-}
+initCounters();
 
 
-/* ---------- hero bubbles: click to pop, respawn at a random spot ---------- */
-
-const bubbleField = document.getElementById("bubble-field");
-const BUBBLE_COUNT = window.innerWidth < 720 ? 14 : 24;
-
-const BUBBLE_TINTS = [
-  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(221,183,107,0.45) 42%, rgba(201,162,39,0.10) 100%)",
-  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(243,233,210,0.6) 42%, rgba(221,183,107,0.12) 100%)",
-  "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 16%, rgba(126,95,32,0.26) 42%, rgba(126,95,32,0.06) 100%)",
-];
-
-// Infinite decorative loops that should only tick while the hero is on
-// screen (bubbles + hero orbs). Paused tweens stop costing gsap.ticker.
-const heroLoopTweens = new Set();
-
-function spawnBubble() {
-  if (!bubbleField) return;
-  const b = document.createElement("div");
-  b.className = "bubble";
-  const small = window.innerWidth < 720;
-  const size = small ? 26 + Math.random() * 56 : 34 + Math.random() * 76;
-  b.style.width = size + "px";
-  b.style.height = size + "px";
-  b.style.left = 2 + Math.random() * 90 + "%";
-  b.style.top = 4 + Math.random() * 88 + "%";
-  b.style.opacity = 0.4 + Math.random() * 0.3;
-  b.style.background = BUBBLE_TINTS[Math.floor(Math.random() * BUBBLE_TINTS.length)];
-  bubbleField.appendChild(b);
-
-  // gentle bob/sway; bubbles never leave the hero
-  const bob = 14 + Math.random() * 30;
-  const dur = 4 + Math.random() * 5;
-
-  if (!REDUCED) {
-    heroLoopTweens.add(gsap.to(b, {
-      y: -bob,
-      x: (Math.random() - 0.5) * 46,
-      duration: dur,
-      ease: "sine.inOut",
-      yoyo: true,
-      repeat: -1,
-      delay: Math.random() * 2,
-    }));
-  }
-
-  b.addEventListener("click", () => {
-    b.style.pointerEvents = "none";
-    gsap.killTweensOf(b);
-    heroLoopTweens.forEach((tw) => {
-      if (tw.targets()[0] === b) heroLoopTweens.delete(tw);
-    });
-    if (REDUCED) {
-      // no pop animation under reduced motion: swap in place
-      b.remove();
-      spawnBubble();
-      return;
-    }
-    gsap.timeline({
-      onComplete: () => { b.remove(); spawnBubble(); },
-    }).to(b, { scale: 1.9, autoAlpha: 0, duration: 0.28, ease: "power2.in" });
-  });
-}
-
-for (let i = 0; i < BUBBLE_COUNT; i++) spawnBubble();
-
-/* ---------- photo field roll: entrance + progress line ---------- */
-
-const photoRoll = document.querySelector(".photo-roll");
-const photoMeterFill = document.getElementById("photo-roll-fill");
-const photoMeterAct = document.getElementById("photo-roll-act");
-const photoMeterCount = document.getElementById("photo-roll-count");
-
-if (photoRoll && !REDUCED && window.ScrollTrigger) {
-  // signature moment: the gold roll line fills as the chapter scrolls
-  if (photoMeterFill) {
-    let lastMeterFrame = 0;
-    let lastMeterAct = "";
-    gsap.fromTo(photoMeterFill, { scaleX: 0 }, {
-      scaleX: 1,
-      ease: "none",
-      scrollTrigger: {
-        trigger: photoRoll,
-        start: "top 72%",
-        end: "bottom 72%",
-        scrub: true,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const frame = Math.min(11, Math.max(1, Math.round(self.progress * 10) + 1));
-          if (frame !== lastMeterFrame) {
-            lastMeterFrame = frame;
-            if (photoMeterCount) photoMeterCount.textContent = "FRAME " + String(frame).padStart(2, "0") + " / 11";
-            const act = frame <= 7 ? "BLOOM" : "HORIZON";
-            if (act !== lastMeterAct) {
-              lastMeterAct = act;
-              if (photoMeterAct) photoMeterAct.textContent = act;
-            }
-          }
-        },
-      },
-    });
-  }
-
-  // enter: photo field roll is a low-frequency narrative entrance
-  gsap.utils.toArray(".photo-act").forEach((act) => {
-    gsap.from(act.querySelectorAll(".photo-frame"), {
-      clipPath: "inset(0 0 100% 0)",
-      y: 24,
-      autoAlpha: 0,
-      duration: MOTION.enter.duration,
-      ease: MOTION.enter.ease,
-      stagger: MOTION.enter.stagger,
-      immediateRender: false,
-      scrollTrigger: { trigger: act, start: "top 78%", toggleActions: "play none none none" },
-    });
-  });
-  gsap.from(".photo-frame-lead", {
-    clipPath: "inset(0 0 100% 0)",
-    y: 24,
-    autoAlpha: 0,
-    duration: MOTION.enter.duration,
-    ease: MOTION.enter.ease,
-    immediateRender: false,
-    scrollTrigger: { trigger: ".photo-roll-head", start: "top 82%", toggleActions: "play none none none" },
-  });
-}
 
 /* ---------- unified detail layer: photo / film / series / game / music ----------
    One #lightbox serves every archive type. The photo viewer keeps its frame
@@ -1046,7 +754,6 @@ function initArchiveTabs() {
 
 initArchiveTabs();
 
-
 /* ---------- music panel: genre filter + search + random pick ----------
    The playlist renders fully expanded (no accordion); the chip row filters
    by genre, the search filters within the visible genres, and the random
@@ -1396,180 +1103,38 @@ if (TOUCH) {
    background + chip swap, no transform) — high-frequency interactions
    get instant feedback per the motion rules in AGENTS.md ---------- */
 
-/* ---------- poem stamp under reduced motion: purely decorative ----------
-   The slam/restamp handlers live inside the !REDUCED guard below; without
-   this the stamp would render as a focusable button that does nothing. */
-if (REDUCED) {
-  const stamp = document.querySelector(".poem-stamp");
-  if (stamp) {
-    stamp.removeAttribute("tabindex");
-    stamp.removeAttribute("role");
-    stamp.setAttribute("aria-hidden", "true");
-    stamp.style.cursor = "default";
-    stamp.classList.add("is-static");
-  }
-}
-
 /* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
-  /* ---------- hero: floating orbs + mouse parallax ---------- */
-
-  const orbLoops = [
-    gsap.to(".orb-1", { y: 60, x: -30, duration: 14, repeat: -1, yoyo: true, ease: "sine.inOut" }),
-    gsap.to(".orb-2", { y: -50, x: 40, duration: 11, repeat: -1, yoyo: true, ease: "sine.inOut" }),
-    gsap.to(".orb-3", { y: 40, x: 25, duration: 9, repeat: -1, yoyo: true, ease: "sine.inOut" }),
-  ];
-  orbLoops.forEach((tw) => heroLoopTweens.add(tw));
-
-  // Hibernate offscreen decor: pause the bubble/orb loops while the hero is
-  // out of view, resume in place when it returns. onRefresh re-syncs after
-  // global refreshes (e.g. a mid-page reload that restores scroll).
-  const heroHibernator = ScrollTrigger.create({
-    trigger: ".hero",
-    start: "top top",
-    end: "bottom top",
-    onToggle: (self) => heroLoopTweens.forEach((tw) => tw.paused(!self.isActive)),
-    onRefresh: (self) => heroLoopTweens.forEach((tw) => tw.paused(!self.isActive)),
-  });
-  heroLoopTweens.forEach((tw) => tw.paused(!heroHibernator.isActive));
-
-  const hero = document.querySelector(".hero");
-  const depthEls = gsap.utils.toArray("[data-depth]").map((el) => ({
-    el,
-    depth: parseFloat(el.dataset.depth),
-    qx: gsap.quickTo(el, "x", { duration: 1.2, ease: "power3.out" }),
-    qy: gsap.quickTo(el, "y", { duration: 1.2, ease: "power3.out" }),
-  }));
-
-  hero.addEventListener("pointermove", (e) => {
-    const nx = e.clientX / window.innerWidth - 0.5;
-    const ny = e.clientY / window.innerHeight - 0.5;
-    depthEls.forEach(({ depth, qx, qy }) => {
-      qx(nx * depth);
-      qy(ny * depth);
-    });
-  });
-
-  // hero drifts up slightly as you leave it
-  gsap.to(".hero-inner", {
-    yPercent: -12,
-    opacity: 0.25,
-    ease: "none",
-    scrollTrigger: {
-      trigger: ".hero",
-      start: "top top",
-      end: "bottom top",
-      scrub: true,
-      invalidateOnRefresh: true,
-    },
-  });
-
-  /* ---------- big split headers: edge words slide to a centered lockup ----------
-     All header motion is scrub-locked to scroll position (no time-based
-     toggles), so fast scrolling can never leave the titles mid-animation. */
-
-  function splitHeadParallax(headId) {
-    const head = document.getElementById(headId);
-    if (!head) return;
-    const left = head.querySelector(".bh-left .bh-word");
-    const right = head.querySelector(".bh-right .bh-word");
-
-    // shift (in % of the word's own width) that centers the word in its line;
-    // left word slides right (+), right word slides left (-)
-    const slideToCenter = (word, sign) => () => {
-      const line = word.parentElement;
-      const lw = line.clientWidth;
-      const ww = word.offsetWidth;
-      if (!lw || !ww) return 0;
-      return (sign * ((lw - ww) / 2) * 100) / ww;
-    };
-
-    const converge = { start: "top 95%", end: "center center", scrub: true, invalidateOnRefresh: true };
-    if (left) {
-      gsap.fromTo(left, { xPercent: 0 }, {
-        xPercent: slideToCenter(left, 1),
-        ease: "none",
-        scrollTrigger: { trigger: head, ...converge },
-      });
-    }
-    if (right) {
-      gsap.fromTo(right, { xPercent: 0 }, {
-        xPercent: slideToCenter(right, -1),
-        ease: "none",
-        scrollTrigger: { trigger: head, ...converge },
-      });
-    }
-
-    // rise out of the overflow masks while converging
-    gsap.from(head.querySelectorAll(".bh-line .bh-word"), {
-      yPercent: 110,
+  /* hero: the image drifts up as the section leaves, so the first scroll
+     has a reason to move. Scrub-locked, transform only. */
+  if (heroMedia) {
+    gsap.to(heroMedia, {
+      yPercent: 8,
+      scale: 1.05,
       ease: "none",
       scrollTrigger: {
-        trigger: head,
-        start: "top 98%",
-        end: "top 50%",
-        scrub: true,
-        invalidateOnRefresh: true,
-      },
-    });
-    gsap.from(head.querySelectorAll(".bh-meta span"), {
-      clipPath: "inset(0 0 100% 0)",
-      yPercent: 60,
-      ease: "none",
-      stagger: 0.08,
-      scrollTrigger: {
-        trigger: head,
-        start: "top 85%",
-        end: "top 42%",
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
         scrub: true,
         invalidateOnRefresh: true,
       },
     });
   }
 
-  splitHeadParallax("photo-head");
-  splitHeadParallax("archive-head");
-  splitHeadParallax("about-head");
+  /* ---------- game cards: staggered entrance ----------
+     enter: the roster is the longest low-frequency entrance on the page. */
 
-  /* ---------- section mask reveals (curtain wipe) ----------
-     one-off narrative curtain: 1.25s power4.inOut is intentionally longer
-     than MOTION.enter; the mask is a section-level reveal, not a card entrance. */
-
-  gsap.utils.toArray(".sec-mask").forEach((mask) => {
-    gsap.fromTo(mask,
-      { clipPath: "inset(0 0 100% 0)" },
-      {
-        clipPath: "inset(0 0 0% 0)",
-        duration: 1.25,
-        ease: "power4.inOut",
-        scrollTrigger: {
-          trigger: mask,
-          start: "top 88%",
-          toggleActions: "play none none reverse",
-        },
-      });
-  });
-
-  /* ---------- hall of fame cards: staggered entrance ----------
-     enter: HOF card reveal is the longest low-frequency entrance (top of range) */
-
-  gsap.from(".hof-card", {
-    y: 90,
-    rotationX: -8,
-    clipPath: "inset(0 0 100% 0)",
-    transformOrigin: "center bottom",
+  gsap.from(".hof-item", {
+    y: 28,
+    autoAlpha: 0,
     duration: MOTION.enter.longDuration,
-    stagger: { each: MOTION.enter.stagger, from: "start" },
+    stagger: MOTION.enter.stagger,
     ease: MOTION.enter.heavyEase,
-    clearProps: "clipPath",
-    // never hide the cards before the trigger fires: if the trigger is
-    // missed for any reason the cards stay visible instead of blanking.
     immediateRender: false,
     scrollTrigger: {
-      // trigger the grid itself: the cards are laid out in one track, so the
-      // reveal plays once for the whole roster.
       trigger: ".hof",
-      start: "top 70%",
+      start: "top 78%",
       toggleActions: "play none none reverse",
     },
   });
@@ -1608,14 +1173,17 @@ if (!REDUCED) {
   /* ---------- about stats entrance ----------
      enter: low-frequency reveal; MOTION.enter.duration replaces the old 0.7s */
 
-  gsap.from(".about-stats span", {
-    yPercent: 110,
+  /* ---------- about stats: low-frequency reveal ---------- */
+
+  gsap.from("#about-stats div", {
+    y: 16,
+    autoAlpha: 0,
     duration: MOTION.enter.duration,
-    stagger: 0.08,
+    stagger: 0.06,
     ease: MOTION.enter.ease,
     scrollTrigger: {
-      trigger: ".about-stats",
-      start: "top 85%",
+      trigger: "#about-stats",
+      start: "top 88%",
       toggleActions: "play none none reverse",
     },
   });
@@ -1635,112 +1203,20 @@ if (!REDUCED) {
     },
   });
 
-  /* ---------- poem: stamp slam + ink-develop entrance (the section's signature) ---------- */
+  /* ---------- poem: stanza develop ---------- */
 
-  const poemSheet = document.querySelector(".poem-sheet");
-  const poemStamp = document.querySelector(".poem-stamp");
-  const poemLines = gsap.utils.toArray(".poem-text p");
-
-  if (poemSheet && poemStamp && poemLines.length) {
-    gsap.set(poemLines, { clipPath: "inset(0 100% 0 0)" });
-    gsap.set(poemStamp, { opacity: 0, scale: 1.9, rotation: 14 });
-
-    const slamStamp = () => {
-      gsap.timeline()
-        .to(poemStamp, { opacity: 1, scale: 1, rotation: 4, duration: 0.45, ease: "back.in(1.8)" })
-        .to(poemSheet, { y: 6, duration: 0.09, ease: "power2.in" }, ">-0.04")
-        .to(poemSheet, { y: 0, duration: 0.55, ease: "elastic.out(1.4, 0.3)" })
-        .to(poemLines, {
-          clipPath: "inset(0 0% 0 0)",
-          duration: 0.9,
-          stagger: 0.14,
-          ease: "power2.inOut",
-          clearProps: "clipPath",
-        }, "<0.1");
-    };
-
-    ScrollTrigger.create({
-      trigger: poemSheet,
-      start: "top 72%",
-      once: true,
-      onEnter: slamStamp,
-    });
-
-    // the stamp is a state machine: click or Enter/Space to re-stamp
-    const restamp = () => {
-      gsap.set(poemLines, { clipPath: "inset(0 100% 0 0)" });
-      gsap.set(poemStamp, { opacity: 0, scale: 1.9, rotation: 14 });
-      slamStamp();
-    };
-    poemStamp.addEventListener("click", restamp);
-    poemStamp.addEventListener("keydown", (e) => {
-      if (e.key !== "Enter" && e.key !== " ") return;
-      e.preventDefault();
-      restamp();
-    });
-  }
-
-  gsap.from(".poem-block", {
-    y: 40,
-    clipPath: "inset(0 0 100% 0)",
-    duration: 0.9,
-    stagger: 0.14,
-    ease: "power3.out",
-    clearProps: "clipPath",
-    scrollTrigger: {
-      trigger: ".poem-notes",
-      start: "top 86%",
-      toggleActions: "play none none reverse",
-    },
-  });
-
-  /* ---------- ticker: scroll velocity drives speed + skew ----------
-     The marquee loop is owned by GSAP (CSS animation is disabled via
-     .is-js-driven) so fast scrolling can accelerate it; stop settles back. */
-
-  const tickerTracks = gsap.utils.toArray(".ticker-track");
-  if (tickerTracks.length) {
-    const skewSetters = tickerTracks.map((t) => gsap.quickTo(t, "skewX", { duration: 0.55, ease: "power3.out" }));
-    const marqueeTweens = tickerTracks.map((t) => {
-      t.classList.add("is-js-driven");
-      return gsap.to(t, { xPercent: -50, ease: "none", duration: 26, repeat: -1 });
-    });
-
-    // Pause each marquee while its ticker strip is offscreen and resume it in
-    // place on return. The velocity handler below skips paused tweens, so an
-    // offscreen ticker's timeScale stays untouched until it is visible again.
-    tickerTracks.forEach((track, i) => {
-      ScrollTrigger.create({
-        trigger: track.closest(".ticker") || track,
-        start: "top bottom",
-        end: "bottom top",
-        onToggle: (self) => marqueeTweens[i].paused(!self.isActive),
-      });
-    });
-
-    let settleTweens = [];
-    let skewIdle;
-    ScrollTrigger.create({
-      start: 0,
-      end: "max",
-      onUpdate: (self) => {
-        settleTweens.forEach((t) => t.kill());
-        settleTweens = [];
-        const v = gsap.utils.clamp(-9, 9, self.getVelocity() / -300);
-        // velocity magnitude boosts the marquee: 1x idle → ~3.2x flat-out
-        // (visible marquees only; offscreen ones stay paused and untouched)
-        const speed = 1 + (Math.abs(v) / 9) * 2.2;
-        marqueeTweens.forEach((tw) => {
-          if (!tw.paused()) tw.timeScale(speed);
-        });
-        skewSetters.forEach((fn) => fn(v));
-        clearTimeout(skewIdle);
-        skewIdle = setTimeout(() => {
-          settleTweens = marqueeTweens
-            .filter((tw) => !tw.paused())
-            .map((tw) => gsap.to(tw, { timeScale: 1, duration: 0.9, ease: "power2.out" }));
-          skewSetters.forEach((fn) => fn(0));
-        }, 140);
+  const poemLines = gsap.utils.toArray(".poem-verse p");
+  if (poemLines.length) {
+    gsap.from(poemLines, {
+      y: 18,
+      autoAlpha: 0,
+      duration: MOTION.enter.duration,
+      stagger: 0.07,
+      ease: MOTION.enter.ease,
+      scrollTrigger: {
+        trigger: ".poem-verse",
+        start: "top 84%",
+        toggleActions: "play none none reverse",
       },
     });
   }
@@ -1753,6 +1229,10 @@ if (!REDUCED) {
     duration: 1,
     ease: "power4.out",
     clearProps: "clipPath",
+    // never pre-hide the wordmark before the trigger fires: if the trigger
+    // is missed (short page, restored scroll position) the name would stay
+    // clipped out of existence instead of simply not animating.
+    immediateRender: false,
     scrollTrigger: {
       trigger: ".footer",
       start: "top 85%",
@@ -1776,16 +1256,13 @@ const navPairs = navAnchors
   .map((a) => ({ anchor: a, section: document.querySelector(a.getAttribute("href")) }))
   .filter((pair) => pair.section);
 
-const progressFill = document.getElementById("scroll-progress-fill");
-
 // Section offsets are cached on ScrollTrigger refresh (and once at boot);
 // the per-scroll onUpdate only reads these. Reading offsetTop/scrollHeight
 // on every scroll event forces a synchronous layout each time.
 let navOffsets = navPairs.map((p) => p.section.offsetTop);
-let navMaxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
 function cacheNavMetrics() {
   navOffsets = navPairs.map((p) => p.section.offsetTop);
-  navMaxScroll = document.documentElement.scrollHeight - window.innerHeight;
 }
 
 function updateNavAndProgress(self) {
@@ -1794,11 +1271,8 @@ function updateNavAndProgress(self) {
   for (let i = 0; i < navOffsets.length; i++) {
     if (navOffsets[i] <= y) current = i;
   }
-  if (self.scroll() >= navMaxScroll - 4) {
-    current = navPairs.length - 1;
-  }
+  if (self.progress >= 1) current = navPairs.length - 1;
   navPairs.forEach((pair, i) => pair.anchor.classList.toggle("is-active", i === current));
-  if (progressFill) progressFill.style.transform = "scaleX(" + self.progress + ")";
 }
 
 ScrollTrigger.create({

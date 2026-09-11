@@ -1,149 +1,174 @@
-# N1GHT CHXN9 — 项目约定
+# N1GHT CHXN9 - 项目约定
 
 纯静态个人收藏站：`index.html` 双击即用，无构建、无 npm 运行时依赖。改动必须先读本文件。
 
-界面质量标准由两族已安装技能构成（都在 `~/.zcode/skills/`），各管一摊：
+设计事实源是 `DESIGN.md`（token / 排版 / 玻璃配方 / 实测对比度）；本文件管操作约定与红线。
 
-- **design-taste-frontend**（taste-skill，leonxlnx）——设计方向与反模板纪律的事实源：design read 先行、三档 dial、AI tells 禁令、redesign protocol、pre-flight 清单。
-- **better-\* 技能族**（jakubkrehel/skills）——质量事实源：六个领域技能 `better-accessibility` / `better-layout` / `better-typography` / `better-colors` / `better-writing` / `better-ui` 依次为各领域事实来源；编排技能 `better-interface`（合并六域审查），工作流技能 `interface-review`（变更范围审查）、`explain-interface`、`break`、`variant`（后三个手动调用）。
-
-冲突裁决顺序：**better-\* 的无障碍 / 对比度 / 性能红线最高**，风格与品牌特例都不得突破；其余风格问题上，**本文件记录的品牌特例 > taste-skill 默认纪律**；技能都没覆盖的项目操作约定以下文为准。
+**V2（2026）已整体重构视觉层**：从「装饰过载的亮色奢华」改为**编辑式影像档案 + 液态玻璃控件**。本文件已同步退役清单，不要复活下文列出的任何东西。
 
 ## 硬性禁区
 
 - 不增删改 `.venv/`；不修改或删除 `photo/` 原图。新增照片时 `photo/` 与 `photo/full/` 两处都要有文件。
 - 不引入外部图床 / CDN，图片、字体全走项目内相对路径。运行时外链（IMDb、网易云歌页 / APP 深链）只做内容跳转，不嵌 iframe、不加载外部资源。
-- 不修改 `js/vendor/` 内压缩库；`js/sig-data.js` 是 fontTools 生成的签名路径数据，禁止手写 path。
+- 不修改 `js/vendor/` 内压缩库；`js/sig-data.js` 是 fontTools 生成的签名路径数据，禁止手写 path，且不参与加载。
+- **不引入新依赖**：不装动画库（anime.js 等已评估并否决）、不加 CSS 框架、不加颗粒噪点层。
+
+## 已退役（不要复活）
+
+V2 删掉的东西，任何一条重新出现都算回归：
+
+| 类别 | 退役项 |
+| --- | --- |
+| 装饰 | 漂浮气泡场、hero 旋转贴纸、光斑 orbs、preloader（含快门与字符升起）、滚动进度条、自定义光标与磁吸 |
+| 排版装饰 | `-webkit-text-stroke` 空心大字、双色大标题、**金色左边框条**、金色小方块编号 chip、表格隔行染色、首字下沉 |
+| 结构 | ticker 走马灯（两条全部移除）、`.sec-mask` 幕帘、bighead 双词居中 scrub、`photo-roll-meter` 进度线 |
+| 动效 | 弹性 spring（`back.out` / `elastic`）整体退役；`.poem-stamp` 盖章交互退役 |
+| 色彩 | 暖金沙色板（`--sand-*` / `--gold-300` / `--ink-400`）已被中性纸墨 ramp 取代 |
+
+**形状一致性锁**：全站只有 `--radius-sm/md/lg/pill` 四档。出现 `2px` / `9px` / `50%` / 24px 之类的散值即为回归。
 
 ## 技术约束
 
 - 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js` → `music-covers.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js`）→ `main.js`。
+- 样式表顺序：`fonts.css` → `style.css` → **`glass.css`** → `reel-stage.css` → `film-stage.css` → `series-stage.css`。`glass.css` 提供 `.glass` 基类，必须在组件样式之前。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
 - GSAP/ScrollTrigger/SplitText/Lenis 走本地 `js/vendor/`。Lenis 仅非 REDUCED 启用；锚点跳转统一走 `lenis.scrollTo`。
-- 内容归属红线：`#panel-books / films / series / music / sport / games` 六个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token（books / films / series / music / sport / games）。
+- 内容归属红线：`#panel-books / films / series / music / sport / games` 六个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token。
 - 中文内容行加 `lang="zh"`（回退系统字体）。
-- 动效与滚动监听的性能红线集中在下文「动效」一章。
+- **`.tab-panels` 必须保持为 `#archive` 的直接子元素**：`initArchiveTabs()` 用 `tabbar.closest("#archive").querySelector(":scope > .tab-panels")` 定位，包一层 `.shell` 会让整个 tab 系统静默失效。它的容器约束写在 `style.css` 里。
 
 ## 视觉基调（项目身份）
 
-Design read：个人收藏 / 档案站，受众是同好与自己，气质 = **明亮奢华 + iOS 质感 + 光效点缀 + 圆角体系**。对应 dial：`DESIGN_VARIANCE 7 / MOTION_INTENSITY 7 / VISUAL_DENSITY 4`。新粗野主义（硬边 2-3px 描边、硬偏移阴影、方角、grain 噪点）整体退役，不要再写。
+Design read：个人影像档案，受众是同好与自己。气质 = **编辑式画廊**：纸感中性底、克制的排版、全屏影像。
+对应 dial：`DESIGN_VARIANCE 6 / MOTION_INTENSITY 4 / VISUAL_DENSITY 4`。
 
-- **明暗**：全站锁定亮色单主题（Page Theme Lock），任何分区不得反转为暗色；明亮奢华靠大留白与柔和分层，不靠底色反转。
-- **圆角**：全站一套 radius token（`--radius-sm` / `-md` / `-lg`，重构时定值入 token 层）；嵌套容器遵守 concentric radius——外圆角 = 内圆角 + padding；按钮允许全圆 pill；同站禁止混用方角与圆角两套体系（Shape Consistency Lock）。
-- **玻璃面板**：`backdrop-filter: blur() saturate()` + 1px 内高光边（白系低透明）+ 内阴影高光；必须带 `@media (prefers-reduced-transparency: reduce)` 实底回退。
-- **阴影**：分层透明软阴影，色相贴基底 hue；禁纯黑投影、禁硬偏移阴影。
-- **光效（品牌特例）**：覆盖 taste-skill "NO neon / outer glows" 默认值（用户拍板要求光效）。accent 柔光辉光、radial 光斑、光泽渐变只给交互件与每区唯一 signature moment；不上正文文字；辉光必须有静态可见形态，动画不能是唯一信号。
-- **渐变**：允许克制的光泽渐变；插值空间 `in oklab`，双 hue 中间发灰时改 `in oklch`；禁 AI 紫渐变。
-- **纹理**：grain 噪点层退役，质感交给材质与光效。
-- **色彩遗训**：禁紫；无纯黑 `#000` / 纯白 `#fff`（用近黑近白）；accent hue = 可交互，静态文字不用它；每视图只一个实心填充主操作。
-- **色板（已拍板：钛银+香槟金，2026-09）**：原语 ramp `--sand-050 #F6F5F1` / `--sand-100 #EDEBE4` / `--sand-200 #DFDACE`、`--gold-100 #F3E9D2` / `--gold-300 #DDB76B` / `--gold-500 #C9A227` / `--gold-700 #7E5F20`、`--ink-900 #1D1B16` / `--ink-600 #4A463D` / `--ink-400 #6B675A`、面 `--paper #FCFBF8`；组件只准引用语义层（`--color-bg / -bg-deep / -surface / -text / -text-secondary / -text-muted / -line / -accent-solid / -accent-text / -accent-tint / -glow / -on-accent`）。gold-500 实心块必须配 1px gold-700 描边环（非文本 3:1）；关键对比对已实测（如 ink-900/sand-050 15.8:1、ink-400/sand-050 4.95:1、gold-700/sand-050 5.4:1、ink-900/gold-500 7.1:1）。
-- 图片描边沿用中性低透明度（`oklch(0 0 0 / 0.1)` 类），不用带色调灰。
+**核心判断**：照片是页面上唯一被允许彩色的事物。界面不得与图片抢注意力——这决定了下面几乎每一条规则。
 
-## 动效（better-ui × taste-skill）
+- **明暗**：正文页全亮色纸面。暗色只用于三处——全屏影像 hero、`#lightbox`、`.footer`。不要把任何普通分区反转为暗色。
+- **色彩**：中性纸墨 ramp + 单一香槟金强调。**禁紫、禁纯黑 `#000`、禁纯白 `#fff`**（用 `--ink-950 #101010` / `--on-dark #F2F2EF`）。accent hue = 可交互，静态文字只有诗区叠句一处例外。
+- **强调色配额**：全站命中元素 **≤ 25**（V1 是 182，V2 是 14）。新增一处金色就要问自己是不是在稀释它。
+- **留白优先于线条**：分组靠间距与留白，不靠描边、底色块、分隔线。分隔线只给密集表格数据。
+- **图片优先于装饰**：任何新装饰元素都要先回答「它有没有在和照片抢注意力」。
 
-- MOTION_INTENSITY 7：动效是站点身份，motion claimed = motion shown——声称的动效必须真的存在；每个动画要能一句话说出动机（层级 / 叙事 / 反馈 / 状态过渡），说不出的删。动效值是精确值：时长、曲线、缩放、blur 不写近似值。
-- 动效参数常量：`js/main.js` 的 `MOTION.feedback`（≤150ms，高频）、`MOTION.enter`（0.7–1.1s，低频入场）、`MOTION.spring`（仅低频状态切换）；新增动效优先复用，不再堆一次性时间线。
-- 性能红线：只动 `transform` / `opacity` / `filter`（`clip-path: inset()` 幕帘等价允许）；scrub 动画必须 `invalidateOnRefresh: true`；图片加载后的 refresh 用 250ms debounce 合并；滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis，禁裸 `window` scroll handler。
-- 可中断：交互状态变化用 CSS transition 或 GSAP + `overwrite`；keyframes 只用于一次性序列。
-- tab 切换的幕帘（`initArchiveTabs().animateIn()` 给 `.tab-panel` 上的 `clipPath`）必须带 `clearProps: "clipPath"`：`clip-path` 即使取值是 `inset(0)` 也会裁掉子元素画到面板框外的部分，搜索框左端与游戏首列卡片都贴着面板边缘，曾因此把焦点环切平。
-- 频率分治：高频交互（hover / press / 拖拽跟随）即时反馈，或只对 opacity / color 做 ≤150ms 过渡；按压反馈 scale 严格 `0.96`。低频入场 / 编排 / 状态切换可用 spring 弹性（GSAP `back.out` / `elastic` 或 CSS 近似曲线）——弹性是品牌特例，只许低频。
-- 光效动效（辉光呼吸、光泽扫过、spotlight border）只给 signature moment；每个动画状态变化必须有**静态反馈通道**（颜色 / 图标 / 文字）——动画不能是唯一信号。
-- 入场 stagger 只给不常见的分层进场，按语义分块约 `100ms`；退场比入场更柔和（小 translateY，两方向 ease-out）。
-- `transition-property` 写具体属性，禁 `transition: all`；`will-change` 仅限 transform / opacity / filter，且只在实测首帧卡顿时加。
-- reduced-motion：视差与自动播放全移除，scrub / pinned 动画静态化；玻璃面板保留但去动效。
-- 自检方法：以 10% 速度回放动画，找"subtly wrong"。
+## 液态玻璃（V2 核心）
 
-## 排版（better-typography）
+完整配方与原理见 `DESIGN.md` 第 4 节。三条操作红线：
 
-- `line-height` 全部 unitless：标题 ~1.1，正文 1.5–1.6，任何 ≥3 行换行文本 ≥1.4。
-- 长文行长 60–75ch；标题 `text-wrap: balance`，描述 `pretty`，长词 `overflow-wrap: break-word`，标签/徽章 `nowrap`。
-- 会变化的数字（计数器、进度、搜索结果数、秒表类）一律 `tabular-nums`。
-- 大号标题轻微负字距；小号大写标签轻微正字距；阅读尺寸正文两者都不加。
-- UI 文本 ≥14px（caption 13px，很少低于 12px）；mono 小标签同等受此下限约束；移动端输入框 16px（防 iOS 缩放）。
-- 正文用弯引号；范围用 en dash；省略号用单字符；文案按自然大小写存储、展示交给 `text-transform`。
-- 字重 <400 只给 ≥28px 展示场景；加载实际使用的字重，避免浏览器合成。
-- 字体：Space Grotesk（300-700 可变，展示 + 正文）+ IBM Plex Mono（标签）+ Instrument Serif italic（衬线点缀）自托管；Vast Shadow / Bungee / Calistoga / Notable 已退役（文件留在 `fonts/` 但不再声明、不再预载）；可增字重或字族，只能经 `css/fonts.css` 本地文件，禁外链。
-- 英文文案禁 em-dash（用句号 / 逗号 / 冒号重写句子）；中文破折号不受限；en dash 只用于范围。
+1. **绝不在玻璃元素的祖先上做 opacity / transform 动画**。祖先的 `filter` / `opacity < 1` / `transform` / `mask` / `mix-blend-mode` 会建立新的 backdrop root，玻璃会退化成「无模糊」。入场动画只加在玻璃自身或其内部内容上。
+2. **模糊声明永远写在 SVG 折射增强之前**。`@supports (backdrop-filter: url(...))` 在 Safari 上返回 true 但不渲染，会静默连模糊一起丢掉。
+3. **不把多层玻璃放进横向滚动容器**（滚动时 backdrop 跟随、绝对定位层随内容滚）。`≤720px` 的 tab 条已因此改实底。
 
-## 颜色（better-colors）
+回退是**三重**的（`prefers-reduced-transparency` 只有 Chromium 支持，不能单独依赖）：`@supports` 无 backdrop-filter → `prefers-reduced-transparency` / `prefers-contrast` → `html[data-transparency="solid"]`。
 
-- 两层 token：原语按 hue（只进 token 层），组件只准用**语义层**；缺角色就新增语义 token，绝不借用近值。新色板落地时一并建立语义层。
-- 语义命名按用途（`--color-accent-solid` 类），禁按外观命名。
-- 对比度**实测不估算**（AA：正文 <24px 4.5:1、大字 ≥24px 与 UI 部件 3:1；AAA：7:1 / 4.5:1），测文字实际压着的背景——玻璃面板按叠加后的实际底色测；失败时报告色对 / 实测值 / 阈值，**颜色改动需用户拍板**。
-- 一色一义：accent hue = 可交互，静态文字不用它；同 hue 15° 内视为同色。**品牌特例**：poem 区叠句（.refrain）用 gold-700 静态文字（2026-09 用户拍板；纸底实测 5.7:1，AA 达标）。
-- 每视图只一个实心填充主操作；修对比度动 lightness，不动 hue。
-- 新色板必须成 ramp：感知亮度等步、hue 恒定、鲜度中段最高两端回落、两端不碰纯黑纯白。
-- 辉光 / 光效色与所压背景的对比度同样实测。
+玻璃**只给浮在内容之上的控件**（导航、tab 条、未来的浮层）。纸面上的按钮用实心色——纸上没有可折射的内容，玻璃只会发灰。
 
-## 无障碍（better-accessibility）
+## 排版（DESIGN.md 第 2 节）
 
-- 焦点：`:focus-visible` + ≥2px 实线环；禁无替代的 `outline: none`；模态背景 `inert`、焦点进出管理；skip link 是第一个可聚焦元素。
-- 键盘走 ARIA APG：Esc 关浮层、组合件内方向键、roving tabindex（活动项 0 其余 -1）、Enter/Space 激活；`tabindex` 只用 0 和 -1。
-- 不做 `<div onClick>`：动作 `<button>`、导航 `<a href>`；真链接支持 Cmd/Ctrl/中键。
-- 目标尺寸：AA 基线 24×24，触摸 44×44、桌面 40×40；伪元素扩展命中区且不重叠。
-- "No ARIA is better than bad ARIA"：原生优先；`aria-hidden` 不上可聚焦元素；图标按钮带描述性 `aria-label`。
-- reduced-motion：动效 opt-in 包裹；视差与自动播放全移除；自动播放媒体有可见暂停控件。
-- 表单：`<label for>`、占位符是示例不是标签、autocomplete、永不禁粘贴。
-- 结构：一个 `<h1>` 不跳级、一个 `<main>`、320px 无横向滚动、200% 缩放可用、文本容器 `min-height` 非 `height`。
+- **双寄存器系统，10 个声明角色封顶**：UI 档（11 / 12 / 13 / 15 / 16px）+ 展示档（20 / 25 / 31 / 49 / 76px，模数 1.25）。两者之间的空档是刻意的，不要插中间值。
+- **红线**：`text-box-trim` **只给展示档标题**（`.display` / `.sec-title` / `.coda-title` / `.footer-name`）。它移除降部空间，与 `overflow: hidden` 同用会切掉降部——曾把「Maybe」渲染成「Maube」。
+- `line-height` 一律 unitless；标题 `text-wrap: balance`，描述 `pretty`；会变的数字 `tabular-nums`。
+- 字重只用 400 / 500。层级由字号与留白承担，不由加粗承担。
+- 英文文案禁 em dash（用句号 / 逗号 / 冒号重写）；中文破折号不受限；en dash 只用于范围；正文用弯引号。
+
+## 颜色（DESIGN.md 第 3 节）
+
+- 两层 token：原语按 hue（只进 token 层），组件只准用**语义层**；缺角色就新增语义 token，绝不借用近值。
+- 对比度**实测不估算**。已实测的关键值：ink-900/paper-050 17.18:1、ink-600 8.04:1、**ink-500 5.11:1（muted 的唯一合法值）**、gold-700/paper-050 5.52:1、ink-900/gold-400 7.62:1、导航玻璃最差 10.11:1。
+- **`--ink-400` 一类浅灰不得用于小字**；muted 一律 `--ink-500`。
+- **导航玻璃底色不透明度不得低于 0.76**：实测 α0.60 时最差照片上标签只有 3.10:1。
+- 每视图只一个实心填充主操作；修对比度只动 lightness，不动 hue。
+
+## 动效（DESIGN.md 第 6 节）
+
+- 四条命名缓动：`--ease-out` / `--ease-soft` / `--ease-in-out` / `--ease-snap`。不再新增一次性曲线。
+- 现有动效每一个都能一句话说出动机；新增动效说不出的就删。
+- **弹性已退役**：不用 `back.out` / `elastic`；低频入场用 `power3/4.out`。
+- 性能红线：只动 `transform` / `opacity` / `filter`；scrub 必须 `invalidateOnRefresh: true`；图片加载后 refresh 用 250ms debounce；滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis。
+- `transition-property` 写具体属性，禁 `transition: all`。
+- **`filter` 会创建包含块**：图片滤镜只加在 `img` 上，绝不加到任何含 `position: fixed` 后代的容器（`#lightbox` 是 fixed）。
+- `main.js` 的 `MOTION` 常量保留复用；`spring` 已无人使用，新代码不要引入。
+- reduced-motion：视差、入场、hover 位移全静态化，信息不丢失。
+
+## 无障碍
+
+- `:focus-visible` + 2px 实线 `--color-accent-text` 环，`outline-offset: 3px`；禁无替代的 `outline: none`。
+- 键盘走 ARIA APG：Esc 关浮层、方向键在组合件内、roving tabindex、Enter/Space 激活；`tabindex` 只用 0 和 -1。
+- 不做 `<div onClick>`：动作 `<button>`、导航 `<a href>`。图标按钮带 `aria-label`。
+- 目标尺寸：桌面 40×40，触摸 44×44。
+- 一个 `<h1>` 不跳级、一个 `<main>`、320px 无横向滚动、200% 缩放可用。
+- **`[hidden]` 必须能压过组件自带 `display`**：`style.css` 已用 `[hidden] { display: none !important; }` 兜底，新增组件不要移除这条。
 - 验收两次走查：纯键盘 + 读屏。
 
-## 布局（better-layout）
+## 布局
 
-- 留白分组不用线：组间距 ≥ 组内 2×；分隔线是密集数据的最后手段。
-- 对齐共享边缘，层级用单一间距步；物理 left/right 换逻辑属性（`margin-inline-start` 等）。
-- 横向滚动器下一项露 16–32px 窥视；带框控件间 ≥12px、无框控件周围 ≥24px；移动端按钮内缩 16px + 安全区。
-- 断点由内容驱动，组件优先容器查询；文本容器禁固定宽高。
-- 关键操作永不放在会被裁剪的位置。
+- 留白分组：组间距 ≥ 组内 2×；分隔线是密集数据的最后手段。
+- 对齐共享边缘；物理 left/right 换逻辑属性（`margin-inline-start` 等）。
+- 断点由内容驱动（1100 / 900 / 720 / 480）。
+- 横向滚动器下一项露 16-32px 窥视；移动端按钮内缩 + 安全区。
 
-## 文案（better-writing）
+## 文案
 
-- 先侦察既有语气：本站"中英混排、短句、大写 mono"是**刻意品牌声音，不是缺陷**——只修不一致、歧义、轻重失配。
-- 按钮动词先行；确认框重复后果（"删除 + 取消"，不是 Yes/No）；链接描述目的地；一套大小写策略全站一致。
-- 错误说明怎么修；空状态给出下一步；占位符是示例不是标签。
-- 发布前文案自审（taste-skill）：重读所有可见字符串，改掉语法破碎、指代不明、AI 腔俏皮话；拿不准就换朴素功能句。
+- 先侦察既有语气：本站「中英混排、短句、大写 mono 标签」是**刻意品牌声音**——只修不一致、歧义、轻重失配。
+- V2 已把 mono 覆盖率下调并删除大量装饰性大写标签；新增标签前先问是否必要。
+- 按钮动词先行；错误说明怎么修；空状态给出下一步；占位符是示例不是标签。
 
-## better-interface 验收纪律
+## 代码结构
 
-任何界面改动用 `better-interface` 的纪律验收：
+- `js/main.js` 站点交互层：hero 入场、玻璃高光（`initGlassSpotlight`）、滚动揭示（`ScrollTrigger.batch`）、计数器（`initCounters`）、统一详情层（photo / film / series / game / music 共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`。
+- 已从 `main.js` 移除：`initCursor` / `initMagnetic` / `spawnBubble` / preloader 时间线 / ticker JS 驱动 / bighead parallax / `.sec-mask` / 计数条 / `#scroll-progress`。
+- ARCHIVE 共享工具条与收藏星标已于更早版本整体撤销，不再新增回访入口。
+- 签名：已整体退役；`js/sig-data.js` 保留在仓库但不参与加载。
 
-- **上限 15 条发现**，一行一个根因，位置必须 `path:line`，附 Before / After / Why。
-- **13 条 HIGH 触发器**（命中即 HIGH，永不下调）：无可访问名；无可见焦点；键盘不可达；无视 reduced-motion；320px 或 200% 裁剪；对比度不达标；状态仅由颜色承载；破坏性动作无确认/撤销；截断内容不可取回；内容只能越过滚动边缘到达；错误无恢复路径；语义色误用；状态仅由动效承载。
-- **五步修复阶梯**（取最早可行）：删 → 用平台原生 → 复用项目已有 → 修正数值 → 新增。第 1 步可行时提第 5 步方案本身就是一条发现。
-- 对比度**实测不估算**；跑不了的检查标 `Not verified`；结论只有 `Block`（有 HIGH）/ `Approve`。
+### 影 / 剧
 
-界面改动另跑 taste-skill pre-flight 要点：主题锁、单 accent 锁、形状一致性锁、动效有动机、marquee ≤1/页、CTA 单行不换行、文案自审。
+数据（`film-data.js` 16 部 / `series-data.js` 19 部）→ 配置适配器经 `js/reel-stage.js` 的 `createReelStage()` 工厂渲染进 `#panel-films` / `#panel-series`。
 
-## 代码结构（新功能照此归属）
+**改动纪律**：`reel-stage.js` 是**两个面板共用的唯一实现**，适配器只传配置。视觉改动优先加在 `css/reel-stage.css` 末尾的 `V2` 区块，**不要改工厂契约**（否则影和剧要改两遍）。
+class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑定。
 
-- `js/main.js` 站点交互层：preloader、光标徽章、磁吸、泡泡场、统一详情层（photo / film / series / game / music，共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮 + 滚动进度、共享 `scheduleRefresh`。横向拖拽滚轴（`makeHorizontalScroller` / `.dragbar`）随游戏名册改平铺一并退役，不要再引入。
-- ARCHIVE 共享工具条（filter / sort / density）与收藏星标 / FAVORITES ONLY 已于 2026-09 按用户裁定整体撤销：`#archive-toolbar`、`night:favorites`、`night:view` 及相关 CSS / JS 全部移除，不再新增回访入口。表格类内容默认按 `index.html` 与数据文件里的原始顺序呈现。
-- 签名：已整体退役（2026-09 用户裁定，about 签名连带绘制代码一并移除）；`js/sig-data.js` 保留在仓库但不参与加载，仍是 fontTools 生成数据、禁止手改。
-- 影 / 剧：数据（`film-data.js` 16 部 / `series-data.js` 19 部，字段 `{ id, imdb（ttID）, poster, title, director / years, year / seasons, genre / category, quote }`）→ 配置适配器经 `js/reel-stage.js` 的 `createReelStage()` 工厂渲染进 `#panel-films` / `#panel-series`；共享机械样式在 `css/reel-stage.css`，面板 accent / detail 区 / 断点 / reduce 块在各自 css。卡片直接挂进 strip，不再包 wrapper。class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑定。
-- 音乐：`js/music-data.js`（`window.MUSIC_DATA`，763 首 16 组，`{ id, zh, en, groupLang, tracks: [{ id, title, artist }] }`）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips；`.genre-count` 由渲染器自动生成。专辑封面走 `js/music-covers.js`（`window.MUSIC_COVERS`，songId → 文件名，图在 `album-covers/`，生成文件勿手改），详情层 `.lb-music` 显示真实封面，缺图回落 ♪ 占位 sleeve。歌单默认**全展开、无手风琴**（2026-09 用户裁定）：浏览靠流派 chips 过滤（sticky）+ 搜索叠加 + 随机一首（从当前可见卡片抽取，走同一网易云深链）。
-- 音乐默认**单流派显示**（2026-09 用户裁定）：一次只显示一组，首屏是索引 0 的 POP（`music-stage.js` 渲染后隐藏其余组），chips 行没有「全部」选项，一次只有一枚 `aria-pressed="true"`。搜索只作用于当前流派；当前流派零命中而别处有结果时，`#music-search-empty` 给出 `NO MATCH IN THIS GENRE` 并渲染 `#music-search-jump`（`查看 <流派> · <命中数>`，取命中最多的一组），点击切组并保留关键词。切换流派统一走 `selectGenre()`。
-- 书、球队硬编码在 `index.html`；历史调研产物放 `archive/<topic>/`，不参与站点加载。
+选中态的语言：**发丝环 + accent 下边框 + 一个居中的 OPEN chip**。不要恢复「整个 meta 面板反转为实心墨 + 38% 高度色块盖住海报」——那会挡掉面板本来要展示的画面。
 
-### 光标徽章（品牌特例）
+### 音乐
 
-taste-skill 禁自定义光标，本项目**显式豁免**保留：`initCursor()` + `data-cursor` 取值出徽章，仅精指针且非 REDUCED 启用（`html.has-cursor` 由 JS 设置）。指针为 10px 深墨圆点 + 30px 细 ink 环（ink@0.6 实测纸底 4.40:1 / 金底 3.20:1）；`[data-cursor]` 目标在圆点旁偏移出紧凑深墨胶囊标签（dynamic-island 语汇），标签文字 0.75rem mono 大写、字距 0.14em，跟随与状态切换即时（power2.out，无弹性），文本输入区恢复系统 I-beam。挂点：`VIEW`（.photo-frame-btn、.hof-item、影/剧 IMDb 按钮）、`DRAG`（影/剧 range）、`PLAY`（音乐 .idx-card）、`OPEN`（影/剧海报卡）、`STAMP`（.poem-stamp）。新交互卡片挂对应值即可，无需改 JS/CSS。
+`js/music-data.js`（`window.MUSIC_DATA`，763 首 16 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
 
-## 站点结构（改动前核对实际现状）
+专辑封面走 `js/music-covers.js`（`window.MUSIC_COVERS`，songId → 文件名，图在 `album-covers/`，生成文件勿手改），详情层 `.lb-music` 显示真实封面，缺图回落 ♪ 占位 sleeve。
 
-preloader → hero（大标题 + 泡泡场）→ PHOTOGRAPHY（FIELD ROLL 编辑式双章节网格 11 帧 → DO NOT GO GENTLE 诗条 → Dylan Thomas 诗块收尾）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 HOF 18 卡；照片 / 影 / 剧 / 游戏 / 音乐共用统一详情层）→ ABOUT（统计）→ footer。GAME ARCHIVE 独立区与独立 POEM 区已撤销（2026-09 用户裁定：游戏并入 archive 第六 tab，诗并入 photo 区尾）。poem 块为杂志跨页排版：eyebrow + serif 大标题 + 导语居中开场，桌面诗笺左/注释栏右双栏（720px 单列堆叠），叠句金色贯穿。
+- 歌单默认**全展开、无手风琴**；浏览靠流派 chips 过滤 + 搜索叠加 + 随机一首。
+- 默认**单流派显示**：一次只显示一组，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。切换流派统一走 `selectGenre()`。
+- 搜索只作用于当前流派；零命中而别处有结果时给 `#music-search-jump`，点击切组并保留关键词。
 
-archive 内的游戏名册为**平铺网格**（2026-09 用户裁定，取代原横向拖拽轨道与拖动条）：`#hof-grid` 是 `repeat(auto-fill, minmax(min(100%, 240px), 1fr))`，18 张全部同屏可扫，页面滚轮只需垂直穿过。卡片：封面 `.hof-img-wrap` 固定 16:9 裁切，其下 `.hof-foot` 第一行是「排名 + 时长」mono 元信息，第二行 `.hof-name` 独占整行并预留两行高度，让整排引文基线对齐；排名由 `.hof` 的 CSS counter 画出，不在 DOM 手写。引文常显，hover / `.is-active` 抬卡 + 香槟光晕（抬升与时长变色同时承载状态，光晕不是唯一信号）。PHOTO 改为 FIELD ROLL 编辑式网格（BLOOM / HORIZON 双章节，不依赖横向拖拽）；lightbox 展示 photo/ 低分辨率版本，不加载 photo/full/ 原图。大标题（bighead）双词从两侧滑动居中，scrub 锁定。
+### 书 / 球队
 
-TICKER 共 2 条（2026-09 用户拍板收敛：原 01/02 移除，保留计数条与诗条）；taste-skill marquee ≤1/页与本项目 2 条的出入记录为品牌特例，不再增配第三条。
+硬编码在 `index.html`；历史调研产物放 `archive/<topic>/`，不参与站点加载。
+
+## 站点结构
+
+hero（全屏影像）→ PHOTOGRAPHY（编辑式 12 栏网格 11 帧 → Dylan Thomas 诗区）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 18 卡）→ ABOUT（统计 + coda）→ footer。
+
+- **照片网格只放横构图 plate**：11 张全部是 1600×1067（3:2）。不要竖裁成 4:5 或 1:1——会切掉主体。可用比例：`21:9` 全幅 / `3:2`。
+- 游戏名册是平铺网格 `repeat(auto-fill, minmax(min(100%, 250px), 1fr))`，封面 16:9，`.hof-foot` 用显式 `grid-area` 排两行（序号 + 时长 / 名称）。排名由 CSS counter 画出。
+- 图片默认低饱和、hover / focus 复原：这是「颜色是奖励不是壁纸」的落点。滤镜只加在 `img` 上。
+- 说明文字是 hover / focus-within 浮层，键盘可达。
 
 ## 内容更新
 
-- 摄影：`.photo-frame`，`photo/` 与 `photo/full/` 都放。
-- 游戏：`hof-item`（直接进 `#hof-grid` 平铺网格，不再有 `.hof-row` / 拖动条），封面 `covers/`。
+- 摄影：`.photo-frame`，`photo/` 与 `photo/full/` 都放；网格比例只用 21:9 或 3:2。
+- 游戏：`.hof-item`（直接进 `#hof-grid`），封面 `covers/`，时长写 `.hof-hours`，引文写 `.hof-quote`。
 - 影视：海报 `posters/<ttID>.jpg`，条目进 `film-data.js` / `series-data.js`。
-- 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成；缺图就留空，详情层自动回落占位 sleeve。
-- 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`），新增队伍时连同官网 href 一起核实填写。
-- 增删内容同步 `#about-stats`、计数 TICKER。
+- 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成。
+- 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`）。
+- 增删内容同步 `#about-stats` 的计数（`data-count`）与 hero 统计条。
 
 ## 改完自检
 
-双击可用、无外部 CDN、无新增长帧、reduced-motion 不破布局、引用资源无 404、`?v=` 已递增；纯键盘走查、320px / 200% 不裁剪、对比度实测、动画 10% 慢速回放；better-interface 标准下无 HIGH；taste-skill pre-flight 要点：主题锁（全站亮色不反转）、单 accent 锁、形状一致性锁（一套圆角体系）、动效有动机、marquee ≤1、玻璃材质 reduced-transparency 回退可验证。提交并推送 `origin/main`。
+1. 双击 `index.html` 可用；无外部 CDN；控制台无 404。
+2. 无新增长帧；reduced-motion 不破布局；引用资源无 404；`?v=` 已递增。
+3. 纯键盘走查；320px 与 200% 缩放不裁剪；对比度实测（玻璃按叠加底色）。
+4. 视觉回归自检：强调色命中元素仍 ≤ 25；圆角仍只有四档；没有复活退役清单里的任何一项。
+5. 玻璃自检：模糊声明仍在增强之前；没有把玻璃放进横向滚动容器；没有在玻璃祖先上做 opacity / transform 动画。
+6. 提交并推送 `origin/main`。
+
+## 回滚
+
+重构前的状态标记在 git tag `pre-redesign`，工作分支 `redesign/v2`。

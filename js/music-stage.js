@@ -52,7 +52,6 @@
     const list = el("div", "artist-tracks");
     group.tracks.forEach((t) => {
       const card = el("article", "idx-card track-own");
-      card.setAttribute("data-cursor", "PLAY");
       card.setAttribute("data-song-id", t.id);
 
       const titleEl = el("h3", "idx-title", t.title);

@@ -1,0 +1,146 @@
+﻿
+#################### e549766e-b8b1-48a2-bd72-8cc04e9e4e9d
+theme=light  industry=saas
+northStar: Editorial paper cutouts on white
+northStarDetail: A gallery catalog where ink-black text sits on bone-white paper, each interactive element casts a flat gray shadow like a die-cut card lifted slightly from the page.
+LAYOUT: Max-width 1200px centered content column on a full-width white canvas. Hero is vertically centered with a display headline, short muted paragraph, and two side-by-side pill CTAs; no hero image — the first visual break is the logo strip, then a large full-bleed photograph. Sections alternate white and bone (#f7f5ff) bands with 100px vertical breathing room. Feature blocks use a 4-column card grid for product screenshots, each card on the bone surface with a 1px inset hairline. Onboarding uses a 3-column timeline with circle checkpoints on a hairline rule. Navigation is a single fixed top bar: logo left, link cluster center-left, login + dark pill CTA right. No sidebar, no mega-menu.
+IMAGERY: Photography is the emotional engine: full-bleed, high-saturation action and lifestyle imagery (surfing, fashion, vibrant product crops) that contrast sharply against the bone-white interface. Images are treated raw — no overlays, no duotone, no rounded corners, no borders. The interface frames the photography like a gallery wall. Product UI is shown as tilted browser-frame screenshots floating on the canvas. Logo strip is desaturated grayscale partner marks at mid-gray opacity, each monochrome and small. Icons are minimal: a purple gradient cube/diamond for the brand mark, otherwise absent or hairline.
+-- COLOR TOKENS
+  [neutral] Charcoal Ink #131315 :: Primary text, dark pill button fill, heading borders — warm near-black, the only filled button color in the system
+  [neutral] Pure White #ffffff :: Page canvas, card surfaces, button text, ghost button background
+  [neutral] Bone #f7f5ff :: Secondary canvas, subtle violet-tinted off-white for alternating sections
+  [neutral] Cutout Gray #f1f1f1 :: Solid offset shadow color under primary buttons and secondary surfaces
+  [neutral] Slate Mid #717173 :: Muted body text, secondary metadata, helper copy
+  [neutral] Hairline #d0d0d0 :: Subtle borders, dividers, inactive tab indicators
+  [neutral] Deep Charcoal #444444 :: Input borders, slightly heavier dividers than Hairline
+  [brand] Logo Violet #855cf7 :: Brand mark gradient terminus, logo cube fill — the only saturated color in the system
+  [accent] Lavender Trace #dacefd :: Selected tab underline, violet hairline accents, announcement pill border — violet at whisper volume
+-- SURFACES
+  L0 Canvas #ffffff :: Primary page background
+  L1 Bone #f7f5ff :: Alternating section background, subtle violet-tinted band
+  L2 Cutout #f1f1f1 :: Offset shadow plane under elevated buttons and cards
+-- TYPE
+  FONT  | weights= | src= | subst= | feats=
+  FONT  | weights= | src= | subst= | feats=
+  FONT  | weights= | src= | subst= | feats=
+  FONT  | weights= | src= | subst= | feats=
+  BASE    
+-- SPACING
+  baseUnit= density= elementGap=10px sectionGap=100px cardPadding=24px pageMaxWidth=1200px
+  RADIUS tabs = 2px
+  RADIUS cards = 14px
+  RADIUS inputs = 9px
+  RADIUS buttons = 35px
+  RADIUS smallChips = 2px
+  RADIUS secondaryButtons = 20px
+-- RADII/SHAPES: 
+-- SHADOWS
+-- GRADIENTS: 
+-- CONTRAST PAIRS
+-- COMPONENTS
+  + Primary Pill Button :: Highest-emphasis action :: Dark charcoal fill (#131315), white text, 35px border-radius, ~15px vertical / 24px horizontal padding, Inter Display 16px weight 400 with white color. Carries the signature 8px 8px 0px 0px #f1f1f1 hard offset shadow beneath — no blur, reads as a cutout hovering above the page.
+  + Ghost Pill Button :: Secondary action paired with primary :: No fill, 1.5px solid #131315 border, #131315 text, 35px radius, same padding as primary. The 8px offset shadow is rendered in semi-transparent gray (rgba(226,226,227,0.5) 10px 10px 0px -2px) so the button appears to sit on a slightly lifted paper plane.
+  + Top Navigation Bar :: Site-wide navigation :: Sticky white bar with 1px bottom hairline (#d0d0d0). Logo cube left, then 5–6 Inter Display 14px links in #131315 with 20px gap; right side: 'Log In' text link plus the primary pill CTA. Vertical padding ~20px.
+  + Announcement Pill :: Inline news/feature flag above hero :: Lavender Trace (#dacefd) 1px border, fully rounded (~999px or matching button radius), Aux Mono 14px text in violet. No fill, no shadow. Floats centered above the hero headline.
+  + Hero Headline :: Page-level display :: Inter Display 72px (desktop) / 48px (tablet) weight 400, #131315, line-height 1.1, letter-spacing -0.03em. Centered, max-width ~900px. No gradient, no mixed weight — the size and negative tracking do all the work.
+  + Tab Navigation Strip :: In-section content switcher :: Four labels (Search / Access / Share / Archive) in Inter Display 16px, evenly spaced, separated by hairline dividers. Active tab is marked by a 2px-tall violet (#855cf7) underline directly beneath the text — not a pill background, just a precise accent line. Inactive tabs are #717173.
+  + Product Screenshot Card :: Feature proof point :: Product UI rendered as a browser-frame screenshot, slight tilt or straight, sitting on the bone (#f7f5ff) surface. Card has 1px inset #00000014 hairline, 14px radius, no outer shadow. Image bleeds nearly to the card edge.
+  + Logo Strip :: Social proof / partner bar :: Horizontal row of 7–8 partner logos in mid-gray (#717173 or desaturated), evenly spaced with ~40px gaps, all rendered at uniform height (~20px). No labels, no borders — just quiet marks.
+  + Timeline Onboarding Row :: Step-based explanation :: Three columns headed by Aux Mono 14px labels ('DAY 1', 'DAY 14', 'DAY 21') in #717173, then Inter Display 24px headings in #131315, then body text. Below the columns runs a full-width hairline with 2px solid charcoal circles at each step; active step is filled, future steps are outlined.
+  + Cookie Consent Banner :: Bottom-right compliance notice :: Fixed bottom-right card, white fill, 1px #d0d0d0 border, 9px radius, ~16px padding. Body text in 12px #717173, small 'Okay' button with #131315 text and no background.
+  + Brand Logo Mark :: Identity :: A small cube/diamond glyph filled with a conic gradient from transparent to #855cf7, ~24px square, followed by 'shade' wordmark in Inter Display 20px weight 400, #131315. The gradient is the only saturated color mark in the system.
+-- DOS
+  DO Use the hard offset shadow (8px 8px 0px 0px #f1f1f1) exclusively on primary pill buttons — never apply blur or diffusion to elevation
+  DO Set Inter Display at weight 400 only; let size and -0.03em tracking carry hierarchy, never switch to bold
+  DO Reserve #855cf7 for the logo gradient and the active tab underline — every other accent must be the muted #dacefd lavender
+  DO Pair every primary CTA with a ghost secondary button of identical 35px radius and padding
+  DO Use 100px between major sections, 10–12px between inline elements, 24px inside cards
+  DO Treat photography as full-bleed and unbordered — let the white canvas frame it like a gallery wall
+  DO Apply Aux Mono 14px -0.04em to all eyebrow labels, timestamps, and tab headings
+-- DONTS
+  DONT Do not introduce additional brand colors or saturated fills — the system is 99% achromatic by design
+  DONT Do not use soft blurred shadows on buttons; the signature is hard, solid, paper-cutout offsets
+  DONT Do not bold headlines or use weight 500+ in Inter Display — the single-weight hierarchy is intentional
+  DONT Do not round the active tab into a pill background; the 2px violet underline is the only acceptable indicator
+  DONT Do not add gradient backgrounds to sections or cards — gradients are reserved for the brand mark
+  DONT Do not use border-radius values outside the defined scale (35/20/14/9/2px)
+  DONT Do not center-align body paragraphs longer than two lines — the system is left-aligned with a centered display headline only
+-- CUSTOM SECTIONS
+  [Agent Prompt Guide] $1c
+-- PROPERTIES: 
+-- PROPCTX: 
+
+#################### a6efcd16-dcd8-435b-9bd6-8c590589b424
+theme=light  industry=ecommerce
+northStar: Sculptor's atelier on white marble — monolithic plinth surfaces, single cobalt spark, lowercase whispers from floor to ceiling.
+northStarDetail: 
+LAYOUT: The page is full-bleed with a 1440px content rail. The hero is a full-viewport photographic banner with floating overlay UI. The product sections use a 4-column grid that collapses to 2 on tablet and 1 on mobile. Section rhythm: large product feature → ranked editorial grid → fresh releases grid → press credentials bar. Each product section centers its content within the rail and uses 80px vertical breathing room between sections. The navigation is a sticky single-row top bar with a thin announcement strip above it. Product cards align to a strict grid — image area always centers the shoe silhouette with 40px top/bottom padding inside the card, metadata cluster anchors to the bottom-left corner with a 40x40 brand mark leading.
+IMAGERY: Product photography is the dominant visual — each shoe is shot on a pure white or plaster surface at a three-quarter angle, filling the card with no lifestyle context, no model, no environment. The hero pushes full-bleed lifestyle photography: cropped shots of legs and shoes on sand or concrete floors, always at human scale, never studio-perfect. The 'object IS the hero' principle — shoes occupy 40-60% of the visible frame even in the editorial hero. No decorative graphics, no abstract patterns, no illustrations. Icons are line-based 1.5px stroke in Ink Black, never filled, never colored.
+-- COLOR TOKENS
+  [brand] Electric Cobalt #000aff :: New In badges, active nav pill, current-slide indicator, claim moments — the only chromatic signal in the system, used sparingly so it reads as activation not decoration
+  [accent] Pale Iris #e5e7ff :: New Color badge fill, soft highlight wash, tinted surface for variant callouts — a desaturated ghost of the cobalt that whispers color without breaking the monochrome regime
+  [neutral] Ink Black #111111 :: Primary text, default borders, icon strokes, hairline dividers — the dominant structural color across headings, lists, and links
+  [neutral] Pure White #ffffff :: Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color
+  [neutral] Plaster #ecedee :: Secondary surface for product cards, nav bar background, soft elevation tier above the canvas
+  [neutral] Slate #a1a4aa :: Card border tone, neutral button fill, muted button border — the gray that defines card edges without darkening them
+  [neutral] Fog #d7d7d7 :: Light card border, divider lines, inactive surface tint
+  [neutral] Graphite #444955 :: List and navigation borders, structural dividers between rows and cells
+  [neutral] Ash #737780 :: Secondary text, muted body copy, de-emphasized metadata, link rest state
+  [neutral] Charcoal #3b3b3b :: Body text alternate, subtle dark surface for inset blocks
+-- SURFACES
+  L0 Canvas #ffffff :: Page background, outer frame, top-level layout
+  L1 Plaster #ecedee :: Product cards, nav strip, soft elevated content blocks
+  L2 Fog #d7d7d7 :: Inset panels, muted inactive states
+  L3 Ink #111111 :: Featured In media bar, inverted text blocks, deep footer
+-- TYPE
+  FONT  | weights= | src= | subst= | feats=
+  FONT  | weights= | src= | subst= | feats=
+  FONT  | weights= | src= | subst= | feats=
+  BASE   
+-- SPACING
+  baseUnit= density= elementGap=16px sectionGap=80px cardPadding=20px pageMaxWidth=1440px
+  RADIUS cards = 10px
+  RADIUS pills = 30px
+  RADIUS badges = 30px
+  RADIUS images = 10px
+  RADIUS inputs = 10px
+  RADIUS buttons = 10px
+-- RADII/SHAPES: 
+-- SHADOWS
+-- GRADIENTS: 
+-- CONTRAST PAIRS
+-- COMPONENTS
+  + Announcement Bar :: Top-of-page promotional strip :: Full-bleed deep navy (~#000340) background, centered white Roobert 13px body text reading promotional copy. Sits above the main navigation as a thin 32-40px bar. No close button visible — passive, always-on.
+  + Main Navigation :: Primary site navigation :: White surface, horizontal flex layout. Left: grid icon button (icon stroke 1.5px, #111). Center-left: 'Shop' pill button — white background, #111 border, 10px radius, 8px 14px padding, 14px Roobert 500. Center: wordmark 'zellerfeld' in Roobert with the logomark. Right: search icon button, 'Account' text link in Ash (#737780), wishlist heart icon. 48-56px height. Border-bottom: 1px #ecedee.
+  + Hero with Background Imagery :: Above-the-fold product feature :: Full-bleed photographic background covering the full viewport height. Image bleeds edge-to-edge with no border-radius. Overlaid bottom-left: 'New In' cobalt badge (see badge spec), then a 64-128px display headline in Roobert 700 white, lowercase ('studio runner'), letter-spacing -5px. Beneath: 15-16px subhead in white at ~80% opacity. Right-side floating product card (see Floating Product Card).
+  + Floating Product Info Card :: In-hero product buy card :: White surface, 14.4-20px radius, 16-20px padding. Contains: small product thumbnail (60x60, 10px radius), product name in Roobert 600 16px Ink, 'By studio' in Space Mono 12px Ash, price in Space Mono 600 14px Ink. CTA: 'Shop studio runner' — black (#111) filled button, white text, 10px radius, 8px 20px padding.
+  + Ranked Product Card (Top 10) :: Numbered editorial product list item :: Plaster (#ecedee) surface, 10px radius, no border. Each card spans 1/4 of viewport width. Giant translucent rank numeral (1, 2, 3, 4) in Roobert 700 at 200-280px, white at ~60% opacity, positioned top-right as a watermark. Product image centered, natural proportions. Below image: 20px gap, then small 40x40 brand logo thumbnail (white bg, 4px radius), product name in Roobert 600 16px Ink, 'By {brand}' in Space Mono 12px Ash, price in Space Mono 400 12px Ink.
+  + Standard Product Card (New Releases) :: Grid product display card :: Plaster (#ecedee) surface, 10px radius, no border. Width 1/4 of grid. Top-left: status badge (New In / Sold Out / New Color). Centered product image fills the card with ~60% height. Below: 16px gap, brand logo thumbnail 40x40 (white surface, 4px radius), product name Roobert 600 16px Ink, 'By {brand}' in Space Mono 12px Ash, price in Space Mono 400 12px Ink.
+  + New In Badge :: Status indicator for fresh products :: Electric Cobalt (#000aff) background, white text 'New In' in Roobert 600 12px. Pill shape, 30px border-radius, 4px 8px padding. Sits absolute top-left of product card with 12px offset.
+  + Sold Out Badge :: Inventory status indicator :: Slate (#a1a4aa) background, white text 'Sold Out' in Roobert 600 12px. Pill shape, 30px border-radius, 4px 8px padding. Identical dimensions to New In badge so badge layout doesn't shift.
+  + New Color Badge :: Variant announcement :: Pale Iris (#e5e7ff) background, Ink (#111) text 'New Color' in Roobert 600 12px. Pill shape, 30px border-radius, 4px 8px padding. Reads as a softer sibling of the New In badge.
+  + See All Button :: Section-end navigation :: Full-width of content column (not edge-to-edge), white surface, Ink (#111) text 'See All' in Roobert 500 16px, 10px radius, 12px 24px padding, 1px #ecedee border. Centered below product grid.
+  + Featured In Media Bar :: Press credentials strip :: Ink (#111) background, full-bleed width, 80-100px height. Centered label 'Featured in' in Space Mono 12px Ash above the bar. Inside: horizontally distributed press logos (COMPLEX, POPULAR MECHANICS, VOGUE, WIRED) in white at 60% opacity, even spacing, max ~60px height each.
+  + Section Header with Carousel Arrows :: List section title :: Full-width of content area. Left: section title in Roobert 600 20px Ink (e.g. 'Featured New Releases'). Right: prev/next arrow buttons, 40x40 square, 1px #ecedee border, 10px radius, chevron icon in Ash 1.5px stroke. Arrows are part of a horizontal carousel control.
+  + Brand Logo Thumbnail :: Partner brand mark in product card :: 40x40 square, white (#ffffff) surface, 4-6px radius, 1px #ecedee border. Contains the partner brand's mark centered at ~50% fill. Used in both ranked and standard product cards to credit the designer.
+-- DOS
+  DO Use Roobert at -0.04em tracking for all UI text; never let letter-spacing drift to 0 or positive values
+  DO Reserve #000aff exclusively for New In badges, the active Shop pill, and current-state indicators — no more than 3% of any screen should carry this color
+  DO Apply 10px border-radius to all cards, buttons, inputs, and images; 30px only for pill-shaped badges
+  DO Use Space Mono for prices, rank numerals, and 'By {brand}' credit lines — never for headlines or body
+  DO Set product card surfaces to #ecedee (Plaster), not #ffffff, to create a gentle tier above the white canvas
+  DO Anchor product card metadata (brand mark, name, price) to a 16-20px padding from the card edge with a consistent 40x40 brand thumbnail
+  DO Keep the hero image full-bleed and let overlays sit on the bottom third — the shoe should be the visual subject, the UI floats on top
+-- DONTS
+  DONT Don't introduce new chromatic colors beyond the single cobalt (#000aff) and its pale variant (#e5e7ff)
+  DONT Don't use drop shadows on product cards — the system relies on surface color stepping and 10px radius for separation
+  DONT Don't set type larger than 128px (display) or smaller than 12px (Space Mono micro labels)
+  DONT Don't use rounded radii other than 10px and 30px — no fully square corners, no fully circular elements
+  DONT Don't center body text or metadata; left-align all product information including the 'By {brand}' credit
+  DONT Don't apply color to icons — keep all line icons monochrome Ink (#111) at 1.5px stroke
+  DONT Don't separate badge variants by shape — all status badges share the 30px pill; differentiate by fill color only
+-- CUSTOM SECTIONS
+  [Agent Prompt Guide] $1c
+-- PROPERTIES: 
+-- PROPCTX: 
+

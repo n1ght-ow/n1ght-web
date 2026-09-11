@@ -1,0 +1,339 @@
+﻿
+#################### 41af8353-6a8f-416d-947b-57932f591497    
+theme=light industry=design
+northStar: Swiss design studio at high noon. A white gallery wall lit by a single yellow desk lamp — everything is grayscale until a button, badge, or highlight demands attention, and then that one yellow note carries the whole room.
+northStarDetail: 
+DESCRIPTION: Programa operates in a Swiss-design vocabulary: near-pure white canvas, architectural sans-serif type at tightly tracked small-to-medium sizes, hairline borders, and a single saturated yellow-green accent that functions as a highlighter pen across an otherwise austere page. The entire palette is essentially four grays plus one chromatic signal — chromatic real estate is rationed, not distributed, so when yellow appears it reads as a switch flipped on. Components are slim and confident: 10px radii, thin 1px borders, generous white space, and zero shadow noise. The aesthetic is editorial-portfolio meets productivity tool — restrained enough to feel serious, bold enough to feel like a designer's tool.
+LAYOUT: Centered max-width layout (~1200px) with generous side margins (111px+). The header is a flat white bar with no border, logo left, centered nav cluster, auth actions right. Content pages lead with a single large 42px left-aligned heading, followed by a full-width Fog Gray info banner, then a vertically stacked numbered content list that uses bold lead-in labels + paragraphs. Section separation is 48-96px vertical padding. No alternating bands, no sidebar, no grid cards on content pages — the rhythm is a single column of breathing white space punctuated by sparse structural elements.
+IMAGERY: Pure UI with no photography or illustration on this page — the visual language is typographic and structural. Logo is the only graphic mark, rendered as two solid Ink Black geometric shapes (diamond/parallelogram forms). The highlighter-yellow CTA is itself a visual element: a stamped sticker on the white canvas. No icons, no avatars, no product screenshots on the Acceptable Use Policy page. When imagery does appear elsewhere, expect it to be contained within sharp or slightly rounded crops, full-bleed product photography on pure white, and monochromatic or single-accent treatment consistent with the palette.
+-- COLORS
+  [neutral] Ink Black #1a1a1a :: Primary text, all borders, icon strokes, logo, divider lines, button outlines — the structural ink that defines every shape on the page
+  [neutral] Paper White #ffffff :: Page canvas, card surfaces, text on dark fills, input fields
+  [neutral] Fog Gray #f4f4f4 :: Soft section background, alternate surface, and quiet card fill
+  [neutral] Ash Gray #a3a3a3 :: Muted secondary text, inactive links, placeholder copy, tertiary metadata
+  [brand] Highlighter Yellow #fbff2b :: Primary action background, focus highlights, tag fills — the single chromatic accent that makes interactive elements feel switched on against the monochrome system
+-- SURFACES
+  L0 Canvas #ffffff :: Page background — the dominant surface
+  L1 Fog Card #f4f4f4 :: Soft info banners and elevated callouts that recede without a border
+  L2 Accent Fill #fbff2b :: Highlight wash on primary action surfaces
+-- TYPE
+  FAM Neue Haas Grotesk Text | sizes=14px, 16px, 17px, 20px, 24px, 42px | w=400, 500 | lh=1.10 (display), 1.20 (headings), 1.40 (body) | ls=-0.03em at all sizes (approximately -0.42px at 14px, -0.48px at 16px, -0.51px at 17px, -0.6px at 20px, -0.72px at 24px, -1.26px at 42px) | sub=Inter, Neue Haas Grotesk Display Pro (if available), or Helvetica Neue | feat=
+      ROLE: The single typeface carries every voice on the site — nav, body, headings, buttons, inputs. Weight 400 is the default for body and nav; weight 500 is reserved for emphasized inline labels (e.g. 'Last Updated:') and section opens. The choice of a neo-grotesque with consistent -0.03em tracking at every size creates optical tightness even at 42px, avoiding the airy looseness most sans-serifs default to. This is a Swiss-tool typeface, not a personality typeface — restraint is the signature.
+  FAM neue-haas-grotesk-text | sizes=20px | w=400 | lh=1.4 | ls= | sub= | feat=
+      ROLE: neue-haas-grotesk-text — detected in extracted data but not described by AI
+  SCALE caption = 14px / lh 1.4 / ls -0.42
+  SCALE body-sm = 16px / lh 1.4 / ls -0.48
+  SCALE subheading = 20px / lh 1.4 / ls -0.6
+  SCALE heading-sm = 24px / lh 1.2 / ls -0.72
+  SCALE heading = 42px / lh 1.1 / ls -1.26
+-- SPACING
+  baseUnit= density= elementGap=12px sectionGap=96px cardPadding=16px pageMaxWidth=1200px
+  radius: {"nav":"10px","cards":"16px","inputs":"10px","buttons":"10px"}
+-- ELEVATION
+-- COMPONENTS
+  + Top Navigation Bar :: Sticky-style header anchoring page identity and primary destinations
+      White background, no border-bottom. Left: geometric two-diamond logo (Ink Black) + 'Programa' wordmark at 16-20px weight 400. Center: nav links (Product, Customers, Pricing, Learn) at 16px weight 400, Ink Black, 24px horizontal spacing. Right: 'Log in' as a text link in Ink Black, then a Primary CTA Button. Height feels ~64px with generous horizontal padding.
+  + Primary CTA Button :: The single high-emphasis action on any screen
+      Highlighter Yellow (#fbff2b) fill, 1px Ink Black (#1a1a1a) border, 10px border-radius, 8px vertical / 12px horizontal padding. Label in Neue Haas Grotesk Text 16px weight 400, Ink Black. 12px gap between sibling buttons. The 1px black outline around a yellow fill gives the button a hand-stamped, sticker-like quality — it's the only place a border reinforces rather than contains.
+  + Ghost Text Button :: Secondary, low-emphasis action paired with the primary CTA
+      No fill, no border. Label in Neue Haas Grotesk Text 16px weight 400, Ink Black. Sits to the left of the Primary CTA. Vertically aligned to the same baseline as the CTA.
+  + Page Heading :: Hero heading for content pages
+      Neue Haas Grotesk Text 42px weight 500, Ink Black, line-height 1.10, letter-spacing -1.26px. Left-aligned with 111px left margin. No subtitle, no eyebrow — the heading stands alone.
+  + Info Banner :: Metadata callout (e.g. 'Last Updated') below the page heading
+      Fog Gray (#f4f4f4) fill, no border, 16px border-radius. Padding ~12px vertical / 16px horizontal. Content is a label-value pair: bold label ('Last Updated:') in Ink Black weight 500, followed by value in Ink Black weight 400, both at 16px.
+  + Numbered Section Block :: Ordered content list with bold lead-in label
+      Decimal number (1., 2., …) flush left at 16px Ink Black weight 400. Indented label (e.g. 'Purpose and Scope') in 16px weight 500 Ink Black. Body paragraphs in 16-17px weight 400 Ink Black at line-height 1.4. Vertical gap between sections: 8px. The bold label + paragraph pattern is a signature — it's the page's only typographic hierarchy device.
+  + Logo Lockup :: Brand mark + wordmark for header and footer
+      Two stacked diamond/parallelogram shapes in Ink Black, approximately 24x24px, followed by 'Programa' wordmark in Neue Haas Grotesk Text 20px weight 400, Ink Black, letter-spacing -0.6px. 8px gap between icon and wordmark.
+  + Form Input :: Text entry field
+      1px Ink Black border, 10px border-radius, 6px vertical / 12px horizontal padding. Placeholder text in Ash Gray (#a3a3a3) at 16px. White fill. On focus: border remains Ink Black (no color shift) — the focus state is communicated through weight or ring, not hue.
+  + Nav Link :: Top-level navigation destination
+      Neue Haas Grotesk Text 16px weight 400, Ink Black, no underline, no color shift on hover visible in data. 24px horizontal spacing between links. 4px column gap from the wordmark.
+  + Footer Link :: Secondary navigation in footer
+      Neue Haas Grotesk Text 14-16px weight 400, Ink Black, muted compared to nav. Typically arranged in columns with 8-12px vertical gap between links.
+-- DOS
+  DO Use #fbff2b fill with 1px #1a1a1a border exclusively for the single primary action per screen — never use the yellow as a background for large surfaces or decorative blocks.
+  DO Set all text at -0.03em letter-spacing using the Neue Haas Grotesk Text scale (14/16/17/20/24/42px) — do not introduce a second typeface or loosen tracking at display sizes.
+  DO Apply 10px border-radius to buttons, nav elements, and inputs; reserve 16px for larger card surfaces and info banners.
+  DO Build vertical rhythm on the 6px base unit: 8px between list items, 12px for element gaps, 16px for card padding, 48-96px for section separation.
+  DO Use #f4f4f4 as the only mid-surface between white and the yellow accent — never introduce additional gray tints or gradient washes.
+  DO Keep page layout centered with a 1200px max-width and 111px left margin for content blocks; let white space carry the visual weight.
+  DO Communicate hierarchy through weight (400 vs 500), not color or size variation — the system has exactly two weights and a tight type scale.
+-- DONTS
+  DONT Don't introduce drop shadows, glow effects, or blur — elevation is flat and border-defined.
+  DONT Don't use #fbff2b on more than one element per viewport — its power comes from scarcity.
+  DONT Don't add a second accent color; the palette is monochrome + one yellow-green signal.
+  DONT Don't use Ash Gray (#a3a3a3) for body copy — it's a 2.5:1 contrast fail on white; reserve it for placeholders and inactive metadata only.
+  DONT Don't increase border-radius above 16px — the slightly squared geometry is part of the identity.
+  DONT Don't break the 6px spacing grid with arbitrary pixel values; every gap should be a multiple of 6.
+  DONT Don't add a subtitle or eyebrow text above page headings — the 42px heading stands alone.
+-- CUSTOM
+  [Agent Prompt Guide] $1c
+-- SIMILAR
+  ~ Linear because Same near-monochrome palette with a single saturated accent (Linear's purple), tight typographic system, and minimal-border component geometry
+  ~ Figma Config because Same Swiss-design restraint with hairline borders, generous white space, and a single chromatic accent used sparingly for primary actions
+  ~ Notion because Similar flat-no-shadow component language, 10px-ish radii, and a neutral-first palette where one accent color carries the brand
+  ~ Vercel because Same editorial minimalism with monochrome canvas, tight tracking on a neo-grotesque typeface, and accent color rationed to CTAs only
+  ~ Are.na because Same white-canvas-plus-muted-neutral aesthetic with type-driven hierarchy and zero decorative chrome
+
+#################### e4a7b5f3-f393-4f6d-b4a5-ecf874024bed    
+theme=light industry=design
+northStar: Gallery wall of black-on-white objects
+northStarDetail: 
+DESCRIPTION: 099 Supply is a museum-grid: white walls, black objects, labels in tiny tracked-out monospace caps. The entire interface is reduced to a pure white canvas with one near-black (#101010) doing all the work — typography, borders, fills, buttons, mockup silhouettes — so every rendered asset reads as a specimen on a gallery plinth. Typography is exclusively Soehne Mono at weight 400, with uppercase tracking up to 0.18em giving every label the air of a curator's index card. Components are flat, borderless, and defined by 1px hairline edges and tight 8px radii; there are no shadows, no gradients, and no chromatic accents. The aesthetic is forensic — each mockup and component tile is framed identically, letting the objects themselves carry the visual weight.
+LAYOUT: Full-bleed white canvas with no max-width container — content extends edge to edge. Hero is a centered site title area (the '099' counter in large mono) followed by section grids. Each section begins with a left-aligned uppercase heading ('3D MOCKUPS', 'FRAMER COMPONENTS') in muted gray with wide tracking, then a uniform 5-column tile grid with consistent 12px gaps between tiles. Tiles are identically sized and shaped — a square-ish rectangle containing a centered asset and a metadata strip footer. No alternating bands, no dark sections, no asymmetric compositions. The grid is the page: museum-row after museum-row of black objects on white. Navigation is minimal — likely a top bar with category links in the same tracked-out uppercase treatment.
+IMAGERY: Pure UI, no decorative photography. The only imagery is the mockup assets themselves — high-fidelity 3D product renders (iPhone, hoodie, Apple Watch, drink carton, cap, Pro Display, MacBook Pro, business card, digital tablet) rendered in pure black or near-black against white. Illustrations are limited to UI component previews (theme toggle, loader ring, kinetic text dot sphere, grid loader plus-pattern, compare slider garment). Icon style: thin 1-2px stroke outlines, monochrome #555 or #101010, no fills. No lifestyle, no atmosphere, no context — each object is isolated like a product shot for a catalog.
+-- COLORS
+  [neutral] Canvas White #ffffff :: Page background, card surfaces, button backgrounds, link containers — the gallery wall everything sits on
+  [neutral] Ink #101010 :: Primary headings, body text, and icon fills on light surfaces. Do not promote it to the primary CTA color
+  [neutral] Charcoal #000000 :: Pure-black decorative fills for mockup rendering and high-contrast object silhouettes
+  [neutral] Muted Hard #222222 :: Dark surface tint for elevated dark components and modal/overlay backgrounds; Dark surface fill for elevated panels, toggle/loader component backgrounds
+  [neutral] Muted #555555 :: Secondary body text, supporting copy, muted helper labels
+  [neutral] Muted Soft #999999 :: Section headings, icon fills, badge text, hover border state — the softest readable gray
+  [neutral] Border Soft #c8c8c8 :: Soft hairline borders for less prominent dividers and input outlines
+  [neutral] Border Subtle #e0e0e0 :: Card edges, link borders, subtle dividers between tiles — the dominant hairline color
+-- SURFACES
+  L0 Canvas #ffffff :: Page background — the gallery wall.
+  L1 Card #ffffff :: Individual mockup and component tile surfaces, visually identical to canvas but defined by a 1px border.
+  L2 Elevated Dark #222222 :: Dark mode toggle, loader ring fills, modal overlays — the only surface that breaks from white.
+-- TYPE
+  FAM Soehne Mono | sizes=8px, 10px, 11px, 12px, 16px, 26px, 54px | w=400, 500 | lh=1.00, 1.20, 1.50 | ls=0.025em at 54px display, 0.18em at 26px hero, 0.08em at 12px badge, 0.02em at 8px micro | sub=JetBrains Mono, IBM Plex Mono, or Space Mono | feat=No special features detected — monospaced face is the visual identity
+      ROLE: The exclusive typeface — used for every heading, body, badge, link, icon, and label. Weight 400 dominates; weight 500 is reserved for the 26px hero label. All non-body sizes render in uppercase with tracking between 0.02em and 0.18em. The monospaced face reinforces the museum-catalog, specimen-tag atmosphere.
+  SCALE caption = 10px / lh 1.2 / ls 0.8
+  SCALE label = 26px / lh 1.2 / ls 4.68
+  SCALE display = 54px / lh 1 / ls 1.35
+-- SPACING
+  baseUnit= density= elementGap=12px sectionGap=80px cardPadding= pageMaxWidth=
+  radius: {"cards":"8px","badges":"0px","inputs":"4px","buttons":"9999px"}
+-- ELEVATION
+-- COMPONENTS
+  + Mockup Tile Card :: Primary unit — displays a 3D mockup asset with catalog-style metadata strip
+      White background, 1px solid #e0e0e0 border, 8px radius. Top portion: centered mockup image on white. Bottom metadata strip: padded 10px top/bottom, 12px right/left, separated from image by a 1px #e0e0e0 horizontal divider. Left metadata label in Soehne Mono 11px weight 400 #555 (format 'M 005'). Right label in Soehne Mono 12px weight 400 #555 uppercase with 0.08em tracking (asset name like 'IPHONE'). No shadow.
+  + Framer Component Tile Card :: Second tile variant for interactive component previews
+      White background, 1px solid #e0e0e0 border, 6px or 8px radius. Centered component preview (toggle, loader, browser frame). Bottom label strip same format as mockup tile but prefixed 'C' instead of 'M' (e.g. 'C 000 THEME TOGGLE'). Expand icon (two arrows) sits in the top-right corner as a 16px #555 stroke.
+  + Section Heading :: Section label above each grid block
+      Soehne Mono 26px weight 500, uppercase, #999999, letter-spacing 0.18em (4.68px). Acts as a quiet, tracked-out curator's heading. Examples: '3D MOCKUPS', 'FRAMER COMPONENTS'. No underline, no decoration.
+  + Primary Button :: Filled dark button for 'Buy' and conversion actions
+      Background #101010, text #ffffff, Soehne Mono 12px weight 400 uppercase with 0.08em tracking, 9999px (pill) radius, padding ~10px 16px. Hover: background shifts to #999999. Used sparingly — appears in modal CTAs and the browser-frame demo.
+  + Ghost Button :: Secondary outlined button paired with primary
+      Background transparent, border 1px #999999, text #555555, same Soehne Mono 12px uppercase treatment, 9999px radius, padding ~10px 16px. Appears alongside Primary Button in modal demo ('Close').
+  + Metadata Label :: Catalog-style tag below each tile
+      Soehne Mono 12px weight 400, uppercase, 0.08em letter-spacing, #555555. Left-aligned: asset ID (e.g. 'M 005'). Right-aligned: asset name (e.g. 'IPHONE'). No background, no border, sits on the card's metadata strip.
+  + Modal Panel :: Overlay for copy/info interactions
+      White background, 1px #e0e0e0 border, 8px radius. Header text Soehne Mono 16px weight 400 #101010 ('Less is more'). Body copy Soehne Mono 11px #555. Footer contains a Ghost Button + Primary Button pair right-aligned.
+  + Theme Toggle :: Interactive component demo — pill switch
+      Pill-shaped (999px radius), 1px #e0e0e0 border, white background, inner circle thumb at left position showing #ffffff fill on #101010 track, or reversed when toggled.
+  + Loader Ring :: Circular progress component demo
+      Two concentric arcs forming a ring: lighter arc #e0e0e0 (background ring), darker arc #101010 (progress arc, ~270° sweep). No fill, pure stroke composition.
+  + Browser Frame :: Windowed screenshot frame component
+      Rounded rectangle with 8px radius, 1px #e0e0e0 border. Top chrome bar: three small circles (traffic lights) and a URL pill input with #c8c8c8 placeholder text ('https://'). Interior content area displays a globe or page preview.
+  + Compare Slider :: Before/after image comparison component
+      Rectangular frame split vertically: left side shows light-mode garment, right side dark-mode variant, divided by a 1px #101010 handle/bar with a draggable circle grip.
+  + Table Component :: Structured data table demo
+      Header row: 'COMPANY' / 'FOUNDED ↑' in Soehne Mono 12px uppercase #999999 with 0.08em tracking. Body rows alternating white background, 1px #e0e0e0 horizontal dividers, text in Soehne Mono 12px #101010. No vertical borders.
+  + Form Builder Checkbox :: Form control component demo
+      Small 16px square with 4px radius. Unchecked: 1px #e0e0e0 border, white fill. Checked: #101010 fill with white checkmark stroke at ~2px weight.
+  + Counter Display :: Large numeric typographic component
+      Soehne Mono weight 400 at large display size (~54px or scaled), rendered as three stacked digits '099' in #101010 on white. Pure typographic exercise — no frame, no border.
+-- DOS
+  DO Use only Soehne Mono (or JetBrains Mono substitute) for every piece of text — no second typeface.
+  DO Set every label, badge, and metadata strip in uppercase with tracking between 0.02em and 0.18em.
+  DO Render all buttons at 9999px radius and all cards/tiles at 8px radius — the contrast is the system.
+  DO Use 1px solid borders in #e0e0e0 for default state, #999999 for hover, and #101010 for strong emphasis.
+  DO Keep all mockup assets on pure white backgrounds centered within their tiles — the object IS the content.
+  DO Maintain the catalog metadata pattern: asset ID left ('M 005'), asset name right ('IPHONE'), separated by a horizontal divider.
+  DO Use #101010 as the sole fill for dark elements — buttons, strokes, silhouettes, checkmark icons, loader arcs.
+-- DONTS
+  DONT Never introduce chromatic color — no blues, greens, reds, or any hue. The system is monochrome.
+  DONT Never apply box-shadow, drop-shadow, or any elevation effect. Depth comes from hairline borders only.
+  DONT Never use a sans-serif or proportional typeface. Mono is non-negotiable.
+  DONT Never use background gradients except for the single conic-gradient loader pattern (#101010 → #c8c8c8).
+  DONT Never set border-radius below 4px on cards or above 9999px on buttons — the radius vocabulary is fixed.
+  DONT Never use bold (600+) or light (300-) weights. Stay at 400, with 500 reserved for the 26px section heading.
+  DONT Never mix section heading style — always 26px uppercase #999999 with 0.18em tracking, nothing decorative.
+-- CUSTOM
+  [Agent Prompt Guide] $1c
+  [Motion Philosophy] Motion is minimal and functional. Durations cluster at 0.12s (106 occurrences) for micro-interactions like hover color shifts, with 0.3s reserved for larger transitions. The dominant easing is 'ease' (474 uses) — no bouncy or spring curves. Properties transitioned: border-color (50x), opacity (42x), color (14x) — all signaling state changes rather than spectacle. No scroll-triggered animations, no parallax, no entrance choreography. The loader ring is the only component with continuous motion.
+-- SIMILAR
+  ~ Are.na because Same flat white-canvas grid with no chrome — objects/content tiles presented as bare specimens with minimal labels.
+  ~ Linear because Monochrome dark-on-light discipline, tight typographic system, gallery-grade restraint in component design.
+  ~ Framer Marketplace because Same component-grid presentation pattern with catalog-style metadata strips under each tile.
+  ~ Apple Design Resources because Same white-plinth aesthetic for product mockups — black objects on white, no lifestyle context, identical framing.
+  ~ Minimalissimo because Editorial design portfolio with same museum-catalog feel — monochrome, monospace labels, specimen-card layouts.
+
+#################### 973332dc-4e10-4e90-85d8-3bce9c3cd3ed    
+theme=light industry=design
+northStar: Type specimen museum on white paper
+northStarDetail: 
+DESCRIPTION: Sociotype is a type foundry site that operates as a curated letterform gallery: a near-pure black-and-white canvas where custom typefaces are the only chromatic event. The interface is essentially a specimen book rendered in a browser — enormous 251px type specimens sit on paper-white backgrounds, with hairline 1px borders and zero shadows drawing all the visual weight. The hero breaks the monochrome contract with a single full-bleed atmospheric photograph (refracted glass, water, prismatic color) used as a rotating feature stage, letting the photography supply the one moment of saturated color per page load. Navigation, labels, and chrome are uniformly small (11–14px) Onsite Regular with wide letter-spacing, behaving like museum wall text rather than app UI. Components are stripped to their minimum: a top bar, a size selector, a fullscreen toggle, arrow-suffix text links, and category lists — every element defers to the type being sold.
+LAYOUT: Full-bleed hero photographs with the wordmark and featured label overlaid; the rest of the site is a max-width ~1200px content area centered on Paper. Specimen pages follow a strict two-column pattern: a narrow ~120px left rail listing sub-family categories (Text, Curve, Sharp, Stencil / Mono, SemiMono, Condensed, Standard, Extended) and a wider right column with the 251px specimen on top, an editorial description paragraph below, and a 'More Info →' link. Vertical rhythm is generous (120px section gaps) with 1px hairlines marking transitions. Navigation is a single top bar — no sidebar, no footer chrome, no breadcrumbs. The featured image carousel rotates the hero position but the underlying layout is identical across all five featured typefaces. The site never uses card grids, pricing tables, or multi-column feature blocks — every page is essentially one long specimen wall.
+IMAGERY: The site uses a single full-bleed atmospheric photograph per featured typeface — refracted light, water droplets, glass textures, prismatic color (green, yellow, blue, red). These are the only chromatic events on the site: editorial, mood-rich, full-bleed with 0px radius, no overlay tint, no masking. The photography behaves like a museum spotlight on the specimen, and the white text overlaid is the only typographic element competing with the letterforms. All other pages are pure UI — no product photography, no lifestyle imagery, no icon decoration. Icons (fullscreen toggle, category dots) are 12px outlined glyphs in #818181, mono weight, functional not decorative.
+-- COLORS
+  [neutral] Onyx #000000 :: Primary text, all borders and dividers, nav and link strokes — the structural black of every UI line
+  [neutral] Paper #ffffff :: Page and card surfaces, reverse text on dark overlays
+  [neutral] Charcoal #1a1818 :: Body text on light surfaces where true black reads too clinical — used for paragraph copy and descriptions
+  [neutral] Graphite #818181 :: Secondary text, caption labels, size selector, muted metadata
+  [neutral] Ash #9d9d9d :: Hairline list dividers and subtle separators within type family navigation
+  [neutral] Bone #d6d6d6 :: Light section dividers, subtle structural borders
+-- SURFACES
+  L0 Paper #ffffff :: Universal page and card background — the same white holds the hero photo, the type specimens, and all detail pages
+-- TYPE
+  FAM Main Onsite | sizes=11px, 12px, 13px, 14px, 16px, 18px, 26px, 40px | w=400 | lh=1, 1.13, 1.19, 1.22, 1.29, 1.31, 1.33, 1.38 | ls=0.015, 0.025, 0.04, 0.05, 0.08 | sub= | feat=
+      ROLE: Main Onsite — detected in extracted data but not described by AI
+  FAM Onsite | sizes=251px | w=400 | lh=1.00–1.38 | ls=0.015em at body, 0.025em at small UI, 0.040em at nav, 0.050em at captions, 0.080em at the smallest 11px labels | sub=Inter, IBM Plex Sans, Söhne | feat=
+      ROLE: Primary UI typeface for body, nav, buttons, links, captions, and headings — used at every interface scale from 11px micro-labels to 40px section titles. The wide letter-spacing range (0.015em–0.080em) gives small text a museum-label quality; the custom 400 weight keeps the entire interface at one calm voice.
+  FAM Avec Sharp / Ceno / Meso / Gestura / Rework | sizes=251px | w=400 | lh=1.25 | ls=0.001em (essentially normal) | sub=Each is a custom font; substitute with Playfair Display, GT Sectra, Recoleta, or PP Editorial New for editorial display needs | feat=liga (on Gestura)
+      ROLE: Display specimens — each font is showcased at a single massive 251px size as the product being sold. These are page heroes, not UI text. The tight 0.001em letter-spacing lets the display type breathe at its own proportions while the UI chrome (Onsite) keeps wide tracking for contrast.
+  FAM Ceno | sizes=251px | w=400 | lh=1.25 | ls=0.001 | sub= | feat=
+      ROLE: Ceno — detected in extracted data but not described by AI
+  FAM Meso | sizes=251px | w=400 | lh=1.25 | ls=0.001 | sub= | feat=
+      ROLE: Meso — detected in extracted data but not described by AI
+  FAM Gestura | sizes=251px | w=400 | lh=1.25 | ls=0.001 | sub= | feat="liga"
+      ROLE: Gestura — detected in extracted data but not described by AI
+  FAM Rework | sizes=251px | w=400 | lh=1.25 | ls=0.001 | sub= | feat=
+      ROLE: Rework — detected in extracted data but not described by AI
+  SCALE caption = 11px / lh 1.38 / ls 0.88
+  SCALE body = 14px / lh 1.29 / ls 0.21
+  SCALE heading-sm = 18px / lh 1.19 / ls 0.45
+  SCALE heading = 26px / lh 1.13 / ls 0.39
+  SCALE heading-lg = 40px / lh 1 / ls 0.6
+  SCALE display = 251px / lh 1.25 / ls 0.25
+-- SPACING
+  baseUnit= density= elementGap=12px sectionGap=120px cardPadding=12px pageMaxWidth=1200px
+  radius: {"tags":"0px","cards":"0px","inputs":"0px","buttons":"0px"}
+-- ELEVATION
+-- COMPONENTS
+  + Top Navigation Bar :: Sticky site header with left-anchored section links and centered wordmark
+      Full-width transparent bar over the hero image. Left: 'Typefaces' link in Onsite 12px weight 400, #000000, letter-spacing 0.025em. Center: 'SOCIOTYPE' wordmark in Onsite 14px, letter-spacing 0.08em. Right: 'Shop', 'Trials', 'About', 'Cart' links in same treatment. No background fill, no border, no shadow — it floats over content.
+  + Hero Feature Image :: Full-bleed atmospheric photograph as a rotating featured typeface showcase
+      Full-viewport photographic image (refracted glass, water droplets, prismatic green/yellow/blue). 251px specimen text overlaid in the bottom-left in white (#ffffff) for the featured font name. No rounded corners, no overlay tint — the photo IS the section.
+  + Featured Overlay Label :: Top-left caption identifying the current hero specimen
+      'Featured: Avec' in Onsite 16px weight 400, #ffffff, overlaid on the hero image. Short description paragraph beneath in Onsite 12px #ffffff at 50% line width, 6px margin-bottom from the headline.
+  + Image Carousel Counter :: Top-right pagination indicator for the featured image rotation
+      '1/5' in Onsite 16px #ffffff, top-right of the hero, tracking the current featured typeface position.
+  + Type Specimen Display :: Massive single-word specimen of the font being sold
+      The font name ('Avec', 'Onsite') set in itself at 251px Onsite 400 weight, #000000, line-height 1.25, letter-spacing 0.001em. Sits on Paper (#ffffff) with 0px padding/margin from the viewport edges, giving the specimen maximum visual real estate.
+  + Specimen Meta Header :: Top-of-specimen breadcrumb and size indicator
+      Left: font family + style name in Onsite 12px #000000 with 0.08em letter-spacing (e.g. 'Avec Sharp    Regular'). Right: current display size '25px' in Onsite 12px and a fullscreen toggle icon. A 1px #d6d6d6 hairline border separates this header from the specimen below.
+  + Style Category List :: Vertical list of font sub-families (Text, Curve, Sharp, Stencil / Mono, SemiMono, etc.)
+      Left column, fixed ~120px wide. Each category name in Onsite 14px weight 400 #000000, with '14 Styles' / '8 Styles' caption beneath in Onsite 11px #818181, letter-spacing 0.05em. Items separated by 1px #9d9d9d borders with 9px vertical padding between entries.
+  + Specimen Description Block :: Editorial description of the font family beside the category list
+      Right column, Onsite 16px weight 400 #000000, line-height 1.22, max-width ~540px. Plain prose paragraph. 30px margin-bottom separating it from the next element.
+  + More Info Arrow Link :: Text link to the font's full detail page
+      Inline link in Onsite 16px #000000 with a right-arrow glyph (→) appended with a space. No underline, no color change, no border. The arrow IS the affordance — it signals clickability through the suffix character rather than styling.
+  + Size Selector Control :: Dropdown/toggle for switching specimen display size
+      Onsite 12px #818181, top-right of the specimen page. Minimal text-only control, no border, no background. Adjacent fullscreen icon is a 12px outlined square glyph.
+  + Specimen Section Divider :: Hairline separator between meta header and the large specimen
+      1px solid #d6d6d6 horizontal rule, full width of the content area, 0px padding above/below.
+-- DOS
+  DO Use 0px border-radius on every component — buttons, cards, inputs, tags, and images all stay sharp. The angularity is part of the type-foundry aesthetic.
+  DO Set all UI text in Onsite weight 400, never bold. The site speaks in one calm voice; weight 700 would shout over the specimens.
+  DO Use letter-spacing between 0.025em and 0.080em for any UI text under 16px to give small labels a museum-card quality. Reserve 0.001em for 251px display specimens only.
+  DO Keep surfaces pure Paper (#ffffff) with Onyx (#000000) text. No tints, no dark mode, no card fills — the background is always the same white that holds the specimens.
+  DO Use 1px solid #d6d6d6 or #9d9d9d for all dividers and structural borders. No 2px+ rules, no shadows, no double lines.
+  DO Suffixed arrows (→) on text links replace button styling. 'More Info →' is the canonical link pattern, never 'Read More' inside a bordered box.
+  DO Use a single atmospheric photograph (one per featured font) as the only source of color per page. The hero image is the moment the palette earns its saturation.
+-- DONTS
+  DONT Don't introduce any chromatic color into the UI. The 0% colorfulness is a deliberate signal that the type is the product — adding blue, red, or any accent would compete with the specimens.
+  DONT Don't use shadows, gradients, or any elevation effects. The design language is flat; depth comes from typography scale and whitespace, not from z-axis tricks.
+  DONT Don't use bold (600/700) for headings. Stay at Onsite 400; size alone carries hierarchy (14 → 18 → 26 → 40 → 251).
+  DONT Don't round any corner. A 4px or 8px radius would make the type foundry look like a generic SaaS card — the sharp 0px is what makes it feel like editorial print.
+  DONT Don't fill backgrounds on cards or nav. Let Paper show through; if a component needs to separate from the page, use a 1px #d6d6d6 border instead of a fill.
+  DONT Don't use icon-only buttons with colorful backgrounds. Controls are text-only in #818181 or use outlined glyphs at 12px — the size selector and fullscreen toggle show the pattern.
+  DONT Don't set body text below 14px. The smallest UI is 11–12px and those are reserved for captions and meta labels, never long-form reading.
+-- CUSTOM
+  [Agent Prompt Guide] $1c
+-- SIMILAR
+  ~ Dinamo (dinamo.com) because Same type-foundry-as-product model: white canvas, oversized specimen display, single sans UI face at wide letter-spacing, hairline rules, no shadows or color
+  ~ Grilli Type (grillitype.com) because Type foundry site with monochrome interface, 0px radii, specimen-first pages, and full-bleed atmospheric photography as the only color source
+  ~ Commercial Type (commercialtype.com) because Editorial type foundry aesthetic — paper-white pages, editorial paragraph blocks beside specimen displays, museum-label typography for UI chrome
+  ~ OH no Type (ohnotype.com) because Independent type foundry with zero-chrome specimen pages: massive display type, thin dividers, no card fills, no buttons — links carry an arrow suffix
+  ~ Production Type (productiontype.com) because Type specimen gallery with single-word 200px+ hero displays, hairline-bordered meta rows, and 0% colorful interface that defers entirely to the letterforms
+
+#################### 3f6e3076-e77f-487e-b212-3b5946a34e87    
+theme=light industry=design
+northStar: Old-world broadsheet on warm cream — newspaper editorial for the digital age.
+northStarDetail: 
+DESCRIPTION: A vintage broadsheet portfolio rendered on warm parchment stock. Near-black ink dominates text, borders, and large editorial banners; the cream canvas stays quiet and matte, never clinical. Display type is the brand: enormous custom serifs (Canopee, Germgoth) with negative tracking and sub-1.0 line-heights so letters collide and bleed into one another, mimicking woodblock print and 19th-century poster lettering. One warm ember-orange accent appears sparingly — a stamp, a star icon — like a hand-stamped seal. Components stay flat and borderless; depth comes from contrast, not shadow. Layout reads like a zine or newspaper spread: oversized headline banners intercut with tight three-column project grids and full-bleed illustrations.
+LAYOUT: Full-bleed page with max-width ~1440px centered. The top opens with a thin header bar, then a three-column 'featured work' strip (image, type, image). A full-width Ink Black display banner (MIRANDA) crashes through the middle, acting as a typographic section break. Below: alternating two-column and three-column blocks of project cards and portrait illustrations, each separated by generous 43px vertical rhythm. Another full-width banner (WEBSITE) punctuates the lower half. The footer is a simple two-column text block. Navigation is minimal — a single hamburger icon top-right, no persistent nav bar. The grid is consistent: always 3 equal columns at the top tier, breaking into 2 or 1 for illustrative sections. Vertical spacing is comfortable but not airy; the density feels curated, not sparse.
+IMAGERY: Digital illustration dominates over photography. Portrait subjects are stylized semi-realistic digital paintings with dramatic lighting (rim-lit faces, saturated backgrounds, painterly texture). Project thumbnails lean toward moody interior photography (warm wood, cool blue retail spaces). Illustrations are tightly cropped, often filling the full card width, with no border or padding buffer. One Ember Orange graphic accent (stamp sunburst) appears as a decorative seal. The overall treatment feels like a curated magazine spread — every image is art-directed, never stock.
+-- COLORS
+  [neutral] Parchment #e2dedb :: Page background, image matte areas — the warm stock everything else is printed on
+  [neutral] Bone Cream #cdc6be :: Card surfaces, secondary panels, subtle inset backgrounds slightly darker than parchment
+  [neutral] Ink Black #1d1d1b :: Body text, nav links, borders, large display banner fills, icon strokes — the near-black that carries every contrast-critical role
+  [neutral] Charcoal #69645f :: Muted secondary text, subdued borders, quiet typographic accents
+  [neutral] Pure Black #000000 :: Card outline emphasis, deepest fills, highest-contrast border work on cream surfaces
+  [accent] Ember Orange #c03f13 :: Stamp illustrations, star icon accent, occasional seal/sticker color — the single chromatic punctuation in an otherwise monochrome system
+-- SURFACES
+  L0 Parchment #e2dedb :: Page background
+  L1 Bone Cream #cdc6be :: Card and panel surface
+  L2 Ink Black #1d1d1b :: Full-width display banner fill
+  L3 Pure Black #000000 :: Deepest card border emphasis
+-- TYPE
+  FAM Editorial New | sizes=16px, 17px, 19px, 20px, 24px, 29px, 31px, 32px, 37px, 86px | w=300 | lh=0.93, 1.08, 1.11, 1.15, 1.16, 1.18, 1.20, 1.25, 1.27, 1.33, 1.36 | ls=-0.0400em to -0.0100em; tighter at larger sizes | sub=Tiempos Text or Source Serif 4 | feat=
+      ROLE: Body text, nav, links, card descriptions, smaller headings — the workhorse serif
+  FAM Canopee | sizes=17px, 20px, 22px, 23px, 32px, 43px, 65px, 72px, 86px, 109px, 112px, 118px, 122px, 202px, 212px, 366px, 432px, 446px, 533px | w=400 | lh=0.71, 0.73, 0.77, 0.78, 0.79, 0.81, 0.91, 1.00, 1.25 | ls=-0.0890em to -0.0070em; extreme tightening at display sizes | sub=Migra or Bodoni Moda at heavy weight | feat=
+      ROLE: Display headlines and section titles — the signature font for oversize banners (MIRANDA, WEBSITE, INTERACTIVE ARTIST!)
+  FAM Domaine Display | sizes=20px, 22px, 32px, 65px, 72px, 86px, 109px, 118px, 122px, 446px | w=500 | lh=0.73, 0.78, 0.79, 0.91, 1.00 | ls=-0.0600em to -0.0200em | sub=Playfair Display or GT Super | feat=
+      ROLE: Mid-weight display headings, body emphasis, secondary hero text — bridges Editorial New's restraint and Canopee's drama
+  FAM Germgoth | sizes=158px | w=400 | lh=normal | ls=-0.0040em | sub=Pirata One or IM Fell English | feat=
+      ROLE: Rare gothic/blackletter accent — used for occasional impact moments that need medieval or poster-poster weight
+  SCALE caption = 14px / lh 1.18 / ls -0.27
+  SCALE body-sm = 16px / lh 1.27 / ls -0.16
+  SCALE subheading = 22px / lh 1.18 / ls -0.55
+  SCALE heading-sm = 32px / lh 1.11 / ls -0.96
+  SCALE heading = 65px / lh 0.91 / ls -2.08
+  SCALE heading-lg = 122px / lh 0.79 / ls -4.88
+  SCALE display = 446px / lh 0.73 / ls -22.3
+-- SPACING
+  baseUnit= density= elementGap=14px sectionGap=43px cardPadding=24px pageMaxWidth=1440px
+  radius: {"tags":"2.88px","cards":"11.52px","images":"0px","buttons":"2.88px"}
+-- ELEVATION
+  Project Card => rgba(29, 29, 27, 0.2) -4px 4px 6px 0px
+  Portrait Card => rgba(29, 29, 27, 0.2) -5px 3px 6px 0px
+-- COMPONENTS
+  + Editorial Header Bar :: Top navigation strip
+      Full-width Parchment (#e2dedb) bar with location label left ('Amsterdam, NL'), centered brand name in Editorial New 19-20px weight 300, and hamburger icon right. 1px Ink Black border-bottom for hairline separation.
+  + Project Grid Card :: Work showcase tile
+      3-column grid card. Thumbnail image with 0px radius fills top. Below: project title in Editorial New 20px weight 300, a 2.88px-radius square NEW badge in Ember Orange (#c03f13) with white text, and a 2-3 line description in Editorial New 16-17px. No card border; separation comes from whitespace alone.
+  + Display Banner Block :: Hero/section divider
+      Full-width Ink Black (#1d1d1b) rectangle spanning the page with oversize Canopee text in Parchment (#e2dedb). Text sizes 202-533px, line-height 0.71-0.79 so letters nearly touch. Negative letter-spacing up to -0.089em. This is the system's most recognizable pattern.
+  + NEW Badge :: Project freshness tag
+      Small square 2.88px-radius tag, Ember Orange (#c03f13) background, Editorial New 12-14px weight 300 white text. Sits inline with project title.
+  + Portrait Illustration Card :: Large artwork showcase
+      Full-bleed digital illustration with tight cropping. No border, no radius. Caption sits below in Canopee or Domaine Display at 43-86px, line-height 0.91-0.79, weight 400-500. The illustration does the heavy lifting; type acts as a placard.
+  + Drop Cap Bio Block :: Author introduction
+      Two-column intro: left column opens with a large Canopee drop cap (the brand's first letter) at 86px+, then Editorial New body text. Right column holds a larger Canopee headline ('CREATIVE DEVELOPER BASED IN AMSTERDAM, NL.') at 65-72px. The drop cap is the only typographic flourish in body text.
+  + Stamp Seal Illustration :: Decorative editorial accent
+      Perforated-edge postage-stamp rectangle at 11.52px radius, off-white interior with Ember Orange sunburst graphic, handwritten signature line, and two metadata rows ('NAME', 'BIRTH') in tiny Editorial New caps. Functions as a signature mark, not a functional UI element.
+  + Three-Column Section Header :: Featured work intro
+      Left card: image. Center card: massive Canopee heading ('ALL WORK!') in 65-86px with short Editorial New subhead. Right card: image. Visual rhythm of image-type-image. Center column centered.
+  + Text Link with Underline :: Inline navigation/CTA
+      Editorial New 16-19px weight 300, Ink Black (#1d1d1b) color, 1px underline offset 3px. Hover darkens to Pure Black. No background fill, no button shape — editorial hyperlinks stay as text.
+  + Project Metadata Row :: Work card footer detail
+      Single-line row of Editorial New 14-16px caption text in Charcoal (#69645f) below project description, listing role/agency/year. Acts as a byline.
+-- DOS
+  DO Use Canopee at 200px+ for any section-divider banner — display sizes below 122px lose the system's defining character
+  DO Set line-height below 0.85 on all Canopee display text so letters crowd and nearly collide; this is the signature, not a bug
+  DO Pair every project card with a 2.88px-radius square NEW badge in Ember Orange (#c03f13) — the badge is the only chromatic note in a monochrome page
+  DO Use Editorial New weight 300 exclusively for body, nav, and small headings — heavier weights break the editorial restraint
+  DO Let images bleed to the card edge with 0px radius; sharp corners are part of the broadsheet language
+  DO Keep the page background Parchment (#e2dedb) and card surfaces Bone Cream (#cdc6be) — never introduce a white or cool gray
+  DO Use negative letter-spacing on all Canopee and Domaine Display headings; positive tracking destroys the printed-poster feel
+-- DONTS
+  DONT Do not introduce gradients, glassmorphism, or modern blur effects — this is a 1890s broadsheet, not 2024 SaaS
+  DONT Do not use border-radius above 12px on any element — sharp geometry defines the print aesthetic
+  DONT Do not add more than one chromatic accent — the Ember Orange only works because the rest is monochrome
+  DONT Do not center-align body text longer than two lines; flush-left only for paragraphs
+  DONT Do not use shadows for general depth; reserve the directional ink-color shadow for project cards only
+  DONT Do not substitute system sans-serifs (Inter, Helvetica) for any of the four custom faces — the serif/gothic mix is load-bearing
+  DONT Do not use line-height above 1.0 on display headings — open spacing kills the compressed woodblock feel
+-- CUSTOM
+  [Agent Prompt Guide] $1c
+-- SIMILAR
+  ~ Locomotive (locomotive.ca) because Same broadsheet editorial typography with extreme display sizes and tight letter-spacing on a cream/warm background
+  ~ Pentagram portfolio pages because Newspaper-grid layouts, oversize serif headlines bleeding off cards, monochrome with single chromatic stamp accent
+  ~ Rauno Freiberg (raunofreiberg.com) because Custom display faces, sharp-cornered image cards, generous whitespace on warm neutral canvas
+  ~ Resn (resn.co.nz) because Playful experimental portfolio that uses oversize custom type as architectural elements rather than body copy
+  ~ Frank Chimero because Editorial portfolio tradition — broadsheet-inspired, serif-driven, monochrome with intentional restraint
+

@@ -1,0 +1,575 @@
+﻿
+=========== e549766e-b8b1-48a2-bd72-8cc04e9e4e9d  len=277943 ===========
+siteName: Shade
+northStar: Editorial paper cutouts on white
+-- COLORS (120)
+  * Page Canvas | #fafafa\",\"gradient\":\"$undefined | 
+  * Hairline Border | #e5e7eb\",\"gradient\":\"$undefined | 
+  * Card Surface | #ededed\",\"gradient\":\"$undefined | 
+  * Divider Mid | #dadada\",\"gradient\":\"$undefined | 
+  * Graphite | #242424\",\"gradient\":\"$undefined | 
+  * Ink Black | #171717\",\"gradient\":\"$undefined | 
+  * Vermilion Flame | #fc4a2b\",\"gradient\":\"linear-gradient(268.33deg, rgb(252, 74, 43), rgb(255, 126, 103), rgb(255, 172, 158), rgb(255, 206, 198)) | 
+  * Ember Pulse | #ea3718\",\"gradient\":\"$undefined | 
+  * Tangerine Signal | #f97316\",\"gradient\":\"$undefined | 
+  * Coral Blush | #ffac9e\",\"gradient\":\"$undefined | 
+  * Peach Mist | #ffe5e0\",\"gradient\":\"$undefined | 
+  * Apricot Wash | #ffedd5\",\"gradient\":\"$undefined | 
+  * Obsidian | #000000\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Deep Teal | #0b252a\",\"gradient\":\"$undefined | 
+  * Bone | #f6f5f5\",\"gradient\":\"$undefined | 
+  * Sandstone | #f5ece5\",\"gradient\":\"$undefined | 
+  * Ash Blush | #ede2d7\",\"gradient\":\"$undefined | 
+  * Cream Paper | #e4dfd9\",\"gradient\":\"$undefined | 
+  * Pure White | #ffffff\",\"gradient\":\"$undefined | 
+  * Charcoal Ink | #000000\",\"gradient\":\"$undefined | 
+  * Near Black | #050505\",\"gradient\":\"$undefined | 
+  * Pressed Graphite | #171717\",\"gradient\":\"$undefined | 
+  * Slate | #737373\",\"gradient\":\"$undefined | 
+  * Electric Violet | #7270ff\",\"gradient\":\"$undefined | 
+  * Signal Blue | #1560fb\",\"gradient\":\"$undefined | 
+  * Deep Indigo | #2f2b4a\",\"gradient\":\"$undefined | 
+  * Midnight Ink | #1c1a2c\",\"gradient\":\"$undefined | 
+  * Slate | #4b5563\",\"gradient\":\"$undefined | 
+  * Silver | #9ca3af\",\"gradient\":\"$undefined | 
+  * Linen Canvas | #edede8\",\"gradient\":\"$undefined | 
+  * Frosted White | #ffffff\",\"gradient\":\"$undefined | 
+  * Warm Stone | #dbdbd2\",\"gradient\":\"$undefined | 
+  * Pebble | #c0c0c0\",\"gradient\":\"$undefined | 
+  * Graphite Ink | #141414\",\"gradient\":\"$undefined | 
+  * Charcoal Body | #292929\",\"gradient\":\"$undefined | 
+  * Page Canvas | #ffffff\",\"gradient\":\"$undefined | 
+  * Ink Black | #1c1d1f\",\"gradient\":\"$undefined | 
+  * Graphite | #232529\",\"gradient\":\"$undefined | 
+  * Obsidian | #101113\",\"gradient\":\"$undefined | 
+  * Carbon | #2e3238\",\"gradient\":\"$undefined | 
+  * Slate 500 | #505967\",\"gradient\":\"$undefined | 
+  * Obsidian | #000000\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Deep Ink | #121211\",\"gradient\":\"$undefined | 
+  * Graphite | #575551\",\"gradient\":\"$undefined | 
+  * Warm Stone | #958d7e\",\"gradient\":\"$undefined | 
+  * Ember Tag | #e8552b\",\"gradient\":\"$undefined | 
+  * Voltage Blue | #2142e7\",\"gradient\":\"$undefined | 
+  * Deep Voltage | #182fa5\",\"gradient\":\"$undefined | 
+  * Midnight Ink | #111827\",\"gradient\":\"$undefined | 
+  * Slate 600 | #4b5563\",\"gradient\":\"$undefined | 
+  * Slate 700 | #374151\",\"gradient\":\"$undefined | 
+  * Slate 500 | #70747d\",\"gradient\":\"$undefined | 
+  * Vellum | #f6f6f4\",\"gradient\":\"$undefined | 
+  * Paper | #ffffff\",\"gradient\":\"$undefined | 
+  * Ink | #000000\",\"gradient\":\"$undefined | 
+  * Carbon | #2c2c26\",\"gradient\":\"$undefined | 
+  * Ash | #d0d0c8\",\"gradient\":\"$undefined | 
+  * Olive Char | #57584b\",\"gradient\":\"$undefined | 
+  * Void | #0b0c0e\",\"gradient\":\"$undefined | 
+  * Graphite | #131416\",\"gradient\":\"$undefined | 
+  * Charcoal | #1f1f21\",\"gradient\":\"$undefined | 
+  * Smoke | #3c3d3e\",\"gradient\":\"$undefined | 
+  * Steel | #71717a\",\"gradient\":\"$undefined | 
+  * Fog | #858687\",\"gradient\":\"$undefined | 
+  * Parchment | #dbdad7\",\"gradient\":\"$undefined | 
+  * Paper | #ffffff\",\"gradient\":\"$undefined | 
+  * Sand | #e6e4e0\",\"gradient\":\"$undefined | 
+  * Ink | #121212\",\"gradient\":\"$undefined | 
+  * Smoke | #616161\",\"gradient\":\"$undefined | 
+  * Charcoal | #18181b\",\"gradient\":\"$undefined | 
+  * Charcoal | #080808\",\"gradient\":\"$undefined | 
+  * Graphite | #222222\",\"gradient\":\"$undefined | 
+  * Mid Ink | #292929\",\"gradient\":\"$undefined | 
+  * Steel | #696969\",\"gradient\":\"$undefined | 
+  * Fog | #999999\",\"gradient\":\"$undefined | 
+  * Ash | #b2b2b2\",\"gradient\":\"$undefined | 
+  * Void Canvas | #0a0a0a\",\"gradient\":\"$undefined | 
+  * Graphite | #161616\",\"gradient\":\"$undefined | 
+  * Frosted Glass | #d4d4d4\",\"gradient\":\"$undefined | 
+  * Ink Black | #000000\",\"gradient\":\"$undefined | 
+  * Snow White | #ffffff\",\"gradient\":\"$undefined | 
+  * Bone | #ededed\",\"gradient\":\"$undefined | 
+  * Iris | #624de3\",\"gradient\":\"$undefined | 
+  * Soft Iris | #8d4af7\",\"gradient\":\"$undefined | 
+  * Studio Slate | #1a1d1e\",\"gradient\":\"$undefined | 
+  * Obsidian | #151718\",\"gradient\":\"$undefined | 
+  * Pure White | #ffffff\",\"gradient\":\"$undefined | 
+  * Cloud | #f6f7f9\",\"gradient\":\"$undefined | 
+  * Canvas Cream | #f5f5f5\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Ink Black | #0a0a0a\",\"gradient\":\"$undefined | 
+  * Charcoal | #171717\",\"gradient\":\"$undefined | 
+  * Graphite | #404040\",\"gradient\":\"$undefined | 
+  * Steel | #737373\",\"gradient\":\"$undefined | 
+  * Ink Black | #1a1a1a\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Graphite | #6a6a6a\",\"gradient\":\"$undefined | 
+  * Warm Charcoal | #4d3f32\",\"gradient\":\"$undefined | 
+  * Fog | #f6f6f6\",\"gradient\":\"$undefined | 
+  * Linen | #ececec\",\"gradient\":\"$undefined | 
+  * Violet Pulse | #a565ff\",\"gradient\":\"$undefined | 
+  * Indigo Ink | #5e5cff\",\"gradient\":\"$undefined | 
+  * Lavender Wash | #ebebff\",\"gradient\":\"$undefined | 
+  * Iris Glow | #e0c9ff\",\"gradient\":\"$undefined | 
+  * Ledger Green | #2e7317\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Carbon Ink | #0f0f0f\",\"gradient\":\"$undefined | 
+  * Graphite | #222222\",\"gradient\":\"$undefined | 
+  * Iron | #4c4c4c\",\"gradient\":\"$undefined | 
+  * Steel | #606060\",\"gradient\":\"$undefined | 
+  * Slate | #898989\",\"gradient\":\"$undefined | 
+  * Fog | #9d9d9d\",\"gradient\":\"$undefined | 
+  * Gloss Black | #17150e\",\"gradient\":\"$undefined | 
+  * Gloss White | #f0f7f6\",\"gradient\":\"$undefined | 
+  * Pure White | #ffffff\",\"gradient\":\"$undefined | 
+  * Solar Yellow | #cccc25\",\"gradient\":\"linear-gradient(180deg, #cccc25, #cacd78) | 
+  * Soft Charcoal | #272b30\",\"gradient\":\"$undefined | 
+  * Mid Grey | #949494\",\"gradient\":\"$undefined | 
+-- FONTS: sans-serif ; Inter Display ; Aux Mono Regular ; Inter ; Aux Mono
+-- ROLES (32)
+  - Primary text, dark pill button fill, heading borders — warm near-black, the only filled button color in the system
+  - Page canvas, card surfaces, button text, ghost button background
+  - Secondary canvas, subtle violet-tinted off-white for alternating sections
+  - Solid offset shadow color under primary buttons and secondary surfaces
+  - Muted body text, secondary metadata, helper copy
+  - Subtle borders, dividers, inactive tab indicators
+  - Input borders, slightly heavier dividers than Hairline
+  - Brand mark gradient terminus, logo cube fill — the only saturated color in the system
+  - Selected tab underline, violet hairline accents, announcement pill border — violet at whisper volume
+  - caption
+  - body-sm
+  - body
+  - subheading
+  - heading-sm
+  - heading
+  - heading-lg
+  - display
+  - Highest-emphasis action
+  - Secondary action paired with primary
+  - Site-wide navigation
+  - Inline news/feature flag above hero
+  - Page-level display
+  - In-section content switcher
+  - Feature proof point
+  - Social proof / partner bar
+  - Step-based explanation
+  - Bottom-right compliance notice
+  - Identity
+  - sans-serif — detected in extracted data but not described by AI
+  - Primary typeface for all UI text, body and headings alike. Single weight 400 carries the entire hierarchy through size and tracking alone — no bold, no light. The custom stylistic sets (ss01, ss07, ss08) reshape the g, a, and l terminals into a more geometric, editorial silhouette that distinguishes it from stock Inter.
+  - Monospaced label font for section eyebrows (e.g. 'DAY 1', 'LET'S CHAT', nav items, badge text). Sets at 14px with -0.04em tracking gives timestamps and labels a technical, archival feel against the editorial display type.
+  - Secondary fallback / system-level utility text where the custom display features aren't required
+-- SHADOWS (0)
+-- COMPONENTS (11)
+  + Primary Pill Button :: Highest-emphasis action\",\"description\":\"Dark charcoal fill (#131315), white text, 35px border-radius, ~15px vertical / 24px horizontal padding, Inter Display 16px weight 400 with white color. Carries the signature 8px 8px 0px 0px #f1f1f1 hard offset shadow beneath — no blur, reads as a cutout hovering above the page.
+  + Ghost Pill Button :: Secondary action paired with primary\",\"description\":\"No fill, 1.5px solid #131315 border, #131315 text, 35px radius, same padding as primary. The 8px offset shadow is rendered in semi-transparent gray (rgba(226,226,227,0.5) 10px 10px 0px -2px) so the button appears to sit on a slightly lifted paper plane.
+  + Top Navigation Bar :: Site-wide navigation\",\"description\":\"Sticky white bar with 1px bottom hairline (#d0d0d0). Logo cube left, then 5–6 Inter Display 14px links in #131315 with 20px gap; right side: 'Log In' text link plus the primary pill CTA. Vertical padding ~20px.
+  + Announcement Pill :: Inline news/feature flag above hero\",\"description\":\"Lavender Trace (#dacefd) 1px border, fully rounded (~999px or matching button radius), Aux Mono 14px text in violet. No fill, no shadow. Floats centered above the hero headline.
+  + Hero Headline :: Page-level display\",\"description\":\"Inter Display 72px (desktop) / 48px (tablet) weight 400, #131315, line-height 1.1, letter-spacing -0.03em. Centered, max-width ~900px. No gradient, no mixed weight — the size and negative tracking do all the work.
+  + Tab Navigation Strip :: In-section content switcher\",\"description\":\"Four labels (Search / Access / Share / Archive) in Inter Display 16px, evenly spaced, separated by hairline dividers. Active tab is marked by a 2px-tall violet (#855cf7) underline directly beneath the text — not a pill background, just a precise accent line. Inactive tabs are #717173.
+  + Product Screenshot Card :: Feature proof point\",\"description\":\"Product UI rendered as a browser-frame screenshot, slight tilt or straight, sitting on the bone (#f7f5ff) surface. Card has 1px inset #00000014 hairline, 14px radius, no outer shadow. Image bleeds nearly to the card edge.
+  + Logo Strip :: Social proof / partner bar\",\"description\":\"Horizontal row of 7–8 partner logos in mid-gray (#717173 or desaturated), evenly spaced with ~40px gaps, all rendered at uniform height (~20px). No labels, no borders — just quiet marks.
+  + Timeline Onboarding Row :: Step-based explanation\",\"description\":\"Three columns headed by Aux Mono 14px labels ('DAY 1', 'DAY 14', 'DAY 21') in #717173, then Inter Display 24px headings in #131315, then body text. Below the columns runs a full-width hairline with 2px solid charcoal circles at each step; active step is filled, future steps are outlined.
+  + Cookie Consent Banner :: Bottom-right compliance notice\",\"description\":\"Fixed bottom-right card, white fill, 1px #d0d0d0 border, 9px radius, ~16px padding. Body text in 12px #717173, small 'Okay' button with #131315 text and no background.
+  + Brand Logo Mark :: Identity\",\"description\":\"A small cube/diamond glyph filled with a conic gradient from transparent to #855cf7, ~24px square, followed by 'shade' wordmark in Inter Display 20px weight 400, #131315. The gradient is the only saturated color mark in the system.
+-- VALUES: rgb(241, 241, 241) 8px 8px 0px 0px | rgba(226, 226, 227, 0.5) 10px 10px 0px -2px | rgba(19, 19, 21, 0.12) 0px 1px 4px 0px | rgba(0, 0, 0, 0.2) 0px 3px 4px 0px | rgba(0, 0, 0, 0.05) 0px 0px 0px 1px inset | conic-gradient(rgba(0, 0, 0, 0) 200deg, rgb(133, 92, 247))
+-- RULES
+  = Do\"}],[\"$\",\"ul\",null,{\"className
+  = Use the hard offset shadow (8px 8px 0px 0px #f1f1f1) exclusively on primary pill buttons — never apply blur or diffusion to elevation
+  = Set Inter Display at weight 400 only; let size and -0.03em tracking carry hierarchy, never switch to bold
+  = Reserve #855cf7 for the logo gradient and the active tab underline — every other accent must be the muted #dacefd lavender
+  = Pair every primary CTA with a ghost secondary button of identical 35px radius and padding
+  = Use 100px between major sections, 10–12px between inline elements, 24px inside cards
+  = Treat photography as full-bleed and unbordered — let the white canvas frame it like a gallery wall
+  = Apply Aux Mono 14px -0.04em to all eyebrow labels, timestamps, and tab headings
+  = Don't\"}],[\"$\",\"ul\",null,{
+  = Do not introduce additional brand colors or saturated fills — the system is 99% achromatic by design
+  = Do not use soft blurred shadows on buttons; the signature is hard, solid, paper-cutout offsets
+  = Do not bold headlines or use weight 500+ in Inter Display — the single-weight hierarchy is intentional
+  = Do not round the active tab into a pill background; the 2px violet underline is the only acceptable indicator
+  = Do not add gradient backgrounds to sections or cards — gradients are reserved for the brand mark
+  = Do not use border-radius values outside the defined scale (35/20/14/9/2px)
+  = Do not center-align body paragraphs longer than two lines — the system is left-aligned with a centered display headline only
+
+=========== a6efcd16-dcd8-435b-9bd6-8c590589b424  len=277504 ===========
+siteName: Zellerfeld
+northStar: Sculptor's atelier on white marble — monolithic plinth surfaces, single cobalt spark, lowercase whispers from floor to ceiling.
+-- COLORS (112)
+  * Canvas White | #ffffff\",\"gradient\":\"$undefined | 
+  * Charcoal | #212121\",\"gradient\":\"$undefined | 
+  * True Black | #000000\",\"gradient\":\"$undefined | 
+  * Warm Sand | #e0dacf\",\"gradient\":\"$undefined | 
+  * Olive Char | #222519\",\"gradient\":\"$undefined | 
+  * Iron Gray | #525252\",\"gradient\":\"$undefined | 
+  * Canvas White | #ffffff\",\"gradient\":\"$undefined | 
+  * Soft Ash | #eeeeee\",\"gradient\":\"$undefined | 
+  * Mist Sage | #d5e4e8\",\"gradient\":\"$undefined | 
+  * Graphite | #474747\",\"gradient\":\"$undefined | 
+  * Charcoal | #212121\",\"gradient\":\"$undefined | 
+  * Onyx | #000000\",\"gradient\":\"$undefined | 
+  * Bone | #e7ecea\",\"gradient\":\"$undefined | 
+  * Ink | #000000\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Voltage Lime | #e3fc03\",\"gradient\":\"$undefined | 
+  * Obsidian | #000000\",\"gradient\":\"$undefined | 
+  * Graphite | #323232\",\"gradient\":\"$undefined | 
+  * Carbon | #1a1a1a\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Concrete | #e6e6e6\",\"gradient\":\"$undefined | 
+  * Canvas White | #fafafa\",\"gradient\":\"$undefined | 
+  * Warm Ash | #d9d9d9\",\"gradient\":\"$undefined | 
+  * Mid Gray | #cdcdce\",\"gradient\":\"$undefined | 
+  * Ink Black | #07060b\",\"gradient\":\"$undefined | 
+  * Pure Black | #000000\",\"gradient\":\"$undefined | 
+  * Glacial Mist | #ddfcff\",\"gradient\":\"$undefined | 
+  * Obsidian | #111111\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Concrete Gray | #e5e5e5\",\"gradient\":\"$undefined | 
+  * Soft Mist | #f5f5f5\",\"gradient\":\"$undefined | 
+  * Steel | #707072\",\"gradient\":\"$undefined | 
+  * Faint Gray | #9e9ea0\",\"gradient\":\"$undefined | 
+  * Carbon Ink | #1a211e\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * True Black | #000000\",\"gradient\":\"$undefined | 
+  * Obsidian | #0c0c0c\",\"gradient\":\"$undefined | 
+  * Fog | #eef1f0\",\"gradient\":\"$undefined | 
+  * Mist | #e0e0e0\",\"gradient\":\"$undefined | 
+  * Obsidian | #000000\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Hairline Gray | #e5e7eb\",\"gradient\":\"$undefined | 
+  * Stone | #efefef\",\"gradient\":\"$undefined | 
+  * Driftwood | #bfbfbf\",\"gradient\":\"$undefined | 
+  * Slate | #6b7280\",\"gradient\":\"$undefined | 
+  * Charcoal Ink | #3f3f3f\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Stone Veil | #d3cec5\",\"gradient\":\"$undefined | 
+  * Sumi Black | #030302\",\"gradient\":\"$undefined | 
+  * Ash | #686867\",\"gradient\":\"$undefined | 
+  * Pebble | #acacac\",\"gradient\":\"$undefined | 
+  * Obsidian Ink | #1c1717\",\"gradient\":\"$undefined | 
+  * Paper | #ffffff\",\"gradient\":\"$undefined | 
+  * Bone | #f0f0f0\",\"gradient\":\"$undefined | 
+  * Eucalyptus Mist | #a9aea9\",\"gradient\":\"$undefined | 
+  * Bone Canvas | #fefcf8\",\"gradient\":\"$undefined | 
+  * Press White | #ffffff\",\"gradient\":\"$undefined | 
+  * Onyx Black | #000000\",\"gradient\":\"$undefined | 
+  * Graphite | #403f3e\",\"gradient\":\"$undefined | 
+  * Carbon | #121212\",\"gradient\":\"$undefined | 
+  * Iron | #1d1d1d\",\"gradient\":\"$undefined | 
+  * Gallery White | #ffffff\",\"gradient\":\"$undefined | 
+  * Canvas Mist | #f4f4f4\",\"gradient\":\"$undefined | 
+  * Ink Black | #000000\",\"gradient\":\"$undefined | 
+  * Charcoal | #141414\",\"gradient\":\"$undefined | 
+  * Fog | #e2e8f0\",\"gradient\":\"$undefined | 
+  * Graphite | #666666\",\"gradient\":\"$undefined | 
+  * Carbon | #222222\",\"gradient\":\"$undefined | 
+  * Obsidian | #000000\",\"gradient\":\"$undefined | 
+  * Graphite | #313131\",\"gradient\":\"$undefined | 
+  * Frost | #ffffff\",\"gradient\":\"$undefined | 
+  * Paper | #f7f7f7\",\"gradient\":\"$undefined | 
+  * Mist | #e5e7eb\",\"gradient\":\"$undefined | 
+  * Cream Paper | #fcf7fa\",\"gradient\":\"$undefined | 
+  * Pure Card | #ffffff\",\"gradient\":\"$undefined | 
+  * Ash Mist | #f1f1f1\",\"gradient\":\"$undefined | 
+  * Carbon Black | #000000\",\"gradient\":\"$undefined | 
+  * Graphite Input | #212121\",\"gradient\":\"$undefined | 
+  * Obsidian Pill | #1a1a1a\",\"gradient\":\"$undefined | 
+  * Electric Cobalt | #0700ff\",\"gradient\":\"$undefined | 
+  * Gallery Black | #000000\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Hairline Gray | #ebebeb\",\"gradient\":\"$undefined | 
+  * Fog Gray | #cecccc\",\"gradient\":\"$undefined | 
+  * Chalk White | #f7f7f7\",\"gradient\":\"$undefined | 
+  * Onyx | #000000\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Soot | #121212\",\"gradient\":\"$undefined | 
+  * Ink | #161912\",\"gradient\":\"$undefined | 
+  * Graphite | #4c4c4c\",\"gradient\":\"$undefined | 
+  * Slate | #737373\",\"gradient\":\"$undefined | 
+  * Soot | #24241f\",\"gradient\":\"$undefined | 
+  * Limestone | #d1d3cf\",\"gradient\":\"$undefined | 
+  * Chalk | #e5e5e5\",\"gradient\":\"$undefined | 
+  * Graphite | #333333\",\"gradient\":\"$undefined | 
+  * Canvas White | #ffffff\",\"gradient\":\"$undefined | 
+  * Ink Black | #080808\",\"gradient\":\"$undefined | 
+  * True Black | #000000\",\"gradient\":\"$undefined | 
+  * Mist Gray | #dadada\",\"gradient\":\"$undefined | 
+  * Signal Red | #c80000\",\"gradient\":\"$undefined | 
+  * Carbon Black | #000000\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Concrete Gray | #cacaca\",\"gradient\":\"$undefined | 
+  * Mist Gray | #f1f1f1\",\"gradient\":\"$undefined | 
+  * Iron Gray | #404040\",\"gradient\":\"$undefined | 
+  * Ash Gray | #616161\",\"gradient\":\"$undefined | 
+  * Parchment Stone | #dfe0db\",\"gradient\":\"$undefined | 
+  * Bone White | #eeefea\",\"gradient\":\"$undefined | 
+  * Pure White | #ffffff\",\"gradient\":\"$undefined | 
+  * Carbon | #000000\",\"gradient\":\"$undefined | 
+  * Graphite | #3c3c3b\",\"gradient\":\"$undefined | 
+  * Ash | #808080\",\"gradient\":\"$undefined | 
+-- FONTS: Roobert ; Space Mono ; Arial
+-- ROLES (33)
+  - New In badges, active nav pill, current-slide indicator, claim moments — the only chromatic signal in the system, used sparingly so it reads as activation not decoration
+  - New Color badge fill, soft highlight wash, tinted surface for variant callouts — a desaturated ghost of the cobalt that whispers color without breaking the monochrome regime
+  - Primary text, default borders, icon strokes, hairline dividers — the dominant structural color across headings, lists, and links
+  - Neutral form states, badge text, and quiet UI feedback where color should stay understated. Do not promote it to the primary CTA color
+  - Secondary surface for product cards, nav bar background, soft elevation tier above the canvas
+  - Card border tone, neutral button fill, muted button border — the gray that defines card edges without darkening them
+  - Light card border, divider lines, inactive surface tint
+  - List and navigation borders, structural dividers between rows and cells
+  - Secondary text, muted body copy, de-emphasized metadata, link rest state
+  - Body text alternate, subtle dark surface for inset blocks
+  - caption
+  - body-lg
+  - subheading
+  - heading-sm
+  - heading
+  - heading-lg
+  - display
+  - Top-of-page promotional strip
+  - Primary site navigation
+  - Above-the-fold product feature
+  - In-hero product buy card
+  - Numbered editorial product list item
+  - Grid product display card
+  - Status indicator for fresh products
+  - Inventory status indicator
+  - Variant announcement
+  - Section-end navigation
+  - Press credentials strip
+  - List section title
+  - Partner brand mark in product card
+  - Primary brand typeface — used for everything from 13px body to 128px hero. The -0.04em tracking is consistent across all sizes, pulling the lowercase wordmark into a tight, sculpted mass. Weights escalate by context: 400 for body and UI, 500 for emphasized labels, 600 for product names, 700 for large display.
+  - Technical metadata — prices (€189,00), Top 10 rank numerals, ticker marks, shop name credits. Drops in where the page needs to feel like a spec sheet rather than marketing copy.
+  - Arial — detected in extracted data but not described by AI
+-- SHADOWS (0)
+-- COMPONENTS (13)
+  + Announcement Bar :: Top-of-page promotional strip\",\"description\":\"Full-bleed deep navy (~#000340) background, centered white Roobert 13px body text reading promotional copy. Sits above the main navigation as a thin 32-40px bar. No close button visible — passive, always-on.
+  + Main Navigation :: Primary site navigation\",\"description\":\"White surface, horizontal flex layout. Left: grid icon button (icon stroke 1.5px, #111). Center-left: 'Shop' pill button — white background, #111 border, 10px radius, 8px 14px padding, 14px Roobert 500. Center: wordmark 'zellerfeld' in Roobert with the logomark. Right: search icon button, 'Account' text link in Ash (#737780), wishlist heart icon. 48-56px height. Border-bottom: 1px #ecedee.
+  + Hero with Background Imagery :: Above-the-fold product feature\",\"description\":\"Full-bleed photographic background covering the full viewport height. Image bleeds edge-to-edge with no border-radius. Overlaid bottom-left: 'New In' cobalt badge (see badge spec), then a 64-128px display headline in Roobert 700 white, lowercase ('studio runner'), letter-spacing -5px. Beneath: 15-16px subhead in white at ~80% opacity. Right-side floating product card (see Floating Product Card).
+  + Floating Product Info Card :: In-hero product buy card\",\"description\":\"White surface, 14.4-20px radius, 16-20px padding. Contains: small product thumbnail (60x60, 10px radius), product name in Roobert 600 16px Ink, 'By studio' in Space Mono 12px Ash, price in Space Mono 600 14px Ink. CTA: 'Shop studio runner' — black (#111) filled button, white text, 10px radius, 8px 20px padding.
+  + Ranked Product Card (Top 10) :: Numbered editorial product list item\",\"description\":\"Plaster (#ecedee) surface, 10px radius, no border. Each card spans 1/4 of viewport width. Giant translucent rank numeral (1, 2, 3, 4) in Roobert 700 at 200-280px, white at ~60% opacity, positioned top-right as a watermark. Product image centered, natural proportions. Below image: 20px gap, then small 40x40 brand logo thumbnail (white bg, 4px radius), product name in Roobert 600 16px Ink, 'By {brand}' in Space Mono 12px Ash, price in Space Mono 400 12px Ink.
+  + Standard Product Card (New Releases) :: Grid product display card\",\"description\":\"Plaster (#ecedee) surface, 10px radius, no border. Width 1/4 of grid. Top-left: status badge (New In / Sold Out / New Color). Centered product image fills the card with ~60% height. Below: 16px gap, brand logo thumbnail 40x40 (white surface, 4px radius), product name Roobert 600 16px Ink, 'By {brand}' in Space Mono 12px Ash, price in Space Mono 400 12px Ink.
+  + New In Badge :: Status indicator for fresh products\",\"description\":\"Electric Cobalt (#000aff) background, white text 'New In' in Roobert 600 12px. Pill shape, 30px border-radius, 4px 8px padding. Sits absolute top-left of product card with 12px offset.
+  + Sold Out Badge :: Inventory status indicator\",\"description\":\"Slate (#a1a4aa) background, white text 'Sold Out' in Roobert 600 12px. Pill shape, 30px border-radius, 4px 8px padding. Identical dimensions to New In badge so badge layout doesn't shift.
+  + New Color Badge :: Variant announcement\",\"description\":\"Pale Iris (#e5e7ff) background, Ink (#111) text 'New Color' in Roobert 600 12px. Pill shape, 30px border-radius, 4px 8px padding. Reads as a softer sibling of the New In badge.
+  + See All Button :: Section-end navigation\",\"description\":\"Full-width of content column (not edge-to-edge), white surface, Ink (#111) text 'See All' in Roobert 500 16px, 10px radius, 12px 24px padding, 1px #ecedee border. Centered below product grid.
+  + Featured In Media Bar :: Press credentials strip\",\"description\":\"Ink (#111) background, full-bleed width, 80-100px height. Centered label 'Featured in' in Space Mono 12px Ash above the bar. Inside: horizontally distributed press logos (COMPLEX, POPULAR MECHANICS, VOGUE, WIRED) in white at 60% opacity, even spacing, max ~60px height each.
+  + Section Header with Carousel Arrows :: List section title\",\"description\":\"Full-width of content area. Left: section title in Roobert 600 20px Ink (e.g. 'Featured New Releases'). Right: prev/next arrow buttons, 40x40 square, 1px #ecedee border, 10px radius, chevron icon in Ash 1.5px stroke. Arrows are part of a horizontal carousel control.
+  + Brand Logo Thumbnail :: Partner brand mark in product card\",\"description\":\"40x40 square, white (#ffffff) surface, 4-6px radius, 1px #ecedee border. Contains the partner brand's mark centered at ~50% fill. Used in both ranked and standard product cards to credit the designer.
+-- VALUES: 
+-- RULES
+  = Do\"}],[\"$\",\"ul\",null,{\"className
+  = Use Roobert at -0.04em tracking for all UI text; never let letter-spacing drift to 0 or positive values
+  = Reserve #000aff exclusively for New In badges, the active Shop pill, and current-state indicators — no more than 3% of any screen should carry this color
+  = Apply 10px border-radius to all cards, buttons, inputs, and images; 30px only for pill-shaped badges
+  = Use Space Mono for prices, rank numerals, and 'By {brand}' credit lines — never for headlines or body
+  = Set product card surfaces to #ecedee (Plaster), not #ffffff, to create a gentle tier above the white canvas
+  = Keep the hero image full-bleed and let overlays sit on the bottom third — the shoe should be the visual subject, the UI floats on top
+  = Don't\"}],[\"$\",\"ul\",null,{
+  = Don't introduce new chromatic colors beyond the single cobalt (#000aff) and its pale variant (#e5e7ff)
+  = Don't use drop shadows on product cards — the system relies on surface color stepping and 10px radius for separation
+  = Don't set type larger than 128px (display) or smaller than 12px (Space Mono micro labels)
+  = Don't use rounded radii other than 10px and 30px — no fully square corners, no fully circular elements
+  = Don't center body text or metadata; left-align all product information including the 'By {brand}' credit
+  = Don't apply color to icons — keep all line icons monochrome Ink (#111) at 1.5px stroke
+  = Don't separate badge variants by shape — all status badges share the 30px pill; differentiate by fill color only
+
+=========== 694723e9-0df7-4b9f-ba07-83fc598532d6  len=295496 ===========
+siteName: Symbolic.ai
+northStar: editorial newsroom on cream paper. A broadsheet masthead in serif type, floating on warm off-white stock, with soft tan shadows that make every card feel like it was set in letterpress — not rendered.
+-- COLORS (119)
+  * Jet Ink | #0a0a0a\",\"gradient\":\"$undefined | 
+  * Charcoal | #151515\",\"gradient\":\"$undefined | 
+  * Fog | #858585\",\"gradient\":\"$undefined | 
+  * Pewter | #9d9d9d\",\"gradient\":\"$undefined | 
+  * Steel | #545454\",\"gradient\":\"$undefined | 
+  * Dove | #d5d9e2\",\"gradient\":\"$undefined | 
+  * Ember Coral | #ff5c3c\",\"gradient\":\"$undefined | 
+  * Pure White | #ffffff\",\"gradient\":\"$undefined | 
+  * Ink Black | #000000\",\"gradient\":\"$undefined | 
+  * Cream Paper | #f8f6f2\",\"gradient\":\"$undefined | 
+  * Soft Cream | #fffbe7\",\"gradient\":\"$undefined | 
+  * Charcoal | #141414\",\"gradient\":\"$undefined | 
+  * Cream Paper | #e4dfd9\",\"gradient\":\"$undefined | 
+  * Pure White | #ffffff\",\"gradient\":\"$undefined | 
+  * Charcoal Ink | #000000\",\"gradient\":\"$undefined | 
+  * Near Black | #050505\",\"gradient\":\"$undefined | 
+  * Pressed Graphite | #171717\",\"gradient\":\"$undefined | 
+  * Slate | #737373\",\"gradient\":\"$undefined | 
+  * White | #ffffff\",\"gradient\":\"$undefined | 
+  * Cream | #f7f7f4\",\"gradient\":\"$undefined | 
+  * Fog | #f5f5f5\",\"gradient\":\"$undefined | 
+  * Ash | #e4e4e7\",\"gradient\":\"$undefined | 
+  * Stone | #8c8c8c\",\"gradient\":\"$undefined | 
+  * Steel | #737373\",\"gradient\":\"$undefined | 
+  * Obsidian | #000000\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Deep Teal | #0b252a\",\"gradient\":\"$undefined | 
+  * Bone | #f6f5f5\",\"gradient\":\"$undefined | 
+  * Sandstone | #f5ece5\",\"gradient\":\"$undefined | 
+  * Ash Blush | #ede2d7\",\"gradient\":\"$undefined | 
+  * Ink Navy | #0c1754\",\"gradient\":\"$undefined | 
+  * Electric Cobalt | #2545ff\",\"gradient\":\"$undefined | 
+  * Charcoal | #171417\",\"gradient\":\"$undefined | 
+  * Warm Canvas | #f9f8f6\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Cream Border | #f0e9e1\",\"gradient\":\"$undefined | 
+  * Vellum | #f6f6f4\",\"gradient\":\"$undefined | 
+  * Paper | #ffffff\",\"gradient\":\"$undefined | 
+  * Ink | #000000\",\"gradient\":\"$undefined | 
+  * Carbon | #2c2c26\",\"gradient\":\"$undefined | 
+  * Ash | #d0d0c8\",\"gradient\":\"$undefined | 
+  * Olive Char | #57584b\",\"gradient\":\"$undefined | 
+  * Ink Black | #1f1c1b\",\"gradient\":\"$undefined | 
+  * Paper White | #ffffff\",\"gradient\":\"$undefined | 
+  * Canvas Cream | #ebe9e1\",\"gradient\":\"$undefined | 
+  * Linen | #f5f4f0\",\"gradient\":\"$undefined | 
+  * Stone | #a69b92\",\"gradient\":\"$undefined | 
+  * Hairline | #d9d6ce\",\"gradient\":\"$undefined | 
+  * Gloss Black | #17150e\",\"gradient\":\"$undefined | 
+  * Gloss White | #f0f7f6\",\"gradient\":\"$undefined | 
+  * Pure White | #ffffff\",\"gradient\":\"$undefined | 
+  * Solar Yellow | #cccc25\",\"gradient\":\"linear-gradient(180deg, #cccc25, #cacd78) | 
+  * Soft Charcoal | #272b30\",\"gradient\":\"$undefined | 
+  * Mid Grey | #949494\",\"gradient\":\"$undefined | 
+  * Canvas White | #ffffff\",\"gradient\":\"$undefined | 
+  * Soft Cream | #f0eee9\",\"gradient\":\"$undefined | 
+  * Hairline Mist | #e5e7eb\",\"gradient\":\"$undefined | 
+  * Silver Rule | #d9d9dd\",\"gradient\":\"$undefined | 
+  * Fog | #93939f\",\"gradient\":\"$undefined | 
+  * Slate Caption | #75758a\",\"gradient\":\"$undefined | 
+  * Parchment | #fefffc\",\"gradient\":\"$undefined | 
+  * Paper | #ffffff\",\"gradient\":\"$undefined | 
+  * Linen | #f9faf7\",\"gradient\":\"$undefined | 
+  * Ink Black | #171717\",\"gradient\":\"$undefined | 
+  * Graphite | #2c2c2c\",\"gradient\":\"$undefined | 
+  * Charcoal | #444141\",\"gradient\":\"$undefined | 
+  * Manuscript Cream | #f9f9f7\",\"gradient\":\"$undefined | 
+  * Press Black | #000000\",\"gradient\":\"$undefined | 
+  * Sage Border | #d2ddd2\",\"gradient\":\"$undefined | 
+  * Mist Green | #dee5dd\",\"gradient\":\"$undefined | 
+  * Paper Shadow | #edf0e9\",\"gradient\":\"$undefined | 
+  * Smoke | #c7c7c6\",\"gradient\":\"$undefined | 
+  * Electric Cobalt | #244cff\",\"gradient\":\"$undefined | 
+  * Lavender Mist | #c3aeff\",\"gradient\":\"$undefined | 
+  * Parchment | #f7f7f1\",\"gradient\":\"$undefined | 
+  * Snow | #ffffff\",\"gradient\":\"$undefined | 
+  * Ice Wash | #e8f8ff\",\"gradient\":\"$undefined | 
+  * Sky Tint | #d6f2ff\",\"gradient\":\"$undefined | 
+  * Obsidian | #000000\",\"gradient\":\"$undefined | 
+  * Graphite | #666666\",\"gradient\":\"$undefined | 
+  * Smoke | #8f8f8f\",\"gradient\":\"$undefined | 
+  * Paper | #ffffff\",\"gradient\":\"$undefined | 
+  * Ash | #f1f1f1\",\"gradient\":\"$undefined | 
+  * Hairline | #0000001f\",\"gradient\":\"$undefined | 
+  * Eggshell | #fdfcfc\",\"gradient\":\"$undefined | 
+  * Warm Taupe | #f5f3f1\",\"gradient\":\"$undefined | 
+  * Stone | #ebe8e4\",\"gradient\":\"$undefined | 
+  * Ink | #000000\",\"gradient\":\"$undefined | 
+  * Graphite | #44403b\",\"gradient\":\"$undefined | 
+  * Smoke | #777169\",\"gradient\":\"$undefined | 
+  * Linen Canvas | #edede8\",\"gradient\":\"$undefined | 
+  * Frosted White | #ffffff\",\"gradient\":\"$undefined | 
+  * Warm Stone | #dbdbd2\",\"gradient\":\"$undefined | 
+  * Pebble | #c0c0c0\",\"gradient\":\"$undefined | 
+  * Graphite Ink | #141414\",\"gradient\":\"$undefined | 
+  * Charcoal Body | #292929\",\"gradient\":\"$undefined | 
+  * Newsprint | #ececea\",\"gradient\":\"$undefined | 
+  * Bright White | #ffffff\",\"gradient\":\"$undefined | 
+  * Bone | #f5f5f4\",\"gradient\":\"$undefined | 
+  * Stone 200 | #d4d2d1\",\"gradient\":\"$undefined | 
+  * Stone 400 | #a6a09b\",\"gradient\":\"$undefined | 
+  * Stone 500 | #87827d\",\"gradient\":\"$undefined | 
+  * Cream Paper | #faf6f0\",\"gradient\":\"$undefined | 
+  * Ink Black | #000000\",\"gradient\":\"$undefined | 
+  * Slate Whisper | #5e697f\",\"gradient\":\"$undefined | 
+  * Charcoal | #555555\",\"gradient\":\"$undefined | 
+  * Pure White | #ffffff\",\"gradient\":\"$undefined | 
+  * Ember Orange | #de4c00\",\"gradient\":\"$undefined | 
+  * Soft Ember | #efa680\",\"gradient\":\"$undefined | 
+  * Bone White | #fffefb\",\"gradient\":\"$undefined | 
+  * Linen | #f3f2ee\",\"gradient\":\"$undefined | 
+  * Hairline Gray | #e5e7eb\",\"gradient\":\"$undefined | 
+  * Stone Border | #c1bdba\",\"gradient\":\"$undefined | 
+  * Ink | #272421\",\"gradient\":\"$undefined | 
+  * Paper Warm | #edebe8\",\"gradient\":\"$undefined | 
+  * Paper Cool | #e3e3e2\",\"gradient\":\"$undefined | 
+  * Mist | #eeeeed\",\"gradient\":\"$undefined | 
+  * Stone | #7d7c7a\",\"gradient\":\"$undefined | 
+  * Charcoal | #333333\",\"gradient\":\"$undefined | 
+-- FONTS: sans-serif ; Open Runde Regular ; Open Runde Semibold ; Suisse Works Book ; Geist Mono ; Suisse Works Medium ; Open Runde Medium ; Grenze Gotisch ; Open Runde Bold ; Inter ; Suisse Works ; Open Runde
+-- ROLES (41)
+  - Primary page canvas and white card surfaces.
+  - Primary text, hairline borders, icon strokes, and the single CTA fill — black-on-cream is the system's only action color, no chromatic buttons
+  - Card surfaces, elevated content layers, input fills — the brighter sheet the cream canvas holds
+  - Secondary borders, muted body text, link underline tones
+  - Strong secondary borders and slightly softer heading text — separates structural dividers from Ink Black
+  - Captions, helper text, disabled states, tertiary borders
+  - Muted body copy and secondary dividers
+  - Subtle section bands, recessed surfaces, and the lighter shadow base
+  - The warm shadow tint used across all card elevations — replaces standard cool gray
+  - Faint horizontal rules and gentle background tints
+  - Cool-leaning hairline borders, subtle separation lines
+  - Teal wash for highlight backgrounds, decorative bands, and soft emphasis behind content.
+  - Violet outline accent for tags, dividers, and focused UI edges.
+  - Dark-mode variant of AI Violet for borders and stronger emphasis on processing states
+  - Red wash for highlight backgrounds, decorative bands, and soft emphasis behind content. Do not promote it to the primary CTA color
+  - caption
+  - body-sm
+  - body
+  - subheading
+  - heading-sm
+  - heading
+  - display
+  - The single action on a page
+  - Persistent site actions in the header
+  - Top-bar nav items
+  - Showcase product capabilities in scroll sections
+  - Atmospheric product illustration — embeds the publishing context
+  - Indicate the system is actively working on a task
+  - Show that content has been validated
+  - Editorial decoration — urgency or release-state indicators
+  - Hero and section titles
+  - Supporting paragraph under the hero headline
+  - Persistent site navigation
+  - Form inputs
+  - Vertical rhythm between major page sections
+  - sans-serif — detected in extracted data but not described by AI
+  - Editorial serif for all headlines and display type — Book (450) carries the masthead voice at 28–58px, Medium (500) for sub-headings at 20px. Suisse Works' high contrast and sharp serifs give the interface a printed-broadsheet authority that no sans could replicate.
+  - Humanist sans for body, navigation, links, and most UI labels. Open Runde's slightly rounded geometric forms soften the editorial serif above — Regular (400) for body, Semibold (600) for nav emphasis, Bold (700) for inline labels. The wide x-height at 16px with 1.63 line-height creates comfortable reading density.
+  - Monospaced labels for product state indicators ('Rewriting...', 'Transcribing...') and technical metadata. Geist Mono at 14px is intentionally small — it's a whisper of machinery inside the editorial voice, not a visual block.
+  - Decorative blackletter for stamp-style elements like 'For Immediate Release'. Used once or twice per screen as accent texture, never for body. The gothic contrast against Suisse Works' modern serif is the system's signature historical flourish.
+  - Minor fallback for non-primary UI labels where Open Runde is unavailable
+-- SHADOWS (0)
+-- COMPONENTS (13)
+  + Primary CTA Button :: The single action on a page\",\"description\":\"Solid black (#000000) fill, white (#ffffff) text in Open Runde Semibold 16px, fully pill-shaped (10000px or 2000px radius), 8px vertical / 20px horizontal padding. No border, no shadow. The button's confidence comes from the contrast between pure black and cream canvas — not from color. An arrow glyph (→) trails the label at 20% opacity offset.
+  + Secondary Nav Button :: Persistent site actions in the header\",\"description\":\"Ink Black (#000000) fill, white text, 16px Open Runde Medium, 8px vertical / 16px horizontal padding, 16px corner radius. Slightly less pill than the primary CTA — sits flush right in the nav bar next to text links.
+  + Text Navigation Link :: Top-bar nav items\",\"description\":\"Open Runde Regular 16px, Ink Black (#000000), no underline by default, 1px Ink Black underline on hover with a 2px offset. No background change — nav links are typographic, never boxed.
+  + Feature Demo Card :: Showcase product capabilities in scroll sections\",\"description\":\"Pure white (#ffffff) surface, 24px corner radius, 20px padding, default warm shadow (rgba(213, 208, 184, 0.4) 0px 2px 6px 0px). Contains a screenshot or newspaper-textured image with a small violet ('AI processing') or teal ('verified') pill label overlaid in the corner. Cards are slightly rotated (-1 to 2 degrees) and overlap to create a casual 'scattered clippings' composition.
+  + Newspaper Clipping Card :: Atmospheric product illustration — embeds the publishing context\",\"description\":\"Full-bleed newspaper image with slight 1px Charcoal (#4c4c4a) border, 8px radius. Layered behind or beside a Feature Demo Card. Provides the visual metaphor that the product works on real published content.
+  + AI Processing Pill :: Indicate the system is actively working on a task\",\"description\":\"White background, 1px violet (#6938ef) border, AI Violet text in Geist Mono 14px, fully pill radius (10000px), 4px vertical / 12px horizontal padding. Often paired with a spinning violet arc icon to the left. The label is a present-participle verb: 'Rewriting...', 'Fact checking...', 'Transcribing...', 'Generating...', 'Formatting...'. The trailing ellipsis is essential — it means the action is in progress.
+  + Verification Checkmark :: Show that content has been validated\",\"description\":\"Editorial Teal (#10756a) circle (28px diameter), white checkmark glyph centered. Always paired with a short teal label in Open Runde Semibold 14px. Used on product UI cards to communicate trust without words.
+  + Stamp Badge :: Editorial decoration — urgency or release-state indicators\",\"description\":\"Stamp Red (#f42c2b) text in Grenze Gotisch 48px / line-height 1.0, uppercase, with a slight rotation (-4 to -2 degrees) to mimic a rubber stamp. Optional faded rectangular border at 0.3 opacity in the same red. No background — the stamp is typographic, not a chip.
+  + Editorial Headline :: Hero and section titles\",\"description\":\"Suisse Works Book 58px / line-height 1.50 for hero, 36px / 1.31 for section heads, 28px / 1.31 for sub-section. Always Ink Black (#000000). The serif's high contrast strokes and sharp terminals are the visual anchor of every screen — no other type competes for attention at this size.
+  + Hero Subtext :: Supporting paragraph under the hero headline\",\"description\":\"Open Runde Regular 16px / 1.63, Charcoal (#4c4c4a). Centered under the headline, max-width approximately 560px. Never longer than two lines — the system is stingy with body copy on hero screens.
+  + Top Navigation Bar :: Persistent site navigation\",\"description\":\"Cream canvas (#fdfcf5) background — never a separate color, 1px Soft Sand (#e5e2d0) bottom border, logo left, text links centered or right-aligned, primary action button at far right. 64px height, 24px horizontal padding. No sticky shadow on scroll — the bar simply continues the cream.
+  + Input Field :: Form inputs\",\"description\":\"White (#ffffff) background, 1px Charcoal (#4c4c4a) border, 8px corner radius, 12px vertical / 16px horizontal padding. Open Runde Regular 16px, Ink Black text. Placeholder in Warm Gray (#7f7e7b). Focus state: 2px rgb(246, 246, 240) outer ring (no chromatic accent — the field still reads as paper).
+  + Section Spacer :: Vertical rhythm between major page sections\",\"description\":\"80px vertical space on desktop, 48px on mobile. Sections share the cream canvas — no color bands. Rhythm is created by whitespace and a subtle 1px Soft Sand divider when needed.
+-- VALUES: rgba(213, 208, 184, 0.4) 0px 2px 6px 0px | rgb(246, 246, 240) 0px 0px 0px 2px | rgba(213, 208, 184, 0.6) 0px 1px 2px 0px | rgba(213, 208, 184, 0.2) 0px 4px 12px 0px | rgba(213, 208, 184, 0.3) 0px 0px 0px 1px
+-- RULES
+  = Do\"}],[\"$\",\"ul\",null,{\"className
+  = Use #fdfcf5 as the page background and #ffffff only for card and elevated surfaces — the warm/cool contrast between canvas and paper is the system's foundation
+  = Use Suisse Works (or GT Sectra) for all headlines 20px and above; never substitute a sans for editorial display type
+  = Apply the warm khaki shadow rgba(213, 208, 184, 0.4) 0px 2px 6px to every card — never use cool gray shadows
+  = Use 8px radius for standard cards and inputs, 24px for large feature demo cards, and 10000px (pill) for all buttons and AI processing indicators
+  = Use Ink Black (#000000) as the single primary action color — fill the CTA button solid black, no gradients, no chromatic alternatives
+  = Reserve Editorial Teal (#10756a) for verification and 'correct' states; reserve AI Violet (#6938ef) for active processing labels
+  = Use present-participle AI labels with trailing ellipsis ('Rewriting...', 'Fact checking...') in Geist Mono — the verb-in-progress is the system's primary way to say 'the machine is working'
+  = Don't\"}],[\"$\",\"ul\",null,{
+  = Don't introduce chromatic CTA buttons — black-on-cream is the system's only action language
+  = Don't use pure white (#ffffff) as a page background — the cream canvas (#fdfcf5) is the entire atmosphere
+  = Don't apply cool gray shadows (rgba(0,0,0,...)) — all elevation must use the warm khaki base
+  = Don't mix sans-serif into headlines above 20px — the serif/sans split is structural, not decorative
+  = Don't use Stamp Red (#f42c2b) for buttons, errors, or destructive actions — red is reserved for editorial stamp accents only
+  = Don't flatten the type scale — Suisse Works Book (450) is the headline weight; don't promote to Bold (700) for emphasis, use size and line-height instead
+  = Don't add drop shadows stronger than 0.4 opacity — the system never goes beyond a soft printed-paper lift, never a hovering UI panel
+

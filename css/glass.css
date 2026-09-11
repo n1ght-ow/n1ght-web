@@ -1,0 +1,267 @@
+/* ============================================================
+   N1GHT CHXN9 - LIQUID GLASS
+   The single source of truth for every glass surface on the site.
+
+   Four layers, in paint order:
+     1 .glass__body  heavy blur        - the frosted body
+     2 .glass__edge  light-blur ring   - the lens edge (samples the body
+                                         already painted beneath it, so the
+                                         rim reads sharper + brighter)
+     3 rim           inset shadows     - specular top bevel, darkened
+                                         underside, inner bloom
+     4 ::before      gradient hairline - 1px border that stays legible on
+                                         both the lit and unlit side
+   Plus an optional pointer-tracked specular highlight (--mx / --my).
+
+   Browser notes (verified, not assumed):
+   - backdrop-filter blur/saturate/brightness is Baseline: universal.
+   - backdrop-filter: url(#svg) is CHROMIUM ONLY (WebKit bug 245510,
+     no Firefox support) AND @supports LIES about it: Safari parses the
+     value, returns true, then renders nothing - losing the blur with it.
+     So the blur-only declaration is ALWAYS written first, and the SVG
+     refraction lives behind a plain (non-url) feature query.
+   - prefers-reduced-transparency is CHROMIUM ONLY (Safari declined it,
+     Firefox has not shipped it). It is therefore never the only fallback.
+     Three independent fallbacks below.
+
+   Backdrop-root trap: an ancestor with filter / opacity < 1 / transform /
+   mask / mix-blend-mode becomes the backdrop root, and the glass then
+   samples only its own subtree - rendering as if unblurred. Never animate
+   opacity or transform on an ANCESTOR of a .glass element.
+   ============================================================ */
+
+:root {
+  /* glass tints: low alpha on purpose. The page is already near-white, so
+     the dark-theme 0.08-0.13 values that most recipes publish would make
+     the pane vanish here. The nav needs >= 0.76 to hold ink labels at
+     >= 7:1 over the worst (dark) hero photo; controls sit on paper and
+     need far less. */
+  --glass-nav: color-mix(in oklab, var(--paper-000) 78%, transparent);
+  --glass-panel: color-mix(in oklab, var(--paper-000) 72%, transparent);
+  --glass-control: color-mix(in oklab, var(--paper-000) 62%, transparent);
+  --glass-dark: color-mix(in oklab, var(--ink-950) 58%, transparent);
+
+  --glass-blur: blur(20px) saturate(1.7) brightness(1.05);
+  --glass-blur-strong: blur(28px) saturate(1.7) brightness(1.05);
+  --glass-edge-w: 13px;
+  --glass-radius: var(--radius-lg);
+}
+
+/* ---------- base: the frosted body ----------
+   :where() keeps this at zero specificity on purpose. The layers inside a
+   glass element are absolutely positioned, so the element needs a
+   positioning context by default, but a component that declares its own
+   position (the nav is fixed, the lightbox controls are absolute) must
+   still win without needing !important. */
+:where(.glass) { position: relative; }
+
+.glass {
+  border: 0;
+  border-radius: var(--glass-radius);
+  background: var(--glass-panel);
+  isolation: isolate;
+  /* Layer 3 - the specular rim. Highest value per line of anything here:
+     this is what separates glass from tinted film. */
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-bevel),
+    inset 1px 0 0 0 var(--glass-bevel-side),
+    inset -1px 0 0 0 var(--glass-bevel-side),
+    inset 0 -1px 0 0 var(--glass-shade),
+    inset 0 16px 24px -18px var(--glass-bloom),
+    0 1px 2px oklch(0 0 0 / 0.05),
+    0 18px 44px -18px oklch(0 0 0 / 0.22);
+}
+
+/* Layer 1 + 2 live in their own elements so each gets its own backdrop
+   read. Painting order matters: body first, edge second. */
+.glass__body,
+.glass__edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.glass__body {
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+/* The lens edge. Each element's backdrop includes previously painted
+   siblings, so this ring samples the already-blurred body underneath and
+   renders visibly sharper and brighter at the rim. That discontinuity is
+   the lens read, built from Baseline features only. */
+.glass__edge {
+  padding: var(--glass-edge-w);
+  backdrop-filter: blur(3px) brightness(1.14) saturate(1.4);
+  -webkit-backdrop-filter: blur(3px) brightness(1.14) saturate(1.4);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* Layer 4 - the gradient hairline. A flat white 1px border is invisible on
+   a light theme, so the gradient runs bright -> neutral dark: whichever
+   side the light is on, one half of the ring stays legible. */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    var(--glass-hairline-hi) 0%,
+    var(--glass-hairline-mid) 28%,
+    var(--glass-hairline-lo) 62%,
+    var(--glass-hairline-lo2) 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.glass__content { position: relative; z-index: 3; }
+
+/* light-theme rim values */
+.glass,
+.light-glass {
+  --glass-bevel: oklch(1 0 0 / 0.95);
+  --glass-bevel-side: oklch(1 0 0 / 0.48);
+  --glass-shade: oklch(0 0 0 / 0.07);
+  --glass-bloom: var(--paper-200);
+  --glass-hairline-hi: oklch(1 0 0 / 0.98);
+  --glass-hairline-mid: oklch(1 0 0 / 0.18);
+  --glass-hairline-lo: oklch(0 0 0 / 0.06);
+  --glass-hairline-lo2: oklch(0 0 0 / 0.14);
+}
+
+/* ---------- dark glass: only inside the dark detail layer ---------- */
+.glass--dark {
+  background: var(--glass-dark);
+  --glass-bevel: oklch(1 0 0 / 0.24);
+  --glass-bevel-side: oklch(1 0 0 / 0.10);
+  --glass-shade: oklch(0 0 0 / 0.42);
+  --glass-bloom: oklch(1 0 0 / 0.10);
+  --glass-hairline-hi: oklch(1 0 0 / 0.5);
+  --glass-hairline-mid: oklch(1 0 0 / 0.12);
+  --glass-hairline-lo: oklch(0 0 0 / 0.2);
+  --glass-hairline-lo2: oklch(1 0 0 / 0.26);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-bevel),
+    inset 0 -1px 0 0 var(--glass-shade),
+    0 1px 2px oklch(0 0 0 / 0.3),
+    0 18px 44px -18px oklch(0 0 0 / 0.6);
+}
+.glass--dark .glass__body { backdrop-filter: blur(22px) saturate(1.5); -webkit-backdrop-filter: blur(22px) saturate(1.5); }
+.glass--dark .glass__edge { backdrop-filter: blur(3px) brightness(1.3) saturate(1.3); -webkit-backdrop-filter: blur(3px) brightness(1.3) saturate(1.3); }
+
+/* ---------- single-layer variant ----------
+   For small controls where a second backdrop read per frame is not worth
+   the cost. The blur goes on the element itself; the rim and the hairline
+   still apply, so it reads as the same material. */
+.glass--simple {
+  backdrop-filter: blur(16px) saturate(1.6) brightness(1.04);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6) brightness(1.04);
+}
+
+/* ---------- shape variants ---------- */
+.glass--pill { --glass-radius: var(--radius-pill); }
+.glass--pill .glass__edge { padding: 9px; }
+.glass--sm { --glass-radius: var(--radius-md); --glass-edge-w: 9px; }
+
+/* ============================================================
+   Layer 5 (enhancement, Chromium only): SVG displacement refraction.
+   Guarded by a feature query that does NOT mention url(), because
+   @supports(backdrop-filter: url(...)) reports true on Safari while the
+   value renders as nothing. -webkit-backdrop-filter is Chromium-only, so
+   its presence is the honest signal. The blur-only rule above always
+   stands first, so a dropped enhancement can never cost the blur.
+   ============================================================ */
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  @supports not (-moz-appearance: none) {
+    .glass--refract .glass__body {
+      backdrop-filter: blur(5px) saturate(1.6) url(#lg-lens);
+      -webkit-backdrop-filter: blur(5px) saturate(1.6) url(#lg-lens);
+    }
+  }
+}
+
+/* ============================================================
+   Pointer-tracked specular highlight.
+   --mx / --my are written from JS, rAF-throttled, one style write per
+   frame (GSAP quickTo cannot tween custom properties).
+   ============================================================ */
+.glass--spot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-out);
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    oklch(1 0 0 / 0.5),
+    oklch(1 0 0 / 0.14) 42%,
+    transparent 70%
+  );
+}
+.glass--spot:hover::after,
+.glass--spot:focus-within::after { opacity: 1; }
+
+/* ============================================================
+   FALLBACKS - three independent mechanisms.
+   ============================================================ */
+
+/* 1. No backdrop-filter at all: go solid. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--paper-000);
+    box-shadow: 0 1px 2px oklch(0 0 0 / 0.05), 0 18px 44px -18px oklch(0 0 0 / 0.2);
+  }
+  .glass--dark { background: var(--ink-950); }
+  .glass__body,
+  .glass__edge,
+  .glass--spot::after { display: none; }
+}
+
+/* 2. Reduced transparency AND increased contrast. prefers-reduced-transparency
+   is Chromium-only, so prefers-contrast rides along for wider coverage. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .glass {
+    background: var(--paper-000);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: 0 1px 2px oklch(0 0 0 / 0.06), 0 18px 44px -18px oklch(0 0 0 / 0.2);
+  }
+  .glass--dark { background: var(--ink-950); }
+  .glass__body,
+  .glass__edge,
+  .glass--spot::after { display: none; }
+  .glass::before { opacity: 0.55; }
+}
+
+/* 3. Explicit opt-out set from JS (html[data-transparency="solid"]), which
+   is the only mechanism that works on a browser that supports neither of
+   the two media queries above. */
+html[data-transparency="solid"] .glass {
+  background: var(--paper-000);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 1px 2px oklch(0 0 0 / 0.06), 0 18px 44px -18px oklch(0 0 0 / 0.2);
+}
+html[data-transparency="solid"] .glass--dark { background: var(--ink-950); }
+html[data-transparency="solid"] .glass__body,
+html[data-transparency="solid"] .glass__edge,
+html[data-transparency="solid"] .glass--spot::after { display: none; }
+
+/* Reduced motion: the glass keeps its material, loses the movement. */
+@media (prefers-reduced-motion: reduce) {
+  .glass--spot::after { transition: none; }
+}
