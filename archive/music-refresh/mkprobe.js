@@ -18,7 +18,7 @@ function page(t) {
     '<style>body{background:#111}</style></head><body>',
     '<div class="lightbox is-open" id="lightbox" role="dialog" aria-modal="true" aria-label="detail" aria-hidden="false" data-detail="music">',
     '  <div class="lb-top" id="lb-top">',
-    '    <span id="lb-count">TRACK 02 / 08</span>',
+    '    <span id="lb-count" class="lb-count">TRACK 02 / 08</span>',
     '    <span id="lb-act" class="lb-act">' + t.zh + '</span>',
     '    <button class="lb-close" id="lb-close" type="button" aria-label="Close">Close</button>',
     '  </div>',
