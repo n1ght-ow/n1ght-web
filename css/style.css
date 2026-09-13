@@ -1434,10 +1434,16 @@ h1, h2 { text-wrap: balance; }
   text-wrap: pretty;
 }
 
-/* music sleeve: the only glowing object in the archive */
+/* music sleeve: the only glowing object in the archive.
+   The vh term is the sleeve's whole budget, not a taste call: the column is
+   centred, so it clears the fixed .lb-top bar only while
+       sleeve <= 94vh - 84px (bar + gutters) - 182px (caption + gaps + action)
+   and the 310px below adds the ~28px of air the caption wants under the bar.
+   420px therefore lands on any window taller than ~780px and tapers below
+   that instead of colliding. */
 .lb-stage .lb-music {
   position: relative;
-  width: min(46vw, 300px);
+  width: min(68vw, 420px, calc(94vh - 310px));
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -1460,19 +1466,35 @@ h1, h2 { text-wrap: balance; }
 
 .lb-music-glyph { font-size: var(--fs-display); color: var(--color-accent-text); }
 
-.lb-music-label {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  padding: 0.7em;
-  font-size: var(--fs-label);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
+/* --- the music column ----------------------------------------------------
+   Cover art is the anchor. Identity reads as a caption above it and the one
+   action sits below, so the sleeve stays the only thing at the optical centre.
+   The shared .lb-stage gap would space head / sleeve / action alike and flatten
+   the hierarchy, so music zeroes it and sets its own rhythm:
+     8px   eyebrow -> title   the eyebrow labels the title, so it hugs it
+    12px   title   -> artist  the byline is a separate fact
+    24px   head    -> sleeve  same object, kept close
+    32px   sleeve  -> action  a band of its own, and clear of the gold bloom
+   ------------------------------------------------------------------------ */
+.lightbox[data-detail="music"] .lb-stage { gap: 0; }
+
+.lb-music-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 46ch;
   text-align: center;
-  color: #fff;
-  background: oklch(0.12 0 0 / 0.72);
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
+
+/* the shared classes inherit body leading (1.65), which pads a 12px mono line
+   by ~4px top and bottom; the music head trims that so the gaps read as the
+   numbers above rather than as numbers plus line-box slack */
+.lb-music-head .lb-meta-kicker { margin: 0 0 var(--sp-2); line-height: 1.2; }
+.lb-music-head .lb-meta-title { margin: 0; text-wrap: balance; }
+.lb-music-head .lb-meta-lines { margin: var(--sp-3) 0 0; line-height: 1.2; }
+
+.lightbox[data-detail="music"] .lb-music-head { margin-block-end: var(--sp-5); }
+.lightbox[data-detail="music"] .lb-music-link { align-self: center; margin-block-start: var(--sp-6); }
 
 .lb-meta {
   position: absolute;
@@ -1693,6 +1715,39 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .lb-stage img { max-height: 52vh; }
   .lb-nav { width: 44px; height: 44px; }
   .lb-rail { justify-content: flex-start; }
+
+  .lb-stage .lb-music { width: min(76vw, 360px, 46vh); }
+  .lightbox[data-detail="music"] .lb-music-head { margin-block-end: var(--sp-4); }
+  .lightbox[data-detail="music"] .lb-music-link { margin-block-start: var(--sp-5); }
+}
+
+/* Short windows (landscape phones, small laptops): the music column is the
+   tallest thing in the layer, and .lb-top is fixed, so it tightens first. */
+@media (max-height: 720px) {
+  /* a 420px sleeve plus its caption simply does not fit under the fixed bar
+     once the window is this short, so the caption drops a step and the sleeve
+     trades height for it rather than collapsing */
+  .lb-stage .lb-music { width: min(68vw, 420px, calc(94vh - 300px)); }
+  .lb-music-head .lb-meta-title { font-size: var(--fs-h4); }
+  .lightbox[data-detail="music"] .lb-music-head { margin-block-end: var(--sp-4); }
+  .lightbox[data-detail="music"] .lb-music-link { margin-block-start: var(--sp-5); }
+  .lb-music-head { max-width: 54ch; }
+}
+
+/* Landscape phones: the window is now shorter than the column wants to be, so
+   centring would push the caption up under the fixed bar. Pin the stack below
+   the bar instead, shrink the sleeve, and drop the title a step. */
+@media (max-height: 560px) {
+  .lightbox[data-detail="music"] {
+    justify-content: flex-start;
+    padding-block-start: calc(clamp(1rem, 3vh, 2rem) + 56px);
+  }
+  .lb-stage .lb-music { width: min(48vw, 240px, 30vh); }
+  .lb-music-head .lb-meta-title { font-size: var(--fs-h4); }
+  .lb-music-head .lb-meta-kicker { margin-block-end: var(--sp-1); }
+  .lb-music-head .lb-meta-lines { margin-block-start: var(--sp-2); }
+  .lightbox[data-detail="music"] .lb-music-head { margin-block-end: var(--sp-2); }
+  .lightbox[data-detail="music"] .lb-music-link { margin-block-start: var(--sp-3); }
 }
 
 @media (max-width: 480px) {

@@ -243,9 +243,17 @@ const lbStage = document.getElementById("lb-stage");
 const lbImg = document.getElementById("lb-img");
 const lbCap = document.getElementById("lb-cap");
 const lbMusic = document.getElementById("lb-music");
-const lbMusicLabel = lbMusic ? lbMusic.querySelector(".lb-music-label") : null;
 const lbMusicCover = document.getElementById("lb-music-cover");
 const lbMusicGlyph = lbMusic ? lbMusic.querySelector(".lb-music-glyph") : null;
+/* music carries its own identity and its one action inside .lb-stage (a centred
+   column: kicker / title / artist, sleeve, OPEN). Film, series and game keep
+   theirs in the right-hand .lb-meta column, so both sets of nodes coexist and
+   each render branch fills only the pair it owns. */
+const lbMusicHead = document.getElementById("lb-music-head");
+const lbMusicKicker = document.getElementById("lb-music-kicker");
+const lbMusicTitle = document.getElementById("lb-music-title");
+const lbMusicLines = document.getElementById("lb-music-lines");
+const lbMusicLink = document.getElementById("lb-music-link");
 const lbMeta = document.getElementById("lb-meta");
 const lbKicker = document.getElementById("lb-kicker");
 const lbTitle = document.getElementById("lb-title");
@@ -387,6 +395,8 @@ function setDetailVisibility(show) {
   if (lbImg) lbImg.hidden = !show.image;
   if (lbCap) lbCap.hidden = !show.caption;
   if (lbMusic) lbMusic.hidden = !show.music;
+  if (lbMusicHead) lbMusicHead.hidden = !show.music;
+  if (lbMusicLink) lbMusicLink.hidden = !show.music;
   if (lbMeta) lbMeta.hidden = !show.meta;
   if (lbRail) lbRail.hidden = !show.rail;
 }
@@ -394,6 +404,9 @@ function setDetailVisibility(show) {
 function renderDetail() {
   const item = detailItems[lbIndex];
   if (!item) return;
+  // CSS hook: the music column owns its own vertical rhythm, which the shared
+  // .lb-stage gap cannot express (see .lightbox[data-detail="music"] in style.css)
+  if (lightbox) lightbox.dataset.detail = detailType;
   const label = detailLabel(detailType);
   const total = detailItems.length;
   lbCount.textContent = label + " " + String(lbIndex + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0");
@@ -418,7 +431,9 @@ function renderDetail() {
   }
 
   if (detailType === "music") {
-    setDetailVisibility({ image: false, caption: false, music: true, meta: true, rail: false });
+    // no right-hand column for music: identity sits above the sleeve and the
+    // single action below it, both inside .lb-stage
+    setDetailVisibility({ image: false, caption: false, music: true, meta: false, rail: false });
     // real sleeve when the archive has artwork for this song, otherwise the
     // placeholder sleeve keeps the layer honest instead of showing a broken img
     if (lbMusicCover) {
@@ -433,15 +448,14 @@ function renderDetail() {
       }
     }
     if (lbMusicGlyph) lbMusicGlyph.hidden = Boolean(item.cover);
-    if (lbMusicLabel) lbMusicLabel.textContent = "NETEASE CLOUD MUSIC";
-    lbKicker.textContent = item.genre;
-    lbTitle.textContent = item.title;
-    lbLines.textContent = item.artist;
-    lbQuote.textContent = "Open in NetEase Cloud Music to play this track.";
-    lbLink.hidden = false;
-    lbLink.textContent = "OPEN IN NETEASE";
-    lbLink.href = "https://music.163.com/#/song?id=" + item.id;
-    lbLink.dataset.songId = item.id;
+    if (lbMusicKicker) lbMusicKicker.textContent = item.genre;
+    if (lbMusicTitle) lbMusicTitle.textContent = item.title;
+    if (lbMusicLines) lbMusicLines.textContent = item.artist;
+    if (lbMusicLink) {
+      lbMusicLink.textContent = "OPEN IN NETEASE";
+      lbMusicLink.href = "https://music.163.com/#/song?id=" + item.id;
+      lbMusicLink.dataset.songId = item.id;
+    }
     if (lbLive) {
       lbLive.textContent = "Track " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + " by " + item.artist + ". " + item.genre;
     }
@@ -609,14 +623,18 @@ function initUnifiedDetail() {
   lbPrevBtn.addEventListener("click", () => lbLoad(lbIndex - 1));
   lbNextBtn.addEventListener("click", () => lbLoad(lbIndex + 1));
   lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
-  if (lbLink) {
-    lbLink.addEventListener("click", (e) => {
-      const songId = lbLink.dataset.songId;
+  /* Both links funnel into the same opener: #lb-link carries the film / series
+     IMDb href, #lb-music-link the song deep link. Only the latter ever has a
+     songId, so the guard keeps the two from cross-firing. */
+  [lbLink, lbMusicLink].forEach((link) => {
+    if (!link) return;
+    link.addEventListener("click", (e) => {
+      const songId = link.dataset.songId;
       if (!songId) return;
       e.preventDefault();
       if (typeof openNetEaseSong === "function") openNetEaseSong(songId);
     });
-  }
+  });
 
   // clicking the dark backdrop closes
   lightbox.addEventListener("click", (e) => {
