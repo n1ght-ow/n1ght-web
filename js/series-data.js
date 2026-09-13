@@ -10,7 +10,7 @@
       years: "1987",
       seasons: "36 集",
       category: "CLASSICS",
-      quote: "一座大观园，装下所有聚散。三十七年过去，园子还在，人也还在。"
+      quote: "园子刚刚造好，所有人都在往里走，只有一个人站在门口数日子。"
     },
     {
       id: "series-02",
@@ -20,7 +20,7 @@
       years: "1986",
       seasons: "25 集",
       category: "CLASSICS",
-      quote: "取经的路走了整整四十年，妖精换了几茬，师徒四人从来没换过。"
+      quote: "十万八千里走下来，最难的那一难，是让这四个人一直走同一条路。"
     },
     {
       id: "series-03",
@@ -30,7 +30,7 @@
       years: "2020",
       seasons: "12 集",
       category: "CRIME & MYSTERY",
-      quote: "真相沉默太久，就有人用命替它开口。"
+      quote: "有人把真相背在身上太久了，最后只能交给别人替他扛。"
     },
     {
       id: "series-04",
@@ -40,7 +40,7 @@
       years: "2020",
       seasons: "12 集",
       category: "CRIME & MYSTERY",
-      quote: "小孩的镜头比大人诚实，也远比大人吓人。"
+      quote: "三个孩子在山上按下了快门，下山以后，每个人都在演。"
     },
     {
       id: "series-05",
@@ -50,7 +50,7 @@
       years: "2023",
       seasons: "12 集",
       category: "CRIME & MYSTERY",
-      quote: "桦林的秋天比别处都长，长到够一个人把一辈子过完。"
+      quote: "这里的秋天特别长，长到够一个人把一个案子想上二十年。"
     },
     {
       id: "series-06",
@@ -60,7 +60,7 @@
       years: "2017",
       seasons: "32 集",
       category: "CRIME & MYSTERY",
-      quote: "白天和黑夜共用一张脸——兄弟俩撑起同一盏灯。"
+      quote: "一张脸，两个名字，白天和黑夜轮着用。"
     },
     {
       id: "series-07",
@@ -70,7 +70,7 @@
       years: "2008-2013",
       seasons: "5 季",
       category: "CRIME & MYSTERY",
-      quote: "化学老师的天平一开始称分子，后来称道德，最后称命。"
+      quote: "他一辈子都在配比，最后配出一个自己也不认识的人。"
     },
     {
       id: "series-08",
@@ -80,7 +80,7 @@
       years: "2015-2022",
       seasons: "6 季",
       category: "CRIME & MYSTERY",
-      quote: "好人是怎么一步一步把自己写进坏人的剧本里。"
+      quote: "他一步一步往前挪，每一步都小得不像错；回头看时，已经没有路了。"
     },
     {
       id: "series-09",
@@ -90,7 +90,7 @@
       years: "2015",
       seasons: "54 集",
       category: "POWER & HISTORY",
-      quote: "复仇者拿棋局当刀，走一步，棋盘上就少一个辜负过他的人。"
+      quote: "他带着一身病回到京城，把整座朝廷当成一盘下了十二年的棋。"
     },
     {
       id: "series-10",
@@ -100,7 +100,7 @@
       years: "2019-2024",
       seasons: "3 季",
       category: "POWER & HISTORY",
-      quote: "穿越者带着现代脑子和背锅之躯，把整个庙堂都卷进一场赌局。"
+      quote: "他带着一个不属于这里的脑子，走进了最不讲道理的地方。"
     },
     {
       id: "series-11",
@@ -110,7 +110,7 @@
       years: "2011-2023",
       seasons: "6 季",
       category: "SCI-FI & FANTASY",
-      quote: "黑镜 Black Mirror — 屏幕关掉以后，问题一个都没少。"
+      quote: "每一集都只往前多走一小步，然后停下来，让你看清那一步踩在哪儿。"
     },
     {
       id: "series-12",
@@ -120,7 +120,7 @@
       years: "2016-2025",
       seasons: "5 季",
       category: "SCI-FI & FANTASY",
-      quote: "怪奇物语 — 八十年代的小镇，地下藏着一个颠倒的世界。"
+      quote: "小镇下面还有一个小镇，灯一闪一闪的，是那边有人在敲门。"
     },
     {
       id: "series-13",
@@ -130,7 +130,7 @@
       years: "2015-2018",
       seasons: "2 季",
       category: "SCI-FI & FANTASY",
-      quote: "超感猎杀 — 八个人分享同一颗心，城市之间没有墙。"
+      quote: "八个人隔着八座城市一起醒过来，从那天起，没有谁是一个人了。"
     },
     {
       id: "series-14",
@@ -140,7 +140,7 @@
       years: "2020",
       seasons: "7 集",
       category: "SCI-FI & FANTASY",
-      quote: "后翼弃兵 — 天才少女赢遍棋盘，最后要赢的是她自己。"
+      quote: "她在天花板上推演棋局，先赢的不是对手，是那个不肯睡着的自己。"
     },
     {
       id: "series-15",
@@ -150,7 +150,7 @@
       years: "2019-2024",
       seasons: "4 季",
       category: "DARK SATIRE",
-      quote: "黑袍纠察队 — 超级英雄救的是收视率，普通人负责收拾烂摊子。"
+      quote: "他们披着披风救的是收视率，地上的东西交给别人捡。"
     },
     {
       id: "series-16",
@@ -160,7 +160,7 @@
       years: "2013-2018",
       seasons: "6 季",
       category: "DARK SATIRE",
-      quote: "纸牌屋 — 权力游戏里没有人是安全的，包括玩家自己。"
+      quote: "他对着镜头说话，好像只有你一个人可以信任。这就是第一步。"
     },
     {
       id: "series-17",
@@ -170,7 +170,7 @@
       years: "1994-2004",
       seasons: "10 季",
       category: "FAMILY & LIFE",
-      quote: "老友记 — 六个朋友一张沙发，中央公园的咖啡凉了，友情还热着。"
+      quote: "沙发就那么一张，六个人轮着坐，谁也没想过换个地方。"
     },
     {
       id: "series-18",
@@ -180,7 +180,7 @@
       years: "2009-2020",
       seasons: "11 季",
       category: "FAMILY & LIFE",
-      quote: "摩登家庭 — 一大家子人，怪得各有各的可爱。"
+      quote: "一家人各拍各的，剪到一起才发现，原来都在同一个屋顶底下。"
     },
     {
       id: "series-19",
@@ -190,7 +190,7 @@
       years: "2011-2021",
       seasons: "11 季",
       category: "FAMILY & LIFE",
-      quote: "无耻之徒 — 芝加哥南区的家：穷得叮当响，爱得理直气壮。"
+      quote: "屋子里什么都缺，唯独不缺人回来吃饭。"
     }
   ];
 })();

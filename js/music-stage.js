@@ -54,9 +54,32 @@
       const card = el("article", "idx-card track-own");
       card.setAttribute("data-song-id", t.id);
 
+      /* The cover. 761 of the 763 songs have one and 689 distinct files sit
+         in album-covers/ - the list simply never rendered any of them, which
+         is most of why it read as a text dump. A dense row WITH art is still
+         a list, not a grid: Hardwax runs 700+ records this way at 80-100px.
+         Missing art falls back to an empty sleeve of the same size so the
+         rows stay on one vertical rhythm. */
+      const cover = window.MUSIC_COVERS && window.MUSIC_COVERS[t.id];
+      if (cover) {
+        const img = document.createElement("img");
+        img.className = "idx-cover";
+        img.src = "album-covers/" + cover;
+        img.alt = "";
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.width = 128;
+        img.height = 128;
+        card.appendChild(img);
+      } else {
+        const sleeve = el("span", "idx-cover idx-cover-empty");
+        sleeve.setAttribute("aria-hidden", "true");
+        card.appendChild(sleeve);
+      }
+
       const titleEl = el("h3", "idx-title", t.title);
       tagLang(titleEl, t.title);
-      const artistEl = el("span", "idx-artist mono", t.artist);
+      const artistEl = el("span", "idx-artist", t.artist);
       tagLang(artistEl, t.artist);
 
       card.appendChild(titleEl);

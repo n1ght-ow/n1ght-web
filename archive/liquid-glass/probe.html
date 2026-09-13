@@ -1,0 +1,30 @@
+<!doctype html><meta charset="utf-8"><title>probe</title>
+<body><div id="out">pending</div>
+<script>
+const res = {};
+// 1. CSSOM parse test (nikdelvin method)
+const el = document.createElement('div');
+el.style.cssText = "backdrop-filter: url(#test)";
+res.cssom_backdropFilter = el.style.backdropFilter;
+res.cssom_webkitBackdropFilter = el.style.webkitBackdropFilter;
+el.style.cssText = "-webkit-backdrop-filter: url(#test)";
+res.cssom_webkit_only = el.style.webkitBackdropFilter;
+// 2. @supports
+res.supports_url_quoted = CSS.supports('backdrop-filter','url("#glassfx-refract")');
+res.supports_url_bare = CSS.supports('backdrop-filter','url(#glassfx-refract)');
+res.supports_blur = CSS.supports('backdrop-filter','blur(10px)');
+res.supports_filter_url = CSS.supports('filter','url(#x)');
+res.supports_webkit_backdrop = CSS.supports('-webkit-backdrop-filter','url(#x) blur(4px)');
+// 3. computed style roundtrip
+const d = document.createElement('div');
+d.style.backdropFilter = 'blur(2px) url(#f) saturate(1.2)';
+document.body.appendChild(d);
+res.computed_backdropFilter = getComputedStyle(d).backdropFilter;
+res.inline_backdropFilter = d.style.backdropFilter;
+res.ua = navigator.userAgent;
+res.supports_reduced_transparency = matchMedia('(prefers-reduced-transparency: reduce)').matches;
+res.has_reduced_transparency_mq = (()=>{ try { return matchMedia('(prefers-reduced-transparency: reduce)').media; } catch(e){ return 'ERR'; } })();
+res.supports_mask_composite_exclude = CSS.supports('mask-composite','exclude');
+res.supports_webkit_mask_composite = CSS.supports('-webkit-mask-composite','xor');
+document.getElementById('out').textContent = 'RESULT:' + JSON.stringify(res, null, 1);
+</script></body>

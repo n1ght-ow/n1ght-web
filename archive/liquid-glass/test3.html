@@ -1,0 +1,84 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>lg-test3</title>
+<style>
+  html,body{margin:0;background:#000;color:#fff;font:13px/1.4 system-ui}
+  .bg{position:fixed;inset:0;z-index:0;background:
+      repeating-linear-gradient(90deg,#000 0 14px,#fff 14px 28px),
+      repeating-linear-gradient(0deg,rgba(255,0,0,.9) 0 22px,rgba(0,80,255,.9) 22px 44px);
+      background-blend-mode:difference;}
+  h1{position:relative;z-index:3;font:600 12px/1 ui-monospace,monospace;margin:10px 14px 4px;letter-spacing:.08em}
+  .maps{position:relative;z-index:3;padding:0 14px}
+  .wrap{position:relative;z-index:2;display:grid;gap:14px;padding:14px}
+  .cell{display:flex;align-items:center;gap:14px}
+  .lbl{width:250px;font:600 10px/1.3 ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:#000d;padding:4px 6px;border-radius:4px}
+  .glass{flex:1;height:58px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.10);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.6), inset 0 -1px 2px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.5);
+    font:500 15px/1 system-ui;color:#fff;text-shadow:0 1px 6px #000}
+  .plain{backdrop-filter: blur(12px) saturate(1.4);}
+  @supports (backdrop-filter: url("#lg-nik")){
+    .nik{ backdrop-filter: url(#lg-nik) blur(1px) saturate(1.4); }
+    .nik2{ backdrop-filter: url(#lg-nik2) blur(1px) saturate(1.4); }
+    .src{ backdrop-filter: url(#lg-src) blur(1px) saturate(1.4); }
+  }
+</style></head>
+<body>
+<div class="bg"></div>
+<h1>1 — WHAT THE DISPLACEMENT MAPS ACTUALLY LOOK LIKE (grey #808080 = neutral)</h1>
+<div class="maps">
+  <svg width="620" height="140" style="background:#222">
+    <text x="4" y="12" fill="#fff" font-size="10">A: SourceAlpha differencing graph (glassfx style)</text>
+    <rect x="6" y="18" width="600" height="58" rx="29" fill="#888" filter="url(#lg-src-map)"/>
+    <text x="4" y="94" fill="#fff" font-size="10">B: gradient feImage map (nikdelvin / shuding lineage)</text>
+    <image x="6" y="100" width="600" height="58" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'600'%20height%3D'58'%20viewBox%3D'0%200%20600%2058'%3E%0A%3Cdefs%3E%0A%3ClinearGradient%20id%3D'Y'%20x1%3D'0'%20x2%3D'0'%20y1%3D'43%25'%20y2%3D'57%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230F0'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3ClinearGradient%20id%3D'X'%20x1%3D'3%25'%20x2%3D'97%25'%20y1%3D'0'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23F00'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3C%2Fdefs%3E%0A%3Cstyle%3E.mix%7Bmix-blend-mode%3Ascreen%7D%3C%2Fstyle%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'%23808080'%2F%3E%0A%3Cg%20filter%3D'blur(2px)'%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'%23000080'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'url(%23Y)'%20class%3D'mix'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'url(%23X)'%20class%3D'mix'%2F%3E%0A%3Crect%20x%3D'14'%20y%3D'14'%20height%3D'30'%20width%3D'572'%20fill%3D'%23808080'%20rx%3D'15'%20ry%3D'15'%20filter%3D'blur(14px)'%2F%3E%0A%3C%2Fg%3E%3C%2Fsvg%3E" preserveAspectRatio="none"/>
+  </svg>
+</div>
+<h1>2 — BACKDROP-FILTER WITH THOSE MAPS OVER A HIGH-CONTRAST BACKDROP</h1>
+<div class="wrap">
+  <div class="cell"><div class="lbl">A: no glass (control)</div><div class="glass">Segmented Control</div></div>
+  <div class="cell"><div class="lbl">B: blur only (fallback)</div><div class="glass plain">Segmented Control</div></div>
+  <div class="cell"><div class="lbl">C: SourceAlpha lens, scale 90</div><div class="glass src">Segmented Control</div></div>
+  <div class="cell"><div class="lbl">D: gradient map, scale 100</div><div class="glass nik">Segmented Control</div></div>
+  <div class="cell"><div class="lbl">E: gradient map, scale 160</div><div class="glass nik2">Segmented Control</div></div>
+</div>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <filter id="lg-src-map" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="16" result="soft"/>
+      <feOffset in="soft" dx="9" dy="0" result="sxp"/>
+      <feOffset in="soft" dx="-9" dy="0" result="sxn"/>
+      <feComposite in="sxp" in2="sxn" operator="arithmetic" k1="0" k2="-2.6" k3="2.6" k4="0.5" result="gx"/>
+      <feOffset in="soft" dx="0" dy="9" result="syp"/>
+      <feOffset in="soft" dx="0" dy="-9" result="syn"/>
+      <feComposite in="syp" in2="syn" operator="arithmetic" k1="0" k2="-2.6" k3="2.6" k4="0.5" result="gy"/>
+      <feColorMatrix in="gx" type="matrix" values="0 0 0 1 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" result="mx"/>
+      <feColorMatrix in="gy" type="matrix" values="0 0 0 0 0  0 0 0 1 0  0 0 0 0 0  0 0 0 0 1" result="my"/>
+      <feComposite in="mx" in2="my" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="map"/>
+    </filter>
+
+    <filter id="lg-src" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="16" result="soft"/>
+      <feOffset in="soft" dx="9" dy="0" result="sxp"/>
+      <feOffset in="soft" dx="-9" dy="0" result="sxn"/>
+      <feComposite in="sxp" in2="sxn" operator="arithmetic" k1="0" k2="-2.6" k3="2.6" k4="0.5" result="gx"/>
+      <feOffset in="soft" dx="0" dy="9" result="syp"/>
+      <feOffset in="soft" dx="0" dy="-9" result="syn"/>
+      <feComposite in="syp" in2="syn" operator="arithmetic" k1="0" k2="-2.6" k3="2.6" k4="0.5" result="gy"/>
+      <feColorMatrix in="gx" type="matrix" values="0 0 0 1 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" result="mx"/>
+      <feColorMatrix in="gy" type="matrix" values="0 0 0 0 0  0 0 0 1 0  0 0 0 0 0  0 0 0 0 1" result="my"/>
+      <feComposite in="mx" in2="my" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="90" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+
+    <filter id="lg-nik" x="0" y="0" width="600" height="58" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feImage x="0" y="0" width="600" height="58" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'600'%20height%3D'58'%20viewBox%3D'0%200%20600%2058'%3E%0A%3Cdefs%3E%0A%3ClinearGradient%20id%3D'Y'%20x1%3D'0'%20x2%3D'0'%20y1%3D'43%25'%20y2%3D'57%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230F0'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3ClinearGradient%20id%3D'X'%20x1%3D'3%25'%20x2%3D'97%25'%20y1%3D'0'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23F00'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3C%2Fdefs%3E%0A%3Cstyle%3E.mix%7Bmix-blend-mode%3Ascreen%7D%3C%2Fstyle%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'%23808080'%2F%3E%0A%3Cg%20filter%3D'blur(2px)'%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'%23000080'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'url(%23Y)'%20class%3D'mix'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'url(%23X)'%20class%3D'mix'%2F%3E%0A%3Crect%20x%3D'14'%20y%3D'14'%20height%3D'30'%20width%3D'572'%20fill%3D'%23808080'%20rx%3D'15'%20ry%3D'15'%20filter%3D'blur(14px)'%2F%3E%0A%3C%2Fg%3E%3C%2Fsvg%3E" result="m" preserveAspectRatio="none"/>
+      <feDisplacementMap in="SourceGraphic" in2="m" scale="100" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="lg-nik2" x="0" y="0" width="600" height="58" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feImage x="0" y="0" width="600" height="58" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'600'%20height%3D'58'%20viewBox%3D'0%200%20600%2058'%3E%0A%3Cdefs%3E%0A%3ClinearGradient%20id%3D'Y'%20x1%3D'0'%20x2%3D'0'%20y1%3D'43%25'%20y2%3D'57%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230F0'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3ClinearGradient%20id%3D'X'%20x1%3D'3%25'%20x2%3D'97%25'%20y1%3D'0'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23F00'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3C%2Fdefs%3E%0A%3Cstyle%3E.mix%7Bmix-blend-mode%3Ascreen%7D%3C%2Fstyle%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'%23808080'%2F%3E%0A%3Cg%20filter%3D'blur(2px)'%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'%23000080'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'url(%23Y)'%20class%3D'mix'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20height%3D'58'%20width%3D'600'%20fill%3D'url(%23X)'%20class%3D'mix'%2F%3E%0A%3Crect%20x%3D'14'%20y%3D'14'%20height%3D'30'%20width%3D'572'%20fill%3D'%23808080'%20rx%3D'15'%20ry%3D'15'%20filter%3D'blur(14px)'%2F%3E%0A%3C%2Fg%3E%3C%2Fsvg%3E" result="m" preserveAspectRatio="none"/>
+      <feDisplacementMap in="SourceGraphic" in2="m" scale="160" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+</body></html>

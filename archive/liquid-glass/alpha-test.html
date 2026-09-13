@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>SourceAlpha semantics</title>
+<style>
+html,body{margin:0;background:#111;color:#fff;font:13px/1.4 system-ui}
+.bg{position:fixed;inset:0;z-index:0;background:
+  repeating-linear-gradient(90deg,#000 0 12px,#fff 12px 24px),
+  repeating-linear-gradient(0deg,#f00 0 20px,#00f 20px 40px);
+  background-blend-mode:difference}
+.wrap{position:relative;z-index:2;display:grid;gap:14px;padding:16px}
+.cell{display:grid;grid-template-columns:230px 1fr;gap:12px;align-items:center}
+.lbl{font:600 10px/1.35 ui-monospace,monospace;background:#000d;padding:4px 6px;border-radius:4px}
+.g{height:70px;border-radius:35px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;
+   font:500 14px/1 system-ui;text-shadow:0 1px 5px #000;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+@supports (backdrop-filter: url("#a1")){
+ .a1{backdrop-filter:url(#a1)}
+ .a2{backdrop-filter:url(#a2)}
+ .a3{backdrop-filter:url(#a3)}
+ .a4{backdrop-filter:url(#a4)}
+}
+</style></head><body>
+<div class="bg"></div>
+<div class="wrap">
+ <div class="cell"><div class="lbl">0. control: no backdrop-filter</div><div class="g">Segmented</div></div>
+ <div class="cell"><div class="lbl">1. filter = alpha→white (SourceAlpha as RGB)</div><div class="g a1">Segmented</div></div>
+ <div class="cell"><div class="lbl">2. filter = feFlood red, feComposite in SourceAlpha</div><div class="g a2">Segmented</div></div>
+ <div class="cell"><div class="lbl">3. glassfx lens graph, scale 200 (exaggerated)</div><div class="g a3">Segmented</div></div>
+ <div class="cell"><div class="lbl">4. feTurbulence scale 200 + no blur</div><div class="g a4">Segmented</div></div>
+</div>
+<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+ <filter id="a1" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+   <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/>
+ </filter>
+ <filter id="a2" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+   <feFlood flood-color="#ff0000" result="red"/>
+   <feComposite in="red" in2="SourceAlpha" operator="in"/>
+ </filter>
+ <filter id="a3" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+   <feGaussianBlur in="SourceAlpha" stdDeviation="16" result="soft"/>
+   <feOffset in="soft" dx="9" dy="0" result="sxp"/><feOffset in="soft" dx="-9" dy="0" result="sxn"/>
+   <feComposite in="sxp" in2="sxn" operator="arithmetic" k1="0" k2="-2.6" k3="2.6" k4="0.5" result="gx"/>
+   <feOffset in="soft" dx="0" dy="9" result="syp"/><feOffset in="soft" dx="0" dy="-9" result="syn"/>
+   <feComposite in="syp" in2="syn" operator="arithmetic" k1="0" k2="-2.6" k3="2.6" k4="0.5" result="gy"/>
+   <feColorMatrix in="gx" type="matrix" values="0 0 0 1 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" result="mx"/>
+   <feColorMatrix in="gy" type="matrix" values="0 0 0 0 0  0 0 0 1 0  0 0 0 0 0  0 0 0 0 1" result="my"/>
+   <feComposite in="mx" in2="my" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="map"/>
+   <feDisplacementMap in="SourceGraphic" in2="map" scale="200" xChannelSelector="R" yChannelSelector="G"/>
+ </filter>
+ <filter id="a4" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+   <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" seed="3" result="n"/>
+   <feDisplacementMap in="SourceGraphic" in2="n" scale="200" xChannelSelector="R" yChannelSelector="G"/>
+ </filter>
+</defs></svg>
+</body></html>

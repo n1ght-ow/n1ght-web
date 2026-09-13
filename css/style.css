@@ -295,9 +295,15 @@ h1, h2 { text-wrap: balance; }
   margin-inline-start: 0.75em;
 }
 
-.nav-links { display: flex; gap: 2px; align-items: center; }
+/* The indicator is absolutely positioned inside this list, so the list is
+   the positioning context. The links themselves are lifted above it: without
+   the z-index the pill would paint over its own label. */
+.nav-links { position: relative; display: flex; gap: 2px; align-items: center; }
 
 .nav-links a {
+  position: relative;
+  /* one above .glass-pill, so the label stays on top of its own indicator */
+  z-index: 4;
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   letter-spacing: 0.1em;
@@ -314,7 +320,25 @@ h1, h2 { text-wrap: balance; }
 }
 
 .nav-links a:hover { color: var(--color-text); background: oklch(0 0 0 / 0.05); }
-.nav-links a.is-active { background: var(--color-ink); color: var(--color-on-dark); }
+
+/* The active link no longer paints its own background - the glass pill
+   underneath does that, and it has to stay visible through the label. */
+.nav-links a.is-active {
+  color: var(--color-on-dark);
+  background: none;
+}
+
+/* While the pill is being carried, only the link UNDER it keeps the light
+   label; everything else goes back to ink. */
+.nav-links.is-dragging a.is-active { color: var(--color-text-secondary); }
+.nav-links.is-dragging a.is-drop-target { color: var(--color-on-dark); }
+
+/* Grab affordance, but only where the drag actually exists: the pill is not
+   draggable inside a horizontal scroller (<=720px). */
+@media (min-width: 721px) {
+  .nav-links a.is-active { cursor: grab; }
+  .nav-links.is-dragging a.is-active { cursor: grabbing; }
+}
 
 /* The nav keeps ink labels even over the dark hero. The frosted pill is
    light in every case, and white-on-frost would be invisible; ink on the
@@ -452,21 +476,43 @@ h1, h2 { text-wrap: balance; }
 .sec-copy .lead { display: block; margin-block-end: var(--sp-4); }
 
 /* ============ 9. PHOTOGRAPHY ============ */
-/* Every frame in the archive is landscape 3:2, so the grid is built from
-   landscape-only plates. No portrait crops, nothing gets decapitated. */
+/* An editorial contact sheet, not a table.
+
+   Every plate here is landscape 3:2 and none of them is ever cropped, so the
+   rhythm has to come from PLACEMENT rather than from ratio. Three devices do
+   that work, and each one is load-bearing:
+     1. row-gap: 0 on the grid, so a negative offset pulls a plate up into the
+        row band above it instead of merely sitting closer to its neighbour;
+     2. an explicit grid-column START per plate, so the left edges never fall
+        into a column. The old sheet started every run at column 1, which is
+        exactly what made it read as a spreadsheet rather than a sequence;
+     3. align-items: start, so plates sharing a row keep their own heights and
+        the bottom edge stays ragged.
+   Offsets are authored per plate below and only five plates carry one: if
+   every plate were offset, none of them would be. */
 .photo-grid {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(0.5rem, 1.1vw, 1.25rem);
+  grid-template-columns: repeat(16, minmax(0, 1fr));
+  column-gap: clamp(0.5rem, 1vw, 1rem);
+  row-gap: 0;
+  align-items: start;
   padding-block-end: var(--section-y);
+
+  --photo-drop-1: clamp(1.25rem, 3vw, 3rem);
+  --photo-drop-2: clamp(2rem, 5.5vw, 5rem);
+  --photo-lift-1: clamp(1rem, 2.5vw, 2.25rem);
 }
 
 .photo-frame { position: relative; margin: 0; }
+
 .photo-frame-btn {
   position: relative;
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  /* the ratio sits on the button, not the figure, so the caption below it
+     adds to the frame height instead of eating into the plate */
+  aspect-ratio: 3 / 2;
   border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
@@ -488,43 +534,99 @@ h1, h2 { text-wrap: balance; }
 .photo-frame-btn:hover img,
 .photo-frame-btn:focus-visible img { transform: scale(1.035); filter: saturate(1); }
 
-.photo-span-full { grid-column: span 12; aspect-ratio: 21 / 9; }
-.photo-span-7 { grid-column: span 7; aspect-ratio: 3 / 2; }
-.photo-span-5 { grid-column: span 5; aspect-ratio: 3 / 2; }
-.photo-span-6 { grid-column: span 6; aspect-ratio: 3 / 2; }
-.photo-span-4 { grid-column: span 4; aspect-ratio: 3 / 2; }
+/* ---------- per-plate placement ----------
+   Read each line as: which column the plate starts in, how many of the 16 it
+   spans, and how far it is nudged off its own row band. The starts are
+   deliberately non-monotonic (03 starts left of 02, 05 sits further right
+   than 06, 07 further right again) so the eye finds no vertical seam to run
+   down. Column positions are chosen so neighbouring plates interlock instead
+   of stacking into full-width rows. */
+.photo-frame[data-photo-index="0"] { grid-column: 1 / -1; }
+.photo-frame[data-photo-index="1"] { grid-column: 4 / span 7; margin-block-start: var(--photo-drop-1); }
+.photo-frame[data-photo-index="2"] { grid-column: 1 / span 5; }
+.photo-frame[data-photo-index="3"] { grid-column: 7 / span 5; margin-block-start: var(--photo-drop-2); }
+/* the only lift, and it is safe by construction: the row above is empty at
+   columns 13-16, so the plate rises into air rather than onto a neighbour */
+.photo-frame[data-photo-index="4"] { grid-column: 13 / span 4; margin-block-start: calc(-1 * var(--photo-lift-1)); }
+.photo-frame[data-photo-index="5"] { grid-column: 2 / span 6; }
+.photo-frame[data-photo-index="6"] { grid-column: 9 / span 8; }
+.photo-frame[data-photo-index="7"] { grid-column: 1 / -1; }
+.photo-frame[data-photo-index="8"] { grid-column: 1 / span 7; }
+.photo-frame[data-photo-index="9"] { grid-column: 10 / span 7; margin-block-start: var(--photo-drop-1); }
+.photo-frame[data-photo-index="10"] { grid-column: 4 / span 13; }
 
-/* Caption rides the image on hover/focus; keyboard reaches it because the
-   button inside the frame receives focus, so :focus-within fires. */
+/* ---------- per-plate drift ----------
+   Scrub-linked, and it is the only scroll effect on the sheet. The value is
+   a percentage of the plate's OWN height (not a pixel count), so it stays
+   proportional at every width with nothing to re-tune; the sign is the
+   direction, and alternating it is what stops neighbouring plates from
+   moving as one rigid block. The two 21:9 openers are deliberately still -
+   they anchor each movement while the rest breathes, and if everything
+   drifted, nothing would read as anchored.
+   Read by initPhotoDrift() in js/main.js. Kept here so a plate's column,
+   its offset and its drift are authored in one place. */
+.photo-frame[data-photo-index="0"] { --photo-drift: 0; }
+.photo-frame[data-photo-index="1"] { --photo-drift: 3; }
+.photo-frame[data-photo-index="2"] { --photo-drift: -3; }
+.photo-frame[data-photo-index="3"] { --photo-drift: 3; }
+.photo-frame[data-photo-index="4"] { --photo-drift: -3; }
+.photo-frame[data-photo-index="5"] { --photo-drift: 3; }
+.photo-frame[data-photo-index="6"] { --photo-drift: -3; }
+.photo-frame[data-photo-index="7"] { --photo-drift: 0; }
+.photo-frame[data-photo-index="8"] { --photo-drift: 3; }
+.photo-frame[data-photo-index="9"] { --photo-drift: -3; }
+.photo-frame[data-photo-index="10"] { --photo-drift: 3; }
+
+/* The two openers are the only 21:9 plates. Nothing is ever cropped to get
+   there - the source frames are 3:2 and the wide plates are the full-bleed
+   ones, so the ratio difference is carried by the crop the photographer
+   already made, not by the browser. */
+.photo-frame[data-photo-index="0"] .photo-frame-btn,
+.photo-frame[data-photo-index="7"] .photo-frame-btn { aspect-ratio: 21 / 9; }
+
+/* ---------------------------------------------------------------------
+   Caption: a permanent line under the plate, not a bar that appears on
+   hover. Hiding it behind hover made every frame a closed box, and it also
+   fell foul of WCAG 2.2 SC 1.4.13, which requires hover-revealed content to
+   be dismissible without moving the pointer - something no amount of CSS
+   could give us here. It is now simply text, at a measured 8.04:1.
+   --------------------------------------------------------------------- */
 .photo-frame-cap {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  z-index: 2;
-  padding: var(--sp-5) var(--sp-5) var(--sp-4);
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: var(--sp-4);
-  color: #fff;
-  background: linear-gradient(0deg, oklch(0.1 0 0 / 0.72), transparent);
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
-  pointer-events: none;
+  gap: var(--sp-3);
+  /* Sized to exceed the largest possible drift, because the drift is
+     downward-only and this padding is the only thing between a sinking plate
+     and its own caption. Worst case is the widest plate (index 10, ~708px at
+     1440px) at 3% = ~21px; this clears it at every breakpoint with room to
+     spare, and the drift is off entirely below 901px. */
+  padding-block-start: clamp(1.25rem, 2.2vw, 2.25rem);
+  color: var(--color-text-secondary);
 }
-
-.photo-frame:hover .photo-frame-cap,
-.photo-frame:focus-within .photo-frame-cap { opacity: 1; transform: none; }
 
 .photo-frame-no {
+  flex: 0 0 auto;
   font-size: var(--fs-label);
   letter-spacing: var(--track-label);
-  color: oklch(1 0 0 / 0.75);
+  color: var(--color-text-muted);
 }
 
-.photo-frame-text { font-size: var(--fs-caption); line-height: 1.5; color: #fff; }
+.photo-frame-text {
+  flex: 1 1 auto;
+  max-width: 38ch;
+  font-size: var(--fs-caption);
+  line-height: 1.5;
+  text-wrap: pretty;
+  color: inherit;
+}
+
+/* the act headers: same .sec-head grid, tighter bottom so the plates start
+   close under the label, and the title drops to the h3 step because these
+   are movements inside a chapter, not chapters. */
+.sec-head.photo-act-head { padding-block-end: var(--sp-5); }
+
+.photo-act-title { font-size: var(--fs-h3); }
+.photo-act-range { font-size: var(--fs-label); letter-spacing: var(--track-label); color: var(--color-text-muted); }
 
 .photo-roll-foot {
   display: flex;
@@ -601,9 +703,11 @@ h1, h2 { text-wrap: balance; }
 
 .tab-btn {
   /* the glass layers are absolutely positioned siblings, so an unpositioned
-     button would be painted underneath them and its label would vanish */
+     button would be painted underneath them and its label would vanish.
+     4 is one above .glass-pill, which sits at 3 so that the track's
+     pointer-tracked highlight cannot wash over it. */
   position: relative;
-  z-index: 3;
+  z-index: 4;
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   letter-spacing: 0.1em;
@@ -623,14 +727,31 @@ h1, h2 { text-wrap: balance; }
 
 .tab-btn:hover { color: var(--color-text); background: oklch(0 0 0 / 0.05); }
 
+/* The active tab no longer paints its own background: the draggable glass
+   pill under it does that. The :active scale is gone too - the pill now
+   carries the press, and scaling the label as well would double it up. */
 .tab-btn.is-active {
-  background: var(--color-ink);
   color: var(--color-on-dark);
+  background: none;
 }
 
 .tab-btn.is-active .no { color: oklch(1 0 0 / 0.55); }
 
-.tab-btn:active { transform: scale(0.96); }
+/* While the pill is being carried, only the shelf UNDER it keeps the light
+   label. Everywhere else the label goes back to ink, because it is sitting on
+   bare glass. Without this the shelf the pill came from stays white-on-white
+   for the whole drag. */
+.tabbar.is-dragging .tab-btn.is-active { color: var(--color-text-secondary); }
+.tabbar.is-dragging .tab-btn.is-active .no { color: var(--color-text-muted); }
+.tabbar.is-dragging .tab-btn.is-drop-target { color: var(--color-on-dark); }
+.tabbar.is-dragging .tab-btn.is-drop-target .no { color: oklch(1 0 0 / 0.55); }
+
+/* Grab affordance, but only where the drag actually exists: inside the
+   horizontal scroller at <=720px the strip is not draggable. */
+@media (min-width: 721px) {
+  .tab-btn.is-active { cursor: grab; }
+  .tabbar.is-dragging .tab-btn.is-active { cursor: grabbing; }
+}
 
 /* .tab-panels is a direct child of #archive (see index.html), so it carries
    its own shell constraint rather than sitting inside a .shell wrapper. */
@@ -648,39 +769,87 @@ h1, h2 { text-wrap: balance; }
 .tab-panels .tab-panel { display: none; }
 .tab-panels .tab-panel.is-active { display: block; }
 
-/* ============ 12. LEDGERS (books / sport / music) ============ */
-/* A hairline is the last resort, and dense tabular data is the one place
-   it earns its keep. Everywhere else, space does the separating. */
-.idx-list { border-block-start: 1px solid var(--color-line); }
+/* ============ 12. LEDGERS (books / sport) ============ */
+/* A five or six item shelf is not a table.
+
+   Measured before this change: every row was EXACTLY 95px tall whatever it
+   held, the title column was 659px wide while the longest title in it was
+   about 232px, so the commentary sat roughly 460px away from the words it
+   comments on, and every row carried a hairline. The dead gap was structural
+   - three columns of grid doing what one column and some air do better.
+
+   Corpus check across twelve editorial index sites: SEVEN use no separator
+   at all and only two use a 1px rule. The per-row hairline is a table idiom
+   (Criterion, greatestbooks), not an editorial one, and the project's own
+   rule is "space separates, lines are the last resort".
+
+   The second level is now carried by weight and colour on the SAME line
+   rather than by a smaller size on its own line - the move desengs uses on
+   96 rows, and the one that scales from 6 to 96 without changing anything. */
+.idx-list { display: grid; }
 
 .idx-row {
   display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: clamp(1rem, 2.4vw, 2.5rem);
-  align-items: baseline;
-  padding-block: clamp(1.1rem, 2.2vh, 1.6rem);
-  border-block-end: 1px solid var(--color-line-soft);
-  transition: background-color 0.2s var(--ease-out);
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  column-gap: var(--sp-4);
+  align-items: start;
+  padding-block: clamp(1.5rem, 3vw, 2.75rem);
+  transition: opacity 0.2s var(--ease-out);
 }
 
-.idx-row:hover { background: oklch(0 0 0 / 0.022); }
+/* Hover dims the siblings and snaps the row under the cursor. Two moves, no
+   new elements, and it works the same at 5 rows and at 96. */
+@media (hover: hover) and (pointer: fine) {
+  .idx-list:has(.idx-row:hover) .idx-row:not(:hover) { opacity: 0.5; }
+  .idx-row:hover { transition-duration: 0s; }
+}
 
-.idx-no {
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--track-meta);
-  color: var(--color-text-muted);
+.idx-row > .idx-no,
+.idx-row > .idx-logo {
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .idx-mid {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35em;
+  grid-column: 2;
+  grid-row: 1;
+  display: block;
   min-width: 0;
 }
 
+.idx-line {
+  grid-column: 2;
+  grid-row: 2;
+  margin-block-start: var(--sp-2);
+  color: var(--color-text-secondary);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+
+/* A rank is a label, not a cell: 11px, the muted token, and deliberately
+   NOT tabular. Across the corpus no site sets a rank in tabular figures -
+   that is the register a literary index reserves for tables and dates. */
+.idx-no {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-meta);
+  color: var(--color-text-muted);
+  line-height: 1.8;
+}
+
+/* The crest is a MARK, not a favicon. One optical box for every logo, so a
+   wide wordmark and a square crest occupy the same square and the column
+   stops going ragged (it ran 28px and 54px side by side before). */
+.idx-logo {
+  width: 2.75rem;
+  height: 2.75rem;
+  object-fit: contain;
+}
+
 .idx-title {
+  display: inline;
   font-size: var(--fs-h4);
   font-weight: 500;
   letter-spacing: -0.015em;
@@ -688,27 +857,28 @@ h1, h2 { text-wrap: balance; }
   color: var(--color-text);
 }
 
-.idx-title a { transition: color 0.2s var(--ease-out); }
-.idx-title a:hover { color: var(--color-accent-text); }
+.idx-title a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s var(--ease-out);
+}
 
+.idx-title a:hover,
+.idx-title a:focus-visible { text-decoration-color: var(--color-accent); }
+
+/* inline, on the title's own line, a step down in weight and colour but NOT
+   in size - no cliff */
 .idx-meta {
+  display: inline;
+  margin-inline-start: var(--sp-3);
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   letter-spacing: var(--track-meta);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
-
-.idx-line {
-  color: var(--color-text-secondary);
-  font-size: var(--fs-small);
-  line-height: 1.6;
-  max-width: 44ch;
-  text-wrap: pretty;
-}
-
-.idx-logo { width: 28px; height: 28px; object-fit: contain; margin-block-end: 0.6em; }
-.idx-logo-wide { width: 54px; }
 
 /* ============ 13. MUSIC ============ */
 .music-bar {
@@ -835,12 +1005,20 @@ h1, h2 { text-wrap: balance; }
   box-shadow: none;
 }
 
-/* the active chip is marked in text as well as in colour */
-.genre-chip.is-active::before { content: "✓"; margin-inline-end: 0.4em; }
+/* There is deliberately no ::before marker on the active chip. The tick
+   added width, so the whole 16-chip rail reflowed on every genre change.
+   The filled state carries it, and aria-pressed carries it for AT. */
 
 .playlist { display: flex; flex-direction: column; gap: var(--sp-6); }
 
-.genre { --music-row-min: 46px; }
+/* 763 cards are built at boot and 15/16 of the genres are hidden with
+   display:none. Containment on the 16 top-level blocks captures the layout
+   and paint win without making each focusable row its own containment unit
+   (which would let a keyboard jump land on a row that was never rendered). */
+.genre {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 60rem;
+}
 
 .genre-head {
   display: flex;
@@ -848,7 +1026,6 @@ h1, h2 { text-wrap: balance; }
   justify-content: space-between;
   gap: var(--sp-4);
   padding-block-end: var(--sp-3);
-  border-block-end: 1px solid var(--color-line);
 }
 
 .genre-title { font-size: var(--fs-h3); font-weight: 500; letter-spacing: var(--track-h3); line-height: 1.15; }
@@ -869,31 +1046,49 @@ h1, h2 { text-wrap: balance; }
   column-gap: clamp(1.5rem, 4vw, 3.5rem);
 }
 
+/* ---------------------------------------------------------------------
+   The track row.
+
+   It used to be three text columns - a 2.6rem mono counter, the title, the
+   artist - with a hairline under every one of 108 rows, no artwork, and a
+   hover that tinted the row by 2.5% black (below the perceptual threshold of
+   most panels). That is a spreadsheet, not a shelf.
+
+   Now: the real cover, title and artist on ONE line separated by weight and
+   colour rather than by column, no rule between rows (Hardwax separates 700+
+   records with margin and spends its only hairline above the tracklist), and
+   no numbering at all - a personal collection is not a chart, and the
+   counter was a chart device.
+   --------------------------------------------------------------------- */
 .idx-card {
   position: relative;
   display: grid;
-  grid-template-columns: 2.6rem minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-columns: 64px minmax(0, 1.15fr) minmax(0, 1fr);
   gap: var(--sp-3);
   align-items: center;
-  min-height: var(--music-row-min);
-  padding-block: 0.5rem;
-  border-block-end: 1px solid var(--color-line-soft);
+  padding-block: var(--sp-2);
   cursor: pointer;
-  transition: background-color 0.16s var(--ease-out);
 }
 
-.idx-card::before {
-  content: counter(track, decimal-leading-zero);
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text-muted);
-  counter-increment: track;
+.idx-cover {
+  display: block;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-deep);
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.08);
 }
 
-.artist-tracks { counter-reset: track; }
+.idx-cover-empty { display: block; }
 
-.idx-card:hover { background: oklch(0 0 0 / 0.025); }
+/* Hover lights the TEXT, not the row: the row tint was invisible, and
+   lighting two spans reads as a response rather than as a rendering
+   artifact. */
+.idx-card .idx-title,
+.idx-artist { transition: color 0.16s var(--ease-out); }
+
+.idx-card:hover .idx-title { color: var(--color-accent-text); }
 
 .idx-card .idx-title {
   font-size: var(--fs-small);
@@ -909,108 +1104,161 @@ h1, h2 { text-wrap: balance; }
   white-space: nowrap;
 }
 
+/* Sentence case, not uppercase mono. Caps + muted + tracked, repeated 108
+   times, turns the byline into texture; the project's own V2 notes already
+   retired decorative uppercase labels. */
 .idx-artist {
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
+  font-size: var(--fs-caption);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 
 .is-search-hidden { display: none !important; }
 
 /* ============ 14. GAMES ============ */
 .hof {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
-  gap: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 1.75rem);
+  /* Explicit column counts, not auto-fill. 18 divides evenly at 1, 2, 3, 6
+     and 9 columns and nowhere else; auto-fill inside the 1440 shell produced
+     FOUR columns, i.e. four rows and a last row holding 2 of 4 - a shelf that
+     visibly ends in an accident. Three columns is the only exact fit that
+     also leaves a card wide enough (~415px) to carry a line of commentary. */
+  grid-template-columns: 1fr;
+  gap: clamp(1.75rem, 3.5vw, 3rem) clamp(1rem, 2vw, 1.75rem);
+  counter-reset: hof;
 }
 
-.hof-item { cursor: pointer; }
+@media (min-width: 720px) { .hof { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 900px) { .hof { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
+.hof-item { cursor: pointer; counter-increment: hof; }
+
+/* No card: no surface fill, no ring, no lift, no shadow. The cover sits on
+   the paper and the metadata is type beneath it. The white plate was the
+   single most template-looking thing on the page - it is what a streaming
+   tile looks like, not what a printed page looks like. */
 .hof-card {
   position: relative;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
-  transition: transform 0.45s var(--ease-soft), box-shadow 0.45s var(--ease-soft);
+  display: block;
 }
 
-.hof-item:hover .hof-card,
-.hof-item.is-active .hof-card { transform: translateY(-3px); box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.14), var(--shadow-lift); }
-
 .hof-item:focus-visible { outline: none; }
-.hof-item:focus-visible .hof-card { outline: 2px solid var(--color-accent-text); outline-offset: 3px; }
+.hof-item:focus-visible .hof-card::after {
+  top: 0;
+  left: 0;
+  right: 0;
+  border-color: var(--color-accent-text);
+}
+
+/* THE hover: one signal. A 3px frame starts 3px outside the cover and
+   converges onto it. Zero transform, zero filter, zero shadow - the card
+   used to fire four signals at once (translateY, image scale, shadow-lift
+   and an inset ring), which is what makes a grid read as a template. */
+.hof-card::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  aspect-ratio: 16 / 9;
+  border: 3px solid transparent;
+  border-radius: var(--radius-md);
+  pointer-events: none;
+  transition:
+    top 0.18s var(--ease-out),
+    left 0.18s var(--ease-out),
+    right 0.18s var(--ease-out),
+    border-color 0.18s var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hof-item:hover .hof-card::after {
+    top: 0;
+    left: 0;
+    right: 0;
+    border-color: var(--color-accent-text);
+  }
+}
 
 .hof-inner { display: block; }
 
-.hof-img-wrap { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--color-bg-deep); }
+.hof-img-wrap {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-deep);
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+}
 
 .hof-img-wrap img {
   width: 100%;
   height: 100%;
+  /* every cover in covers/ is a true 16:9, so this crops nothing today; the
+     lever for varying them later is object-position, not a scale */
   object-fit: cover;
   filter: saturate(0.72);
-  transition: transform 0.6s var(--ease-soft), filter 0.45s var(--ease-out);
+  transition: filter 0.45s var(--ease-out);
 }
 
 .hof-item:hover .hof-img-wrap img,
-.hof-item.is-active .hof-img-wrap img { transform: scale(1.04); filter: saturate(1); }
+.hof-item.is-active .hof-img-wrap img { filter: saturate(1); }
 
+/* rank and hours share one line; the name gets its own */
 .hof-foot {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.35em var(--sp-3);
+  display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  padding: var(--sp-3) var(--sp-4) var(--sp-4);
+  gap: 0.2em var(--sp-2);
+  padding-block-start: var(--sp-3);
 }
 
 .hof-foot::before {
   content: counter(hof, decimal-leading-zero);
-  grid-area: 1 / 1;
   font-family: var(--font-mono);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-variant-numeric: tabular-nums;
   color: var(--color-text-muted);
 }
 
-.hof { counter-reset: hof; }
-.hof-item { counter-increment: hof; }
-
 .hof-hours {
-  grid-area: 1 / 2;
+  margin-inline-start: auto;
   font-family: var(--font-mono);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-variant-numeric: tabular-nums;
   letter-spacing: var(--track-meta);
   color: var(--color-text-muted);
-  text-align: end;
 }
 
+/* flex: 1 0 100% forces the name onto its own line without a wrapper.
+   The old min-height: 2.6em is gone - it padded every one-line title with
+   dead space purely to make the cards the same height. */
 .hof-name {
-  grid-area: 2 / 1 / 3 / 3;
+  flex: 1 0 100%;
   font-size: var(--fs-small);
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.3;
-  min-height: 2.6em;
 }
 
+/* 18 quotes shown at once was 18 competing sentences. One line, clamped;
+   the full text still lives in #lightbox, which gameItemData already feeds. */
 .hof-quote {
-  margin-block-start: var(--sp-3);
-  padding-inline: var(--sp-1);
-  font-size: var(--fs-caption);
-  line-height: 1.55;
+  margin-block-start: var(--sp-2);
+  font-size: var(--fs-label);
+  line-height: 1.5;
   color: var(--color-text-muted);
-  text-wrap: pretty;
-  transition: color 0.3s var(--ease-out);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-
-.hof-item:hover .hof-quote,
-.hof-item.is-active .hof-quote { color: var(--color-text-secondary); }
 
 /* ============ 15. ABOUT ============ */
 .about-grid {
@@ -1210,7 +1458,7 @@ h1, h2 { text-wrap: balance; }
   opacity: 1;
 }
 
-.lb-music-glyph { font-size: 4rem; color: var(--color-accent-text); }
+.lb-music-glyph { font-size: var(--fs-display); color: var(--color-accent-text); }
 
 .lb-music-label {
   position: absolute;
@@ -1354,6 +1602,13 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
 /* ============ 18. RESPONSIVE ============ */
 @media (max-width: 1100px) {
   .sec-head { grid-template-columns: 1fr; gap: var(--sp-5); }
+  /* the sheet is still 16 columns here, but the offsets halve: at this width
+     a full-strength drop starts to read as a mistake rather than a rhythm */
+  .photo-grid {
+    --photo-drop-1: clamp(0.75rem, 2vw, 1.5rem);
+    --photo-drop-2: clamp(1.25rem, 3.5vw, 2.5rem);
+    --photo-lift-1: clamp(0.5rem, 1.5vw, 1.25rem);
+  }
   .lb-meta {
     position: static;
     transform: none;
@@ -1403,13 +1658,24 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .tabbar::-webkit-scrollbar { display: none; }
   .tabbar .glass__body,
   .tabbar .glass__edge { display: none; }
+  /* the indicator stays, as a solid pill: there is no backdrop to sample in
+     a scroller, and the drag that would need the glass is off at this width */
+  .tabbar .glass-pill { background: var(--ink-950); }
+  .tabbar .glass-pill__body { display: none; }
   .tab-btn { flex: 0 0 auto; }
   .tab-btn .no { display: none; }
 
+  /* The placement above is authored for 16 columns; here the sheet becomes a
+     six-column contact sheet, so every authored start and offset is reset.
+     The extra class in the selector is what outranks the per-plate rules -
+     deliberately, rather than !important. */
   .photo-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-  .photo-span-full { grid-column: span 6; aspect-ratio: 3 / 2; }
-  .photo-span-7, .photo-span-5, .photo-span-6 { grid-column: span 6; }
-  .photo-span-4 { grid-column: span 3; }
+  .photo-grid .photo-frame[data-photo-index] { grid-column: 1 / -1; margin-block-start: 0; }
+  /* one pair, so the contact sheet is not a single unbroken stack */
+  .photo-grid .photo-frame[data-photo-index="8"],
+  .photo-grid .photo-frame[data-photo-index="9"] { grid-column: span 3; }
+  .photo-grid .photo-frame[data-photo-index="0"] .photo-frame-btn,
+  .photo-grid .photo-frame[data-photo-index="7"] .photo-frame-btn { aspect-ratio: 3 / 2; }
 
   .idx-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
   .idx-line { grid-column: 2; }
@@ -1431,7 +1697,7 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
 
 @media (max-width: 480px) {
   .photo-grid { grid-template-columns: 1fr; }
-  .photo-span-full, .photo-span-7, .photo-span-5, .photo-span-6, .photo-span-4 { grid-column: 1 / -1; }
+  .photo-grid .photo-frame[data-photo-index] { grid-column: 1 / -1; }
   .hero-stats { gap: var(--sp-4); }
 }
 
@@ -1451,5 +1717,4 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .hof-item.is-active .hof-card { transform: none; }
   .hof-img-wrap img,
   .hof-item:hover .hof-img-wrap img { transform: none; }
-  .photo-frame-cap { opacity: 1; transform: none; }
 }

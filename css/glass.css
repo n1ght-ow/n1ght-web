@@ -2,15 +2,17 @@
    N1GHT CHXN9 - LIQUID GLASS
    The single source of truth for every glass surface on the site.
 
-   Four layers, in paint order:
+   Six layers, in paint order:
      1 .glass__body  heavy blur        - the frosted body
      2 .glass__edge  light-blur ring   - the lens edge (samples the body
                                          already painted beneath it, so the
                                          rim reads sharper + brighter)
      3 rim           inset shadows     - specular top bevel, darkened
                                          underside, inner bloom
-     4 ::before      gradient hairline - 1px border that stays legible on
-                                         both the lit and unlit side
+     4 ::before      axial 1px bead    - bright top, dark side rails, per
+                                         Apple's measured rest-state profile
+     5 press ring    .glass__press     - conic rim that energises on :active
+     6 refraction    SVG displacement  - Chromium-only lens (see below)
    Plus an optional pointer-tracked specular highlight (--mx / --my).
 
    Browser notes (verified, not assumed):
@@ -24,10 +26,20 @@
      Firefox has not shipped it). It is therefore never the only fallback.
      Three independent fallbacks below.
 
-   Backdrop-root trap: an ancestor with filter / opacity < 1 / transform /
-   mask / mix-blend-mode becomes the backdrop root, and the glass then
-   samples only its own subtree - rendering as if unblurred. Never animate
-   opacity or transform on an ANCESTOR of a .glass element.
+   Backdrop-root trap - MEASURED on Chrome 152.0.7977.83, 2026 (see
+   DESIGN.md 4.2; the strip test in archive/liquid-glass/warp.html):
+     KILLS the backdrop read : filter != none, opacity < 1 (on the element
+                              ITSELF or on any ancestor), mask, mix-blend-mode.
+     SAFE                    : transform, will-change: transform, and
+                              transform on an ANCESTOR. Also isolation:
+                              isolate and contain: paint - both were
+                              reproduced as harmless here, contrary to
+                              some published claims. Do not "fix" them.
+   Two consequences the components below rely on:
+     - the draggable pill may be transformed every frame (the lens follows);
+     - the pill may NEVER fade in with opacity, and the press ring must be a
+       SIBLING element rather than the opacity of .glass__edge, or the
+       transition would blank the lens mid-flight.
    ============================================================ */
 
 :root {
@@ -41,10 +53,33 @@
   --glass-control: color-mix(in oklab, var(--paper-000) 62%, transparent);
   --glass-dark: color-mix(in oklab, var(--ink-950) 58%, transparent);
 
+  /* The selected pill of a segmented control. Its own role, so its own
+     token: --glass-dark belongs to #lightbox. 0.76 is the measured floor -
+     below it the 12px mono caps on the pill lose their contrast budget. */
+  /* 0.84 is a legibility decision, not a taste one. The pill is a TINTED
+     glass: at this alpha the composite stays near #333 over both paper and a
+     white photo, so the 12px mono caps on it land ~11.6:1 and, more
+     importantly, the ratio barely moves with the backdrop. Dropping toward
+     0.6 buys a little more see-through and loses the "black box" the design
+     is built around; the glass read is carried by the rim and the lens
+     instead, which is also how Apple does it. */
+  --glass-pill: color-mix(in oklab, var(--ink-950) 84%, transparent);
+
   --glass-blur: blur(20px) saturate(1.7) brightness(1.05);
   --glass-blur-strong: blur(28px) saturate(1.7) brightness(1.05);
   --glass-edge-w: 13px;
   --glass-radius: var(--radius-lg);
+
+  /* Width of the axial bead ramps in layer 4. Roughly the corner-arc
+     length, so the crossover lands inside the arc the way it measures on
+     Apple's own surfaces. */
+  --glass-bead-w: 9px;
+
+  /* The pill's travel. Used by the component styles, read here so the
+     whole glass family moves on one curve. */
+  --glass-pill-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --glass-pill-travel: 420ms;
+  --glass-pill-morph: 180ms;
 }
 
 /* ---------- base: the frosted body ----------
@@ -101,22 +136,34 @@
   mask-composite: exclude;
 }
 
-/* Layer 4 - the gradient hairline. A flat white 1px border is invisible on
-   a light theme, so the gradient runs bright -> neutral dark: whichever
-   side the light is on, one half of the ring stays legible. */
+/* Layer 4 - the axial 1px bead. Two stacked linear gradients inside the
+   same masked ring, never a conic: measured against real Control Center
+   surfaces, the RESTING highlight sits on a fixed vertical axis - lit top,
+   lit bottom, DARK side rails. A conic would sweep one highlight around all
+   four edges, brightening the flanks as it passed them, which is the
+   opposite of the measurement. (The conic is correct only while pressed,
+   which is what .glass__press below is for.) */
 .glass::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(
-    135deg,
-    var(--glass-hairline-hi) 0%,
-    var(--glass-hairline-mid) 28%,
-    var(--glass-hairline-lo) 62%,
-    var(--glass-hairline-lo2) 100%
-  );
+  background:
+    linear-gradient(
+      to right,
+      var(--glass-bead-side) 0,
+      transparent var(--glass-bead-w),
+      transparent calc(100% - var(--glass-bead-w)),
+      var(--glass-bead-side) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      var(--glass-bead-top) 0,
+      transparent var(--glass-bead-w),
+      transparent calc(100% - var(--glass-bead-w)),
+      var(--glass-bead-bottom) 100%
+    );
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -127,6 +174,42 @@
 
 .glass__content { position: relative; z-index: 3; }
 
+/* ---------- layer 5: the press ring ----------
+   Interactive glass energises its rim on press instead of changing colour.
+   Two measured constraints forced this into its own element:
+     1. the conic sweep is correct ONLY here, where the highlight genuinely
+        travels. It cannot be folded into the resting bead, which is axial.
+     2. the ring has to fade in, and a transition on .glass__edge would take
+        that element's own opacity below 1 - which blanks its backdrop read
+        outright (measured). A sibling that carries no backdrop-filter of
+        its own is the only safe carrier for the fade. */
+.glass__press {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  padding: 1px;
+  background: conic-gradient(
+    var(--glass-press-lo) 0deg,
+    var(--glass-press-hi) 58deg,
+    var(--glass-press-lo) 128deg,
+    var(--glass-press-lo) 232deg,
+    var(--glass-press-hi) 302deg,
+    var(--glass-press-lo) 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  /* fast in - the rim is feedback, not decoration */
+  transition: opacity 0.12s var(--ease-out);
+}
+
+.glass:active > .glass__press,
+.glass.is-pressed > .glass__press { opacity: 1; }
+
 /* light-theme rim values */
 .glass,
 .light-glass {
@@ -134,10 +217,15 @@
   --glass-bevel-side: oklch(1 0 0 / 0.48);
   --glass-shade: oklch(0 0 0 / 0.07);
   --glass-bloom: var(--paper-200);
-  --glass-hairline-hi: oklch(1 0 0 / 0.98);
-  --glass-hairline-mid: oklch(1 0 0 / 0.18);
-  --glass-hairline-lo: oklch(0 0 0 / 0.06);
-  --glass-hairline-lo2: oklch(0 0 0 / 0.14);
+  /* On paper the ring reads by its DARK half: a white top bead over
+     --paper-000 is invisible on its own, and the bright top edge is already
+     carried by the inset bevel in layer 3. So the light glass keeps a white
+     top for form and leans on the side rails + underside for definition. */
+  --glass-bead-top: oklch(1 0 0 / 0.98);
+  --glass-bead-bottom: oklch(0 0 0 / 0.13);
+  --glass-bead-side: oklch(0 0 0 / 0.055);
+  --glass-press-hi: oklch(1 0 0 / 0.92);
+  --glass-press-lo: oklch(1 0 0 / 0.10);
 }
 
 /* ---------- dark glass: only inside the dark detail layer ---------- */
@@ -147,10 +235,13 @@
   --glass-bevel-side: oklch(1 0 0 / 0.10);
   --glass-shade: oklch(0 0 0 / 0.42);
   --glass-bloom: oklch(1 0 0 / 0.10);
-  --glass-hairline-hi: oklch(1 0 0 / 0.5);
-  --glass-hairline-mid: oklch(1 0 0 / 0.12);
-  --glass-hairline-lo: oklch(0 0 0 / 0.2);
-  --glass-hairline-lo2: oklch(1 0 0 / 0.26);
+  /* The dark glass is where Apple's profile is taken literally: a lit top
+     AND a lit bottom (both measured +97 L) with dark side rails (-39 L). */
+  --glass-bead-top: oklch(1 0 0 / 0.5);
+  --glass-bead-bottom: oklch(1 0 0 / 0.42);
+  --glass-bead-side: oklch(0 0 0 / 0.34);
+  --glass-press-hi: oklch(1 0 0 / 0.62);
+  --glass-press-lo: oklch(0 0 0 / 0.28);
   box-shadow:
     inset 0 1px 0 0 var(--glass-bevel),
     inset 0 -1px 0 0 var(--glass-shade),
@@ -169,27 +260,232 @@
   -webkit-backdrop-filter: blur(16px) saturate(1.6) brightness(1.04);
 }
 
+/* ---------- accent glass ----------
+   The ONE place glass is allowed to sit on paper, and only because it was
+   asked for by name. Plain glass on a flat page reads grey: there is nothing
+   behind it to refract and the rim has nothing to read against. So this
+   variant carries a CHAMPAGNE TINT in the body, and the tint is the point -
+   blur(14px) saturate(1.9) now has a hue to deepen toward the edges, the
+   specular rim reads against colour instead of against more paper, and the
+   ::before bead gets a warm underside to sit on. */
+.glass--accent {
+  --glass-radius: var(--radius-pill);
+  /* 50% is the ceiling. At 58% plus the saturate below the rendered body came
+     out 255,255,69 and the bottom rim 255,255,0 - pure neon yellow, measured
+     off the real pixels. */
+  background: color-mix(in oklab, var(--gold-400) 52%, transparent);
+  --glass-bevel: oklch(1 0 0 / 0.92);
+  --glass-bevel-side: oklch(1 0 0 / 0.46);
+  --glass-shade: oklch(0 0 0 / 0.16);
+  /* kept low: the white inset bloom washes a pale tint out fast */
+  --glass-bloom: oklch(1 0 0 / 0.28);
+  --glass-bead-top: oklch(1 0 0 / 0.96);
+  --glass-bead-bottom: oklch(0 0 0 / 0.2);
+  --glass-bead-side: oklch(0 0 0 / 0.09);
+  --glass-press-hi: oklch(1 0 0 / 0.9);
+  --glass-press-lo: oklch(0 0 0 / 0.12);
+  color: var(--ink-950);
+}
+
+/* The saturate() values on the nav glass are tuned for a near-neutral dark
+   lozenge, where pushing saturation costs nothing. On a GOLD tint the same
+   1.9x drives the hue straight to the primary: gold #C9A227 is already ~68%
+   saturated, so 1.9x is 100%+. Measured on the real pixels the body came out
+   255,255,69 and the rim 255,255,0 - a neon highlighter, not champagne. The
+   accent variant therefore stays close to 1 and lets the TINT carry the
+   colour, which is the whole point of having one. */
+.glass--accent .glass__body {
+  backdrop-filter: blur(16px) saturate(1.08);
+  -webkit-backdrop-filter: blur(16px) saturate(1.08);
+}
+
+/* NO brightness() on this variant, on either layer.
+
+   .glass__edge is position:absolute/inset:0, so it covers the WHOLE control -
+   it is not a rim ring, and the 9px padding on .glass--pill .glass__edge does
+   nothing to an empty absolutely-positioned box. Whatever brightness it
+   declares is therefore applied to the entire surface and STACKS with the
+   body's. On the nav glass (dark, over photographs) that stack is the look.
+   On a pale gold tint it simply clips: measured 255,247,188 with a red and
+   green channel pinned at 255 - cream, not champagne. */
+.glass--accent .glass__edge {
+  backdrop-filter: blur(4px) saturate(1.04);
+  -webkit-backdrop-filter: blur(4px) saturate(1.04);
+}
+
+/* fallbacks, all three - see the glass section of AGENTS.md */
+@media (prefers-reduced-transparency: reduce) {
+  .glass--accent { background: var(--gold-400); }
+}
+html[data-transparency="solid"] .glass--accent { background: var(--gold-400); }
+
 /* ---------- shape variants ---------- */
 .glass--pill { --glass-radius: var(--radius-pill); }
 .glass--pill .glass__edge { padding: 9px; }
 .glass--sm { --glass-radius: var(--radius-md); --glass-edge-w: 9px; }
 
 /* ============================================================
-   Layer 5 (enhancement, Chromium only): SVG displacement refraction.
+   THE SELECTED PILL of a segmented control.
+
+   A dark-glass lozenge, absolutely positioned inside a track, moved by
+   translate3d and resized by width. js/glass-pill.js writes the geometry;
+   everything in this block is material and state.
+
+   Positioning by transform rather than left/top is not a micro-optimisation
+   here: it is what lets the position update every frame with no lag while
+   the WIDTH still tweens. During a drag, transform is deliberately dropped
+   from the transition list so the pill sits exactly under the cursor, while
+   the morph between two segment widths stays animated. That split is the
+   difference between "grabbable" and "laggy".
+
+   opacity is never animated on this element: measured, opacity < 1 on a
+   glass element erases its own backdrop read.
+   ============================================================ */
+.glass-pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Above every surface layer of the track. .glass--spot::after and the bead
+     both sit at z-index 2, and the pointer-tracked highlight would otherwise
+     wash straight over the selected segment. The segments themselves are at
+     3 and win on document order, which is what keeps their labels on top. */
+  z-index: 3;
+  width: 0;
+  height: 0;
+  border-radius: var(--radius-pill);
+  background: var(--glass-pill);
+  box-shadow:
+    inset 0 1px 0 0 oklch(1 0 0 / 0.22),
+    inset 0 -1px 0 0 oklch(0 0 0 / 0.4),
+    0 1px 2px oklch(0 0 0 / 0.18),
+    0 8px 20px -10px oklch(0 0 0 / 0.45);
+  /* the track owns the pointer; see js/glass-pill.js */
+  pointer-events: none;
+  will-change: transform, width;
+  transition:
+    transform var(--glass-pill-travel) var(--glass-pill-ease),
+    width var(--glass-pill-travel) var(--glass-pill-ease),
+    height var(--glass-pill-travel) var(--glass-pill-ease),
+    scale var(--glass-pill-travel) var(--glass-pill-ease);
+}
+
+/* the pill's own refraction layer, reusing the same single filter id */
+.glass-pill__body {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  backdrop-filter: blur(6px) saturate(1.4);
+  -webkit-backdrop-filter: blur(6px) saturate(1.4);
+}
+
+/* The pill carries the same axial bead as the bars, and it is what actually
+   sells "glass" once the body is dark enough to be legible: a lit top AND a
+   lit bottom with dark flanks. Painted over the body, so it survives the
+   background alpha that the refracted backdrop does not. */
+.glass-pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background:
+    linear-gradient(
+      to right,
+      oklch(0 0 0 / 0.42) 0,
+      transparent 8px,
+      transparent calc(100% - 8px),
+      oklch(0 0 0 / 0.42) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      oklch(1 0 0 / 0.5) 0,
+      transparent 9px,
+      transparent calc(100% - 9px),
+      oklch(1 0 0 / 0.36) 100%
+    );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* Held but not yet moved: the grab. scale() is a separate property so it
+   can never collide with the transform JS writes every frame. */
+.glass-pill.is-grabbed { scale: 0.94; }
+
+/* Actually being dragged: position must be 1:1 with the cursor, so transform
+   drops out of the transition list while width/height keep their morph. scale
+   stays: the grab shrink must not snap the moment the first move arrives. */
+.glass-pill.is-dragging {
+  transition:
+    width var(--glass-pill-morph) var(--glass-pill-ease),
+    height var(--glass-pill-morph) var(--glass-pill-ease),
+    scale var(--glass-pill-morph) var(--glass-pill-ease);
+}
+
+/* Settling after release, or snapping back after a cancel. */
+.glass-pill.is-settling { scale: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-pill,
+  .glass-pill.is-dragging {
+    transition: none;
+    scale: 1;
+  }
+}
+
+/* ============================================================
+   Layer 6 (enhancement, Blink only): SVG displacement refraction.
+
+   THE GATE IS A CLASS, NOT A FEATURE QUERY, AND THAT IS NOT LAZINESS.
+   This used to be guarded by @supports (-webkit-backdrop-filter: blur(1px)),
+   on the theory that the prefixed property is Chromium-only. Chrome has since
+   dropped the -webkit- alias, so that query now reports FALSE in Chrome 152 -
+   meaning the enhancement had silently stopped applying anywhere at all. Nor
+   can the guard be @supports (backdrop-filter: url(...)): Safari parses that
+   value, reports true, then paints nothing AND takes the blur down with it.
+
+   So the test has to be a POSITIVE Blink signal, and it is set once in the
+   head of index.html as html.has-lens. Verified here, not assumed: over an
+   18px stripe field, blur(5px) alone flattens the stripes to a single flat
+   grey (1 luminance transition), while blur(5px) url(#lg-lens) keeps them and
+   modulates their spacing (45 transitions). Without .has-lens the glass keeps
+   its blur and loses only the refraction, which is the correct fallback.
+
+   The filter is #lg-lens in index.html: a rim-localised displacement map
+   (gradient ramps screened onto neutral grey, then punched flat in the
+   middle by a blurred rounded rect) feeding feDisplacementMap. It is a real
+   edge lens - the backdrop compresses toward the two rounded ends and
+   splays across the middle. An feTurbulence map, which is what a lot of
+   published snippets use, produces uniform noise across the whole surface
+   instead; that is a frosted-warp tool, not a lens.
+
    Guarded by a feature query that does NOT mention url(), because
    @supports(backdrop-filter: url(...)) reports true on Safari while the
    value renders as nothing. -webkit-backdrop-filter is Chromium-only, so
    its presence is the honest signal. The blur-only rule above always
    stands first, so a dropped enhancement can never cost the blur.
    ============================================================ */
-@supports (-webkit-backdrop-filter: blur(1px)) {
-  @supports not (-moz-appearance: none) {
-    .glass--refract .glass__body {
-      backdrop-filter: blur(5px) saturate(1.6) url(#lg-lens);
-      -webkit-backdrop-filter: blur(5px) saturate(1.6) url(#lg-lens);
-    }
-  }
+html.has-lens .glass--refract .glass__body {
+  backdrop-filter: blur(5px) saturate(1.6) url(#lg-lens);
 }
+
+/* The pill deliberately does NOT get the lens, for two reasons that were
+   both visible in the render:
+   1. the displacement map's flat interior is authored for a wide thin bar
+      (a ~16:1 viewBox). On a 95x40 pill the punch-out stretches into the
+      wrong shape, the centre stops being neutral, and the lens magnifies the
+      middle of the pill into a bright blob instead of leaving it flat;
+   2. it is the one element that MOVES, and a moving backdrop-filter
+      re-samples its backdrop every frame - the displacement pass is the
+      expensive part of that, paid for an effect that is wrong anyway.
+   The pill reads as glass from its blur plus the axial bead above, which is
+   also why it needs no lens to hold its own next to the bars.
+   url() is deliberately absent from -webkit-backdrop-filter everywhere: an
+   engine that supports the prefixed property but not url() inside it drops
+   the ENTIRE declaration, blur included. */
 
 /* ============================================================
    Pointer-tracked specular highlight.
@@ -228,7 +524,9 @@
   .glass--dark { background: var(--ink-950); }
   .glass__body,
   .glass__edge,
+  .glass-pill__body,
   .glass--spot::after { display: none; }
+  .glass__press { display: none; }
 }
 
 /* 2. Reduced transparency AND increased contrast. prefers-reduced-transparency
@@ -243,8 +541,11 @@
   .glass--dark { background: var(--ink-950); }
   .glass__body,
   .glass__edge,
+  .glass-pill__body,
   .glass--spot::after { display: none; }
   .glass::before { opacity: 0.55; }
+  /* the press ring has nothing to add once the surface is opaque */
+  .glass__press { display: none; }
 }
 
 /* 3. Explicit opt-out set from JS (html[data-transparency="solid"]), which
@@ -257,11 +558,17 @@ html[data-transparency="solid"] .glass {
   box-shadow: 0 1px 2px oklch(0 0 0 / 0.06), 0 18px 44px -18px oklch(0 0 0 / 0.2);
 }
 html[data-transparency="solid"] .glass--dark { background: var(--ink-950); }
+/* the pill is not a .glass element, so it needs its own solid state */
+html[data-transparency="solid"] .glass-pill { background: var(--ink-950); }
 html[data-transparency="solid"] .glass__body,
 html[data-transparency="solid"] .glass__edge,
+html[data-transparency="solid"] .glass-pill__body,
 html[data-transparency="solid"] .glass--spot::after { display: none; }
+html[data-transparency="solid"] .glass__press { display: none; }
 
-/* Reduced motion: the glass keeps its material, loses the movement. */
+/* Reduced motion: the glass keeps its material, loses the movement. The
+   pill stays draggable - it just arrives instantly instead of travelling. */
 @media (prefers-reduced-motion: reduce) {
   .glass--spot::after { transition: none; }
+  .glass__press { transition: none; }
 }

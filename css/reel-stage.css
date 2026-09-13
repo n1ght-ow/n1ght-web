@@ -1,12 +1,26 @@
 /* ============================================================
    REEL STAGE: shared base for the film reel and series tape.
-   One rule set, dual prefixes (.film-* / .series-*). Panel
-   identity (card width, accent values, thumb feel) comes from
-   per-stage variables defined in css/film-stage.css and
-   css/series-stage.css, which also keep their own detail-area
-   layouts, breakpoints and reduced-motion blocks.
-   Bright-luxury visual layer: open strip (no boxed viewport),
-   rounded poster cards, soft shadows, gold accent ring states.
+   One rule set, dual prefixes (.film-* / .series-*). Panel identity
+   (card width, accent values, thumb feel) comes from per-stage
+   variables defined in css/film-stage.css and css/series-stage.css,
+   which also keep their own detail-area layouts, breakpoints and
+   reduced-motion blocks.
+
+   Mechanics (strip transform, range, drag, focus) are unchanged.
+   Everything here is presentation on the paper/ink system.
+
+   HISTORY, because this file was three stacked override layers and
+   reading it used to mean diffing them in your head. Two dead ends are
+   now gone and must not come back:
+     - the selected state used to invert the entire meta panel to solid
+       ink and slide a 38%-height slab over the poster for the "OPEN"
+       affordance. Stacked, it read as a black hole in the strip and hid
+       the art the panel exists to show.
+     - a dozen rules referenced tokens (--shadow-soft-sm, --shadow-soft-md,
+       --color-accent-solid, --color-glow) that were never defined
+       anywhere, so every one of those declarations silently dropped. The
+       selected card and the resting card computed an IDENTICAL
+       box-shadow: selection was invisible.
    ============================================================ */
 
 .film-stage,
@@ -21,11 +35,11 @@
 .series-stage-head {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: baseline;
   gap: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--color-line);
-  margin-bottom: 1.35rem;
+  padding-block-end: 0.9rem;
+  border-block-end: 1px solid var(--color-line);
+  margin-block-end: 1.6rem;
 }
 
 .film-stage-head-left,
@@ -36,10 +50,10 @@
 
 .film-stage-title,
 .series-stage-title {
-  font-size: clamp(1.65rem, 4vw, 3.4rem);
-  font-weight: 700;
-  line-height: 0.98;
-  letter-spacing: -0.03em;
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: var(--track-h3);
   color: var(--color-text);
 }
 
@@ -47,32 +61,37 @@
 .film-stage-count,
 .series-stage-sub,
 .series-stage-count {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.875rem;
-  letter-spacing: 0.12em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
   color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
-.film-stage-head-right .film-stage-count,
-.series-stage-head-right .series-stage-count {
-  background: var(--color-text);
-  color: var(--color-bg);
-  padding: 0.35em 0.9em;
-  border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-soft-sm);
-}
-
+/* touch-action is pan-y, NOT pan-x pan-y. The viewport is overflow:hidden,
+   so a horizontal pan does nothing here; leaving pan-x out is what lets the
+   pointer handler claim the horizontal axis for the swipe. */
 .film-stage-viewport,
 .series-stage-viewport {
   overflow: hidden;
   background: transparent;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
 }
+
+/* while a finger is actually dragging the strip, the cursor says so and the
+   per-card colour transition is muted so it cannot fight the drag */
+.film-stage-dragging .film-card-img,
+.series-stage-dragging .series-card-img { transition: none; }
+.film-stage-dragging,
+.series-stage-dragging { cursor: grabbing; }
 
 .film-stage-strip,
 .series-stage-strip {
   display: flex;
+  /* never the default `stretch`: one tall caption would change every card's
+     height and the posters would stop sharing a baseline */
+  align-items: start;
   width: max-content;
   min-width: 100%;
   gap: clamp(0.9rem, 2vw, 1.7rem);
@@ -80,188 +99,202 @@
   will-change: transform;
 }
 
+/* ---------------------------------------------------------------------
+   THE CARD: a 2:3 media box with the meta BELOW it, not over it.
+
+   The card used to be one box at aspect-ratio 3/4.15 (0.7229) with the
+   poster absolutely filling it and the meta plate laid over the bottom
+   band. A 2:3 poster is 0.6667, so object-fit: cover cropped about 7.7% of
+   its height, and the opaque plate then covered more of what was left.
+   Splitting media from meta fixes both, and it removes the white plate
+   that made the shelf read as a streaming tile rather than a printed page.
+   Criterion's poster rail does exactly this: cover in a 2:3.08 box, meta
+   under it, nothing dimmed at rest.
+
+   The four nodes the factory emits (card-no, card-img, card-meta,
+   card-sleeve) are siblings, so this is a pure CSS re-flow - the shared
+   factory contract is untouched.
+   --------------------------------------------------------------------- */
 .film-card,
 .series-card {
   position: relative;
   flex: 0 0 auto;
   width: var(--reel-card-w);
-  aspect-ratio: 3 / 4.15;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: stretch;
+  display: grid;
+  /* THE COLUMN MUST BE DECLARED. Without it the single column is implicit
+     `auto`, and the poster is `width:100%` + `aspect-ratio: 2/3` - so the
+     column width depends on the image and the image width depends on the
+     column. The browser breaks that cycle by falling back to each JPEG's
+     intrinsic size, which rendered the six posters at 158 / 54 / 90 / 59 /
+     54 / 24 px inside identical 268px cards. */
+  grid-template-columns: minmax(0, 1fr);
+  /* 1fr on the last row keeps every card the same height even when one
+     caption wraps: without it the rail's default `stretch` let the tallest
+     caption push the whole row and the posters stopped aligning. */
+  grid-template-rows: auto auto 1fr;
+  align-content: start;
   padding: 0;
-  overflow: hidden;
-  background: var(--color-bg-deep);
+  background: transparent;
   color: var(--color-text);
   border: 0;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-soft-sm);
-  text-align: left;
+  border-radius: 0;
+  text-align: start;
   cursor: pointer;
-  transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.film-card:hover,
-.series-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-soft-md), var(--reel-hover-ring);
-}
-
-.film-card:active,
-.series-card:active {
-  transform: scale(0.96);
-  box-shadow: var(--shadow-soft-sm);
-}
-
-.film-card:focus-visible,
-.series-card:focus-visible {
-  outline: 3px solid var(--color-accent-text);
-  outline-offset: 4px;
-}
-
-.film-card.is-active,
-.series-card.is-active {
-  background: var(--color-text);
-  color: var(--color-bg);
-  box-shadow: var(--shadow-soft-md), var(--reel-active-ring);
-  transform: translateY(-3px);
 }
 
 .film-card-img,
 .series-card-img {
-  position: absolute;
-  inset: 0;
+  grid-row: 1;
+  position: relative;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 2 / 3;
+  height: auto;
   object-fit: cover;
   display: block;
   background: var(--color-bg-deep);
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: var(--radius-md);
+  /* an inset ring that survives being painted over by the image itself:
+     outline draws above the element's own box, and with a radius the engine
+     rounds it, so no wrapper element is needed. */
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+  filter: saturate(0.72);
+  transition:
+    filter 0.45s var(--ease-out),
+    outline-color 0.3s var(--ease-out),
+    transform 0.25s var(--ease-out);
 }
 
 .film-card:hover .film-card-img,
 .film-card:focus-visible .film-card-img,
 .series-card:hover .series-card-img,
 .series-card:focus-visible .series-card-img {
-  transform: scale(1.045);
+  outline-color: oklch(0 0 0 / 0.2);
+  /* Criterion lifts its cards 4px on hover and does NOT scale the artwork.
+     The caption deliberately stays put: moving it too would make the rail
+     look like it was breathing. */
+  transform: translateY(-4px);
 }
 
+.film-card:hover .film-card-img,
+.film-card:focus-visible .film-card-img,
+.film-card.is-active .film-card-img,
+.series-card:hover .series-card-img,
+.series-card:focus-visible .series-card-img,
+.series-card.is-active .series-card-img {
+  filter: saturate(1);
+}
+
+/* The selected state, and it is the only ring darker than hover: the two
+   have to be tellable apart or the state is lost. This is the rule that was
+   silently dead before - the ring token it used did not exist. */
 .film-card.is-active .film-card-img,
 .series-card.is-active .series-card-img {
-  transform: scale(1.03);
+  outline-color: oklch(0 0 0 / 0.34);
 }
 
-.film-card-no,
-.series-card-no {
-  position: absolute;
-  top: 0.7rem;
-  left: 0.7rem;
-  z-index: 4;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.8125rem;
-  letter-spacing: 0.12em;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-surface);
-  background: rgba(29, 27, 22, 0.85);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  border-radius: var(--radius-pill);
-  padding: 0.3em 0.75em;
+.film-card:focus-visible,
+.series-card:focus-visible {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 3px;
+  border-radius: var(--radius-md);
 }
 
-.film-card.is-active .film-card-no,
-.series-card.is-active .series-card-no {
-  background: var(--color-accent-solid);
-  color: var(--color-on-accent);
-}
-
+/* No plate and no plate colour: the meta is simply type under the poster.
+   The start border is transparent at rest so the accent rule on the
+   selected card costs no layout shift. */
+/* TWO fields, one line each, in a block whose height cannot vary.
+   Criterion's grid caption is exactly this: a <dl> with the title and the
+   director, both 13px/1.2. Letterboxd locks the caption box to the poster's
+   own width and forbids the title from wrapping. Both do it so the bottom
+   edges match by construction rather than by luck, which is what the old
+   three-field, freely-wrapping caption got wrong. */
 .film-card-meta,
 .series-card-meta {
-  position: relative;
-  z-index: 3;
+  grid-row: 2;
+  position: static;
+  z-index: auto;
   display: grid;
-  gap: 0.22rem;
-  padding: 0.9rem 1rem 1.25rem;
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-line);
-  transition: background 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  gap: 0.15rem;
+  padding-block: var(--sp-3) 0;
+  background: none;
+  border-block-start: 1px solid transparent;
+  transition: border-color 0.3s var(--ease-out);
 }
 
 .film-card.is-active .film-card-meta,
 .series-card.is-active .series-card-meta {
-  background: var(--color-text);
-  border-top-color: transparent;
+  background: none;
+  border-block-start-color: var(--color-accent);
 }
 
 .film-card-title,
 .series-card-title {
-  font-size: clamp(1rem, 1.3vw, 1.3rem);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+  font-size: var(--fs-h4);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.2;
   color: var(--color-text);
-  overflow-wrap: anywhere;
-}
-
-.film-card.is-active .film-card-title,
-.series-card.is-active .series-card-title {
-  color: var(--color-bg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .film-card-meta-line,
 .film-card-genre,
 .series-card-meta-line,
 .series-card-category {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.8125rem;
-  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
   color: var(--color-text-muted);
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.film-card.is-active .film-card-meta-line,
-.film-card.is-active .film-card-genre,
-.series-card.is-active .series-card-meta-line,
-.series-card.is-active .series-card-category {
-  color: var(--color-glow);
-}
+/* The genre tag is gone from the card. It is already the first word of the
+   detail region's kicker directly below, and a third caption field is what
+   made the blocks ragged in the first place. The node still exists in the
+   factory's output, so it is hidden rather than removed. */
+.film-card-genre,
+.series-card-category { display: none; }
 
+/* The index chip is gone. It printed an opaque dark pill on all 35 cards
+   and carried nothing that the strip order and the 01-16 counter do not
+   already say. The node still exists in the factory's output, so it is
+   hidden rather than removed - one line, trivially reversible. */
+.film-card-no,
+.series-card-no { display: none; }
+
+/* The OPEN chip is retired. It floated (it was centred on the card while the
+   mis-sized poster sat somewhere else inside it), it was the only solid dark
+   shape in a paper-white strip, and the whole card is already the button -
+   Criterion's grid cards carry no call to action at all. The node remains in
+   the factory's output and is hidden below. */
 .film-card-sleeve,
-.series-card-sleeve {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 5;
-  height: 38%;
-  display: grid;
-  place-items: center;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: var(--color-accent-text);
-  background: var(--reel-sleeve-bg);
-  border-top: 1px solid rgba(126, 95, 32, 0.22);
-  clip-path: inset(100% 0 0 0);
-  transition: clip-path 0.34s cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
+.series-card-sleeve { display: none; }
+
+/* Touch devices have no hover, so the desaturation reward never fires and
+   35 posters sit permanently dulled. Erased Tapes and Ghostly both gate the
+   restore behind a hover-capability check; so do we. */
+@media (hover: none) {
+  .film-card-img,
+  .series-card-img { filter: saturate(1); }
 }
 
-.film-card:hover .film-card-sleeve,
-.film-card:focus-visible .film-card-sleeve,
-.film-card.is-active .film-card-sleeve,
-.series-card:hover .series-card-sleeve,
-.series-card:focus-visible .series-card-sleeve,
-.series-card.is-active .series-card-sleeve {
-  clip-path: inset(0 0 0 0);
-}
-
+/* ---------------------------------------------------------------------
+   The scrubber. The reel moves on a transform, not on scroll, so this
+   input IS the position indicator; it is kept because it is the keyboard
+   and precision path. Restyled as a rule with a thumb that sits on it.
+   --------------------------------------------------------------------- */
 .film-stage-dragwrap,
 .series-stage-dragwrap {
-  margin-top: 1.15rem;
+  margin-block-start: 1.15rem;
   padding: 0.6rem clamp(0.2rem, 1vw, 0.8rem);
   background: transparent;
   border: 0;
@@ -282,188 +315,38 @@
 
 .film-stage-range::-webkit-slider-runnable-track,
 .series-stage-range::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: var(--radius-pill);
-  background: var(--color-line);
+  height: 2px;
+  background: oklch(0 0 0 / 0.14);
+  border-radius: 0;
 }
 
 .film-stage-range::-webkit-slider-thumb,
 .series-stage-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 22px;
-  height: 22px;
-  margin-top: -8px;
-  border-radius: var(--radius-pill);
-  background: var(--reel-thumb-bg);
-  border: 1px solid var(--color-accent-text);
-  box-shadow: var(--shadow-soft-sm);
-  cursor: var(--reel-thumb-cursor);
-}
-
-.film-stage-range::-moz-range-track,
-.series-stage-range::-moz-range-track {
-  height: 6px;
-  border-radius: var(--radius-pill);
-  background: var(--color-line);
-}
-
-.film-stage-range::-moz-range-thumb,
-.series-stage-range::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
-  border: 1px solid var(--color-accent-text);
-  border-radius: var(--radius-pill);
-  background: var(--reel-thumb-bg);
-  box-shadow: var(--shadow-soft-sm);
-  cursor: var(--reel-thumb-cursor);
-}
-
-.film-stage-range:focus-visible,
-.series-stage-range:focus-visible {
-  outline: 3px solid var(--color-accent-text);
-  outline-offset: var(--reel-focus-offset);
-}
-
-
-/* ============================================================
-   V2 VISUAL LAYER
-   The mechanics above (strip transform, range, drag, focus) are
-   unchanged. This block only restyles what the eye reads, so the
-   two panels land on the same paper/ink system as the rest of the
-   site: no gold chip fills, no pill counting, one radius scale.
-   ============================================================ */
-
-.film-stage-head,
-.series-stage-head {
-  align-items: baseline;
-  padding-bottom: 0.9rem;
-  margin-bottom: 1.6rem;
-}
-
-.film-stage-title,
-.series-stage-title {
-  font-size: var(--fs-h3);
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: var(--track-h3);
-}
-
-.film-stage-sub,
-.film-stage-count,
-.series-stage-sub,
-.series-stage-count {
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  text-transform: uppercase;
-}
-
-.film-stage-head-right .film-stage-count,
-.series-stage-head-right .series-stage-count {
-  background: none;
-  color: var(--color-text-muted);
-  padding: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.film-card,
-.series-card {
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
-}
-
-.film-card:hover,
-.series-card:hover,
-.film-card.is-active,
-.series-card.is-active {
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.16), var(--shadow-lift);
-}
-
-.film-card:focus-visible,
-.series-card:focus-visible {
-  outline: 2px solid var(--color-accent-text);
-  outline-offset: 3px;
-}
-
-.film-card-img,
-.series-card-img { filter: saturate(0.72); }
-.film-card:hover .film-card-img,
-.film-card:focus-visible .film-card-img,
-.film-card.is-active .film-card-img,
-.series-card:hover .series-card-img,
-.series-card:focus-visible .series-card-img,
-.series-card.is-active .series-card-img { filter: saturate(1); }
-
-.film-card-no,
-.series-card-no {
-  font-size: var(--fs-label);
-  letter-spacing: var(--track-label);
-}
-
-.film-card-title,
-.series-card-title {
-  font-weight: 500;
-  letter-spacing: -0.012em;
-  line-height: 1.3;
-}
-
-.film-card-meta-line,
-.film-card-genre,
-.series-card-meta-line,
-.series-card-category {
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  text-transform: uppercase;
-}
-
-/* the genre tag was a tinted pill; on the new system it is a quiet label */
-.film-card-genre,
-.series-card-category {
-  background: none;
-  color: var(--color-text-muted);
-  padding: 0;
-  border-radius: 0;
-}
-
-.film-card-sleeve,
-.series-card-sleeve {
-  background: var(--color-ink);
-  color: var(--color-on-dark);
-  letter-spacing: var(--track-label);
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-}
-
-.film-stage-range::-webkit-slider-runnable-track,
-.series-stage-range::-webkit-slider-runnable-track {
-  height: 1px;
-  background: var(--color-line);
-  border-radius: 0;
-}
-
-.film-stage-range::-webkit-slider-thumb,
-.series-stage-range::-webkit-slider-thumb {
-  width: 14px;
-  height: 14px;
-  margin-top: -7px;
-  background: var(--color-ink);
-  box-shadow: none;
-}
-
-.film-stage-range::-moz-range-track,
-.series-stage-range::-moz-range-track {
-  height: 1px;
-  background: var(--color-line);
-  border-radius: 0;
-}
-
-.film-stage-range::-moz-range-thumb,
-.series-stage-range::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  background: var(--color-ink);
+  width: 12px;
+  height: 12px;
+  margin-top: -5px;
   border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
+  box-shadow: none;
+}
+
+.film-stage-range::-moz-range-track,
+.series-stage-range::-moz-range-track {
+  height: 2px;
+  background: oklch(0 0 0 / 0.14);
+  border-radius: 0;
+}
+
+.film-stage-range::-moz-range-thumb,
+.series-stage-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
   box-shadow: none;
 }
 
@@ -472,124 +355,3 @@
   outline: 2px solid var(--color-accent-text);
   outline-offset: 4px;
 }
-
-
-
-/* ============================================================
-   V2 CORRECTIONS
-   Two things the first V2 pass got wrong:
-   1. The selected state inverted the whole meta panel to solid ink and
-      slid a 38%-height slab over the poster for the "OPEN" affordance.
-      Stacked, that read as a black hole in the strip and hid the art the
-      panel exists to show. Selection is now carried by a hairline ring and
-      an accent rule; the affordance is a single centred chip.
-   2. Selectors here are more specific than the ones above on purpose, so
-      this block wins without !important.
-   ============================================================ */
-
-.film-card .film-card-sleeve,
-.series-card .series-card-sleeve {
-  left: 50%;
-  right: auto;
-  top: 50%;
-  bottom: auto;
-  height: auto;
-  width: max-content;
-  transform: translate(-50%, -50%);
-  padding: 0.55em 1.1em;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-weight: 400;
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  box-shadow: 0 1px 2px oklch(0 0 0 / 0.12), 0 8px 24px -10px oklch(0 0 0 / 0.4);
-}
-
-.film-card .film-card-meta,
-.series-card .series-card-meta {
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-line);
-  transition: border-color 0.3s var(--ease-out);
-}
-
-.film-card.is-active .film-card-meta,
-.series-card.is-active .series-card-meta {
-  background: var(--color-surface);
-  border-top-color: var(--color-accent);
-}
-
-.film-card.is-active .film-card-title,
-.series-card.is-active .series-card-title { color: var(--color-text); }
-
-.film-card.is-active .film-card-meta-line,
-.film-card.is-active .film-card-genre,
-.series-card.is-active .series-card-meta-line,
-.series-card.is-active .series-card-category { color: var(--color-text-muted); }
-
-/* the index chip is an overlay on unknown artwork, so it stays opaque */
-.film-card .film-card-no,
-.series-card .series-card-no {
-  background: oklch(0.12 0 0 / 0.72);
-  border-radius: var(--radius-pill);
-  color: #fff;
-}
-
-.film-card.is-active .film-card-no,
-.series-card.is-active .series-card-no {
-  background: var(--color-ink);
-  color: var(--color-on-dark);
-}
-
-
-
-/* ============ V2 CORRECTIONS ============ */
-/* The 1px track in --color-line was invisible against the archive panel, so
-   the reel scrubber read as a stray dot with no affordance. */
-.film-stage-range::-webkit-slider-runnable-track,
-.series-stage-range::-webkit-slider-runnable-track {
-  height: 2px;
-  background: oklch(0 0 0 / 0.14);
-}
-
-.film-stage-range::-webkit-slider-thumb,
-.series-stage-range::-webkit-slider-thumb {
-  width: 12px;
-  height: 12px;
-  margin-top: -5px;
-  background: var(--color-ink);
-}
-
-.film-stage-range::-moz-range-track,
-.series-stage-range::-moz-range-track {
-  height: 2px;
-  background: oklch(0 0 0 / 0.14);
-}
-
-.film-stage-range::-moz-range-thumb,
-.series-stage-range::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  background: var(--color-ink);
-}
-
-
-
-/* ============ V2 SIZE CONSOLIDATION ============
-   These components still carried their own clamp() ladders from the old
-   system, which reintroduced off-scale sizes (20.16 / 20.8 / 21.6 / 24.88px)
-   next to the tokens. Snapped to the nearest role. */
-.film-card-title,
-.series-card-title { font-size: var(--fs-h4); }
-
-.film-detail-quote,
-.series-detail-quote { font-size: var(--fs-h4); }
-
-.series-detail-seasons { font-size: var(--fs-h4); }
-
-.film-detail-kicker,
-.series-detail-kicker { font-size: var(--fs-meta); }
-

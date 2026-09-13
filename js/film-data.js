@@ -10,7 +10,7 @@
       director: "Francis Ford Coppola",
       year: "1972",
       genre: "CRIME & NOIR",
-      quote: "权力是餐桌尽头一个轻声的嗓音，爱是家族需要它成为的任何模样。"
+      quote: "门在他身后关上。光从缝里进来，照着一张没有他的全家福。"
     },
     {
       id: "film-02",
@@ -20,7 +20,7 @@
       director: "Quentin Tarantino",
       year: "1994",
       genre: "CRIME & NOIR",
-      quote: "餐厅里的每个人都有故事，这部电影只是决定把它们一次讲完。"
+      quote: "箱子里到底装着什么，三十年过去，还是没有人肯说。"
     },
     {
       id: "film-03",
@@ -30,7 +30,7 @@
       director: "刘伟强、麦兆辉",
       year: "2002",
       genre: "CRIME & NOIR",
-      quote: "一个人活在明处，一个人活在暗处，都在念同一句祈祷。"
+      quote: "天台上风很大，两个人都不肯先说出自己是谁。"
     },
     {
       id: "film-04",
@@ -40,7 +40,7 @@
       director: "Bong Joon-ho",
       year: "2003",
       genre: "CRIME & NOIR",
-      quote: "田野守着秘密，雨一直下，案子把每个人都攥在手里。"
+      quote: "雨停了，田里没有答案，只有一条通往隧道口的路。"
     },
     {
       id: "film-05",
@@ -50,7 +50,7 @@
       director: "Quentin Tarantino",
       year: "2003",
       genre: "CRIME & NOIR",
-      quote: "复仇是一条用血画出来的直线，从教堂一直画到刀尖。"
+      quote: "她列了一张很长的名单，然后从第一个开始，一个一个地走过去。"
     },
     {
       id: "film-06",
@@ -60,7 +60,7 @@
       director: "Ethan Coen / Joel Coen",
       year: "2007",
       genre: "CRIME & NOIR",
-      quote: "第一声枪响之前，命运早就抛完了硬币，沙漠只是负责记账。"
+      quote: "硬币还没落地，谁也不知道自己能不能看到明天。"
     },
     {
       id: "film-07",
@@ -70,7 +70,7 @@
       director: "Stanley Kubrick",
       year: "1971",
       genre: "SCI-FI",
-      quote: "一个男孩骨子里流着魔鬼的音乐，社会却宁肯抹掉魔鬼，也不肯抹掉音乐。"
+      quote: "他们治好了他打人的手，顺手也拿走了他听音乐的能力。"
     },
     {
       id: "film-08",
@@ -80,7 +80,7 @@
       director: "Christopher Nolan",
       year: "2010",
       genre: "SCI-FI",
-      quote: "我们在梦里建起整座城市，醒来才问自己哪一层才是真的。"
+      quote: "陀螺一直在转，没有人敢等它停下来。"
     },
     {
       id: "film-09",
@@ -90,7 +90,7 @@
       director: "Christopher Nolan",
       year: "2014",
       genre: "SCI-FI",
-      quote: "爱是唯一不需要坐标就穿越了距离的东西。"
+      quote: "他离开的时候女儿十岁，回来的时候，她比他老。"
     },
     {
       id: "film-10",
@@ -100,7 +100,7 @@
       director: "Roberto Benigni",
       year: "1997",
       genre: "DRAMA",
-      quote: "他把世上最糟的地方变成一场游戏，因为他儿子值得多赢一分。"
+      quote: "他把营地编成一场游戏，规则只有一条：不要出声，要赢。"
     },
     {
       id: "film-11",
@@ -110,7 +110,7 @@
       director: "Steve McQueen",
       year: "2013",
       genre: "DRAMA",
-      quote: "自由一旦被夺走，就成了小提琴唯一记得怎么发出的声音。"
+      quote: "名字被拿走了十二年，他一直记得自己叫什么。"
     },
     {
       id: "film-12",
@@ -120,7 +120,7 @@
       director: "Damien Chazelle",
       year: "2014",
       genre: "DRAMA",
-      quote: "他太想变伟大，甘愿为此流血——而鼓点从没说过不行。"
+      quote: "血滴在鼓面上，节拍没有慢下来，也没有变快。"
     },
     {
       id: "film-13",
@@ -130,7 +130,7 @@
       director: "Todd Phillips",
       year: "2019",
       genre: "DRAMA",
-      quote: "一个人在外面一直笑，直到城市终于开口问：笑点到底是什么。"
+      quote: "他在楼梯上跳舞，整座城市都以为他在哭。"
     },
     {
       id: "film-14",
@@ -140,7 +140,7 @@
       director: "Bong Joon-ho",
       year: "2019",
       genre: "DRAMA",
-      quote: "楼梯贯穿整座城市——有些家庭往上爬，有些家庭住在楼梯下面。"
+      quote: "雨从山上一直流到山下，住在低处的人，得自己把水舀出去。"
     },
     {
       id: "film-15",
@@ -150,7 +150,7 @@
       director: "Charlie Chaplin",
       year: "1936",
       genre: "ROMANCE & CLASSIC",
-      quote: "机器从头到尾只想要他一样东西，而他只想要回自己的尊严。"
+      quote: "传送带越转越快，他越转越小，小到只剩一顶圆礼帽还在动。"
     },
     {
       id: "film-16",
@@ -160,7 +160,7 @@
       director: "Richard Linklater",
       year: "1995-2013",
       genre: "ROMANCE & CLASSIC",
-      quote: "三个夜晚横跨十八年，对话却从来没走到过路的尽头。"
+      quote: "他们每九年见一次，每次都说了很多话，只是越来越不敢停下。"
     }
   ];
 })();

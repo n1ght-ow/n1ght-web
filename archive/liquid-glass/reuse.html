@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><title>reusable map test</title>
+<style>
+html,body{margin:0;background:#0a0a0c;color:#fff;font:13px/1.4 system-ui}
+.bg{position:fixed;inset:0;z-index:0;width:100%;height:100%;object-fit:cover}
+.wrap{position:relative;z-index:2;display:grid;gap:18px;padding:20px}
+.tag{font:600 10px/1 ui-monospace,monospace;background:#000c;padding:3px 6px;border-radius:4px;display:inline-block;margin-bottom:6px}
+.g{height:56px;border-radius:999px;background:rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;
+   font:500 15px/1 system-ui;text-shadow:0 1px 6px rgba(0,0,0,.75);
+   box-shadow:inset 0 1px 1px rgba(255,255,255,.6),inset 0 -1px 2px rgba(0,0,0,.35),0 14px 34px rgba(0,0,0,.5)}
+.wide{width:100%}
+.narrow{width:260px}
+.tall{height:120px;border-radius:34px}
+@supports (backdrop-filter: url("#pct")){
+  .pct{ backdrop-filter: url(#pct) blur(1px) saturate(1.5) brightness(1.04); }
+  .pix{ backdrop-filter: url(#pix) blur(1px) saturate(1.5) brightness(1.04); }
+  .s60{ backdrop-filter: url(#pct60) blur(1px) saturate(1.5); }
+  .s150{ backdrop-filter: url(#pct150) blur(1px) saturate(1.5); }
+}
+</style></head><body>
+<img class="bg" src="../../photo/SAVE_20260616_234154.jpg" alt="">
+<div class="wrap">
+  <div><span class="tag">A: pct map (feImage w/h=100%, pAR=none) scale100 — wide</span><div class="g wide pct">Segmented Control</div></div>
+  <div><span class="tag">B: pct map — narrow (260px)</span><div class="g narrow pct">Segmented</div></div>
+  <div><span class="tag">C: pct map — tall 120px</span><div class="g wide tall pct">Segmented Control</div></div>
+  <div><span class="tag">D: FIXED-PX map 600x100, scale100 — wide</span><div class="g wide pix">Segmented Control</div></div>
+  <div><span class="tag">E: FIXED-PX map — narrow (the failure mode)</span><div class="g narrow pix">Segmented</div></div>
+  <div><span class="tag">F: pct map scale 60</span><div class="g wide s60">Segmented Control</div></div>
+  <div><span class="tag">G: pct map scale 150</span><div class="g wide s150">Segmented Control</div></div>
+</div>
+<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+  <filter id="pct" x="-15%" y="-25%" width="130%" height="150%" color-interpolation-filters="sRGB">
+    <feImage x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'600'%20height%3D'100'%20viewBox%3D'0%200%20600%20100'%3E%0A%3Cdefs%3E%0A%3ClinearGradient%20id%3D'Y'%20x1%3D'0'%20x2%3D'0'%20y1%3D'14%25'%20y2%3D'86%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230F0'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3ClinearGradient%20id%3D'X'%20x1%3D'2.5%25'%20x2%3D'97.5%25'%20y1%3D'0'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23F00'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3C%2Fdefs%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'%23808080'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'url(%23Y)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'url(%23X)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%0A%3Crect%20x%3D'16'%20y%3D'20'%20width%3D'568'%20height%3D'60'%20rx%3D'30'%20ry%3D'30'%20fill%3D'%23808080'%20filter%3D'blur(16px)'%2F%3E%0A%3C%2Fsvg%3E" result="m"/>
+    <feDisplacementMap in="SourceGraphic" in2="m" scale="100" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="pct60" x="-15%" y="-25%" width="130%" height="150%" color-interpolation-filters="sRGB">
+    <feImage x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'600'%20height%3D'100'%20viewBox%3D'0%200%20600%20100'%3E%0A%3Cdefs%3E%0A%3ClinearGradient%20id%3D'Y'%20x1%3D'0'%20x2%3D'0'%20y1%3D'14%25'%20y2%3D'86%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230F0'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3ClinearGradient%20id%3D'X'%20x1%3D'2.5%25'%20x2%3D'97.5%25'%20y1%3D'0'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23F00'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3C%2Fdefs%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'%23808080'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'url(%23Y)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'url(%23X)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%0A%3Crect%20x%3D'16'%20y%3D'20'%20width%3D'568'%20height%3D'60'%20rx%3D'30'%20ry%3D'30'%20fill%3D'%23808080'%20filter%3D'blur(16px)'%2F%3E%0A%3C%2Fsvg%3E" result="m"/>
+    <feDisplacementMap in="SourceGraphic" in2="m" scale="60" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="pct150" x="-15%" y="-25%" width="130%" height="150%" color-interpolation-filters="sRGB">
+    <feImage x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'600'%20height%3D'100'%20viewBox%3D'0%200%20600%20100'%3E%0A%3Cdefs%3E%0A%3ClinearGradient%20id%3D'Y'%20x1%3D'0'%20x2%3D'0'%20y1%3D'14%25'%20y2%3D'86%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230F0'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3ClinearGradient%20id%3D'X'%20x1%3D'2.5%25'%20x2%3D'97.5%25'%20y1%3D'0'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23F00'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3C%2Fdefs%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'%23808080'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'url(%23Y)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'url(%23X)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%0A%3Crect%20x%3D'16'%20y%3D'20'%20width%3D'568'%20height%3D'60'%20rx%3D'30'%20ry%3D'30'%20fill%3D'%23808080'%20filter%3D'blur(16px)'%2F%3E%0A%3C%2Fsvg%3E" result="m"/>
+    <feDisplacementMap in="SourceGraphic" in2="m" scale="150" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="pix" x="0" y="0" width="600" height="100" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <feImage x="0" y="0" width="600" height="100" preserveAspectRatio="none" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'600'%20height%3D'100'%20viewBox%3D'0%200%20600%20100'%3E%0A%3Cdefs%3E%0A%3ClinearGradient%20id%3D'Y'%20x1%3D'0'%20x2%3D'0'%20y1%3D'14%25'%20y2%3D'86%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230F0'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3ClinearGradient%20id%3D'X'%20x1%3D'2.5%25'%20x2%3D'97.5%25'%20y1%3D'0'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23F00'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%0A%3C%2Fdefs%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'%23808080'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'url(%23Y)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%0A%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'600'%20height%3D'100'%20fill%3D'url(%23X)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%0A%3Crect%20x%3D'16'%20y%3D'20'%20width%3D'568'%20height%3D'60'%20rx%3D'30'%20ry%3D'30'%20fill%3D'%23808080'%20filter%3D'blur(16px)'%2F%3E%0A%3C%2Fsvg%3E" result="m"/>
+    <feDisplacementMap in="SourceGraphic" in2="m" scale="100" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
+</body></html>

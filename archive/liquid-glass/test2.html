@@ -1,0 +1,67 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>lg-test2</title>
+<style>
+  html,body{margin:0;background:#000;font:13px/1.4 system-ui;color:#fff}
+  /* High-contrast, high-frequency backdrop so refraction is unmistakable */
+  .bg{position:fixed;inset:0;z-index:0;background:
+      repeating-linear-gradient(90deg,#000 0 14px,#fff 14px 28px),
+      repeating-linear-gradient(0deg,rgba(255,0,0,.9) 0 22px,rgba(0,80,255,.9) 22px 44px);
+      background-blend-mode:difference;}
+  .bgtext{position:fixed;inset:0;z-index:1;font:700 46px/1.1 Georgia,serif;color:#ffd400;
+      mix-blend-mode:difference;padding:20px}
+  .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1fr;gap:18px;padding:24px}
+  .cell{display:flex;align-items:center;gap:14px}
+  .lbl{width:250px;font:600 10px/1.3 ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;
+       color:#fff;background:#000c;padding:4px 6px;border-radius:4px}
+  .glass{flex:1;height:58px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.08);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,.5), 0 8px 24px rgba(0,0,0,.5);
+    font:500 15px/1 system-ui;color:#fff;text-shadow:0 1px 6px #000}
+  .plain{backdrop-filter: blur(10px) saturate(1.4);}
+  @supports (backdrop-filter: url("#lg-lens")){
+    .v1{ backdrop-filter: url(#lg-lens) blur(1px) saturate(1.4); }
+    .v2{ backdrop-filter: url(#lg-turb) blur(1px) saturate(1.4); }
+    .v3{ backdrop-filter: url(#lg-img) blur(1px) saturate(1.4); }
+    .v4{ backdrop-filter: url(#lg-lens); }              /* lens only, no blur */
+    .v5{ backdrop-filter: url(#lg-lens) ; filter: none; }
+  }
+</style></head>
+<body>
+<div class="bg"></div>
+<div class="bgtext">LIQUID GLASS REFRACTION TEST — REFRACTION TEST 0123456789</div>
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+  <defs>
+    <filter id="lg-lens" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="16" result="soft"/>
+      <feOffset in="soft" dx="9" dy="0" result="sxp"/>
+      <feOffset in="soft" dx="-9" dy="0" result="sxn"/>
+      <feComposite in="sxp" in2="sxn" operator="arithmetic" k1="0" k2="-2.6" k3="2.6" k4="0.5" result="gx"/>
+      <feOffset in="soft" dx="0" dy="9" result="syp"/>
+      <feOffset in="soft" dx="0" dy="-9" result="syn"/>
+      <feComposite in="syp" in2="syn" operator="arithmetic" k1="0" k2="-2.6" k3="2.6" k4="0.5" result="gy"/>
+      <feColorMatrix in="gx" type="matrix" values="0 0 0 1 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" result="mx"/>
+      <feColorMatrix in="gy" type="matrix" values="0 0 0 0 0  0 0 0 1 0  0 0 0 0 0  0 0 0 0 1" result="my"/>
+      <feComposite in="mx" in2="my" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="90" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="lg-turb" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01" numOctaves="2" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="80" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="lg-img" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feImage href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='58'%3E%3Cdefs%3E%3ClinearGradient id='X' x1='0' y1='0' x2='1' y2='0'%3E%3Cstop offset='0' stop-color='%23f00'/%3E%3Cstop offset='50%25' stop-color='%23808080'/%3E%3Cstop offset='100%25' stop-color='%23000'/%3E%3C/linearGradient%3E%3ClinearGradient id='Y' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%230f0'/%3E%3Cstop offset='50%25' stop-color='%23808080'/%3E%3Cstop offset='100%25' stop-color='%23000'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='600' height='58' fill='%23808080'/%3E%3Crect width='600' height='58' fill='url(%23X)' style='mix-blend-mode:screen'/%3E%3Crect width='600' height='58' fill='url(%23Y)' style='mix-blend-mode:screen'/%3E%3C/svg%3E" width="600" height="58" result="m" preserveAspectRatio="none"/>
+      <feDisplacementMap in="SourceGraphic" in2="m" scale="70" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <div class="cell"><div class="lbl">A: no glass (control)</div><div class="glass">Segmented Control</div></div>
+  <div class="cell"><div class="lbl">B: blur only (fallback)</div><div class="glass plain">Segmented Control</div></div>
+  <div class="cell"><div class="lbl">C: SourceAlpha lens + blur1</div><div class="glass v1">Segmented Control</div></div>
+  <div class="cell"><div class="lbl">D: feTurbulence + blur1</div><div class="glass v2">Segmented Control</div></div>
+  <div class="cell"><div class="lbl">E: feImage gradient map + blur1</div><div class="glass v3">Segmented Control</div></div>
+  <div class="cell"><div class="lbl">F: SourceAlpha lens, scale 90, no blur</div><div class="glass v4">Segmented Control</div></div>
+</div>
+</body></html>

@@ -1,0 +1,97 @@
+<!doctype html><html><head><meta charset="utf-8"><title>lens tuning</title>
+<style>
+html,body{margin:0;background:#0a0a0c;color:#fff;font:13px/1.4 system-ui}
+.bg{position:fixed;inset:0;z-index:0;width:100%;height:100%;object-fit:cover}
+.bg2{position:fixed;inset:0;z-index:0;background:repeating-linear-gradient(90deg,#000 0 14px,#fff 14px 28px),repeating-linear-gradient(0deg,rgba(255,0,0,.9) 0 22px,rgba(0,80,255,.9) 22px 44px);background-blend-mode:difference;opacity:0}
+.wrap{position:relative;z-index:2;display:grid;gap:16px;padding:18px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.seg{position:relative;height:56px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.6), inset 0 -1px 2px rgba(0,0,0,.35), 0 14px 34px rgba(0,0,0,.5);
+  font:500 15px/1 system-ui;text-shadow:0 1px 6px rgba(0,0,0,.7);overflow:hidden}
+.plain{backdrop-filter: blur(14px) saturate(1.5) brightness(1.05)}
+.lbl{position:relative;z-index:2}
+.tag{font:600 10px/1 ui-monospace,monospace;background:#000c;padding:3px 6px;border-radius:4px;display:inline-block;margin-bottom:6px}
+@supports (backdrop-filter: url("#L1")){ .l1{ backdrop-filter: url(#L1) blur(1px) saturate(1.5) brightness(1.05); } }
+@supports (backdrop-filter: url("#L2")){ .l2{ backdrop-filter: url(#L2) blur(1px) saturate(1.5) brightness(1.05); } }
+@supports (backdrop-filter: url("#L3")){ .l3{ backdrop-filter: url(#L3) blur(1px) saturate(1.5) brightness(1.05); } }
+@supports (backdrop-filter: url("#L4")){ .l4{ backdrop-filter: url(#L4) blur(1px) saturate(1.5) brightness(1.05); } }
+.nest{position:absolute;left:8px;top:8px;width:120px;height:40px;border-radius:999px;background:rgba(255,255,255,.06);
+  backdrop-filter: blur(14px) saturate(1.5); box-shadow: inset 0 1px 0 rgba(255,255,255,.6)}
+.host{position:relative;height:120px;border-radius:24px;overflow:hidden;background:rgba(255,255,255,.06);
+  backdrop-filter: blur(18px) saturate(1.5); box-shadow: inset 0 1px 0 rgba(255,255,255,.5)}
+</style></head><body>
+<img class="bg" src="../../photo/SAVE_20260616_234154.jpg" alt="">
+<div class="bg2" id="b2"></div>
+<div class="wrap">
+  <div class="row"><div><span class="tag">no glass</span><div class="seg"><span class="lbl">Segmented Control</span></div></div>
+  <div><span class="tag">blur only</span><div class="seg plain"><span class="lbl">Segmented Control</span></div></div></div>
+  <div class="row"><div><span class="tag">L1 sd16 off9 k2.6 scale90</span><div class="seg l1"><span class="lbl">Segmented Control</span></div></div>
+  <div><span class="tag">L2 sd10 off6 k3.4 scale130</span><div class="seg l2"><span class="lbl">Segmented Control</span></div></div></div>
+  <div class="row"><div><span class="tag">L3 sd8 off5 k4 scale170</span><div class="seg l3"><span class="lbl">Segmented Control</span></div></div>
+  <div><span class="tag">L4 sd12 off7 k3 scale110 disp14</span><div class="seg l4"><span class="lbl">Segmented Control</span></div></div></div>
+  <div class="row"><div><span class="tag">nested: parent blur + child blur</span><div class="host"><div class="nest"></div></div></div>
+  <div><span class="tag">control: host only</span><div class="host"></div></div></div>
+</div>
+<svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+<filter id="L1" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="16" result="soft"/>
+      <feOffset in="soft" dx="9" dy="0" result="sxp"/>
+      <feOffset in="soft" dx="-9" dy="0" result="sxn"/>
+      <feComposite in="sxp" in2="sxn" operator="arithmetic" k1="0" k2="-2.6" k3="2.6" k4="0.5" result="gx"/>
+      <feOffset in="soft" dx="0" dy="9" result="syp"/>
+      <feOffset in="soft" dx="0" dy="-9" result="syn"/>
+      <feComposite in="syp" in2="syn" operator="arithmetic" k1="0" k2="-2.6" k3="2.6" k4="0.5" result="gy"/>
+      <feColorMatrix in="gx" type="matrix" values="0 0 0 1 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" result="mx"/>
+      <feColorMatrix in="gy" type="matrix" values="0 0 0 0 0  0 0 0 1 0  0 0 0 0 0  0 0 0 0 1" result="my"/>
+      <feComposite in="mx" in2="my" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="90" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="L2" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10" result="soft"/>
+      <feOffset in="soft" dx="6" dy="0" result="sxp"/>
+      <feOffset in="soft" dx="-6" dy="0" result="sxn"/>
+      <feComposite in="sxp" in2="sxn" operator="arithmetic" k1="0" k2="-3.4" k3="3.4" k4="0.5" result="gx"/>
+      <feOffset in="soft" dx="0" dy="6" result="syp"/>
+      <feOffset in="soft" dx="0" dy="-6" result="syn"/>
+      <feComposite in="syp" in2="syn" operator="arithmetic" k1="0" k2="-3.4" k3="3.4" k4="0.5" result="gy"/>
+      <feColorMatrix in="gx" type="matrix" values="0 0 0 1 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" result="mx"/>
+      <feColorMatrix in="gy" type="matrix" values="0 0 0 0 0  0 0 0 1 0  0 0 0 0 0  0 0 0 0 1" result="my"/>
+      <feComposite in="mx" in2="my" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="130" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="L3" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="soft"/>
+      <feOffset in="soft" dx="5" dy="0" result="sxp"/>
+      <feOffset in="soft" dx="-5" dy="0" result="sxn"/>
+      <feComposite in="sxp" in2="sxn" operator="arithmetic" k1="0" k2="-4" k3="4" k4="0.5" result="gx"/>
+      <feOffset in="soft" dx="0" dy="5" result="syp"/>
+      <feOffset in="soft" dx="0" dy="-5" result="syn"/>
+      <feComposite in="syp" in2="syn" operator="arithmetic" k1="0" k2="-4" k3="4" k4="0.5" result="gy"/>
+      <feColorMatrix in="gx" type="matrix" values="0 0 0 1 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" result="mx"/>
+      <feColorMatrix in="gy" type="matrix" values="0 0 0 0 0  0 0 0 1 0  0 0 0 0 0  0 0 0 0 1" result="my"/>
+      <feComposite in="mx" in2="my" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="170" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+<filter id="L4" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="12" result="soft"/>
+      <feOffset in="soft" dx="7" dy="0" result="sxp"/>
+      <feOffset in="soft" dx="-7" dy="0" result="sxn"/>
+      <feComposite in="sxp" in2="sxn" operator="arithmetic" k1="0" k2="-3" k3="3" k4="0.5" result="gx"/>
+      <feOffset in="soft" dx="0" dy="7" result="syp"/>
+      <feOffset in="soft" dx="0" dy="-7" result="syn"/>
+      <feComposite in="syp" in2="syn" operator="arithmetic" k1="0" k2="-3" k3="3" k4="0.5" result="gy"/>
+      <feColorMatrix in="gx" type="matrix" values="0 0 0 1 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0 1" result="mx"/>
+      <feColorMatrix in="gy" type="matrix" values="0 0 0 0 0  0 0 0 1 0  0 0 0 0 0  0 0 0 0 1" result="my"/>
+      <feComposite in="mx" in2="my" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="138" xChannelSelector="R" yChannelSelector="G" result="dR"/>
+      <feColorMatrix in="dR" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="oR"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="110" xChannelSelector="R" yChannelSelector="G" result="dG"/>
+      <feColorMatrix in="dG" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="oG"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="82" xChannelSelector="R" yChannelSelector="G" result="dB"/>
+      <feColorMatrix in="dB" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="oB"/>
+      <feBlend in="oR" in2="oG" mode="screen" result="rg"/>
+      <feBlend in="rg" in2="oB" mode="screen"/>
+    </filter>
+</defs></svg>
+</body></html>

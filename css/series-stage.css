@@ -1,161 +1,154 @@
 /* ============ SERIES STAGE: reel identity + detail area ============
-   Shared reel mechanics live in css/reel-stage.css; this file keeps
-   the series panel's accent variables, its own carded detail-area
-   layout, the 760px breakpoint and the reduced-motion block.
-   Single-accent lock: the series panel shares the site gold family. */
+   Shared reel mechanics live in css/reel-stage.css; this file keeps the
+   series panel's card width, its own detail-area layout, the 760px
+   breakpoint and the reduced-motion block.
+
+   Folded from three layers into one. Two things were silently broken here
+   and are worth naming so they do not come back:
+     - the detail panel was a GLASS slab (background: var(--glass-bg),
+       box-shadow: var(--glass-edge) + var(--shadow-soft-md)). Not one of
+       those three tokens was ever defined, so all of it dropped; and glass
+       was the wrong call anyway. Glass is for controls floating over
+       content. This panel sits in the flow on paper, where there is nothing
+       to refract - the site's own rule says so.
+     - .series-detail-genre / -year / -director were styled but never
+       emitted. The series adapter produces -category / -years / -seasons.
+       Dead selectors, removed.
+   Only --reel-card-w differs between the two panels, so it is all that is
+   left in the token block. */
 
 .series-stage {
   --reel-card-w: clamp(176px, 24vw, 248px);
-  --reel-hover-ring: 0 0 0 1px rgba(126, 95, 32, 0.3);
-  --reel-active-ring: 0 0 0 1px var(--color-accent-solid);
-  --reel-sleeve-bg: var(--color-accent-tint);
-  --reel-thumb-bg: var(--color-accent-solid);
-  --reel-thumb-cursor: grab;
-  --reel-focus-offset: 3px;
 }
 
+/* Type only - no poster. See css/film-stage.css for the full reasoning: the
+   rail directly above already shows the poster, and a second copy 60px below
+   it put the same picture on screen twice. Criterion, Hardwax, Boomkat and
+   Second Run all keep the artwork at one size in the row and let the selected
+   item's detail be columns of type. */
 .series-stage-detail {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: clamp(1.2rem, 3vw, 3rem);
-  align-items: end;
-  margin-top: clamp(2rem, 5vh, 3.4rem);
-  padding: clamp(1.4rem, 3vw, 2.4rem);
-  background: var(--glass-bg);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  backdrop-filter: blur(16px) saturate(150%);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--glass-edge), var(--shadow-soft-md);
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .series-stage-detail {
-    background: var(--color-surface);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    box-shadow: var(--shadow-soft-md);
-  }
-}
-
-.series-detail-poster {
-  position: relative;
-  width: min(100%, 340px);
-  aspect-ratio: 3 / 4.15;
-  background: var(--color-bg-deep);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-soft-md);
-  overflow: hidden;
-}
-
-.series-detail-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  background: var(--color-bg-deep);
+  margin-block-start: var(--sp-6);
+  padding-block-start: var(--sp-5);
+  border-block-start: 1px solid var(--color-line);
 }
 
 .series-detail-copy {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: minmax(0, 26ch) minmax(0, 46ch);
+  column-gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
   min-width: 0;
 }
 
 .series-detail-kicker {
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
-  align-items: center;
+  gap: var(--sp-3);
+  align-items: baseline;
+  padding-block-end: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
+/* category and years were tinted pills; colour is reserved for interaction */
 .series-detail-category,
 .series-detail-years {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.875rem;
-  letter-spacing: 0.1em;
-  padding: 0.4em 1em;
-  border-radius: var(--radius-pill);
-}
-
-.series-detail-category {
-  color: var(--color-accent-text);
-  background: var(--color-accent-tint);
-}
-
-.series-detail-years {
-  color: var(--color-text-secondary);
-  background: var(--color-bg-deep);
+  background: none;
+  color: var(--color-text-muted);
+  padding: 0;
+  border-radius: 0;
 }
 
 .series-detail-title {
-  font-size: clamp(2rem, 5vw, 3.9rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1;
+  grid-column: 1;
+  margin: 0;
+  font-size: var(--fs-h2);
+  font-weight: 500;
+  letter-spacing: var(--track-h2);
+  line-height: 1.11;
   color: var(--color-text);
   overflow-wrap: anywhere;
 }
 
 .series-detail-seasons {
-  font-size: clamp(0.95rem, 1.6vw, 1.3rem);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  color: var(--color-text-secondary);
+  grid-column: 1;
+  margin-block-start: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: 400;
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 .series-detail-quote {
-  font-family: "Instrument Serif", "Songti SC", "SimSun", "Noto Serif SC", Georgia, serif;
+  grid-column: 2;
+  grid-row: 2;
+  max-width: 46ch;
+  margin: 0;
+  font-family: var(--font-serif);
   font-style: italic;
-  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  font-size: var(--fs-h4);
   line-height: 1.5;
   color: var(--color-text-secondary);
-  max-width: 46ch;
 }
 
+/* The panel's single action, as real glass. .glass supplies the border,
+   radius, isolation and the specular rim; .glass--accent supplies the
+   champagne tint that makes the material read on a flat paper page. All this
+   rule owns is placement and type. */
 .series-detail-imdb {
+  grid-column: 2;
+  grid-row: 3;
   justify-self: start;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--color-on-accent);
-  background: var(--color-accent-solid);
-  border: 1px solid var(--color-accent-text);
-  border-radius: var(--radius-pill);
-  box-shadow: var(--glow-accent);
-  padding: 0.7em 1.3em;
+  align-self: end;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  margin-block-start: var(--sp-4);
+  padding: 0.85em 1.45em;
+  color: var(--ink-950);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
   text-decoration: none;
-  transition:
-    transform 0.15s var(--ease-out),
-    box-shadow 0.15s var(--ease-out),
-    background 0.15s var(--ease-out);
+  white-space: nowrap;
+  transition: transform 0.15s var(--ease-out);
 }
 
-.series-detail-imdb:hover {
-  background: var(--color-glow);
-  box-shadow: var(--shadow-soft-md), 0 8px 30px rgba(221, 183, 107, 0.65);
-}
-
-.series-detail-imdb:active { transform: scale(0.96); }
+.series-detail-imdb:hover { transform: translateY(-1px); }
+.series-detail-imdb:active { transform: scale(0.97); }
 
 .series-detail-imdb:focus-visible {
-  outline: 3px solid var(--color-accent-text);
+  outline: 2px solid var(--color-accent-text);
   outline-offset: 3px;
 }
 
 @media (max-width: 760px) {
-  .series-stage-detail {
-    grid-template-columns: 1fr;
-    align-items: start;
+  /* the two measured columns collapse; the quote drops under the identity */
+  .series-detail-copy { grid-template-columns: minmax(0, 1fr); }
+
+  .series-detail-quote {
+    grid-column: 1;
+    grid-row: auto;
+    margin-block-start: var(--sp-5);
+    max-width: 46ch;
   }
 
-  .series-detail-poster {
-    width: min(100%, 240px);
+  /* one column, so the action drops to the natural flow position */
+  .series-detail-imdb {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
   }
 
-  .series-card {
-    width: min(66vw, 240px);
-  }
+  .series-card { width: min(66vw, 240px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -165,131 +158,12 @@
   .series-card.is-active,
   .series-detail-imdb,
   .series-detail-imdb:hover,
-  .series-stage-range,
-  .series-card-sleeve,
-  .series-card-img {
+  .series-stage-range {
     transform: none !important;
     transition-duration: 0s !important;
   }
 
-  .series-card-sleeve {
-    clip-path: inset(0 0 0 0);
-  }
+  /* the poster does not lift on hover under reduced motion */
+  .series-card:hover .series-card-img,
+  .series-card:focus-visible .series-card-img { transform: none; }
 }
-
-
-/* ============ V2 VISUAL LAYER ============ */
-.series-stage-detail {
-  margin-top: 2rem;
-  padding: 0;
-  background: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  box-shadow: none;
-}
-
-.series-detail-poster {
-  border-radius: var(--radius-md);
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
-}
-
-
-
-.series-detail-kicker {
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  text-transform: uppercase;
-}
-
-.series-detail-genre,
-.series-detail-year {
-  background: none;
-  color: var(--color-text-muted);
-  padding: 0;
-  border-radius: 0;
-}
-
-.series-detail-title {
-  font-size: var(--fs-h2);
-  font-weight: 500;
-  letter-spacing: var(--track-h2);
-  line-height: 1.02;
-}
-
-.series-detail-director {
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  text-transform: uppercase;
-}
-
-.series-detail-quote {
-  font-size: clamp(1.02rem, 1.4vw, 1.3rem);
-  line-height: 1.55;
-}
-
-.series-detail-imdb {
-  font-size: var(--fs-meta);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  background: var(--color-ink);
-  color: var(--color-on-dark);
-  border: 0;
-  box-shadow: none;
-  padding: 0.85em 1.4em;
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-}
-
-.series-detail-imdb:hover {
-  background: var(--ink-900);
-  box-shadow: none;
-}
-
-
-
-/* ============ V2 CORRECTIONS ============ */
-/* The category / years tags were tinted pills. On the paper system they are
-   quiet mono labels: colour is reserved for interaction. */
-.series-detail-category,
-.series-detail-years {
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  text-transform: uppercase;
-  background: none;
-  color: var(--color-text-muted);
-  padding: 0;
-  border-radius: 0;
-}
-
-.series-stage-detail {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  gap: clamp(1.5rem, 4vw, 3.5rem);
-  align-items: end;
-  margin-top: 2rem;
-  padding: 0;
-  background: none;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-
-
-/* ============ V2 SIZE CONSOLIDATION ============
-   These components still carried their own clamp() ladders from the old
-   system, which reintroduced off-scale sizes (20.16 / 20.8 / 21.6 / 24.88px)
-   next to the tokens. Snapped to the nearest role. */
-.film-card-title,
-.series-card-title { font-size: var(--fs-h4); }
-
-.film-detail-quote,
-.series-detail-quote { font-size: var(--fs-h4); }
-
-.series-detail-seasons { font-size: var(--fs-h4); }
-
-.film-detail-kicker,
-.series-detail-kicker { font-size: var(--fs-meta); }
-

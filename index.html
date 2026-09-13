@@ -10,37 +10,76 @@
   <meta property="og:title" content="N1GHT CHXN9 - Photography and Archive">
   <meta property="og:description" content="Frames kept bright, eighteen games, and everything that shaped the person behind both.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141412'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='16' font-weight='bold' fill='%23C9A227' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+  <!-- Blink is the only engine that renders url() inside backdrop-filter.
+       Safari parses the value, reports @supports true, then paints nothing
+       and drops the blur along with it, so the gate has to be a POSITIVE
+       Blink test rather than a feature query. Chrome also dropped the
+       -webkit-backdrop-filter alias, which is what the old CSS gate keyed
+       on, so that gate had quietly stopped matching anywhere. Set here, in
+       the head, so the nav never paints once without its lens. See
+       css/glass.css, layer 6. -->
+  <script>
+    document.documentElement.classList.toggle(
+      "has-lens",
+      CSS.supports("background", "paint(lg)") && CSS.supports("backdrop-filter", "url(#lg-lens)")
+    );
+  </script>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=11">
-  <link rel="stylesheet" href="css/style.css?v=58">
-  <link rel="stylesheet" href="css/glass.css?v=1">
-  <link rel="stylesheet" href="css/reel-stage.css?v=6">
-  <link rel="stylesheet" href="css/film-stage.css?v=8">
-  <link rel="stylesheet" href="css/series-stage.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=61">
+  <link rel="stylesheet" href="css/glass.css?v=5">
+  <link rel="stylesheet" href="css/reel-stage.css?v=11">
+  <link rel="stylesheet" href="css/film-stage.css?v=12">
+  <link rel="stylesheet" href="css/series-stage.css?v=12">
 </head>
 <body>
 
   <!-- Chromium-only refraction layer for the floating glass. Safari and
        Firefox parse url() inside backdrop-filter but render nothing, so the
        blur-only declaration always stands first and this stays an
-       enhancement. See css/glass.css. -->
+       enhancement. See css/glass.css.
+
+       This is a real edge lens, not a noise warp. The feImage is a vector
+       displacement map built in a nested SVG: R drives X, G drives Y,
+       #808080 is neutral. Two gradient ramps are screened onto a neutral
+       grey field so each only writes its own channel, and a blurred rounded
+       rect of EXACTLY neutral grey then punches the middle back to 0.5, so
+       the displacement survives only in a band around the rim. That band is
+       the bezel; its width is the blur radius on that rect.
+
+       Three things are load-bearing and must not be "simplified":
+       - color-interpolation-filters="sRGB". In the default linearRGB the
+         128 neutral drifts after conversion and the whole backdrop shifts.
+       - the map is INLINED as a data URL. feImage silently fails on
+         external URLs from zero-size SVGs.
+       - width="100%" preserveAspectRatio="none" on the feImage: percentages
+         resolve against the ELEMENT's filter region, which is what lets one
+         filter id serve both bars at their different sizes.
+       The 1600x100 viewBox is deliberate: it keeps the map's aspect close to
+       a wide thin bar, so the bezel stays uniform instead of stretching into
+       a wide ellipse on one axis. -->
   <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
-    <filter id="lg-lens" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.006 0.012" numOctaves="2" seed="7" result="noise"/>
-      <feGaussianBlur in="noise" stdDeviation="1.4" result="smooth"/>
-      <feDisplacementMap in="SourceGraphic" in2="smooth" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+    <filter id="lg-lens" x="-12%" y="-30%" width="124%" height="160%" color-interpolation-filters="sRGB">
+      <feImage x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'1600'%20height%3D'100'%20viewBox%3D'0%200%201600%20100'%3E%3Cdefs%3E%3ClinearGradient%20id%3D'Y'%20x1%3D'0'%20x2%3D'0'%20y1%3D'10%25'%20y2%3D'90%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230F0'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D'X'%20x1%3D'1.2%25'%20x2%3D'98.8%25'%20y1%3D'0'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23F00'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1600'%20height%3D'100'%20fill%3D'%23808080'%2F%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1600'%20height%3D'100'%20fill%3D'url(%23Y)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1600'%20height%3D'100'%20fill%3D'url(%23X)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%3Crect%20x%3D'19.2'%20y%3D'10'%20width%3D'1561.6'%20height%3D'80'%20rx%3D'40'%20ry%3D'40'%20fill%3D'%23808080'%20filter%3D'blur(5)'%2F%3E%3C%2Fsvg%3E" result="MAP"/>
+      <feDisplacementMap in="SourceGraphic" in2="MAP" scale="110" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
   </svg>
 
   <a class="skip-link mono" href="#hero">SKIP TO CONTENT</a>
 
   <!-- ============ NAV : liquid glass pill floating over the hero ============ -->
-  <header class="nav glass glass--pill glass--spot" id="nav">
+  <header class="nav glass glass--pill glass--spot glass--refract" id="nav">
     <div class="glass__body" aria-hidden="true"></div>
     <div class="glass__edge" aria-hidden="true"></div>
+    <span class="glass__press" aria-hidden="true"></span>
     <div class="glass__content">
       <a class="nav-brand" href="#hero">N1GHT CHXN9<i>/ LN4 STUDY</i></a>
       <nav class="nav-links" aria-label="Primary">
+        <!-- The selected indicator. It is a real element rather than a
+             background on the active link because it has to be draggable;
+             js/glass-pill.js owns its geometry. Decorative only: the links
+             themselves carry the semantics. -->
+        <span class="glass-pill nav-pill" id="nav-pill" aria-hidden="true"><span class="glass-pill__body"></span></span>
         <a href="#photo">Photography</a>
         <a href="#archive">Archive</a>
         <a href="#about">About</a>
@@ -87,8 +126,17 @@
       </div>
 
       <div class="shell">
-        <div class="photo-grid">
-          <figure class="photo-frame photo-span-full" data-photo-index="0">
+        <section class="photo-act" aria-labelledby="photo-bloom-title">
+          <div class="sec-head photo-act-head">
+            <div>
+              <p class="label sec-eyebrow">Movement one</p>
+              <h3 class="sec-title photo-act-title" id="photo-bloom-title">Bloom <span class="photo-act-range mono">/ 01-07</span></h3>
+            </div>
+            <p class="sec-copy">Seven frames of branch, bud and blossom, before the season decided what it was going to be.</p>
+          </div>
+
+          <div class="photo-grid">
+            <figure class="photo-frame" data-photo-index="0">
             <button class="photo-frame-btn" type="button" aria-label="Open frame 01: bare branches against a pale sky">
               <img src="photo/1779456446198.jpg" alt="Bare branches in backlight against a pale sky" width="1600" height="1067" loading="lazy" decoding="async">
             </button>
@@ -97,21 +145,7 @@
               <span class="photo-frame-text">Before the leaves, the shape is the story.</span>
             </figcaption>
           </figure>
-        </div>
-      </div>
-
-      <div class="shell">
-        <section class="photo-act" aria-labelledby="photo-bloom-title">
-          <div class="sec-head" style="padding-block-end:1.5rem">
-            <div>
-              <p class="label sec-eyebrow">Movement one</p>
-              <h3 class="sec-title" id="photo-bloom-title" style="font-size:var(--fs-h3)">Bloom <span class="mono" style="color:var(--color-text-muted)">/ 01-07</span></h3>
-            </div>
-            <p class="sec-copy">Seven frames of branch, bud and blossom, before the season decided what it was going to be.</p>
-          </div>
-
-          <div class="photo-grid">
-            <figure class="photo-frame photo-span-7" data-photo-index="1">
+            <figure class="photo-frame" data-photo-index="1">
               <button class="photo-frame-btn" type="button" aria-label="Open frame 02: yellow blossom on a dark branch">
                 <img src="photo/1779456446218.jpg" alt="Yellow blossom clustered on a dark branch" width="1600" height="1067" loading="lazy" decoding="async">
               </button>
@@ -121,7 +155,7 @@
               </figcaption>
             </figure>
 
-            <figure class="photo-frame photo-span-5" data-photo-index="2">
+            <figure class="photo-frame" data-photo-index="2">
               <button class="photo-frame-btn" type="button" aria-label="Open frame 03: white blossom against a blue background">
                 <img src="photo/1779456446227.jpg" alt="White blossom against a soft blue background" width="1600" height="1067" loading="lazy" decoding="async">
               </button>
@@ -131,7 +165,7 @@
               </figcaption>
             </figure>
 
-            <figure class="photo-frame photo-span-4" data-photo-index="3">
+            <figure class="photo-frame" data-photo-index="3">
               <button class="photo-frame-btn" type="button" aria-label="Open frame 04: a white branch reaching into the sky">
                 <img src="photo/1779456446231.jpg" alt="A white blossom branch reaching into the blue sky" width="1600" height="1067" loading="lazy" decoding="async">
               </button>
@@ -141,7 +175,7 @@
               </figcaption>
             </figure>
 
-            <figure class="photo-frame photo-span-4" data-photo-index="4">
+            <figure class="photo-frame" data-photo-index="4">
               <button class="photo-frame-btn" type="button" aria-label="Open frame 05: folded buds and leaves against green">
                 <img src="photo/1779456446240.jpg" alt="Folded flower buds and leaves against a green blurred background" width="1600" height="1067" loading="lazy" decoding="async">
               </button>
@@ -151,7 +185,7 @@
               </figcaption>
             </figure>
 
-            <figure class="photo-frame photo-span-4" data-photo-index="5">
+            <figure class="photo-frame" data-photo-index="5">
               <button class="photo-frame-btn" type="button" aria-label="Open frame 06: a curved branch with white blossom">
                 <img src="photo/1779456446245.jpg" alt="A curved branch with white blossom against the blue sky" width="1600" height="1067" loading="lazy" decoding="async">
               </button>
@@ -160,22 +194,8 @@
                 <span class="photo-frame-text">The arc knows where it is going.</span>
               </figcaption>
             </figure>
-          </div>
-        </section>
-      </div>
 
-      <div class="shell">
-        <section class="photo-act" aria-labelledby="photo-horizon-title">
-          <div class="sec-head" style="padding-block-end:1.5rem">
-            <div>
-              <p class="label sec-eyebrow">Movement two</p>
-              <h3 class="sec-title" id="photo-horizon-title" style="font-size:var(--fs-h3)">Horizon <span class="mono" style="color:var(--color-text-muted)">/ 08-11</span></h3>
-            </div>
-            <p class="sec-copy">Four frames where the ground opens up and the weather takes over.</p>
-          </div>
-
-          <div class="photo-grid">
-            <figure class="photo-frame photo-span-7" data-photo-index="6">
+            <figure class="photo-frame" data-photo-index="6">
               <button class="photo-frame-btn" type="button" aria-label="Open frame 07: dense white blossom and dark branches">
                 <img src="photo/1779456446248.jpg" alt="Dense white blossom on dark branches" width="1600" height="1067" loading="lazy" decoding="async">
               </button>
@@ -184,8 +204,24 @@
                 <span class="photo-frame-text">Too much bloom to hold.</span>
               </figcaption>
             </figure>
+          </div>
+        </section>
+      </div>
 
-            <figure class="photo-frame photo-span-5" data-photo-index="7">
+      <div class="shell">
+        <!-- .photo-act-horizon is read by photoFrameData() to label the
+             detail layer; without it every frame reported BLOOM. -->
+        <section class="photo-act photo-act-horizon" aria-labelledby="photo-horizon-title">
+          <div class="sec-head photo-act-head">
+            <div>
+              <p class="label sec-eyebrow">Movement two</p>
+              <h3 class="sec-title photo-act-title" id="photo-horizon-title">Horizon <span class="photo-act-range mono">/ 08-11</span></h3>
+            </div>
+            <p class="sec-copy">Four frames where the ground opens up and the weather takes over.</p>
+          </div>
+
+          <div class="photo-grid">
+            <figure class="photo-frame" data-photo-index="7">
               <button class="photo-frame-btn" type="button" aria-label="Open frame 08: a green field under a wide cloud bank">
                 <img src="photo/SAVE_20260616_234154.jpg" alt="A green field under a wide bank of clouds" width="1600" height="1067" loading="lazy" decoding="async">
               </button>
@@ -195,7 +231,7 @@
               </figcaption>
             </figure>
 
-            <figure class="photo-frame photo-span-6" data-photo-index="8">
+            <figure class="photo-frame" data-photo-index="8">
               <button class="photo-frame-btn" type="button" aria-label="Open frame 09: a field under low clouds">
                 <img src="photo/SAVE_20260616_234224.jpg" alt="A field under low hanging clouds" width="1600" height="1067" loading="lazy" decoding="async">
               </button>
@@ -205,7 +241,7 @@
               </figcaption>
             </figure>
 
-            <figure class="photo-frame photo-span-6" data-photo-index="9">
+            <figure class="photo-frame" data-photo-index="9">
               <button class="photo-frame-btn" type="button" aria-label="Open frame 10: a green slope and a tall cloud">
                 <img src="photo/SAVE_20260616_234337.jpg" alt="A green grass slope below a tall cloud" width="1600" height="1067" loading="lazy" decoding="async">
               </button>
@@ -215,7 +251,7 @@
               </figcaption>
             </figure>
 
-            <figure class="photo-frame photo-span-full" data-photo-index="10">
+            <figure class="photo-frame" data-photo-index="10">
               <button class="photo-frame-btn" type="button" aria-label="Open frame 11: open fields and a distant band of cloud">
                 <img src="photo/SAVE_20260616_234423.jpg" alt="Open fields with a distant band of cloud" width="1600" height="1067" loading="lazy" decoding="async">
               </button>
@@ -285,9 +321,14 @@
           </div>
         </div>
 
-        <div class="tabbar glass glass--pill glass--spot" role="tablist" aria-label="Archive shelves" id="archive-tabbar">
+        <div class="tabbar glass glass--pill glass--spot glass--refract" role="tablist" aria-label="Archive shelves" id="archive-tabbar">
           <div class="glass__body" aria-hidden="true"></div>
           <div class="glass__edge" aria-hidden="true"></div>
+          <span class="glass__press" aria-hidden="true"></span>
+          <!-- The selected indicator. Draggable: grab it and pull it onto
+               another shelf. Decorative - the buttons below are the control,
+               so keyboard and screen-reader behaviour is untouched. -->
+          <span class="glass-pill" id="tab-pill" aria-hidden="true"><span class="glass-pill__body"></span></span>
           <button class="tab-btn is-active" id="tab-books" type="button" role="tab" aria-selected="true" aria-controls="panel-books" data-tab="books"><span class="no" aria-hidden="true">01</span>Books</button>
           <button class="tab-btn" id="tab-films" type="button" role="tab" aria-selected="false" aria-controls="panel-films" data-tab="films" tabindex="-1"><span class="no" aria-hidden="true">02</span>Films</button>
           <button class="tab-btn" id="tab-series" type="button" role="tab" aria-selected="false" aria-controls="panel-series" data-tab="series" tabindex="-1"><span class="no" aria-hidden="true">03</span>Series</button>
@@ -308,32 +349,32 @@
               <article class="idx-row">
                 <span class="idx-no">01</span>
                 <div class="idx-mid"><h3 class="idx-title">The Three-Body Problem</h3><div class="idx-meta">Liu Cixin</div></div>
-                <p class="idx-line" lang="zh">我们向星空投去一个问题，才知道整片森林一直都在听。</p>
+                <p class="idx-line" lang="zh">我们朝黑暗里喊了一声，才听见整片森林早就屏住了呼吸。</p>
               </article>
               <article class="idx-row">
                 <span class="idx-no">02</span>
                 <div class="idx-mid"><h3 class="idx-title">The Stranger</h3><div class="idx-meta">Albert Camus</div></div>
-                <p class="idx-line" lang="zh">他连一滴假眼泪都不肯挤，世界却用烈日般的诚实审判了他。</p>
+                <p class="idx-line" lang="zh">太阳太亮了，亮到他连一滴该流的眼泪都挤不出来。</p>
               </article>
               <article class="idx-row">
                 <span class="idx-no">03</span>
                 <div class="idx-mid"><h3 class="idx-title">Notre-Dame de Paris</h3><div class="idx-meta">Victor Hugo</div></div>
-                <p class="idx-line" lang="zh">大教堂收着最响的钟和最低调的心，它们爱的是同一道光。</p>
+                <p class="idx-line" lang="zh">钟楼收留了一个太丑的人，教堂替他挡住了整座城市的眼睛。</p>
               </article>
               <article class="idx-row">
                 <span class="idx-no">04</span>
                 <div class="idx-mid"><h3 class="idx-title">To Live</h3><div class="idx-meta">Yu Hua</div></div>
-                <p class="idx-line" lang="zh">命运一直在拿走，他一直没走——留下来，成了最勇敢的收成。</p>
+                <p class="idx-line" lang="zh">日子一件一件从他手里拿走，他一件一件地接着过。</p>
               </article>
               <article class="idx-row">
                 <span class="idx-no">05</span>
                 <div class="idx-mid"><h3 class="idx-title">How the Steel Was Tempered</h3><div class="idx-meta">Nikolai Ostrovsky</div></div>
-                <p class="idx-line" lang="zh">钢不是在舒服的地方锻出来的，想成为重要的人也一样。</p>
+                <p class="idx-line" lang="zh">他把一辈子折进一句话里，那句话后来比他活得久。</p>
               </article>
               <article class="idx-row">
                 <span class="idx-no">06</span>
                 <div class="idx-mid"><h3 class="idx-title">Fortress Besieged</h3><div class="idx-meta">Qian Zhongshu</div></div>
-                <p class="idx-line" lang="zh">外面的人想进去，里面的人想出来——那堵墙，说到底是我们自己。</p>
+                <p class="idx-line" lang="zh">城里的人想出去，城外的人想进来，墙一直在原地不动。</p>
               </article>
             </div>
           </div>
@@ -369,29 +410,29 @@
           <div class="tab-panel" id="panel-sport" role="tabpanel" aria-labelledby="tab-sport" data-panel="sport" tabindex="0">
             <div class="idx-list">
               <article class="idx-row idx-team" data-sport="basketball">
-                <span class="idx-no">01</span>
-                <div class="idx-mid"><img class="idx-logo" src="logos/spurs.svg" alt="San Antonio Spurs official logo" loading="lazy"><h3 class="idx-title"><a href="https://www.nba.com/spurs" target="_blank" rel="noopener">San Antonio Spurs</a></h3><div class="idx-meta">San Antonio, Texas, USA</div></div>
-                <p class="idx-line" lang="zh">五座冠军赢得悄无声息——联盟见过的最安静王朝。</p>
+                <img class="idx-logo" src="logos/spurs.svg" alt="San Antonio Spurs official logo" loading="lazy">
+                <div class="idx-mid"><h3 class="idx-title"><a href="https://www.nba.com/spurs" target="_blank" rel="noopener">San Antonio Spurs</a></h3><div class="idx-meta">San Antonio, Texas, USA</div>
+                  <p class="idx-line" lang="zh">五个冠军，没有一次是靠喊出来的。</p></div>
               </article>
               <article class="idx-row idx-team" data-sport="football">
-                <span class="idx-no">02</span>
-                <div class="idx-mid"><img class="idx-logo" src="logos/mancity.svg" alt="Manchester City official crest" loading="lazy"><h3 class="idx-title"><a href="https://www.mancity.com" target="_blank" rel="noopener">Manchester City Football Club</a></h3><div class="idx-meta">Manchester, England</div></div>
-                <p class="idx-line" lang="zh">连拿四座联赛冠军，足球仍像一堂关于如何建队的课。</p>
+                <img class="idx-logo" src="logos/mancity.svg" alt="Manchester City official crest" loading="lazy">
+                <div class="idx-mid"><h3 class="idx-title"><a href="https://www.mancity.com" target="_blank" rel="noopener">Manchester City Football Club</a></h3><div class="idx-meta">Manchester, England</div>
+                  <p class="idx-line" lang="zh">球一直在他们脚下，四座奖杯之后，还在传同一脚球。</p></div>
               </article>
               <article class="idx-row idx-team" data-sport="formula-1">
-                <span class="idx-no">03</span>
-                <div class="idx-mid"><img class="idx-logo idx-logo-wide" src="logos/mclaren.svg" alt="McLaren Racing official logo" loading="lazy"><h3 class="idx-title"><a href="https://www.mclaren.com/racing/" target="_blank" rel="noopener">McLaren Formula 1 Team</a></h3><div class="idx-meta">Woking, England</div></div>
-                <p class="idx-line" lang="zh">从头就是木瓜橙——六十年赛车，车库仍然相信下一圈。</p>
+                <img class="idx-logo" src="logos/mclaren.svg" alt="McLaren Racing official logo" loading="lazy">
+                <div class="idx-mid"><h3 class="idx-title"><a href="https://www.mclaren.com/racing/" target="_blank" rel="noopener">McLaren Formula 1 Team</a></h3><div class="idx-meta">Woking, England</div>
+                  <p class="idx-line" lang="zh">木瓜橙用了六十年，车库里的灯从来没熄过。</p></div>
               </article>
               <article class="idx-row idx-team" data-sport="american-football">
-                <span class="idx-no">04</span>
-                <div class="idx-mid"><img class="idx-logo" src="logos/ravens.svg" alt="Baltimore Ravens official logo" loading="lazy"><h3 class="idx-title"><a href="https://www.baltimoreravens.com" target="_blank" rel="noopener">Baltimore Ravens</a></h3><div class="idx-meta">Baltimore, Maryland, USA</div></div>
-                <p class="idx-line" lang="zh">靠防守立身，靠沉稳前行——硬气与嚣张，平衡得刚刚好。</p>
+                <img class="idx-logo" src="logos/ravens.svg" alt="Baltimore Ravens official logo" loading="lazy">
+                <div class="idx-mid"><h3 class="idx-title"><a href="https://www.baltimoreravens.com" target="_blank" rel="noopener">Baltimore Ravens</a></h3><div class="idx-meta">Baltimore, Maryland, USA</div>
+                  <p class="idx-line" lang="zh">他们赢球的方式很安静，安静到你能听见撞击声。</p></div>
               </article>
               <article class="idx-row idx-team" data-sport="esports">
-                <span class="idx-no">05</span>
-                <div class="idx-mid"><img class="idx-logo" src="logos/spirit.svg" alt="Team Spirit official logo" loading="lazy"><h3 class="idx-title"><a href="https://teamspirit.gg" target="_blank" rel="noopener">Team Spirit</a></h3><div class="idx-meta">Belgrade, Serbia</div></div>
-                <p class="idx-line" lang="zh">拒绝当弱者的弱者——从无名之辈打到世界冠军，而且赢了两次。</p>
+                <img class="idx-logo" src="logos/spirit.svg" alt="Team Spirit official logo" loading="lazy">
+                <div class="idx-mid"><h3 class="idx-title"><a href="https://teamspirit.gg" target="_blank" rel="noopener">Team Spirit</a></h3><div class="idx-meta">Belgrade, Serbia</div>
+                  <p class="idx-line" lang="zh">一个没人听说过的名字，赢了两次世界冠军。</p></div>
               </article>
             </div>
           </div>
@@ -627,10 +668,11 @@
   <script src="js/series-data.js?v=1"></script>
   <script src="js/music-data.js?v=1"></script>
   <script src="js/music-covers.js?v=1"></script>
-  <script src="js/reel-stage.js?v=6"></script>
+  <script src="js/reel-stage.js?v=19"></script>
   <script src="js/film-stage.js?v=4"></script>
   <script src="js/series-stage.js?v=4"></script>
-  <script src="js/music-stage.js?v=4"></script>
-  <script src="js/main.js?v=49"></script>
+  <script src="js/music-stage.js?v=5"></script>
+  <script src="js/glass-pill.js?v=2"></script>
+  <script src="js/main.js?v=53"></script>
 </body>
 </html>

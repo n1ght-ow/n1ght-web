@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquid Glass segmented control — plain CSS + vanilla JS</title>
+<style>
+/* ============================================================================
+   LIQUID GLASS SEGMENTED CONTROL — iOS 26 / Control Center style.
+   Plain CSS + vanilla JS, no build step, no external assets.
+   Layer order (bottom -> top):
+     1. backdrop photo / colour field
+     2. .lg-track   = the glass pill (backdrop-filter: url(#lg-refract) ...)
+     3. .lg-pill    = the solid selected indicator, INSIDE the track
+     4. .lg-btn     = labels
+     5. ::before    = masked gradient hairline rim
+   ========================================================================== */
+
+:root{
+  --lg-h: 56px;               /* track height                                  */
+  --lg-pad: 5px;              /* gap between track edge and the selected pill   */
+  --lg-radius: var(--lg-pill);/* shape lock: only these four radii are allowed  */
+  --lg-radius-sm: 8px;
+  --lg-radius-md: 14px;
+  --lg-radius-lg: 28px;
+  --lg-pill: 999px;
+
+  --lg-tint: 16, 16, 20;      /* glass body colour, "r, g, b"                   */
+  --lg-alpha: .44;            /* glass body opacity over the backdrop           */
+  --lg-blur: 22px;
+  --lg-saturate: 1.9;
+  --lg-brightness: .90;
+
+  --lg-ink: #F2F2EF;          /* label on glass                                 */
+  --lg-ink-selected: #101010; /* label on the selected pill                     */
+
+  --lg-ease: cubic-bezier(.32,.72,0,1);   /* iOS-like, no overshoot          */
+  --lg-dur: .42s;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font:400 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  color:var(--lg-ink);
+  background:#0b0b0e;
+  overflow-x:hidden;
+}
+
+/* ---------- 1. busy backdrop: CSS colour field + optional project photo ---- */
+.lg-bg{
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(120% 90% at 12% 8%,  #ff2d55 0%, rgba(255,45,85,0)   55%),
+    radial-gradient(100% 80% at 88% 18%, #ffcc00 0%, rgba(255,204,0,0)   50%),
+    radial-gradient(120% 90% at 78% 92%, #34c759 0%, rgba(52,199,89,0)   55%),
+    radial-gradient(110% 80% at 18% 88%, #0a84ff 0%, rgba(10,132,255,0)  55%),
+    radial-gradient(90%  70% at 50% 50%, #5856d6 0%, rgba(88,86,214,0)   60%),
+    #101014;
+}
+.lg-photo{
+  position:fixed; inset:0; z-index:1;
+  width:100%; height:100%; object-fit:cover;
+  filter:saturate(1.05) contrast(1.05);
+}
+.lg-scrim{
+  position:fixed; inset:0; z-index:2; pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,.34), rgba(0,0,0,.06) 40%, rgba(0,0,0,.42));
+}
+.lg-stage{
+  position:relative; z-index:3;
+  min-height:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:28px; padding:48px 20px;
+}
+
+/* ---------- 2. THE GLASS TRACK ------------------------------------------- */
+.lg-track{
+  position:relative;
+  display:flex; align-items:center; gap:2px;
+  height:var(--lg-h);
+  padding:var(--lg-pad);
+  border-radius:var(--lg-radius);
+  isolation:isolate;               /* keep blend/blur work local             */
+
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,.10) 0%,
+      rgba(255,255,255,.030) 38%,
+      rgba(255,255,255,.018) 62%,
+      rgba(255,255,255,.070) 100%),
+    rgba(var(--lg-tint), var(--lg-alpha));
+
+  /* ORDER MATTERS: the plain blur is declared first and unconditionally, so a
+     browser that cannot render url() inside backdrop-filter still gets frosted
+     glass. The refracting version is added later inside @supports. */
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate)) brightness(var(--lg-brightness));
+  backdrop-filter:         blur(var(--lg-blur)) saturate(var(--lg-saturate)) brightness(var(--lg-brightness));
+
+  /* specular rim (inner) + elevation (outer) */
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.85),
+    inset 0 2px 7px  rgba(255,255,255,.30),
+    inset 0 -1px 1px rgba(255,255,255,.42),
+    inset 0 -7px 16px rgba(255,255,255,.07),
+    inset 0 0 0 1px  rgba(255,255,255,.06),
+    0 18px 44px rgba(0,0,0,.55),
+    0 4px 12px  rgba(0,0,0,.38);
+}
+
+/* 5. hairline gradient border, drawn with the mask-composite trick so it can
+      be a real gradient instead of a flat border-color. */
+.lg-track::before{
+  content:""; position:absolute; inset:0; z-index:4;
+  border-radius:inherit; padding:1px; pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(255,255,255,.95) 0%,
+    rgba(255,255,255,.42) 18%,
+    rgba(255,255,255,.10) 46%,
+    rgba(255,255,255,.16) 62%,
+    rgba(255,255,255,.62) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;   /* Safari */
+          mask-composite:exclude;/* Chrome 120+, Firefox */
+}
+
+/* a soft diagonal specular sheen, static, sits under the labels */
+.lg-track::after{
+  content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+  border-radius:inherit;
+  background:linear-gradient(112deg,
+    rgba(255,255,255,.22) 0%,
+    rgba(255,255,255,0) 34%,
+    rgba(255,255,255,0) 66%,
+    rgba(255,255,255,.10) 100%);
+  mix-blend-mode:screen;
+}
+
+/* ---------- 3. THE SELECTED PILL ----------------------------------------- */
+.lg-pill{
+  position:absolute; z-index:2;
+  left:0; top:var(--lg-pad); bottom:var(--lg-pad);
+  width:0;                        /* JS sets width + translateX              */
+  border-radius:var(--lg-pill);
+  background:linear-gradient(180deg,#ffffff 0%,#f4f4f6 55%,#e6e6ea 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -1px 1px rgba(0,0,0,.10),
+    0 1px 1px rgba(0,0,0,.16),
+    0 6px 16px rgba(0,0,0,.30),
+    0 0 0 .5px rgba(0,0,0,.10);
+  transform:translateX(0);
+  transition:transform var(--lg-dur) var(--lg-ease), width var(--lg-dur) var(--lg-ease);
+  will-change:transform,width;
+}
+
+/* ---------- 4. LABELS ----------------------------------------------------- */
+.lg-btn{
+  position:relative; z-index:3;
+  flex:0 0 auto;
+  appearance:none; border:0; background:none; margin:0;
+  height:100%;
+  padding:0 20px;
+  border-radius:var(--lg-pill);
+  font:500 15px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  letter-spacing:.01em;
+  color:var(--lg-ink);
+  text-shadow:0 1px 3px rgba(0,0,0,.8), 0 0 14px rgba(0,0,0,.45);   /* keeps labels legible on glass   */
+  cursor:pointer;
+  white-space:nowrap;
+  transition:color .28s var(--lg-ease), text-shadow .28s var(--lg-ease);
+  -webkit-tap-highlight-color:transparent;
+}
+.lg-btn[aria-selected="true"]{
+  color:var(--lg-ink-selected);
+  text-shadow:none;
+}
+.lg-btn:focus-visible{
+  outline:2px solid #0a84ff;
+  outline-offset:3px;
+}
+@media (hover:hover){ .lg-btn:hover{ color:#fff } .lg-btn[aria-selected="true"]:hover{ color:var(--lg-ink-selected) } }
+
+/* ---------- 6. REFRACTION (Chromium only) --------------------------------- */
+@supports (backdrop-filter: url("#lg-refract")){
+  .lg-track{
+    /* url() FIRST: the crisp backdrop is displaced, then a light blur smooths
+       it. Blurring first would erase the bend. */
+    backdrop-filter: url(#lg-refract) blur(2px) saturate(var(--lg-saturate)) brightness(var(--lg-brightness));
+  }
+}
+
+/* ---------- 7. FALLBACKS -------------------------------------------------- */
+/* (a) no backdrop-filter at all */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+  .lg-track{ background:linear-gradient(180deg,#2a2a31,#141419); }
+}
+/* (b) OS-level transparency reduction */
+@media (prefers-reduced-transparency: reduce){
+  .lg-track{ -webkit-backdrop-filter:none; backdrop-filter:none;
+             background:linear-gradient(180deg,#2b2b33,#15151a); }
+}
+@media (prefers-contrast: more){
+  .lg-track{ -webkit-backdrop-filter:none; backdrop-filter:none;
+             background:linear-gradient(180deg,#232329,#0e0e12);
+             box-shadow:inset 0 0 0 1px rgba(255,255,255,.9), 0 12px 30px rgba(0,0,0,.6); }
+}
+/* (c) manual override: <html data-transparency="solid"> */
+html[data-transparency="solid"] .lg-track{
+  -webkit-backdrop-filter:none; backdrop-filter:none;
+  background:linear-gradient(180deg,#2b2b33,#15151a);
+}
+/* (d) reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .lg-pill{ transition:none }
+  .lg-btn{ transition:none }
+}
+
+/* ---------- page chrome (not part of the component) ---------------------- */
+.lg-title{font:500 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase;opacity:.9;text-shadow:0 1px 6px #000}
+.lg-hint{display:none}
+.lg-toggle{display:none}
+#track2{backdrop-filter:blur(20px) saturate(1.9) brightness(.90) !important;-webkit-backdrop-filter:blur(20px) saturate(1.9) brightness(.90) !important}
+#track2::after{display:none}
+#track2{--lg-alpha:.44}
+font-size:13px;opacity:.75;text-shadow:0 1px 6px #000;text-align:center;max-width:52ch}
+.lg-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.lg-toggle{appearance:none;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.10);
+  color:#fff;border-radius:999px;padding:8px 14px;font:500 12px/1 system-ui;cursor:pointer}
+</style>
+</head>
+<body>
+
+<!-- 1. backdrop -->
+<div class="lg-bg"></div>
+<img class="lg-photo" src="../../photo/SAVE_20260616_234154.jpg" alt="" onerror="this.remove()">
+<div class="lg-scrim"></div>
+
+<div class="lg-stage" style="gap:16px;padding:16px;justify-content:flex-start">
+  <div class="lg-title">The Archive</div>
+
+  <!-- ===== THE COMPONENT ===== -->
+  <div class="lg-track" role="tablist" aria-label="Archive sections" id="track">
+    <span class="lg-pill" aria-hidden="true"></span>
+    <button class="lg-btn" role="tab" aria-selected="true"  tabindex="0"  id="t0" aria-controls="p0">Books</button>
+    <button class="lg-btn" role="tab" aria-selected="false" tabindex="-1" id="t1" aria-controls="p1">Films</button>
+    <button class="lg-btn" role="tab" aria-selected="false" tabindex="-1" id="t2" aria-controls="p2">Series</button>
+    <button class="lg-btn" role="tab" aria-selected="false" tabindex="-1" id="t3" aria-controls="p3">Music</button>
+    <button class="lg-btn" role="tab" aria-selected="false" tabindex="-1" id="t4" aria-controls="p4">Sport</button>
+    <button class="lg-btn" role="tab" aria-selected="false" tabindex="-1" id="t5" aria-controls="p5">Games</button>
+  </div>
+  <div class="lg-track" id="track2" role="tablist" aria-label="no-lens control"><span class="lg-pill" style="width:78px;transform:translateX(0)"></span><button class="lg-btn" aria-selected="true" style="padding:0 20px">Books</button><button class="lg-btn" aria-selected="false" style="padding:0 20px">Films</button><button class="lg-btn" aria-selected="false" style="padding:0 20px">Series</button></div>
+  <!-- ======================== -->
+
+  <p class="lg-hint">Click, or focus the control and use &larr; &rarr; / Home / End.
+     The pill is resized and moved to the selected label, not to a fixed slot.</p>
+
+  <div class="lg-row">
+    <button class="lg-toggle" id="toggle-transparency">Toggle solid fallback</button>
+  </div>
+</div>
+
+<!-- ===== THE SVG FILTER (one shared instance for the whole page) ===== -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <filter id="lg-refract" x="-12%" y="-30%" width="124%" height="160%"
+            color-interpolation-filters="sRGB">
+      <!-- the displacement map: percentages resolve against the ELEMENT's own
+           filter region, so one filter serves every size (see the report). -->
+      <feImage x="0" y="0" width="100%" height="100%" preserveAspectRatio="none"
+               href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27600%27%20height%3D%27100%27%20viewBox%3D%270%200%20600%20100%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27Y%27%20x1%3D%270%27%20x2%3D%270%27%20y1%3D%2714%25%27%20y2%3D%2786%25%27%3E%3Cstop%20offset%3D%270%25%27%20stop-color%3D%27%230F0%27%2F%3E%3Cstop%20offset%3D%2750%25%27%20stop-color%3D%27%23808080%27%2F%3E%3Cstop%20offset%3D%27100%25%27%20stop-color%3D%27%23000%27%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%27X%27%20x1%3D%272.5%25%27%20x2%3D%2797.5%25%27%20y1%3D%270%27%20y2%3D%270%27%3E%3Cstop%20offset%3D%270%25%27%20stop-color%3D%27%23F00%27%2F%3E%3Cstop%20offset%3D%2750%25%27%20stop-color%3D%27%23808080%27%2F%3E%3Cstop%20offset%3D%27100%25%27%20stop-color%3D%27%23000%27%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20x%3D%270%27%20y%3D%270%27%20width%3D%27600%27%20height%3D%27100%27%20fill%3D%27%23808080%27%2F%3E%3Crect%20x%3D%270%27%20y%3D%270%27%20width%3D%27600%27%20height%3D%27100%27%20fill%3D%27url(%23Y)%27%20style%3D%27mix-blend-mode%3Ascreen%27%2F%3E%3Crect%20x%3D%270%27%20y%3D%270%27%20width%3D%27600%27%20height%3D%27100%27%20fill%3D%27url(%23X)%27%20style%3D%27mix-blend-mode%3Ascreen%27%2F%3E%3Crect%20x%3D%2716%27%20y%3D%2720%27%20width%3D%27568%27%20height%3D%2760%27%20rx%3D%2730%27%20ry%3D%2730%27%20fill%3D%27%23808080%27%20filter%3D%27blur(16px)%27%2F%3E%3C%2Fsvg%3E"
+               result="MAP"/>
+      <feDisplacementMap in="SourceGraphic" in2="MAP" scale="86"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<script>
+(function () {
+  'use strict';
+  var track  = document.getElementById('track');
+  var pill   = track.querySelector('.lg-pill');
+  var tabs   = Array.prototype.slice.call(track.querySelectorAll('.lg-btn'));
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* --- move + resize the pill to whatever button is selected ------------- */
+  function place(animate) {
+    var sel = tabs.filter(function (b) { return b.getAttribute('aria-selected') === 'true'; })[0];
+    if (!sel) return;
+    var t = track.getBoundingClientRect();
+    var b = sel.getBoundingClientRect();
+    if (!animate) pill.style.transition = 'none';
+    pill.style.width = b.width + 'px';
+    pill.style.transform = 'translateX(' + (b.left - t.left) + 'px)';
+    if (!animate) { void pill.offsetWidth; pill.style.transition = ''; }
+  }
+
+  function select(i, focus) {
+    tabs.forEach(function (b, n) {
+      var on = n === i;
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+      b.tabIndex = on ? 0 : -1;
+    });
+    place(!reduce.matches);
+    if (focus) tabs[i].focus();
+  }
+
+  /* --- pointer ---------------------------------------------------------- */
+  track.addEventListener('click', function (e) {
+    var btn = e.target.closest('.lg-btn');
+    if (btn) select(tabs.indexOf(btn), false);
+  });
+
+  /* --- keyboard (ARIA APG tabs pattern, automatic activation) ----------- */
+  track.addEventListener('keydown', function (e) {
+    var i = tabs.indexOf(document.activeElement);
+    if (i < 0) return;
+    var n = null;
+    if (e.key === 'ArrowRight') n = (i + 1) % tabs.length;
+    else if (e.key === 'ArrowLeft') n = (i - 1 + tabs.length) % tabs.length;
+    else if (e.key === 'Home') n = 0;
+    else if (e.key === 'End')  n = tabs.length - 1;
+    if (n !== null) { e.preventDefault(); select(n, true); }
+  });
+
+  /* --- keep the pill glued when the box changes size -------------------- */
+  if ('ResizeObserver' in window) new ResizeObserver(function () { place(false); }).observe(track);
+  addEventListener('resize', function () { place(false); }, { passive: true });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { place(false); });
+  place(false);
+
+  /* --- manual fallback switch ------------------------------------------- */
+  document.getElementById('toggle-transparency').addEventListener('click', function () {
+    var r = document.documentElement;
+    r.dataset.transparency = r.dataset.transparency === 'solid' ? '' : 'solid';
+  });
+})();
+</script>
+</body>
+</html>

@@ -96,6 +96,60 @@ if (!REDUCED && window.ScrollTrigger) {
   });
 }
 
+/* ---------- photography: per-plate drift ----------
+   The sheet's life comes from its geometry, not from a bigger entrance, so
+   this is deliberately the only scroll effect on it: a few percent of each
+   plate's own height, scrubbed.
+
+   Four details are load-bearing:
+   - yPercent rather than y. It resolves against the plate's own height, so
+     the drift stays proportional at every width with nothing to re-tune.
+   - the target is .photo-frame-btn, NOT .photo-frame. The batch entrance
+     above passes overwrite: true, which kills every other tween on its
+     target; a different element keeps the two fully independent. It also
+     means the caption stays put while the image moves above it.
+   - the magnitude and its sign come from --photo-drift in style.css, so a
+     plate's column, offset and drift stay authored in one block.
+   - THE DRIFT ONLY EVER GOES DOWNWARD FROM REST. A symmetric +/-n would let a
+     plate rise into the row band above it and cover the previous plate's
+     caption: measured at 1440px that left exactly 1px of clearance, which is
+     a font-metric change away from breaking. So a positive value runs
+     0 -> +n and a negative value runs +n -> 0. Both stay at or below rest, so
+     the worst case is a plate eating into its OWN caption's top padding -
+     which is why that padding is sized to exceed n% of the tallest plate.
+     The sign still alternates, so neighbours counter-move instead of sliding
+     in lockstep.
+   Never transformed: .photo-frame itself, and anything containing #lightbox
+   (it is position: fixed). */
+if (!REDUCED && window.ScrollTrigger && gsap.matchMedia) {
+  const photoDrift = gsap.matchMedia();
+  photoDrift.add("(min-width: 901px)", () => {
+    gsap.utils.toArray(".photo-frame").forEach((frame) => {
+      const amount = parseFloat(window.getComputedStyle(frame).getPropertyValue("--photo-drift"));
+      if (!amount) return;
+      const plate = frame.querySelector(".photo-frame-btn");
+      if (!plate) return;
+      // positive sinks from rest, negative rises back to rest; neither ever
+      // crosses above the plate's own resting position
+      gsap.fromTo(
+        plate,
+        { yPercent: Math.max(0, -amount) },
+        {
+          yPercent: Math.max(0, amount),
+          ease: "power1.out",
+          scrollTrigger: {
+            trigger: frame,
+            start: "clamp(top bottom)",
+            end: "clamp(bottom top)",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+    });
+  });
+}
+
 /* ---------- glass spotlight ----------
    One rAF-throttled style write per frame. GSAP quickTo cannot tween a
    custom property, so this is hand-rolled on purpose. Fine pointers only:
@@ -492,17 +546,14 @@ function initUnifiedDetail() {
     if (btn) btn.addEventListener("click", () => openDetail("photo", i));
   });
 
-  [["films", "film"], ["series", "series"]].forEach(([token, type]) => {
-    const panel = document.getElementById("panel-" + token);
-    if (!panel) return;
-    panel.addEventListener("click", (e) => {
-      const card = e.target.closest(".film-card, .series-card");
-      if (!card) return;
-      const cards = Array.from(panel.querySelectorAll(".film-card, .series-card"));
-      const index = cards.indexOf(card);
-      if (index >= 0) openDetail(type, index);
-    });
-  });
+  /* films and series deliberately have NO click handler here.
+     Their detail block sits directly under the rail, so opening a full-screen
+     layer repeated information the page was already showing - and it did it
+     worse: a 250px poster floating in a dark field with the copy stranded off
+     to one side. Clicking a poster now just selects it, which is the same
+     thing hovering and tabbing already do. The layer is still the detail
+     mechanism for photo, game and music, which have no inline detail block of
+     their own. */
 
   const gamePanel = document.getElementById("panel-games");
   if (gamePanel) {
@@ -640,6 +691,21 @@ function initArchiveTabs() {
   // roving tabindex: only the active tab participates in the Tab order
   tabs.forEach((t, i) => { t.tabIndex = i === current ? 0 : -1; });
 
+  // The selected indicator is its own draggable element, so every path that
+  // changes the selection has to move it - click, arrow key, Home/End and the
+  // drag all funnel through showMeta below.
+  const pillEl = document.getElementById("tab-pill");
+  const pill = pillEl && window.createGlassPill
+    ? window.createGlassPill({
+        root: tabbar,
+        items: tabs,
+        pill: pillEl,
+        index: current,
+        // a drag commit is a normal selection; select() is idempotent
+        onChange: (index) => select(index),
+      })
+    : null;
+
   const showMeta = (idx) => {
     tabs.forEach((t, i) => {
       const on = i === idx;
@@ -648,6 +714,7 @@ function initArchiveTabs() {
       t.tabIndex = on ? 0 : -1;
     });
     panels.forEach((p, i) => p.classList.toggle("is-active", i === idx));
+    if (pill) pill.moveTo(idx);
     tabbar.dispatchEvent(new CustomEvent("night:archive-tab", {
       detail: { token: tabs[idx].getAttribute("data-tab"), index: idx },
     }));
@@ -692,6 +759,9 @@ function initArchiveTabs() {
     // the games panel measures lazily (it mounts display:none); refresh so
     // the in-panel ScrollTrigger and the drag scroller re-measure
     scheduleRefresh();
+    // the tab strip is sized by its labels, so a selection change can move
+    // every segment the pill has to snap to
+    if (pill) pill.refresh();
     const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre, .hof-item")) : [];
     if (instant) {
       gsap.set(rows, { y: 0, clearProps: "clipPath" });
@@ -1265,6 +1335,28 @@ function cacheNavMetrics() {
   navOffsets = navPairs.map((p) => p.section.offsetTop);
 }
 
+// The nav gets the same draggable indicator as the archive tab strip. It is
+// only meaningful when every anchor resolved to a section: if one href has no
+// target, navPairs is shorter than navAnchors and every index past the gap
+// would point at the wrong label.
+const navPillMount = document.querySelector(".nav-links");
+const navPillEl = document.getElementById("nav-pill");
+const navPill = navPillMount && navPillEl && window.createGlassPill && navPairs.length === navAnchors.length
+  ? window.createGlassPill({
+      root: navPillMount,
+      items: navAnchors,
+      pill: navPillEl,
+      index: 0,
+      // Dragging the indicator onto another section is a navigation, and the
+      // links already know how to do that: routing through their own handler
+      // keeps Lenis, reduced-motion and the native hash jump on one path.
+      onChange: (index) => {
+        const pair = navPairs[index];
+        if (pair) pair.anchor.click();
+      },
+    })
+  : null;
+
 function updateNavAndProgress(self) {
   const y = self.scroll() + window.innerHeight * 0.45;
   let current = -1;
@@ -1273,6 +1365,14 @@ function updateNavAndProgress(self) {
   }
   if (self.progress >= 1) current = navPairs.length - 1;
   navPairs.forEach((pair, i) => pair.anchor.classList.toggle("is-active", i === current));
+
+  // This runs on every scroll frame, so only touch the DOM on a real change.
+  // Above the first section nothing is active, and the indicator withdraws
+  // rather than sitting under a label that is not selected.
+  if (navPill) {
+    if (current < 0) navPill.hide();
+    else if (current !== navPill.index() || !navPill.visible()) navPill.moveTo(current);
+  }
 }
 
 ScrollTrigger.create({
