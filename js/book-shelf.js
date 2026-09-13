@@ -124,6 +124,8 @@
       if (book.thickness >= 18) {
         title = el("span", "bs-title");
         title.textContent = book.title;
+        /* the shelf is set in Chinese, so every line that carries words says so */
+        title.setAttribute("lang", "zh");
         title.style.color = book.ink;
         spine.appendChild(title);
       }
@@ -157,9 +159,11 @@
       label.appendChild(rule);
       var lt = el("p", "bs-label-title");
       lt.textContent = book.title;
+      lt.setAttribute("lang", "zh");
       label.appendChild(lt);
       var la = el("p", "bs-label-author");
       la.textContent = book.author;
+      la.setAttribute("lang", "zh");
       label.appendChild(la);
       cover.appendChild(label);
 
@@ -179,7 +183,9 @@
     scene.appendChild(scrim);
 
     var author = el("p", "bs-author");
+    author.setAttribute("lang", "zh");
     var blurb = el("p", "bs-blurb");
+    blurb.setAttribute("lang", "zh");
     var live = el("p", "sr-only");
     live.setAttribute("role", "status");
     live.setAttribute("aria-live", "polite");
@@ -225,7 +231,9 @@
     function fitTitles() {
       nodes.forEach(function (n) {
         if (!n.title) return;
-        var max = 13;
+        /* Chinese is set one glyph per em, so the ceiling is higher than the
+           Latin it replaced and the height check below does the rest */
+        var max = 16;
         n.title.style.fontSize = max + "px";
         var guard = 0;
         while (n.title.offsetHeight > n.book.height - 44 && max > 7 && guard < 40) {
