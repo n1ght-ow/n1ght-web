@@ -184,18 +184,15 @@
     scrim.setAttribute("aria-label", "Put the book back");
     scene.appendChild(scrim);
 
-    var author = el("p", "bs-author");
-    author.setAttribute("lang", "zh");
     var blurb = el("p", "bs-blurb");
     blurb.setAttribute("lang", "zh");
     var live = el("p", "sr-only");
     live.setAttribute("role", "status");
     live.setAttribute("aria-live", "polite");
-    mount.appendChild(author);
     mount.appendChild(blurb);
     mount.appendChild(live);
 
-    return { scene: scene, nodes: nodes, scrim: scrim, author: author, blurb: blurb, live: live };
+    return { scene: scene, nodes: nodes, scrim: scrim, blurb: blurb, live: live };
   }
 
   function init(mount) {
@@ -338,7 +335,6 @@
         for (var j = 0; j < BOOKS.length; j++) if (BOOKS[j].id === picked) open = BOOKS[j];
       }
       if (open) {
-        parts.author.textContent = open.author;
         parts.blurb.textContent = open.blurb;
         parts.live.textContent = open.title + "，" + open.author + "。" + open.blurb;
       } else {

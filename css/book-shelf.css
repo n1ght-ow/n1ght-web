@@ -326,13 +326,14 @@
    is, and it needs no z-index at all. Twice the stage, so perspective cannot
    uncover a corner of it. */
 .bs-scrim {
+  /* inset, not width/height + negative margins. The upstream writes 200% square
+     with margin -100%, but a percentage MARGIN resolves against the containing
+     block's WIDTH - so margin-top was pulling up by the stage's width, not its
+     height, and on a stage wider than it is tall the scrim stopped short and
+     dimmed only the top band. inset resolves top/bottom against height and
+     left/right against width, which is what was meant. */
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 200%;
-  height: 200%;
-  margin-left: -100%;
-  margin-top: -100%;
+  inset: -100%;
   padding: 0;
   border: 0;
   background: oklch(0 0 0 / 0.28);
@@ -348,12 +349,15 @@
   cursor: pointer;
 }
 
-/* ---------- the two lines an open book carries ----------
-   Fixed bands rather than following the book: the book's own height changes
-   from title to title and a line that steps up or down between them reads as a
-   layout that cannot make up its mind. --bs-reach is half the tallest spine,
-   so the gap only ever grows. */
-.bs-author,
+/* ---------- the line an open book carries ----------
+   One line, under the board. There is no line above the book: the cover's own
+   label already carries the title and the author, and a second copy floating
+   over the scene was saying the same thing twice.
+
+   Placed off the scene's landmark rather than off the stage's bottom edge, so
+   it keeps its distance from the shelf at every scale - which is what keeps
+   the note off the spines it would otherwise be printed across. --bs-base
+   minus half the stage: how far the board sits below the scene's pivot. */
 .bs-blurb {
   position: absolute;
   left: 0;
@@ -362,35 +366,18 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.22s var(--ease-out), visibility 0s linear 0.22s;
-}
-
-.book-shelf[data-picked] .bs-author,
-.book-shelf[data-picked] .bs-blurb {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.22s var(--ease-out) 0.16s, visibility 0s linear 0.16s;
-}
-
-.bs-author {
-  /* Both lines are placed off the scene's own two landmarks rather than off the
-     stage's edges, so they keep their distance from the book at every scale:
-     46px over the cover's top, and 20px under the board - which is what keeps
-     the note off the spines it would otherwise be printed across. */
-  top: calc(50% - var(--bs-reach) * var(--bs-fit) - 46px);
-  font-family: inherit;
-  font-size: var(--fs-caption);
-  line-height: 1.4;
-  color: var(--color-text-muted);
-}
-
-.bs-blurb {
-  /* --bs-base - half the stage: how far the board sits below the scene's pivot */
   top: calc(50% + (var(--bs-base) - 50%) * var(--bs-fit) + 20px);
   font-family: inherit;
   font-size: var(--fs-small);
   line-height: 1.6;
   color: var(--color-text-secondary);
   white-space: nowrap;
+}
+
+.book-shelf[data-picked] .bs-blurb {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.22s var(--ease-out) 0.16s, visibility 0s linear 0.16s;
 }
 
 /* the row is scaled to the column, so a narrow window shrinks the shelf rather
@@ -402,6 +389,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .bs-scrim,
-  .bs-author,
   .bs-blurb { transition-duration: 0.01ms; }
 }

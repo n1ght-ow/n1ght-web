@@ -34,7 +34,7 @@
       id: "notre-dame",
       spine: "Notre-Dame de Paris", title: "巴黎圣母院", author: "雨果",
       blurb: "钟楼收留了一个太丑的人，教堂替他挡住了整座城市的眼睛。",
-      thickness: 48, height: 288, lean: 0,
+      thickness: 34, height: 288, lean: 0,
       cloth: "#c7a233", ink: "#2b2618", band: "#8a3b34",
     },
     {
@@ -48,7 +48,7 @@
       id: "steel",
       spine: "How the Steel Was Tempered", title: "钢铁是怎样炼成的", author: "奥斯特洛夫斯基",
       blurb: "他把一辈子折进一句话里，那句话后来比他活得久。",
-      thickness: 21, height: 266, lean: 0,
+      thickness: 30, height: 266, lean: 0,
       cloth: "#7d2f2a", ink: "#f4e9d8", band: "#e0c07a",
     },
     {
@@ -83,7 +83,7 @@
       id: "red-chamber",
       spine: "Dream of the Red Chamber", title: "红楼梦", author: "曹雪芹",
       blurb: "园子最热闹的时候，没人留意它已经开始空了。",
-      thickness: 23, height: 258, lean: 0,
+      thickness: 33, height: 258, lean: 0,
       cloth: "#33513f", ink: "#eee7d6", band: "#c9b78b",
     },
     {
@@ -125,7 +125,7 @@
       id: "condor",
       spine: "The Legend of the Condor Heroes", title: "射雕英雄传", author: "金庸",
       blurb: "江南七怪跑进大漠，就为了教一个笨孩子练拳。",
-      thickness: 31, height: 246, lean: 9,
+      thickness: 42, height: 246, lean: 9,
       cloth: "#2a2723", ink: "#efece4", band: "#c8a24a",
     },
   ];
