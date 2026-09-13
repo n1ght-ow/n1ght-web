@@ -123,9 +123,11 @@
       var title = null;
       if (book.thickness >= 18) {
         title = el("span", "bs-title");
-        title.textContent = book.title;
-        /* the shelf is set in Chinese, so every line that carries words says so */
-        title.setAttribute("lang", "zh");
+        /* the back of the book carries the short form, in English: a spine is a
+           21px strip and Latin turns to lie along it, which is what a spine
+           does. The cover below carries the name the book is known by. */
+        title.textContent = book.spine;
+        title.setAttribute("lang", "en");
         title.style.color = book.ink;
         spine.appendChild(title);
       }
@@ -231,9 +233,10 @@
     function fitTitles() {
       nodes.forEach(function (n) {
         if (!n.title) return;
-        /* Chinese is set one glyph per em, so the ceiling is higher than the
-           Latin it replaced and the height check below does the rest */
-        var max = 16;
+        /* one size for the whole shelf, the way a publisher would set a series.
+           The check below only ever shrinks it, and only for the two long
+           titles that need it. */
+        var max = 13;
         n.title.style.fontSize = max + "px";
         var guard = 0;
         while (n.title.offsetHeight > n.book.height - 44 && max > 7 && guard < 40) {
@@ -275,7 +278,7 @@
 
         n.btn.setAttribute(
           "aria-label",
-          (isPicked ? "Put " + book.title + " back" : "Open " + book.title)
+          (isPicked ? "合上《" + book.title + "》" : "打开《" + book.title + "》")
         );
         n.btn.setAttribute("data-picked", isPicked ? "true" : "false");
 
