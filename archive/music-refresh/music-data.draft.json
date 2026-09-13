@@ -1,0 +1,3753 @@
+{
+ "summary": {
+  "total": 447,
+  "groups": [
+   {
+    "id": "pop",
+    "zh": "英语 · 流行",
+    "n": 138
+   },
+   {
+    "id": "ballad",
+    "zh": "英语 · 抒情",
+    "n": 39
+   },
+   {
+    "id": "rock",
+    "zh": "英语 · 摇滚",
+    "n": 35
+   },
+   {
+    "id": "edm-and-dance",
+    "zh": "英语 · 电音舞曲",
+    "n": 43
+   },
+   {
+    "id": "randb-and-soul",
+    "zh": "英语 · 节奏布鲁斯",
+    "n": 24
+   },
+   {
+    "id": "hip-hop",
+    "zh": "英语 · 说唱",
+    "n": 27
+   },
+   {
+    "id": "folk-and-country",
+    "zh": "英语 · 民谣与乡村",
+    "n": 25
+   },
+   {
+    "id": "golden-classics",
+    "zh": "英语 · 黄金经典",
+    "n": 6
+   },
+   {
+    "id": "mandarin-pop",
+    "zh": "华语 · 流行",
+    "n": 32
+   },
+   {
+    "id": "mandarin-ballad",
+    "zh": "华语 · 抒情",
+    "n": 36
+   },
+   {
+    "id": "mandarin-rock",
+    "zh": "华语 · 摇滚",
+    "n": 5
+   },
+   {
+    "id": "mandarin-folk",
+    "zh": "华语 · 民谣与独立",
+    "n": 18
+   },
+   {
+    "id": "mandarin-ost",
+    "zh": "华语 · 影视原声与中国风",
+    "n": 11
+   },
+   {
+    "id": "k-pop",
+    "zh": "韩语 · K-POP",
+    "n": 8
+   }
+  ]
+ },
+ "groups": [
+  {
+   "id": "pop",
+   "zh": "英语 · 流行",
+   "en": "POP",
+   "tracks": [
+    {
+     "idx": 138,
+     "id": "24197361",
+     "title": "California Gurls",
+     "artist": "Katy Perry / Snoop Dogg",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 236,
+     "id": "1975505546",
+     "title": "Calm Down",
+     "artist": "Rema / Selena Gomez",
+     "src": "replace",
+     "wasId": "2058865535"
+    },
+    {
+     "idx": 237,
+     "id": "2065100111",
+     "title": "What Was I Made For? (From The Motion Picture \"Barbie\")（电影《芭比》原声）",
+     "artist": "Billie Eilish",
+     "src": "keep",
+     "wasId": "2065100111"
+    },
+    {
+     "idx": 238,
+     "id": "1355147933",
+     "title": "bad guy",
+     "artist": "Billie Eilish",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 239,
+     "id": "2080331573",
+     "title": "greedy",
+     "artist": "Tate McRae",
+     "src": "replace",
+     "wasId": "2105586334"
+    },
+    {
+     "idx": 240,
+     "id": "2637558926",
+     "title": "APT.",
+     "artist": "ROSÉ / Bruno Mars",
+     "src": "keep",
+     "wasId": "2637558926"
+    },
+    {
+     "idx": 241,
+     "id": "2057234990",
+     "title": "Lose Control",
+     "artist": "Teddy Swims",
+     "src": "replace",
+     "wasId": "2081585861"
+    },
+    {
+     "idx": 242,
+     "id": "2117911937",
+     "title": "Beautiful Things",
+     "artist": "Benson Boone",
+     "src": "keep",
+     "wasId": "2117911937"
+    },
+    {
+     "idx": 243,
+     "id": "494865824",
+     "title": "Havana",
+     "artist": "Camila Cabello / Young Thug",
+     "src": "replace",
+     "wasId": "1331707956"
+    },
+    {
+     "idx": 244,
+     "id": "25657282",
+     "title": "Marry You",
+     "artist": "Bruno Mars",
+     "src": "replace",
+     "wasId": "26377216"
+    },
+    {
+     "idx": 245,
+     "id": "29803675",
+     "title": "Fight Song",
+     "artist": "Rachel Platten",
+     "src": "replace",
+     "wasId": "416903659"
+    },
+    {
+     "idx": 246,
+     "id": "3406580",
+     "title": "Hips Don't Lie（难以抗拒）",
+     "artist": "Shakira / Wyclef Jean",
+     "src": "replace",
+     "wasId": "24603573"
+    },
+    {
+     "idx": 247,
+     "id": "3406406",
+     "title": "Waka Waka (This Time for Africa)（2010年南非世界杯主题曲）",
+     "artist": "Shakira / Freshlyground",
+     "src": "replace",
+     "wasId": "34497413"
+    },
+    {
+     "idx": 248,
+     "id": "458697629",
+     "title": "I Don't Wanna Live Forever (Fifty Shades Darker)（电影《五十度黑》主题曲）",
+     "artist": "ZAYN / Taylor Swift",
+     "src": "keep",
+     "wasId": "458697629"
+    },
+    {
+     "idx": 249,
+     "id": "1373168742",
+     "title": "Señorita",
+     "artist": "Shawn Mendes / Camila Cabello",
+     "src": "replace",
+     "wasId": "1832581859"
+    },
+    {
+     "idx": 250,
+     "id": "1364343491",
+     "title": "Dance Monkey",
+     "artist": "Tones and I",
+     "src": "replace",
+     "wasId": "1386693749"
+    },
+    {
+     "idx": 251,
+     "id": "405599119",
+     "title": "7 Years",
+     "artist": "Lukas Graham",
+     "src": "replace",
+     "wasId": "1306995079"
+    },
+    {
+     "idx": 252,
+     "id": "16593589",
+     "title": "Summertime Sadness",
+     "artist": "Lana Del Rey",
+     "src": "keep",
+     "wasId": "16593589"
+    },
+    {
+     "idx": 253,
+     "id": "26243686",
+     "title": "Young And Beautiful（风华正茂）",
+     "artist": "Lana Del Rey",
+     "src": "keep",
+     "wasId": "26243686"
+    },
+    {
+     "idx": 254,
+     "id": "504265014",
+     "title": "Dusk Till Dawn",
+     "artist": "ZAYN / Sia",
+     "src": "keep",
+     "wasId": "504265014"
+    },
+    {
+     "idx": 255,
+     "id": "2188283",
+     "title": "If I Were a Boy",
+     "artist": "Beyoncé",
+     "src": "keep",
+     "wasId": "2188283"
+    },
+    {
+     "idx": 256,
+     "id": "16434100",
+     "title": "If I Ain't Got You",
+     "artist": "Alicia Keys",
+     "src": "keep",
+     "wasId": "16434100"
+    },
+    {
+     "idx": 257,
+     "id": "21373645",
+     "title": "Just Give Me a Reason",
+     "artist": "P!nk / Nate Ruess",
+     "src": "keep",
+     "wasId": "21373645"
+    },
+    {
+     "idx": 258,
+     "id": "21038711",
+     "title": "Paparazzi",
+     "artist": "Lady Gaga",
+     "src": "replace",
+     "wasId": "2677295798"
+    },
+    {
+     "idx": 259,
+     "id": "1386002735",
+     "title": "Bad Romance",
+     "artist": "Lady Gaga",
+     "src": "keep",
+     "wasId": "1386002735"
+    },
+    {
+     "idx": 260,
+     "id": "18981962",
+     "title": "Last Friday Night (T.G.I.F.)",
+     "artist": "Katy Perry",
+     "src": "keep",
+     "wasId": "18981962"
+    },
+    {
+     "idx": 261,
+     "id": "29719175",
+     "title": "Night Changes",
+     "artist": "One Direction",
+     "src": "keep",
+     "wasId": "29719175"
+    },
+    {
+     "idx": 262,
+     "id": "27896574",
+     "title": "Story of My Life",
+     "artist": "One Direction",
+     "src": "keep",
+     "wasId": "27896574"
+    },
+    {
+     "idx": 263,
+     "id": "415904452",
+     "title": "Treat You Better",
+     "artist": "Shawn Mendes",
+     "src": "keep",
+     "wasId": "415904452"
+    },
+    {
+     "idx": 264,
+     "id": "36921365",
+     "title": "Stitches",
+     "artist": "Shawn Mendes",
+     "src": "keep",
+     "wasId": "36921365"
+    },
+    {
+     "idx": 265,
+     "id": "1830422741",
+     "title": "Ghost",
+     "artist": "Justin Bieber",
+     "src": "keep",
+     "wasId": "1830422741"
+    },
+    {
+     "idx": 266,
+     "id": "27514868",
+     "title": "Grenade",
+     "artist": "Bruno Mars",
+     "src": "keep",
+     "wasId": "27514868"
+    },
+    {
+     "idx": 267,
+     "id": "433681259",
+     "title": "24K Magic",
+     "artist": "Bruno Mars",
+     "src": "keep",
+     "wasId": "433681259"
+    },
+    {
+     "idx": 268,
+     "id": "441120471",
+     "title": "That's What I Like",
+     "artist": "Bruno Mars",
+     "src": "keep",
+     "wasId": "441120471"
+    },
+    {
+     "idx": 269,
+     "id": "1876212794",
+     "title": "Shivers",
+     "artist": "Ed Sheeran",
+     "src": "keep",
+     "wasId": "1876212794"
+    },
+    {
+     "idx": 270,
+     "id": "1855475139",
+     "title": "Bad Habits",
+     "artist": "Ed Sheeran",
+     "src": "keep",
+     "wasId": "1855475139"
+    },
+    {
+     "idx": 271,
+     "id": "28692519",
+     "title": "Photograph",
+     "artist": "Ed Sheeran",
+     "src": "keep",
+     "wasId": "28692519"
+    },
+    {
+     "idx": 272,
+     "id": "2126654120",
+     "title": "Training Season（训练季）",
+     "artist": "Dua Lipa",
+     "src": "keep",
+     "wasId": "2126654120"
+    },
+    {
+     "idx": 273,
+     "id": "2097627772",
+     "title": "Houdini",
+     "artist": "Dua Lipa",
+     "src": "keep",
+     "wasId": "2097627772"
+    },
+    {
+     "idx": 274,
+     "id": "2031003572",
+     "title": "Feather",
+     "artist": "Sabrina Carpenter",
+     "src": "keep",
+     "wasId": "2031003572"
+    },
+    {
+     "idx": 275,
+     "id": "400876320",
+     "title": "Unstoppable",
+     "artist": "Sia",
+     "src": "keep",
+     "wasId": "400876320"
+    },
+    {
+     "idx": 276,
+     "id": "564000295",
+     "title": "Paris in the Rain",
+     "artist": "LAUV",
+     "src": "keep",
+     "wasId": "564000295"
+    },
+    {
+     "idx": 277,
+     "id": "479223413",
+     "title": "I Like Me Better",
+     "artist": "LAUV",
+     "src": "keep",
+     "wasId": "479223413"
+    },
+    {
+     "idx": 278,
+     "id": "1374329431",
+     "title": "Dancing With Your Ghost",
+     "artist": "Sasha Alex Sloan",
+     "src": "keep",
+     "wasId": "1374329431"
+    },
+    {
+     "idx": 279,
+     "id": "36990266",
+     "title": "Faded",
+     "artist": "Alan Walker",
+     "src": "keep",
+     "wasId": "36990266"
+    },
+    {
+     "idx": 280,
+     "id": "1338098071",
+     "title": "Let Me Down Slowly",
+     "artist": "Alec Benjamin / Alessia Cara",
+     "src": "keep",
+     "wasId": "1338098071"
+    },
+    {
+     "idx": 281,
+     "id": "39224884",
+     "title": "Cheap Thrills",
+     "artist": "Sia",
+     "src": "keep",
+     "wasId": "39224884"
+    },
+    {
+     "idx": 282,
+     "id": "28306668",
+     "title": "Chandelier",
+     "artist": "Sia",
+     "src": "keep",
+     "wasId": "28306668"
+    },
+    {
+     "idx": 283,
+     "id": "27698223",
+     "title": "Royals",
+     "artist": "Lorde",
+     "src": "keep",
+     "wasId": "27698223"
+    },
+    {
+     "idx": 284,
+     "id": "1958557540",
+     "title": "golden hour",
+     "artist": "JVKE",
+     "src": "keep",
+     "wasId": "1958557540"
+    },
+    {
+     "idx": 285,
+     "id": "1846473650",
+     "title": "drivers license",
+     "artist": "Olivia Rodrigo",
+     "src": "keep",
+     "wasId": "1846473650"
+    },
+    {
+     "idx": 286,
+     "id": "2080218767",
+     "title": "vampire",
+     "artist": "Olivia Rodrigo",
+     "src": "keep",
+     "wasId": "2080218767"
+    },
+    {
+     "idx": 287,
+     "id": "2144901835",
+     "title": "Espresso",
+     "artist": "Sabrina Carpenter",
+     "src": "keep",
+     "wasId": "2144901835"
+    },
+    {
+     "idx": 288,
+     "id": "1948618489",
+     "title": "Late Night Talking",
+     "artist": "Harry Styles",
+     "src": "keep",
+     "wasId": "1948618489"
+    },
+    {
+     "idx": 289,
+     "id": "1407951508",
+     "title": "Adore You",
+     "artist": "Harry Styles",
+     "src": "keep",
+     "wasId": "1407951508"
+    },
+    {
+     "idx": 290,
+     "id": "1404228064",
+     "title": "Watermelon Sugar",
+     "artist": "Harry Styles",
+     "src": "keep",
+     "wasId": "1404228064"
+    },
+    {
+     "idx": 291,
+     "id": "1432456852",
+     "title": "Save Your Tears",
+     "artist": "The Weeknd",
+     "src": "keep",
+     "wasId": "1432456852"
+    },
+    {
+     "idx": 292,
+     "id": "1406633327",
+     "title": "Blinding Lights",
+     "artist": "The Weeknd",
+     "src": "keep",
+     "wasId": "1406633327"
+    },
+    {
+     "idx": 293,
+     "id": "2014200813",
+     "title": "Flowers",
+     "artist": "Miley Cyrus",
+     "src": "keep",
+     "wasId": "2014200813"
+    },
+    {
+     "idx": 294,
+     "id": "1418953604",
+     "title": "Physical",
+     "artist": "Dua Lipa",
+     "src": "keep",
+     "wasId": "1418953604"
+    },
+    {
+     "idx": 295,
+     "id": "1433934518",
+     "title": "Levitating",
+     "artist": "Dua Lipa",
+     "src": "keep",
+     "wasId": "1433934518"
+    },
+    {
+     "idx": 296,
+     "id": "1400110511",
+     "title": "Don't Start Now",
+     "artist": "Dua Lipa",
+     "src": "keep",
+     "wasId": "1400110511"
+    },
+    {
+     "idx": 297,
+     "id": "1990192689",
+     "title": "Lavender Haze",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "1990192689"
+    },
+    {
+     "idx": 298,
+     "id": "516818336",
+     "title": "Delicate",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "516818336"
+    },
+    {
+     "idx": 299,
+     "id": "1990192725",
+     "title": "Karma",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "1990192725"
+    },
+    {
+     "idx": 300,
+     "id": "1990192694",
+     "title": "Anti-Hero",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "1990192694"
+    },
+    {
+     "idx": 301,
+     "id": "17753288",
+     "title": "What Makes You Beautiful（是什么让你如此美丽）",
+     "artist": "One Direction",
+     "src": "keep",
+     "wasId": "17753288"
+    },
+    {
+     "idx": 302,
+     "id": "1805283634",
+     "title": "Another Day Of Sun（《LA LA LAND》插曲）",
+     "artist": "La La Land Cast",
+     "src": "keep",
+     "wasId": "1805283634"
+    },
+    {
+     "idx": 303,
+     "id": "30841076",
+     "title": "I Really Like You",
+     "artist": "Carly Rae Jepsen",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 304,
+     "id": "509728806",
+     "title": "How Long",
+     "artist": "Charlie Puth",
+     "src": "keep",
+     "wasId": "509728806"
+    },
+    {
+     "idx": 305,
+     "id": "2050561748",
+     "title": "Hits Different",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 317,
+     "id": "21157332",
+     "title": "One Day",
+     "artist": "Matisyahu",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 324,
+     "id": "1981056341",
+     "title": "I Don't Think That I Like Her",
+     "artist": "Charlie Puth",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 326,
+     "id": "2065100107",
+     "title": "Dance The Night（电影《芭比》原声）",
+     "artist": "Dua Lipa",
+     "src": "keep",
+     "wasId": "2065100107"
+    },
+    {
+     "idx": 334,
+     "id": "17112299",
+     "title": "Call Me Maybe",
+     "artist": "Carly Rae Jepsen",
+     "src": "keep",
+     "wasId": "17112299"
+    },
+    {
+     "idx": 335,
+     "id": "410846246",
+     "title": "Send My Love (To Your New Lover)",
+     "artist": "Adele",
+     "src": "keep",
+     "wasId": "410846246"
+    },
+    {
+     "idx": 336,
+     "id": "21038723",
+     "title": "Poker Face",
+     "artist": "Lady Gaga",
+     "src": "keep",
+     "wasId": "21038723"
+    },
+    {
+     "idx": 338,
+     "id": "1964236604",
+     "title": "Nonsense",
+     "artist": "Sabrina Carpenter",
+     "src": "keep",
+     "wasId": "1964236604"
+    },
+    {
+     "idx": 339,
+     "id": "2689018742",
+     "title": "twilight zone",
+     "artist": "Ariana Grande",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 340,
+     "id": "445867332",
+     "title": "Another Day Of Sun (From \"La La Land\" Soundtrack)",
+     "artist": "La La Land Cast",
+     "src": "replace",
+     "wasId": "1805283634"
+    },
+    {
+     "idx": 341,
+     "id": "2154851107",
+     "title": "WILDFLOWER",
+     "artist": "Billie Eilish",
+     "src": "keep",
+     "wasId": "2154851107"
+    },
+    {
+     "idx": 345,
+     "id": "1948620191",
+     "title": "As It Was",
+     "artist": "Harry Styles",
+     "src": "keep",
+     "wasId": "1948620191"
+    },
+    {
+     "idx": 347,
+     "id": "2154850334",
+     "title": "BIRDS OF A FEATHER（比翼之鸟）",
+     "artist": "Billie Eilish",
+     "src": "keep",
+     "wasId": "2154850334"
+    },
+    {
+     "idx": 348,
+     "id": "2617944302",
+     "title": "Die With A Smile",
+     "artist": "Lady Gaga / Bruno Mars",
+     "src": "keep",
+     "wasId": "2617944302"
+    },
+    {
+     "idx": 357,
+     "id": "21253806",
+     "title": "One More Night",
+     "artist": "Maroon 5",
+     "src": "keep",
+     "wasId": "21253806"
+    },
+    {
+     "idx": 358,
+     "id": "28661564",
+     "title": "Maps",
+     "artist": "Maroon 5",
+     "src": "keep",
+     "wasId": "28661564"
+    },
+    {
+     "idx": 360,
+     "id": "21253966",
+     "title": "Moves Like Jagger",
+     "artist": "Maroon 5 / Christina Aguilera",
+     "src": "keep",
+     "wasId": "21253966"
+    },
+    {
+     "idx": 361,
+     "id": "36496695",
+     "title": "Love Yourself",
+     "artist": "Justin Bieber",
+     "src": "keep",
+     "wasId": "36496695"
+    },
+    {
+     "idx": 362,
+     "id": "1859245776",
+     "title": "STAY",
+     "artist": "The Kid LAROI / Justin Bieber",
+     "src": "keep",
+     "wasId": "1859245776"
+    },
+    {
+     "idx": 363,
+     "id": "35847559",
+     "title": "Sorry",
+     "artist": "Justin Bieber",
+     "src": "keep",
+     "wasId": "35847559"
+    },
+    {
+     "idx": 364,
+     "id": "4172700",
+     "title": "Payphone",
+     "artist": "Maroon 5 / Wiz Khalifa",
+     "src": "keep",
+     "wasId": "4172700"
+    },
+    {
+     "idx": 365,
+     "id": "29019227",
+     "title": "Sugar",
+     "artist": "Maroon 5",
+     "src": "keep",
+     "wasId": "29019227"
+    },
+    {
+     "idx": 371,
+     "id": "33728982",
+     "title": "Gold",
+     "artist": "Kiiara",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 372,
+     "id": "27566922",
+     "title": "Roar",
+     "artist": "Katy Perry",
+     "src": "keep",
+     "wasId": "27566922"
+    },
+    {
+     "idx": 373,
+     "id": "2871217",
+     "title": "Firework",
+     "artist": "Katy Perry",
+     "src": "keep",
+     "wasId": "2871217"
+    },
+    {
+     "idx": 374,
+     "id": "18637990",
+     "title": "Beauty And A Beat",
+     "artist": "Justin Bieber / Nicki Minaj",
+     "src": "keep",
+     "wasId": "18637990"
+    },
+    {
+     "idx": 375,
+     "id": "18638057",
+     "title": "Baby",
+     "artist": "Justin Bieber / Ludacris",
+     "src": "keep",
+     "wasId": "18638057"
+    },
+    {
+     "idx": 379,
+     "id": "451703096",
+     "title": "Shape of You",
+     "artist": "Ed Sheeran",
+     "src": "keep",
+     "wasId": "451703096"
+    },
+    {
+     "idx": 386,
+     "id": "22441762",
+     "title": "Teenage Dream",
+     "artist": "Katy Perry",
+     "src": "keep",
+     "wasId": "22441762"
+    },
+    {
+     "idx": 387,
+     "id": "29747526",
+     "title": "Who Says",
+     "artist": "Selena Gomez",
+     "src": "keep",
+     "wasId": "29747526"
+    },
+    {
+     "idx": 390,
+     "id": "28756834",
+     "title": "All About That Bass",
+     "artist": "Meghan Trainor",
+     "src": "keep",
+     "wasId": "28756834"
+    },
+    {
+     "idx": 398,
+     "id": "34072434",
+     "title": "One Call Away",
+     "artist": "Charlie Puth",
+     "src": "keep",
+     "wasId": "34072434"
+    },
+    {
+     "idx": 401,
+     "id": "5093684",
+     "title": "Just the Way You Are",
+     "artist": "Bruno Mars",
+     "src": "keep",
+     "wasId": "5093684"
+    },
+    {
+     "idx": 403,
+     "id": "420478436",
+     "title": "We Don't Talk Anymore (Mr. Collipark Remix)",
+     "artist": "Charlie Puth / Selena Gomez / Mr. Collipark",
+     "src": "replace",
+     "wasId": "401249910"
+    },
+    {
+     "idx": 404,
+     "id": "473817398",
+     "title": "Attention",
+     "artist": "Charlie Puth",
+     "src": "keep",
+     "wasId": "473817398"
+    },
+    {
+     "idx": 405,
+     "id": "473602620",
+     "title": "There's Nothing Holdin' Me Back",
+     "artist": "Shawn Mendes",
+     "src": "keep",
+     "wasId": "473602620"
+    },
+    {
+     "idx": 406,
+     "id": "401249910",
+     "title": "We Don't Talk Anymore",
+     "artist": "Charlie Puth / Selena Gomez",
+     "src": "keep",
+     "wasId": "401249910"
+    },
+    {
+     "idx": 418,
+     "id": "29572512",
+     "title": "You Are In Love",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 419,
+     "id": "29572511",
+     "title": "Wonderland",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 420,
+     "id": "29572510",
+     "title": "Clean",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 421,
+     "id": "29572509",
+     "title": "I Know Places",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 422,
+     "id": "29572507",
+     "title": "How You Get The Girl",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 423,
+     "id": "29572506",
+     "title": "Wildest Dreams",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "29572506"
+    },
+    {
+     "idx": 424,
+     "id": "29572505",
+     "title": "Bad Blood",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "29572505"
+    },
+    {
+     "idx": 425,
+     "id": "29572504",
+     "title": "I Wish You Would",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 426,
+     "id": "29561033",
+     "title": "Shake It Off",
+     "artist": "Taylor Swift",
+     "src": "replace",
+     "wasId": "28953033"
+    },
+    {
+     "idx": 427,
+     "id": "29572503",
+     "title": "All You Had To Do Was Stay",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 428,
+     "id": "29498911",
+     "title": "Out Of The Woods",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "29498911"
+    },
+    {
+     "idx": 429,
+     "id": "29572502",
+     "title": "Style",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "29572502"
+    },
+    {
+     "idx": 430,
+     "id": "29572501",
+     "title": "Blank Space",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "29572501"
+    },
+    {
+     "idx": 431,
+     "id": "29561031",
+     "title": "Welcome To New York",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 432,
+     "id": "1382781566",
+     "title": "Daylight",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 433,
+     "id": "1382790037",
+     "title": "It's Nice To Have A Friend",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 434,
+     "id": "1382781549",
+     "title": "ME!",
+     "artist": "Taylor Swift / Brendon Urie",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 435,
+     "id": "1382781546",
+     "title": "Afterglow",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 436,
+     "id": "1382778973",
+     "title": "You Need To Calm Down",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 437,
+     "id": "1382781502",
+     "title": "False God",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 438,
+     "id": "1382781478",
+     "title": "Soon You'll Get Better",
+     "artist": "Taylor Swift / The Chicks",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 439,
+     "id": "1382781444",
+     "title": "London Boy",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 440,
+     "id": "1382778878",
+     "title": "Cornelia Street",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 441,
+     "id": "1382781417",
+     "title": "Paper Rings",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 442,
+     "id": "1382781399",
+     "title": "Miss Americana & The Heartbreak Prince",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 443,
+     "id": "1382781397",
+     "title": "I Think He Knows",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 444,
+     "id": "1382778829",
+     "title": "The Archer",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 445,
+     "id": "1382781100",
+     "title": "The Man",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "1382781100"
+    },
+    {
+     "idx": 446,
+     "id": "1382778514",
+     "title": "Lover",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "1382778514"
+    },
+    {
+     "idx": 447,
+     "id": "1382576173",
+     "title": "Cruel Summer",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "1382576173"
+    },
+    {
+     "idx": 448,
+     "id": "1382572453",
+     "title": "I Forgot That You Existed",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    }
+   ]
+  },
+  {
+   "id": "ballad",
+   "zh": "英语 · 抒情",
+   "en": "BALLAD",
+   "tracks": [
+    {
+     "idx": 205,
+     "id": "19558690",
+     "title": "How to Save a Life",
+     "artist": "The Fray",
+     "src": "keep",
+     "wasId": "19558690"
+    },
+    {
+     "idx": 206,
+     "id": "21730832",
+     "title": "Chasing Cars",
+     "artist": "Snow Patrol",
+     "src": "replace",
+     "wasId": "27200688"
+    },
+    {
+     "idx": 207,
+     "id": "26505362",
+     "title": "All I Want",
+     "artist": "Kodaline",
+     "src": "replace",
+     "wasId": "26330723"
+    },
+    {
+     "idx": 208,
+     "id": "17177277",
+     "title": "Sparks",
+     "artist": "Coldplay",
+     "src": "replace",
+     "wasId": "1496239563"
+    },
+    {
+     "idx": 209,
+     "id": "1409093519",
+     "title": "Falling",
+     "artist": "Harry Styles",
+     "src": "keep",
+     "wasId": "1409093519"
+    },
+    {
+     "idx": 210,
+     "id": "16435050",
+     "title": "Make You Feel My Love",
+     "artist": "Adele",
+     "src": "replace",
+     "wasId": "27412429"
+    },
+    {
+     "idx": 211,
+     "id": "5159010",
+     "title": "Hey There Delilah",
+     "artist": "Plain White T's",
+     "src": "keep",
+     "wasId": "5159010"
+    },
+    {
+     "idx": 212,
+     "id": "563586080",
+     "title": "The Night We Met",
+     "artist": "Lord Huron / Phoebe Bridgers",
+     "src": "replace",
+     "wasId": "2691123316"
+    },
+    {
+     "idx": 213,
+     "id": "5054926",
+     "title": "When You Say Nothing At All（电影《新娘百分百》插曲）",
+     "artist": "Ronan Keating",
+     "src": "replace",
+     "wasId": "18548880"
+    },
+    {
+     "idx": 214,
+     "id": "1313096578",
+     "title": "Shallow（电影《一个明星的诞生》主题曲）",
+     "artist": "Lady Gaga / Bradley Cooper",
+     "src": "keep",
+     "wasId": "1313096578"
+    },
+    {
+     "idx": 216,
+     "id": "1374446646",
+     "title": "I Love You 3000",
+     "artist": "Stephanie Poetri",
+     "src": "keep",
+     "wasId": "1374446646"
+    },
+    {
+     "idx": 220,
+     "id": "26608879",
+     "title": "Burn",
+     "artist": "Ellie Goulding",
+     "src": "keep",
+     "wasId": "26608879"
+    },
+    {
+     "idx": 221,
+     "id": "28531849",
+     "title": "Stay With Me",
+     "artist": "Sam Smith",
+     "src": "keep",
+     "wasId": "28531849"
+    },
+    {
+     "idx": 222,
+     "id": "28208046",
+     "title": "Say Something",
+     "artist": "A Great Big World",
+     "src": "keep",
+     "wasId": "28208046"
+    },
+    {
+     "idx": 223,
+     "id": "16435064",
+     "title": "Skyfall (Full Length)（电影《007：大破天幕杀机》主题曲）",
+     "artist": "Adele",
+     "src": "keep",
+     "wasId": "16435064"
+    },
+    {
+     "idx": 224,
+     "id": "1350601781",
+     "title": "Arcade",
+     "artist": "Duncan Laurence",
+     "src": "keep",
+     "wasId": "1350601781"
+    },
+    {
+     "idx": 225,
+     "id": "504492140",
+     "title": "Too Good At Goodbyes",
+     "artist": "Sam Smith",
+     "src": "keep",
+     "wasId": "504492140"
+    },
+    {
+     "idx": 226,
+     "id": "28586064",
+     "title": "I'm Not the Only One",
+     "artist": "Sam Smith",
+     "src": "keep",
+     "wasId": "28586064"
+    },
+    {
+     "idx": 227,
+     "id": "18161816",
+     "title": "Let Her Go",
+     "artist": "Passenger",
+     "src": "keep",
+     "wasId": "18161816"
+    },
+    {
+     "idx": 228,
+     "id": "25706371",
+     "title": "Impossible",
+     "artist": "James Arthur",
+     "src": "keep",
+     "wasId": "25706371"
+    },
+    {
+     "idx": 229,
+     "id": "429528027",
+     "title": "Say You Won't Let Go",
+     "artist": "James Arthur",
+     "src": "keep",
+     "wasId": "429528027"
+    },
+    {
+     "idx": 230,
+     "id": "1404805139",
+     "title": "Before You Go",
+     "artist": "Lewis Capaldi",
+     "src": "keep",
+     "wasId": "1404805139"
+    },
+    {
+     "idx": 231,
+     "id": "36841428",
+     "title": "All I Ask",
+     "artist": "Adele",
+     "src": "keep",
+     "wasId": "36841428"
+    },
+    {
+     "idx": 232,
+     "id": "2117009",
+     "title": "Set Fire to the Rain",
+     "artist": "Adele",
+     "src": "keep",
+     "wasId": "2117009"
+    },
+    {
+     "idx": 233,
+     "id": "1887190390",
+     "title": "Easy On Me",
+     "artist": "Adele",
+     "src": "keep",
+     "wasId": "1887190390"
+    },
+    {
+     "idx": 234,
+     "id": "25657241",
+     "title": "It Will Rain",
+     "artist": "Bruno Mars",
+     "src": "keep",
+     "wasId": "25657241"
+    },
+    {
+     "idx": 235,
+     "id": "25657236",
+     "title": "When I Was Your Man",
+     "artist": "Bruno Mars",
+     "src": "keep",
+     "wasId": "25657236"
+    },
+    {
+     "idx": 323,
+     "id": "1323911406",
+     "title": "Someone You Loved",
+     "artist": "Lewis Capaldi",
+     "src": "replace",
+     "wasId": "1803545978"
+    },
+    {
+     "idx": 325,
+     "id": "28680438",
+     "title": "Thinking out Loud",
+     "artist": "Ed Sheeran",
+     "src": "keep",
+     "wasId": "28680438"
+    },
+    {
+     "idx": 333,
+     "id": "2411634",
+     "title": "A Thousand Years",
+     "artist": "Christina Perri",
+     "src": "keep",
+     "wasId": "2411634"
+    },
+    {
+     "idx": 350,
+     "id": "35847388",
+     "title": "Hello",
+     "artist": "Adele",
+     "src": "keep",
+     "wasId": "35847388"
+    },
+    {
+     "idx": 351,
+     "id": "36841427",
+     "title": "Love In The Dark",
+     "artist": "Adele",
+     "src": "keep",
+     "wasId": "36841427"
+    },
+    {
+     "idx": 378,
+     "id": "460043703",
+     "title": "Perfect",
+     "artist": "Ed Sheeran",
+     "src": "keep",
+     "wasId": "460043703"
+    },
+    {
+     "idx": 391,
+     "id": "27556211",
+     "title": "All of Me",
+     "artist": "John Legend",
+     "src": "keep",
+     "wasId": "27556211"
+    },
+    {
+     "idx": 392,
+     "id": "25657274",
+     "title": "Talking to the Moon",
+     "artist": "Bruno Mars",
+     "src": "keep",
+     "wasId": "25657274"
+    },
+    {
+     "idx": 393,
+     "id": "16232697",
+     "title": "Because of You",
+     "artist": "Kelly Clarkson",
+     "src": "keep",
+     "wasId": "16232697"
+    },
+    {
+     "idx": 395,
+     "id": "402073823",
+     "title": "When We Were Young",
+     "artist": "Adele",
+     "src": "keep",
+     "wasId": "402073823"
+    },
+    {
+     "idx": 396,
+     "id": "16435049",
+     "title": "Someone Like You",
+     "artist": "Adele",
+     "src": "keep",
+     "wasId": "16435049"
+    },
+    {
+     "idx": 399,
+     "id": "29966565",
+     "title": "Love Me Like You Do（电影《五十度灰》主题曲）",
+     "artist": "Ellie Goulding",
+     "src": "keep",
+     "wasId": "29966565"
+    }
+   ]
+  },
+  {
+   "id": "rock",
+   "zh": "英语 · 摇滚",
+   "en": "ROCK",
+   "tracks": [
+    {
+     "idx": 116,
+     "id": "27697195",
+     "title": "Wrecking Ball",
+     "artist": "Miley Cyrus",
+     "src": "keep",
+     "wasId": "27697195"
+    },
+    {
+     "idx": 117,
+     "id": "3225999",
+     "title": "Whataya Want from Me",
+     "artist": "P!nk",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 118,
+     "id": "2103580032",
+     "title": "All Out Of Fight",
+     "artist": "P!nk",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 119,
+     "id": "26145391",
+     "title": "Here's To Never Growing Up",
+     "artist": "Avril Lavigne",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 120,
+     "id": "16431842",
+     "title": "Innocence",
+     "artist": "Avril Lavigne",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 121,
+     "id": "16432052",
+     "title": "Girlfriend",
+     "artist": "Avril Lavigne",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 122,
+     "id": "16431880",
+     "title": "Complicated",
+     "artist": "Avril Lavigne",
+     "src": "keep",
+     "wasId": "16431880"
+    },
+    {
+     "idx": 123,
+     "id": "25657526",
+     "title": "Catch My Breath",
+     "artist": "Kelly Clarkson",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 124,
+     "id": "20200923",
+     "title": "Secrets",
+     "artist": "OneRepublic",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 125,
+     "id": "3427383631",
+     "title": "Pay That Toll",
+     "artist": "OneRepublic",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 126,
+     "id": "1313303916",
+     "title": "In the End（结果到头来）",
+     "artist": "Linkin Park",
+     "src": "replace",
+     "wasId": "1426247184"
+    },
+    {
+     "idx": 127,
+     "id": "16686599",
+     "title": "Numb（麻木不仁）",
+     "artist": "Linkin Park",
+     "src": "keep",
+     "wasId": "16686599"
+    },
+    {
+     "idx": 128,
+     "id": "460043748",
+     "title": "Battle Symphony",
+     "artist": "Linkin Park",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 129,
+     "id": "460043753",
+     "title": "One More Light（又一道光芒）",
+     "artist": "Linkin Park",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 130,
+     "id": "1927389937",
+     "title": "Bones",
+     "artist": "Imagine Dragons",
+     "src": "keep",
+     "wasId": "1927389937"
+    },
+    {
+     "idx": 131,
+     "id": "1338149101",
+     "title": "Believer",
+     "artist": "Imagine Dragons / Lil Wayne",
+     "src": "keep",
+     "wasId": "1338149101"
+    },
+    {
+     "idx": 132,
+     "id": "17177367",
+     "title": "The Scientist",
+     "artist": "Coldplay",
+     "src": "keep",
+     "wasId": "17177367"
+    },
+    {
+     "idx": 133,
+     "id": "17177380",
+     "title": "Paradise",
+     "artist": "Coldplay",
+     "src": "keep",
+     "wasId": "17177380"
+    },
+    {
+     "idx": 134,
+     "id": "28528999",
+     "title": "A Sky Full of Stars",
+     "artist": "Coldplay",
+     "src": "keep",
+     "wasId": "28528999"
+    },
+    {
+     "idx": 135,
+     "id": "3986017",
+     "title": "Viva La Vida（生命万岁）",
+     "artist": "Coldplay",
+     "src": "keep",
+     "wasId": "3986017"
+    },
+    {
+     "idx": 136,
+     "id": "1869271",
+     "title": "We Will Rock You",
+     "artist": "Queen",
+     "src": "replace",
+     "wasId": "5104537"
+    },
+    {
+     "idx": 314,
+     "id": "31789010",
+     "title": "Shots (Broiler Remix)",
+     "artist": "Imagine Dragons / Broiler",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 330,
+     "id": "27896565",
+     "title": "Here's to Never Growing Up",
+     "artist": "Avril Lavigne",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 331,
+     "id": "27896566",
+     "title": "Bitchin' Summer",
+     "artist": "Avril Lavigne",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 332,
+     "id": "3370511577",
+     "title": "drop dead",
+     "artist": "Olivia Rodrigo",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 337,
+     "id": "3392742809",
+     "title": "stupid song",
+     "artist": "Olivia Rodrigo",
+     "src": "keep",
+     "wasId": "3392742809"
+    },
+    {
+     "idx": 344,
+     "id": "1349964388",
+     "title": "Running Up That Hill",
+     "artist": "Meg Myers",
+     "src": "keep",
+     "wasId": "1349964388"
+    },
+    {
+     "idx": 356,
+     "id": "26060065",
+     "title": "Counting Stars（数星星）",
+     "artist": "OneRepublic",
+     "src": "keep",
+     "wasId": "26060065"
+    },
+    {
+     "idx": 367,
+     "id": "4224657",
+     "title": "Apologize",
+     "artist": "OneRepublic",
+     "src": "replace",
+     "wasId": "21803604"
+    },
+    {
+     "idx": 369,
+     "id": "17177324",
+     "title": "Yellow",
+     "artist": "Coldplay",
+     "src": "keep",
+     "wasId": "17177324"
+    },
+    {
+     "idx": 380,
+     "id": "21373918",
+     "title": "Raise Your Glass",
+     "artist": "P!nk",
+     "src": "replace",
+     "wasId": "3226001"
+    },
+    {
+     "idx": 381,
+     "id": "415126537",
+     "title": "Just Like Fire（电影《爱丽丝梦游仙境2：镜中奇遇记》主题曲）",
+     "artist": "P!nk",
+     "src": "keep",
+     "wasId": "415126537"
+    },
+    {
+     "idx": 382,
+     "id": "27515086",
+     "title": "Try",
+     "artist": "P!nk",
+     "src": "replace",
+     "wasId": "21373644"
+    },
+    {
+     "idx": 394,
+     "id": "26569168",
+     "title": "Stronger",
+     "artist": "Kelly Clarkson",
+     "src": "replace",
+     "wasId": "2870985"
+    },
+    {
+     "idx": 449,
+     "id": "455311479",
+     "title": "Believer",
+     "artist": "Imagine Dragons",
+     "src": "replace",
+     "wasId": "1338149101"
+    }
+   ]
+  },
+  {
+   "id": "edm-and-dance",
+   "zh": "英语 · 电音舞曲",
+   "en": "EDM & DANCE",
+   "tracks": [
+    {
+     "idx": 175,
+     "id": "21407207",
+     "title": "Give Me Everything",
+     "artist": "Pitbull / Ne-Yo / Afrojack / Nayer",
+     "src": "replace",
+     "wasId": "27072480"
+    },
+    {
+     "idx": 176,
+     "id": "29534449",
+     "title": "Unity",
+     "artist": "TheFatRat",
+     "src": "keep",
+     "wasId": "29534449"
+    },
+    {
+     "idx": 177,
+     "id": "1480204501",
+     "title": "Salt",
+     "artist": "Ava Max",
+     "src": "keep",
+     "wasId": "1480204501"
+    },
+    {
+     "idx": 178,
+     "id": "3406918",
+     "title": "Titanium",
+     "artist": "David Guetta / Sia",
+     "src": "keep",
+     "wasId": "3406918"
+    },
+    {
+     "idx": 179,
+     "id": "29771432",
+     "title": "Firestone",
+     "artist": "Kygo / Conrad Sewell",
+     "src": "keep",
+     "wasId": "29771432"
+    },
+    {
+     "idx": 180,
+     "id": "2011072415",
+     "title": "On My Way（《和平精英》盛夏推广曲）",
+     "artist": "Alan Walker / Sabrina Carpenter / Farruko",
+     "src": "keep",
+     "wasId": "2011072415"
+    },
+    {
+     "idx": 181,
+     "id": "419594258",
+     "title": "Hymn For The Weekend (Remix)",
+     "artist": "Alan Walker / Coldplay",
+     "src": "replace",
+     "wasId": "37240629"
+    },
+    {
+     "idx": 182,
+     "id": "29947420",
+     "title": "Fade",
+     "artist": "Alan Walker",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 183,
+     "id": "436487129",
+     "title": "Move Your Body (Alan Walker Remix)",
+     "artist": "Alan Walker / Sia",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 184,
+     "id": "506092035",
+     "title": "The Spectre（幽魂）",
+     "artist": "Alan Walker",
+     "src": "replace",
+     "wasId": "1398324033"
+    },
+    {
+     "idx": 185,
+     "id": "515453363",
+     "title": "All Falls Down（一切陨落）",
+     "artist": "Alan Walker / Noah Cyrus / Digital Farm Animals / Juliander",
+     "src": "replace",
+     "wasId": "1331708845"
+    },
+    {
+     "idx": 186,
+     "id": "444269135",
+     "title": "Alone",
+     "artist": "Alan Walker",
+     "src": "keep",
+     "wasId": "444269135"
+    },
+    {
+     "idx": 187,
+     "id": "531051690",
+     "title": "The Middle",
+     "artist": "Zedd / Grey / Maren Morris",
+     "src": "keep",
+     "wasId": "531051690"
+    },
+    {
+     "idx": 188,
+     "id": "461518855",
+     "title": "Stay（片刻停留）",
+     "artist": "Zedd / Alessia Cara",
+     "src": "replace",
+     "wasId": "1861580070"
+    },
+    {
+     "idx": 189,
+     "id": "19902364",
+     "title": "Clarity",
+     "artist": "Zedd / Foxes",
+     "src": "keep",
+     "wasId": "19902364"
+    },
+    {
+     "idx": 190,
+     "id": "453185808",
+     "title": "Paris",
+     "artist": "The Chainsmokers",
+     "src": "keep",
+     "wasId": "453185808"
+    },
+    {
+     "idx": 191,
+     "id": "402070862",
+     "title": "Don't Let Me Down",
+     "artist": "The Chainsmokers / Daya",
+     "src": "keep",
+     "wasId": "402070862"
+    },
+    {
+     "idx": 192,
+     "id": "497218032",
+     "title": "Silence",
+     "artist": "Marshmello / Khalid",
+     "src": "keep",
+     "wasId": "497218032"
+    },
+    {
+     "idx": 193,
+     "id": "26496942",
+     "title": "Animals (Original Mix)",
+     "artist": "Martin Garrix",
+     "src": "replace",
+     "wasId": "28786054"
+    },
+    {
+     "idx": 194,
+     "id": "456175020",
+     "title": "Scared to Be Lonely",
+     "artist": "Martin Garrix / Dua Lipa",
+     "src": "keep",
+     "wasId": "456175020"
+    },
+    {
+     "idx": 195,
+     "id": "423227295",
+     "title": "In the Name of Love（以爱之名）",
+     "artist": "Martin Garrix / Bebe Rexha",
+     "src": "keep",
+     "wasId": "423227295"
+    },
+    {
+     "idx": 196,
+     "id": "549800783",
+     "title": "One Kiss",
+     "artist": "Calvin Harris / Dua Lipa",
+     "src": "replace",
+     "wasId": "2152133213"
+    },
+    {
+     "idx": 197,
+     "id": "443242",
+     "title": "Summer（电影《菊次郎的夏天》主题曲）",
+     "artist": "久石譲",
+     "src": "replace",
+     "wasId": "28306554"
+    },
+    {
+     "idx": 198,
+     "id": "16963280",
+     "title": "Feel So Close (Radio Edit)",
+     "artist": "Calvin Harris",
+     "src": "keep",
+     "wasId": "16963280"
+    },
+    {
+     "idx": 199,
+     "id": "27713921",
+     "title": "Hey Brother",
+     "artist": "Avicii / Dan Tyminski",
+     "src": "keep",
+     "wasId": "27713921"
+    },
+    {
+     "idx": 200,
+     "id": "29771146",
+     "title": "The Nights",
+     "artist": "Avicii / Nicholas Furlong",
+     "src": "replace",
+     "wasId": "1826923389"
+    },
+    {
+     "idx": 201,
+     "id": "27713920",
+     "title": "Wake Me Up",
+     "artist": "Avicii / Aloe Blacc",
+     "src": "replace",
+     "wasId": "26546088"
+    },
+    {
+     "idx": 310,
+     "id": "439076364",
+     "title": "Solo Dance",
+     "artist": "Martin Jensen",
+     "src": "keep",
+     "wasId": "439076364"
+    },
+    {
+     "idx": 311,
+     "id": "2150087691",
+     "title": "Walk Thru Fire（赴汤蹈火）",
+     "artist": "Vicetone",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 312,
+     "id": "447925342",
+     "title": "Meant To Be（命中注定）",
+     "artist": "Arc North / Krista Marina",
+     "src": "replace",
+     "wasId": "497131617"
+    },
+    {
+     "idx": 313,
+     "id": "500410102",
+     "title": "Run Free (feat. IVIE)",
+     "artist": "Deep Chills / IVIE",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 316,
+     "id": "1952112969",
+     "title": "Go Again (feat. ELYSA)",
+     "artist": "King CAAN / Elysa",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 318,
+     "id": "1842927464",
+     "title": "Waiting For Love",
+     "artist": "Avicii",
+     "src": "keep",
+     "wasId": "1842927464"
+    },
+    {
+     "idx": 319,
+     "id": "1356658022",
+     "title": "Slow Down（放缓）",
+     "artist": "Madnap / Pauline Herr",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 320,
+     "id": "480426313",
+     "title": "There For You（守候）",
+     "artist": "Martin Garrix / Troye Sivan",
+     "src": "keep",
+     "wasId": "480426313"
+    },
+    {
+     "idx": 322,
+     "id": "423228325",
+     "title": "Closer",
+     "artist": "The Chainsmokers / Halsey",
+     "src": "keep",
+     "wasId": "423228325"
+    },
+    {
+     "idx": 343,
+     "id": "17706562",
+     "title": "Good Time",
+     "artist": "Owl City / Carly Rae Jepsen",
+     "src": "keep",
+     "wasId": "17706562"
+    },
+    {
+     "idx": 349,
+     "id": "515269424",
+     "title": "Wolves",
+     "artist": "Selena Gomez / Marshmello",
+     "src": "keep",
+     "wasId": "515269424"
+    },
+    {
+     "idx": 355,
+     "id": "411314681",
+     "title": "This Is What You Came For",
+     "artist": "Calvin Harris / Rihanna",
+     "src": "keep",
+     "wasId": "411314681"
+    },
+    {
+     "idx": 366,
+     "id": "3313334",
+     "title": "We Found Love",
+     "artist": "Rihanna / Calvin Harris",
+     "src": "replace",
+     "wasId": "21562960"
+    },
+    {
+     "idx": 370,
+     "id": "461347998",
+     "title": "Something Just Like This",
+     "artist": "The Chainsmokers / Coldplay",
+     "src": "keep",
+     "wasId": "461347998"
+    },
+    {
+     "idx": 377,
+     "id": "34228719",
+     "title": "What Do You Mean?",
+     "artist": "Justin Bieber",
+     "src": "keep",
+     "wasId": "34228719"
+    },
+    {
+     "idx": 388,
+     "id": "21562994",
+     "title": "S&M",
+     "artist": "Rihanna",
+     "src": "keep",
+     "wasId": "21562994"
+    }
+   ]
+  },
+  {
+   "id": "randb-and-soul",
+   "zh": "英语 · 节奏布鲁斯",
+   "en": "R&B & SOUL",
+   "tracks": [
+    {
+     "idx": 157,
+     "id": "2066953372",
+     "title": "Water",
+     "artist": "Tyla",
+     "src": "replace",
+     "wasId": "2091578499"
+    },
+    {
+     "idx": 158,
+     "id": "426194883",
+     "title": "Pink + White",
+     "artist": "Frank Ocean",
+     "src": "keep",
+     "wasId": "426194883"
+    },
+    {
+     "idx": 159,
+     "id": "2752219406",
+     "title": "Dancing in the Smoke (From the Netflix Series \"Nobody Wants This\" Season 2)",
+     "artist": "GIVĒON",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 160,
+     "id": "1424400870",
+     "title": "HEARTBREAK ANNIVERSARY",
+     "artist": "GIVĒON",
+     "src": "keep",
+     "wasId": "1424400870"
+    },
+    {
+     "idx": 164,
+     "id": "2052348113",
+     "title": "Popular (Music from the HBO Original Series)（剧集《偶像漩涡》原声）",
+     "artist": "The Weeknd / Playboi Carti / Madonna",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 165,
+     "id": "2058139099",
+     "title": "One Of The Girls（剧集《偶像漩涡》原声）",
+     "artist": "The Weeknd / JENNIE / Lily-Rose Depp",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 166,
+     "id": "1938344407",
+     "title": "About Damn Time",
+     "artist": "Lizzo",
+     "src": "keep",
+     "wasId": "1938344407"
+    },
+    {
+     "idx": 167,
+     "id": "514172235",
+     "title": "Best Part",
+     "artist": "Daniel Caesar / H.E.R.",
+     "src": "keep",
+     "wasId": "514172235"
+    },
+    {
+     "idx": 168,
+     "id": "1824927085",
+     "title": "Leave The Door Open",
+     "artist": "Bruno Mars / Anderson .Paak / Silk Sonic",
+     "src": "keep",
+     "wasId": "1824927085"
+    },
+    {
+     "idx": 169,
+     "id": "1401302504",
+     "title": "Say So",
+     "artist": "Doja Cat",
+     "src": "keep",
+     "wasId": "1401302504"
+    },
+    {
+     "idx": 170,
+     "id": "1964208608",
+     "title": "Kiss Me More",
+     "artist": "Doja Cat / 渡辺直美",
+     "src": "replace",
+     "wasId": "1855285578"
+    },
+    {
+     "idx": 171,
+     "id": "2004563422",
+     "title": "SOS",
+     "artist": "SZA",
+     "src": "keep",
+     "wasId": "2004563422"
+    },
+    {
+     "idx": 172,
+     "id": "1806905006",
+     "title": "Good Days",
+     "artist": "SZA",
+     "src": "keep",
+     "wasId": "1806905006"
+    },
+    {
+     "idx": 173,
+     "id": "2004563430",
+     "title": "Snooze",
+     "artist": "SZA",
+     "src": "keep",
+     "wasId": "2004563430"
+    },
+    {
+     "idx": 174,
+     "id": "2188235",
+     "title": "Halo",
+     "artist": "Beyoncé",
+     "src": "keep",
+     "wasId": "2188235"
+    },
+    {
+     "idx": 315,
+     "id": "27158959",
+     "title": "Come Back To Me",
+     "artist": "宇多田ヒカル",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 321,
+     "id": "28718313",
+     "title": "The Way I Still Love You（就像我还爱你一样）",
+     "artist": "Reynard Silva",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 329,
+     "id": "19550042",
+     "title": "Halo",
+     "artist": "Beyoncé",
+     "src": "replace",
+     "wasId": "2188235"
+    },
+    {
+     "idx": 346,
+     "id": "2004562490",
+     "title": "Kill Bill",
+     "artist": "SZA",
+     "src": "keep",
+     "wasId": "2004562490"
+    },
+    {
+     "idx": 353,
+     "id": "21563094",
+     "title": "Umbrella",
+     "artist": "Rihanna / JAŸ-Z",
+     "src": "keep",
+     "wasId": "21563094"
+    },
+    {
+     "idx": 376,
+     "id": "1830419924",
+     "title": "Peaches",
+     "artist": "Justin Bieber / Daniel Caesar / GIVĒON",
+     "src": "replace",
+     "wasId": "1907161101"
+    },
+    {
+     "idx": 389,
+     "id": "21563184",
+     "title": "Diamonds",
+     "artist": "Rihanna",
+     "src": "keep",
+     "wasId": "21563184"
+    },
+    {
+     "idx": 397,
+     "id": "16435051",
+     "title": "Rolling in the Deep",
+     "artist": "Adele",
+     "src": "keep",
+     "wasId": "16435051"
+    },
+    {
+     "idx": 400,
+     "id": "29722263",
+     "title": "Uptown Funk",
+     "artist": "Mark Ronson / Bruno Mars",
+     "src": "keep",
+     "wasId": "29722263"
+    }
+   ]
+  },
+  {
+   "id": "hip-hop",
+   "zh": "英语 · 说唱",
+   "en": "HIP-HOP",
+   "tracks": [
+    {
+     "idx": 137,
+     "id": "5103312",
+     "title": "Empire State Of Mind（纽约之心）",
+     "artist": "JAŸ-Z / Alicia Keys",
+     "src": "replace",
+     "wasId": "18614153"
+    },
+    {
+     "idx": 139,
+     "id": "17405587",
+     "title": "Still D.R.E.",
+     "artist": "Dr. Dre / Snoop Dogg",
+     "src": "keep",
+     "wasId": "17405587"
+    },
+    {
+     "idx": 140,
+     "id": "545350938",
+     "title": "NUMB",
+     "artist": "XXXTENTACION",
+     "src": "replace",
+     "wasId": "16686599"
+    },
+    {
+     "idx": 141,
+     "id": "501133798",
+     "title": "Jocelyn Flores",
+     "artist": "XXXTENTACION",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 142,
+     "id": "501133800",
+     "title": "Everybody Dies In Their Nightmares",
+     "artist": "XXXTENTACION",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 143,
+     "id": "545350935",
+     "title": "SAD!",
+     "artist": "XXXTENTACION",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 144,
+     "id": "1312062100",
+     "title": "Run Tha Streetz",
+     "artist": "2Pac / Michel'le / Storm / Mutah",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 145,
+     "id": "469104548",
+     "title": "HUMBLE.",
+     "artist": "Kendrick Lamar",
+     "src": "replace",
+     "wasId": "481873953"
+    },
+    {
+     "idx": 146,
+     "id": "2152805690",
+     "title": "Not Like Us",
+     "artist": "Kendrick Lamar",
+     "src": "keep",
+     "wasId": "2152805690"
+    },
+    {
+     "idx": 147,
+     "id": "16648232",
+     "title": "Party Rock Anthem",
+     "artist": "LMFAO / Lauren Bennett / GoonRock",
+     "src": "replace",
+     "wasId": "1817961813"
+    },
+    {
+     "idx": 148,
+     "id": "1862710350",
+     "title": "INDUSTRY BABY",
+     "artist": "Lil Nas X / Jack Harlow",
+     "src": "replace",
+     "wasId": "2037073798"
+    },
+    {
+     "idx": 149,
+     "id": "1373172794",
+     "title": "Old Town Road",
+     "artist": "Lil Nas X",
+     "src": "replace",
+     "wasId": "1416661690"
+    },
+    {
+     "idx": 150,
+     "id": "409031076",
+     "title": "One Dance",
+     "artist": "Drake / WizKid / Kyla",
+     "src": "replace",
+     "wasId": "411349769"
+    },
+    {
+     "idx": 151,
+     "id": "555974038",
+     "title": "Better Now",
+     "artist": "Post Malone",
+     "src": "keep",
+     "wasId": "555974038"
+    },
+    {
+     "idx": 152,
+     "id": "1318733599",
+     "title": "Sunflower（电影《蜘蛛侠：平行宇宙》迈尔斯主题曲）",
+     "artist": "Post Malone / Swae Lee",
+     "src": "keep",
+     "wasId": "1318733599"
+    },
+    {
+     "idx": 153,
+     "id": "27853227",
+     "title": "Rap God",
+     "artist": "Eminem",
+     "src": "replace",
+     "wasId": "1485777161"
+    },
+    {
+     "idx": 154,
+     "id": "1299818",
+     "title": "Without Me",
+     "artist": "Eminem",
+     "src": "replace",
+     "wasId": "1322432164"
+    },
+    {
+     "idx": 155,
+     "id": "17572422",
+     "title": "Stan",
+     "artist": "Eminem / Dido",
+     "src": "keep",
+     "wasId": "17572422"
+    },
+    {
+     "idx": 156,
+     "id": "5052317",
+     "title": "Lose Yourself",
+     "artist": "Eminem",
+     "src": "keep",
+     "wasId": "5052317"
+    },
+    {
+     "idx": 161,
+     "id": "531777461",
+     "title": "God's Plan",
+     "artist": "Drake",
+     "src": "replace",
+     "wasId": "3420781828"
+    },
+    {
+     "idx": 162,
+     "id": "1444959590",
+     "title": "Chicago Freestyle（风城随笔）",
+     "artist": "Drake / GIVĒON",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 163,
+     "id": "426026646",
+     "title": "Work (Derra Flip)",
+     "artist": "Derra / Drake / Rihanna",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 307,
+     "id": "5100769",
+     "title": "Nothing On You",
+     "artist": "B.o.B / Bruno Mars",
+     "src": "keep",
+     "wasId": "5100769"
+    },
+    {
+     "idx": 354,
+     "id": "1297841",
+     "title": "Love The Way You Lie",
+     "artist": "Eminem / Rihanna",
+     "src": "keep",
+     "wasId": "1297841"
+    },
+    {
+     "idx": 368,
+     "id": "27902187",
+     "title": "The Monster",
+     "artist": "Eminem / Rihanna",
+     "src": "keep",
+     "wasId": "27902187"
+    },
+    {
+     "idx": 384,
+     "id": "17793698",
+     "title": "Whistle",
+     "artist": "Flo Rida",
+     "src": "keep",
+     "wasId": "17793698"
+    },
+    {
+     "idx": 402,
+     "id": "30953009",
+     "title": "See You Again（有缘再见）",
+     "artist": "Wiz Khalifa / Charlie Puth",
+     "src": "keep",
+     "wasId": "30953009"
+    }
+   ]
+  },
+  {
+   "id": "folk-and-country",
+   "zh": "英语 · 民谣与乡村",
+   "en": "FOLK & COUNTRY",
+   "tracks": [
+    {
+     "idx": 111,
+     "id": "1989318036",
+     "title": "Stick Season",
+     "artist": "Noah Kahan",
+     "src": "keep",
+     "wasId": "1989318036"
+    },
+    {
+     "idx": 112,
+     "id": "1874585362",
+     "title": "Until I Found You",
+     "artist": "Stephen Sanchez",
+     "src": "keep",
+     "wasId": "1874585362"
+    },
+    {
+     "idx": 113,
+     "id": "27646851",
+     "title": "Best Day Of My Life",
+     "artist": "American Authors",
+     "src": "keep",
+     "wasId": "27646851"
+    },
+    {
+     "idx": 114,
+     "id": "18611643",
+     "title": "I'm Yours",
+     "artist": "Jason Mraz",
+     "src": "keep",
+     "wasId": "18611643"
+    },
+    {
+     "idx": 115,
+     "id": "35724589",
+     "title": "Lemon Tree（柠檬树）",
+     "artist": "Fool's Garden",
+     "src": "keep",
+     "wasId": "35724589"
+    },
+    {
+     "idx": 306,
+     "id": "27759600",
+     "title": "Five Hundred Miles（五百英里）",
+     "artist": "Justin Timberlake / Carey Mulligan / Stark Sands",
+     "src": "keep",
+     "wasId": "27759600"
+    },
+    {
+     "idx": 308,
+     "id": "28859948",
+     "title": "Turnin'",
+     "artist": "Young Rising Sons",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 309,
+     "id": "4433364",
+     "title": "Summer Vibe",
+     "artist": "Walk off the Earth",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 327,
+     "id": "17858810",
+     "title": "Lemon Tree（柠檬树）",
+     "artist": "Fool's Garden",
+     "src": "replace",
+     "wasId": "35724589"
+    },
+    {
+     "idx": 328,
+     "id": "460043708",
+     "title": "What Do I Know?",
+     "artist": "Ed Sheeran",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 342,
+     "id": "1496764168",
+     "title": "Heat Waves",
+     "artist": "Glass Animals",
+     "src": "keep",
+     "wasId": "1496764168"
+    },
+    {
+     "idx": 352,
+     "id": "460043704",
+     "title": "Galway Girl",
+     "artist": "Ed Sheeran",
+     "src": "keep",
+     "wasId": "460043704"
+    },
+    {
+     "idx": 383,
+     "id": "28157586",
+     "title": "If I Die Young",
+     "artist": "The Band Perry",
+     "src": "keep",
+     "wasId": "28157586"
+    },
+    {
+     "idx": 385,
+     "id": "19292984",
+     "title": "Love Story",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "19292984"
+    },
+    {
+     "idx": 407,
+     "id": "19292982",
+     "title": "Fearless",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "19292982"
+    },
+    {
+     "idx": 408,
+     "id": "19292813",
+     "title": "Starlight",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 409,
+     "id": "19292812",
+     "title": "Everything Has Changed",
+     "artist": "Taylor Swift / Ed Sheeran",
+     "src": "keep",
+     "wasId": "19292812"
+    },
+    {
+     "idx": 410,
+     "id": "19292807",
+     "title": "Stay Stay Stay",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "19292807"
+    },
+    {
+     "idx": 411,
+     "id": "25787222",
+     "title": "We Are Never Ever Getting Back Together",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "25787222"
+    },
+    {
+     "idx": 412,
+     "id": "19292805",
+     "title": "I Almost Do",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 413,
+     "id": "19292804",
+     "title": "22",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "19292804"
+    },
+    {
+     "idx": 414,
+     "id": "25787219",
+     "title": "All Too Well（记忆犹新）",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "25787219"
+    },
+    {
+     "idx": 415,
+     "id": "19292802",
+     "title": "I Knew You Were Trouble.",
+     "artist": "Taylor Swift",
+     "src": "replace",
+     "wasId": "25648017"
+    },
+    {
+     "idx": 416,
+     "id": "19292800",
+     "title": "Red",
+     "artist": "Taylor Swift",
+     "src": "keep",
+     "wasId": "19292800"
+    },
+    {
+     "idx": 417,
+     "id": "19292799",
+     "title": "State Of Grace",
+     "artist": "Taylor Swift",
+     "src": "new",
+     "wasId": null
+    }
+   ]
+  },
+  {
+   "id": "golden-classics",
+   "zh": "英语 · 黄金经典",
+   "en": "CLASSICS",
+   "tracks": [
+    {
+     "idx": 202,
+     "id": "4336098",
+     "title": "Let It Be (Remastered)",
+     "artist": "The Beatles",
+     "src": "replace",
+     "wasId": "5201829"
+    },
+    {
+     "idx": 203,
+     "id": "4337372",
+     "title": "Yesterday (Remastered)",
+     "artist": "The Beatles",
+     "src": "replace",
+     "wasId": "1295571534"
+    },
+    {
+     "idx": 204,
+     "id": "4331344",
+     "title": "Hey Jude",
+     "artist": "The Beatles",
+     "src": "replace",
+     "wasId": "1811303184"
+    },
+    {
+     "idx": 217,
+     "id": "20707713",
+     "title": "You Raise Me Up",
+     "artist": "Westlife",
+     "src": "keep",
+     "wasId": "20707713"
+    },
+    {
+     "idx": 218,
+     "id": "2080607",
+     "title": "My Love",
+     "artist": "Westlife",
+     "src": "replace",
+     "wasId": "26867112"
+    },
+    {
+     "idx": 219,
+     "id": "1470274244",
+     "title": "Can't Help Falling in Love",
+     "artist": "Elvis Presley",
+     "src": "keep",
+     "wasId": "1470274244"
+    }
+   ]
+  },
+  {
+   "id": "mandarin-pop",
+   "zh": "华语 · 流行",
+   "en": "MANDARIN POP",
+   "tracks": [
+    {
+     "idx": 18,
+     "id": "1966162185",
+     "title": "是你",
+     "artist": "梦然",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 39,
+     "id": "297839",
+     "title": "爱你 (Love You)",
+     "artist": "王心凌",
+     "src": "replace",
+     "wasId": "297710"
+    },
+    {
+     "idx": 40,
+     "id": "297805",
+     "title": "当你",
+     "artist": "王心凌",
+     "src": "replace",
+     "wasId": "108251"
+    },
+    {
+     "idx": 41,
+     "id": "1465225532",
+     "title": "逆战",
+     "artist": "张杰",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 42,
+     "id": "108795",
+     "title": "曹操",
+     "artist": "林俊杰",
+     "src": "keep",
+     "wasId": "108795"
+    },
+    {
+     "idx": 43,
+     "id": "191254",
+     "title": "天下",
+     "artist": "张杰",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 46,
+     "id": "139808",
+     "title": "快乐崇拜",
+     "artist": "潘玮柏 / 张韶涵",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 48,
+     "id": "25640392",
+     "title": "淋雨一直走 (Keep Walking)",
+     "artist": "张韶涵",
+     "src": "keep",
+     "wasId": "25640392"
+    },
+    {
+     "idx": 49,
+     "id": "1410647903",
+     "title": "带我去找夜生活",
+     "artist": "告五人",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 50,
+     "id": "1368754688",
+     "title": "爱人错过 (Somewhere in time)",
+     "artist": "告五人",
+     "src": "keep",
+     "wasId": "1368754688"
+    },
+    {
+     "idx": 51,
+     "id": "1807799505",
+     "title": "唯一",
+     "artist": "告五人",
+     "src": "keep",
+     "wasId": "1807799505"
+    },
+    {
+     "idx": 52,
+     "id": "1959667345",
+     "title": "给你一瓶魔法药水",
+     "artist": "告五人",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 53,
+     "id": "167827",
+     "title": "素颜",
+     "artist": "许嵩 / 何曼婷",
+     "src": "keep",
+     "wasId": "167827"
+    },
+    {
+     "idx": 54,
+     "id": "411214279",
+     "title": "雅俗共赏",
+     "artist": "许嵩",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 56,
+     "id": "574921549",
+     "title": "怪咖",
+     "artist": "薛之谦",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 60,
+     "id": "518686034",
+     "title": "戒烟",
+     "artist": "李荣浩",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 61,
+     "id": "407450223",
+     "title": "爸爸妈妈",
+     "artist": "李荣浩",
+     "src": "keep",
+     "wasId": "407450223"
+    },
+    {
+     "idx": 62,
+     "id": "27678655",
+     "title": "李白",
+     "artist": "李荣浩",
+     "src": "keep",
+     "wasId": "27678655"
+    },
+    {
+     "idx": 63,
+     "id": "1407551413",
+     "title": "麻雀",
+     "artist": "李荣浩",
+     "src": "keep",
+     "wasId": "1407551413"
+    },
+    {
+     "idx": 64,
+     "id": "27731176",
+     "title": "模特",
+     "artist": "李荣浩",
+     "src": "keep",
+     "wasId": "27731176"
+    },
+    {
+     "idx": 67,
+     "id": "31654343",
+     "title": "不将就（电影《何以笙箫默》片尾主题曲）",
+     "artist": "李荣浩",
+     "src": "keep",
+     "wasId": "31654343"
+    },
+    {
+     "idx": 69,
+     "id": "1409382131",
+     "title": "摩天动物园 (City Zoo)",
+     "artist": "G.E.M.邓紫棋",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 70,
+     "id": "1484967131",
+     "title": "孤独 (Loneliness)",
+     "artist": "G.E.M.邓紫棋",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 71,
+     "id": "1412264550",
+     "title": "透明 (Selfless)",
+     "artist": "G.E.M.邓紫棋",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 72,
+     "id": "1970560265",
+     "title": "天空没有极限",
+     "artist": "G.E.M.邓紫棋",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 73,
+     "id": "29848657",
+     "title": "手心的蔷薇 (Beautiful)",
+     "artist": "林俊杰 / G.E.M.邓紫棋",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 74,
+     "id": "36270426",
+     "title": "来自天堂的魔鬼",
+     "artist": "G.E.M.邓紫棋",
+     "src": "keep",
+     "wasId": "36270426"
+    },
+    {
+     "idx": 76,
+     "id": "36024806",
+     "title": "再见 (good bye)",
+     "artist": "G.E.M.邓紫棋",
+     "src": "replace",
+     "wasId": "3389754902"
+    },
+    {
+     "idx": 80,
+     "id": "1405283464",
+     "title": "句号 (Full Stop)",
+     "artist": "G.E.M.邓紫棋",
+     "src": "keep",
+     "wasId": "1405283464"
+    },
+    {
+     "idx": 82,
+     "id": "2083785152",
+     "title": "唯一",
+     "artist": "G.E.M.邓紫棋",
+     "src": "replace",
+     "wasId": "1807799505"
+    },
+    {
+     "idx": 95,
+     "id": "1901371647",
+     "title": "孤勇者（动画剧集《英雄联盟：双城之战》中文主题曲）",
+     "artist": "陈奕迅",
+     "src": "keep",
+     "wasId": "1901371647"
+    },
+    {
+     "idx": 110,
+     "id": "108914",
+     "title": "江南 (River South)",
+     "artist": "林俊杰",
+     "src": "keep",
+     "wasId": "108914"
+    }
+   ]
+  },
+  {
+   "id": "mandarin-ballad",
+   "zh": "华语 · 抒情",
+   "en": "MANDARIN BALLAD",
+   "tracks": [
+    {
+     "idx": 21,
+     "id": "165026",
+     "title": "时间都去哪儿了（电影《私人定制》插曲\\电视剧《老牛家的战争》主题曲\\电视剧《空巢姥爷》主题曲）…",
+     "artist": "王铮亮",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 38,
+     "id": "254574",
+     "title": "后来（原曲《未来へ》）",
+     "artist": "刘若英",
+     "src": "keep",
+     "wasId": "254574"
+    },
+    {
+     "idx": 44,
+     "id": "28059417",
+     "title": "他不懂",
+     "artist": "张杰",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 47,
+     "id": "326990",
+     "title": "亲爱的，那不是爱情",
+     "artist": "张韶涵",
+     "src": "keep",
+     "wasId": "326990"
+    },
+    {
+     "idx": 55,
+     "id": "27955653",
+     "title": "你还要我怎样",
+     "artist": "薛之谦",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 57,
+     "id": "169185",
+     "title": "认真的雪",
+     "artist": "薛之谦",
+     "src": "keep",
+     "wasId": "169185"
+    },
+    {
+     "idx": 58,
+     "id": "1463165983",
+     "title": "天外来物",
+     "artist": "薛之谦",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 59,
+     "id": "32507038",
+     "title": "演员",
+     "artist": "薛之谦",
+     "src": "keep",
+     "wasId": "32507038"
+    },
+    {
+     "idx": 65,
+     "id": "2600493765",
+     "title": "恋人",
+     "artist": "李荣浩",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 66,
+     "id": "1293886117",
+     "title": "年少有为",
+     "artist": "李荣浩",
+     "src": "replace",
+     "wasId": "1468114204"
+    },
+    {
+     "idx": 68,
+     "id": "1330348068",
+     "title": "起风了（原曲：《ヤキモチ》—高桥优）",
+     "artist": "冯沁苑(买辣椒也用券)",
+     "src": "keep",
+     "wasId": "1330348068"
+    },
+    {
+     "idx": 75,
+     "id": "28949444",
+     "title": "喜欢你 (Like You)",
+     "artist": "G.E.M.邓紫棋",
+     "src": "keep",
+     "wasId": "28949444"
+    },
+    {
+     "idx": 78,
+     "id": "233931",
+     "title": "泡沫 (Bubble)",
+     "artist": "G.E.M.邓紫棋",
+     "src": "keep",
+     "wasId": "233931"
+    },
+    {
+     "idx": 79,
+     "id": "1299550532",
+     "title": "倒数",
+     "artist": "G.E.M.邓紫棋",
+     "src": "keep",
+     "wasId": "1299550532"
+    },
+    {
+     "idx": 81,
+     "id": "30612793",
+     "title": "多远都要在一起",
+     "artist": "G.E.M.邓紫棋",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 85,
+     "id": "287719",
+     "title": "开始懂了",
+     "artist": "孙燕姿",
+     "src": "replace",
+     "wasId": "5246676"
+    },
+    {
+     "idx": 86,
+     "id": "287083",
+     "title": "雨天",
+     "artist": "孙燕姿",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 87,
+     "id": "287063",
+     "title": "我怀念的",
+     "artist": "孙燕姿",
+     "src": "keep",
+     "wasId": "287063"
+    },
+    {
+     "idx": 88,
+     "id": "287398",
+     "title": "我不难过",
+     "artist": "孙燕姿",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 90,
+     "id": "298838",
+     "title": "传奇",
+     "artist": "王菲",
+     "src": "keep",
+     "wasId": "298838"
+    },
+    {
+     "idx": 91,
+     "id": "29713754",
+     "title": "匆匆那年 (Fleet of Time)",
+     "artist": "王菲",
+     "src": "keep",
+     "wasId": "29713754"
+    },
+    {
+     "idx": 92,
+     "id": "299936",
+     "title": "红豆",
+     "artist": "王菲",
+     "src": "keep",
+     "wasId": "299936"
+    },
+    {
+     "idx": 94,
+     "id": "64317",
+     "title": "因为爱情（电影《将爱情进行到底》主题曲）",
+     "artist": "陈奕迅 / 王菲",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 97,
+     "id": "66842",
+     "title": "十年",
+     "artist": "陈奕迅",
+     "src": "keep",
+     "wasId": "66842"
+    },
+    {
+     "idx": 98,
+     "id": "409931770",
+     "title": "十面埋伏",
+     "artist": "陈奕迅",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 99,
+     "id": "65528",
+     "title": "淘汰",
+     "artist": "陈奕迅",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 100,
+     "id": "65536",
+     "title": "爱情转移（电影《爱情呼叫转移》主题曲）",
+     "artist": "陈奕迅",
+     "src": "keep",
+     "wasId": "65536"
+    },
+    {
+     "idx": 101,
+     "id": "64093",
+     "title": "孤独患者",
+     "artist": "陈奕迅",
+     "src": "keep",
+     "wasId": "64093"
+    },
+    {
+     "idx": 102,
+     "id": "65766",
+     "title": "富士山下",
+     "artist": "陈奕迅",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 103,
+     "id": "65800",
+     "title": "最佳损友",
+     "artist": "陈奕迅",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 104,
+     "id": "108242",
+     "title": "她说 (She Says)",
+     "artist": "林俊杰",
+     "src": "keep",
+     "wasId": "108242"
+    },
+    {
+     "idx": 105,
+     "id": "26305547",
+     "title": "背对背拥抱 (Back to Back)",
+     "artist": "林俊杰",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 106,
+     "id": "25727803",
+     "title": "修炼爱情 (Practice Love)",
+     "artist": "林俊杰",
+     "src": "keep",
+     "wasId": "25727803"
+    },
+    {
+     "idx": 107,
+     "id": "29814898",
+     "title": "可惜没如果 (If Only...)",
+     "artist": "林俊杰",
+     "src": "keep",
+     "wasId": "29814898"
+    },
+    {
+     "idx": 108,
+     "id": "2041026502",
+     "title": "愿与愁",
+     "artist": "林俊杰",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 109,
+     "id": "108485",
+     "title": "Always Online（《Cries In A Distance》国语版）",
+     "artist": "林俊杰",
+     "src": "new",
+     "wasId": null
+    }
+   ]
+  },
+  {
+   "id": "mandarin-rock",
+   "zh": "华语 · 摇滚",
+   "en": "MANDARIN ROCK",
+   "tracks": [
+    {
+     "idx": 34,
+     "id": "25706282",
+     "title": "夜空中最亮的星",
+     "artist": "逃跑计划",
+     "src": "replace",
+     "wasId": "1939557593"
+    },
+    {
+     "idx": 35,
+     "id": "139357",
+     "title": "生如夏花",
+     "artist": "朴树",
+     "src": "replace",
+     "wasId": "5265370"
+    },
+    {
+     "idx": 36,
+     "id": "355992",
+     "title": "追梦赤子心（2013《快乐男声》主题曲）",
+     "artist": "GALA",
+     "src": "keep",
+     "wasId": "355992"
+    },
+    {
+     "idx": 37,
+     "id": "386844",
+     "title": "杀死那个石家庄人",
+     "artist": "万能青年旅店",
+     "src": "keep",
+     "wasId": "386844"
+    },
+    {
+     "idx": 96,
+     "id": "66282",
+     "title": "浮夸",
+     "artist": "陈奕迅",
+     "src": "keep",
+     "wasId": "66282"
+    }
+   ]
+  },
+  {
+   "id": "mandarin-folk",
+   "zh": "华语 · 民谣与独立",
+   "en": "MANDARIN FOLK",
+   "tracks": [
+    {
+     "idx": 9,
+     "id": "441491828",
+     "title": "水星记",
+     "artist": "郭顶",
+     "src": "keep",
+     "wasId": "441491828"
+    },
+    {
+     "idx": 10,
+     "id": "436346833",
+     "title": "凄美地",
+     "artist": "郭顶",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 16,
+     "id": "30431366",
+     "title": "奇妙能力歌",
+     "artist": "陈粒",
+     "src": "keep",
+     "wasId": "30431366"
+    },
+    {
+     "idx": 17,
+     "id": "1363948882",
+     "title": "世间美好与你环环相扣",
+     "artist": "柏松",
+     "src": "keep",
+     "wasId": "1363948882"
+    },
+    {
+     "idx": 19,
+     "id": "31445772",
+     "title": "理想三旬",
+     "artist": "陈鸿宇",
+     "src": "keep",
+     "wasId": "31445772"
+    },
+    {
+     "idx": 20,
+     "id": "421423806",
+     "title": "小半",
+     "artist": "陈粒",
+     "src": "keep",
+     "wasId": "421423806"
+    },
+    {
+     "idx": 22,
+     "id": "202373",
+     "title": "南方姑娘",
+     "artist": "赵雷",
+     "src": "keep",
+     "wasId": "202373"
+    },
+    {
+     "idx": 23,
+     "id": "447926067",
+     "title": "鼓楼 (The Drum Tower)",
+     "artist": "赵雷",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 24,
+     "id": "436514312",
+     "title": "成都",
+     "artist": "赵雷",
+     "src": "replace",
+     "wasId": "1888108371"
+    },
+    {
+     "idx": 25,
+     "id": "1974443814",
+     "title": "我记得",
+     "artist": "赵雷",
+     "src": "keep",
+     "wasId": "1974443814"
+    },
+    {
+     "idx": 26,
+     "id": "27646198",
+     "title": "董小姐",
+     "artist": "宋冬野",
+     "src": "keep",
+     "wasId": "27646198"
+    },
+    {
+     "idx": 27,
+     "id": "27646199",
+     "title": "斑马，斑马",
+     "artist": "宋冬野",
+     "src": "keep",
+     "wasId": "27646199"
+    },
+    {
+     "idx": 28,
+     "id": "27646205",
+     "title": "安和桥",
+     "artist": "宋冬野",
+     "src": "replace",
+     "wasId": "28053527"
+    },
+    {
+     "idx": 29,
+     "id": "110215",
+     "title": "风吹麦浪",
+     "artist": "李健",
+     "src": "keep",
+     "wasId": "110215"
+    },
+    {
+     "idx": 30,
+     "id": "109998",
+     "title": "贝加尔湖畔",
+     "artist": "李健",
+     "src": "keep",
+     "wasId": "109998"
+    },
+    {
+     "idx": 31,
+     "id": "569214250",
+     "title": "借",
+     "artist": "毛不易",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 32,
+     "id": "569200213",
+     "title": "消愁",
+     "artist": "毛不易",
+     "src": "keep",
+     "wasId": "569200213"
+    },
+    {
+     "idx": 33,
+     "id": "569213220",
+     "title": "像我这样的人",
+     "artist": "毛不易",
+     "src": "keep",
+     "wasId": "569213220"
+    }
+   ]
+  },
+  {
+   "id": "mandarin-ost",
+   "zh": "华语 · 影视原声与中国风",
+   "en": "MANDARIN OST",
+   "tracks": [
+    {
+     "idx": 11,
+     "id": "97357",
+     "title": "那些年（电影《那些年，我们一起追的女孩》主题曲）",
+     "artist": "胡夏",
+     "src": "keep",
+     "wasId": "97357"
+    },
+    {
+     "idx": 12,
+     "id": "482999696",
+     "title": "夏至未至（电视剧《夏至未至》同名主题曲）",
+     "artist": "胡夏",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 13,
+     "id": "28754846",
+     "title": "卷珠帘",
+     "artist": "霍尊",
+     "src": "keep",
+     "wasId": "28754846"
+    },
+    {
+     "idx": 14,
+     "id": "516823132",
+     "title": "大鱼 (唱片版)",
+     "artist": "周深",
+     "src": "keep",
+     "wasId": "516823132"
+    },
+    {
+     "idx": 15,
+     "id": "2124381474",
+     "title": "小美满（电影《热辣滚烫》热辣陪伴曲）",
+     "artist": "周深",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 45,
+     "id": "327115",
+     "title": "隐形的翅膀（电视剧《爱杀17》片尾曲）",
+     "artist": "张韶涵",
+     "src": "replace",
+     "wasId": "2006730075"
+    },
+    {
+     "idx": 77,
+     "id": "449818741",
+     "title": "光年之外（电影《太空旅客》中文主题曲）",
+     "artist": "G.E.M.邓紫棋",
+     "src": "keep",
+     "wasId": "449818741"
+    },
+    {
+     "idx": 83,
+     "id": "454828887",
+     "title": "遇见（电影《向左走向右走》主题曲）",
+     "artist": "孙燕姿",
+     "src": "keep",
+     "wasId": "454828887"
+    },
+    {
+     "idx": 84,
+     "id": "548556869",
+     "title": "半句再见（电影《六弄咖啡馆》主题曲）",
+     "artist": "孙燕姿",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 89,
+     "id": "26207292",
+     "title": "致青春（电影《致我们终将逝去的青春》主题曲）",
+     "artist": "王菲",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 93,
+     "id": "66823",
+     "title": "岁月如歌（无线电视剧《冲上云霄》主题曲）",
+     "artist": "陈奕迅",
+     "src": "new",
+     "wasId": null
+    }
+   ]
+  },
+  {
+   "id": "k-pop",
+   "zh": "韩语 · K-POP",
+   "en": "K-POP",
+   "tracks": [
+    {
+     "idx": 1,
+     "id": "2035161156",
+     "title": "奚(FLOWER)（花）",
+     "artist": "JISOO",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 2,
+     "id": "3431697108",
+     "title": "Dear my crazy soulmate",
+     "artist": "IU",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 3,
+     "id": "1404511131",
+     "title": "Blueming",
+     "artist": "IU",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 4,
+     "id": "1815389717",
+     "title": "Celebrity（名人）",
+     "artist": "IU",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 5,
+     "id": "29777545",
+     "title": "Angel",
+     "artist": "尹美莱 / Tiger JK / 비지 (Bizzy)",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 6,
+     "id": "404184562",
+     "title": "Everytime",
+     "artist": "CHEN / Punch",
+     "src": "new",
+     "wasId": null
+    },
+    {
+     "idx": 7,
+     "id": "444267925",
+     "title": "Stay With Me",
+     "artist": "CHANYEOL / Punch",
+     "src": "replace",
+     "wasId": "28531849"
+    },
+    {
+     "idx": 8,
+     "id": "2060301521",
+     "title": "운명（命运）",
+     "artist": "Why",
+     "src": "new",
+     "wasId": null
+    }
+   ]
+  }
+ ]
+}

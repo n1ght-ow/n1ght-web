@@ -860,7 +860,7 @@ function initMusicSearch() {
 
   // Normalized per-card haystack, built once at init: matchCard then only
   // compares precomputed strings instead of re-querying and re-normalizing
-  // all 763 cards on every keystroke.
+  // all 441 cards on every keystroke.
   const cardHaystacks = cards.map((card) => {
     const title = card.querySelector(".idx-title");
     const artist = card.querySelector(".idx-artist");
@@ -928,7 +928,7 @@ function initMusicSearch() {
     const searching = Boolean(trimmed);
     const qNorm = searching ? normalize(trimmed) : "";
 
-    // one pass over all 763 cards: `hit` is genre-independent, so the same
+    // one pass over all 441 cards: `hit` is genre-independent, so the same
     // pass can credit genres other than the visible one and feed the
     // "no match here, results elsewhere" jump button
     const hitsByGenre = new Array(genres.length).fill(0);
@@ -1037,7 +1037,7 @@ function initMusicSearch() {
   }
 
   // Coalesce keystroke bursts: each frame applies at most one search pass
-  // over the 763 cards instead of one per input event.
+  // over the 441 cards instead of one per input event.
   let searchFrame = 0;
   function requestApply() {
     if (searchFrame) return;

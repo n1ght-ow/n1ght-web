@@ -54,9 +54,9 @@
       const card = el("article", "idx-card track-own");
       card.setAttribute("data-song-id", t.id);
 
-      /* The cover. 761 of the 763 songs have one and 689 distinct files sit
-         in album-covers/ - the list simply never rendered any of them, which
-         is most of why it read as a text dump. A dense row WITH art is still
+      /* The cover. All 441 songs in MUSIC_DATA resolve to one of the 367
+         distinct files in album-covers/ (see js/music-covers.js). A dense row
+         WITH art is still
          a list, not a grid: Hardwax runs 700+ records this way at 80-100px.
          Missing art falls back to an empty sleeve of the same size so the
          rows stay on one vertical rhythm. */

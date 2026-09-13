@@ -8,3 +8,12 @@ output/
 _preview.html
 js/main.preview.js
 .zcode/
+
+# archive/music-refresh: bulk binaries from the D:\fw audit. The screenshots
+# live on the owner's machine and every image here is regenerable from the
+# scripts + JSON that ARE tracked, so only the text artifacts go in the repo.
+archive/music-refresh/covers/
+archive/music-refresh/review-assets/
+archive/music-refresh/shots/
+archive/music-refresh/imgcache/
+archive/music-refresh/*.png

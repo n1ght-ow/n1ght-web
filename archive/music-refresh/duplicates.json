@@ -1,0 +1,98 @@
+{
+ "同曲同歌手完全重复": [
+  {
+   "title": "Lemon Tree（柠檬树）",
+   "artist": "Fool's Garden",
+   "rows": [
+    115,
+    327
+   ],
+   "albums": [
+    "High Times - Best Of",
+    "Dish of the Day"
+   ]
+  },
+  {
+   "title": "Here's to Never Growing Up",
+   "artist": "Avril Lavigne",
+   "rows": [
+    119,
+    330
+   ],
+   "albums": [
+    "Here's To Never Growing Up",
+    "Avril Lavigne (Expanded Edition)"
+   ]
+  },
+  {
+   "title": "Halo",
+   "artist": "Beyoncé",
+   "rows": [
+    174,
+    329
+   ],
+   "albums": [
+    "Halo",
+    "I AM...SASHA FIERCE"
+   ]
+  },
+  {
+   "title": "Another Day Of Sun",
+   "artist": "La La Land Cast",
+   "rows": [
+    302,
+    340
+   ],
+   "albums": [
+    "Soundtracks",
+    "La La Land (Original Motion Picture Soundtrack)"
+   ]
+  }
+ ],
+ "同曲不同版本_可能有意保留": [
+  {
+   "title": "We Don't Talk Anymore",
+   "artist": "Charlie Puth / Selena Gomez",
+   "rows": [
+    403,
+    406
+   ],
+   "note": "403 是 Mr. Collipark Remix，406 是 Nine Track Mind 原曲"
+  },
+  {
+   "title": "Believer",
+   "artist": "Imagine Dragons",
+   "rows": [
+    131,
+    449
+   ],
+   "note": "131 是 Lil Wayne 版单曲，449 是 Evolve 专辑原版"
+  }
+ ],
+ "同名不同歌": [
+  {
+   "title": "Stay With Me",
+   "rows": [
+    7,
+    221
+   ],
+   "note": "CHANYEOL/Punch（鬼怪 OST） vs Sam Smith"
+  },
+  {
+   "title": "Numb / NUMB",
+   "rows": [
+    127,
+    140
+   ],
+   "note": "Linkin Park vs XXXTENTACION"
+  },
+  {
+   "title": "Stay / STAY",
+   "rows": [
+    188,
+    362
+   ],
+   "note": "Zedd/Alessia Cara vs The Kid LAROI/Justin Bieber"
+  }
+ ]
+}
