@@ -11,7 +11,7 @@
 - 不增删改 `.venv/`；不修改或删除 `photo/` 原图。新增照片时 `photo/` 与 `photo/full/` 两处都要有文件。
 - 不引入外部图床 / CDN，图片、字体全走项目内相对路径。运行时外链（IMDb、网易云歌页 / APP 深链）只做内容跳转，不嵌 iframe、不加载外部资源。
 - 不修改 `js/vendor/` 内压缩库；`js/sig-data.js` 是 fontTools 生成的签名路径数据，禁止手写 path，且不参与加载。
-- **不引入新依赖**：不装动画库（anime.js 等已评估并否决）、不加 CSS 框架、不加颗粒噪点层。
+- **不引入新依赖**：不装动画库（anime.js 等已评估并否决）、不加 CSS 框架、不加颗粒噪点层。书架是这条的边界案例：它用**仓库里已有的** GSAP 重写了一个 React + motion/react 的实验，所以依赖没有增加。
 
 ## 已退役（不要复活）
 
@@ -29,8 +29,8 @@ V2 删掉的东西，任何一条重新出现都算回归：
 
 ## 技术约束
 
-- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js` → `music-covers.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js`）→ `main.js`。
-- 样式表顺序：`fonts.css` → `style.css` → **`glass.css`** → `reel-stage.css` → `film-stage.css` → `series-stage.css`。`glass.css` 提供 `.glass` 基类，必须在组件样式之前。
+- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js` → `music-covers.js` → `book-shelf-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js` → `book-shelf.js`）→ `main.js`。
+- 样式表顺序：`fonts.css` → `style.css` → **`glass.css`** → `reel-stage.css` → `film-stage.css` → `series-stage.css` → `book-shelf.css`。`glass.css` 提供 `.glass` 基类，必须在组件样式之前。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
 - GSAP/ScrollTrigger/SplitText/Lenis 走本地 `js/vendor/`。Lenis 仅非 REDUCED 启用；锚点跳转统一走 `lenis.scrollTo`。
 - 内容归属红线：`#panel-books / films / series / music / sport / games` 六个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token。
@@ -87,7 +87,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 - 四条命名缓动：`--ease-out` / `--ease-soft` / `--ease-in-out` / `--ease-snap`。不再新增一次性曲线。
 - 现有动效每一个都能一句话说出动机；新增动效说不出的就删。
-- **弹性已退役**：不用 `back.out` / `elastic`；低频入场用 `power3/4.out`。
+- **弹性已退役**：不用 `back.out` / `elastic`；低频入场用 `power3/4.out`。这条管的是**过冲曲线**，不是「JS 里不许有缓动」——书架用 GSAP 的 `power3.out` 落位、`expo.out` 跟随指针，两者都不过冲，也是上游 spring 的等效时长。
 - 性能红线：只动 `transform` / `opacity` / `filter`；scrub 必须 `invalidateOnRefresh: true`；图片加载后 refresh 用 250ms debounce；滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis。
 - `transition-property` 写具体属性，禁 `transition: all`。
 - **`filter` 会创建包含块**：图片滤镜只加在 `img` 上，绝不加到任何含 `position: fixed` 后代的容器（`#lightbox` 是 fixed）。
@@ -160,7 +160,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 ### 音乐
 
-`js/music-data.js`（`window.MUSIC_DATA`，763 首 16 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
+`js/music-data.js`（`window.MUSIC_DATA`，441 首 14 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
 
 专辑封面走 `js/music-covers.js`（`window.MUSIC_COVERS`，songId → 文件名，图在 `album-covers/`，生成文件勿手改），详情层 `.lb-music` 显示真实封面，缺图回落 ♪ 占位 sleeve。
 
@@ -168,13 +168,28 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - 默认**单流派显示**：一次只显示一组，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。切换流派统一走 `selectGenre()`。
 - 搜索只作用于当前流派；零命中而别处有结果时给 `#music-search-jump`，点击切组并保留关键词。
 
-### 书 / 球队
+### 书（书架）
+
+`js/book-shelf-data.js`（`window.BOOK_SHELF`，16 本）→ `js/book-shelf.js` 渲染进 `#panel-books` 里的 `[data-book-shelf="auto"]` 挂载点。**`#panel-books` 里已经没有 `.idx-row` 标记**，书不再是硬编码列表。
+
+移植自 sanyam.sh/lab/book-shelf（上游是 React + motion/react）。这一版用仓库里**已有的** GSAP 重写，所以仍然没有新增依赖、没有构建步骤；场景、数字与推理属于原作者。点书脊 → 书旋出到舞台中央、封面正对读者、scrim 压在书架前；再点一次 / 点 scrim / Escape 放回去。
+
+- **几何是契约**：`--bs-stage` / `--bs-base` / `--bs-centre` 写在 `book-shelf.css`，JS 用 `getComputedStyle` 读，任何一边都不要写死第二份。
+- **封面落点 = 舞台的垂直中心**（`--bs-centre` = stage/2）。这是唯一让缩放免费的选择：场景绕中心缩放，那个点就永远不动，开书时上下两行字不必追它。
+- **每本书是盒子不是贴图**：书脊是一面、封面是另一面（`rotateY(90deg) translateZ(thickness/2)`），翻 −90° 就把封面转给读者，全程没有淡入淡出。
+- **scrim 是同一个 3D 场景里的一个平面**，不是上层遮罩：`preserve-3d` 按深度绘制并忽略 `z-index`，用 `translateZ(100px)` 挡在书架前、书后。
+- **书脊字体**：`Klein Blue Night`（`fonts/KeLaiYinLanDeYeWan.ttf`，12.6 MB，非商业授权）。字号由 JS 按书脊高度自动缩到放得下；`thickness < 18` 的书脊不排字，只留布色。
+- **布色 / 印色**：16 组全部**实测**过 4.5:1（5.05 到 12.59）。换布色必须重新量，不许估。
+- **作者在书上方、短评在书下方**，两行挂在场景的两个地标上（书顶 −46px / 底板下 +20px）并跟着 `--bs-fit` 缩放，所以短评永远落在书脊之外。
+- 窄窗口是**整体缩排**（`--bs-fit`，按列宽算），不重排、不换行；短评是唯一允许换行的一行。
+
+### 球队
 
 硬编码在 `index.html`；历史调研产物放 `archive/<topic>/`，不参与站点加载。
 
 ## 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（16 栏编辑式散页 11 帧，分 Bloom 01-07 / Horizon 08-11 两个乐章 → Dylan Thomas 诗区）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 18 卡）→ ABOUT（统计 + coda）→ footer。
+hero（全屏影像）→ PHOTOGRAPHY（16 栏编辑式散页 11 帧，分 Bloom 01-07 / Horizon 08-11 两个乐章 → Dylan Thomas 诗区）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 441 首 14 组 / 球队 5 / 游戏 18 卡）→ ABOUT（统计 + coda）→ footer。
 
 - **照片网格只放横构图 plate**：11 张全部是 1600×1067（3:2）。不要竖裁成 4:5 或 1:1——会切掉主体。可用比例：`21:9` 全幅 / `3:2`。
 - **照片区是「散页」不是表格**：16 栏 + `row-gap: 0` + `align-items: start`，每张在 CSS 里**显式写自己的 `grid-column` 起始列**、跨度与垂直偏移（见 `style.css` 第 9 节按 `[data-photo-index]` 的区块）。**不要给每张都加偏移**——都偏等于没偏；也**不要**把 placement 改回 `nth-child(3n)` 之类的生成式规则，11 张的节奏是逐张写出来的。
@@ -182,7 +197,7 @@ hero（全屏影像）→ PHOTOGRAPHY（16 栏编辑式散页 11 帧，分 Bloom
 - 漂移挂在 **`.photo-frame-btn`** 上（不是 `.photo-frame`）：入场用的 `ScrollTrigger.batch` 带 `overwrite: true`，会杀掉同目标上的其他补间。量由 CSS 的 `--photo-drift` 提供，正负交替。
 - 游戏名册是**显式三列**（≥900px；720–900 两列，≤720 单列），封面 16:9。**不要改回 `auto-fill`**：18 只能被 1/2/3/6/9/18 整除，`auto-fill minmax(250px,1fr)` 在 1440 下出 4 栏 = 4 行零 2 个孤儿。序号与时长并成一行（`counter` 仍在 `.hof-foot::before`，但不再独占一行），名称在下一行，评语一行截断。
 - **影 / 剧的卡片是「2:3 媒介盒 + 盒外的 meta」**，靠 `.film-card` 的栅格实现（`grid-template-columns: minmax(0,1fr)` + `grid-template-rows: auto auto 1fr`），**不要改回绝对定位的整盒 + meta 覆盖**，也**不要漏掉列定义**（漏了海报会按 JPG 固有尺寸渲染，实测 158/54/90/59/54/24px）。索引药丸（`.film-card-no`）与 OPEN chip（`.film-card-sleeve`）均已 `display: none`；选中态靠**可区分的环**（静止 0.1 / hover 0.2 / 选中 0.34）与 meta 的 accent 上边框两层。**详情区不放图**。
-- **索引列表（书 / 球队 / 音乐）没有逐行发丝线**，靠 `padding-block` 与间距分组。序号只用于书，`--fs-label` + muted 且**不用 tabular-nums**；球队用队徽（统一 2.75rem 等比盒）取代序号。
+- **索引列表（球队 / 音乐）没有逐行发丝线**，靠 `padding-block` 与间距分组。球队用队徽（统一 2.75rem 等比盒）取代序号，音乐用 64px 封面取代序号。书已经不进这套 `.idx-*` 了（见「书（书架）」）。
 - **音乐每行必须渲染 64px 真封面**（`window.MUSIC_COVERS`）；缺图回落同尺寸空 sleeve。不要恢复 `counter(track)` 编号，也不要给 `.idx-artist` 加回大写 + 字距。
 - 图片默认低饱和、hover / focus 复原：这是「颜色是奖励不是壁纸」的落点。滤镜只加在 `img` 上。
 - **照片说明文字常驻在 plate 下方**，不再是 hover 浮层（旧做法让每张图都是黑盒，且违反 WCAG 2.2 SC 1.4.13 的可关闭要求）。键盘可达性不受影响：按钮仍在，caption 只是不再依赖 `:focus-within`。
@@ -193,6 +208,7 @@ hero（全屏影像）→ PHOTOGRAPHY（16 栏编辑式散页 11 帧，分 Bloom
 - 游戏：`.hof-item`（直接进 `#hof-grid`），封面 `covers/`，时长写 `.hof-hours`，引文写 `.hof-quote`。
 - 影视：海报 `posters/<ttID>.jpg`，条目进 `film-data.js` / `series-data.js`。
 - 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成。
+- 书：条目进 `js/book-shelf-data.js`，每本除了 title / author / blurb 还要给 binding（`thickness` 21–48、`height` 240–288、`lean`、`cloth`、`ink`、`band`）；**新增或换布色必须重量 ink/cloth 的 4.5:1**。行宽、缩放和书脊字号都会自己算。
 - 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`）。
 - 增删内容同步 `#about-stats` 的计数（`data-count`）与 hero 统计条。
 

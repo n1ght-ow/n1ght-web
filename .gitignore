@@ -21,4 +21,7 @@ archive/music-refresh/mock.html
 archive/music-refresh/probe.html
 archive/music-refresh/probe-long.html
 archive/music-refresh/books-preview.html
+archive/music-refresh/shelf-*.html
+archive/music-refresh/spine-font-probe.html
+archive/music-refresh/cjk-spine-probe.html
 archive/music-refresh/*.txt

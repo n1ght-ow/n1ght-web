@@ -1,0 +1,400 @@
+/* ============ BOOKSHELF (books panel) ============
+   A shelf of sixteen books. Press a spine and that book comes out of the row,
+   turns to face you and lands in the middle of the stage with a scrim behind
+   it, which is what a modal opening looks like; press the scrim, press the
+   book again, or press Escape and it goes back to its slot.
+
+   Ported from the book-shelf lab at sanyam.sh (component source:
+   github.com/SanyamPunia/www, components/labs/book-shelf). The scene, the
+   numbers and the reasoning are its author's; the React + motion/react calls
+   are rewritten here against GSAP, which is already vendored, and the Tailwind
+   utility classes are expanded so the file reads on its own.
+
+   The two things this port adds on top of the original:
+
+   - The spines are set in Klein Blue Night (see fonts.css) instead of the page
+     sans, because a shelf's titles are printed on cloth, not typeset.
+   - The open book carries its author above it and its collection note below,
+     both appearing with the book and leaving with it.
+
+   The layout constant that matters: the box a book turns in is COVER deep, so
+   the cover face sits at rotateY(90deg) translateZ(thickness / 2) and turning
+   the box by -90 brings it square to the reader with the spine falling away to
+   the left, which is where a spine is when a book is held. */
+
+.book-shelf {
+  /* The stage, and where the shelf's surface sits in it. The picked cover
+     comes to rest at the stage's own vertical centre, which is the one choice
+     that makes the scene's scale free: scaling about the centre pins that point
+     where it is, so the two lines around an open book never have to chase it. */
+  --bs-stage: 560px;
+  --bs-base: 500px;
+  --bs-centre: 280px;
+  /* how far out of the shelf it comes, and how far the scrim floats in front */
+  --bs-out: 210px;
+  --bs-scrim-z: 100px;
+  /* a cover's width, which is also how deep a book sits on the board */
+  --bs-cover: 182px;
+  /* how far the highest and lowest spine reaches, so the two lines around an
+     open book never move from title to title */
+  --bs-reach: 144px;
+  --bs-fit: 1;
+  /* the board is the one thing on this stage that has to read as an object
+     rather than as paper, so it gets its own three values rather than a
+     borrowed token */
+  --bs-board-top: #e3e2dc;
+  --bs-board-face: #cbcac2;
+
+  position: relative;
+  width: 100%;
+  height: var(--bs-stage);
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+  /* a wall rather than the page: the paper the rest of the archive sits on is
+     the same value as the palest cloth here, and a cream spine on it was a
+     hairline and a shadow. The pool of light is centred above the shelf, so
+     the row is the brightest thing in the frame and the corners fall away. */
+  background-color: var(--color-surface);
+  background-image: radial-gradient(
+    120% 82% at 50% 26%,
+    var(--color-surface) 0%,
+    var(--color-bg) 46%,
+    var(--color-bg-deep) 100%
+  );
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* the whole scene is scaled about its own centre, so the margin held back at
+   the sides buys height at the top and bottom as well */
+.bs-scene {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  perspective-origin: 50% var(--bs-centre);
+  transform: scale(var(--bs-fit));
+}
+
+/* the board, brought forward to the depth the spines stand at, or the books
+   float in front of the thing they are standing on */
+.bs-board {
+  position: absolute;
+  left: 50%;
+  top: var(--bs-base);
+  height: 9px;
+  background: linear-gradient(180deg, var(--bs-board-top) 0%, var(--bs-board-face) 100%);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.9);
+  transform: translateZ(calc(var(--bs-cover) / 2));
+}
+
+/* what the row casts on the board, which is the only shadow at rest. Drawn with
+   a box-shadow rather than a blur(): a filter here would be one more thing
+   flattening a preserve-3d subtree for no gain. */
+.bs-cast {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--bs-base) - 4px);
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 14px 5px oklch(0 0 0 / 0.16);
+  transform: translateZ(calc(var(--bs-cover) / 2 - 2px));
+}
+
+.bs-row {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: var(--bs-base);
+  transform-style: preserve-3d;
+}
+
+/* one book. Its whole state is three numbers - where it is, how far it has
+   turned, and how far it leans - and every one is derived from which book is
+   picked rather than kept anywhere. */
+.bs-book {
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  appearance: none;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+.bs-book:focus-visible {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 3px;
+}
+
+.bs-box {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* ---------- the spine, which is the face a shelf shows ---------- */
+.bs-spine {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  backface-visibility: hidden;
+  transform: translateZ(calc(var(--bs-cover) / 2));
+  box-shadow: inset -1px 0 0 oklch(0 0 0 / 0.3), inset 1px 0 0 oklch(1 0 0 / 0.14);
+}
+
+/* the round of the spine, which is a light along it, not a fill */
+.bs-round {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    oklch(0 0 0 / 0.28) 0%,
+    oklch(1 0 0 / 0.16) 26%,
+    oklch(1 0 0 / 0.05) 54%,
+    oklch(0 0 0 / 0.3) 100%
+  );
+}
+
+/* the cloth's tooth, over any surface that is meant to be cloth. Inline, so the
+   page makes no request for it: a diffuse surface scatters light and grain is
+   what that looks like. */
+.bs-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+}
+
+/* the blind rules a binder presses either side of the panel */
+.bs-blind {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 9%;
+  bottom: 9%;
+  box-shadow: inset 0 1px 0 oklch(0 0 0 / 0.35), inset 0 -1px 0 oklch(1 0 0 / 0.14);
+}
+
+/* the head and tail bands, which is most of what says hardback */
+.bs-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.bs-band--head { top: 13%; }
+.bs-band--tail { bottom: 13%; }
+
+/* the title, set down the spine and centred on it. vertical-rl is the writing
+   mode a spine is actually set in: CJK stands upright and Latin turns, so the
+   face works for either without a branch. */
+.bs-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-align: center;
+  font-family: "Klein Blue Night", var(--font-sans);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow: 0 1px 0 oklch(0 0 0 / 0.3);
+}
+
+/* ---------- the page block and the cover ---------- */
+.bs-pages {
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+  background: repeating-linear-gradient(
+    90deg,
+    #efe8d8 0px,
+    #efe8d8 1px,
+    #d8cfba 1px,
+    #d8cfba 2px
+  );
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.2);
+}
+
+.bs-cover {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  backface-visibility: hidden;
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.18);
+}
+
+.book-shelf[data-picked] .bs-book[data-picked="true"] .bs-cover {
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.18), 0 18px 40px oklch(0 0 0 / 0.28),
+    0 3px 10px oklch(0 0 0 / 0.18);
+}
+
+.bs-cover-light {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    118deg,
+    oklch(1 0 0 / 0.14) 0%,
+    transparent 38%,
+    transparent 62%,
+    oklch(0 0 0 / 0.2) 100%
+  );
+}
+
+/* the blind border, pressed into the board rather than printed on it, which is
+   a light edge on one side of the line and a dark one on the other */
+.bs-cover-border {
+  position: absolute;
+  inset: 9px;
+  border-radius: 1px;
+  box-shadow: inset 0 1px 0 oklch(0 0 0 / 0.3), inset 1px 0 0 oklch(0 0 0 / 0.24),
+    inset 0 -1px 0 oklch(1 0 0 / 0.16), inset -1px 0 0 oklch(1 0 0 / 0.12);
+}
+
+/* the label, pasted on, so it sits proud of the cloth and casts */
+.bs-label {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: 19%;
+  border-radius: 2px;
+  padding: 12px;
+  background: #f2ead9;
+  color: #2a2723;
+  box-shadow: 0 2px 5px oklch(0 0 0 / 0.32), inset 0 0 0 1px oklch(0 0 0 / 0.12);
+}
+
+.bs-label-rule {
+  display: block;
+  width: 32px;
+  height: 2px;
+  margin-bottom: 8px;
+}
+
+.bs-label-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #2a2723;
+}
+
+.bs-label-author {
+  margin: 4px 0 0;
+  font-size: 10px;
+  line-height: 1.3;
+  color: #2a2723;
+  opacity: 0.6;
+}
+
+/* the stamp at the foot, pressed rather than printed */
+.bs-stamp {
+  position: absolute;
+  left: 24px;
+  bottom: 20px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+/* ---------- the scrim ----------
+   A plane inside the same 3D scene rather than a layer over it: a preserve-3d
+   context paints by depth and ignores z-index, so an overlay stacked on top
+   would sit behind the shelf whatever order it was given. At 100px toward the
+   reader it is in front of the row and behind the book, which is what a scrim
+   is, and it needs no z-index at all. Twice the stage, so perspective cannot
+   uncover a corner of it. */
+.bs-scrim {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  margin-left: -100%;
+  margin-top: -100%;
+  padding: 0;
+  border: 0;
+  background: oklch(0 0 0 / 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateZ(var(--bs-scrim-z));
+  transition: opacity 0.22s var(--ease-out);
+}
+
+.book-shelf[data-picked] .bs-scrim {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* ---------- the two lines an open book carries ----------
+   Fixed bands rather than following the book: the book's own height changes
+   from title to title and a line that steps up or down between them reads as a
+   layout that cannot make up its mind. --bs-reach is half the tallest spine,
+   so the gap only ever grows. */
+.bs-author,
+.bs-blurb {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s var(--ease-out), visibility 0s linear 0.22s;
+}
+
+.book-shelf[data-picked] .bs-author,
+.book-shelf[data-picked] .bs-blurb {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.22s var(--ease-out) 0.16s, visibility 0s linear 0.16s;
+}
+
+.bs-author {
+  /* Both lines are placed off the scene's own two landmarks rather than off the
+     stage's edges, so they keep their distance from the book at every scale:
+     46px over the cover's top, and 20px under the board - which is what keeps
+     the note off the spines it would otherwise be printed across. */
+  top: calc(50% - var(--bs-reach) * var(--bs-fit) - 46px);
+  font-family: inherit;
+  font-size: var(--fs-caption);
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.bs-blurb {
+  /* --bs-base - half the stage: how far the board sits below the scene's pivot */
+  top: calc(50% + (var(--bs-base) - 50%) * var(--bs-fit) + 20px);
+  font-family: inherit;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+/* the row is scaled to the column, so a narrow window shrinks the shelf rather
+   than reflowing it. The blurb is the only line that cannot survive that, so it
+   is allowed to wrap once there is no width for it. */
+@media (max-width: 720px) {
+  .bs-blurb { white-space: normal; padding-inline: var(--sp-5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-scrim,
+  .bs-author,
+  .bs-blurb { transition-duration: 0.01ms; }
+}
