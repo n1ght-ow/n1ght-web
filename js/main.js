@@ -246,11 +246,11 @@ const lbMusic = document.getElementById("lb-music");
 const lbMusicCover = document.getElementById("lb-music-cover");
 const lbMusicGlyph = lbMusic ? lbMusic.querySelector(".lb-music-glyph") : null;
 /* music carries its own identity and its one action inside .lb-stage (a centred
-   column: kicker / title / artist, sleeve, OPEN). Film, series and game keep
-   theirs in the right-hand .lb-meta column, so both sets of nodes coexist and
-   each render branch fills only the pair it owns. */
+   column: title / artist, sleeve, OPEN). The genre lives only in the top bar,
+   which is where the layer already reads it. Film, series and game keep theirs
+   in the right-hand .lb-meta column, so both sets of nodes coexist and each
+   render branch fills only the pair it owns. */
 const lbMusicHead = document.getElementById("lb-music-head");
-const lbMusicKicker = document.getElementById("lb-music-kicker");
 const lbMusicTitle = document.getElementById("lb-music-title");
 const lbMusicLines = document.getElementById("lb-music-lines");
 const lbMusicLink = document.getElementById("lb-music-link");
@@ -448,7 +448,6 @@ function renderDetail() {
       }
     }
     if (lbMusicGlyph) lbMusicGlyph.hidden = Boolean(item.cover);
-    if (lbMusicKicker) lbMusicKicker.textContent = item.genre;
     if (lbMusicTitle) lbMusicTitle.textContent = item.title;
     if (lbMusicLines) lbMusicLines.textContent = item.artist;
     if (lbMusicLink) {

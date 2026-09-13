@@ -1363,6 +1363,15 @@ h1, h2 { text-wrap: balance; }
 
 /* ============ 17. LIGHTBOX (the one dark layer) ============ */
 .lightbox {
+  /* The four pieces of chrome - counter, close button, prev and next arrow -
+     all sit on one vertical edge instead of the two they used to (the arrows
+     were at clamp(0.5rem, 2vw, 2rem), the bar at var(--gutter), 40px apart).
+     6vw is deliberately a step inside the page gutter: two equal 72px edges
+     read as "these should have lined up with the content", which the layer
+     does not do. --lb-nav is the arrow size, which the sleeve also budgets
+     for so the artwork never ends up underneath it. */
+  --lb-edge: clamp(1rem, 6vw, 6rem);
+  --lb-nav: 48px;
   position: fixed;
   inset: 0;
   z-index: 200;
@@ -1386,11 +1395,15 @@ h1, h2 { text-wrap: balance; }
 
 .lb-top {
   position: absolute;
-  inset-inline: var(--gutter);
+  inset-inline: var(--lb-edge);
   top: clamp(1rem, 3vh, 2rem);
-  display: flex;
+  /* three columns, not space-between: with space-between the middle item's
+     axis is (left item width - right item width) / 2 off centre, which is why
+     the genre used to sit 16px right of the sleeve. Equal 1fr side columns put
+     it back on the container axis, which is the artwork's axis. */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: var(--sp-4);
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
@@ -1399,6 +1412,9 @@ h1, h2 { text-wrap: balance; }
   color: var(--color-on-dark-muted);
   z-index: 3;
 }
+
+.lb-top > :first-child { justify-self: start; }
+.lb-top > :last-child { justify-self: end; }
 
 .lb-act { color: var(--color-on-dark); }
 
@@ -1443,7 +1459,9 @@ h1, h2 { text-wrap: balance; }
    that instead of colliding. */
 .lb-stage .lb-music {
   position: relative;
-  width: min(68vw, 420px, calc(94vh - 310px));
+  /* the fourth term keeps the artwork clear of the two arrows: whatever the
+     window, the sleeve is never wider than the band between them */
+  width: min(68vw, 420px, calc(94vh - 310px), calc(100vw - 2 * (var(--lb-edge) + var(--lb-nav) + var(--sp-3))));
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -1489,7 +1507,6 @@ h1, h2 { text-wrap: balance; }
 /* the shared classes inherit body leading (1.65), which pads a 12px mono line
    by ~4px top and bottom; the music head trims that so the gaps read as the
    numbers above rather than as numbers plus line-box slack */
-.lb-music-head .lb-meta-kicker { margin: 0 0 var(--sp-2); line-height: 1.2; }
 .lb-music-head .lb-meta-title { margin: 0; text-wrap: balance; }
 .lb-music-head .lb-meta-lines { margin: var(--sp-3) 0 0; line-height: 1.2; }
 
@@ -1557,8 +1574,8 @@ h1, h2 { text-wrap: balance; }
 .lb-nav {
   top: 50%;
   transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
+  width: var(--lb-nav);
+  height: var(--lb-nav);
   font-size: var(--fs-h4);
   background: oklch(1 0 0 / 0.1);
   box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.2);
@@ -1566,8 +1583,8 @@ h1, h2 { text-wrap: balance; }
 
 .lb-nav:hover { background: oklch(1 0 0 / 0.2); }
 .lb-nav:active { transform: translateY(-50%) scale(0.96); }
-.lb-prev { inset-inline-start: clamp(0.5rem, 2vw, 2rem); }
-.lb-next { inset-inline-end: clamp(0.5rem, 2vw, 2rem); }
+.lb-prev { inset-inline-start: var(--lb-edge); }
+.lb-next { inset-inline-end: var(--lb-edge); }
 
 .lb-close {
   position: static;
@@ -1713,10 +1730,10 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .genre-chip { flex: 0 0 auto; }
 
   .lb-stage img { max-height: 52vh; }
-  .lb-nav { width: 44px; height: 44px; }
+  .lightbox { --lb-nav: 44px; }
   .lb-rail { justify-content: flex-start; }
 
-  .lb-stage .lb-music { width: min(76vw, 360px, 46vh); }
+  .lb-stage .lb-music { width: min(76vw, 360px, 46vh, calc(100vw - 2 * (var(--lb-edge) + var(--lb-nav) + var(--sp-3)))); }
   .lightbox[data-detail="music"] .lb-music-head { margin-block-end: var(--sp-4); }
   .lightbox[data-detail="music"] .lb-music-link { margin-block-start: var(--sp-5); }
 }
@@ -1727,7 +1744,7 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   /* a 420px sleeve plus its caption simply does not fit under the fixed bar
      once the window is this short, so the caption drops a step and the sleeve
      trades height for it rather than collapsing */
-  .lb-stage .lb-music { width: min(68vw, 420px, calc(94vh - 300px)); }
+  .lb-stage .lb-music { width: min(68vw, 420px, calc(94vh - 300px), calc(100vw - 2 * (var(--lb-edge) + var(--lb-nav) + var(--sp-3)))); }
   .lb-music-head .lb-meta-title { font-size: var(--fs-h4); }
   .lightbox[data-detail="music"] .lb-music-head { margin-block-end: var(--sp-4); }
   .lightbox[data-detail="music"] .lb-music-link { margin-block-start: var(--sp-5); }
@@ -1742,9 +1759,8 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
     justify-content: flex-start;
     padding-block-start: calc(clamp(1rem, 3vh, 2rem) + 56px);
   }
-  .lb-stage .lb-music { width: min(48vw, 240px, 30vh); }
+  .lb-stage .lb-music { width: min(48vw, 240px, 30vh, calc(100vw - 2 * (var(--lb-edge) + var(--lb-nav) + var(--sp-3)))); }
   .lb-music-head .lb-meta-title { font-size: var(--fs-h4); }
-  .lb-music-head .lb-meta-kicker { margin-block-end: var(--sp-1); }
   .lb-music-head .lb-meta-lines { margin-block-start: var(--sp-2); }
   .lightbox[data-detail="music"] .lb-music-head { margin-block-end: var(--sp-2); }
   .lightbox[data-detail="music"] .lb-music-link { margin-block-start: var(--sp-3); }
