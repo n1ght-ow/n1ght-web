@@ -350,14 +350,13 @@
 }
 
 /* ---------- the line an open book carries ----------
-   One line, under the board. There is no line above the book: the cover's own
-   label already carries the title and the author, and a second copy floating
-   over the scene was saying the same thing twice.
+   One line, over the book, in the band the author line used to hold. The
+   cover's own label already carries the title and the author, so the only
+   thing left worth saying out loud is the note.
 
-   Placed off the scene's landmark rather than off the stage's bottom edge, so
-   it keeps its distance from the shelf at every scale - which is what keeps
-   the note off the spines it would otherwise be printed across. --bs-base
-   minus half the stage: how far the board sits below the scene's pivot. */
+   Hung off the scene's landmark rather than off the stage's top edge, so it
+   keeps its distance from the cover at every scale: 54px over the book's own
+   top, which is also what keeps it clear of the tallest spine below it. */
 .bs-blurb {
   position: absolute;
   left: 0;
@@ -366,7 +365,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.22s var(--ease-out), visibility 0s linear 0.22s;
-  top: calc(50% + (var(--bs-base) - 50%) * var(--bs-fit) + 20px);
+  top: calc(50% - var(--bs-reach) * var(--bs-fit) - 54px);
   font-family: inherit;
   font-size: var(--fs-small);
   line-height: 1.6;
