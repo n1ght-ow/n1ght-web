@@ -120,7 +120,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 ## 代码结构
 
-- `js/main.js` 站点交互层：hero 入场、玻璃高光（`initGlassSpotlight`）、滚动揭示、计数器（`initCounters`）、统一详情层（photo / film / series / game / music 共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`。**摄影是两个例外**：它没有任何滚动动效（墙自己会动，`ScrollTrigger.batch` 的入场与 `--photo-drift` 漂移都随散页网格一起删除），点击也改成在 `#photo-wall` 上委托一次。
+- `js/main.js` 站点交互层：hero 入场、玻璃高光（`initGlassSpotlight`）、滚动揭示、计数器（`initCounters`）、统一详情层（photo / film / series / game / music 共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`、`window.NightScroll`（全屏层共用的滚动锁）。**摄影的例外**：它没有任何滚动动效（墙自己会动，`ScrollTrigger.batch` 的入场与 `--photo-drift` 漂移都随散页网格一起删除），点击改成在 `#photo-wall` 上委托一次，灯箱关闭时额外派发 `night:detail-closed` 让墙重新上锁。
 - 已从 `main.js` 移除：`initCursor` / `initMagnetic` / `spawnBubble` / preloader 时间线 / ticker JS 驱动 / bighead parallax / `.sec-mask` / 计数条 / `#scroll-progress` / 摄影入场与逐张漂移。
 - ARCHIVE 共享工具条与收藏星标已于更早版本整体撤销，不再新增回访入口。
 - 签名：已整体退役；`js/sig-data.js` 保留在仓库但不参与加载。
@@ -193,17 +193,22 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 ## 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（一屏曲面照片墙，11 帧 → Dylan Thomas 诗区）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ ABOUT（统计 + coda）→ footer。
+hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，11 帧 → Dylan Thomas 诗区）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ ABOUT（统计 + coda）→ footer。
 
-- 照片区是**一屏 3D 曲面墙**，复刻 cmscurvegallery.framer.website：11 张瓦片贴在**以观看者为球心**的球面上，拖拽横向无限循环。几何、交互与三个坑都在 `js/photo-wall.js` 与 `css/photo-wall.css`，两条必须记住的：
+- **照片不在正文流里**：正文只留章节导语 + 一个「Open the wall」按钮，整面墙在 `#photo-view` 这个全屏层里（nav `Photography`、页脚链接、导语按钮三处都能打开）。`z-index 60`：nav（70）仍在它之上可点，`#lightbox`（200）仍能压在它上面。**它不是模态**——只有 `main` / `footer` 被置 `inert`，nav 故意保持可用；滚动锁走 `main.js` 暴露的 `window.NightScroll`，并且监听 `night:detail-closed` 在灯箱关掉之后**重新上锁**（灯箱关闭会清掉所有 inert 并还回滚动）。
+- **无 JS 兜底**：11 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` 在**第一次打开视图时**把这 11 个元素搬进 `#photo-wall`。所以关闭 JS 时照片仍在页面上，只是没有墙。
+- 墙的排布是**justified 行**，复刻 cmscurvegallery.framer.website：一行里瓦片**等高**、每张保留自己的比例、整行被拉到正好填满该纬圈。几何、交互与四个坑都在 `js/photo-wall.js` 与 `css/photo-wall.css`，三条必须记住的：
   - **`translateZ(R)` 不能漏**。CSS 的观看者在 `z = +perspective`，所以球心要落到观看者身上就得把 sphere 推前 R；漏掉它观看者就站在球**面**上，整面墙按 50% 渲染、后半圈镜像到屏幕中央（已复现）。
   - **sphere 必须是零尺寸盒子**。它那面正好压在观看者平面上的大盒子会投影到无穷大，Chrome 会丢掉整列不画（390px 实测左侧一条黑带，DOM 里瓦片齐全且可命中）。零尺寸的盒子平移后仍是零尺寸。
-- **两个旋钮不许互换**：`SLOTS`（每圈瓦片数，= 2 × 照片数，必须是照片数的倍数，这样重复永远相隔 180°）决定**弯曲程度**；`COLS`（跨屏瓦片数）决定**缩放**。`R` 与行步长都是推导值，**永不手写**——手写的半径会把地平线放在任意位置。
-- **瓦片比例 3:2 = 源图比例**，`object-fit: cover` 因此零裁切。**不要竖裁成 4:5 或 1:1**：会切掉主体（参考站那样每张裁掉约 47% 宽度）。
+  - **行高是目标值，宽度吸收余量**（`slack = circ / (Σa·h + n·gutter)`）。反过来「解」行高（`h = (circ - n·g)/Σa`）永远解偏低——行是画到溢出为止、最后一格不会退回去，实测矮 10%，每行下面就多一条 40px 黑带。定死 h、把宽度整体缩几个百分点，环仍然闭合得**精确**，而行间距恰好是一条发丝缝。
+- **两个旋钮不许互换**：`R_RATIO`（0.66 × 舞台宽）决定**弯曲程度**；行的缩放由 `rowsVisible = clamp(2.0, 3.46 × H/W, 4.6)` 推导——一行的高度就是缩放，而竖向视口必须让瓦片更小才能保持**横跨数量**，所以它不是常数。`R` 与所有行距都是推导值，**永不手写**。
+- **瓦片比例是每张抽的**（三角分布，`[0.60, 1.06]`、峰值 0.75，即宽/高）：参考站的参差感来自「每张照片比例不同」，而本站 11 张全是 3:2，不抽比例就必然是一排排横条——这正是第一版做丑的原因。代价是 `object-fit: cover` **会裁**（原站同样在裁，它的素材从 0.50 到 1.00）。要回到零裁切就把 `A_MIN/A_MAX/A_PEAK` 一起收到 1.5 附近，但那样就不像原站了。
 - **后半圈靠 `cull()` 剔除**：经度超过 90° 的瓦片在观看者身后，投影的 w 变负，Chrome 会把它们镜像到屏幕中央、并且在奇点附近放大到离谱。只留 |经度| ≤ 60°（可见范围约 ±37°）。这不是优化，是正确性。
 - **拖拽 1:1 且逐帧直写**：`a = a0 ∓ dx / R`，拖拽期间**不经过任何补间**（`reel-stage.js` 实测 131px 滞后的教训）；落位用 `power3.out` + 距离成比例时长，reduced-motion 下瞬时。滚轮**只吃 `deltaX`**（+ Shift+纵滚）：墙只是长文档里的一屏，吞掉 deltaY 就是滚动陷阱。
 - **`data-act` 取代了 `.photo-act-horizon`**：`photoFrameData()` 现在读 `frame.dataset.act`。乐章标题已随参考站样式整体删除，属性是 `BLOOM / HORIZON` 的唯一来源。
 - **点瓦片开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（`e.detail === 0` 的键盘回车放行）。克隆体也是真 `<button>`，所以 `main.js` 在 `#photo-wall` 上**委托一次**，不再逐帧绑定。
+- **方向键挂在 `#photo-view` 上，不是墙上**：视图刚打开时焦点在 Close 药丸上，挂在墙上等于「先进某一帧才有反应」。
+- **墙是全彩的**（`--wall-saturate` 默认 `saturate(1)`），这是「颜色是奖励不是壁纸」的**明文例外**：那条规则保护的是纸面页，而在墙上照片就是页面本身，没有界面要保护，压饱和在这个尺度上只会读成渲染故障。一个变量可以调回去。
 - 游戏名册是**显式三列**（≥900px；720–900 两列，≤720 单列），封面 16:9。**不要改回 `auto-fill`**：18 只能被 1/2/3/6/9/18 整除，`auto-fill minmax(250px,1fr)` 在 1440 下出 4 栏 = 4 行零 2 个孤儿。序号与时长并成一行（`counter` 仍在 `.hof-foot::before`，但不再独占一行），名称在下一行，评语一行截断。
 - **影 / 剧的卡片是「2:3 媒介盒 + 盒外的 meta」**，靠 `.film-card` 的栅格实现（`grid-template-columns: minmax(0,1fr)` + `grid-template-rows: auto auto 1fr`），**不要改回绝对定位的整盒 + meta 覆盖**，也**不要漏掉列定义**（漏了海报会按 JPG 固有尺寸渲染，实测 158/54/90/59/54/24px）。索引药丸（`.film-card-no`）与 OPEN chip（`.film-card-sleeve`）均已 `display: none`；选中态靠**可区分的环**（静止 0.1 / hover 0.2 / 选中 0.34）与 meta 的 accent 上边框两层。**详情区不放图**。
 - **索引列表（球队 / 音乐）没有逐行发丝线**，靠 `padding-block` 与间距分组。球队用队徽（统一 2.75rem 等比盒）取代序号，音乐用 64px 封面取代序号。书已经不进这套 `.idx-*` 了（见「书（书架）」）。
@@ -213,7 +218,7 @@ hero（全屏影像）→ PHOTOGRAPHY（一屏曲面照片墙，11 帧 → Dylan
 
 ## 内容更新
 
-- 摄影：`.photo-frame`（**正典 11 帧必须留在 HTML 里**，墙只是搬动它们的位置并克隆出装饰性重复），`photo/` 与 `photo/full/` 都放；瓦片比例只用 3:2。新增照片数会改变 `SLOTS`，几何自己重算，不用改别处。
+- 摄影：`.photo-frame`（**正典 11 帧必须留在 HTML 里**，放在 `.photo-fallback` 网格里；墙在第一次打开时把它们搬进 `#photo-wall` 并克隆出装饰性重复），`photo/` 与 `photo/full/` 都放。新增照片数会被几何自动吸收，其它地方不用改。
 - 游戏：`.hof-item`（直接进 `#hof-grid`），封面 `covers/`，时长写 `.hof-hours`，引文写 `.hof-quote`。
 - 影视：海报 `posters/<ttID>.jpg`，条目进 `film-data.js` / `series-data.js`。
 - 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成。

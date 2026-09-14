@@ -31,6 +31,22 @@ if (!REDUCED && typeof Lenis !== "undefined") {
   });
 }
 
+/* The photography wall is a full-screen layer of its own (js/photo-wall.js),
+   and it needs the same scroll stop the detail layer uses without reaching
+   into this module's lenis instance. Deliberately not a counter: the only
+   overlap is #lightbox opening on top of the wall, and that is handled by the
+   night:detail-closed event below, where the wall simply re-asserts itself. */
+window.NightScroll = {
+  stop() {
+    document.body.style.overflow = "hidden";
+    if (lenis) lenis.stop();
+  },
+  start() {
+    document.body.style.overflow = "";
+    if (lenis) lenis.start();
+  },
+};
+
 /* ---------- helpers ---------- */
 
 // One shared scheduler for full ScrollTrigger.refresh passes: bursts of
@@ -490,6 +506,9 @@ function closeDetail() {
   // hand focus back to the card that opened the detail layer
   if (lbTrigger && document.contains(lbTrigger)) lbTrigger.focus();
   lbTrigger = null;
+  // the wall may still be up underneath: closing this layer just handed the
+  // page back and cleared every inert attribute, and it has to put both back
+  document.dispatchEvent(new CustomEvent("night:detail-closed"));
 }
 
 function initUnifiedDetail() {
