@@ -613,6 +613,21 @@ h1, h2 { text-wrap: balance; }
   -webkit-backdrop-filter: blur(3px) saturate(1.4);
 }
 
+/* Colour parity with the tab strip (asked for). The strip refracts, and the
+   lens rule REPLACES --glass-blur, so its body renders 249,249,243 - the
+   honest composite of the 72% tint over the paper. These two bars keep
+   --glass-blur, whose brightness(1.05) has nothing to lift on paper: 248 x
+   1.05 clips every channel, so they painted 255,255,252 - pure white, which
+   AGENTS.md forbids outright. Measured off one screenshot with the same
+   239,239,234 backdrop: strip 249,249,243 / search 255,255,252 / rail
+   255,255,255. Dropping the brightness here lands all three on one colour and
+   costs nothing: blur and saturate are untouched. */
+.music-search .glass__body,
+.genre-filter .glass__body {
+  backdrop-filter: blur(20px) saturate(1.7);
+  -webkit-backdrop-filter: blur(20px) saturate(1.7);
+}
+
 .tab-btn {
   /* the glass layers are absolutely positioned siblings, so an unpositioned
      button would be painted underneath them and its label would vanish.
@@ -1026,27 +1041,21 @@ html:not(.js) .sport-wash { opacity: 1; }
   align-items: center;
   gap: 4px;
   flex-wrap: wrap;
-  /* The one thing kept from the previous revision (asked for): the SAME
-     inline-size expression as header.nav, so this bar and the fixed one above it
-     share both edges at every width. Measured difference: 0.0px on the left and
-     on the right, from 1440px down to 320px.
-     100vw is deliberate. 100% would be the panel column, which is one scrollbar
-     (15px here) narrower than the viewport, so the rail would sit 7.5px in from
-     the nav on each side below 1297px - the one range where the nav's own width
-     is the viewport-driven branch. The cost is that the plate overhangs the
-     column by half a scrollbar into the panel's padding; the gutter is at least
-     20px a side, so it never reaches the page edge and never makes a horizontal
-     scrollbar (checked at 320px: documentElement scrollWidth == clientWidth). */
-  --rail-w: min(1180px, calc(100vw - 2 * var(--gutter)));
-  width: var(--rail-w);
-  /* Centred on the nav's axis, which is NOT what auto margins give once the
-     plate is wider than the column (below 1297px): the over-constrained case
-     throws the start margin away and pushes the plate 7.5px to the right of the
-     nav. (100% - w) / 2 goes negative instead and keeps the centres equal. */
-  margin-inline: calc((100% - var(--rail-w)) / 2);
+  /* A PHONE CORNER, NOT A CAPSULE, AND THE SEARCH ROW'S WIDTH (asked for,
+     third revision): this plate is now exactly as wide as the search row above
+     it - it is a plain block in .music-drawer, so 100% IS that column - and its
+     corners are quarter circles. The shape lock only has four radii, so 22px
+     (--radius-lg) is the one legal "big rounded rectangle": measured against a
+     96px tall plate it still reads as a rectangle, where --radius-pill gave a
+     48px stadium end. The rim keeps the 9px of the other two bars; the 13px
+     default is sized for a much larger surface.
+     The nav-width maths (--rail-w, the (100% - w) / 2 centring) is retired with
+     the second revision - do not copy it back. */
+  --glass-radius: var(--radius-lg);
+  --glass-edge-w: 9px;
   /* The tab strip's tray geometry: 6px around 40px items, and the same single
-     gap above and below. Radius, tint, blur, rim and elevation all come from
-     .glass + .glass--pill - do not re-declare them here. */
+     gap above and below. Tint, blur, rim and elevation come from .glass -
+     do not re-declare them here. */
   padding: 6px;
   margin-block: var(--bar-gap);
 }
@@ -1095,14 +1104,13 @@ html:not(.js) .sport-wash { opacity: 1; }
   min-height: 40px;
   border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out), transform 0.15s var(--ease-out);
+  transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out), box-shadow 0.18s var(--ease-out), transform 0.15s var(--ease-out);
 }
 
 /* The single solid primary action of this view, kept solid ink on paper:
    the reference parks its one CTA pill at the right end of the bar and this
    is the same slot, inverted for a paper tray. */
-.music-random { flex: none; background: var(--color-ink); color: var(--color-on-dark); }
-.music-random:hover { background: var(--ink-900); }
+.music-random { flex: none; }
 .music-random:active { transform: scale(0.96); }
 
 /* A bare item inside the tray: no box, no hairline. The pill on hover is the
@@ -1165,19 +1173,120 @@ html:not(.js) .sport-wash { opacity: 1; }
   border-radius: var(--radius-pill);
   cursor: pointer;
   background: none;
-  transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out);
+  transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out);
 }
 
 .genre-chip:hover { color: var(--color-text); background: oklch(0 0 0 / 0.05); }
 
+.genre-chip.is-active { background: var(--glass-pill); color: var(--color-on-dark); }
+
+/* There is deliberately no tick marker on the active chip: it added width, so
+   the whole chip rail reflowed on every genre change. The filled pill carries
+   the state, and aria-pressed carries it for AT. The ::before this selector
+   does get below is the glass bead - inset: 0, so it adds no layout. */
+
+/* ---- the ink pill, as LIQUID GLASS (asked for) --------------------------
+   The music CTA and the active genre chip now carry the SAME material as the
+   tab strip's selected indicator (#tab-pill in js/glass-pill.js), copied from
+   .glass-pill in glass.css: the 84% ink-950 tint, the +-1px bevel, the two
+   elevation shadows, a blur(6px) saturate(1.4) backdrop layer and the axial
+   bead. It is written here rather than as a shared class because the chips are
+   generated by js/music-stage.js and their state is an is-active toggle, so a
+   markup-applied variant would need JS plumbing for no gain.
+
+   The backdrop layer is a ::after at z-index: -1, and both halves of that are
+   load-bearing: a positioned pseudo paints ABOVE the label by default, and
+   z-index: -1 is what drops it between the button's own tint and its text -
+   the layering the tab bar gets for free by keeping its pill and its labels in
+   separate elements. isolate keeps that negative layer inside this button
+   instead of letting it escape to the nearest ancestor stacking context.
+   z-index: 4 is the same value .tab-btn and .genre-chip use to ride above the
+   tray's .glass__body / .glass__edge. */
+.music-random,
 .genre-chip.is-active {
-  background: var(--color-ink);
+  position: relative;
+  isolation: isolate;
+  z-index: 4;
+  background: var(--glass-pill);
   color: var(--color-on-dark);
+  box-shadow:
+    inset 0 1px 0 0 oklch(1 0 0 / 0.22),
+    inset 0 -1px 0 0 oklch(0 0 0 / 0.4),
+    0 1px 2px oklch(0 0 0 / 0.18),
+    0 8px 20px -10px oklch(0 0 0 / 0.45);
 }
 
-/* There is deliberately no ::before marker on the active chip. The tick
-   added width, so the whole 16-chip rail reflowed on every genre change.
-   The filled state carries it, and aria-pressed carries it for AT. */
+.music-random::after,
+.genre-chip.is-active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  backdrop-filter: blur(6px) saturate(1.4);
+  -webkit-backdrop-filter: blur(6px) saturate(1.4);
+}
+
+/* The axial bead - .glass-pill::before verbatim: dark flank rails, lit top and
+   lit bottom. Painted over the label, which is fine: it is a 1px ring on the
+   border, and the labels keep >= 11px of padding. */
+.music-random::before,
+.genre-chip.is-active::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background:
+    linear-gradient(
+      to right,
+      oklch(0 0 0 / 0.42) 0,
+      transparent 8px,
+      transparent calc(100% - 8px),
+      oklch(0 0 0 / 0.42) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      oklch(1 0 0 / 0.5) 0,
+      transparent 9px,
+      transparent calc(100% - 9px),
+      oklch(1 0 0 / 0.36) 100%
+    );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* Hover keeps the glass: deepening the shadow is the move the tab pill makes
+   when it is grabbed, and the solid --ink-900 this CTA used to swap in threw
+   the whole material away on the first pointer move. */
+.music-random:hover,
+.genre-chip.is-active:hover {
+  box-shadow:
+    inset 0 1px 0 0 oklch(1 0 0 / 0.28),
+    inset 0 -1px 0 0 oklch(0 0 0 / 0.44),
+    0 2px 4px oklch(0 0 0 / 0.24),
+    0 12px 26px -10px oklch(0 0 0 / 0.5);
+}
+
+/* The three fallbacks, next to the material they belong to. These two are not
+   .glass elements, so glass.css's blocks cannot reach them - and with no
+   backdrop-filter to sample, the layer is not a surface at all. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .music-random::after,
+  .genre-chip.is-active::after { display: none; }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .music-random::after,
+  .genre-chip.is-active::after { display: none; }
+}
+html[data-transparency="solid"] .music-random,
+html[data-transparency="solid"] .genre-chip.is-active { background: var(--ink-950); }
+html[data-transparency="solid"] .music-random::after,
+html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
 
 .playlist { display: flex; flex-direction: column; gap: var(--sp-6); }
 

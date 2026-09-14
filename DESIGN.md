@@ -269,18 +269,21 @@
 
 | bar | 尺寸（1418 视口实测） | 材质 |
 | --- | --- | --- |
-| `#archive-tabbar` | 577 × 52，`width: max-content`，左贴正文边 | `.glass--pill`：72% paper-000 + `.glass__body` `blur(20px) saturate(1.7) brightness(1.05)` + 棱环 + `--glass-elevation`；选中态是 `js/glass-pill.js` 那颗墨色药丸（`--glass-pill` 84% ink-950） |
-| `.music-search` | 1275 × 52，铺满正文列 | 同上；内容层 `.glass__content` 抬到 z-index 3 |
-| `#genre-filter` | 1180 × 96（两行 chips），与 `header.nav` 同宽同轴 | 同上；chips 抬到 `z-index: 4` |
+| `#archive-tabbar` | 577 × 52，`width: max-content`，左贴正文边 | `.glass--pill`：72% paper-000 + 棱环 + `--glass-elevation`；body 走折射分支（`blur(5px) saturate(1.6) url(#lg-lens)`，**无** brightness，见下）；选中态是 `js/glass-pill.js` 那颗墨色玻璃药丸（`--glass-pill` 84% ink-950） |
+| `.music-search` | 1275 × 52，铺满正文列 | 同上，但 body 去掉 `brightness()`（见下）；内容层 `.glass__content` 抬到 z-index 3 |
+| `#genre-filter` | **1275 × 96**（两行 chips），与搜索行**逐像素同宽**；圆角 **22px**（`--radius-lg`，不是胶囊）、棱宽 9px | 同上（`.glass__body` 去掉 brightness，见下）；chips 抬到 `z-index: 4` |
 
 - **托盘几何来自标签条，不是参考实现**：6px 内距 + 4px 间距 + 40px 条目（参考实现的条目只有 29px，**没有照抄**——桌面 40×40 是硬线，紧凑只落在横轴：条目内距 1.25em → 1.05em）。三条因此同一套高度公式：一行 52px，流派行两行 96px。
-- **宽度刻意不统一**（用户第三轮选定：实测 577 / 1275 / 1180）：三条靠材质读成一家、靠宽度与页面层级保持彼此独立——这是「不要弄成一组工具条」的落点。流派行仍与 `header.nav` 用同一条表达式 `min(1180px, calc(100vw - 2 * var(--gutter)))`；居中必须是 `calc((100% - var(--rail-w)) / 2)` 而不是 `margin-inline: auto`（宽度超过列时是 over-constrained，起始 margin 会被丢掉、整块右移半个滚动条）。实测 1440→320 九个宽度左右边缘差 **0.0px**。
+- **宽度**（用户第四轮的最终形态，实测 577 / 1275 / 1275）：标签条 `max-content`；搜索行与流派行都是 `.music-drawer` 的整列，**逐像素同宽**。第三轮的「流派行 = 导航条 1180 / 居中 `calc((100% - var(--rail-w)) / 2)`」已退役。
+- **流派行是唯一的圆角矩形**：`--glass-radius: var(--radius-lg)`（22px）+ `--glass-edge-w: 9px`。形状锁只有四档，22px 是唯一合法的「大圆角但非胶囊」；96px 高的板在 22px 下仍读成长方形（胶囊是 48px 的 stadium 端）。
+- **三条同色的坑（已修）**：标签条 `glass--refract` 的透镜规则替换了 `--glass-blur`（无 brightness），渲染 249,249,243；另两条走默认 `--glass-blur`，`brightness(1.05)` 把 248 的合成削顶成 **255,255,252 纯白**（违反禁纯白）。现在这两条的 `.glass__body` 显式去掉 brightness（保留 blur 20 / saturate 1.7），同一张 PNG 实测三条落在 247-249。
 - **间距只有一个 token `--bar-gap`（`--sp-5` = 24px）**：实测标签条→搜索行→流派行→列表 = **24 / 24 / 24**。标签条的下边距同时就是它与六个面板的距离，所以这一条把面板起点从 48 收到 24（用户选择 24 时已披露的副作用）。
 - **没有一行 sticky**（用户第三轮，明文覆盖第二轮的「流派常驻」）：三条都随列表滚走。`alignGenreTop()` 的落点基准因此改成**固定导航条的底边 + 16**——`header.nav` 是 `fixed`，rect 在任何滚动位置都诚实；旧的「读 sticky 板的 `computed top` + `offsetHeight`」随吸顶一起退役（那条规则本来是为绕开「换组时文档变矮、sticky 板被压出视口」）。实测：搜索中点 chip 落点 16 / 15px，深处切流派 16px。
 - **材质就是 `.glass` 本体，手写那套整体退役**：流派行原来是手写的 Blur Navigation 板（`blur(26px)` + `--paper-100` @16% + 墨 12% 环）**外加自己那三条回退**——现在它就是 `.glass`，`glass.css` 一次覆盖三条。随之消失的还有它的对比度豁免：没有东西从板下穿过，最差底色就是纸面。实测（72% paper-000 合成到 `--paper-100` = `248,248,246`）：chip 标签 ink-600 **8.13:1**、占位符 / 序号 ink-500 **5.18:1**、选中 chip 与 CTA 16.96:1。
 - **玻璃层必须是 `.glass` 的静态子元素，而且写在内容之前**：两层都是绝对定位，静态的 chips / 输入框会被画在它们下面。`js/music-stage.js` 只 `appendChild`、从不清空 `#genre-filter`，所以 index.html 里写死的两层安全；chips 与 `.music-search > .glass__content` 都要 `position: relative; z-index: 4`（`.tab-btn` 同一个理由、同一个值）。`.glass__press` 只给 tab 条与流派行——文本域不是按钮，点进去打字不该让整块板的棱闪一下。
 - **三条共用去 brightness 的棱**：`#archive-tabbar .glass__edge, .music-search .glass__edge, .genre-filter .glass__edge { backdrop-filter: blur(3px) saturate(1.4) }`。纸上 1.14× 只是把已经约 249 的主体削顶成纯白——实测这条 bar 的上下 9px 是 `255,255,255` 而主体是 `249,249,243`；药丸四边各距棱 6px，于是那圈白就读成了药丸的白色光晕。改后同点实测 `248,248,240` / `244,244,237`。`header.nav` 压在照片上，**保留** brightening。
-- 音乐条目**不再各自带发丝线**：整行读成一条 bar + 一枚点亮的条目（hover 药丸底、active 实心墨）。`.music-random` 仍是这个视图**唯一**的实心主操作，停在 bar 右端，DOM 里也排最后。
+- 音乐条目**不再各自带发丝线**：整行读成一条 bar + 一枚点亮的条目（hover 药丸底、active 墨色玻璃）。`.music-random` 仍是这个视图**唯一**的主操作，停在 bar 右端，DOM 里也排最后。
+- **两枚墨色胶囊 = 标签条那颗指示器的材质**（用户第四轮要求）：`.music-random` 与 `.genre-chip.is-active` 共用 `background: var(--glass-pill)`（84% ink-950）+ `.glass-pill` 的斜面与两级投影 + `::before` 轴向棱 + `::after` 背板 `blur(6px) saturate(1.4)`；`::after` 走 `z-index: -1` 才落在染色与文字之间（伪元素默认压在文字上），按钮自带 `isolation: isolate` 把负层关在里面，`z-index: 4` 与 `.tab-btn` 同值地骑在托盘两层之上。hover 只加深阴影，不换实心色。三条回退写在同处。
 - **焦点提示在输入框底边**：1px `--color-text-muted` 底线 + 光标。输入框自身的 `outline: none` 由这条底线替代，行内的清除 / 随机一首保留全局焦点环。
 - `≤720px`：`.tabbar` 与 `#genre-filter` 都是横向滚动器，都转实底（`var(--color-surface)` + `inset 0 0 0 1px var(--color-line)`）并把两层 `display: none`——滚动容器里不放 backdrop-filter，绝对定位层也会随内容滚。实底规则必须写成 **`.tabbar.glass` / `.genre-filter.glass`**：`.glass` 在 glass.css 里且**后加载**，bare 类的同名声明压不过它（`.tabbar` 那条自 V2 起就没生效过，这次修好了）。搜索行不滚动，**保留玻璃**。
 
