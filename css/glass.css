@@ -488,6 +488,41 @@ html.has-lens .glass--refract .glass__body {
   backdrop-filter: blur(5px) saturate(1.6) url(#lg-lens);
 }
 
+/* ============================================================
+   The NAV's lens: the formation of Framer's LiquidGlass
+   (framer.com/m/Liquid-Glass-Nav-Pro-bjAIfL.js), not the one above.
+
+   The tab strip keeps #lg-lens, the authored picture-map lens. The nav cannot,
+   and the reason is a defect the picture map walks into by construction: its
+   displacement reaches +-55px while the bar is 58px tall, so near the two ends
+   the sample lands OUTSIDE the bar - and outside the bar there is no
+   --glass-nav fill to sample, only the hero's ink behind it. The lens prints
+   that as a dark bow-tie next to POEM. Measured: that band's minimum luminance
+   was 0.086; with the lens off it is 0.729; over paper, 0 dark pixels.
+
+   The reference avoids it with two things, and both are copied here:
+
+   1. THE FILL SITS ABOVE THE FILTERED BACKDROP. In the reference the tint is a
+      child painted over the filtered layer while the filtered element itself
+      carries no background. That is the whole trick: the lens may then sample
+      whatever it likes, because the bar's tone no longer depends on what it
+      sampled - an out-of-bounds sample cannot punch a hole in a surface that
+      has already been painted over it. The bar's own background therefore goes
+      transparent, which is why all three fallbacks below have to hand it back.
+   2. the map is generated per size as a signed-distance field, so refraction is
+      confined to a 14px bezel and the offset is at most 40 * 118/255 = 18.5px
+      instead of 55. js/glass-lens.js builds it; #lg-nav holds the chain. */
+html.has-lens .nav.glass--refract {
+  background: transparent;
+}
+html.has-lens .nav.glass--refract .glass__body {
+  background: var(--glass-nav);
+  /* one url(). Blur, displacement, saturation and brightness all live inside
+     #lg-nav, so no CSS filter functions appear here: url() plus functions
+     would apply the blur twice. */
+  backdrop-filter: url(#lg-nav);
+}
+
 /* The pill deliberately does NOT get the lens, for two reasons that were
    both visible in the render:
    1. the displacement map's flat interior is authored for a wide thin bar
@@ -533,6 +568,9 @@ html.has-lens .glass--refract .glass__body {
 
 /* 1. No backdrop-filter at all: go solid. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  /* the nav hands the fill back to the bar itself: with no backdrop-filter
+     there is no filtered layer for it to sit above */
+  html.has-lens .nav.glass--refract { background: var(--glass-nav); }
   .glass {
     background: var(--paper-000);
     box-shadow: var(--glass-elevation);
@@ -548,6 +586,7 @@ html.has-lens .glass--refract .glass__body {
 /* 2. Reduced transparency AND increased contrast. prefers-reduced-transparency
    is Chromium-only, so prefers-contrast rides along for wider coverage. */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  html.has-lens .nav.glass--refract { background: var(--glass-nav); }
   .glass {
     background: var(--paper-000);
     backdrop-filter: none;
@@ -567,6 +606,7 @@ html.has-lens .glass--refract .glass__body {
 /* 3. Explicit opt-out set from JS (html[data-transparency="solid"]), which
    is the only mechanism that works on a browser that supports neither of
    the two media queries above. */
+html[data-transparency="solid"] .nav.glass--refract { background: var(--glass-nav); }
 html[data-transparency="solid"] .glass {
   background: var(--paper-000);
   backdrop-filter: none;

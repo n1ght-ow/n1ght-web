@@ -1,8 +1,8 @@
 /* Self-hosted latin subsets (content is English-only).
    Paper/ink type system: Space Grotesk carries display + UI; IBM Plex Mono covers labels; Instrument Serif
-   italic is the editorial accent. Retired display faces (Vast Shadow,
-   Bungee, Calistoga, Notable) stay on disk in fonts/ but are no longer
-   declared or preloaded. */
+   italic is the editorial accent; Diplomata SC carries one string, the hero
+   wordmark. Retired display faces (Vast Shadow, Bungee, Calistoga, Notable)
+   stay on disk in fonts/ but are no longer declared or preloaded. */
 
 @font-face {
   font-family: 'Space Grotesk';
@@ -38,6 +38,24 @@
   font-weight: 400;
   font-display: block;
   src: url('../fonts/KeLaiYinLanDeYeWan.ttf') format('truetype');
+}
+
+/* The masthead face. Diplomata SC (Eduardo Tunni, SIL OFL 1.1), the latin
+   subset served by Google Fonts, vendored as a woff2 in fonts/ like every
+   other face here. It is the answering move to the retired display faces:
+   those were loud by being heavy, this one is loud by being engraved, which
+   is why the hero no longer needs a photograph to hold it up.
+   The face is used for a single string at a single size, and that string IS
+   the page's first paint, so it blocks rather than swaps: a fallback that
+   repaints at a different width is worse than a beat of empty ink, and the
+   preload in index.html makes that beat ~0 on a local file. */
+@font-face {
+  font-family: 'Diplomata SC';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('../fonts/DiplomataSC-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {

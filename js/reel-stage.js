@@ -543,25 +543,61 @@
          letting you compare one entry against the next. Picking a different
          film should feel like the text was already there.
 
-         The replacement is a single tween on the copy block: no clip, no
-         stagger, 180ms. It confirms the panel changed without ever cutting a
-         letter. */
+         The replacement is one settle: no clip, no stagger, 180ms. It confirms
+         the panel changed without ever cutting a letter.
+
+         THE FADE GOES ON THE TYPE, NEVER ON THE COLUMN.
+
+         The column is an ANCESTOR of the accent glass button, and an ancestor
+         at opacity < 1 erases that element's backdrop read (DESIGN.md 4.2 -
+         measured there at ancestor opacity 0.99). Tweening the copy block
+         therefore faded the champagne pill up out of the paper and then
+         snapped it onto its real surface on the final frame: a flash around
+         the button's label every time a different poster was chosen.
+
+         The rise stays on the block, because transform IS safe on an ancestor
+         - that is why the button still travels the 6px with the text it
+         belongs to. Measured on the accent glass in the film panel (headless
+         Chrome 152, DPR 1, interior mean RGB): settled 212,192,132; the block
+         at opacity 0.6 -> 217,198,140, at 0.3 -> 227,218,187, at 0 ->
+         239,239,234, which is the bare paper. */
       const copy = q(stage, "." + prefix + "-detail-copy");
-      if (canTween() && animate && copy) {
-        window.gsap.fromTo(
-          copy,
-          { opacity: 0, y: 6 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.18,
-            ease: "power2.out",
-            overwrite: true,
+      if (canTween() && copy) {
+        /* the four type nodes, never the button that closes the column */
+        const type = [
+          q(stage, "." + prefix + "-detail-kicker"),
+          title,
+          line,
+          quote
+        ].filter(Boolean);
+        if (animate) {
+          window.gsap.fromTo(
+            type,
+            { opacity: 0 },
+            {
+              opacity: 1,
+              duration: 0.18,
+              ease: "power2.out",
+              overwrite: true,
+              clearProps: "opacity"
+            }
+          );
+          window.gsap.fromTo(
+            copy,
+            { y: 6 },
+            {
+              y: 0,
+              duration: 0.18,
+              ease: "power2.out",
+              overwrite: true,
+              clearProps: "transform"
+            }
+          );
+        } else {
+          window.gsap.set(type.concat([copy]), {
             clearProps: "opacity,transform"
-          }
-        );
-      } else if (canTween() && copy) {
-        window.gsap.set(copy, { clearProps: "opacity,transform" });
+          });
+        }
       }
 
     }

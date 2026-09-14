@@ -39,12 +39,12 @@ V2 删掉的东西，任何一条重新出现都算回归：
 
 ## 视觉基调（项目身份）
 
-Design read：个人影像档案，受众是同好与自己。气质 = **编辑式画廊**：纸感中性底、克制的排版、全屏影像。
+Design read：个人影像档案，受众是同好与自己。气质 = **编辑式画廊**：纸感中性底、克制的排版、影像优先，开场是一个巨型字标。
 对应 dial：`DESIGN_VARIANCE 6 / MOTION_INTENSITY 4 / VISUAL_DENSITY 4`。
 
 **核心判断**：照片是页面上唯一被允许彩色的事物。界面不得与图片抢注意力——这决定了下面几乎每一条规则。
 
-- **明暗**：正文页全亮色纸面。暗色只用于三处——全屏影像 hero、`#lightbox`、`.footer`。不要把任何普通分区反转为暗色。
+- **明暗**：正文页全亮色纸面。暗色只用于三处——**hero（承载巨型字标）**、`#lightbox`、`.footer`。hero 自 2026-09 起只剩字标，但字标现在压在**一层全幅影像**上（`hero/`，见「站点结构」与 `DESIGN.md` 第 7 节）；它**仍然是暗区**；不要把任何普通分区反转为暗色。
 - **色彩**：中性纸墨 ramp + 单一香槟金强调。**禁紫、禁纯黑 `#000`、禁纯白 `#fff`**（用 `--ink-950 #101010` / `--on-dark #F2F2EF`）。accent hue = 可交互，静态文字只有诗区叠句一处例外。
 - **强调色配额**：全站命中元素 **≤ 25**（V1 是 182，V2 是 14）。新增一处金色就要问自己是不是在稀释它。
 - **留白优先于线条**：分组靠间距与留白，不靠描边、底色块、分隔线。分隔线只给密集表格数据。
@@ -70,6 +70,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 ## 排版（DESIGN.md 第 2 节）
 
 - **双寄存器系统，10 个声明角色封顶**：UI 档（11 / 12 / 13 / 15 / 16px）+ 展示档（20 / 25 / 31 / 49 / 76px，模数 1.25）。两者之间的空档是刻意的，不要插中间值。
+- **hero 字标是 logotype，不是第 11 个角色**：`N1GHT CHXN9` 一个字符串、一个字号，字号按 `.hero-inner` 的内容列算（`--masthead: 14.5cqw`，实测来历写在 `css/style.css` 第 7 节）。字号表不动。
 - **红线**：`text-box-trim` **只给展示档标题**（`.display` / `.sec-title` / `.footer-name`；coda 已退役）。它移除降部空间，与 `overflow: hidden` 同用会切掉降部——曾把「Maybe」渲染成「Maube」。
 - `line-height` 一律 unitless；标题 `text-wrap: balance`，描述 `pretty`；会变的数字 `tabular-nums`。
 - 字重只用 400 / 500。层级由字号与留白承担，不由加粗承担。
@@ -122,7 +123,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 ## 代码结构
 
-- `js/main.js` 站点交互层：hero 入场、玻璃高光（`initGlassSpotlight`）、滚动揭示、统一详情层（photo / film / series / game / music 共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`、`window.NightScroll`（全屏层共用的滚动锁）。**摄影的例外**：它没有任何滚动动效（墙自己会动，`ScrollTrigger.batch` 的入场与 `--photo-drift` 漂移都随散页网格一起删除），点击改成在 `#photo-wall` 上委托一次，灯箱关闭时额外派发 `night:detail-closed` 让墙重新上锁。
+- `js/main.js` 站点交互层：hero 字标升起（整块出遮罩，不逐字）、玻璃高光（`initGlassSpotlight`）、滚动揭示、统一详情层（photo / film / series / game / music 共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`、`window.NightScroll`（全屏层共用的滚动锁）。**摄影的例外**：它没有任何滚动动效（墙自己会动，`ScrollTrigger.batch` 的入场与 `--photo-drift` 漂移都随散页网格一起删除），点击改成在 `#photo-wall` 上委托一次，灯箱关闭时额外派发 `night:detail-closed` 让墙重新上锁。
 - 已从 `main.js` 移除：`initCursor` / `initMagnetic` / `spawnBubble` / preloader 时间线 / ticker JS 驱动 / bighead parallax / `.sec-mask` / 计数条 / `#scroll-progress` / 摄影入场与逐张漂移 / **`initCounters` 与 about-stats、about-body、coda 三条时间线（随 ABOUT 面板一起退役）**。
 - ARCHIVE 共享工具条与收藏星标已于更早版本整体撤销，不再新增回访入口。
 - 签名：已整体退役；`js/sig-data.js` 保留在仓库但不参与加载。
@@ -132,6 +133,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 应要求把 `header.nav` 换成 Framer Liquid Glass Navbar（`framer.com/m/Liquid-Glass-Navbar-6gh01a.js`）的**形态**，材质仍是本站玻璃。完整表格与实测数字见 `DESIGN.md` 4.9。
 
 - **只借三件事**：镜片棱 3px（pill 默认 9px）、轴向棱改成**上下都亮 + 暗侧轨**、以及参考那六层「宽、软、极低 α」的投影（写进新 token `--glass-elevation`）。参考的 logo 宝石、菜单项、`Get Started` 按钮是它的**内容**不是形态，**没有抄**。
+- **折射换成 LiquidGlass 的成形方式**（应要求，完整表格见 `DESIGN.md` 4.10）：`#lg-nav` 一条链（`feGaussianBlur → feDisplacementMap → feColorMatrix → feComponentTransfer` 全在 SVG 里，CSS 只写 `url(#lg-nav)`），位移图由 `js/glass-lens.js` 按 bar 自身尺寸现算（圆角矩形 SDF + 14px bezel + 向外径向，`scale=40` → 最大 18.5px）。**关键是染色层搬到了滤镜之上**（`.glass__body` 自己的 background）：bar 的颜色不再取决于采样到了什么。原来 `#lg-lens` 的 ±55px 位移会把 bar 外的 hero 墨色搬进来，在 POEM 旁印出一朵黑影——实测那条横带的最低亮度 0.086，现在是 0.799，且两端逐位相同。染色上移要求 `.nav.glass--refract` 的 background 透明，**三条回退都要把它交还**（漏一条 = 掉增强的浏览器上一条隐形 bar）。tab 条仍走 `#lg-lens`。
 - 覆盖必须写成 **`.nav.glass …`**：`.glass` / `.glass--pill` 在 `glass.css` 里且**后加载**，bare `.nav` 的同名声明压不过它。同 `.tabbar.glass` 那个坑；新的 `background: var(--glass-nav)` 也踩了一次。
 - `--glass-elevation` 定义在 `glass.css` 的 `:root`，默认值就是原来那两层投影；`.glass` 与三条回退都读它。**改高度只改这一个 token**，不要重抄 inset 斜面。
 - 顺手修好：`.nav` 此前没有 `background`，吃的是 72% 的 `--glass-panel`，而 78% 的 `--glass-nav` 从没被任何选择器用过。合成到纯黑背景上，α0.72 的链接色只有 **4.20:1**（不合格），α0.78 是 **4.99:1**。
@@ -198,6 +200,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - `settle` 的 `onUpdate` 要读**实时** x（`gsap.getProperty`）写 range，写目标值会让滑块第一帧就瞬移到终点再等条带追上来。
 - **`state.settling` 必须在 `resetMover` 里清掉**：`resetMover` 既在落位完成时跑、也在 `pointerdown` 打断落位时跑，而被打断的补间**永远不会触发 onComplete** —— 漏掉这句标志会永久为真，之后 `setupMode`（resize 与每次海报加载时的重测/重夹紧）静默失效。
 - `setupMode` 在 `settling` 期间**不得写 transform**：它写的是 `state.x`，而 `settle` 早已把 `state.x` 提交成目标值，所以居中动画途中只要有海报加载完，条带会直接闪到终点。
+- **详情区的 settle 只淡文字，绝不淡那一列**：`.film-detail-copy` / `.series-detail-copy` 是 `OPEN ON IMDb`（`.glass--accent`）的**祖先**，而祖先 `opacity < 1` 会让玻璃的 backdrop 读取失效（`DESIGN.md` 4.2 那条陷阱）。整块淡入的后果是**每换一张海报都在按钮标签周围闪一下**：实测按钮内部均值在 opacity 1 时是 `212,192,132`，0.6 → `217,198,140`，0.3 → `227,218,187`，0 就是纸面 `239,239,234`，而补间中途只要祖先是 0.x 就在这条斜坡上走一遍，最后一帧再跳回真表面。现在淡入只挂在 kicker / title / line / quote 四个文字节点上，**抬起（`y: 6`）仍留在整块**——transform 在祖先上安全，所以按钮照旧跟着文字走 6px，但它的任何一帧祖先都是 opacity 1（CDP 逐帧实测：`copy: 1` 恒定，按钮内部 `224,207,150` / `212,192,132` 恒定，`kick` 0 → 1 走完 180ms）。
 
 ### 音乐
 
@@ -260,7 +263,7 @@ Dylan Thomas《Do not go gentle into that good night》。**这一段只有诗**
 
 ## 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，11 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
+hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，11 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
 
 - **照片不在正文流里**：正文只留章节导语 + 一个「Open the wall」按钮，整面墙在 `#photo-view` 这个全屏层里（nav `Photography`、页脚链接、导语按钮三处都能打开）。`z-index 60`：nav（70）仍在它之上可点，`#lightbox`（200）仍能压在它上面。**它不是模态**——只有 `main` / `footer` 被置 `inert`，nav 故意保持可用；滚动锁走 `main.js` 暴露的 `window.NightScroll`，并且监听 `night:detail-closed` 在灯箱关掉之后**重新上锁**（灯箱关闭会清掉所有 inert 并还回滚动）。
 - **无 JS 兜底**：11 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` 在**第一次打开视图时**把这 11 个元素搬进 `#photo-wall`。所以关闭 JS 时照片仍在页面上，只是没有墙。
@@ -291,7 +294,8 @@ hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，1
 - 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成。
 - 书：条目进 `js/book-shelf-data.js`，每本除了 title / author / blurb 还要给 binding（`thickness` 21–48、`height` 240–288、`lean`、`cloth`、`ink`、`band`）；**新增或换布色必须重量 ink/cloth 的 4.5:1**。行宽、缩放和书脊字号都会自己算。
 - 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`）。
-- 增删内容同步 **hero 统计条**；`#about-stats` 的 8 个计数已随 ABOUT 面板退役（要恢复计数就得同时把 `initCounters()` 与 `data-count` 标记一起加回来）。
+- hero 影像层：`index.html` 里一个 `<picture class="hero-plate">`，三个文件——`hero/nebula-tall.jpg`（708×1532，竖屏原生切片，`max-aspect-ratio: 3/4` 时用）、`hero/nebula-1200.jpg`（1200w）、`hero/nebula.jpg`（2400w）。换图就是换这三个文件，并同步 `width` / `height` / `alt`；**原图不要预裁**，露哪一块由 `object-position` 选。它上面那层 scrim（字标对比度就靠它）写在 `css/style.css` 第 7 节，**改动必须重量对比度**（DESIGN.md 3.2 有量法）。
+- **hero 统计条已退役**（2026-09，hero 只剩字标与它背后那张影像）：藏品数字现在只住在 `DESIGN.md` 第 0 节与各面板页头里，增删内容要同步那里。`#about-stats` 的 8 个计数更早已随 ABOUT 面板退役（要恢复计数就得同时把 `initCounters()` 与 `data-count` 标记一起加回来）。
 
 ## 改完自检
 

@@ -61,19 +61,21 @@ const MOTION = {
 };
 
 /* ---------- hero entrance ----------
-   The one entrance that runs without being scrolled into view: the image
-   settles out of a slight overscale while the type rises. Transform and
-   opacity only, and skipped entirely under reduced motion. */
+   The hero is one object now, so the entrance is one gesture: the wordmark
+   rises out of the mask in css/style.css and stops. The whole mark moves at
+   once - per-character rises were retired with the preloader, and a stagger
+   across two lines would be a two-step animation of a single word.
+   Transform only, no overshoot, and skipped entirely under reduced motion
+   (the mark is simply there). */
 
-const heroMedia = document.querySelector(".hero-media img");
+const heroMark = document.querySelector(".hero-wordmark");
 
-if (!REDUCED) {
-  const heroTl = gsap.timeline({ defaults: { ease: MOTION.enter.ease } });
-  if (heroMedia) heroTl.from(heroMedia, { scale: 1.06, autoAlpha: 0, duration: 1.6, ease: "power2.out" });
-  heroTl
-    .from(".hero-eyebrow", { y: 14, autoAlpha: 0, duration: 0.7 }, 0.2)
-    .from(".hero-title", { y: 30, autoAlpha: 0, duration: MOTION.enter.longDuration }, 0.3)
-    .from(".hero-stats > div", { y: 14, autoAlpha: 0, duration: 0.7, stagger: 0.07 }, 0.5);
+if (!REDUCED && heroMark) {
+  gsap.from(heroMark, {
+    yPercent: 115,
+    duration: MOTION.enter.longDuration,
+    ease: MOTION.enter.heavyEase,
+  });
 }
 
 /* ---------- photography: no scroll effects at all ----------
@@ -1196,23 +1198,6 @@ if (TOUCH) {
 
 /* ---------- reduced motion: decorative animations only ---------- */
 if (!REDUCED) {
-  /* hero: the image drifts up as the section leaves, so the first scroll
-     has a reason to move. Scrub-locked, transform only. */
-  if (heroMedia) {
-    gsap.to(heroMedia, {
-      yPercent: 8,
-      scale: 1.05,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-        invalidateOnRefresh: true,
-      },
-    });
-  }
-
   /* ---------- game cards: no scroll entrance ----------
      The roster used to arrive as eighteen staggered cards. It is a dial now:
      js/games-stage.js writes a transform on every .hof-item every time the band

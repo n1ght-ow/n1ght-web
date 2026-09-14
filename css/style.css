@@ -57,6 +57,8 @@
   --font-sans: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
   --font-serif: "Instrument Serif", "Songti SC", Georgia, serif;
+  /* one string, one size: the hero wordmark. Not a text role - see section 7. */
+  --font-masthead: "Diplomata SC", "Space Grotesk", serif;
 
   /* --- type: UI register (tight, deliberate) --- */
   --fs-label: 0.6875rem;    /* 11 - mono eyebrow */
@@ -346,16 +348,6 @@ h1, h2 { text-wrap: balance; }
   white-space: nowrap;
 }
 
-.nav-brand i {
-  font-style: normal;
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-  margin-inline-start: 0.75em;
-}
-
 .nav-links { display: flex; gap: 2px; align-items: center; }
 
 .nav-links a {
@@ -390,108 +382,135 @@ h1, h2 { text-wrap: balance; }
    frosted pill measures 9.1:1 over the darkest possible photo backdrop and
    far better over this one. */
 
-/* ============ 7. HERO (full-bleed image) ============ */
+/* ============ 7. HERO (the picture, and the name laid on top of it) ============ */
+/* Two layers, one screen: a full-bleed picture, and the name over it - with the
+   nav bar floating over both, because the nav is fixed. The name never leaves
+   the centre of the viewport: the picture is a LAYER, absolutely positioned and
+   out of the flow, so the mark centres exactly as it did when it was alone.
+   Nothing else lives here: no eyebrow, no title, no stat row, no scroll hint. */
 .hero {
   position: relative;
   min-height: 640px;
   height: 100dvh;
   overflow: hidden;
   background: var(--ink-950);
-  display: flex;
-  align-items: flex-end;
+  display: grid;
+  place-items: center;
 }
 
-.hero-media { position: absolute; inset: 0; }
+/* cqw resolves against THIS element's content box, so the mark fills exactly
+   the column every other chapter aligns to, and it stops growing when .shell
+   hits its 1440px ceiling. .shell is width:100% + max-width, so inline-size
+   containment cannot change its box - it only frees the size from its
+   contents, which is what keeps the unit from being circular. */
+.hero-inner {
+  /* Above the picture. An absolutely positioned box paints over static in-flow
+     content in the same stacking context, so this pair is what puts the name on
+     top of the layer instead of behind it. */
+  position: relative;
+  z-index: 1;
+  container-type: inline-size;
+  display: grid;
+  place-items: center;
+  /* The mark's size, and the only place it is written.
+     Measured, not guessed: at 100px "CHXN9" advances 681.2 units, i.e. 6.812em,
+     so 100 / 6.812 = 14.68cqw fills the column exactly. 14.5 holds back the
+     hair of margin that keeps subpixel rounding off the right edge. Both lines
+     are five glyphs, so one factor sizes both, and there is no breakpoint: the
+     mark is a function of its column at every width. */
+  --masthead: 14.5cqw;
+}
 
-.hero-media img {
-  width: 100%;
-  height: 100%;
+/* The mask is what the mark rises out of on load (js/main.js). overflow:
+   hidden clips at the padding box and the ink of a face this tall can overflow
+   its line box, so the padding/negative-margin pair stops the mask shaving the
+   letters. It reads the mark's size rather than repeating the number, which is
+   also what makes its own em the mark's em. Never give this element
+   text-box-trim. */
+.hero-mask {
+  overflow: hidden;
+  font-size: var(--masthead);
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+
+/* letter-spacing stays 0. Measured side bearings are 2 and 5 units per 1000em
+   (the glyphs already sit edge to edge), so the display tracking the rest of
+   the site uses would close the engraving into a smear. */
+.hero-wordmark {
+  font-family: var(--font-masthead);
+  font-weight: 400;
+  font-size: var(--masthead);
+  line-height: 0.88;
+  color: var(--color-on-dark);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* two lines, always: on one line the mark would be 13.9em wide and the face
+   would render it 93px tall at 1440. Stacked, the same column gives 190px per
+   line, which is the size the word was asked for. The whitespace between the
+   spans collapses once they are blocks. */
+.hero-wordmark span { display: block; }
+
+/* THE PICTURE. Full bleed, the whole frame, and under everything: absolute +
+   inset 0 keeps it out of the flow, so nothing about where the name sits is a
+   function of the picture. object-fit covers. At 1440x900 the frame is wider
+   than the viewport (1.78 against 1.6), so cover fits the HEIGHT exactly and
+   the only slack is horizontal - which is why object-position's second value
+   does nothing on a normal desktop window and the first one is the only aim
+   there is. On a phone the slack flips to the width, and the second value
+   takes over - which is also why portrait viewports are handed a portrait cut
+   of the same picture by index.html's <picture> instead of this file trying to
+   rescue a landscape frame with object-position. */
+.hero-plate {
+  position: absolute;
+  inset: 0;
+}
+
+/* Not desaturated. "Colour is the reward, not the wallpaper" is written for
+   interface photographs; here the picture is the page, exactly as it is on the
+   wall (--wall-saturate: 1, the first stated exception). There is deliberately
+   no filter property at all, so there is also no containing block created over
+   the hero. */
+.hero-plate img {
+  inline-size: 100%;
+  block-size: 100%;
   object-fit: cover;
-  object-position: center 42%;
-  /* a whisper of grade so the archive reads as one body of work */
-  filter: saturate(0.94) contrast(1.04);
+  object-position: 50% 42%;
 }
 
-/* Scrim is measured, not decorative: white type holds 11.5:1 even over a
-   pure-white photograph at 0.80 ink alpha (worst case). */
-.hero-media::after {
+/* THE SCRIM carries the type. It is measured, not decorative, and it is the one
+   thing painted between the picture and the name: the mark is laid over the
+   brightest band of this frame (lit cloud, the burning ring, the spiked star),
+   so without it #F2F2EF would sit on near-white in places. The retired hero
+   solved the same problem with a flat 0.80 ink alpha over a monochrome photo;
+   this one is graded instead, because the picture is the point: heaviest
+   through the band the name occupies (measured y 283-617 of 900, i.e. 31-69%,
+   and it is the frame's brightest zone) and at the bottom edge, where the
+   section hands over to the paper page, and lighter at the very top so the
+   glass nav still has something to refract.
+   Worst-case measured contrast on that type: 5.40:1 at 1440x900 and 6.43:1 at
+   390x844 - both above the 4.5:1 body bar and far above the 3:1 large-text one.
+   Method is in DESIGN.md 3.2 (hide the mark, screenshot, read the brightest
+   pixel in its box). */
+.hero-plate::before {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    oklch(0.12 0 0 / 0.52) 0%,
-    oklch(0.12 0 0 / 0.04) 26%,
-    oklch(0.12 0 0 / 0.10) 54%,
-    oklch(0.12 0 0 / 0.80) 100%
+    oklch(0.12 0 0 / 0.46) 0%,
+    oklch(0.12 0 0 / 0.66) 20%,
+    oklch(0.12 0 0 / 0.66) 56%,
+    oklch(0.12 0 0 / 0.46) 78%,
+    oklch(0.12 0 0 / 0.70) 100%
   );
-}
-
-.hero-inner {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  padding-block-end: clamp(2rem, 5vh, 3.5rem);
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--sp-7);
-  flex-wrap: wrap;
-}
-
-.hero-eyebrow { color: oklch(1 0 0 / 0.7); margin-block-end: var(--sp-5); }
-
-.hero-title {
-  color: #fff;
-  text-shadow: 0 2px 40px oklch(0 0 0 / 0.35);
-  max-width: 18ch;
-}
-
-.hero-stats {
-  display: flex;
-  gap: clamp(1.5rem, 3vw, 2.75rem);
-  color: #fff;
-  padding-block-end: var(--sp-2);
-}
-
-.hero-stats div { line-height: 1.15; }
-
-.hero-stats b {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: var(--fs-h4);
-  font-weight: 400;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
-}
-
-.hero-stats span {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: oklch(1 0 0 / 0.62);
-}
-
-/* bottom-corner scroll affordance: a small bordered label, not a bouncing
-   chevron (the references use a static marker in 153 sampled heroes) */
-.hero-scroll {
-  position: absolute;
-  inset-inline-end: var(--gutter);
-  bottom: clamp(2rem, 5vh, 3.5rem);
-  z-index: 2;
-}
-
-.hero-line {
-  position: absolute;
-  inset-inline-end: var(--gutter);
-  top: 0;
-  width: 1px;
-  height: 100%;
-  background: linear-gradient(180deg, transparent, oklch(1 0 0 / 0.25) 40%, oklch(1 0 0 / 0.6));
-  z-index: 2;
   pointer-events: none;
 }
+
+
+
 
 /* ============ 8. SECTION HEAD ============
    One shape for the whole page: eyebrow + display title in the first cell, the
@@ -1866,14 +1885,11 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
 }
 
 @media (max-width: 720px) {
-  .hero { height: auto; min-height: 88dvh; }
-  .hero-inner { flex-direction: column; align-items: flex-start; gap: var(--sp-6); }
-  .hero-title { max-width: 100%; }
-  .hero-scroll, .hero-line { display: none; }
-  .hero-stats { flex-wrap: wrap; gap: var(--sp-5); }
+  /* The hero keeps its viewport height at every width. It is a title card, not
+     a block of content: height:auto would collapse it onto the mark, and the
+     mark itself needs no breakpoint because it is sized off its column. */
 
   .nav { height: 52px; }
-  .nav-brand i { display: none; }
   .nav-links { overflow-x: auto; scrollbar-width: none; }
   .nav-links::-webkit-scrollbar { display: none; }
   .nav-links a { white-space: nowrap; padding: 0.7em 0.9em; }
@@ -1963,10 +1979,6 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .lb-music-head .lb-meta-lines { margin-block-start: var(--sp-2); }
   .lightbox[data-detail="music"] .lb-music-head { margin-block-end: var(--sp-2); }
   .lightbox[data-detail="music"] .lb-music-link { margin-block-start: var(--sp-3); }
-}
-
-@media (max-width: 480px) {
-  .hero-stats { gap: var(--sp-4); }
 }
 
 /* ============ 19. REDUCED MOTION ============ */

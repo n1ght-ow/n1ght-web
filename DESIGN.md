@@ -2,11 +2,11 @@
 
 > 面向实现的单一设计事实源（V2，2026）。只记录现状，不发明新风格。
 > 结构与裁决见 `AGENTS.md`；研究留档见 `archive/design-research/` 与 `archive/premium-techniques/`。
-> **本版按代码逐条核对过**：`css/style.css?v=77`、`css/glass.css?v=7`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=14`、`css/series-stage.css?v=16`、`css/book-shelf.css?v=5`、`css/photo-wall.css?v=5`、`css/games-stage.css?v=2`、`css/smooth-cursor.css?v=1`、`js/main.js?v=66`、`js/reel-stage.js?v=23`、`js/glass-pill.js?v=3`。
+> **本版按代码逐条核对过**：`css/fonts.css?v=13`、`css/style.css?v=84`、`css/glass.css?v=7`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=14`、`css/series-stage.css?v=16`、`css/book-shelf.css?v=5`、`css/photo-wall.css?v=5`、`css/games-stage.css?v=2`、`css/smooth-cursor.css?v=1`、`js/main.js?v=66`、`js/reel-stage.js?v=23`、`js/glass-pill.js?v=3`。
 
 ## 0. 品牌与 Design read
 
-**一句话**：一个编辑式影像档案。纸感中性底、克制的排版、全屏影像，液态玻璃只出现在浮在内容之上的控件上。
+**一句话**：一个编辑式影像档案。纸感中性底、克制的排版、影像优先，开场是一个巨型字标，液态玻璃只出现在浮在内容之上的控件上。
 
 **Design read**：personal archive / photography，受众是同好与自己。语气是**编辑式画廊**，不是作品集官网、不是仪表盘、不是科技感暗色站。
 
@@ -14,9 +14,9 @@
 
 **Dial**：DESIGN_VARIANCE 6 / MOTION_INTENSITY 4 / VISUAL_DENSITY 4。
 
-**主题锁**：正文页全亮色纸面。暗色只用于三处：全屏影像 hero、`#lightbox` 详情层、`.footer`。它们都是「影像与落幕」语汇，不是分区反转。
+**主题锁**：正文页全亮色纸面。暗色只用于三处：**hero（承载巨型字标）**、`#lightbox` 详情层、`.footer`。它们是「开场与落幕」语汇，不是分区反转。hero 是一层全幅影像加压在它上面的巨型字标（`hero/`，几何与 scrim 见第 7 节），导航条浮在两者之上；它**仍然是三个暗区之一**。
 
-**藏品规模**（写进 hero 统计条；`#about-stats` 那 8 个计数已随 ABOUT 面板退役）：书 16 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18。
+**藏品规模**（**hero 统计条已退役**：hero 只有字标和它背后的那张全幅影像。这组数字现在只住在本节与各面板页头里，增删内容要同步这里；`#about-stats` 那 8 个计数更早已随 ABOUT 面板退役）：书 16 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18。
 
 ---
 
@@ -76,6 +76,7 @@
 | IBM Plex Mono | `fonts/IBMPlexMono-{300,400}-latin.woff2` | 标签、元信息、导航 |
 | Instrument Serif | `fonts/InstrumentSerif-italic-latin.woff2`（400 italic） | 编辑式引言、诗 |
 | Klein Blue Night | `fonts/KeLaiYinLanDeYeWan.ttf`（12.6MB，非商业授权） | **只有书架书脊**，13px 一个字号 |
+| Diplomata SC | `fonts/DiplomataSC-latin.woff2`（400，SIL OFL 1.1，Google Fonts 的 latin 子集） | **只有 hero 字标**：一个字符串、一个字号，`font-display: block` + head 里 preload |
 
 ### 2.2 双寄存器字号系统（**10 个声明角色，封顶**）
 
@@ -86,6 +87,8 @@
 **展示寄存器**（模数 **1.25 / Major Third**）：`--fs-h4` 20px（条目标题）/ `--fs-h3` clamp(20→25)（区段小标题）/ `--fs-h2` clamp(31→49)（区标题）/ `--fs-display` clamp(39→76)（hero、coda）。
 
 > 审计时统计**声明角色数**（10），不要统计计算值——clamp 在同一断点会产出中间值，那是同一个角色。
+
+**hero 字标不在这个表里。** `N1GHT CHXN9` 是 logotype，不是文本角色：全站只出现一次、只有一个字号，而且那个字号是**按容器算的**，不是 ramp 上的一格——`.hero-inner` 是 `container-type: inline-size`，`--masthead: 14.5cqw` 让字标永远正好填满 `.shell` 的内容列（实测数字写在 `css/style.css` 第 7 节）。所以字号表仍然是 10 个，中间的空档也没有被填。
 
 ### 2.3 字距
 
@@ -140,7 +143,8 @@
 | 导航玻璃 α0.78（现）/ ink-600 链接 | 4.99:1 | AA |
 | 导航条玻璃（真实 hero 上渲染实测）/ 链接 | 6.58:1 | AAA |
 | 导航条玻璃（真实 hero 上渲染实测）/ 品牌 | 13.94:1 | AAA |
-| hero 白字 / scrim α0.80，最差（纯白照片） | 11.55:1 | AAA |
+| hero 字标 (#F2F2EF) / 影像层+scrim，1440×900 最差像素 | **5.40:1** | AA（大字下限 3:1） |
+| hero 字标 / 影像层+scrim，390×844 最差像素 | 6.43:1 | AA |
 | 卡片说明白字 / scrim α0.62，最差（纯白照片） | 5.66:1 | AA |
 | 选中药丸玻璃 α0.84 / on-dark 标签（渲染实测） | 9.25:1 | AAA |
 | 导航条墨色选中态 / ink-900 | 13.9:1 | AAA |
@@ -152,7 +156,7 @@
 > **五条必须照做的推论**：
 > 1. 导航玻璃底色不透明度**必须 ≥ 0.76**。实测 α0.60 时最差照片上 ink-600 只有 3.10:1；α0.72 是 4.20:1（不合格），α0.78 是 4.99:1。
 > 2. `--ink-400` 这一类浅灰**不能用于小字**；muted 一律 `--ink-500`。
-> 3. hero 白字依赖 scrim α0.80，任何削弱 scrim 的改动都要重新实测。
+> 3. hero 字标压在影像层上，靠 `css/style.css` 第 7 节那条 scrim 立住：改图、改 scrim 的任一段 alpha、或改 `object-position`，**都要重新实测**（量法：把 `.hero-wordmark` 设成 `visibility: hidden` 截屏，再逐像素算它那个矩形里最亮的一点）。
 > 4. **选中药丸（`--glass-pill` α0.84）是深色玻璃上的浅字**，和导航条不是一回事：α 越低，`#F2F2EF` 标签越差。α0.84 实测最差仍有 9.25:1。玻璃感由**边缘**（发丝边 + 轴向棱）承担，不由降低底色不透明度承担。
 > 5. **第三条 bar 就是第三条 bar**（用户第三轮要求）：音乐面板的搜索行与流派行现在和 `#archive-tabbar` 是**同一件玻璃托盘**（`.glass .glass--pill`），见 4.8。第二轮那套手写 Blur Navigation 配方（`blur(26px)` + `--paper-100` @16% + 墨 12% 环 + 自备三条回退）**已整体退役**，它的对比度豁免一并作废：没有东西从板下穿过，最差底色就是纸面（chip 标签 8.13:1、占位符 5.18:1）。**三条 bar 都不吸顶。**
 
@@ -193,6 +197,8 @@
    | 祖先 `opacity: 0.99` | **模糊全丢** |
 
    **会杀掉玻璃的是 `filter` / `opacity < 1`（在元素自身也成立）/ `mask` / `mix-blend-mode`；`transform` 在自身和祖先上都安全。** 这条是「药丸每帧被 transform 移动、玻璃仍然成立」的前提，也意味着**药丸绝不能用 opacity 淡入**。第三方仓库声称 `isolation: isolate` / `contain: paint` 会静默失效，在本机**不可复现**。
+
+   这条陷阱**已经踩过一次**（用户报的「换海报时 OPEN ON IMDb 文字周围闪一下」）：影 / 剧详情区的 settle 原来把整个 `.film-detail-copy` 从 `opacity 0` 补到 `1`，而那块正是 `.glass--accent` 的祖先。实测按钮内部均值随祖先 opacity 走：`1 → 212,192,132`、`0.6 → 217,198,140`、`0.3 → 227,218,187`、`0 → 239,239,234`（纸面）——按钮等于从纸里淡出来，最后一帧再跳回真表面。现在淡入只加在四个文字节点上，抬起（`y: 6`）仍留在整块：CDP 逐帧实测祖先 `opacity` 恒为 `1`，按钮内部 `224,207,150` / `212,192,132` 逐帧不变，`kick`/`quote` 仍走完 0 → 1 的 180ms。
 
 2. **折射的门必须是「正向 Blink 信号」，不能是 `@supports`**：Safari 能解析 `backdrop-filter: url()` 并让 `@supports` 返回 true，但不渲染，会静默连模糊一起丢掉。而 `@supports (-webkit-backdrop-filter: ...)` 也不行了——**Chrome 已经移除了 `-webkit-backdrop-filter` 别名，该查询在 Chrome 152 返回 false**。所以门是 `index.html` head 里设的 `html.has-lens`。**模糊声明永远写在增强之前**，增强挂不上时只丢折射，不丢模糊。
 
@@ -307,8 +313,40 @@
 
 **导航条没有选中指示器**：它曾经和 tab 条共用那颗深色药丸，但药丸压在照片上的玻璃里就是**一块浮着的黑斑**，而参考导航条本身没有选中态。所以 `#nav-pill` 元素、`main.js` 里那次 `createGlassPill()` 调用、以及 `.nav-links.is-dragging` / `.is-drop-target` / `cursor: grab` 规则**全部删除**；选中态改由**墨色**承担（active ink-900 / 兄弟项 ink-600，数字见 3.2）。代价是失去「拖药丸跳章节」这个手势——它不是无障碍通道（真正的控件一直是 `<a href>`），但确实少了一条捷径。
 
----
+### 4.10 导航条的折射：改用 LiquidGlass 的成形方式
 
+应要求把 `header.nav` 的折射换成 Framer **LiquidGlass**（`framer.com/m/Liquid-Glass-Nav-Pro-bjAIfL.js` → `.../qTWwt82O7SiWRgChNZRM/e3GI43LMP.js` → `.../LiquidGlass.js`）的成形逻辑。**只换成形方式，不换材质**：外壳、棱、投影、`--glass-nav` 染色、玻璃高光、按压环全部照旧。`#archive-tabbar` 仍走 4.7 / 4.8 那套 `#lg-lens`（它压在纸面上，采样出界取回来的也是纸，没有这个问题）。
+
+| | 原 `#lg-lens`（tab 条仍在用） | 参考 LiquidGlass（导航条 `#lg-nav`） |
+| --- | --- | --- |
+| 位移图 | 一张固定的 1600×100 SVG 图，`preserveAspectRatio="none"` **拉满整个滤镜区域**（比元素大 124%×160%） | **按元素自身尺寸现算**：圆角矩形的 SDF，中段中性 (128,128)，只在 `bezel` 带内沿**向外径向**渐变、二次衰减；长边封顶 320px、DPR 封顶 1.25 |
+| 位移量 | `scale=110` → 最大 **±55px** | `scale=40`，通道偏移封顶 118/255 → 最大 **18.5px** |
+| 滤镜链 | 模糊 / 饱和写在 CSS 里，`url()` 只做位移 | **一条链全在 SVG 里**：`feImage → feGaussianBlur → feDisplacementMap → feColorMatrix → feComponentTransfer`；CSS 只写一个 `url(#lg-nav)` |
+| 滤镜区域 | `-12% -30% 124% 160%` | `-20% -20% 140% 140%` |
+| 染色层位置 | 在 `.nav` 自己身上，**于是被滤镜采样** | 在**滤镜之上**（`.glass__body` 自己的 background） |
+
+**为什么要动染色层：这就是那块黑影的根。** 原结构里 bar 的浅色来自 `.nav` 自己的 background，而 `.glass__body` 是它的子元素，`backdrop-filter` 采样的正是「父背景 + 页面」。位移一旦把采样点推到 bar 之外，那里**没有那层 78% 纸**，只有 hero 的墨，取回来就是黑的；`.glass__body` 又画在父背景之上，于是黑直接吃掉浅色。bar 高 58px 而位移 ±55px，靠近两端必然出界 —— 这就是 POEM 旁那朵蝴蝶结。参考把 tint 放到滤镜上方之后，**bar 的颜色不再取决于采样到了什么**：采样出界与否，印的都是同一层纸。
+
+**实测**（headless Chrome 152，1440×900，DPR 1；取 bar 两端避开字形的横带，记 平均 / 最低 亮度）：
+
+| 横带 | 原 `#lg-lens` | 现 `#lg-nav` |
+| --- | --- | --- |
+| 左端·上 | 0.782 / 0.780 | 0.834 / **0.799** |
+| 右端·上 | 0.665 / **0.086** | 0.834 / **0.799** |
+| 左端·下 | 0.803 / 0.728 | 0.788 / 0.693 |
+| 右端·下 | 0.734 / **0.165** | 0.788 / 0.693 |
+
+两端**逐位相同**，左右不对称消失；剩下的 0.693 是设计内、两端一致的底缘暗边。同时验过：纸面章节 0 个暗像素；`data-transparency="solid"`、`prefers-reduced-transparency`、去掉 `has-lens` 三条回退都把染色交还给了 bar 本身；320px 下地图按 280×52 重算；控制台零错误；导航链接 ink-600 在合成后的 bar（200,200,199）上 **5.15:1**（合成基准 hero 的 `--ink-950`）。
+
+**代价与纪律**：
+- `js/glass-lens.js` 是**新增的一个文件**（零依赖，约 60 行），只在 `html.has-lens` 下跑。**没有 worker**：参考用 worker 是因为它的组件可以任意尺寸、要防抖重算，而这里只有一条 bar，320×16 的位图是五千个像素。
+- 初始 `feImage` 是 1×1 中性灰 data URL，不是空值：**位移图缺失时读到的是 0 而不是 128**，缺省成中性只会退化成纯模糊，缺省成 0 会让整块按半个 scale 同向偏移。
+- 染色上移意味着 `.nav.glass--refract` 的 background 变透明，**三条回退必须把它交还**（`html.has-lens .nav.glass--refract { background: var(--glass-nav) }` 写在每一条里）。漏一条，掉了增强的浏览器上就是一条隐形 bar。
+- `-webkit-backdrop-filter` 依旧**不带 url()**：不支持 url() 的引擎会把整条声明丢掉，模糊也一起没。
+- 地图随宽度重算走 `ResizeObserver`（bar 宽度 = `min(1180px, 100vw - 2 × gutter)`，随视口变）。
+- 新增或修改玻璃层时，4.3 那三条回退照旧一条都不能少。
+
+---
 ## 5. 形状 / 阴影 / 间距
 
 | 类别 | 值 |
@@ -338,9 +376,7 @@
 
 | 动效 | 动机 | 触发 | 参数 | reduced-motion |
 | --- | --- | --- | --- | --- |
-| hero 影像入场 | 层级 | 首屏 | scale 1.06 → 1，1.6s `power2.out` | 静态 |
-| hero 文字升起 | 层级 | 首屏 | y + autoAlpha，0.7-1.1s | 静态 |
-| hero 影像视差 | 叙事 | 滚动 scrub | `yPercent` + scale，`invalidateOnRefresh` | 静态 |
+| hero 字标升起 | 层级 | 首屏 | **整块**从 `.hero-mask` 里升起（`yPercent` 115 → 0，1.1s `power4.out`），不是逐字 | 静态 |
 | 章节揭示 | 层级 | 滚动进入 | IntersectionObserver / ScrollTrigger 的低频入场 | 静态 |
 | 诗区 folio 展开 | 层级 | 滚动进入 | 框架（头两格 + 落款）0.85s `power3.out` stagger 0.08，随后六节 stagger 0.07 | 静态（整块不挂载） |
 | 图片 hover 去饱和 | 反馈 | hover / focus | `filter` 0.6s + `scale 1.035`（滤镜只加在 `img` 上） | 无位移 |
@@ -386,7 +422,7 @@
 
 ## 7. 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：**印刷 folio**——眉标 + 诗题在左格、导语在右格，中间是 3 + 3 两列的六节诗，落款左格是诗的全名、右格是收尾那句；三块共用诗自己的两列，列距只有 `:root` 的 `--chapter-gap` 一处，与两个 `.sec-head` 同一条。自述 / 统计 / coda 已退役）→ footer。
+hero（**两层**：一层全幅影像 + 压在它上面的**巨型字标**，`N1GHT CHXN9` 两行居中、字号跟着 `.shell` 的内容列走；导航条是第三个浮在上面的东西。影像层 `position: absolute; inset: 0`，完全脱离文档流，所以字标仍然精确居中在视口里。眉标、标题、统计条与滚动提示全部已退役）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：**印刷 folio**——眉标 + 诗题在左格、导语在右格，中间是 3 + 3 两列的六节诗，落款左格是诗的全名、右格是收尾那句；三块共用诗自己的两列，列距只有 `:root` 的 `--chapter-gap` 一处，与两个 `.sec-head` 同一条。自述 / 统计 / coda 已退役）→ footer。
 
 - **摄影是正文里的一屏**（`#photo` 段落内的 `.photo-wall`，高度 clamp 后约一屏），不是全屏层：`#photo-view`、「Open the wall」按钮、滚动锁与 inert 那一套都已退役，nav 与页脚链接只是普通锚点。
 - **棋盘是 PhantomInfiniteGallery 的 vanilla 移植**：**一张无限平面上的一窗格子**，两轴拖拽 + 抛掷 + 鼠标视差 + 按住 320ms 拉远（0.7×，钉住板心）。三条必须记住的：
@@ -398,6 +434,9 @@ hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋�
 - **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（键盘回车放行）。11 张正典是唯一的 tab stop，克隆体 `aria-hidden` + `tabIndex -1`。
 - **无 JS 兜底**：11 个 `.photo-frame` 留在正文的 `.photo-fallback` 网格里（`html.js` 把它 `display: none`），脚本一执行就把它们搬进 `#photo-wall`。
 - **棋盘是全彩的**（`--wall-saturate: 1`）：这里是「颜色是奖励不是壁纸」的**第一个明文例外**——墙上照片就是页面本身。
+- **hero 的影像层也是全彩的**（无 `filter`）：**第二个明文例外**，理由同棋盘——它是这一屏的图画，压饱和只会读成渲染故障。它是 `position: absolute; inset: 0` 的一层，`object-fit: cover`，无圆角（形状锁不动）。
+- **压在字标和影像之间的是 scrim，而且它是实测过的**：`linear-gradient(180deg, ink α0.46 → 0.66（20%）→ 0.66（56%）→ 0.46（78%）→ 0.70)`——中段最重，因为字标（1440×900 下 y 283–617）正好压在整张图最亮的那条带（受光云 + 燃烧环 + 尖刺星）上。实测最差像素：1440×900 **5.40:1**、390×844 6.43:1（前景 #F2F2EF；量法见 3.2 推论 3）。顶端留 0.46 是给导航玻璃留可折射的东西，底端 0.70 是让它交接到纸面那一刀干净。
+- **一张图三个切法**：`<picture>` 在 `max-aspect-ratio: 3/4` 时换 `hero/nebula-tall.jpg`（708×1532，从原图正中裁的原生像素切片——横图铺 390×844 本来也只露一条 1:2.2 的窗，与其把宽图拉高不如直接给它那块像素），否则走 `srcset` 的 1200w / 2400w。桌面 1440×900 实测取 2400w，竖屏 390×844 取 tall，横屏 844×390 取 1200w。换图要同步 `alt` 与 `width` / `height`，**原图不要预裁**：露哪一块由 `object-position` 选（桌面横图纵向没有余量，只有横向能动）。
 - **三个章节头是一种形状**（`.sec-head` ×2 + 诗的 `.poem-head`）：两格 `repeat(2, minmax(0, 1fr))`、共用 `--chapter-gap`、`align-items: baseline`——眉标与导语首行共线，**标题的行数不再改变导语的位置**（旧版 `align-items: end` 让导语底边跟着标题底边走，一行标题的章节导语顶边在眉标上方 11px、两行标题的在下方 39px）。
 - **音乐默认单流派显示**，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。chips 住在 `.genre-filter` 这条布局行里、自己没有盒子（4.8）；它是**与标签条同一件玻璃托盘**，**不吸顶**——搜索行在它上面，两行都跟着列表滚走。
 - **搜索跨全部 15 组**：有命中时每个命中的组都展开，组头从「136 首」改成「4 / 136」，工具条读出「18 / 468」，零命中才是 NO MATCH。搜索中点击 chip = 跳到那一组的结果；清空关键词回到单选流派。

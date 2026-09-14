@@ -29,9 +29,12 @@
     document.documentElement.classList.add("js");
   </script>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/fonts.css?v=12">
-  <link rel="stylesheet" href="css/style.css?v=82">
-  <link rel="stylesheet" href="css/glass.css?v=7">
+  <!-- The hero is one string in one face, and it is the first paint, so that
+       face is preloaded. 25 KB for the only thing on screen when it matters. -->
+  <link rel="preload" href="fonts/DiplomataSC-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/fonts.css?v=13">
+  <link rel="stylesheet" href="css/style.css?v=85">
+  <link rel="stylesheet" href="css/glass.css?v=8">
   <link rel="stylesheet" href="css/reel-stage.css?v=15">
   <link rel="stylesheet" href="css/film-stage.css?v=14">
   <link rel="stylesheet" href="css/series-stage.css?v=16">
@@ -71,6 +74,24 @@
       <feImage x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'1600'%20height%3D'100'%20viewBox%3D'0%200%201600%20100'%3E%3Cdefs%3E%3ClinearGradient%20id%3D'Y'%20x1%3D'0'%20x2%3D'0'%20y1%3D'10%25'%20y2%3D'90%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230F0'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D'X'%20x1%3D'1.2%25'%20x2%3D'98.8%25'%20y1%3D'0'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23F00'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1600'%20height%3D'100'%20fill%3D'%23808080'%2F%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1600'%20height%3D'100'%20fill%3D'url(%23Y)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1600'%20height%3D'100'%20fill%3D'url(%23X)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%3Crect%20x%3D'19.2'%20y%3D'10'%20width%3D'1561.6'%20height%3D'80'%20rx%3D'40'%20ry%3D'40'%20fill%3D'%23808080'%20filter%3D'blur(5)'%2F%3E%3C%2Fsvg%3E" result="MAP"/>
       <feDisplacementMap in="SourceGraphic" in2="MAP" scale="110" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
+    <!-- The NAV's lens, built the way Framer's LiquidGlass builds it: the whole
+         chain (blur -> displacement -> saturation -> brightness) lives inside
+         ONE filter, and the map is not a fixed picture any more - js/glass-lens.js
+         generates it for the bar's own size out of a signed-distance field.
+         The href below is a 1x1 neutral grey on purpose: a missing map reads as
+         0, not as 128, so an un-run script would displace every pixel by half
+         the scale in the same direction. Neutral degrades to a plain blur. -->
+    <filter id="lg-nav" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feImage x="0" y="0" width="1" height="1" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'1'%20height%3D'1'%3E%3Crect%20width%3D'1'%20height%3D'1'%20fill%3D'%23808080'%2F%3E%3C%2Fsvg%3E" result="map"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="softBackdrop"/>
+      <feDisplacementMap in="softBackdrop" in2="map" scale="40" xChannelSelector="R" yChannelSelector="G" result="refracted"/>
+      <feColorMatrix in="refracted" type="saturate" values="1.4" result="saturated"/>
+      <feComponentTransfer in="saturated">
+        <feFuncR type="linear" slope="1.05"/>
+        <feFuncG type="linear" slope="1.05"/>
+        <feFuncB type="linear" slope="1.05"/>
+      </feComponentTransfer>
+    </filter>
   </svg>
 
   <a class="skip-link mono" href="#hero">SKIP TO CONTENT</a>
@@ -81,7 +102,7 @@
     <div class="glass__edge" aria-hidden="true"></div>
     <span class="glass__press" aria-hidden="true"></span>
     <div class="glass__content">
-      <a class="nav-brand" href="#hero">N1GHT CHXN9<i>/ LN4 STUDY</i></a>
+      <a class="nav-brand" href="#hero">N1GHT CHXN9</a>
       <!-- No selected indicator: the active link is marked by colour alone.
            See the note in css/style.css. -->
       <nav class="nav-links" aria-label="Primary">
@@ -94,23 +115,33 @@
 
   <main>
 
-    <!-- ============ HERO ============ -->
+    <!-- ============ HERO : the name, over the picture ============ -->
+    <!-- Two layers, one screen. The picture is the layer (it comes first here so
+         that it is first in paint order too, not just by z-index), the name is
+         laid on top of it, and the fixed nav bar floats over both. The face is
+         Diplomata SC and the size is measured off the shell's own content column;
+         .hero-mask is what the mark rises out of on load: geometry and the scrim
+         in css/style.css section 7, gesture in js/main.js. -->
     <section class="hero" id="hero">
-      <div class="hero-media">
-        <img src="photo/1779456446198.jpg" alt="Bare branches in backlight against a pale sky" width="1600" height="1067" loading="eager" fetchpriority="high" decoding="async">
-      </div>
+      <!-- One picture, three cuts. A landscape frame covering a 390x844 screen is
+           cropped down to a 1:2.2 window anyway, so portrait viewports get that
+           window as real pixels (hero/nebula-tall.jpg is a native-resolution
+           slice, no upscale) instead of the wide file stretched to fit. The wide
+           pair only has to serve landscape: 1200w below 1200px, 2400w for a
+           desktop at dpr 2. The source keeps its whole frame either way and
+           css/style.css picks the window with object-position. -->
+      <picture class="hero-plate">
+        <source media="(max-aspect-ratio: 3/4)" srcset="hero/nebula-tall.jpg">
+        <img src="hero/nebula.jpg"
+             srcset="hero/nebula-1200.jpg 1200w, hero/nebula.jpg 2400w"
+             sizes="100vw"
+             alt="A spiked star and a ringed nebula burning above a dark treeline, dish antennas firing light across the foreground"
+             width="2400" height="1346" decoding="async">
+      </picture>
 
       <div class="hero-inner shell">
-        <div>
-          <p class="label hero-eyebrow">Field notes / MMXXVI</p>
-          <h1 class="display hero-title">Frames kept bright</h1>
-        </div>
-
-        <div class="hero-stats" id="hero-stats">
-          <div><b>11</b><span>Frames</span></div>
-          <div><b>7,980</b><span>Hours</span></div>
-          <div><b>468</b><span>Songs</span></div>
-          <div><b>18</b><span>Games</span></div>
+        <div class="hero-mask">
+          <h1 class="hero-wordmark"><span>N1GHT</span> <span>CHXN9</span></h1>
         </div>
       </div>
     </section>
@@ -687,7 +718,7 @@
   <script src="js/book-shelf-data.js?v=4"></script>
 <script src="js/music-data.js?v=3"></script>
   <script src="js/music-covers.js?v=3"></script>
-  <script src="js/reel-stage.js?v=23"></script>
+  <script src="js/reel-stage.js?v=24"></script>
   <script src="js/film-stage.js?v=6"></script>
   <script src="js/series-stage.js?v=6"></script>
   <script src="js/music-stage.js?v=6"></script>
@@ -695,7 +726,8 @@
 <script src="js/photo-wall.js?v=4"></script>
 <script src="js/games-stage.js?v=3"></script>
   <script src="js/glass-pill.js?v=3"></script>
+  <script src="js/glass-lens.js?v=1"></script>
   <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=70"></script>
+  <script src="js/main.js?v=71"></script>
 </body>
 </html>
