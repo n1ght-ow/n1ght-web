@@ -1,0 +1,176 @@
+/* ============ PHOTO WALL ============
+   The photography chapter as one curved wall of frames, replaced the V2
+   "scattered contact sheet" grid in this revision.
+
+   The look is measured from cmscurvegallery.framer.website with CDP: a black
+   stage, a hairline gutter, small rounded frames, and frames that grow and
+   lean as they leave the middle of the screen. What produces that last part
+   is not a filter or a mask - it is a real 3D scene. The frames sit on a
+   SPHERE around the camera and the stage uses a rectilinear projection, so
+   peripheral frames are (a) closer to the lens than their own plane, hence
+   bigger, (b) spaced further apart, exactly as tan grows against the angle,
+   and (c) turned away from the viewer. Measured on the reference: centre
+   frame 393px, edge frame 822px.
+
+   Four things here are load-bearing:
+
+   1. preserve-3d and overflow: hidden live on DIFFERENT elements. A grouping
+      property (overflow, filter, opacity < 1) on the same element that
+      carries transform-style would flatten the scene, and every frame would
+      collapse onto the stage plane. .photo-wall clips, .photo-wall__sphere
+      keeps the depth.
+
+   2. Every frame is a DIRECT child of the sphere. There is no row wrapper:
+      a row is a JS concept only, which is what makes the horizontal ring
+      close exactly (22 slots, 360/22 apart) and lets the same element be
+      re-placed by rewriting one custom property.
+
+   3. The whole transform string is written into --wall-t by js/photo-wall.js
+      as ONE value. Do not split it back into separate custom properties: a
+      partially-written transform is a frame in the wrong place, and the
+      order (translate -> rotateY -> rotateX -> translateZ -> scaleX) is the
+      construction, not a style choice.
+
+   4. The focus ring is gold-400, NOT --color-accent-text. Measured: gold-700
+      on --ink-950 is 3.18:1 and fails the 3:1 non-text minimum, gold-400 is
+      7.89:1. The global :where() rule at style.css section 5 is written for
+      paper surfaces; this is one of the three dark surfaces.
+
+   Geometry, the two knobs and the gutter are documented in js/photo-wall.js
+   and in AGENTS.md. Nothing about this section is scroll-driven. */
+
+.photo-wall {
+  position: relative;
+  /* one screen of wall; the clamp keeps it from becoming a sliver on a short
+     laptop or a bottomless pit on a tall monitor */
+  height: clamp(30rem, 100svh, 60rem);
+  background: var(--ink-950);
+  overflow: hidden;
+  /* js/photo-wall.js measures the stage and writes the radius here. It is
+     derived, never authored: R = SLOTS * pitch / 2PI, and the pitch comes
+     from the visible-column count. A hand-written perspective would put the
+     horizon somewhere arbitrary. */
+  perspective: var(--wall-r, 900px);
+  cursor: grab;
+  /* vertical panning stays with the page (Lenis); we only claim horizontal
+     intent, so a touch drag on the wall never traps the reader */
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.photo-wall.is-dragging { cursor: grabbing; }
+
+/* A POINT, not a full-size box, and that is load-bearing rather than tidy.
+   The sphere carries translateZ(R) - it has to, because that is what puts its
+   centre on the viewer - and a box that size sitting exactly on the viewer's
+   plane projects to infinity. Chrome resolves that into a layer several
+   thousand pixels across, cannot raster all of it, and silently leaves whole
+   columns of the wall unpainted. Seen at 390px @2x as a black stripe down the
+   left of the stage, with every frame present, visible and hit-testable in the
+   DOM. A zero-size box translates to a zero-size box, so the layer stays the
+   size of what is actually on screen.
+
+   Its centre is the stage's centre either way: the frames position themselves
+   from left/top 50%, which on a zero-size box is the box's own origin. */
+.photo-wall__sphere {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  /* the only element in this section that is allowed will-change: one
+     composited layer that gets a new rotation, instead of ~150 of them */
+  will-change: transform;
+}
+
+/* every direct child of the sphere is a frame, canonical or duplicate */
+.photo-wall__sphere > * {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--wall-tile-w, 16rem);
+  height: var(--wall-tile-h, 10.667rem);
+  margin: 0;
+  transform-origin: 50% 50%;
+  /* no fallback value: if --wall-t is somehow absent the frame falls back to
+     the identity transform and sits in the middle of the stage, which is
+     visible and harmless, rather than vanishing */
+  transform: var(--wall-t, none);
+  backface-visibility: hidden;
+}
+
+.photo-wall .photo-frame-btn {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  /* A frame that has not decoded yet reads as a slightly lifted black tile,
+     which is what the reference does with rgba(0,0,0,.094) on black. There is
+     deliberately no inset hairline: on the light page one was invisible against
+     the image and only marked the placeholder, but on this stage it draws a
+     visible rim around every frame and the reference has none. */
+  background: rgb(255 255 255 / 0.05);
+}
+
+.photo-wall .photo-frame-btn img {
+  width: 100%;
+  height: 100%;
+  /* source frames are 1600x1067 (3:2) and the tile is 3:2, so cover resolves
+     to no crop at all - the ratio was chosen for exactly that */
+  object-fit: cover;
+  /* Desaturated at rest so colour stays a reward rather than wallpaper.
+     filter must stay on the img: it is a grouping property and would flatten
+     the 3D subtree if it moved up to the frame. --wall-saturate is the single
+     knob for "show the wall in full colour" (set it to saturate(1)). */
+  filter: var(--wall-saturate, saturate(0.45));
+  transition: filter 0.5s var(--ease-out);
+  -webkit-user-drag: none;
+}
+
+.photo-wall .photo-frame-btn:hover img,
+.photo-wall .photo-frame-btn:focus-visible img { filter: saturate(1); }
+
+.photo-wall .photo-frame-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------------
+   No-JS / failed-JS fallback. js/photo-wall.js adds .is-built once it has
+   taken the frames over; until then the eleven figures are plain blocks, and
+   this lays them out as a readable grid instead of a stack of black tiles.
+   The figures are outside the sphere at that point, so position: absolute
+   has to be undone as well.
+   --------------------------------------------------------------------- */
+.photo-wall:not(.is-built) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  height: auto;
+  perspective: none;
+  cursor: default;
+}
+
+.photo-wall:not(.is-built) .photo-frame {
+  position: static;
+  width: auto;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  transform: none;
+}
+
+@media (max-width: 720px) {
+  .photo-wall { height: clamp(26rem, 82svh, 44rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-wall .photo-frame-btn img { transition: none; }
+}

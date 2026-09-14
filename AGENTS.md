@@ -29,8 +29,8 @@ V2 删掉的东西，任何一条重新出现都算回归：
 
 ## 技术约束
 
-- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js` → `music-covers.js` → `book-shelf-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js` → `book-shelf.js`）→ `main.js`。
-- 样式表顺序：`fonts.css` → `style.css` → **`glass.css`** → `reel-stage.css` → `film-stage.css` → `series-stage.css` → `book-shelf.css`。`glass.css` 提供 `.glass` 基类，必须在组件样式之前。
+- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js` → `music-covers.js` → `book-shelf-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js` → `book-shelf.js` → `photo-wall.js`）→ `glass-pill.js` → `main.js`。
+- 样式表顺序：`fonts.css` → `style.css` → **`glass.css`** → `reel-stage.css` → `film-stage.css` → `series-stage.css` → `book-shelf.css` → `photo-wall.css`。`glass.css` 提供 `.glass` 基类，必须在组件样式之前。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
 - GSAP/ScrollTrigger/SplitText/Lenis 走本地 `js/vendor/`。Lenis 仅非 REDUCED 启用；锚点跳转统一走 `lenis.scrollTo`。
 - 内容归属红线：`#panel-books / films / series / music / sport / games` 六个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token。
@@ -120,8 +120,8 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 ## 代码结构
 
-- `js/main.js` 站点交互层：hero 入场、玻璃高光（`initGlassSpotlight`）、滚动揭示（`ScrollTrigger.batch`）、计数器（`initCounters`）、统一详情层（photo / film / series / game / music 共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`。
-- 已从 `main.js` 移除：`initCursor` / `initMagnetic` / `spawnBubble` / preloader 时间线 / ticker JS 驱动 / bighead parallax / `.sec-mask` / 计数条 / `#scroll-progress`。
+- `js/main.js` 站点交互层：hero 入场、玻璃高光（`initGlassSpotlight`）、滚动揭示、计数器（`initCounters`）、统一详情层（photo / film / series / game / music 共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`。**摄影是两个例外**：它没有任何滚动动效（墙自己会动，`ScrollTrigger.batch` 的入场与 `--photo-drift` 漂移都随散页网格一起删除），点击也改成在 `#photo-wall` 上委托一次。
+- 已从 `main.js` 移除：`initCursor` / `initMagnetic` / `spawnBubble` / preloader 时间线 / ticker JS 驱动 / bighead parallax / `.sec-mask` / 计数条 / `#scroll-progress` / 摄影入场与逐张漂移。
 - ARCHIVE 共享工具条与收藏星标已于更早版本整体撤销，不再新增回访入口。
 - 签名：已整体退役；`js/sig-data.js` 保留在仓库但不参与加载。
 
@@ -167,6 +167,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - 歌单默认**全展开、无手风琴**；浏览靠流派 chips 过滤 + 搜索叠加 + 随机一首。
 - 默认**单流派显示**：一次只显示一组，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。切换流派统一走 `selectGenre()`。
 - 搜索只作用于当前流派；零命中而别处有结果时给 `#music-search-jump`，点击切组并保留关键词。
+- **切换流派把新手流派带回条带顶部**（`alignGenreTop()`，只向上、不向下）：长流派滑到深处再切短流派时，文档变矮会被浏览器夹到底部，不处理就会"直接到最底"。三个坑都在注释里：目标位置要用 **CSS 读出的 pinned 几何**（`getComputedStyle(bar).top` + `bar.offsetHeight`），不能用 sticky bar 的实时 rect（换组瞬间它可能已被容器顶出视口）；落位是**瞬时跳**不是补间（补间只能从被夹住的近底部开始，会闪一路无关内容）；`lenis.scrollTo` 在目标等于上次目标时**直接 return**，而这里每组的目标都是同一个文档位置，所以要再核对 `window.scrollY` 并回落原生 `scrollTo`。
 
 ### 书（书架）
 
@@ -192,22 +193,27 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 ## 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（16 栏编辑式散页 11 帧，分 Bloom 01-07 / Horizon 08-11 两个乐章 → Dylan Thomas 诗区）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ ABOUT（统计 + coda）→ footer。
+hero（全屏影像）→ PHOTOGRAPHY（一屏曲面照片墙，11 帧 → Dylan Thomas 诗区）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ ABOUT（统计 + coda）→ footer。
 
-- **照片网格只放横构图 plate**：11 张全部是 1600×1067（3:2）。不要竖裁成 4:5 或 1:1——会切掉主体。可用比例：`21:9` 全幅 / `3:2`。
-- **照片区是「散页」不是表格**：16 栏 + `row-gap: 0` + `align-items: start`，每张在 CSS 里**显式写自己的 `grid-column` 起始列**、跨度与垂直偏移（见 `style.css` 第 9 节按 `[data-photo-index]` 的区块）。**不要给每张都加偏移**——都偏等于没偏；也**不要**把 placement 改回 `nth-child(3n)` 之类的生成式规则，11 张的节奏是逐张写出来的。
-- **`.photo-act-horizon` 是 JS 契约**：`photoFrameData()` 用它给详情层打 `BLOOM / HORIZON`，类名删掉会让每张都报 BLOOM。
-- 漂移挂在 **`.photo-frame-btn`** 上（不是 `.photo-frame`）：入场用的 `ScrollTrigger.batch` 带 `overwrite: true`，会杀掉同目标上的其他补间。量由 CSS 的 `--photo-drift` 提供，正负交替。
+- 照片区是**一屏 3D 曲面墙**，复刻 cmscurvegallery.framer.website：11 张瓦片贴在**以观看者为球心**的球面上，拖拽横向无限循环。几何、交互与三个坑都在 `js/photo-wall.js` 与 `css/photo-wall.css`，两条必须记住的：
+  - **`translateZ(R)` 不能漏**。CSS 的观看者在 `z = +perspective`，所以球心要落到观看者身上就得把 sphere 推前 R；漏掉它观看者就站在球**面**上，整面墙按 50% 渲染、后半圈镜像到屏幕中央（已复现）。
+  - **sphere 必须是零尺寸盒子**。它那面正好压在观看者平面上的大盒子会投影到无穷大，Chrome 会丢掉整列不画（390px 实测左侧一条黑带，DOM 里瓦片齐全且可命中）。零尺寸的盒子平移后仍是零尺寸。
+- **两个旋钮不许互换**：`SLOTS`（每圈瓦片数，= 2 × 照片数，必须是照片数的倍数，这样重复永远相隔 180°）决定**弯曲程度**；`COLS`（跨屏瓦片数）决定**缩放**。`R` 与行步长都是推导值，**永不手写**——手写的半径会把地平线放在任意位置。
+- **瓦片比例 3:2 = 源图比例**，`object-fit: cover` 因此零裁切。**不要竖裁成 4:5 或 1:1**：会切掉主体（参考站那样每张裁掉约 47% 宽度）。
+- **后半圈靠 `cull()` 剔除**：经度超过 90° 的瓦片在观看者身后，投影的 w 变负，Chrome 会把它们镜像到屏幕中央、并且在奇点附近放大到离谱。只留 |经度| ≤ 60°（可见范围约 ±37°）。这不是优化，是正确性。
+- **拖拽 1:1 且逐帧直写**：`a = a0 ∓ dx / R`，拖拽期间**不经过任何补间**（`reel-stage.js` 实测 131px 滞后的教训）；落位用 `power3.out` + 距离成比例时长，reduced-motion 下瞬时。滚轮**只吃 `deltaX`**（+ Shift+纵滚）：墙只是长文档里的一屏，吞掉 deltaY 就是滚动陷阱。
+- **`data-act` 取代了 `.photo-act-horizon`**：`photoFrameData()` 现在读 `frame.dataset.act`。乐章标题已随参考站样式整体删除，属性是 `BLOOM / HORIZON` 的唯一来源。
+- **点瓦片开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（`e.detail === 0` 的键盘回车放行）。克隆体也是真 `<button>`，所以 `main.js` 在 `#photo-wall` 上**委托一次**，不再逐帧绑定。
 - 游戏名册是**显式三列**（≥900px；720–900 两列，≤720 单列），封面 16:9。**不要改回 `auto-fill`**：18 只能被 1/2/3/6/9/18 整除，`auto-fill minmax(250px,1fr)` 在 1440 下出 4 栏 = 4 行零 2 个孤儿。序号与时长并成一行（`counter` 仍在 `.hof-foot::before`，但不再独占一行），名称在下一行，评语一行截断。
 - **影 / 剧的卡片是「2:3 媒介盒 + 盒外的 meta」**，靠 `.film-card` 的栅格实现（`grid-template-columns: minmax(0,1fr)` + `grid-template-rows: auto auto 1fr`），**不要改回绝对定位的整盒 + meta 覆盖**，也**不要漏掉列定义**（漏了海报会按 JPG 固有尺寸渲染，实测 158/54/90/59/54/24px）。索引药丸（`.film-card-no`）与 OPEN chip（`.film-card-sleeve`）均已 `display: none`；选中态靠**可区分的环**（静止 0.1 / hover 0.2 / 选中 0.34）与 meta 的 accent 上边框两层。**详情区不放图**。
 - **索引列表（球队 / 音乐）没有逐行发丝线**，靠 `padding-block` 与间距分组。球队用队徽（统一 2.75rem 等比盒）取代序号，音乐用 64px 封面取代序号。书已经不进这套 `.idx-*` 了（见「书（书架）」）。
 - **音乐每行必须渲染 64px 真封面**（`window.MUSIC_COVERS`）；缺图回落同尺寸空 sleeve。不要恢复 `counter(track)` 编号，也不要给 `.idx-artist` 加回大写 + 字距。
 - 图片默认低饱和、hover / focus 复原：这是「颜色是奖励不是壁纸」的落点。滤镜只加在 `img` 上。
-- **照片说明文字常驻在 plate 下方**，不再是 hover 浮层（旧做法让每张图都是黑盒，且违反 WCAG 2.2 SC 1.4.13 的可关闭要求）。键盘可达性不受影响：按钮仍在，caption 只是不再依赖 `:focus-within`。
+- **照片图注仍在 DOM 里，但视觉上是 `sr-only`**：墙不显示任何文字（参考站也没有），灯箱与读屏照读。键盘可达性不变——按钮仍在、`aria-label` 未改、11 张仍各是一个 tab stop。
 
 ## 内容更新
 
-- 摄影：`.photo-frame`，`photo/` 与 `photo/full/` 都放；网格比例只用 21:9 或 3:2。
+- 摄影：`.photo-frame`（**正典 11 帧必须留在 HTML 里**，墙只是搬动它们的位置并克隆出装饰性重复），`photo/` 与 `photo/full/` 都放；瓦片比例只用 3:2。新增照片数会改变 `SLOTS`，几何自己重算，不用改别处。
 - 游戏：`.hof-item`（直接进 `#hof-grid`），封面 `covers/`，时长写 `.hof-hours`，引文写 `.hof-quote`。
 - 影视：海报 `posters/<ttID>.jpg`，条目进 `film-data.js` / `series-data.js`。
 - 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成。

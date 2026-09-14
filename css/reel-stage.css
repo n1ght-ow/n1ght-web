@@ -69,6 +69,49 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* The head's trailing side: the auto-advance control, then the 01-16 count. */
+.film-stage-head-right,
+.series-stage-head-right {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-4);
+}
+
+/* The rail drives itself, so the one thing a reader must be able to do is stop
+   it. Mono, muted, unfilled: a control on paper. No accent, no new radius, and
+   40px tall so it meets the desktop target size. */
+.film-stage-auto,
+.series-stage-auto {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  cursor: pointer;
+  border-block-end: 1px solid transparent;
+  transition:
+    color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out);
+}
+
+.film-stage-auto:hover,
+.series-stage-auto:hover {
+  color: var(--color-text);
+  border-block-end-color: var(--color-line);
+}
+
+.film-stage-auto:focus-visible,
+.series-stage-auto:focus-visible {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 3px;
+}
+
 /* touch-action is pan-y, NOT pan-x pan-y. The viewport is overflow:hidden,
    so a horizontal pan does nothing here; leaving pan-x out is what lets the
    pointer handler claim the horizontal axis for the swipe. */
@@ -77,6 +120,18 @@
   overflow: hidden;
   background: transparent;
   touch-action: pan-y;
+  /* THE CAMERA. Perspective belongs here, on the viewport, and not on the
+     strip: the strip is max-content (two copies, ~9400px wide), so a
+     perspective on it would put the vanishing point 4700px off to the side and
+     swing the whole row off screen. On the viewport the origin is its own
+     centre - which is exactly where the apex is, because paintArc defines the
+     apex as viewportW / 2. */
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  /* No vertical drop any more now that the bend lives in depth, so this is
+     only the room a tilted card's corners need. Block padding only: it must
+     not change clientWidth, which maxX is measured against. */
+  padding-block-end: clamp(1.25rem, 2.5vw, 2.5rem);
 }
 
 /* while a finger is actually dragging the strip, the cursor says so and the
@@ -88,6 +143,21 @@
 
 .film-stage-strip,
 .series-stage-strip {
+  /* position:relative is load-bearing: it makes the strip the offsetParent that
+     the card measurements are taken against (see cardOffsets in reel-stage.js).
+     Without it offsetLeft is measured from .film-stage and every offset is
+     wrong by the strip's own inset. */
+  position: relative;
+  /* The cards carry 3D transforms (translateZ + rotateY, driven by paintArc in
+     reel-stage.js) and the camera sits on the viewport above, so this context
+     has to be shared: without preserve-3d every card would be flattened into
+     its own plane and the browser would paint them in DOM order instead of
+     sorting them by depth. Nothing here may join the grouping-property list
+     (overflow other than visible, opacity < 1, filter, clip-path, mask,
+     mix-blend-mode, isolation, contain: paint) or the context collapses. The
+     poster's low-saturation filter is one level down, on the img, where it
+     only affects its own subtree. */
+  transform-style: preserve-3d;
   display: flex;
   /* never the default `stretch`: one tall caption would change every card's
      height and the posters would stop sharing a baseline */
@@ -118,6 +188,13 @@
 .film-card,
 .series-card {
   position: relative;
+  /* On a cylinder the far half of the ring faces away from the reader. Not
+     drawing it is both cheaper and the only correct answer: a card seen from
+     behind is a mirror image. This and VIS_CULL in reel-stage.js split the
+     range between them - this one covers a middling radius, where a card turns
+     past 90 degrees, and the cull covers the tight end, where the second copy
+     comes back around to face the reader again. */
+  backface-visibility: hidden;
   flex: 0 0 auto;
   width: var(--reel-card-w);
   display: grid;

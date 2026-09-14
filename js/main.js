@@ -75,80 +75,19 @@ if (!REDUCED) {
     .from(".hero-stats > div", { y: 14, autoAlpha: 0, duration: 0.7, stagger: 0.07 }, 0.5);
 }
 
-/* ---------- photography: short entry fade ----------
-   The references reveal imagery with a short fade rather than a long
-   choreography: a photo grid reads as more premium the less it performs.
-   ScrollTrigger.batch gives one trigger per screenful, not one per card. */
+/* ---------- photography: no scroll effects at all ----------
+   The photography chapter is a 3D wall now, and it owns every transform on
+   it. The two effects that used to live here are gone with the scattered
+   grid they were written for:
 
-if (!REDUCED && window.ScrollTrigger) {
-  ScrollTrigger.batch(".photo-frame", {
-    start: "top 90%",
-    once: true,
-    onEnter: (batch) =>
-      gsap.from(batch, {
-        y: 18,
-        autoAlpha: 0,
-        duration: 0.55,
-        ease: MOTION.enter.ease,
-        stagger: 0.06,
-        overwrite: true,
-      }),
-  });
-}
-
-/* ---------- photography: per-plate drift ----------
-   The sheet's life comes from its geometry, not from a bigger entrance, so
-   this is deliberately the only scroll effect on it: a few percent of each
-   plate's own height, scrubbed.
-
-   Four details are load-bearing:
-   - yPercent rather than y. It resolves against the plate's own height, so
-     the drift stays proportional at every width with nothing to re-tune.
-   - the target is .photo-frame-btn, NOT .photo-frame. The batch entrance
-     above passes overwrite: true, which kills every other tween on its
-     target; a different element keeps the two fully independent. It also
-     means the caption stays put while the image moves above it.
-   - the magnitude and its sign come from --photo-drift in style.css, so a
-     plate's column, offset and drift stay authored in one block.
-   - THE DRIFT ONLY EVER GOES DOWNWARD FROM REST. A symmetric +/-n would let a
-     plate rise into the row band above it and cover the previous plate's
-     caption: measured at 1440px that left exactly 1px of clearance, which is
-     a font-metric change away from breaking. So a positive value runs
-     0 -> +n and a negative value runs +n -> 0. Both stay at or below rest, so
-     the worst case is a plate eating into its OWN caption's top padding -
-     which is why that padding is sized to exceed n% of the tallest plate.
-     The sign still alternates, so neighbours counter-move instead of sliding
-     in lockstep.
-   Never transformed: .photo-frame itself, and anything containing #lightbox
-   (it is position: fixed). */
-if (!REDUCED && window.ScrollTrigger && gsap.matchMedia) {
-  const photoDrift = gsap.matchMedia();
-  photoDrift.add("(min-width: 901px)", () => {
-    gsap.utils.toArray(".photo-frame").forEach((frame) => {
-      const amount = parseFloat(window.getComputedStyle(frame).getPropertyValue("--photo-drift"));
-      if (!amount) return;
-      const plate = frame.querySelector(".photo-frame-btn");
-      if (!plate) return;
-      // positive sinks from rest, negative rises back to rest; neither ever
-      // crosses above the plate's own resting position
-      gsap.fromTo(
-        plate,
-        { yPercent: Math.max(0, -amount) },
-        {
-          yPercent: Math.max(0, amount),
-          ease: "power1.out",
-          scrollTrigger: {
-            trigger: frame,
-            start: "clamp(top bottom)",
-            end: "clamp(bottom top)",
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        }
-      );
-    });
-  });
-}
+   - the ScrollTrigger.batch entry fade wrote y + autoAlpha onto .photo-frame,
+     which is exactly the element js/photo-wall.js positions by transform;
+   - the per-plate --photo-drift scrub wrote yPercent onto .photo-frame-btn,
+     which is the tile inside that frame. Both would have fought the wall's
+     own matrix, and the wall has its own motion language (drag, inertia,
+     arrow keys) that no scroll trigger is allowed to join. See AGENTS.md.
+   The captions that used to sit under each plate are still in the DOM, now
+   sr-only, and the detail layer still reads them. */
 
 /* ---------- glass spotlight ----------
    One rAF-throttled style write per frame. GSAP quickTo cannot tween a
@@ -292,7 +231,10 @@ function photoFrameData(frame) {
     alt: img ? img.alt : "",
     caption: cap ? cap.textContent.trim() : "",
     number: no ? no.textContent.trim() : "",
-    act: frame.closest(".photo-act-horizon") ? "HORIZON" : "BLOOM",
+    // read off the figure, not off the section it sits in: the wall has no
+    // movement headings left to be a child of, and the data-act attribute is
+    // the only thing keeping the kicker from reporting BLOOM for all eleven
+    act: frame.getAttribute("data-act") || "BLOOM",
   };
 }
 
@@ -554,10 +496,22 @@ function initUnifiedDetail() {
   if (!lightbox) return;
   lbBuildRail();
 
-  photoFrames.forEach((frame, i) => {
-    const btn = frame.querySelector(".photo-frame-btn");
-    if (btn) btn.addEventListener("click", () => openDetail("photo", i));
-  });
+  /* One delegated listener, because the wall shows more frames than the
+     eleven authored ones: js/photo-wall.js clones them around the ring, and a
+     clone is as clickable as the original. The eleven real figures carry
+     data-photo-index in DOM order, which is the index openDetail wants, and
+     the clones carry the index of the photo they duplicate. A drag is already
+     swallowed in the capture phase by the wall itself, so nothing here has to
+     know about drag state. */
+  const photoWall = document.getElementById("photo-wall");
+  if (photoWall) {
+    photoWall.addEventListener("click", (e) => {
+      const frame = e.target.closest("[data-photo-index]");
+      if (!frame || !photoWall.contains(frame)) return;
+      const i = Number(frame.getAttribute("data-photo-index"));
+      if (i >= 0) openDetail("photo", i);
+    });
+  }
 
   /* films and series deliberately have NO click handler here.
      Their detail block sits directly under the rail, so opening a full-screen
@@ -1007,6 +961,42 @@ function initMusicSearch() {
     applySearch();
   }
 
+  // Switching genre used to inherit the previous group's scroll depth, so a
+  // position deep in a long group landed at (or past) the end of a shorter
+  // one. Bring the new group's head back under the sticky bar instead. Only
+  // ever scrolls up: near the top of the panel the group is already in view
+  // and moving the page there would just be noise.
+  function alignGenreTop(genre) {
+    const bar = panel.querySelector(".music-bar");
+    if (!genre || !bar) return;
+    // The bar's own rect is NOT usable here. Swapping a long group for a
+    // shorter one shrinks the document under the current scroll position, the
+    // browser clamps the scroll, and the sticky bar is momentarily un-pinned -
+    // its rect then sits above the viewport and the offset it yields lands the
+    // group hundreds of pixels short. Read the pinned geometry from CSS
+    // instead (the shelf reads its stage numbers the same way): the sticky
+    // offset plus the bar's own height is where its bottom sits once stuck.
+    const pinnedBottom = (parseFloat(window.getComputedStyle(bar).top) || 0) + bar.offsetHeight;
+    const delta = genre.getBoundingClientRect().top - (pinnedBottom + 16);
+    if (delta > -2) return;
+    const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const target = Math.min(Math.max(window.scrollY + delta, 0), max);
+    // Jump instead of tweening: the swap has already re-laid out the page, so
+    // an animation would have to start from the clamped near-bottom position
+    // and would flash unrelated content on its way back up. An instant cut
+    // also matches the "replaced the list" reading of a chip click.
+    //
+    // Lenis first, so an in-flight momentum scroll is cancelled. Then verify,
+    // because scrollTo() early-returns when the target equals the target it
+    // last committed - and this target is the SAME document position for every
+    // group (the playlist start), so a switch after one that already landed
+    // there would silently do nothing. Its cached limit can also be a resize
+    // behind, clamping the jump short. The native fallback covers both, and
+    // Lenis re-syncs itself from the resulting scroll event.
+    if (lenis) lenis.scrollTo(target, { immediate: true, force: true });
+    if (Math.abs(window.scrollY - target) > 1) window.scrollTo(0, target);
+  }
+
   // ---- genre filter chips (rendered by music-stage.js) ----
   function selectGenre(index) {
     if (!Number.isFinite(index) || index < 0 || index >= genres.length) return;
@@ -1020,6 +1010,7 @@ function initMusicSearch() {
       genre.hidden = i !== index;
     });
     applySearch();
+    alignGenreTop(genres[index]);
   }
 
   if (filterMount) {
@@ -1038,7 +1029,9 @@ function initMusicSearch() {
 
   jump.addEventListener("click", () => {
     selectGenre(parseInt(jump.getAttribute("data-genre"), 10));
-    input.focus();
+    // keep the genre jump's own scroll: focusing the sticky search field
+    // would otherwise re-reveal it from its flow position and fight it
+    input.focus({ preventScroll: true });
   });
 
   // ---- random pick: play one card from whatever is currently browsable ----

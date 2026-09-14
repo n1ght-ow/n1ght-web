@@ -152,10 +152,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .series-card,
-  .series-card:hover,
-  .series-card:focus-visible,
-  .series-card.is-active,
+  /* The cards are deliberately NOT in this list any more. The arc is static
+     layout, not motion, and killing its transform here flattened the series
+     rail while the film rail stayed bent - the two panels disagreed. What
+     reduced motion turns off is the auto-advance (see js/reel-stage.js), not
+     the shape. */
   .series-detail-imdb,
   .series-detail-imdb:hover,
   .series-stage-range {
