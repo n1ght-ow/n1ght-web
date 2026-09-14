@@ -341,6 +341,7 @@
 | hero 文字升起 | 层级 | 首屏 | y + autoAlpha，0.7-1.1s | 静态 |
 | hero 影像视差 | 叙事 | 滚动 scrub | `yPercent` + scale，`invalidateOnRefresh` | 静态 |
 | 章节揭示 | 层级 | 滚动进入 | IntersectionObserver / ScrollTrigger 的低频入场 | 静态 |
+| 诗区 folio 展开 | 层级 | 滚动进入 | 框架（头两格 + 落款）0.85s `power3.out` stagger 0.08，随后六节 stagger 0.07 | 静态（整块不挂载） |
 | 图片 hover 去饱和 | 反馈 | hover / focus | `filter` 0.6s + `scale 1.035`（滤镜只加在 `img` 上） | 无位移 |
 | 计数上升 | 叙事 | 滚动进入一次 | 补间纯对象 + `snap`，1.2s | 直接写终值 |
 | tab 幕帘 | 状态过渡 | 点击 | `clipPath` 0.8s `power4.inOut`，**必须 `clearProps`** | 静态 |
@@ -384,7 +385,7 @@
 
 ## 7. 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：眉标 + 诗题 + 导语在顶上，六节分 3+3 两列，落款收尾；自述 / 统计 / coda 已退役）→ footer。
+hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：**印刷 folio**——眉标 + 诗题在左格、导语在右格，中间是 3 + 3 两列的六节诗，落款左格是诗的全名、右格是收尾那句；三块共用诗自己的两列，列距只有 `--poem-gap` 一处。自述 / 统计 / coda 已退役）→ footer。
 
 - **摄影是正文里的一屏**（`#photo` 段落内的 `.photo-wall`，高度 clamp 后约一屏），不是全屏层：`#photo-view`、「Open the wall」按钮、滚动锁与 inert 那一套都已退役，nav 与页脚链接只是普通锚点。
 - **棋盘是 PhantomInfiniteGallery 的 vanilla 移植**：**一张无限平面上的一窗格子**，两轴拖拽 + 抛掷 + 鼠标视差 + 按住 320ms 拉远（0.7×，钉住板心）。三条必须记住的：

@@ -30,7 +30,7 @@
   </script>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=12">
-  <link rel="stylesheet" href="css/style.css?v=79">
+  <link rel="stylesheet" href="css/style.css?v=81">
   <link rel="stylesheet" href="css/glass.css?v=7">
   <link rel="stylesheet" href="css/reel-stage.css?v=15">
   <link rel="stylesheet" href="css/film-stage.css?v=14">
@@ -570,13 +570,24 @@
          counters and the coda are all gone, and the six stanzas read in two
          columns of three. The section keeps id="about" so the nav and footer
          anchors and every ScrollTrigger still resolve; only the nav LABEL is
-         now Poem. -->
+         now Poem.
+
+         Redesigned as a printed folio (asked for; the two columns stay): the
+         chapter now OPENS and CLOSES on the same two tracks. Masthead on top -
+         source line and title in the left cell, the foreword in the right one,
+         bottom-aligned like every other chapter head on the page. Colophon
+         underneath - the poem's full title in the left cell (the h2 is only
+         its first clause, so this is where the poem is actually named), the
+         closing line in the right one. The plate between them is untouched:
+         same six stanzas, same order, same two .poem-col wrappers. -->
     <section class="section about" id="about">
       <div class="shell">
         <div class="poem" id="poem">
           <header class="poem-head">
-            <p class="label sec-eyebrow">Dylan Thomas / A villanelle / 1947</p>
-            <h2 class="sec-title">Do not go gentle.</h2>
+            <div class="poem-head-main">
+              <p class="label sec-eyebrow">Dylan Thomas / A villanelle / 1947</p>
+              <h2 class="sec-title">Do not go gentle.</h2>
+            </div>
             <p class="poem-standfirst">One poem about refusing to go quietly. Written for a father, kept by everyone else, and the reason this page keeps everything bright.</p>
           </header>
 
@@ -607,7 +618,10 @@
             </div>
           </blockquote>
 
-          <p class="poem-sign">Dylan Thomas, 1947. Kept here because the light is not something you wait for.</p>
+          <footer class="poem-foot">
+            <p class="label poem-source">Do not go gentle into that good night</p>
+            <p class="poem-sign">Kept here because the light is not something you wait for.</p>
+          </footer>
         </div>
       </div>
     </section>
@@ -682,6 +696,6 @@
 <script src="js/games-stage.js?v=3"></script>
   <script src="js/glass-pill.js?v=3"></script>
   <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=67"></script>
+  <script src="js/main.js?v=70"></script>
 </body>
 </html>

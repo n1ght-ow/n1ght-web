@@ -109,7 +109,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 - 留白分组：组间距 ≥ 组内 2×；分隔线是密集数据的最后手段。
 - 对齐共享边缘；物理 left/right 换逻辑属性（`margin-inline-start` 等）。
-- 断点由内容驱动（1100 / 900 / 720 / 480）。
+- 断点由内容驱动（1100 / 1000 / 900 / 720 / 480）。1000 是诗区自己挣来的：两列诗行到 971px 就放不下最长的一行（见「诗（folio）」）。
 - 横向滚动器下一项露 16-32px 窥视；移动端按钮内缩 + 安全区。
 
 ## 文案
@@ -206,6 +206,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 - **两行都是玻璃托盘、都不吸顶**（见「三条 bar」）：搜索行与流派行与标签条同一件东西；换流派的落点按**固定导航条的底边**算（`alignGenreTop()`），历史搜索跳转仍走 `scrollMarginTop`。
 - **三条 bar 的间距统一走 `--bar-gap`（`--sp-5` = 24px）**：实测标签条→搜索行→流派行→列表 = 24 / 24 / 24。标签条的下边距就是六个面板与它的距离，所以这一条同时把面板起点从 48 收到 24——这是用户选 24 时已披露的副作用。
+- **音乐面板没有入场动效**（应要求）：`js/main.js` 的 `animateIn()` 只在面板里能找到 `.idx-row / .genre / .hof` 行时才跑，所以影 / 剧 / 书 / 球队本来就是静止的，**原来只有音乐和游戏吃这套**。实测切到音乐那一帧 `#panel-music` 是 `clipPath: inset(0 0 0 100%)`、可见的 `.genre` 是 `inset(0 0 100%) + translateY(14px)`，0.85s 后才落定 —— 468 张卡 15 组读起来就是加载级联。现在 `select()` 里 `panel-music` 直接走 instant 分支，切过去第一帧就是 `clipPath: none` / `transform: none`。**游戏拨盘仍保留擦入**（改完只剩它一个），要去掉就在同一分支里加 `panel-games`。
 - 歌单默认**全展开、无手风琴**；浏览靠流派 chips 过滤 + 搜索叠加 + 随机一首。
 - 默认**单流派显示**：一次只显示一组，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。切换流派统一走 `selectGenre()`。
 - **搜索跨全部 15 组**（应要求改的）：有命中时每个命中的组都展开，组头从「136 首」变成「4 / 136」，工具条读出「18 / 468」，零命中才显示 NO MATCH。`#music-search-jump` 随之退役——查询已经覆盖全部流派，没有「别处」可跳。**搜索中点击 chip = 跳到那一组的结果**，走原生 `scrollIntoView` + `scroll-margin-top`；**不要自己算 delta**：`.genre` 是 `content-visibility: auto`，实测手算落点差 359px、加一次「修正」反而差 834px（每次重测都会让另一个块实体化）。清空关键词后回到单选流派。
@@ -244,9 +245,21 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - **文案只有三行**：眉标（队名 + 联盟）、荣誉、官网域名。**没有中文短评** —— 荣誉那一行就是这条带子上唯一的中文，走 `--fs-h3`。
 - 图片在 `sport/`（文件名即 slug），五张都转过 webp（2.5MB → 1.3MB）；`loading="lazy"` 保留，隐藏的 tab 面板里图片不会取。
 
+### 诗（folio）
+
+Dylan Thomas《Do not go gentle into that good night》。**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役。应要求重做成**印刷对开页（folio）**，**诗本身的两列没有动**——同样 3 + 3 节、同样的 `.poem-col` 外壳、同样的列宽与列距。
+
+- **整章的栅格就是诗自己的两列**：`.poem-head` 与 `.poem-foot` 都是 `repeat(2, minmax(0, 1fr))` + `var(--poem-gap)`（列距只在 `.poem` 上定义一处），于是诗题压在第 i 节上、导语压在第 iv 节上，落款两格各自对齐同一列。**这就是重做的全部**：章节不再是「一个头 + 下面一首诗」，而是一张从诗题贯到落款的 folio。**不要**把 `.poem-head` 换成 `.sec-head` 的 `0.95fr / 1.05fr`——那是编辑部自己的比例，会让头与诗的列错开。
+- **两列诗行的天花板是最长的那一行，不是口味**：每行都是 `<br>` 硬断，换行不是重排、是诗体断掉。最长行 18.33em（"Their frail deeds might have danced in a green bay,"，1440 下 456px），两列在 shell 里到 **971px** 就放不下——实测 960 / 940 / 920 三个宽度都在换行。所以诗在 **1000px** 竖排，比断点表里的 900 早一档。
+- **竖排时接缝的间距必须等于节间距**：一竖排，每个 `.poem-col` 就变成一格 grid ROW，第 iii 节与第 iv 节之间的缝由 grid 的 `row-gap` 给，`p + p` 那条 1.9em 够不到它。写成 `gap: var(--sp-6)` 会让接缝比节间距还窄，分节节奏在正中间断一次。
+- **节距 1.9em、行距 1.62**：跨节基线距 3.5em、节内 1.62em，三行一节才是看得见的单位。旧值 1.35em 只比行距大一点，六节读成一片。
+- **落款两格**：左边是诗的**全名**（`.label` mono），右边是收尾那句（与导语同一套字号与宽度，`max-width: 46ch`，同 `.sec-copy`）。h2 只是叠句的第一句，**全站唯一写出诗名的地方就是这个落款**。旧落款是「Dylan Thomas, 1947. Kept here because…」压在一条通栏发丝线下：作者与年份眉标里已经写过一遍，所以重做时删掉了重复的题署（**句子本身没改**），发丝线也撤了（「留白优先于线条」）。
+- **`.refrain` 的金色不动**：仍是全站静态文字唯一的 accent 例外（DESIGN.md 3.1）。
+- **动效**：框架（头两格 + 落款）挂在 `.poem-head` 的同一个触发器上，一次 `power3.out` stagger 0.08 入场；六节仍是原来的 stagger 0.07。**落款不要单独挂自己的 ScrollTrigger**：它是本章最后一行、后面就是 footer，拿自身落点当触发等于让这句话在进入 92% 视口之前一直 `visibility: hidden`。
+
 ## 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，11 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas，**这一段现在只有诗**：自述、8 个统计数字、section 头与 coda 都已退役）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
+hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，11 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
 
 - **照片不在正文流里**：正文只留章节导语 + 一个「Open the wall」按钮，整面墙在 `#photo-view` 这个全屏层里（nav `Photography`、页脚链接、导语按钮三处都能打开）。`z-index 60`：nav（70）仍在它之上可点，`#lightbox`（200）仍能压在它上面。**它不是模态**——只有 `main` / `footer` 被置 `inert`，nav 故意保持可用；滚动锁走 `main.js` 暴露的 `window.NightScroll`，并且监听 `night:detail-closed` 在灯箱关掉之后**重新上锁**（灯箱关闭会清掉所有 inert 并还回滚动）。
 - **无 JS 兜底**：11 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` 在**第一次打开视图时**把这 11 个元素搬进 `#photo-wall`。所以关闭 JS 时照片仍在页面上，只是没有墙。

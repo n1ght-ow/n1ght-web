@@ -705,7 +705,12 @@ function initArchiveTabs() {
     /* games contributes its TRACK, not its eighteen cards: the dial writes a
        transform on every .hof-item itself, and a per-card wipe would fight it. */
     const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre, .hof")) : [];
-    if (instant) {
+    /* MUSIC IS SHOWN, NOT WIPED (asked for). The playlist is 468 cards in 15
+       groups, so the panel wipe plus the group unroll inside it reads as a
+       loading cascade rather than an entrance - the shelf is simply there the
+       moment its tab is picked. Every other panel keeps the wipe. */
+    const plain = panels[idx] && panels[idx].id === "panel-music";
+    if (instant || plain) {
       gsap.set(rows, { y: 0, clearProps: "clipPath" });
       gsap.set(panels[idx], { clearProps: "clipPath" });
     } else {
@@ -1216,15 +1221,39 @@ if (!REDUCED) {
      the 300ms ceiling anyway). The panel's own tab wipe in animateIn is the
      entrance, once. */
 
-  /* ---------- poem: stanza develop ----------
+  /* ---------- poem: folio develop ----------
      The about-body, about-stats and coda timelines that used to sit above this
      one went with their markup (asked for). GSAP only WARNS about a missing
      target, so leaving them would have been a silent pile of dead
-     ScrollTriggers firing on nothing. `.poem-verse p` still finds all six
-     stanzas in DOM order, which is the visual reading order of the two
-     columns. */
+     ScrollTriggers firing on nothing.
 
-  /* ---------- poem: stanza develop ---------- */
+     Motivation for both pieces: the poem is the last chapter and the only
+     thing between the reader and the footer, so the chapter sets itself the
+     way it is read - the head and the colophon (the frame) arrive first as one
+     movement, then the six stanzas develop in DOM order, which is the visual
+     reading order of the two columns. Reduced motion skips the whole block. */
+
+  /* The frame - the masthead's two cells and the colophon - arrives as ONE
+     movement on the section's own trigger, in DOM order (title, foreword,
+     closing line). It hangs off the masthead rather than off the colophon on
+     purpose: a tween keyed to the colophon would leave the section's last line
+     pre-hidden until it reached 92% of the viewport, and this chapter is the
+     last one before the footer, so that is a short and fragile run of scroll. */
+  const poemFrame = [...document.querySelectorAll(".poem-head > *, .poem-foot")];
+  if (poemFrame.length) {
+    gsap.from(poemFrame, {
+      y: 14,
+      autoAlpha: 0,
+      duration: MOTION.enter.duration,
+      stagger: 0.08,
+      ease: MOTION.enter.ease,
+      scrollTrigger: {
+        trigger: ".poem-head",
+        start: "top 88%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  }
 
   const poemLines = gsap.utils.toArray(".poem-verse p");
   if (poemLines.length) {
