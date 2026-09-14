@@ -851,22 +851,24 @@ function initMusicSearch() {
   const count = document.getElementById("music-search-count");
   const empty = document.getElementById("music-search-empty");
   const emptyText = document.getElementById("music-search-empty-text");
-  const jump = document.getElementById("music-search-jump");
   const filterMount = document.getElementById("genre-filter");
   const randomBtn = document.getElementById("music-random");
-  if (!panel || !input || !clear || !count || !empty || !emptyText || !jump) return;
+  if (!panel || !input || !clear || !count || !empty || !emptyText) return;
 
   const cards = Array.from(panel.querySelectorAll(".idx-card[data-song-id]"));
   const genres = Array.from(panel.querySelectorAll(".genre"));
   const cardGenres = cards.map((card) => card.closest(".genre"));
   const genreIndexOf = cardGenres.map((genre) => genres.indexOf(genre));
   // the chips are rendered by music-stage.js before this file runs and carry
-  // their own totals ("HIP-HOP · 100"); keep the bare genre names too, for
-  // the empty-state jump button
+  // their own totals ("HIP-HOP · 100")
   const chips = filterMount ? Array.from(filterMount.querySelectorAll(".genre-chip")) : [];
-  const chipLabels = chips.map((chip) => chip.textContent.replace(/\s*·\s*\d+\s*$/, "").trim());
-  // active genre index into `genres`; one genre is visible at a time and
-  // music-stage.js hides every group except index 0 on first render.
+  // Each group head and its size, captured once: a search repaints the head as
+  // "matches / total", and clearing the field puts the original wording back.
+  const genreCounts = genres.map((genre) => genre.querySelector(".genre-count"));
+  const genreTotals = genres.map((genre) => genre.querySelectorAll(".idx-card[data-song-id]").length);
+  // Active genre index. While BROWSING exactly one group is on screen
+  // (music-stage.js hides every group except index 0 on first render); while
+  // SEARCHING the query owns visibility instead.
   let activeGenre = 0;
 
   function normalize(value) {
@@ -935,69 +937,47 @@ function initMusicSearch() {
     scheduleRefresh();
   }
 
-  // One visibility pass: the genre filter owns panel-level `hidden`, the
-  // search owns per-card `is-search-hidden`; the counter only credits cards
-  // inside genres the filter still shows.
+  // One visibility pass. BROWSING: the chip filter owns which group is on
+  // screen and every card is visible. SEARCHING: the query owns visibility
+  // ACROSS THE WHOLE COLLECTION - each group with a hit is revealed, each head
+  // reads "matches / total", and the readout counts every song. That is why the
+  // old "no match in this genre, try that one instead" jump button is gone: a
+  // query now covers every genre, so there is no elsewhere to send anyone to.
   function applySearch() {
     const trimmed = input.value.trim();
     const searching = Boolean(trimmed);
     const qNorm = searching ? normalize(trimmed) : "";
-
-    // one pass over all 441 cards: `hit` is genre-independent, so the same
-    // pass can credit genres other than the visible one and feed the
-    // "no match here, results elsewhere" jump button
     const hitsByGenre = new Array(genres.length).fill(0);
-    let visible = 0;
+    let total = 0;
+
     cards.forEach((card, i) => {
-      const hit = matchCard(cardHaystacks[i], qNorm);
-      const genreHidden = cardGenres[i] ? cardGenres[i].hidden : false;
-      card.classList.toggle("is-search-hidden", !hit || genreHidden);
-      if (!hit) return;
+      const hit = searching ? matchCard(cardHaystacks[i], qNorm) : true;
       const gi = genreIndexOf[i];
-      if (gi >= 0) hitsByGenre[gi]++;
-      if (!genreHidden) visible++;
+      if (hit) {
+        total++;
+        if (gi >= 0) hitsByGenre[gi]++;
+      }
+      card.classList.toggle("is-search-hidden", searching && !hit);
     });
 
-    genres.forEach((genre) => {
-      if (genre.hidden) return;
-      const visibleInGenre = genre.querySelectorAll(".idx-card:not(.is-search-hidden)").length;
-      genre.classList.toggle("is-search-empty", visibleInGenre === 0);
-    });
-
-    // the counter is a search readout: hidden while browsing a genre, and
-    // scoped to "matches / songs in the visible genre" while searching
-    const genreTotal = genres[activeGenre] ? genres[activeGenre].querySelectorAll(".idx-card[data-song-id]").length : 0;
-    count.hidden = !searching;
-    count.textContent = visible + " / " + genreTotal;
-    clear.hidden = !searching;
-    updateEmpty(searching ? hitsByGenre : null);
-    refreshScroll();
-  }
-
-  // A miss inside the active genre is not a dead end while another genre
-  // holds the results: name it, count it, and jump there on click.
-  function updateEmpty(hitsByGenre) {
-    const activeHits = hitsByGenre ? (hitsByGenre[activeGenre] || 0) : 0;
-    empty.hidden = !hitsByGenre || activeHits > 0;
-    if (!hitsByGenre || activeHits > 0) {
-      jump.hidden = true;
-      return;
-    }
-
-    let best = -1;
-    let bestCount = 0;
-    hitsByGenre.forEach((hits, gi) => {
-      if (gi !== activeGenre && hits > bestCount) {
-        best = gi;
-        bestCount = hits;
+    genres.forEach((genre, gi) => {
+      const hits = hitsByGenre[gi];
+      genre.hidden = searching ? hits === 0 : gi !== activeGenre;
+      genre.classList.toggle("is-search-empty", searching && hits === 0);
+      if (genreCounts[gi]) {
+        genreCounts[gi].textContent = searching
+          ? hits + " / " + genreTotals[gi]
+          : genreTotals[gi] + " 首";
       }
     });
 
-    emptyText.textContent = best < 0 ? "NO MATCH" : "NO MATCH IN THIS GENRE";
-    jump.hidden = best < 0;
-    if (best < 0) return;
-    jump.setAttribute("data-genre", String(best));
-    jump.textContent = "查看 " + (chipLabels[best] || "其它流派") + " · " + bestCount;
+    // the counter is a search readout: hidden while browsing, and a cross-genre
+    // total while searching
+    count.hidden = !searching;
+    count.textContent = total + " / " + cards.length;
+    clear.hidden = !searching;
+    empty.hidden = !searching || total > 0;
+    refreshScroll();
   }
 
   function clearSearch() {
@@ -1010,17 +990,41 @@ function initMusicSearch() {
   // one. Bring the new group's head back under the sticky bar instead. Only
   // ever scrolls up: near the top of the panel the group is already in view
   // and moving the page there would just be noise.
-  function alignGenreTop(genre) {
-    const bar = panel.querySelector(".music-bar");
-    if (!genre || !bar) return;
-    // The bar's own rect is NOT usable here. Swapping a long group for a
+  function alignGenreTop(genre, always) {
+    // The pinned row is the GENRE RAIL, not the search row: the rail is what
+    // stays on screen while the list scrolls, so its own box is what the target
+    // has to clear. (The two rows were the other way round in the first pass -
+    // the user corrected it, hence the name that no longer says "bar".)
+    const rail = panel.querySelector(".genre-filter");
+    if (!genre || !rail) return;
+    // The rail's own rect is NOT usable here. Swapping a long group for a
     // shorter one shrinks the document under the current scroll position, the
     // browser clamps the scroll, and the sticky bar is momentarily un-pinned -
     // its rect then sits above the viewport and the offset it yields lands the
     // group hundreds of pixels short. Read the pinned geometry from CSS
     // instead (the shelf reads its stage numbers the same way): the sticky
     // offset plus the bar's own height is where its bottom sits once stuck.
-    const pinnedBottom = (parseFloat(window.getComputedStyle(bar).top) || 0) + bar.offsetHeight;
+    const pinnedBottom = (parseFloat(window.getComputedStyle(rail).top) || 0) + rail.offsetHeight;
+
+    if (always) {
+      // A search jump can travel thousands of pixels, and .genre blocks are
+      // content-visibility: auto - so any delta computed from live rects is
+      // measured against 60rem ESTIMATES for every block in between. Measured:
+      // a POP -> HIP-HOP jump landed 359px off, and a "correct it once" pass
+      // made it 834px off, because each re-measure materialises another block
+      // and moves the target again. Hand it to the engine: scroll-margin-top
+      // parks the group head under the sticky bar, and the browser's scroll
+      // anchoring is exactly the mechanism that absorbs blocks materialising
+      // mid-flight.
+      genre.style.scrollMarginTop = Math.round(pinnedBottom + 16) + "px";
+      genre.scrollIntoView({ block: "start", behavior: "instant" });
+      if (lenis) lenis.scrollTo(window.scrollY, { immediate: true, force: true });
+      return;
+    }
+
+    // Browsing only ever nudges UP: the swapped-in group is normally already in
+    // view and moving the page would be noise. It travels a few pixels inside
+    // blocks that are already materialised, so live rects are honest here.
     const delta = genre.getBoundingClientRect().top - (pinnedBottom + 16);
     if (delta > -2) return;
     const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
@@ -1050,11 +1054,11 @@ function initMusicSearch() {
       chip.classList.toggle("is-active", on);
       chip.setAttribute("aria-pressed", on ? "true" : "false");
     });
-    genres.forEach((genre, i) => {
-      genre.hidden = i !== index;
-    });
     applySearch();
-    alignGenreTop(genres[index]);
+    // While searching, a chip is "take me to that group's results" - and a group
+    // with no hits has nothing to travel to.
+    const searching = Boolean(input.value.trim());
+    if (!searching || !genres[index].hidden) alignGenreTop(genres[index], searching);
   }
 
   if (filterMount) {
@@ -1070,13 +1074,6 @@ function initMusicSearch() {
       if (chip) chip.scrollIntoView({ block: "nearest", inline: "nearest" });
     });
   }
-
-  jump.addEventListener("click", () => {
-    selectGenre(parseInt(jump.getAttribute("data-genre"), 10));
-    // keep the genre jump's own scroll: focusing the sticky search field
-    // would otherwise re-reveal it from its flow position and fight it
-    input.focus({ preventScroll: true });
-  });
 
   // ---- random pick: play one card from whatever is currently browsable ----
   if (randomBtn) {
@@ -1380,28 +1377,12 @@ function cacheNavMetrics() {
   navOffsets = navPairs.map((p) => p.section.offsetTop);
 }
 
-// The nav gets the same draggable indicator as the archive tab strip. It is
-// only meaningful when every anchor resolved to a section: if one href has no
-// target, navPairs is shorter than navAnchors and every index past the gap
-// would point at the wrong label.
-const navPillMount = document.querySelector(".nav-links");
-const navPillEl = document.getElementById("nav-pill");
-const navPill = navPillMount && navPillEl && window.createGlassPill && navPairs.length === navAnchors.length
-  ? window.createGlassPill({
-      root: navPillMount,
-      items: navAnchors,
-      pill: navPillEl,
-      index: 0,
-      // Dragging the indicator onto another section is a navigation, and the
-      // links already know how to do that: routing through their own handler
-      // keeps Lenis, reduced-motion and the native hash jump on one path.
-      onChange: (index) => {
-        const pair = navPairs[index];
-        if (pair) pair.anchor.click();
-      },
-    })
-  : null;
-
+// The nav carries NO selected indicator. It used to mount the same draggable
+// dark lozenge as the archive tab strip, but on a bar that floats over a
+// photograph that lozenge read as a black blob riding the glass, and the
+// reference navbar this bar follows has no selected state at all. The active
+// link is carried by ink colour instead - see .nav-links a.is-active in
+// css/style.css. js/glass-pill.js is still the tab strip's only pill.
 function updateNavAndProgress(self) {
   const y = self.scroll() + window.innerHeight * 0.45;
   let current = -1;
@@ -1409,15 +1390,10 @@ function updateNavAndProgress(self) {
     if (navOffsets[i] <= y) current = i;
   }
   if (self.progress >= 1) current = navPairs.length - 1;
-  navPairs.forEach((pair, i) => pair.anchor.classList.toggle("is-active", i === current));
-
   // This runs on every scroll frame, so only touch the DOM on a real change.
-  // Above the first section nothing is active, and the indicator withdraws
-  // rather than sitting under a label that is not selected.
-  if (navPill) {
-    if (current < 0) navPill.hide();
-    else if (current !== navPill.index() || !navPill.visible()) navPill.moveTo(current);
-  }
+  // Above the first section nothing is active, which now simply means every
+  // label sits at its resting ink.
+  navPairs.forEach((pair, i) => pair.anchor.classList.toggle("is-active", i === current));
 }
 
 ScrollTrigger.create({

@@ -1,0 +1,179 @@
+/* ============================================================
+   THE GAMES DIAL - one cover centred, the rest of the roster behind it.
+
+   WHERE THE LOOK COMES FROM. Detent, a Framer code component
+   (https://framer.com/m/Detent-ienXnN.js): a card's width, offset, opacity
+   and blur are a pure function of its distance from the centre. The port and
+   its reasoning live in js/games-stage.js; this file is only the skin.
+
+   .is-live is set by the stage when it mounts. A page whose stage script
+   never ran keeps a plain three-column roster instead of eighteen covers
+   stacked on one spot - the same discipline as .photo-fallback, one panel
+   over. Nothing here paints twice: the fallback is gated on :not(.is-live).
+
+   The layout contract with the JS is --hof-gap / --hof-pad, read back with
+   getComputedStyle the way book-shelf.js reads its stage geometry. One copy.
+   ============================================================ */
+
+.hof { position: relative; }
+
+/* ---------- the cover box, shared by both modes ---------- */
+.hof-img-wrap {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-deep);
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
+}
+
+.hof-img-wrap img {
+  width: 100%;
+  height: 100%;
+  /* every cover in covers/ is a true 16:9, so this crops nothing today; the
+     lever for varying them later is object-position, not a scale */
+  object-fit: cover;
+  filter: saturate(0.72);
+  transition: filter 0.45s var(--ease-out);
+  /* The load-bearing one of the four anti-drag rules (see js/photo-wall.js):
+     the pointer never lands on the image, so Chrome never starts its own
+     translucent drag copy underneath the dial's 1:1 gesture. */
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* ---------- the meta type, shared by both modes ---------- */
+.hof-name { font-size: var(--fs-small); font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
+.hof-hours { font-family: var(--font-mono); font-size: var(--fs-label); font-variant-numeric: tabular-nums; letter-spacing: var(--track-meta); color: var(--color-text-muted); }
+.hof-quote { font-size: var(--fs-label); line-height: 1.5; color: var(--color-text-muted); }
+
+/* Hide the dial's chrome until there is a dial. */
+.hof-cue, .hof-labels { display: none; }
+
+/* ---------- fallback: js/games-stage.js never mounted ----------
+   Explicit columns, not auto-fill: 18 divides evenly at 1, 2, 3, 6, 9 and 18
+   and nowhere else, and auto-fill inside the 1440 shell produced four columns
+   - four rows and a last row holding two of four. */
+.hof:not(.is-live) {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.75rem, 3.5vw, 3rem) clamp(1rem, 2vw, 1.75rem);
+}
+@media (max-width: 900px) { .hof:not(.is-live) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) { .hof:not(.is-live) { grid-template-columns: minmax(0, 1fr); } }
+
+.hof:not(.is-live) .hof-item { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em var(--sp-2); }
+.hof:not(.is-live) .hof-img-wrap { flex: 1 0 100%; }
+.hof:not(.is-live) .hof-hours { margin-inline-start: auto; }
+.hof:not(.is-live) .hof-quote {
+  flex: 1 0 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- the dial ---------- */
+.hof.is-live {
+  /* 40, not 26: the detent mark occupies the band under the card (rule at 20px,
+     an 8px tick below it), and at 26 the tick and the game's name were reading
+     as one crowded cluster. */
+  --hof-gap: 40px;   /* centre card to its label block */
+  --hof-pad: 16px;   /* breathing room inside the band */
+  /* pre-boot insurance only: sizeTrack() overwrites this with the real
+     height (centre card + both label rows + the pad) before first paint */
+  height: 420px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.hof.is-live.is-dragging { cursor: grabbing; }
+
+.hof.is-live .hof-item {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  border-radius: var(--radius-md);
+  will-change: transform, opacity, filter;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+
+/* The centred cover is the only one in colour - the same "colour is the
+   reward" rule the rest of the site runs on, one card at a time. */
+.hof.is-live .hof-item.is-centre .hof-img-wrap img { filter: saturate(1); }
+
+.hof.is-live .hof-item:focus-visible { outline: 2px solid var(--color-accent-text); outline-offset: 3px; }
+
+/* The meta belongs to the centred card, so it is painted once, there. */
+.hof.is-live .hof-name,
+.hof.is-live .hof-hours,
+.hof.is-live .hof-quote { display: none; }
+
+.hof.is-live .hof-cue {
+  display: block;
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  z-index: 500;
+  pointer-events: none;
+}
+
+.hof.is-live .hof-labels {
+  display: block;
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  /* Centred on the card, whose box it borrows its width and height from (the JS
+     sets both). Without this the block hangs half its own box down and to the
+     right, and the rows then measure as if they overflowed the band. The cue
+     gets the same transform written by js/games-stage.js each frame. */
+  transform: translate(-50%, -50%);
+  z-index: 600;
+  pointer-events: none;
+  text-align: center;
+}
+
+.hof.is-live .hof-rank {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 100%;
+  margin-block-end: var(--hof-gap);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-label);
+  color: var(--color-text-muted);
+}
+
+.hof.is-live .hof-now {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 100%;
+  margin-block-start: var(--hof-gap);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* --fs-h3, an existing role one rung up the display ladder (20 -> 25px): the
+   name is the only thing on the panel the size of a small heading, and at
+   --fs-h4 it read as a caption under a 440px cover. */
+.hof.is-live .hof-now-name { font-size: var(--fs-h3); font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; text-wrap: balance; }
+.hof.is-live .hof-now-hours { font-family: var(--font-mono); font-size: var(--fs-label); font-variant-numeric: tabular-nums; letter-spacing: var(--track-meta); color: var(--color-text-muted); }
+
+/* One line of the collection note, clamped: it is the same sentence the
+   detail layer will show in full when the cover is opened. */
+.hof.is-live .hof-now-quote {
+  font-size: var(--fs-label);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  max-inline-size: 46ch;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

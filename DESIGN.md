@@ -2,7 +2,7 @@
 
 > 面向实现的单一设计事实源（V2，2026）。只记录现状，不发明新风格。
 > 结构与裁决见 `AGENTS.md`；研究留档见 `archive/design-research/` 与 `archive/premium-techniques/`。
-> 最近核对：`css/style.css?v=60`、`css/glass.css?v=2`、`css/reel-stage.css?v=7`、`js/main.js?v=51`。
+> **本版按代码逐条核对过**：`css/style.css?v=73`、`css/glass.css?v=7`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=14`、`css/series-stage.css?v=16`、`css/book-shelf.css?v=5`、`css/photo-wall.css?v=5`、`css/games-stage.css?v=2`、`css/smooth-cursor.css?v=1`、`js/main.js?v=63`、`js/reel-stage.js?v=23`、`js/glass-pill.js?v=3`。
 
 ## 0. 品牌与 Design read
 
@@ -10,11 +10,13 @@
 
 **Design read**：personal archive / photography，受众是同好与自己。语气是**编辑式画廊**，不是作品集官网、不是仪表盘、不是科技感暗色站。
 
-**核心判断**：站点最贵的资产是 11 张照片、16 张海报、689 张专辑封面。界面不得与这些图片抢注意力。**照片是页面上唯一被允许彩色的事物。**
+**核心判断**：站点最贵的资产是 11 张照片、35 张海报（影 16 + 剧 19）、393 张专辑封面。界面不得与这些图片抢注意力。**照片是页面上唯一被允许彩色的事物。**
 
 **Dial**：DESIGN_VARIANCE 6 / MOTION_INTENSITY 4 / VISUAL_DENSITY 4。
 
 **主题锁**：正文页全亮色纸面。暗色只用于三处：全屏影像 hero、`#lightbox` 详情层、`.footer`。它们都是「影像与落幕」语汇，不是分区反转。
+
+**藏品规模**（写进 `#about-stats` 与 hero 统计条的同一组数字）：书 16 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18。
 
 ---
 
@@ -47,18 +49,20 @@
 | --- | --- | --- |
 | `--color-bg` | paper-050 | 页面背景 |
 | `--color-bg-deep` | paper-100 | 归档区、深一档面 |
-| `--color-surface` | paper-000 | 卡片、输入框、实底回退 |
+| `--color-surface` | paper-000 | 卡片、实底回退 |
 | `--color-text` | ink-900 | 正文、标题 |
 | `--color-text-secondary` | ink-600 | 描述、次级信息 |
 | `--color-text-muted` | ink-500 | 标签、编号、meta |
 | `--color-line` | paper-200 | 分隔线 |
-| `--color-line-soft` | `oklch(0 0 0 / .055)` | 密集数据行分隔 |
+| `--color-line-soft` | oklch(0 0 0 / .055) | 密集数据行分隔 |
 | `--color-accent` | gold-400 | 强调实底 |
 | `--color-accent-text` | gold-700 | 强调文字 / 焦点环 |
 | `--color-accent-tint` | gold-100 | 强调浅底 |
 | `--color-ink` | ink-950 | 实心墨块（激活 tab、主按钮） |
 | `--color-on-dark` | on-dark | 暗层文字 |
-| `--color-on-dark-muted` | `oklch(1 0 0 / .62)` | 暗层次级文字 |
+| `--color-on-dark-muted` | oklch(1 0 0 / .62) | 暗层次级文字 |
+
+玻璃那一族 token（`--glass-nav` / `--glass-panel` / `--glass-pill` / `--glass-elevation` 等）定义在 `css/glass.css` 与 `css/style.css` 的 `:root`，见第 4 节。
 
 ---
 
@@ -68,53 +72,39 @@
 
 | 字体 | 文件 | 用途 |
 | --- | --- | --- |
-| Space Grotesk | `fonts/SpaceGrotesk-latin.woff2`（300-700 可变） | 展示 + 正文 + UI |
+| Space Grotesk | `fonts/SpaceGrotesk-latin.woff2`（可变） | 展示 + 正文 + UI |
 | IBM Plex Mono | `fonts/IBMPlexMono-{300,400}-latin.woff2` | 标签、元信息、导航 |
 | Instrument Serif | `fonts/InstrumentSerif-italic-latin.woff2`（400 italic） | 编辑式引言、诗 |
+| Klein Blue Night | `fonts/KeLaiYinLanDeYeWan.ttf`（12.6MB，非商业授权） | **只有书架书脊**，13px 一个字号 |
 
 ### 2.2 双寄存器字号系统（**10 个声明角色，封顶**）
 
-这是 V2 最重要的结构决定：字号不是一条连续 ramp，而是**两个寄存器**——一套紧凑的 UI 档，一套模数化的展示档。两者之间的空档是刻意的。
+字号不是一条连续 ramp，而是**两个寄存器**——一套紧凑的 UI 档，一套模数化的展示档。两者之间的空档是刻意的。
 
-**UI 寄存器**（紧凑，步进小）：
+**UI 寄存器**（紧凑）：`--fs-label` 11px（mono 眉标）/ `--fs-meta` 12px（mono 元信息、导航）/ `--fs-caption` 13px（说明）/ `--fs-small` 15px（次级正文）/ `--fs-body` 16px（正文）。
 
-| token | 值 | 用途 |
-| --- | --- | --- |
-| `--fs-label` | 0.6875rem / 11px | mono 眉标 |
-| `--fs-meta` | 0.75rem / 12px | mono 元信息、导航 |
-| `--fs-caption` | 0.8125rem / 13px | 图片说明 |
-| `--fs-small` | 0.9375rem / 15px | 次级正文、账本行标题 |
-| `--fs-body` | 1rem / 16px | 正文 |
+**展示寄存器**（模数 **1.25 / Major Third**）：`--fs-h4` 20px（条目标题）/ `--fs-h3` clamp(20→25)（区段小标题）/ `--fs-h2` clamp(31→49)（区标题）/ `--fs-display` clamp(39→76)（hero、coda）。
 
-**展示寄存器**（模数 **1.25 / Major Third**）：
-
-| token | 值 | 用途 |
-| --- | --- | --- |
-| `--fs-h4` | 1.25rem / 20px | 条目标题、卡片标题 |
-| `--fs-h3` | `clamp(1.25rem, 1.15rem + .45vw, 1.5625rem)` / 20→25 | 区段小标题 |
-| `--fs-h2` | `clamp(1.9375rem, 1.5rem + 1.9vw, 3.0625rem)` / 31→49 | 区标题 |
-| `--fs-display` | `clamp(2.4375rem, 1.5rem + 4.2vw, 4.75rem)` / 39→76 | hero、coda |
-
-> 审计时统计**声明角色数**（10），不要统计计算值——clamp 在同一断点会产出中间值（例如 `--fs-h3` 在 1440px 计算为 24.88px），那是同一个角色。
+> 审计时统计**声明角色数**（10），不要统计计算值——clamp 在同一断点会产出中间值，那是同一个角色。
 
 ### 2.3 字距
 
-- 展示字号负字距随字号增大：`--track-display -0.045em` → `--track-h2 -0.038em` → `--track-h3 -0.02em`。
-- 小号大写标签正字距：`--track-label 0.16em`；元信息 `--track-meta 0.08em`。
+- 展示字号负字距随字号增大：`--track-display` -0.045em → `--track-h2` -0.038em → `--track-h3` -0.02em。
+- 小号大写标签正字距：`--track-label` 0.16em；元信息 `--track-meta` 0.08em。
 - 阅读尺寸正文两者都不加。
 
 ### 2.4 光学边距
 
 `text-box-trim: trim-both` + `text-box-edge: cap alphabetic` **只给展示档标题**（`.display` / `.sec-title` / `.coda-title` / `.footer-name`）。
 
-> **红线**：`text-box-trim` 会把行盒裁到 cap-height/alphabetic，**移除降部空间**。任何同时 `overflow: hidden`（省略号截断）的元素绝不能加它，否则每个降部都会被切掉——「Maybe」会渲染成「Maube」。V2 曾因此踩坑。
+> **红线**：它会把行盒裁到 cap-height/alphabetic，**移除降部空间**。任何同时 `overflow: hidden`（省略号截断）的元素绝不能加它，否则每个降部都会被切掉——「Maybe」会渲染成「Maube」。V2 曾因此踩坑。
 
 ### 2.5 排版硬规则
 
 - `line-height` 一律 unitless；展示档 0.95-1.1，正文 1.6-1.7。
 - 长文行长 60-75ch；标题 `text-wrap: balance`，描述 `pretty`。
-- 会变化的数字一律 `tabular-nums`。
-- UI 文本 ≥14px；caption 13px；mono 小标签 11px（仅限大写、正字距的标签场景）。
+- 会变化的数字一律 `tabular-nums`；**rank 不用** tabular（那是表格 register）。
+- 中文行加 `lang="zh"`；中文封面标签字号不能沿用拉丁（10px 汉字读不出来，11px 起）。
 - 移动端输入框 16px（防 iOS 聚焦缩放）。
 - 英文文案禁 em dash（用句号 / 逗号 / 冒号重写）；**中文破折号不受限**；en dash 只用于范围；正文用弯引号。
 - 字重只用 400 / 500；700 不出现。层级由字号与留白承担，不由加粗承担。
@@ -126,11 +116,11 @@
 ### 3.1 一色一义
 
 - **accent = 可交互**。静态文字**只有一处**例外：诗区叠句 `.refrain` 用 `--color-accent-text`（品牌特例，用户拍板）。
-- **每视图只一个实心填充主操作**。
+- **每视图只一个实心填充主操作**（音乐是 `随机一首`，影 / 剧是 `OPEN ON IMDb`）。
 - 全站强调色命中元素数**上限 25**（V1 是 182）。新增强调色用法即为回归。
 - 修对比度只动 lightness，不动 hue；颜色改动需用户拍板。
 
-### 3.2 实测对比度（WCAG，本次测算，2026）
+### 3.2 实测对比度（WCAG，实测不估算）
 
 | 前景 / 背景 | 实测 | 阈值 |
 | --- | --- | --- |
@@ -146,19 +136,25 @@
 | on-dark / ink-950 | 16.96:1 | AAA |
 | on-dark@0.62 / ink-950 | 8.18:1 | AAA |
 | 导航玻璃 α0.78，最差照片（#101010）叠加后 ink-900 | 10.11:1 | AAA |
+| 导航玻璃 α0.72（改前）/ ink-600 链接 | **4.20:1** | 不合格（已修） |
+| 导航玻璃 α0.78（现）/ ink-600 链接 | 4.99:1 | AA |
+| 导航条玻璃（真实 hero 上渲染实测）/ 链接 | 6.58:1 | AAA |
+| 导航条玻璃（真实 hero 上渲染实测）/ 品牌 | 13.94:1 | AAA |
 | hero 白字 / scrim α0.80，最差（纯白照片） | 11.55:1 | AAA |
 | 卡片说明白字 / scrim α0.62，最差（纯白照片） | 5.66:1 | AA |
-| **选中药丸玻璃 α0.84 / on-dark 标签（渲染实测）** | **9.25:1** | AAA |
-| 同上，纯白照片叠加的最差理论值 | 10.77:1 | AAA |
-| 导航条玻璃（渲染实测）/ ink-900 标签 | 17.95:1 | AAA |
-| 导航条玻璃（渲染实测）/ ink-500 标签 | 5.34:1 | AA |
-| tab 条玻璃（渲染实测）/ ink-500 标签 | 5.29:1 | AA |
+| 选中药丸玻璃 α0.84 / on-dark 标签（渲染实测） | 9.25:1 | AAA |
+| 导航条墨色选中态 / ink-900 | 13.9:1 | AAA |
+| 导航条兄弟项 / ink-600 | 6.6:1 | AAA |
+| tab 条玻璃主体（渲染实测 249,249,243）/ ink-600 标签 | 8.0:1 | AAA |
+| tab 条玻璃主体 / ink-500 编号 | 5.29:1 | AA |
+| 音乐工具条磨砂面（平纸面上渲染实测 247,247,244） | 与页面底同值 | —— |
 
-> **四条必须照做的推论**：
-> 1. 导航玻璃底色不透明度**必须 ≥ 0.76**。实测 α0.60 时最差照片上 ink-600 只有 3.10:1。
+> **五条必须照做的推论**：
+> 1. 导航玻璃底色不透明度**必须 ≥ 0.76**。实测 α0.60 时最差照片上 ink-600 只有 3.10:1；α0.72 是 4.20:1（不合格），α0.78 是 4.99:1。
 > 2. `--ink-400` 这一类浅灰**不能用于小字**；muted 一律 `--ink-500`。
 > 3. hero 白字依赖 scrim α0.80，任何削弱 scrim 的改动都要重新实测。
-> 4. **选中药丸（`--glass-pill` α0.84）是深色玻璃上的浅字，不是浅色玻璃上的深字**，所以它和导航条不是一回事：α 越低，`#F2F2EF` 标签越差。α0.84 在实测中最差仍有 9.25:1；把它调到 0.6 会让标签掉到约 6:1 并让药丸退化成灰色。玻璃感由**边缘**（发丝边 + 轴向棱）承担，不由降低底色不透明度承担。
+> 4. **选中药丸（`--glass-pill` α0.84）是深色玻璃上的浅字**，和导航条不是一回事：α 越低，`#F2F2EF` 标签越差。α0.84 实测最差仍有 9.25:1。玻璃感由**边缘**（发丝边 + 轴向棱）承担，不由降低底色不透明度承担。
+> 5. **流派行是明文破例**（用户要求「整条都是磨砂」）：磨砂面**只有一层**，就是 `.genre-filter` 自己，配方照抄 Framer Blur Navigation：`blur(26px)` + `--paper-100` @**16%** + 1px `oklch(0 0 0 / 0.12)` 发丝边；**不做满宽**（用户要求），与面板正文同宽。16% 意味着**压在深色封面上时 chip 标签远低于 4.5:1** —— 这是这个材质的定义，不是疏漏：不要再顺手加厚，也不要再叠第二层。
 
 ---
 
@@ -168,22 +164,22 @@
 
 | 层 | 选择器 | 作用 | 可靠性 |
 | --- | --- | --- | --- |
-| 1 磨砂主体 | `.glass__body` | `blur(20px) saturate(1.7) brightness(1.05)` | 全浏览器 |
-| 2 镜片边 | `.glass__edge` | 13px 环，`blur(3px) brightness(1.14)` + `mask-composite: exclude` | 全浏览器 |
+| 1 磨砂主体 | `.glass__body` | `blur(20px) saturate(1.7) brightness(1.05)`（`.glass--simple` 时直接写在元素自身：`blur(16px) saturate(1.6) brightness(1.04)`） | 全浏览器 |
+| 2 镜片边 | `.glass__edge` | 环，`blur(3px) brightness(1.14)` + `mask-composite: exclude`；宽度 = `--glass-edge-w`（默认 13px，`.glass--pill` 9px，`.nav` 3px，见 4.9） | 全浏览器 |
 | 3 镜面高光 | `.glass` 的 inset 阴影 | 顶部亮斜面 + 底部暗边 + 内晕染 | 全浏览器 |
-| 4 轴向发丝边 | `.glass::before` | 1px 环，**竖直轴**：亮上 + 暗侧轨 + 暗下（亮玻璃）；亮上 + 亮下 + 暗侧轨（深色玻璃） | Chrome 120+ / Safari 15.4+ / Firefox 53+ |
+| 4 轴向发丝边 | `.glass::before` | 1px 环，**竖直轴**：亮上 + 暗侧轨 + 暗下（亮玻璃）；亮上 + 亮下 + 暗侧轨（深色玻璃 / 导航） | Chrome 120+ / Safari 15.4+ / Firefox 53+ |
 | 5 按压环 | `.glass__press` | 只画 1px 环的 **conic** 渐变，`:active` 时 `opacity 1` | Chrome 120+ / Safari 15.4+ / Firefox 53+ |
-| 6 增强：SVG 折射 | `.glass--refract .glass__body` | `feImage` 位移图 → `feDisplacementMap` | **仅 Blink**，见 4.2 第 4 条 |
+| 6 增强：SVG 折射 | `.glass--refract .glass__body` | `feImage` 位移图 → `feDisplacementMap` | **仅 Blink**，见 4.2 第 2 条 |
 
 **第 2 层的原理**：每个元素的 backdrop 包含**先前绘制的兄弟节点**，所以边缘环采样到的已经是模糊过的主体，渲染出来必然更锐更亮。这个不连续就是镜片边的读感，且只用 Baseline 特性。
 
 **第 4 层为什么是竖直轴而不是 conic**：对 Apple 自己的表面逐像素量过，休息态的高光是**固定竖直轴**——顶边亮 1px、底边同样亮 1px、左右是**暗**发丝。conic 会把一束高光绕着四条边扫，扫过侧面时侧面反而变亮，与测量相反。**conic 只在按下态成立**，那才是高光真的会移动的时候，所以它单独占了第 5 层。
 
-**第 5 层为什么必须是独立元素**：按压环要做淡入，而**元素自身的 `opacity < 1` 会让它自己的 `backdrop-filter` 完全失效**（实测）。所以既不能改 `.glass__edge` 的 opacity，也不能复用它；`.glass--spot::after` 已经被指针高光占用。
+**第 5 层为什么必须是独立元素**：按压环要做淡入，而**元素自身的 `opacity < 1` 会让它自己的 `backdrop-filter` 完全失效**（实测）。所以既不能改 `.glass__edge` 的 opacity，也不能复用它。
 
-### 4.2 四个必须遵守的约束
+### 4.2 四条必须遵守的约束
 
-1. **背景根陷阱（本机实测更正）**：在 Chrome 152.0.7977.83 上逐项跑过对照实验（同一条纹背景，量模糊后的亮度极差；无玻璃对照组 range=255 证明探针灵敏）：
+1. **背景根陷阱（本机实测更正）**：在 Chrome 152.0.7977.83 上逐项跑过对照实验（同一条纹背景，量模糊后的亮度极差）：
 
    | 场景 | 结果 |
    | --- | --- |
@@ -196,63 +192,116 @@
    | 元素**自身** `filter: blur(0px)` | **模糊全丢** |
    | 祖先 `opacity: 0.99` | **模糊全丢** |
 
-   **会杀掉玻璃的是 `filter` / `opacity < 1`（在元素自身也成立）/ `mask` / `mix-blend-mode`；`transform` 在自身和祖先上都安全。** 这条更正很重要：它是「药丸每帧被 transform 拖动、玻璃仍然成立」的前提，也意味着**药丸绝不能用 opacity 淡入**。第三方仓库声称 `isolation: isolate` / `contain: paint` 会静默失效，在本机**不可复现**，不要据此去改 `.glass { isolation: isolate }`。
+   **会杀掉玻璃的是 `filter` / `opacity < 1`（在元素自身也成立）/ `mask` / `mix-blend-mode`；`transform` 在自身和祖先上都安全。** 这条是「药丸每帧被 transform 移动、玻璃仍然成立」的前提，也意味着**药丸绝不能用 opacity 淡入**。第三方仓库声称 `isolation: isolate` / `contain: paint` 会静默失效，在本机**不可复现**。
 
-2. **折射的门必须是「正向 Blink 信号」，不能是 `@supports`**：Safari 能解析 `backdrop-filter: url()` 并让 `@supports` 返回 true，但不渲染，会静默连模糊一起丢掉。而 `@supports (-webkit-backdrop-filter: ...)` 也不行了——**Chrome 已经移除了 `-webkit-backdrop-filter` 别名，该查询在 Chrome 152 返回 false**，等于增强在所有浏览器上都没生效过。所以门是 `index.html` head 里设的 `html.has-lens`（`CSS.supports('background','paint(lg)') && CSS.supports('backdrop-filter','url(#lg-lens)')`）。**模糊声明永远写在增强之前**，增强挂不上时只丢折射，不丢模糊。
+2. **折射的门必须是「正向 Blink 信号」，不能是 `@supports`**：Safari 能解析 `backdrop-filter: url()` 并让 `@supports` 返回 true，但不渲染，会静默连模糊一起丢掉。而 `@supports (-webkit-backdrop-filter: ...)` 也不行了——**Chrome 已经移除了 `-webkit-backdrop-filter` 别名，该查询在 Chrome 152 返回 false**。所以门是 `index.html` head 里设的 `html.has-lens`。**模糊声明永远写在增强之前**，增强挂不上时只丢折射，不丢模糊。
 
-3. **不要在横向滚动容器里放多层玻璃**：滚动时 backdrop 跟随移动，且绝对定位的玻璃层会随按钮一起滚。`≤720px` 的 tab 条因此改实底，药丸也随之禁用拖拽。
+3. **多层玻璃不进横向滚动容器**：滚动时 backdrop 跟随移动，且绝对定位的玻璃层会随按钮一起滚。`≤720px` 的 **tab 条**因此改实底（`.tabbar.glass` 覆盖），药丸也随之禁用拖拽。**这条现在没有例外**：音乐 chips 行自己就是那块磨砂板，≤720px 时它同时也是横向滚动器——滚的是板子**内部**的 chips，板子自己的 backdrop 不动（见 4.8）。
 
-4. **药丸不吃折射**：位移图的内部「压平」形状是按宽扁条（约 16:1）写的；放到 95×40 的药丸上会被拉伸变形，中心不再是中性，整颗药丸会被放大成一团亮斑（渲染中已复现）。药丸另有两个理由不吃：它是唯一会动的元素，移动的 `backdrop-filter` 每帧重采样 backdrop，而位移是其中最贵的一步。药丸的玻璃感由**模糊 + 轴向棱 + 镜面边缘**承担。
+4. **药丸不吃折射**：位移图的内部「压平」形状是按宽扁条（约 16:1）写的；放到 95×40 的药丸上会被拉伸变形，中心不再是中性，整颗被放大成一团亮斑（渲染中已复现）。药丸另有两个理由不吃：它是唯一会动的元素，移动的 `backdrop-filter` 每帧重采样 backdrop，而位移是其中最贵的一步。
 
-### 4.3 三重回退（研究发现的规范漏洞）
+### 4.3 三重回退（规范漏洞）
 
 `prefers-reduced-transparency` **只有 Chromium 支持**（Safari 明确拒绝，Firefox 未实现），所以它不能是唯一回退。三条独立机制：
 
 1. `@supports not (backdrop-filter: blur(1px))` → 实底
 2. `@media (prefers-reduced-transparency: reduce), (prefers-contrast: more)` → 实底
-3. `html[data-transparency="solid"]` → 实底（JS 显式开关，覆盖前两条都不生效的浏览器）
+3. `html[data-transparency="solid"]` → 实底（JS 显式开关）
+
+**新增玻璃层时三条都要补**。
 
 ### 4.4 使用范围
 
-玻璃**只给浮在内容之上的控件**：`.nav`、`.tabbar`（>720px）、`.glass-pill`、以及未来的浮层控件。纸面上的按钮（`.music-random`、`.genre-chip`、`.lb-meta-link`）用实心色，不用玻璃——纸上的玻璃没有可折射的内容，只会发灰。
+玻璃**只给浮在内容之上的控件**，因为纸上的玻璃没有可折射的内容、只会发灰：
 
-**当前全站只有两个玻璃容器 + 两颗药丸 + 一颗染色按钮**：`header.nav`（内含 `#nav-pill`）、`#archive-tabbar`（内含 `#tab-pill`），以及 `.glass--accent`（影 / 剧详情区的 `OPEN ON IMDb`，**4.7 是它的例外条款**）。再加玻璃元素前先问：它浮在什么上面？
-
-### 4.7 accent glass —— 纸面上唯一允许的玻璃
-
-`.glass--accent` 是**上文「纸面上的按钮用实心色」的唯一例外**，应要求做成玻璃。它靠**香槟色染色**成立：纸上普通玻璃只会发灰（没有东西可折射），而染色给了模糊与棱可以读的东西。
-
-| 层 | 值 | 实测渲染 |
+| 位置 | 控件 | 材质 |
 | --- | --- | --- |
-| 染色 | `color-mix(in oklab, var(--gold-400) 52%, transparent)` | 主体 `226,209,152` |
-| `__body` | `blur(16px) saturate(1.08)` —— **无 brightness** | 上棱 `225,203,134` |
-| `__edge` | `blur(4px) saturate(1.04)` —— **无 brightness** | 下棱 `221,197,124` |
+| 浮在 hero 照片上 | `header.nav` | 纸白玻璃 α0.78（`--glass-nav`） |
+| 浮在归档区内容上 | `#archive-tabbar`（含 `#tab-pill`） | 纸白玻璃 + 墨色药丸 |
+| 浮在歌单上（**只有流派行 sticky**） | `.genre-filter`（磨砂板；搜索行在它上面，随列表滚走） | **磨砂，见 4.8**（唯一破例） |
+| 影 / 剧详情区 | `OPEN ON IMDb`（`.glass--accent`） | 香槟染色玻璃，见 4.7 |
+| 纸面上 | `.music-random`、`.lb-meta-link`、所有 chip / 按钮 | 实心色 |
 
-墨字对比度 **12.51:1**（最暗的下棱 11.19:1）；降级回落 `var(--gold-400)` 实底，7.62:1。
+再加玻璃元素前先问：**它浮在什么上面？** 答案若是「纸」，那就用实心色。
 
-**为什么这一版两层都不能加 `brightness()`**：`.glass__edge` 是 `position: absolute; inset: 0`，它盖住**整个**控件 —— 它不是一圈边框，而 `.glass--pill .glass__edge { padding: 9px }` 对空盒子毫无作用。所以它声明的 brightness 施加在整个表面并**与 `__body` 的叠加**。在导航玻璃上（深色、压在照片上）这个叠加就是效果本身；在浅色金染上只会削顶：**实测 `255,247,188`，红绿通道钉死在 255** —— 是奶油色，不是香槟。
+### 4.5 指针跟随高光
 
-导航那套 `saturate(1.9)` 同理不能照搬：`#C9A227` 本身已约 68% 饱和，1.9× 直接破 100%。染色 58% + `saturate(1.9)` 时实测**主体 `255,255,69`、下棱 `255,255,0`** —— 荧光笔。
-
-**不吃折射**：位移图按宽扁条约 16:1 写的，放到 132×40 会把中心放大成亮斑（与选中药丸同一个已复现的问题）。它的玻璃感来自模糊、染色与镜面棱。
+`.glass--spot` 的 `--mx` / `--my` 由 JS 每帧一次 `setProperty` 写入（rAF 节流）。**不能用 GSAP `quickTo`**——它只补间 transform 数值属性，不补间自定义属性。仅精指针且非 REDUCED 启用。
 
 ### 4.6 选中药丸（`js/glass-pill.js` + `.glass-pill`）
+
+`js/glass-pill.js` 现在**只服务 `#archive-tabbar` 一条**（导航那颗已退役，见 4.9）。
 
 | 项 | 值 |
 | --- | --- |
 | 材质 | `--glass-pill` = ink-950 @ α0.84；1px 轴向棱（亮上 / 亮下 / 暗侧轨）；z-index 3 |
 | 尺寸 | 由 JS 每帧写 `width` / `height` / `translate3d`，**从不写 left/top** |
-| 抓取 | `pointerdown` 落在药丸矩形内 → `.is-grabbed`，`scale: 0.94`（独立 `scale` 属性，不与 `transform` 打架） |
-| 拖拽 | 位置**每帧直写、零延迟**（该状态下 transition 里没有 `transform`）；宽度仍走 180ms 补间 → 跨栏时**连续形变**而非瞬移 |
+| 抓取 | `pointerdown` 落在药丸矩形内 → `.is-grabbed`：**阴影加深，绝不缩尺寸**。曾经是 `scale: 0.94`，实测那会让 90px 的栏只被 84.6px 的药丸盖住 —— 选中指示器唯一不能做的事就是「看起来没落到位」 |
+| 拖拽 | 位置**吸附到指针所在的那一栏**：`geometryFor(index)` 只有「栏的矩形」这一种几何；跨栏时 `transform` 与 `width` 同走 180ms 补间，药丸滑进下一格。指针跑到栏外时 `segmentAt()` 回落到最近的栏，首尾两格是停靠位 |
 | 落点 | 松开时取指针所在栏；松开点即提交点，**没有启动阈值**（点击 = 零位移的拖拽） |
 | 取消 | `Escape` 或 `pointercancel` → 回到**已提交**的栏，不改选中态 |
-| 标签配色 | 拖拽中只有**指针下方**那一栏保持浅色（`.is-drop-target`），其余回到墨色——否则原选中栏会一直白底白字 |
+| 标签配色 | 拖拽中只有**指针下方**那一栏保持浅色（`.is-drop-target`），其余回到墨色 |
 | 禁用 | `≤720px`（横向滚动容器）；`prefers-reduced-motion` 下**保留可拖**，只是瞬时到位 |
-| 无障碍 | 药丸 `aria-hidden="true"`，真正的控件仍是 `<button role="tab">` / `<a href>`；拖拽只是指针增强 |
+| 实测（CDP，1440，真鼠标事件） | 指针压 FILMS 栏左缘内 6px → 药丸 = FILMS 栏矩形；继续拖到栏外 x=722（bar 右缘 641）→ 药丸 = GAMES 栏矩形 `546,193,636,233`；松手后仍是同一矩形。**任何时刻药丸都精确等于某一栏的矩形** |
+| 无障碍 | 药丸 `aria-hidden="true"`，真正的控件仍是 `<button role="tab">`；拖拽只是指针增强 |
 
-### 4.5 指针跟随高光
+### 4.7 accent glass —— 纸面上唯一允许的玻璃
 
-`.glass--spot` 的 `--mx` / `--my` 由 JS 每帧一次 `setProperty` 写入（rAF 节流）。**不能用 GSAP `quickTo`**——它只补间 transform 数值属性，不补间自定义属性。仅精指针且非 REDUCED 启用。
+`.glass--accent` 应要求做成玻璃，靠**香槟色染色**成立：纸上普通玻璃只会发灰，而染色给了模糊与棱可以读的东西。
+
+| 层 | 值 | 实测渲染 |
+| --- | --- | --- |
+| 染色 | `color-mix(in oklab, var(--gold-400) 52%, transparent)` | 主体 226,209,152 |
+| `__body` | `blur(16px) saturate(1.08)` —— **无 brightness** | 上棱 225,203,134 |
+| `__edge` | `blur(4px) saturate(1.04)` —— **无 brightness** | 下棱 221,197,124 |
+
+墨字对比度 **12.51:1**（最暗的下棱 11.19:1）；降级回落 `var(--gold-400)` 实底，7.62:1。
+
+**为什么两层都不能加 `brightness()`**：`.glass__edge` 是 `position: absolute; inset: 0`，它盖住**整个**控件——它不是一圈边框，而 `.glass--pill .glass__edge { padding: 9px }` 对空盒子毫无作用。所以 brightness 施加在整个表面并**与 `__body` 的叠加**。在导航玻璃上（深色、压在照片上）这个叠加就是效果本身；在浅色金染上只会削顶：**实测 255,247,188，红绿通道钉死在 255**——是奶油色，不是香槟。
+
+导航那套 `saturate(1.9)` 同理不能照搬：`#C9A227` 本身已约 68% 饱和，1.9× 直接破 100%。
+
+**不吃折射**：位移图按宽扁条约 16:1 写的，放到 132×40 会把中心放大成亮斑。
+
+### 4.8 两条 bar：Compact Navbar 的形态
+
+应要求把 `#archive-tabbar` 与音乐工具条换成 Framer Compact Navbar（`framer.com/m/Compact-Navbar-cE1IzB.js`）的**形态**：一行一个容器、条目直接住在容器里（自己没有盒子、没有发丝线）、容器内距紧凑、一行唯一的动作停在右端。参考实现是**深色玻璃**；**本站只借形态**。
+
+| bar | 容器 | 材质 |
+| --- | --- | --- |
+| `#archive-tabbar` | 胶囊 `--radius-pill`，托盘 6px、条目间距 4px | 纸白玻璃（配方不动），墨色药丸 |
+| `.genre-filter` | sticky 的流派行，与面板同宽（**不满宽**） | **唯一的磨砂面**：`backdrop-filter: blur(26px)` + `--paper-100` @**16%**，底部 1px `oklch(0 0 0 / 0.12)` 发丝边（Blur Navigation 逐字照抄） |
+| `.music-bar` | 只包住搜索行与空状态，非 sticky | **不画东西**：无背景、无 backdrop-filter、无阴影；随列表滚走 |
+| `.music-search` | 行内布局 | 同上（只有 hover 药丸底与 active 实心墨） |
+
+- **tab 条的镜面棱去掉 brightness**：`#archive-tabbar .glass__edge` 从 `blur(3px) brightness(1.14) saturate(1.4)` 改成 `blur(3px) saturate(1.4)`。纸上没有可锐化的东西，1.14× 只是把已经约 249 的主体削顶成纯白——实测这条 bar 的上下 9px 是 `255,255,255`，而主体是 `249,249,243`；药丸四边各距棱 6px，于是那圈白就读成了药丸的白色光晕。改后同点实测 `248,248,240` / `244,244,237`。**只有 tab 条这样**：`header.nav` 压在照片上，那里的 brightening 就是镜面棱本身。
+- **只有流派行 sticky，搜索行随列表滚走**（这是用户更正过的方向：第一版两行反着来）：`#genre-filter` 与 `.music-bar` 是**兄弟节点**——sticky 会被父盒子裁掉，谁钉住谁就不能住在对方的盒子里。桌面实测：滚 1000px 后 rail 的 top 恒为 81px，搜索行从 −456 走到 −1456。
+- **材质照抄 Framer Blur Navigation**（`framer.com/m/Blur-Navigation-iGYrtY.js`）：`backdrop-filter: blur(26px)`（**无** saturate / brightness）、`--paper-100` @**16%**（参考是 `rgba(239,238,234,0.16)`，正好是本站 paper-100）、1px `oklch(0 0 0 / 0.12)` 发丝边、无圆角。**不做满宽**（用户要求）：与面板正文同宽，所以没有负 margin 出血那一套。参考的 superellipse 圆角、6000×3000 模糊底场、汉堡菜单是它的内容 / 框架，不抄。桌面代价：15 枚 chips 折两行，钉住时这块板 108px 高。
+- **为什么行内一点材质都不留**：两行曾各是 @0.55 / @0.48 的玻璃，叠在已经染色又已经模糊的面上合成到 **75-78% 纸**，霜感被乘没、读起来就是两块实心白板。两层染色玻璃永远读不出「全磨砂」。
+- **行内没有容器圆角**：两行都不画盒子，圆角只剩 chip 自己的 `--radius-pill`。旧规则「chips 行折两行所以托盘不能用 stadium」随之作废——没有托盘了。
+- 条目尺寸仍是 **40px**：参考实现的 29px 条目**没有照抄**（桌面 40×40 是硬线，紧凑只落在横轴——条目内距 1.25em → 1.05em、chips 的 `min-height` 38 → 40px）。
+- 音乐条目**不再各自带发丝线**：整行读成一条 bar + 一枚点亮的条目（hover 药丸底、active 实心墨）。`.music-random` 仍是这个视图**唯一**的实心主操作，只是从「输入框旁边的按钮」变成「停在 bar 右端的 CTA」，DOM 里也排最后。
+- **焦点提示在输入框底边**：1px `--color-text-muted` 底线 + 光标。整行没有盒子，给它画 2px 金环等于给一条满宽色带套相框（用户：「那个金色框删掉吧」）；输入框自身的 `outline: none` 由这条底线替代，行内的清除 / 随机一首保留全局焦点环。
+- `≤720px`：三条都还是各自的横向滚动器。`.tabbar` 的实底规则必须写成 **`.tabbar.glass`**——`.glass` 在 glass.css 里且**后加载**，bare `.tabbar` 的同名声明压不过它。
+
+### 4.9 导航条：Liquid Glass Navbar 的形态
+
+应要求把 `header.nav` 换成 Framer Liquid Glass Navbar（`framer.com/m/Liquid-Glass-Navbar-6gh01a.js`）的**形态**，材质仍是本站玻璃。参考实现（桌面变体 780×58）的外壳是 3px 内距 + 竖直渐变 + 六层投影，内容面板是不透明渐变。**只借三件事**：
+
+| 项 | 参考 | 本站 |
+| --- | --- | --- |
+| 镜片棱宽度 | 3px（= 外壳内距） | `--glass-edge-w: 3px` + `.nav.glass .glass__edge { padding: 3px }` 与 `.nav.glass::before { padding: 3px }`。pill 默认 9px |
+| 轴向棱剖面 | 白上 / 灰中 / 白下，即**上下都亮、暗侧轨** | `--glass-bead-bottom` 亮下（取代亮玻璃默认的暗下）、`--glass-bead-side` 加深 |
+| 高度阴影 | 六层、无负 spread，最宽 4px 60px 30px α0.06 | **逐字照抄**，写进 `--glass-elevation` |
+| 内容面板 | 不透明渐变 + inset bevel | **不抄**：参考靠不透明渐变成立，本站填色会终止 backdrop 读取，玻璃随之消失。退一步只照抄那条 bevel 也试过，渲染出来是**棱内部多出来的一圈细线**——已撤掉。外壳的棱是这条 bar 唯一的边 |
+
+**`--glass-elevation` 是新 token**：定义成原来的 `0 1px 2px α0.05, 0 18px 44px -18px α0.22`，`.glass` 与三条回退都读它。换整套高度因此不必重抄 inset 斜面；**实测 tab 条未受影响**。
+
+**顺手修好的一条**：`.nav` 从来没写过 `background`，吃的是 `.glass` 的 `--glass-panel`（72%），而 `--glass-nav`（78%）没有被任何选择器用过。修法是 `.nav.glass { background: var(--glass-nav) }`——必须带 `.glass`，加载顺序的原因同 4.8。实测数字见 3.2。
+
+**实测渲染**（headless Chrome 152，1198×800，DPR 1.5）：主体 225,225,222（改前 217,217,215）；棱的亮带从上下各 9px 收到 3px。
+
+**导航条没有选中指示器**：它曾经和 tab 条共用那颗深色药丸，但药丸压在照片上的玻璃里就是**一块浮着的黑斑**，而参考导航条本身没有选中态。所以 `#nav-pill` 元素、`main.js` 里那次 `createGlassPill()` 调用、以及 `.nav-links.is-dragging` / `.is-drop-target` / `cursor: grab` 规则**全部删除**；选中态改由**墨色**承担（active ink-900 / 兄弟项 ink-600，数字见 3.2）。代价是失去「拖药丸跳章节」这个手势——它不是无障碍通道（真正的控件一直是 `<a href>`），但确实少了一条捷径。
 
 ---
 
@@ -260,15 +309,16 @@
 
 | 类别 | 值 |
 | --- | --- |
-| 圆角 | `--radius-sm 8px` / `--radius-md 14px` / `--radius-lg 22px` / `--radius-pill` |
-| 阴影 | **只有一条**：`--shadow-lift` |
+| 圆角 | `--radius-sm 8px` / `--radius-md 14px` / `--radius-lg 22px` / `--radius-pill` —— **只有四档**，出现 2px / 9px / 50% / 24px 之类散值即为回归 |
+| 阴影 | 两个 token：`--shadow-lift`（纸面控件）与 `--glass-elevation`（玻璃；导航条那六层） |
 | 间距 | `--sp-1`..`--sp-11`（0.25 / 0.5 / 0.75 / 1 / 1.5 / 2 / 3 / 4 / 5 / 6 / 7.5rem） |
 | 区间距 | `--section-y: clamp(5rem, 9vw, 7.5rem)` |
 | 边距 | `--gutter: clamp(1.25rem, 4.5vw, 4.5rem)` |
 | 容器 | `--shell 1440px`；正文 `--measure 62ch` |
+| 玻璃几何 | `--glass-blur`、`--glass-edge-w`、`--glass-pill-ease / travel / morph` 全在 `glass.css` 的 `:root` |
 
-- **一个阴影 token**。深度由边框、玻璃与留白承担，不由堆叠阴影承担。
-- 圆角只有三档 + pill，嵌套遵守 concentric（外圆角 = 内圆角 + padding）。
+- 深度由边框、玻璃与留白承担，不由堆叠阴影承担。
+- 圆角嵌套遵守 concentric（外圆角 = 内圆角 + padding）。
 - 分隔线是密集数据的最后手段：账本行用 `--color-line-soft`，其余分组靠间距（组间距 ≥ 组内 2×）。
 
 ---
@@ -285,61 +335,79 @@
 | --- | --- | --- | --- | --- |
 | hero 影像入场 | 层级 | 首屏 | scale 1.06 → 1，1.6s `power2.out` | 静态 |
 | hero 文字升起 | 层级 | 首屏 | y + autoAlpha，0.7-1.1s | 静态 |
-| hero 影像视差 | 叙事 | 滚动 scrub | `yPercent 8` + scale，`invalidateOnRefresh` | 静态 |
-| 照片批入场 | 层级 | 滚动进入 | `ScrollTrigger.batch`，y 18 + autoAlpha，0.55s，stagger 0.06 | 静态 |
-| 图片 hover 去饱和 | 反馈 | hover / focus | `filter 0.6s` + `scale 1.035` | 无位移 |
-| 游戏卡入场 | 层级 | 滚动进入 | y 28 + autoAlpha，1.1s `power4.out`，stagger 0.09 | 静态 |
-| 表格行 hover | 反馈 | hover | 背景 0.2s，无位移 | 仅颜色 |
+| hero 影像视差 | 叙事 | 滚动 scrub | `yPercent` + scale，`invalidateOnRefresh` | 静态 |
+| 章节揭示 | 层级 | 滚动进入 | IntersectionObserver / ScrollTrigger 的低频入场 | 静态 |
+| 图片 hover 去饱和 | 反馈 | hover / focus | `filter` 0.6s + `scale 1.035`（滤镜只加在 `img` 上） | 无位移 |
 | 计数上升 | 叙事 | 滚动进入一次 | 补间纯对象 + `snap`，1.2s | 直接写终值 |
 | tab 幕帘 | 状态过渡 | 点击 | `clipPath` 0.8s `power4.inOut`，**必须 `clearProps`** | 静态 |
 | 详情层 | 状态过渡 | 打开 / 关闭 | opacity 0.28s；visibility 延迟 | `transition: none` |
 | 玻璃高光 | 反馈 | 指针移动 | 每帧一次自定义属性写入 | 禁用 |
-| 药丸抓取 | 反馈 | `pointerdown` 落在药丸上 | `scale 0.94`，420ms `--glass-pill-ease` | 静态（不缩放） |
-| 药丸拖拽 | 反馈 | pointermove | transform **每帧直写**；width 180ms 补间 | 瞬时到位 |
-| 药丸归位 | 状态过渡 | 松手 / 取消 | transform + width 420ms `cubic-bezier(.32,.72,0,1)` | 瞬时到位 |
-| 照片漂移 | 叙事 | 滚动 scrub | 每张 0→3% 或 3%→0 自身高度（**只向下，永不越过静止位**），`power1.out`，`invalidateOnRefresh` | 不创建 |
+| 药丸抓取 | 反馈 | `pointerdown` 落在药丸上 | 阴影加深（**不缩尺寸**），180ms | 静态 |
+| 药丸拖拽 | 反馈 | pointermove | 吸附到指针所在栏；transform 与 width 同走 180ms 补间 | 瞬时到位 |
+| 药丸落位 | 状态过渡 | 点击 / 方向键 / Home / End | transform + width 420ms `--glass-pill-ease` | 瞬时到位 |
+| 影 / 剧选中 | 状态过渡 | 点击 / hover / 键盘 | 发丝环 0.1 → 0.2 → 0.34 + 卡片抬起 + 片名浮现 | 瞬时 |
+| 影 / 剧落位 | 状态过渡 | 选中 / 拖拽松手 | `power3.out` + 距离成比例时长 | 瞬时 |
+| 书架开书 | 状态过渡 | 点书脊 | 书旋出到舞台中央（GSAP，`power3.out` 落位、`expo.out` 跟随指针） | 瞬时 |
+| 球队手风琴 | 状态过渡 | 点击 / Enter | `flex-grow` 0.3s（**不用 flex-basis**） | 瞬时 |
+| 游戏盘落位 | 状态过渡 | 拖拽松手 / 甩动 | `power3.out` + 距离成比例时长，`FLICK_MAX` 夹住甩动 | 瞬时 |
+| 照片棋盘 | 反馈 | 拖拽 / 抛掷 / 视差 | 拖拽期间逐帧直写 transform；抛掷 `REST = 1px/s` 归零 | 关掉视差、抛掷与按住缩放 |
+| 光标跟随 | 反馈 | 指针移动 | 弹簧 k400 c45（ζ1.13），transform 每帧直写，到静差即停 rAF | 不启用（原生光标） |
+| 光标转向 / 移动压缩 | 反馈 | 移动 > 100px/s | 旋转 k300 c60、缩放 k500 c45；移动期压到 0.95，150ms 后回 1 | 不启用 |
+| 光标按压 | 反馈 | `pointerdown` | 缩放到 0.7（同一条缩放弹簧） | 不启用 |
+
+**已删除的动效**（不要再加回来）：照片批入场 stagger、照片漂移（`--photo-drift`）、游戏卡逐卡入场 stagger、条带滚动横移（`-stage-drift`）、条带滑块（`-stage-range`）、bighead parallax、ticker、preloader。
 
 ### 6.3 性能红线
 
 - 只动 `transform` / `opacity` / `filter`；`clip-path: inset()` 幕帘等价允许。
+- 拖拽期间**直写 `transform`**，绝不走 `quickTo` / tween（见 11.1）。
 - scrub 动画必须 `invalidateOnRefresh: true`。
 - 图片加载后的 refresh 用 250ms debounce 合并（`scheduleRefresh`）。
 - 滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis；禁裸 `window` scroll handler。
 - `transition-property` 写具体属性；禁 `transition: all`。
 - `filter` 会创建**包含块**：图片滤镜只能加在图片本身，绝不能加在任何含 `position: fixed` 后代的容器上（`#lightbox` 是 fixed）。
+- **`backdrop-filter` 是每帧重采样**：它能出现在 sticky / 浮层上，但放进横向滚动容器要付每帧的代价（音乐 chips 行是明文例外，见 4.2 第 3 条）。
 
 ### 6.4 频率分治
 
 - 高频（hover / press / 指针跟随）即时反馈或 ≤0.2s 颜色过渡；按压 `scale(.96)`。
 - 低频入场 0.55-1.1s；退场比入场柔和。
 - **弹性（spring）已退役**。V2 用 `power3/4.out` 与 `expo` 系曲线；不再出现 `back.out` / `elastic`。
+- **唯一的例外是光标**（`js/smooth-cursor.js`，Framer Smoothcursor 的移植）：它要的是「指针的滞后量」，GSAP 的过冲曲线在这个尺度上只会读成抖动。允许的是**不过冲的弹簧**：三条弹簧的 ζ 必须 ≥ 1（实测 1.13 / 1.73 / 1.01，峰值都不越过目标值）。**这不是给 `back.out` / `elastic` 开口子。** 旧 `initCursor`（环 + 点 + 文字标签）与磁吸**仍然退役**。
 - 每个动画状态变化必须有**静态反馈通道**（颜色 / 文字 / 图标）。
 
 ---
 
 ## 7. 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，11 帧 + 诗区）→ THE ARCHIVE（六 tab：书 6 / 影 16 / 剧 19 / 音乐 763 首 16 组 / 球队 5 / 游戏 18）→ ABOUT（统计）→ footer。
+hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab）→ 诗区（Dylan Thomas）→ ABOUT（自述 + 统计 + coda）→ footer。
 
-- 照片 / 影 / 剧 / 游戏 / 音乐共用唯一的 `#lightbox`。
-- 照片区是**一屏 3D 曲面墙**，装在 `#photo-view` 这个全屏层里（复刻 cmscurvegallery.framer.website，实测值见下）：11 张瓦片贴在以观看者为球心的球面上，按 **justified 行**排布，拖拽横向无限循环。几何与四个坑见 `AGENTS.md`「站点结构」。
-- **每个瓦片抽自己的比例**（宽/高，三角分布 `[0.60, 1.06]`、峰值 0.75）——这是参考站参差感的来源，代价是 `object-fit: cover` 会裁。**这是站点「颜色 / 影像完整」规则的第二个明文例外**（第一个是墙的全彩），因为它直接换来了像不像原站。
-- 实测（本机 headless Chrome，1440×900）：R = 936px、瓦片约 241×368（高宽比 1.53，参考站的瓦片实测 1.23–1.67）、整墙 62 张、同屏 21 张、行距 = 瓦片高 + 一条发丝缝、采样点落在缝里的比例 52/920 = 5.7%（就是缝的面积占比）。390×844 与 320×700 各 79–81 张，无横向滚动。
-- 焦点环用 `--color-accent`（gold-400），**不是 `--color-accent-text`**：gold-700 对 `--ink-950` 实测 **3.18:1**，连 3:1 的非文本下限都不到；gold-400 是 **7.89:1**。全局 `:where()` 焦点规则是为纸面写的，暗面三处（hero / lightbox / footer / 本墙）属于例外。
-- 墙底用 `--ink-950`，**不用纯黑 `#000`**（站点禁用纯黑）。
-- 音乐默认单流派显示，首屏 POP；chips 无「全部」，一次只亮一枚。
-- 游戏名册是 `repeat(auto-fill, minmax(min(100%, 250px), 1fr))` 平铺网格，16:9 封面。
+- **摄影是正文里的一屏**（`#photo` 段落内的 `.photo-wall`，高度 clamp 后约一屏），不是全屏层：`#photo-view`、「Open the wall」按钮、滚动锁与 inert 那一套都已退役，nav 与页脚链接只是普通锚点。
+- **棋盘是 PhantomInfiniteGallery 的 vanilla 移植**：**一张无限平面上的一窗格子**，两轴拖拽 + 抛掷 + 鼠标视差 + 按住 320ms 拉远（0.7×，钉住板心）。三条必须记住的：
+  - **内容是世界坐标的纯函数**（`|(x + 3y) mod n|`）：铺到哪都铺得满，同一个世界格永远是同一张照片；图案以 11 格为周期。
+  - **格子按世界槽位分配**：板子挪一列只换一格的内容，离开窗口的节点回收进 `free` 池。
+  - **一次 transform 写入承载位置**（`translate3d(left, top, z) rotateY(yaw) scale(s)`）：写 `left/top` 会让拖拽的每一帧 flush 一次 layout。
+- **弧是凹的**：`z = R(1 - cosθ)` 把两侧推向读者、中间留在后面，`rotateY(-θ)` 让格子与圆柱相切（`.photo-wall` 自带 `perspective: 1000px`）。
+- **`touch-action: pan-y`，不是 `none`**：横划拖板、纵划滚页（鼠标仍可两轴拖）。
+- **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（键盘回车放行）。11 张正典是唯一的 tab stop，克隆体 `aria-hidden` + `tabIndex -1`。
+- **无 JS 兜底**：11 个 `.photo-frame` 留在正文的 `.photo-fallback` 网格里（`html.js` 把它 `display: none`），脚本一执行就把它们搬进 `#photo-wall`。
+- **棋盘是全彩的**（`--wall-saturate: 1`）：这里是「颜色是奖励不是壁纸」的**第一个明文例外**——墙上照片就是页面本身。
+- **音乐默认单流派显示**，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。chips 住在 `.genre-filter` 这条布局行里、自己没有盒子（4.8）；**它 sticky**——流派行钉在顶部，搜索行在它上面、跟着列表滚走。
+- **搜索跨全部 15 组**：有命中时每个命中的组都展开，组头从「136 首」改成「4 / 136」，工具条读出「18 / 468」，零命中才是 NO MATCH。搜索中点击 chip = 跳到那一组的结果；清空关键词回到单选流派。
+- **游戏名册是一个定位盘**（Detent）：中心一张封面、其余按几何递减排在两侧，一次只讲一个。旧的**显式三列网格只剩兜底**：`css/games-stage.css` 用 `:not(.is-live)` 门住它。
+- **球队是五格手风琴**（Framer image animation 的移植）：一行五张图，永远只有一张被撑开。
+- **书是 3D 书架**：16 本书脊两面盒子，点书脊旋出封面。
 - `.tab-panels` **必须是 `#archive` 的直接子元素**（`initArchiveTabs()` 用 `:scope > .tab-panels` 定位，找不到就整体不工作）；它的容器约束写在 CSS 里。
 
 ---
 
 ## 8. 无障碍基线
 
-- 焦点：`:focus-visible` + 2px 实线 `--color-accent-text` 环，`outline-offset: 3px`；禁无替代的 `outline: none`。
-- 键盘走 ARIA APG：Esc 关层、方向键在 tab / reel / 详情层、roving tabindex、Enter/Space 激活；`tabindex` 只用 0 和 -1。
-- 不做 `<div onClick>`：动作 `<button>`、导航 `<a href>`。
+- 焦点：`:focus-visible` + 2px 实线 `--color-accent-text` 环，`outline-offset: 3px`；禁无替代的 `outline: none`。**暗面三处（hero / lightbox / footer）与棋盘用 `--color-accent`（gold-400）**：gold-700 对 `--ink-950` 实测只有 3.18:1，连 3:1 的非文本下限都不到；gold-400 是 7.89:1。
+- 键盘走 ARIA APG：Esc 关层、方向键在 tab / 条带 / 详情层、roving tabindex、Enter/Space 激活；`tabindex` 只用 0 和 -1。
+- 不做 `<div onClick>`：动作 `<button>`、导航 `<a href>`。图标按钮带 `aria-label`。
 - 目标尺寸：桌面 40×40，触摸 44×44。
-- 一个 `<h1>` 不跳级；一个 `<main>`；skip link 是第一个可聚焦元素。
+- 一个 `<h1>` 不跳级；一个 `<main>`；skip link 是第一个可聚焦元素；320px 无横向滚动，200% 缩放可用。
 - reduced-motion：视差与入场全静态化，hover 位移取消，信息不丢失。
 - `[hidden]` 用 `display: none !important` 兜底——组件自带 `display` 会静默压过 UA 规则。
 
@@ -349,181 +417,72 @@ hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，1
 
 1. 主题锁：正文亮色；暗色只在 hero / lightbox / footer 三处。
 2. 单 accent 锁：强调色命中元素 ≤ 25；静态文字只有诗区叠句例外。
-3. 形状锁：只用三档 radius + pill；嵌套 concentric。
-4. 排版锁：只从 10 个角色里选；`text-box-trim` 不与 `overflow: hidden` 同用。
-5. 动效有动机；只动 transform / opacity / filter；scrub 带 `invalidateOnRefresh`。
-6. 玻璃：模糊声明在增强之前；不在玻璃祖先上做 opacity / transform 动画；不放进横向滚动容器。
-7. 对比度实测不估算；玻璃按叠加后底色测。
+3. 形状锁：只用四档 radius；嵌套 concentric。
+4. 排版锁：只从 10 个角色里选；`text-box-trim` 不与 `overflow` 截断同用。
+5. 动效有动机；只动 transform / opacity / filter；拖拽直写 transform；scrub 带 `invalidateOnRefresh`。
+6. 玻璃：模糊声明在增强之前；增强门是 `html.has-lens`；不给玻璃元素或其祖先加 `opacity < 1` / `filter`；**多层玻璃不进横向滚动容器**；**同一条 bar 上不要叠两层染色玻璃**（会合成到接近实心，见 4.8）；**手写玻璃也要补三条回退**（`.music-bar` 就是手写的）。
+7. 对比度实测不估算；玻璃按叠加后底色测。**已知的一处不合格**是音乐工具条磨砂面上的 muted 占位符（用户要求的破例，见 3.2 推论 5）。
 8. 键盘 + 读屏两次走查；320px / 200% 不裁剪。
 9. 文案自审；英文禁 em dash。
 10. 改完递增所有改动过的 `?v=N`。
----
-
-## 11. 动效：什么让它读起来「贵」
-
-### 11.1 先修坏的那一件：拖拽必须 1:1
-
-条带的每一次位移都走 `setStrip()`，而它曾经把**每一次**写入（包括每一个 `pointermove`）都送去 `gsap.quickTo(strip, "x", { duration: .35, ease: "power2.out" })` —— 函数签名里的 `animate` 参数**声明了但从未被读过**。拿项目自己 vendored 的 GSAP 3.15 量：
-
-| 手指速度 | 海报落后 |
-| --- | --- |
-| 400 px/s | 52 px |
-| **1000 px/s** | **131 px** |
-| 2000 px/s | 262 px |
-
-手指和海报全程差约 8 帧。**这不是动效不够，是动效在跟手指抢方向盘。** 现在拖拽期间**直写 `transform`**（同 `glass-pill.js`、同 AGENTS 的「位置每帧直写」），实测误差 **0 px**。
-
-`animate` 现在真的生效，且**只**用于三个没有人在持握的时刻：松手落位、卡片 reveal、range 提交。`maxX()` 缓存（原本每次 `setStrip` 都读 `scrollWidth`/`clientWidth`，即每个 pointermove 一次强制布局）。range 被拖动时**不回写 `range.value`**。
-
-### 11.2 松手惯性（手写，不引依赖）
-
-| 部件 | 常数 | 出处 |
-| --- | --- | --- |
-| 速度窗口 | **170ms**；窗口过期或最后一次样本超 170ms → 速度 = 0 | Embla `DragTracker`。**stale-flick guard**：甩一下→停住→松手**不得**弹射 |
-| 速度→距离 | boost **鼠标 400 / 触摸 600** | Embla `snapForceBoost` |
-| 吸附目标 | 小甩 → 最近点；大甩 → 前进一格 | 阈值 `clamp(50, 225, 视口宽 × 0.20)` |
-| 落位补间 | `clamp(0.30, 0.90, 0.22 + \|delta\|/2600)`，`power3.out` | `power2/3/4.out` 与 `expo.out` 实测最大值**恰为 1.000000**，数学上不可能过冲 |
-| 端点 | 橡皮筋，常数 **0.15** | use-gesture（iOS 是 0.55，对鼠标太软） |
-
-实测：快甩滑行 211px 并**精确落在吸附点**、轨迹单调；慢拖 0px 滑行；甩后停 300ms 再松手 0px 滑行。
-
-### 11.3 明确**不做**的动效
-
-| 不做 | 理由 |
-| --- | --- |
-| **滚动速度 skew** | ① 它是 2019–21 GSAP 作品集时代的模板级标志；② 它切的正是**唯一不能被切的东西**（海报）；③ 按项目自己的判据它是纯装饰。若一定要：≤1.5–2°，由**条带自身的拖拽速度**驱动，不是滚动 |
-| **逐卡反向视差** | 要给已合成条带里的 35 张卡各升一层 |
-| **逐卡入场 stagger** | 算术上不可能：35 张 × 30ms 已经是 1.62s。**入场只动条带整体，永不动单张卡** |
-| **containerAnimation** | 它确实支持 transform 驱动的横向栏（我原先的判断是错的），但它的进度读 tween，而拖拽直写 `x`，两者立刻失步 |
-| **任何回弹 / spring** | 已退役；且上面的落位曲线可证明不过冲 |
-| 任何在用户没滚动也没拖拽时移动的东西 | Apple HIG |
-
-**单位陷阱**：Lenis 的 `velocity` 是 **px/帧**，ScrollTrigger 的 `self.getVelocity()` 是 **px/秒**。混用差 60 倍。
-
-### 11.4 两个高阶动效
-
-**影 / 剧点击不开浮层。** 它们的详情块就在条带正下方，浮层是把页面已经在讲的东西再讲一遍 —— 而且讲得更差：一张 250px 海报浮在暗场里，文案被挤到一边。**点击现在只是选中**，和 hover / Tab 完全同义。浮层仍然是 photo / game / music 的详情机制，那三个面板没有自己的内联详情块。
-
-（曾经为此写过一版 FLIP：clone 挂 `body`、`decode()` 后再测 Last、源卡用 `opacity` 隐藏不塌陷、First 必须在 `openDetail()` 锁 `body` 滚动之前测。代码已随浮层一起删除，**不要再加回来** —— 逻辑上就不该有这个浮层。）
-
-配套：**点击不触发 `revealCard`**（条带不位移 —— 你点的海报本来就在眼前，把它挪走是没有理由的运动）。键盘导航仍然 reveal，那里条带必须跟着焦点走。
-
-**条带入场**：一次性 `clip-path` 擦除，加在**视口**上而不是卡片上。逐卡 stagger 在这里算术上不成立：35 张 × 30ms 就已经 1.62s，而 UI 过渡的上限是 300ms（600ms 以上属于「不涉及用户输入的 ambient」）。复用组件已有的擦除语言。
-
-**滚动横移已删除**（曾把 4% 行程挂在 `.{prefix}-stage-drift` wrapper 上）。删掉的原因是它和居中**直接冲突**：横移让「居中」变成滚动位置的函数。实测同一张卡在不同滚动位置偏离视口中心 **4px** —— 数字不大，但居中是选中的反馈，一个会随页面滚动的反馈等于没有反馈。加它的时候条带的位置还没有含义；现在有了，它就从「让条带像空间里的一个物件」变成了「让选中指示器说谎」。
-
----
-
-## 12. 影 / 剧的选中模型
-
-### 12.1 一句话
-
-**选中即居中；拖拽只浏览，不改选中。**
-
-### 12.2 三个实测出来的坑
-
-| 坑 | 症状 | 原因 |
-| --- | --- | --- |
-| 点击根本不动条带 | 选中一张，条带纹丝不动，只有下面的字换了 | `revealCard` 的落位公式是「距左 **25%**」（不是居中），而它在做 FLIP 那一轮被从点击路径上摘掉了，删 FLIP 时没加回来 |
-| 手指一碰就选中 | 想拖条带，结果手按到哪张就选了哪张 —— 「拖拽只浏览」是假的 | 卡片是 `<button>`}，`pointerdown` 会 focus 它，而 `focusin` 处理器无条件选中。**修法：`focusin` 只对 `:focus-visible`（键盘焦点）选中** —— 这正是该伪类存在的意义 |
-| 下一次点击被吃掉 | 拖拽后在**另一张卡**上松手，之后那次真实点击没反应 | `swiped` 只由随后的 click 清除，而跨卡松手**根本不产生 click**。**修法：在 `pointerdown` 清掉**，把抑制限定在产生它的那一次手势内 |
-
-### 12.3 位置模型
-
-| 项 | 规则 |
-| --- | --- |
-| 居中位 | `cardContentX + cardW/2 - viewportW/2`，按 `[0, maxX]` 夹紧 |
-| 实测 | 第 **3–14** 张偏移 **0px**；第 **1/2/15/16** 张被夹在两端（条带有界，不加 spacer 就无法居中，所有 center-mode 轮播都如此） |
-| 谁触发 | 点击、`Enter`/`Space`、方向键、`Home`/`End`、Tab 焦点。**不含拖拽，也不含 range** |
-| 谁不触发 | 拖拽（自由浏览）、range 滑块、boot（`animate === false`） |
-| 动画 | 复用 `settle()`：距离成比例的 `power3.out`（已证明不过冲），约 300–900ms |
-| 拖拽落点 | 当前 `x` + 惯性，**只按 `maxX` 夹紧，不吸附卡片** —— 吸附会宣告「这张是当前的」，与「拖拽不改选中」矛盾 |
-| reduced motion | 瞬时到位 |
-
----
-
-## 12. films / series 的最终形状
-
-### 12.1 条带
-
-| 项 | 规则 |
-| --- | --- |
-| 卡片栅格 | **`grid-template-columns: minmax(0, 1fr)` 必须显式声明**。漏了它，单列是隐式 `auto`，而海报是 `width:100% + aspect-ratio:2/3` —— 列宽依赖图、图宽依赖列，浏览器退回按 JPG 固有尺寸排版，实测六张海报渲染成 **158 / 54 / 90 / 59 / 54 / 24 px** |
-| 行 | `grid-template-rows: auto auto 1fr`；条带 `align-items: start`（默认 `stretch` 会让最长的字幕把整排撑高、海报错位） |
-| 字幕 | **只有两个字段**（标题 / 导演·年份），各限一行省略，块高固定 57px。genre 标签从卡片上**隐藏** —— 它已经是下方 kicker 的第一个词 |
-| OPEN 胶囊 | **退役**（`display: none`）。它会飘、是条带里唯一的实心深色形状，而整张卡本来就是按钮 |
-| hover | 海报 `translateY(-4px)` + 环变深，**字幕不动** |
-
-### 12.2 详情区：纯排版，零图片
-
-**同屏不重复海报**是硬规则。实测高度 **404px → 199px（影）/ 150px（剧）**，右侧 1000px 空白消失（诗句拿到 46ch 量度）。
-
-````
-01 / 16   CRIME & NOIR  1972                      ON IMDb
-The Godfather
-Francis Ford Coppola
-                     门在他身后关上。光从缝里进来，照着一张没有他的全家福。
-````
-
-栅格 `minmax(0, 26ch) minmax(0, 46ch)` + `column-gap: clamp(2rem, 6vw, 6rem)`；kicker 跨两栏（位置号把这块绑到选中的那张卡）。
-
-**动作属于「阅读栏」而不是「身份栏」**：`OPEN ON IMDb` 在**第二栏第 3 行**（诗句正下方），实心墨胶囊 —— 它是这个面板唯一的实心主操作。曾经让它骑在 kicker 行右端，那等于把唯一能点的东西放到离它作用对象最远的位置。
 
 ---
 
 ## 10. ARCHIVE 六栏的呈现系统
 
-V2 把纸墨系统铺满全站时，影 / 剧那一族**没有跟上**：它保留了自己的字号阶梯、自己的 token、自己的颜色。实测出来是 7 个**从未定义**的 token 被引用 12 次（`--shadow-soft-sm` / `--shadow-soft-md` / `--color-accent-solid` / `--color-glow` / `--glow-accent` / `--glass-bg` / `--glass-edge`），后果是**选中卡与普通卡算出完全相同的 `box-shadow`** —— 选中态是隐形的。已全部收敛：三个 reel 样式表各自从多层覆盖压成一层。
+V2 把纸墨系统铺满全站时，影 / 剧那一族**没有跟上**：它保留了自己的字号阶梯、自己的 token、自己的颜色。实测出来是 7 个**从未定义**的 token 被引用 12 次，后果是**选中卡与普通卡算出完全相同的 `box-shadow`** —— 选中态是隐形的。已全部收敛：三个 reel 样式表各自从多层覆盖压成一层。**新规则写进主体，不要再开覆盖区块。**
 
-### 10.1 索引行（书 / 球队）
+### 10.1 索引列表（现在只有音乐在用）
 
-5–6 行的书架**不是表格**。旧结构是三栏 baseline 网格：标题列宽 659px 而最长标题约 232px，评语因此离它评述的文字约 **460px**；每行一条发丝线；行高恒为 95px。
+书（书架）与球队（手风琴）都已不在 `.idx-*` 里；`.idx-no` / `.idx-logo` / `.idx-line` 三条孤儿规则连同 720px 下的响应式覆盖一起删掉了。
 
 | 项 | 规则 |
 | --- | --- |
-| 结构 | 首列 2.75rem + 单栏；评语落在第 2 行第 2 列（与标题左对齐的悬挂缩进） |
-| 分隔 | **零发丝线**。12 个编辑式索引站里 7 个不用任何分隔线，逐行发丝线是表格 idiom |
-| 行节奏 | `padding-block: clamp(1.5rem, 3vw, 2.75rem)` |
-| 序号 | `--fs-label` (11px) mono、muted、**不用 tabular-nums**（那是表格 / 日期 / 表单的 register） |
-| 副信息 | 与标题**同一行**，靠 weight (500 / 400) 与颜色分层，**不靠字号台阶** |
-| 球队队徽 | 统一 2.75rem x 2.75rem 等比盒（`object-fit: contain`），取代序号 —— 一枚徽记比一个名次更有信息量 |
+| 结构 | 首列 64px（音乐封面）+ 单栏；**零逐行发丝线**，靠 `padding-block` 与间距分组 |
+| 分隔 | 分组靠留白（组间距 ≥ 组内 2×）；分隔线只给密集表格数据 |
+| 副信息 | 与标题**同一行**，靠 weight（500 / 400）与颜色分层，**不靠字号台阶**；不加回大写 + 字距 |
 | Hover | 兄弟行 `:has()` 压到 `opacity .5`，被 hover 行 `transition-duration: 0s` 瞬间归位 |
 
 ### 10.2 音乐
 
 | 项 | 规则 |
 | --- | --- |
-| 封面 | 每行 **64px** 真封面（`MUSIC_COVERS`，689 / 761 有图；缺图回落同尺寸空 sleeve）。40–46px 的方块是项目符号不是图片；要么 ≥64px，要么不要图 |
-| 编号 | **删除** `counter(track, decimal-leading-zero)`。个人收藏不是榜单 |
+| 封面 | 每行 **64px** 真封面（`MUSIC_COVERS`，468 首里 393 首有图；缺图回落同尺寸空 sleeve）。40-46px 的方块是项目符号不是图片 |
+| 编号 | **删除** `counter(track)`。个人收藏不是榜单 |
 | 分隔 | 零发丝线，靠行距 |
-| 署名 | 句首大写、`--color-text-secondary`。大写 + 哑色 + 字距 x 108 次会把署名变成纹理 |
-| Hover | 点亮**文字**（标题转 accent），不是 2.5% 的行底染色 —— 后者低于感知阈值 |
-| Chip | 激活态**不再加对勾字形**（它会撑宽 chip，导致整条 16-chip 轨每次切流派都重排） |
-| 性能 | `content-visibility: auto` 加 `contain-intrinsic-size` 加在 **`.genre`（16 个块）**上，不加在每张卡上 —— 763 个可聚焦行不适合做 containment 单元 |
+| 署名 | 句首大写、`--color-text-secondary`。大写 + 哑色 + 字距 x 468 次会把署名变成纹理 |
+| Hover | 点亮**文字**（标题转 accent），不是 2.5% 的行底染色——后者低于感知阈值 |
+| Chip | 激活态**不加对勾字形**（它会撑宽 chip，导致整条轨每次切流派都重排）；state 由填充与 `aria-pressed` 承担 |
+| 性能 | `content-visibility: auto` + `contain-intrinsic-size` 加在 **`.genre`（15 个块）**上，不加在每张卡上 |
+| 工具条 | 流派行 sticky 且是唯一磨砂面（`.genre-filter`，Blur Navigation 配方：blur 26 / paper-100 @16% / 1px ink12 边 / 与面板同宽）；搜索行是兄弟节点、在它上面、随列表滚走、不画东西，见 4.8 |
+| 搜索 | **跨全部 15 组**：命中的组全部展开，组头读「命中 / 总数」，工具条读全站命中数；`#music-search-jump` 已随「别处还有结果」这个状态一起退役 |
 
 ### 10.3 游戏
 
 | 项 | 规则 |
 | --- | --- |
-| 栅格 | **显式列数**：≥900px 三列 / 720–900 两列 / ≤720 单列。18 只能被 1 / 2 / 3 / 6 / 9 / 18 整除；`auto-fill minmax(250px,1fr)` 在 1440 下出 **4 栏 = 4 行零 2 个孤儿**，末行残缺是最像「事故」的一处 |
-| 卡片 | **无底色、无阴影、无抬升**。封面直接落在纸面上，元信息是图下的排版 —— 白盒才是「流媒体瓦片」的来源 |
-| 排名 | 序号与时长**并成一行**，不再各占一行；`min-height: 2.6em` 删除 |
-| 评语 | **一行截断**（`-webkit-line-clamp: 1`）加 `--fs-label` 加 muted。18 句同时可见 = 18 句互相竞争；全文仍在 `#lightbox` |
-| Hover | **单一信号**：3px 边框从封面外 3px 收敛到 `inset: 0`（Letterboxd）。旧版同时有 translateY 加图片 scale 加 shadow-lift 加 inset 环共 4 个信号，那正是「模板感」的定义 |
-| 间隙 | 行距 > 列距（itch `20px 10px` / loadmo `20px 18px`）—— 最便宜的「不像栅格」动作 |
+| 名册 | **定位盘（Detent）**：中心一张封面、其余按几何递减排在两侧，一次只讲一个。旧的显式三列网格（≥900 三列 / 720-900 两列 / ≤720 单列）**只剩无 JS 兜底**（`:not(.is-live)` 门住） |
+| 数据 | 18 个 `.hof-item` 就是牌堆，顺序即排名；成环的是**布局**（`wrapDelta`），第 18 张在第 1 张左边一格 |
+| meta | **只画一次**：`.hof-name` / `.hof-hours` / `.hof-quote` 留在条目里当数据源（视觉隐藏），画进中心下方的 `.hof-now` |
+| 落位 | `power3.out` + 距离成比例时长；拖拽期间逐帧直写 transform；`1:1` 量过（拖一个 `DRAG_SPAN` 正好一档，落位后中心偏移 0px） |
+| 滚轮 | **只吃 `deltaX`**（+ Shift）：这是长文档里的一屏，吞掉 `deltaY` 就是滚动陷阱 |
+| 尺寸 | 想整体放大就动形状（reach / NEAR / FALLOFF / GAP），**不要动 `CARD`** |
 
-### 10.4 影 / 剧
+### 10.4 影 / 剧（共用 `js/reel-stage.js` 工厂）
 
 | 项 | 规则 |
 | --- | --- |
-| 卡片 | **两行栅格**：`aspect-ratio: 2 / 3` 媒介盒加盒**外**的 meta。旧版是 `3 / 4.15`（0.7229）的盒子加 `object-fit: cover`，把 2:3 的海报裁掉约 7.7%，meta 又压在底部色带上 |
-| 编号药丸 | **删除**。35 张卡各一颗不透明深色药丸，不携带条带顺序之外的信息 |
-| 卡片底色 | `transparent`。浅色页上的卡片没有盒子（Criterion 在浅色页正是背景透明） |
-| 环 | 画在 `img` 的 `outline` 上（`outline-offset: -1px`），因为它必须**压在图片之上**；静止 0.1 / hover 0.2 / **选中 0.34** —— 三者必须可区分，否则选中态丢失 |
-| 选中态 | 三层：发丝环加 meta 的 accent 上边框加居中的 OPEN chip（条带里唯一的实心深色形状）。**加第四条就会互相稀释** |
-| 触摸 | 视口 `touch-action: pan-y` 加指针滑动复用 `setStrip()`。此前 `pan-x` 在 `overflow: hidden` 上什么都不做，**手指滑动完全无效**，手机上唯一路径是拖 range 滑块 |
-| 指针捕获 | **只在越过 6px 阈值后才捕获**。一接触就捕获会把随后的 click 重定向到视口，等于「点海报打不开」 |
-| hover:none | `@media (hover: none)` 下海报直接满饱和，否则 35 张海报在触摸设备上永久发灰 |
+| 卡片 | **两行栅格**：`aspect-ratio: 2 / 3` 媒介盒 + 盒**外**的 meta。`grid-template-columns: minmax(0, 1fr)` **必须显式声明**（漏了它海报会按 JPG 固有尺寸渲染，实测 158 / 54 / 90 / 59 / 54 / 24px）；`grid-template-rows: auto auto 1fr`；条带 `align-items: start` |
+| 字幕 | **只有两个字段**（标题 / 导演·年份），各限一行省略。genre 标签从卡片上隐藏——它已经是下方 kicker 的第一个词 |
+| 编号药丸 | **退役**（`display: none`）：35 张卡各一颗不透明深色药丸，不携带条带顺序之外的信息 |
+| OPEN 胶囊 | **退役**（`display: none`）：它会飘、是条带里唯一的实心深色形状，而整张卡本来就是按钮 |
+| 卡片底色 | `transparent`。浅色页上的卡片没有盒子 |
+| 环 | 画在 `img` 的 `outline` 上（`outline-offset: -1px`），因为它必须压在图片之上；**静止 0.1 / hover 0.2 / 选中 0.34** —— 三者必须可区分 |
+| 选中态 | **两层**：可区分的发丝环 + 卡片抬起一行 + 片名（绝对定位在海报下方，只有选中那张有，底边与整排底线齐平）。meta 的展示行与 accent 上边框都已退役 |
+| 详情区 | **一条左对齐的竖列**，不是两栏栅格：① 一行 mono 事实（位置号 + 类型 + 年份 + 导演）；② 注释（诗句）占一行，列宽 `max-width: 72ch`；③ `OPEN ON IMDb` 收在同一条左边缘上。**片名不在详情区**（它写在抬起的那张海报下面，同屏印两遍是重复） |
+| 详情原则 | **纯排版、零图片**：海报只允许在条带上出现一次，同屏重复在结构上必须是**不可能** |
+| 触摸 | 视口 `touch-action: pan-y`；指针滑动复用条带拖拽。**指针捕获只在越过 6px 阈值后才要**（一接触就捕获会把随后的 click 重定向，「点海报打不开」） |
+| hover:none | `@media (hover: none)` 下海报直接满饱和，否则触摸设备上 35 张永久发灰 |
 
 ### 10.5 索引列表里**退役**的做法
 
@@ -532,11 +491,69 @@ V2 把纸墨系统铺满全站时，影 / 剧那一族**没有跟上**：它保�
 | 退役项 | 原因 |
 | --- | --- |
 | 逐行发丝线（书 / 球队 / 音乐） | 12 站里 7 站不用；是表格 idiom |
-| rank 上的 `tabular-nums` | 约 40 站普查里**没有一处**这样用；那是表格 register |
-| 序号大于标题 | 全场最大 rank:title = **1.0x**，没有站把 rank 做得比标题大 |
-| 音乐列表无封面 | 689 张封面在磁盘上而列表里 0 张 |
-| 白色卡片底加图下白格（游戏 / 影剧） | 流媒体瓦片感 |
+| rank 上的 `tabular-nums` | 约 40 站普查里没有一处这样用；那是表格 register |
+| 序号大于标题 | 全场最大 rank:title = 1.0x |
+| 音乐列表无封面 | 393 张封面在磁盘上而列表里 0 张 |
+| 白色卡片底 + 图下白格（游戏 / 影剧） | 流媒体瓦片感 |
 | 用 `counter()` 画排名 | 已并入首行微标签 |
 | chip 激活态的对勾字形 | 撑宽 chip 导致整轨重排 |
 | 一张卡同时四个 hover 信号 | 只留一个 |
-| 静止态出现金色 | Criterion 的金在 807KB 里出现 92 次，**只在 hover** |
+| 静止态出现金色 | 金只在 hover / 可交互 |
+
+---
+
+## 11. 动效：什么让它读起来「贵」
+
+### 11.1 拖拽必须 1:1（V2 修的第一件事）
+
+条带的每一次位移都走 `setStrip()`，而它曾经把**每一次**写入（包括每一个 `pointermove`）都送去 `gsap.quickTo()`。拿项目自己 vendored 的 GSAP 量：
+
+| 手指速度 | 海报落后 |
+| --- | --- |
+| 400 px/s | 52 px |
+| **1000 px/s** | **131 px** |
+| 2000 px/s | 262 px |
+
+手指和海报全程差约 8 帧。**这不是动效不够，是动效在跟手指抢方向盘。** 现在**所有**拖拽（条带、照片棋盘、游戏盘、药丸）都是拖拽期间**直写 `transform`**，实测误差 0px；补间只用于三个没有人在持握的时刻：松手落位、reveal、选中。
+
+**单位陷阱**：Lenis 的 `velocity` 是 **px/帧**，ScrollTrigger 的 `self.getVelocity()` 是 **px/秒**。混用差 60 倍。
+
+### 11.2 影 / 剧的当前位置模型（现行）
+
+| 项 | 规则 |
+| --- | --- |
+| 条带 | **无限循环**（`wrapPos` / `CLONE_SETS` / `cardOffsets`）：位移用取模回绕，所以没有端点、不需要 spacer |
+| 选中 | **顶点卡 = 选中卡**（`syncApex` 每帧按位置算，不靠两套状态同步）。**位置本身就是选中的函数**，没有第二个真值 |
+| 拖拽 | **拖拽会改选中**（与旧版「拖拽只浏览」相反的明文决策）：滑块（`-stage-range`）已退役，方向键就是键盘路径 |
+| 落位 | `frame()` 里的趋近（`SEEK_TAU`）+ `REDUCED` 时瞬时到位；**没有 spring** |
+| 惯性 | 速度窗口 `VEL_WINDOW = 170ms`，过期即归零（stale-flick guard：甩一下、停住、再松手不得弹射） |
+| 点击 | **点击只是选中**，与 hover / Tab 同义；**不开浮层、不触发位移** |
+| 焦点 | `focusin` **只对键盘焦点（`:focus-visible`）选中**：`pointerdown` 会 focus 卡片，漏掉这条等于「手指一碰海报就已经选中了」 |
+| 手势 | `swiped` 在 `pointerdown` 清零（跨卡松手根本不产生 click，只靠 click 清会吃掉下一次真实点击） |
+
+### 11.3 明确**不做**的动效
+
+| 不做 | 理由 |
+| --- | --- |
+| **滚动速度 skew** | 它是 2019-21 模板级标志；它切的正是唯一不能被切的东西（海报） |
+| **逐卡反向视差** | 要给已合成的条带里 35 张卡各升一层 |
+| **逐卡入场 stagger** | 算术上不可能：35 张 × 30ms 已经是 1.62s。**入场只动整体，永不动单张卡** |
+| **containerAnimation** | 它的进度读 tween，而拖拽直写 `x`，两者立刻失步 |
+| **任何回弹 / spring** | 已退役；落位曲线（`power3.out` + 距离成比例）可证明不过冲 |
+| **滚动横移** | 它让「居中」变成滚动位置的函数：实测同一张卡在不同滚动位置偏离中心 4px，而居中是选中的反馈，一个会漂的反馈等于没有反馈 |
+| 任何在用户没滚动也没拖拽时移动的东西 | Apple HIG |
+
+### 11.4 两个高阶决定
+
+**影 / 剧点击不开浮层。** 它们的详情块就在条带正下方，浮层是把页面已经在讲的东西再讲一遍——而且讲得更差：一张 250px 海报浮在暗场里，文案被挤到一边。浮层仍然是 photo / game / music 的详情机制，那三个面板没有自己的内联详情块。（曾经写过一版 FLIP，已随浮层一起删除，**不要再加回来**。）
+
+**条带入场是一次性擦除**，加在**视口**上而不是卡片上。逐卡 stagger 在这里算术上不成立（见 11.3）。
+
+---
+
+## 12. 收尾：这一版的状态
+
+- **六个 tab 各有自己的物理**：书是 3D 书架、影 / 剧是循环条带、音乐是索引长列表 + 磨砂工具条、球队是手风琴、游戏是定位盘、照片是无限棋盘。共享的只有 token、玻璃、缓动与无障碍基线。
+- **玻璃只有四个落点**（4.4）；音乐工具条是唯一真的有东西可磨的一处，而它的磨砂面只有一层（4.8）。
+- **一条药丸**（tab 条），**一条染色玻璃**（OPEN ON IMDb）。
+- **每一处「为什么」都写在代码注释里**，本文件只记结论与实测数字；两者的冲突以本文件 + 代码为准，改完请同步三处（代码注释 / 本文件 / `AGENTS.md`）。

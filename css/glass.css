@@ -65,6 +65,12 @@
      instead, which is also how Apple does it. */
   --glass-pill: color-mix(in oklab, var(--ink-950) 84%, transparent);
 
+  /* Elevation of a floating glass surface, as ONE token. A component that
+     needs a different stack swaps this and inherits the rim, the fallbacks
+     and the dark variant unchanged; it never re-declares the inset bevels.
+     The nav replaces it with the Framer Liquid Glass Navbar's six layers. */
+  --glass-elevation: 0 1px 2px oklch(0 0 0 / 0.05), 0 18px 44px -18px oklch(0 0 0 / 0.22);
+
   --glass-blur: blur(20px) saturate(1.7) brightness(1.05);
   --glass-blur-strong: blur(28px) saturate(1.7) brightness(1.05);
   --glass-edge-w: 13px;
@@ -103,8 +109,7 @@
     inset -1px 0 0 0 var(--glass-bevel-side),
     inset 0 -1px 0 0 var(--glass-shade),
     inset 0 16px 24px -18px var(--glass-bloom),
-    0 1px 2px oklch(0 0 0 / 0.05),
-    0 18px 44px -18px oklch(0 0 0 / 0.22);
+    var(--glass-elevation);
 }
 
 /* Layer 1 + 2 live in their own elements so each gets its own backdrop
@@ -366,7 +371,7 @@ html[data-transparency="solid"] .glass--accent { background: var(--gold-400); }
     transform var(--glass-pill-travel) var(--glass-pill-ease),
     width var(--glass-pill-travel) var(--glass-pill-ease),
     height var(--glass-pill-travel) var(--glass-pill-ease),
-    scale var(--glass-pill-travel) var(--glass-pill-ease);
+    box-shadow var(--glass-pill-morph) var(--glass-pill-ease);
 }
 
 /* the pill's own refraction layer, reusing the same single filter id */
@@ -411,29 +416,40 @@ html[data-transparency="solid"] .glass--accent { background: var(--gold-400); }
   mask-composite: exclude;
 }
 
-/* Held but not yet moved: the grab. scale() is a separate property so it
-   can never collide with the transform JS writes every frame. */
-.glass-pill.is-grabbed { scale: 0.94; }
-
-/* Actually being dragged: position must be 1:1 with the cursor, so transform
-   drops out of the transition list while width/height keep their morph. scale
-   stays: the grab shrink must not snap the moment the first move arrives. */
-.glass-pill.is-dragging {
-  transition:
-    width var(--glass-pill-morph) var(--glass-pill-ease),
-    height var(--glass-pill-morph) var(--glass-pill-ease),
-    scale var(--glass-pill-morph) var(--glass-pill-ease);
+/* Held: the pill LIFTS, it never shrinks. It used to scale to 0.94, which is
+   the one thing a selection indicator must not do - measured in a real drag,
+   a 90px slot held an 84.6px lozenge, so a crescent of bare track showed
+   beside it exactly where the eye checks whether it landed (the ends of the
+   bar, with no neighbour to compare against). The shadow deepens instead: the
+   footprint stays exact, and the track's own press ring plus the grabbing
+   cursor carry the rest. */
+.glass-pill.is-grabbed {
+  box-shadow:
+    inset 0 1px 0 0 oklch(1 0 0 / 0.28),
+    inset 0 -1px 0 0 oklch(0 0 0 / 0.44),
+    0 2px 4px oklch(0 0 0 / 0.24),
+    0 12px 26px -10px oklch(0 0 0 / 0.5);
 }
 
-/* Settling after release, or snapping back after a cancel. */
-.glass-pill.is-settling { scale: 1; }
+/* Actually being dragged. The pill snaps from slot to slot (js/glass-pill.js),
+   so position and width travel on the SAME short clock: crossing a boundary
+   reads as the lozenge sliding into the next slot instead of as a 420ms
+   journey that lags the pointer. */
+.glass-pill.is-dragging {
+  transition:
+    transform var(--glass-pill-morph) var(--glass-pill-ease),
+    width var(--glass-pill-morph) var(--glass-pill-ease),
+    height var(--glass-pill-morph) var(--glass-pill-ease),
+    box-shadow var(--glass-pill-morph) var(--glass-pill-ease);
+}
+
+/* .is-settling needs no rule any more: the drag now lands on a slot, so when
+   the pointer comes up the pill is already exactly where it belongs. The
+   class stays as a marker for js/glass-pill.js. */
 
 @media (prefers-reduced-motion: reduce) {
   .glass-pill,
-  .glass-pill.is-dragging {
-    transition: none;
-    scale: 1;
-  }
+  .glass-pill.is-dragging { transition: none; }
 }
 
 /* ============================================================
@@ -519,7 +535,7 @@ html.has-lens .glass--refract .glass__body {
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass {
     background: var(--paper-000);
-    box-shadow: 0 1px 2px oklch(0 0 0 / 0.05), 0 18px 44px -18px oklch(0 0 0 / 0.2);
+    box-shadow: var(--glass-elevation);
   }
   .glass--dark { background: var(--ink-950); }
   .glass__body,
@@ -536,7 +552,7 @@ html.has-lens .glass--refract .glass__body {
     background: var(--paper-000);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    box-shadow: 0 1px 2px oklch(0 0 0 / 0.06), 0 18px 44px -18px oklch(0 0 0 / 0.2);
+    box-shadow: var(--glass-elevation);
   }
   .glass--dark { background: var(--ink-950); }
   .glass__body,
@@ -555,7 +571,7 @@ html[data-transparency="solid"] .glass {
   background: var(--paper-000);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  box-shadow: 0 1px 2px oklch(0 0 0 / 0.06), 0 18px 44px -18px oklch(0 0 0 / 0.2);
+  box-shadow: var(--glass-elevation);
 }
 html[data-transparency="solid"] .glass--dark { background: var(--ink-950); }
 /* the pill is not a .glass element, so it needs its own solid state */

@@ -1,0 +1,73 @@
+/* ============================================================
+   N1GHT CHXN9 - the smooth cursor (js/smooth-cursor.js).
+
+   A vanilla port of Framer's "Smoothcursor"
+   (https://framer.com/m/Smoothcursor-o8zdlR.js). The motion model lives in the
+   script; this file carries the geometry contract and the two rules that
+   decide who owns the pointer.
+
+   THE GEOMETRY CONTRACT
+   --cursor-size / --cursor-tip-x / --cursor-tip-y are read back with
+   getComputedStyle, the same discipline as the book shelf and the games
+   stage: the numbers are written down once, here. The tip is the point of the
+   arrow, and it is both the transform-origin and the pixel that lands on the
+   pointer, so rotation and scale pivot on what the user is aiming with.
+   ============================================================ */
+
+/* WHO OWNS THE POINTER
+   With has-smooth-cursor on <html> every native cursor is switched off and the
+   drawn arrow takes over. The same three constraints the script gates on are
+   repeated here as a media query, so a failure in the script can never leave
+   the page with no cursor at all: if the query does not match, nothing below
+   applies and the native cursor is untouched. */
+@media (pointer: fine) and (min-width: 768px) and (orientation: landscape) and (prefers-reduced-motion: no-preference) {
+  html.has-smooth-cursor,
+  html.has-smooth-cursor * {
+    cursor: none !important;
+  }
+
+  /* The one thing the arrow does not own: the text caret. An invisible I-beam
+     in the music search box is a functional loss, not a style choice. Mirrors
+     NATIVE_CURSOR in js/smooth-cursor.js - keep the two lists identical. */
+  html.has-smooth-cursor :is(input, textarea, [contenteditable]:not([contenteditable="false"])) {
+    cursor: text !important;
+  }
+}
+
+.smooth-cursor {
+  /* Geometry contract. The tip is measured off the path data (viewBox 0 0 50
+     54), stroke edge included: 25.47 of 50 across, 3.21 of 54 down. */
+  --cursor-size: 40px;
+  --cursor-tip-x: 50.9%;
+  --cursor-tip-y: 5.9%;
+
+  position: fixed;
+  top: 0;
+  left: 0; /* physical, not logical: the script writes clientX / clientY */
+  z-index: 900;
+  width: var(--cursor-size);
+  aspect-ratio: 50 / 54;
+  transform-origin: var(--cursor-tip-x) var(--cursor-tip-y);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.14s var(--ease-out);
+  will-change: transform;
+}
+
+/* Revealed on the first pointer move, in the same frame the native cursor is
+   switched off, already sitting on the pointer. */
+.smooth-cursor.is-visible { opacity: 1; }
+
+/* Over a text field the native caret comes back, so the arrow steps aside. */
+.smooth-cursor.is-yielded { opacity: 0; }
+
+.smooth-cursor svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The icon's two colours, on the site's tokens: ink inside, on-dark outside.
+   That is what keeps the same arrow legible on paper and on the dark hero. */
+.smooth-cursor .sc-fill { fill: var(--color-ink); }
+.smooth-cursor .sc-line { stroke: var(--color-on-dark); }

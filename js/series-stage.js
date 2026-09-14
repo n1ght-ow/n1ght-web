@@ -11,7 +11,6 @@
     tabToken: "series",
     title: "NINETEEN SERIES",
     sub: "BOX / TAPE",
-    rangeAria: "Series track position",
     detailAria: "Selected series",
     cardAria: (s) => s.title + ", " + s.years,
     cardMetaLine: (s) => s.years + " / " + s.seasons,
@@ -21,5 +20,8 @@
       { cls: "series-detail-years", text: s.years },
     ],
     detailLine: { cls: "series-detail-seasons", get: (s) => s.seasons },
+    /* a timeline by the FIRST season: parseInt reads the leading year out of
+       both "1987" and "1995-2013" */
+    sortKey: (s) => parseInt(s.years, 10) || 0,
   });
 })();

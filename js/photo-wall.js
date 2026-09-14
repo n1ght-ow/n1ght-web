@@ -1,143 +1,195 @@
 (function () {
   "use strict";
 
-  /* The photography wall, and the full-screen view it lives in.
+  /* The photography board.
 
-     WHERE THE LOOK COMES FROM. cmscurvegallery.framer.website, measured over
-     CDP. The first attempt at this assumed a uniform grid and got it wrong:
-     the reference is a JUSTIFIED layout. Every frame in a row shares one
-     height, each frame keeps its OWN aspect ratio, and the row is stretched
-     until it exactly fills its width - which is where the mosaic's
-     irregularity comes from, because the frames run from 0.50 to 1.00 and no
-     two rows pack the same way. Eleven 3:2 photographs cannot produce that
-     without each tile taking its own aspect, so each tile draws one.
+     WHERE THE LOOK COMES FROM. PhantomInfiniteGallery, a Framer code component
+     (https://framer.com/m/PhantomInfiniteGallery-KBne.js), read line by line and
+     rebuilt here in plain DOM. It is a BOARD, not a carousel: a window of cells
+     over an infinite plane, dragged in two axes with momentum, its cells turned
+     on a cylinder centred on the board, its mouse offset eased behind the
+     pointer. No WebGL, no React, no new dependency - the reference is divs,
+     transforms and one rAF, and so is this.
 
-     THE SURFACE. The rows are laid out on a sphere whose centre is the viewer,
-     so a frame further from the middle of the stage is larger, further from
-     its neighbour, and turned away. Three transforms on three elements:
+     WHAT CHANGED FOR A PAPER PAGE, and why:
+       - the board is IN the chapter, one band tall, not a full-screen layer. The
+         reference is a black canvas with nothing around it; ours sits between
+         the section head and the poem, so it reads as part of the page.
+       - no background colour, no dark vignette, no cell fill, no pink hover.
+         Colour here is the photographs' reward, not the interface's.
+       - cells are 3:2, not square: the reference covers a square with the
+         artwork and crops a third of a landscape frame. Eleven 3:2 photographs
+         go in uncropped.
+       - captions stay out of the cells (sr-only, as the ring wall before it).
+       - the throw STOPS. The reference deliberately never comes to rest (it
+         holds a 1e-4 residual velocity); a board that creeps forever is wrong to
+         read and keeps the compositor awake.
+       - touch-action is pan-y, not none: inline, swallowing vertical touch would
+         be a scroll trap.
 
-       .photo-wall          perspective: R
-       .photo-wall__sphere  translateZ(R) rotateY(a)        <- the drag
-       each frame           rotateY(-t) rotateX(phi) translateZ(-R)
+     THE PLANE IS PERIODIC. A cell's content is a pure function of its WORLD
+     coordinates - index = |(x + 3y) mod n|, the reference's diagonal rhythm - so
+     panning forever never runs out and the same world cell always shows the same
+     photograph. The pattern repeats every n columns and n rows, which is also
+     what lets the focus pan below take the SHORT way round.
 
-     The sphere is pushed forward by exactly R so its centre lands on the
-     viewer, and it is a ZERO-SIZE box because a stage-sized box sitting on the
-     viewer's plane projects to infinity and Chrome then fails to raster whole
-     columns of it. Both of those cost a bug; both are documented in
-     css/photo-wall.css.
+     THE ELEVEN AUTHORED FIGURES ARE CELLS, NOT DECORATION. They sit in world row
+     0 at x = 0..10 and are never recycled; every other visible cell is a pooled
+     clone of one of them, aria-hidden and out of the tab order. That is the same
+     contract the ring wall had, so main.js still finds exactly eleven
+     .photo-frame elements and still delegates clicks on #photo-wall once. */
 
-     THE PACKING, per row:
-       tan(phi) is spaced evenly  ->  the rows are evenly spaced ON SCREEN,
-       because screen y for a point at latitude phi is R * tan(phi).
-       h_world = rowHeight * cos(phi), so the row renders at rowHeight.
-       The parallel at phi is 2*PI*R*cos(phi) long, so that is the width the
-       row must fill; tile count is estimated from it, the aspects are drawn
-       from the PRNG, and h is solved so the row closes EXACTLY. That closure
-       is what lets the whole ring be rotated forever without a seam.
-
-     Two knobs, not interchangeable: R (via R_RATIO) is how much the wall
-     curls, and the zoom is the row height - which is derived from the stage's
-     own aspect rather than fixed, because the tile width follows from the
-     aspect distribution and a portrait frame on a portrait screen has to be
-     much smaller to keep the same number across. */
-
-  var view = document.getElementById("photo-view");
   var wall = document.getElementById("photo-wall");
   var canvas = document.querySelector("[data-photo-fallback]");
-  if (!view || !wall || !canvas) return;
+  if (!wall || !canvas) return;
 
-  var frames = [].slice.call(canvas.querySelectorAll(".photo-frame"));
-  if (frames.length < 2) return;
-  var PHOTOS = frames.length;
+  /* ---------- the knobs ----------
+     The board's HEIGHT comes from css/photo-wall.css (clamp(340px, 56vh,
+     600px)); --pw-cell and --pw-cell-h are written from here. Neither side keeps
+     a second copy of the other's numbers. */
+  var CELL_MIN = 132;          /* px, the narrow end */
+  var CELL_VW = 0.14;          /* share of the board's width */
+  var CELL_MAX = 208;          /* px, the wide end */
+  var IMG_RATIO = 3 / 2;       /* the photographs' own ratio: no crop */
+  var GAP = 14;                /* px between cells, both axes */
+  var MARGIN = 1;              /* extra ring of cells around the window */
 
-  /* ---------- layout constants ---------- */
+  /* The arc. ARC_MAX_ANGLE is the reference's 28deg cut down for a band: on a
+     black canvas the turn is what sells the space, on paper it only has to be
+     legible. ARC_AMOUNT scales it again, exactly as the reference does, and
+     EDGE_FADE / EDGE_OPACITY are the reference's own edge falloff. */
+  var ARC_MAX_ANGLE = 18;
+  var ARC_AMOUNT = 1;
+  var ARC_CLAMP = 1.2;         /* cells past the edge stop turning */
+  var EDGE_FADE = 0.18;
+  var EDGE_OPACITY = 0.4;
 
-  /* sphere radius as a fraction of the stage width. The reference measures
-     929px on a 1418px stage. */
-  var R_RATIO = 0.66;
-  /* The zoom, expressed as "how many rows fill the stage height" - but derived
-     from the stage's own shape rather than fixed, because a portrait tile on a
-     portrait screen has to be much smaller to keep the same number ACROSS.
-     Fixed at 2 on a 390x844 phone the wall showed a single column; the
-     reference shows about 2.5. Solving rows = H * A_PEAK / (k * W) for a
-     frame that is k of the stage wide gives 3.46 * H / W at the reference's
-     density: ~2.2 on a 1440x900 laptop, capped at 4.6 on a phone. */
-  var ROWS_K = 3.46;
-  var ROWS_MIN = 2.0;
-  var ROWS_MAX = 4.6;
-  /* Tile shape, as WIDTH / HEIGHT, before the perspective: the smaller this
-     is the taller the frame. Triangular on [A_MIN, A_MAX] peaked at 0.80,
-     which is where the reference's frames cluster (measured 0.60 to 1.24
-     across its thirty-five tiles, and mostly 0.75-0.85). A_MEAN is only the
-     mean of this distribution, and it is used for one thing: how far one
-     arrow-key press turns the wall. Row packing draws and then solves, so it
-     never depends on a guessed mean. */
-  var A_MIN = 0.60;
-  var A_MAX = 1.06;
-  var A_SKEW = 1.55;
-  var A_PEAK = 0.75;
-  var A_MEAN = 0.70;
-  /* hairline gutter, as measured off the reference (0.63vw at 1418px) */
-  var GUT_MAX = 10;
-  var GUT_MIN = 6;
-  var GUT_VW = 0.0062;
-  /* nothing past this longitude can be on screen; see cull() */
-  var CULL = 60;
-  /* pointer travel below this is a click, not a drag */
-  var SLOP = 6;
-  var DEG = 180 / Math.PI;
+  var PARALLAX_STRENGTH = 0.06;   /* the reference's .1, softened for a band */
+  var PARALLAX_EASE = 0.12;
 
-  var reduce =
-    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var THROW_FRICTION = 0.92;
+  var THROW_MIN = 80;          /* px/s: below this a release is not a throw */
+  var THROW_MAX = 2500;
+  var REST = 1;                /* px/s: below this the board is stopped */
+  var DRAG_THRESHOLD = 4;      /* px before a press becomes a drag */
+  var SWIPE_SLOP = 6;          /* px before a drag eats the click */
+  var HOLD_ZOOM_DELAY = 320;   /* ms held without moving before it zooms out */
+  var HOLD_ZOOM_VALUE = 0.7;
+  var SEEK_TAU = 0.16;         /* s, the ease that frames a chosen photograph */
 
-  /* ---------- seeded random ----------
-     A fresh seed per page load, held for the session: a resize must re-pack
-     the same wall, not a new one, or the mosaic would reshuffle every time
-     the window moves. */
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  var seed = (Date.now() ^ (Math.random() * 0xffffffff)) >>> 0;
+  /* ---------- the eleven, and the plane ---------- */
+  var figures = Array.prototype.slice.call(canvas.querySelectorAll(".photo-frame"));
+  if (!figures.length) return;
+  var PHOTOS = figures.length;
+  var srcs = figures.map(function (f) {
+    var img = f.querySelector("img");
+    return img ? img.getAttribute("src") : "";
+  });
 
-  function srand(s) {
-    seed = s >>> 0;
-  }
+  var layer = document.createElement("div");
+  layer.className = "photo-wall__layer";
+  wall.appendChild(layer);
 
-  function rand() {
-    seed = (seed * 1664525 + 1013904223) >>> 0;
-    return seed / 4294967296;
-  }
+  /* the authored figures move in as themselves: same nodes, same data, same
+     buttons. Nothing is rebuilt, so main.js's node list and every aria-label
+     survive the move. */
+  figures.forEach(function (f) {
+    f.classList.add("photo-cell");
+    /* never a drag source: the browser's own image drag paints a translucent
+       copy of the artwork that fights the board's 1:1 gesture. The clones are
+       copied FROM these nodes, so setting it here covers every cell. */
+    var img = f.querySelector("img");
+    if (img) img.draggable = false;
+    layer.appendChild(f);
+  });
 
-  function aspect() {
-    /* averaging two uniforms gives a triangular distribution; the skew moves
-       its peak from the middle of the range down to A_PEAK */
-    var t = (rand() + rand()) / 2;
-    var at = (A_PEAK - A_MIN) / (A_MAX - A_MIN);
-    return A_MIN + (A_MAX - A_MIN) * Math.pow(t, Math.log(at) / Math.log(0.5));
-  }
-
-  /* ---------- stage ---------- */
-
-  var sphere = document.createElement("div");
-  sphere.className = "photo-wall__sphere";
-
-  var clones = [];
-  var tiles = [];
-  var radius = 1;
-  var stepDeg = 12;
-  var state = { a: 0 };
-  var settle = null;
-  var drag = null;
-  var swiped = false;
   var built = false;
-  var builtW = -1;
-  var builtH = -1;
-  var resizeTimer = 0;
+  var vw = 0, vh = 0, cellW = 0, cellH = 0, pitchX = 1, pitchY = 1, radius = 1;
 
-  function makeClone(i) {
-    var node = frames[i % PHOTOS].cloneNode(true);
-    node.className = "photo-wall__tile";
-    /* a duplicate is decorative: the same photograph is already a real control
-       somewhere in the wall, so this one keeps the click but leaves the tab
-       order and the accessibility tree */
+  /* pos is the board's offset in px and unbounded, par is the mouse offset, size
+     is the hold-zoom factor. There is ONE writer of all three: frame(). */
+  var pos = { x: 0, y: 0 };
+  var vel = { x: 0, y: 0 };
+  var par = { x: 0, y: 0 }, parWant = { x: 0, y: 0 };
+  var size = 1, sizeWant = 1;
+  var seek = null;             /* the offset the board is easing toward */
+  var raf = 0, last = 0;
+
+  var pool = new Map();        /* "x,y" -> node, for the cells that ARE clones */
+  var free = [];
+
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+
+  /* The reference's calcArcTransform, horizontal branch, kept as it wrote it:
+     the angle is the cell centre's normalised distance from the board's centre
+     times the maximum, the radius is the one that puts the edge cell exactly at
+     that maximum, and z pulls the cell toward the reader - so the SIDES come
+     forward and the middle sits back, the "standing inside a cylinder" read.
+     rotateY(-angle) turns the cell to stay tangent to that cylinder. */
+  function calcArc(centerX) {
+    var dx = (centerX - vw / 2) / (vw / 2);
+    var a = (clamp(dx, -ARC_CLAMP, ARC_CLAMP) * ARC_MAX_ANGLE * ARC_AMOUNT * Math.PI) / 180;
+    var edge = Math.min(1, Math.abs(dx));
+    return {
+      z: -radius * (Math.cos(a) - 1),
+      yaw: (-a * 180) / Math.PI,
+      scale: 1 - EDGE_FADE * edge * edge,
+      opacity: 1 - EDGE_OPACITY * edge * ARC_AMOUNT
+    };
+  }
+
+  /* Keeps the world point under the pivot still while the cell size changes -
+     the reference's computePinnedOffset, with the PITCH as the px-per-world
+     unit (the reference can use its cell size there because in the reference the
+     cell IS the pitch). Without this the hold-zoom would slide the board out
+     from under the thing the reader was looking at. */
+  function pinned(prevPitch, nextPitch, pivot, offset) {
+    var worldX = (pivot.x - offset.x) / prevPitch.x;
+    var worldY = (pivot.y - offset.y) / prevPitch.y;
+    return { x: pivot.x - worldX * nextPitch.x, y: pivot.y - worldY * nextPitch.y };
+  }
+
+  /* Shortest way round the pattern, per axis: a focus pan never walks the board
+     more than half a period. */
+  function wrapDelta(delta, period) {
+    var d = delta % period;
+    if (d > period / 2) d -= period;
+    if (d < -period / 2) d += period;
+    return d;
+  }
+
+  function measure() {
+    vw = wall.clientWidth;
+    vh = wall.clientHeight;
+    cellW = Math.round(clamp(vw * CELL_VW, CELL_MIN, CELL_MAX));
+    cellH = Math.round(cellW / IMG_RATIO);
+    pitchX = cellW + GAP;
+    pitchY = cellH + GAP;
+    radius = vw / (2 * Math.sin((ARC_MAX_ANGLE * Math.PI) / 180)) || 1;
+    wall.style.setProperty("--pw-cell", cellW + "px");
+    wall.style.setProperty("--pw-cell-h", cellH + "px");
+  }
+
+  function itemAt(x, y) {
+    return Math.abs((x + y * 3) % PHOTOS);
+  }
+
+  /* The authored eleven own world row 0; anywhere else is a clone of whatever
+     the pattern asks for. */
+  function canonicalAt(x, y) {
+    return y === 0 && x >= 0 && x < PHOTOS ? x : -1;
+  }
+
+  /* ---------- the window ---------- */
+
+  function makeClone() {
+    var node = figures[0].cloneNode(true);
+    node.className = "photo-cell";
+    /* a duplicate is decoration: the same photograph is already a real control
+       in the board, so this one keeps the click (main.js reads its index) but
+       leaves the tab order and the accessibility tree */
     node.setAttribute("aria-hidden", "true");
     var cap = node.querySelector(".photo-frame-cap");
     if (cap && cap.parentNode) cap.parentNode.removeChild(cap);
@@ -146,488 +198,405 @@
     return node;
   }
 
-  function ensureClones(n) {
-    while (clones.length < n) clones.push(makeClone(clones.length));
-  }
-
-  /* Per-row height, as a stable function of the row index rather than of the
-     order the rows happen to be walked in: the wall must re-pack identically
-     for a given seed. The reference's rows are not one height either - that
-     sameness is what makes a justified grid read as a spreadsheet. */
-  function rowHeightFor(k, rowH) {
-    var s = Math.sin(k * 12.9898 + 4.1) * 43758.5453;
-    var f = s - Math.floor(s);
-    return rowH * (0.90 + 0.20 * f);
-  }
-
-  function shuffleBag() {
-    var bag = [];
-    for (var i = 0; i < PHOTOS; i++) bag.push(i);
-    for (var j = bag.length - 1; j > 0; j--) {
-      var k = Math.floor(rand() * (j + 1));
-      var t = bag[j];
-      bag[j] = bag[k];
-      bag[k] = t;
+  /* A cell is addressed by its WORLD slot, so it keeps its content for as long
+     as it lives: panning a column costs one cell, not a boardful of src swaps. */
+  function acquire(x, y) {
+    var node = free.pop();
+    if (!node) {
+      node = makeClone();
+      layer.appendChild(node);
     }
-    return bag;
+    node.style.display = "";
+    var item = itemAt(x, y);
+    node.setAttribute("data-photo-index", String(item));
+    var img = node.querySelector("img");
+    if (img) {
+      var src = srcs[item];
+      if (img.getAttribute("src") !== src) img.setAttribute("src", src);
+      img.setAttribute("alt", "");
+    }
+    return node;
   }
 
-  function layout(W, H) {
-    var gutter = Math.min(GUT_MAX, Math.max(GUT_MIN, W * GUT_VW));
-    var R = R_RATIO * W;
-    var rowsVisible = Math.min(ROWS_MAX, Math.max(ROWS_MIN, (ROWS_K * H) / W));
-    var rowH = H / rowsVisible;
-    var maxTan = (H / 2 + rowH) / R;
+  function place(node, x, y, scale) {
+    var left = x * pitchX * scale + pos.x + par.x;
+    var top = y * pitchY * scale + pos.y + par.y;
+    var arc = calcArc(left + (cellW * scale) / 2);
+    /* ONE transform write per cell per frame, and it carries the position too:
+       writing left/top would flush layout on every frame of every drag. */
+    node.style.transform =
+      "translate3d(" + left.toFixed(2) + "px," + top.toFixed(2) + "px," +
+      arc.z.toFixed(2) + "px) rotateY(" + arc.yaw.toFixed(3) + "deg) scale(" +
+      (arc.scale * scale).toFixed(4) + ")";
+    node.style.opacity = arc.opacity.toFixed(3);
+  }
 
-    /* Walk outwards from the equator. tan(phi) is spaced by half of each
-       neighbouring row's own height, because screen y for latitude phi is
-       R * tan(phi) - so unequal row heights stay equally gapped on screen. */
-    var rows = [{ phi: 0, screenH: rowHeightFor(0, rowH) }];
-    var tUp = 0;
-    var tDown = 0;
-    var prevUp = rows[0].screenH;
-    var prevDown = rows[0].screenH;
-    for (var k = 1; k < 40; k++) {
-      var hUp = rowHeightFor(k, rowH);
-      var hDown = rowHeightFor(k + 100, rowH);
-      var nUp = tUp + ((prevUp + hUp) / 2 + gutter) / R;
-      var nDown = tDown + ((prevDown + hDown) / 2 + gutter) / R;
-      if (nUp > maxTan && nDown > maxTan) break;
-      if (nUp <= maxTan) rows.push({ phi: Math.atan(nUp), screenH: hUp });
-      if (nDown <= maxTan) rows.push({ phi: -Math.atan(nDown), screenH: hDown });
-      tUp = nUp;
-      tDown = nDown;
-      prevUp = hUp;
-      prevDown = hDown;
-    }
-
-    var out = [];
-    var bag = shuffleBag();
-    var bagAt = 0;
-
-    for (var r = 0; r < rows.length; r++) {
-      var lat = rows[r].phi;
-      var cos = Math.cos(lat);
-      var circ = 2 * Math.PI * R * cos;
-      var worldH = rows[r].screenH * cos;
-      /* THE ROW HEIGHT IS THE TARGET and the widths absorb the slack, not the
-         other way round. Solving the height instead (h = (circ - n*g)/sum)
-         always comes out below the target, because the row is drawn until it
-         overflows and the last tile is never given back - measured 10% short,
-         which opened a 40px black band under every row. Keeping h and scaling
-         the widths by circ/their-natural-width closes the ring EXACTLY and
-         moves each aspect by a few percent, which is invisible. It also means
-         the gap between rows is exactly one gutter, at every latitude. */
-      var n = Math.max(3, Math.round(circ / (worldH * A_MEAN + gutter)));
-      var as = [];
-      var sum = 0;
-      for (var i = 0; i < n; i++) {
-        var a = aspect();
-        as.push(a);
-        sum += a;
-      }
-      var h = worldH;
-      var slack = circ / (sum * h + n * gutter);
-      var x = 0;
-      for (var j = 0; j < n; j++) {
-        var w = h * as[j] * slack;
-        if (bagAt >= bag.length) {
-          bag = shuffleBag();
-          bagAt = 0;
+  function paint() {
+    var px = pitchX * size;
+    var py = pitchY * size;
+    var x0 = Math.floor(-(pos.x + par.x) / px) - MARGIN;
+    var x1 = Math.ceil((vw - pos.x - par.x) / px) + MARGIN;
+    var y0 = Math.floor(-(pos.y + par.y) / py) - MARGIN;
+    var y1 = Math.ceil((vh - pos.y - par.y) / py) + MARGIN;
+    var live = {};
+    var x, y, key, node;
+    for (y = y0; y <= y1; y++) {
+      for (x = x0; x <= x1; x++) {
+        key = x + "," + y;
+        if (canonicalAt(x, y) >= 0) continue;
+        node = pool.get(key);
+        if (!node) {
+          node = acquire(x, y);
+          pool.set(key, node);
         }
-        out.push({
-          theta: ((x + w / 2) / (R * cos)) * DEG,
-          phi: lat,
-          w: w,
-          h: h,
-          photo: bag[bagAt++]
-        });
-        x += w + gutter;
+        live[key] = 1;
+        place(node, x, y, size);
       }
     }
-
-    return { tiles: out, R: R, gutter: gutter, stepDeg: ((rowH * A_MEAN + gutter) / R) * DEG };
-  }
-
-  function build() {
-    var W = wall.clientWidth;
-    var H = wall.clientHeight;
-    if (W < 2 || H < 2) return;
-
-    srand(seed);
-    var g = layout(W, H);
-    radius = g.R;
-    stepDeg = g.stepDeg;
-
-    wall.style.setProperty("--wall-r", g.R.toFixed(2) + "px");
-
-    ensureClones(g.tiles.length - PHOTOS);
-    var frag = document.createDocumentFragment();
-    var canon = {};
-    var pool = 0;
-    tiles = [];
-
-    for (var i = 0; i < g.tiles.length; i++) {
-      var t = g.tiles[i];
-      var el;
-      /* the eleven real figures are the eleven tab stops, and each one lands
-         on the first tile that carries its photograph - so tab order, DOM
-         order and data-photo-index all still agree */
-      if (canon[t.photo] === undefined) {
-        canon[t.photo] = i;
-        el = frames[t.photo];
-      } else {
-        el = clones[pool++];
-        el.setAttribute("data-photo-index", String(t.photo));
-      }
-      el.style.setProperty("--wall-w", t.w.toFixed(1) + "px");
-      el.style.setProperty("--wall-h", t.h.toFixed(1) + "px");
-      el.style.setProperty(
-        "--wall-t",
-        "translate(-50%,-50%) rotateY(" + (-t.theta).toFixed(4) + "deg)" +
-          " rotateX(" + (t.phi * DEG).toFixed(4) + "deg)" +
-          " translateZ(" + (-g.R).toFixed(2) + "px)"
-      );
-      el.__wallTheta = t.theta;
-      tiles.push({ el: el, theta: t.theta, hidden: null });
-      frag.appendChild(el);
-    }
-
-    while (pool < clones.length) {
-      var extra = clones[pool++];
-      if (extra.parentNode) extra.parentNode.removeChild(extra);
-    }
-
-    sphere.appendChild(frag);
-    builtW = W;
-    builtH = H;
-    built = true;
-    write(state.a);
-  }
-
-  /* ---------- the single write ---------- */
-
-  function cull() {
-    for (var i = 0; i < tiles.length; i++) {
-      var t = tiles[i];
-      var lon = (((t.theta - state.a) % 360) + 540) % 360 - 180;
-      var hide = lon > CULL || lon < -CULL;
-      if (hide === t.hidden) continue;
-      t.hidden = hide;
-      t.el.style.visibility = hide ? "hidden" : "";
-    }
-  }
-
-  function write(a) {
-    sphere.style.transform =
-      "translateZ(" + radius.toFixed(2) + "px) rotateY(" + a.toFixed(3) + "deg)";
-    cull();
-  }
-
-  function settleTo(target) {
-    if (settle) {
-      settle.kill();
-      settle = null;
-    }
-    var dist = Math.abs(target - state.a);
-    var dur = reduce ? 0 : Math.min(1.1, Math.max(0.25, dist / 900));
-    if (dur === 0 || !window.gsap) {
-      state.a = target;
-      write(state.a);
-      return;
-    }
-    settle = gsap.to(state, {
-      a: target,
-      duration: dur,
-      /* distance-proportional, and power3.out never overshoots: the wall
-         settles onto the lattice instead of bouncing past it */
-      ease: "power3.out",
-      overwrite: true,
-      onUpdate: function () {
-        write(state.a);
-      },
-      onComplete: function () {
-        settle = null;
-      }
+    pool.forEach(function (n, k) {
+      if (live[k]) return;
+      n.style.display = "none";
+      free.push(n);
+      pool["delete"](k);
     });
+    for (var i = 0; i < PHOTOS; i++) place(figures[i], i, 0, size);
   }
 
-  /* ---------- drag ---------- */
+  /* ---------- the one loop ---------- */
 
-  function onMove(e) {
-    if (!drag || e.pointerId !== drag.id) return;
-    var dx = e.clientX - drag.x;
-    if (!drag.moved && Math.abs(dx) > SLOP) drag.moved = true;
-    /* 1:1 by construction: the pointer travels dx across a ring of radius R,
-       so the wall turns by dx / R radians. No easing, no lerp, no tween - the
-       lag that comes from pushing every move through an interpolator is
-       already documented in js/reel-stage.js (131px at 1000px/s). */
-    state.a = drag.a - (dx / radius) * DEG;
-    drag.samples.push([e.timeStamp, state.a]);
-    if (drag.samples.length > 8) drag.samples.shift();
-    write(state.a);
+  function busy() {
+    return dragging || seek || Math.abs(vel.x) + Math.abs(vel.y) > REST ||
+      Math.abs(par.x - parWant.x) + Math.abs(par.y - parWant.y) > 0.5 ||
+      size !== sizeWant;
   }
 
-  function endDrag(e) {
-    if (!drag || (e && e.pointerId !== undefined && e.pointerId !== drag.id)) return;
-    var moved = drag.moved;
-    var samples = drag.samples;
-    drag = null;
-    swiped = moved;
-    wall.classList.remove("is-dragging");
-    document.removeEventListener("pointermove", onMove);
-    document.removeEventListener("pointerup", endDrag);
-    document.removeEventListener("pointercancel", endDrag);
-    if (!moved) return;
+  /* Starts the loop if it is not already running. It must NOT touch the clock:
+     frame() re-kicks itself, so zeroing last here zeroes dt on EVERY frame and
+     silently kills everything that depends on time - the throw, the seek, the
+     size ease. It did. Measured before the fix: 30 frames in 500ms all with
+     dt 0, and a 2490px/s throw that never moved a pixel. The clock is set once,
+     when it has never run, and a long idle is absorbed by the clamp below. */
+  function kick() {
+    if (raf) return;
+    raf = window.requestAnimationFrame(frame);
+  }
 
-    /* velocity from the tail of the gesture only: a pointer that stopped
-       before release must not fling */
-    var v = 0;
-    if (samples.length > 1) {
-      var lastT = samples[samples.length - 1][0];
-      var first = samples[0];
-      for (var i = 0; i < samples.length; i++) {
-        if (lastT - samples[i][0] <= 100) {
-          first = samples[i];
-          break;
-        }
-      }
-      var dt = lastT - first[0];
-      if (dt > 0) v = (samples[samples.length - 1][1] - first[1]) / dt;
+  function frame(now) {
+    raf = 0;
+    if (!last) last = now;
+    var dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
+    last = now;
+
+    /* the hold-zoom eases the cell size and re-pins the offset as it goes */
+    if (size !== sizeWant) {
+      var next = size + (sizeWant - size) * 0.15;
+      if (Math.abs(next - sizeWant) < 0.002) next = sizeWant;
+      pos = pinned(
+        { x: pitchX * size, y: pitchY * size },
+        { x: pitchX * next, y: pitchY * next },
+        { x: vw / 2, y: vh / 2 },
+        pos
+      );
+      size = next;
     }
-    if (reduce || Math.abs(v) < 0.02) return;
-    settleTo(state.a + v * 300);
+
+    if (seek) {
+      var k = 1 - Math.exp(-dt / SEEK_TAU);
+      pos = { x: pos.x + (seek.x - pos.x) * k, y: pos.y + (seek.y - pos.y) * k };
+      if (Math.abs(seek.x - pos.x) < 0.5 && Math.abs(seek.y - pos.y) < 0.5) {
+        pos = { x: seek.x, y: seek.y };
+        seek = null;
+      }
+    } else if (!dragging) {
+      var speed = Math.hypot(vel.x, vel.y);
+      if (speed > REST) {
+        var f = Math.pow(THROW_FRICTION, dt * 60);
+        vel = { x: vel.x * f, y: vel.y * f };
+        pos = { x: pos.x + vel.x * dt, y: pos.y + vel.y * dt };
+      } else if (speed) {
+        vel = { x: 0, y: 0 };
+      }
+    }
+
+    par = {
+      x: par.x + (parWant.x - par.x) * PARALLAX_EASE,
+      y: par.y + (parWant.y - par.y) * PARALLAX_EASE
+    };
+    if (Math.abs(par.x - parWant.x) < 0.1 && Math.abs(par.y - parWant.y) < 0.1) {
+      par = { x: parWant.x, y: parWant.y };
+    }
+
+    paint();
+    if (busy()) kick();
+  }
+
+  /* ---------- the hand ---------- */
+
+  var drag = null;
+  var dragging = false;
+  var swiped = false;
+  var holdFired = false;
+  var holdTimer = 0;
+  var lastMove = { x: 0, y: 0, t: 0 };
+  var velNow = { x: 0, y: 0 };
+  var resizeTimer = 0;
+
+  function localPoint(e) {
+    var r = wall.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  /* The hold-zoom keeps the world point under the CENTRE still while the cells
+     shrink - the reference's one "step back and look at the whole board"
+     gesture, held rather than toggled. */
+  function zoom(target) {
+    pos = pinned(
+      { x: pitchX * size, y: pitchY * size },
+      { x: pitchX * target, y: pitchY * target },
+      { x: vw / 2, y: vh / 2 },
+      pos
+    );
+    seek = null;
+    sizeWant = target;
+    kick();
   }
 
   function onDown(e) {
-    if (drag) return;
     if (e.pointerType === "mouse" && e.button !== 0) return;
-    /* cleared here, never left to the click that may never come: a drag that
-       ends over ANOTHER frame produces no click at all, and the flag would
-       then eat the next honest tap */
+    /* a new press takes the board as it looks right now: a throw still running
+       must not be added to the drag */
+    vel = { x: 0, y: 0 };
+    seek = null;
     swiped = false;
-    drag = { id: e.pointerId, x: e.clientX, a: state.a, moved: false, samples: [] };
-    wall.classList.add("is-dragging");
-    if (settle) {
-      settle.kill();
-      settle = null;
+    holdFired = false;
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, ox: pos.x, oy: pos.y, moved: false };
+    lastMove = { x: e.clientX, y: e.clientY, t: performance.now() };
+    velNow = { x: 0, y: 0 };
+    /* Only a press that does NOT become a drag counts as a hold; the delay is
+       long enough that an ordinary click never reaches it. */
+    if (!reduce) {
+      window.clearTimeout(holdTimer);
+      holdTimer = window.setTimeout(function () {
+        if (!drag || drag.moved) return;
+        holdFired = true;
+        zoom(HOLD_ZOOM_VALUE);
+      }, HOLD_ZOOM_DELAY);
     }
-    document.addEventListener("pointermove", onMove, { passive: true });
-    document.addEventListener("pointerup", endDrag);
-    document.addEventListener("pointercancel", endDrag);
   }
 
-  wall.addEventListener("pointerdown", onDown);
-  wall.addEventListener("dragstart", function (e) {
-    e.preventDefault();
-  });
+  function onMove(e) {
+    if (!drag) {
+      if (reduce) return;
+      /* the reference eases the whole board away from the pointer: the one piece
+         of motion here that is not the reader's own */
+      var p = localPoint(e);
+      parWant = {
+        x: (vw / 2 - p.x) * PARALLAX_STRENGTH,
+        y: (vh / 2 - p.y) * PARALLAX_STRENGTH
+      };
+      kick();
+      return;
+    }
+    if (drag.id !== e.pointerId) return;
+    var dx = e.clientX - drag.x;
+    var dy = e.clientY - drag.y;
+    if (!drag.moved && Math.abs(dx) + Math.abs(dy) < DRAG_THRESHOLD) return;
+    if (!drag.moved) {
+      drag.moved = true;
+      dragging = true;
+      wall.classList.add("is-dragging");
+      window.clearTimeout(holdTimer);
+      try { wall.setPointerCapture(drag.id); } catch (err) { /* older engine */ }
+    }
+    if (Math.abs(dx) > SWIPE_SLOP || Math.abs(dy) > SWIPE_SLOP) swiped = true;
+    var now = performance.now();
+    var dtms = Math.max(1, now - lastMove.t);
+    var vx = clamp(((e.clientX - lastMove.x) / dtms) * 1000, -THROW_MAX, THROW_MAX);
+    var vy = clamp(((e.clientY - lastMove.y) / dtms) * 1000, -THROW_MAX, THROW_MAX);
+    velNow = { x: vx * 0.6 + velNow.x * 0.4, y: vy * 0.6 + velNow.y * 0.4 };
+    lastMove = { x: e.clientX, y: e.clientY, t: now };
+    /* 1:1, straight onto the offset: the drag NEVER goes through a tween */
+    pos = { x: drag.ox + dx, y: drag.oy + dy };
+    paint();
+  }
 
-  /* A drag must not also open the viewer. Capture phase, so this settles it
-     before js/main.js sees the click at all. e.detail === 0 is a click the
-     keyboard made (Enter on a focused frame), which is never a drag. */
-  wall.addEventListener(
-    "click",
-    function (e) {
-      if (!swiped || e.detail === 0) {
-        swiped = false;
-        return;
-      }
+  function onUp(e) {
+    if (!drag || (e && e.pointerId !== drag.id)) return;
+    var moved = drag.moved;
+    drag = null;
+    dragging = false;
+    window.clearTimeout(holdTimer);
+    wall.classList.remove("is-dragging");
+    if (holdFired) {
+      /* the press became a look-closer, so it is not also a click */
+      holdFired = false;
+      zoom(1);
+      return;
+    }
+    if (moved) {
+      if (!reduce && Math.hypot(velNow.x, velNow.y) >= THROW_MIN) vel = velNow;
+      kick();
+      return;
+    }
+    vel = { x: 0, y: 0 };
+  }
+
+  function onLeave() {
+    parWant = { x: 0, y: 0 };
+    kick();
+  }
+
+  /* Horizontal wheel only, plus Shift+wheel: this board is one band inside a
+     long document, so eating deltaY would be a scroll trap. */
+  function onWheel(e) {
+    var dx = e.deltaX;
+    if (Math.abs(dx) < 0.5) dx = e.deltaY;
+    if (e.deltaMode === 1) dx *= 16;
+    if (!dx) return;
+    e.preventDefault();
+    seek = null;
+    vel = { x: 0, y: 0 };
+    pos = { x: pos.x - dx * 1.6, y: pos.y };
+    kick();
+  }
+
+  /* An image must never start the browser's own drag: it paints a translucent
+     copy of the artwork that follows the cursor while the board's 1:1 gesture
+     runs underneath. css/photo-wall.css takes the pointer off the image
+     entirely; this cancels whatever is left. */
+  function onDragStart(e) { e.preventDefault(); }
+
+  /* A drag is browsing, so it must not also be a click. Captured, because the
+     click lands whether or not the pointer is still over the cell. */
+  function onClickCapture(e) {
+    if (e.detail === 0) return;                 /* keyboard Enter still opens */
+    if (swiped || holdFired) {
       swiped = false;
       e.stopPropagation();
       e.preventDefault();
-    },
-    true
-  );
+    }
+  }
 
-  /* ---------- wheel ---------- */
-
-  wall.addEventListener(
-    "wheel",
-    function (e) {
-      /* Horizontal intent only. The view does swallow vertical wheel while it
-         is open, but the wall itself must not: a trackpad two-finger scroll
-         still has to be able to leave. */
-      var d = e.deltaX;
-      if (e.shiftKey && Math.abs(e.deltaY) > Math.abs(d)) d = e.deltaY;
-      if (!d) return;
-      settleTo(state.a + (d / radius) * DEG);
-    },
-    { passive: true }
-  );
-
-  /* ---------- keyboard ---------- */
-
-  /* On the VIEW, not the wall: when the view opens, focus is on the Close
-     pill, which is not inside the wall - bound to the wall the arrows did
-     nothing until the reader had already tabbed into a frame. */
-  view.addEventListener("keydown", function (e) {
-    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-    if (e.altKey || e.ctrlKey || e.metaKey) return;
-    e.preventDefault();
-    settleTo(state.a + (e.key === "ArrowRight" ? stepDeg : -stepDeg));
-  });
-
-  /* Keyboard focus brings its frame to the front. Gated on :focus-visible
-     because pointerdown focuses the button too - without the gate, putting a
-     finger on the wall would already count as choosing a frame, which is the
-     same trap js/reel-stage.js documents. */
-  wall.addEventListener("focusin", function (e) {
+  /* Keyboard focus frames its photograph. The pattern repeats every PHOTOS
+     cells, so the pan takes the short way round instead of walking the plane.
+     Gated on :focus-visible because pointerdown focuses the button too. */
+  function onFocusIn(e) {
     var btn = e.target && e.target.closest ? e.target.closest(".photo-frame-btn") : null;
     if (!btn || !btn.matches(":focus-visible")) return;
     var fig = btn.closest("[data-photo-index]");
-    if (!fig || typeof fig.__wallTheta !== "number") return;
-    var cur = state.a;
-    /* shortest way round, so tabbing backwards does not unwind the wall */
-    var delta = (((fig.__wallTheta - cur) % 360) + 540) % 360 - 180;
-    settleTo(cur + delta);
-  });
-
-  /* ---------- the view ---------- */
-
-  var closeBtn = view.querySelector(".photo-view__close");
-  var lastFocus = null;
-
-  function isOpen() {
-    return view.classList.contains("is-open");
+    if (!fig) return;
+    var i = Number(fig.getAttribute("data-photo-index"));
+    if (!(i >= 0 && i < PHOTOS)) return;
+    var want = {
+      x: pos.x + wrapDelta((vw - cellW * size) / 2 - i * pitchX * size - pos.x, pitchX * size * PHOTOS),
+      y: pos.y + wrapDelta((vh - cellH * size) / 2 - pos.y, pitchY * size * PHOTOS)
+    };
+    if (reduce) { pos = want; paint(); return; }
+    vel = { x: 0, y: 0 };
+    seek = want;
+    kick();
   }
 
-  function setInert(on) {
-    ["main", "footer"].forEach(function (sel) {
-      var el = document.querySelector(sel);
-      if (!el) return;
-      if (on) el.setAttribute("inert", "");
-      else el.removeAttribute("inert");
-    });
-  }
-
-  function lock(on) {
-    if (!window.NightScroll) return;
-    if (on) window.NightScroll.stop();
-    else window.NightScroll.start();
-  }
-
-  function open(trigger) {
-    if (isOpen()) return;
-    lastFocus = trigger || document.activeElement;
-    view.hidden = false;
-    /* force layout so the wall has a box to measure before it is revealed */
-    void view.offsetWidth;
-    if (!built || wall.clientWidth !== builtW || wall.clientHeight !== builtH) {
-      if (!sphere.parentNode) wall.appendChild(sphere);
-      if (canvas) {
-        for (var i = 0; i < frames.length; i++) sphere.appendChild(frames[i]);
-      }
-      build();
-    }
-    view.classList.add("is-open");
-    lock(true);
-    setInert(true);
-    if (closeBtn) closeBtn.focus();
-  }
-
-  function close() {
-    if (!isOpen()) return;
-    view.classList.remove("is-open");
-    lock(false);
-    setInert(false);
-    if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
-    lastFocus = null;
-  }
-
-  if (closeBtn) {
-    closeBtn.addEventListener("click", function () {
-      close();
-    });
-  }
-
-  /* Capture phase on purpose: js/main.js turns every in-page anchor into a
-     lenis scroll, and the chapter link must open the view instead of scrolling
-     to it. Stopping the event here is what keeps the two from both firing. */
-  document.addEventListener(
-    "click",
-    function (e) {
-      var target = e.target;
-      if (!target || !target.closest) return;
-      var opener = target.closest('a[href="#photo"], [data-photo-open]');
-      if (opener) {
-        e.preventDefault();
-        e.stopPropagation();
-        open(opener);
-        return;
-      }
-      if (!isOpen()) return;
-      /* any other in-page jump means leaving: hand the page back first */
-      if (target.closest('a[href^="#"]')) close();
-    },
-    true
-  );
-
-  /* #lightbox can be opened from the wall. Closing it clears every inert
-     attribute and hands the page its scroll back, neither of which is true
-     while the wall is still up, so the wall restates both. */
-  document.addEventListener("night:detail-closed", function () {
-    if (!isOpen()) return;
-    lock(true);
-    setInert(true);
-  });
-
-  document.addEventListener("keydown", function (e) {
-    if (e.key !== "Escape" || !isOpen()) return;
-    /* the viewer sits above the wall; when it is up, Escape is its key */
-    var lb = document.getElementById("lightbox");
-    if (lb && lb.classList.contains("is-open")) return;
+  /* The arrows step one photograph at a time once something in the board has
+     focus - the same contract as the film rail's arrow keys. */
+  function onKeyDown(e) {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
     e.preventDefault();
-    close();
-  });
+    var step = e.key === "ArrowRight" ? -pitchX * size : pitchX * size;
+    if (reduce) { pos = { x: pos.x + step, y: pos.y }; paint(); return; }
+    vel = { x: 0, y: 0 };
+    seek = { x: pos.x + step, y: pos.y };
+    kick();
+  }
 
-  /* ---------- rebuild ---------- */
+  wall.addEventListener("pointerdown", onDown);
+  wall.addEventListener("pointermove", onMove);
+  wall.addEventListener("pointerup", onUp);
+  wall.addEventListener("pointercancel", onUp);
+  wall.addEventListener("pointerleave", onLeave);
+  wall.addEventListener("wheel", onWheel, { passive: false });
+  wall.addEventListener("dragstart", onDragStart);
+  wall.addEventListener("click", onClickCapture, true);
+  wall.addEventListener("focusin", onFocusIn);
+  wall.addEventListener("keydown", onKeyDown);
+
+  /* ---------- build ---------- */
+
+  function build() {
+    measure();
+    size = 1;
+    sizeWant = 1;
+    /* the board opens ON the eleven: the authored row is centred, and the
+       pattern fills in around it */
+    pos = {
+      x: ((vw - cellW) / 2) - ((PHOTOS - 1) / 2) * pitchX,
+      y: (vh - cellH) / 2
+    };
+    par = { x: 0, y: 0 };
+    parWant = { x: 0, y: 0 };
+    vel = { x: 0, y: 0 };
+    seek = null;
+    built = true;
+    paint();
+  }
 
   function schedule() {
-    if (!isOpen()) return;
-    if (resizeTimer) clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () {
-      resizeTimer = 0;
-      if (wall.clientWidth === builtW && wall.clientHeight === builtH) return;
-      build();
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(function () {
+      var before = { w: vw, h: vh };
+      measure();
+      if (!built || before.w !== vw || before.h !== vh) paint();
     }, 150);
   }
+  window.addEventListener("resize", schedule);
 
-  if (window.ResizeObserver) new ResizeObserver(schedule).observe(wall);
-  else window.addEventListener("resize", schedule);
+  var boot = function () {
+    build();
+    kick();
+  };
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    window.requestAnimationFrame(boot);
+  }
 
-  /* read-only surface for the self-check and for anyone debugging the wall */
+  /* read-only surface for the self-check and for anyone debugging the board */
   window.PhotoWall = {
-    get radius() {
-      return radius;
+    get cell() {
+      return { w: cellW, h: cellH, pitchX: pitchX, pitchY: pitchY, scale: size };
     },
-    get angle() {
-      return state.a;
+    get offset() {
+      return { x: pos.x, y: pos.y, parX: par.x, parY: par.y, seek: seek };
     },
-    get tiles() {
-      return tiles.length;
+    get cells() {
+      return { pooled: pool.size, free: free.length, authored: PHOTOS };
     },
-    get visible() {
-      var n = 0;
-      for (var i = 0; i < tiles.length; i++) if (!tiles[i].hidden) n++;
-      return n;
+    get velocity() {
+      return { x: vel.x, y: vel.y, dragVelocity: velNow, dragging: dragging, raf: raf };
     },
     get state() {
-      return { photos: PHOTOS, reduce: reduce, built: built };
+      return { photos: PHOTOS, reduce: reduce, built: built, radius: radius };
     },
-    open: open,
-    close: close,
-    isOpen: isOpen,
-    to: settleTo,
-    rebuild: build,
-    /* a new wall without a reload: the seed is the whole layout, so this is
-       also how a layout gets reproduced when something looks wrong */
-    reseed: function (s) {
-      seed = (s === undefined ? (Date.now() ^ (Math.random() * 0xffffffff)) : s) >>> 0;
-      if (built) build();
-      return seed;
+    to: function (index) {
+      var i = Number(index);
+      if (!(i >= 0 && i < PHOTOS)) return null;
+      pos = {
+        x: pos.x + wrapDelta(((vw - cellW * size) / 2) - i * pitchX * size - pos.x, pitchX * size * PHOTOS),
+        y: pos.y + wrapDelta(((vh - cellH * size) / 2) - pos.y, pitchY * size * PHOTOS)
+      };
+      seek = null;
+      paint();
+      return { x: pos.x, y: pos.y };
     },
-    get seed() {
-      return seed;
+    zoom: function (v) {
+      zoom(v === undefined ? HOLD_ZOOM_VALUE : v);
+    },
+    stop: function () {
+      vel = { x: 0, y: 0 };
+      seek = null;
+      sizeWant = 1;
+      paint();
     }
   };
 })();

@@ -69,47 +69,14 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* The head's trailing side: the auto-advance control, then the 01-16 count. */
+/* The head's trailing side: the 01-16 count. There is no auto-advance control
+   any more, because nothing advances on its own - see the note at the top of
+   js/reel-stage.js. */
 .film-stage-head-right,
 .series-stage-head-right {
   display: flex;
   align-items: baseline;
   gap: var(--sp-4);
-}
-
-/* The rail drives itself, so the one thing a reader must be able to do is stop
-   it. Mono, muted, unfilled: a control on paper. No accent, no new radius, and
-   40px tall so it meets the desktop target size. */
-.film-stage-auto,
-.series-stage-auto {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.5rem;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  text-transform: uppercase;
-  cursor: pointer;
-  border-block-end: 1px solid transparent;
-  transition:
-    color 0.2s var(--ease-out),
-    border-color 0.2s var(--ease-out);
-}
-
-.film-stage-auto:hover,
-.series-stage-auto:hover {
-  color: var(--color-text);
-  border-block-end-color: var(--color-line);
-}
-
-.film-stage-auto:focus-visible,
-.series-stage-auto:focus-visible {
-  outline: 2px solid var(--color-accent-text);
-  outline-offset: 3px;
 }
 
 /* touch-action is pan-y, NOT pan-x pan-y. The viewport is overflow:hidden,
@@ -120,18 +87,11 @@
   overflow: hidden;
   background: transparent;
   touch-action: pan-y;
-  /* THE CAMERA. Perspective belongs here, on the viewport, and not on the
-     strip: the strip is max-content (two copies, ~9400px wide), so a
-     perspective on it would put the vanishing point 4700px off to the side and
-     swing the whole row off screen. On the viewport the origin is its own
-     centre - which is exactly where the apex is, because paintArc defines the
-     apex as viewportW / 2. */
-  perspective: 1200px;
-  perspective-origin: 50% 50%;
-  /* No vertical drop any more now that the bend lives in depth, so this is
-     only the room a tilted card's corners need. Block padding only: it must
-     not change clientWidth, which maxX is measured against. */
-  padding-block-end: clamp(1.25rem, 2.5vw, 2.5rem);
+  /* No 3D, no drop: the clip only has to leave room for the focused card's
+     rise. All of that room is block padding on the strip, because viewport
+     padding would change clientWidth - and clientWidth is what maxX and the
+     apex are measured against. */
+  padding-block-end: 0;
 }
 
 /* while a finger is actually dragging the strip, the cursor says so and the
@@ -148,16 +108,6 @@
      Without it offsetLeft is measured from .film-stage and every offset is
      wrong by the strip's own inset. */
   position: relative;
-  /* The cards carry 3D transforms (translateZ + rotateY, driven by paintArc in
-     reel-stage.js) and the camera sits on the viewport above, so this context
-     has to be shared: without preserve-3d every card would be flattened into
-     its own plane and the browser would paint them in DOM order instead of
-     sorting them by depth. Nothing here may join the grouping-property list
-     (overflow other than visible, opacity < 1, filter, clip-path, mask,
-     mix-blend-mode, isolation, contain: paint) or the context collapses. The
-     poster's low-saturation filter is one level down, on the img, where it
-     only affects its own subtree. */
-  transform-style: preserve-3d;
   display: flex;
   /* never the default `stretch`: one tall caption would change every card's
      height and the posters would stop sharing a baseline */
@@ -165,7 +115,10 @@
   width: max-content;
   min-width: 100%;
   gap: clamp(0.9rem, 2vw, 1.7rem);
-  padding: clamp(1rem, 2vw, 1.6rem) clamp(0.25rem, 1vw, 0.8rem);
+  /* The top inset is the room the focused card rises into: one line (34px, see
+     .is-active below) plus air. The card below the fold is the one that moved,
+     so this is the only place the rail's height accounts for it. */
+  padding: clamp(3rem, 4.5vw, 4rem) clamp(0.25rem, 1vw, 0.8rem) clamp(1rem, 2vw, 1.6rem);
   will-change: transform;
 }
 
@@ -217,6 +170,23 @@
   border-radius: 0;
   text-align: start;
   cursor: pointer;
+  /* the rise is transitioned, not snapped: crossing the apex while dragging
+     hands it over instead of popping */
+  transition:
+    transform 0.3s var(--ease-soft),
+    box-shadow 0.3s var(--ease-soft);
+}
+
+/* THE FOCUS IS ONE LINE OF RISE.
+   The lift equals the label it is about to show - the meta's 1rem gap plus one
+   15px line at line-height 1.2 - so the label's bottom edge lands exactly on the
+   row's baseline and the strip still reads as bottom-flush. The focused poster
+   is one line taller, not one card taller. Derived, not typed: change the label
+   size and the rise follows. */
+.film-card.is-active,
+.series-card.is-active {
+  transform: translateY(calc(-1rem - 1.2 * var(--fs-small)));
+  box-shadow: 0 12px 26px -16px oklch(0 0 0 / 0.3);
 }
 
 .film-card-img,
@@ -240,6 +210,16 @@
     filter 0.45s var(--ease-out),
     outline-color 0.3s var(--ease-out),
     transform 0.25s var(--ease-out);
+  /* A poster must never start the browser's own image drag: it paints a
+     translucent copy of the artwork that follows the cursor while the rail's
+     1:1 gesture runs underneath it. pointer-events:none is the load-bearing
+     guard - the gesture then targets the card (a <button>), not the image - and
+     the other three cover engines that decide otherwise. draggable="false" is
+     set in buildCard, and the viewport cancels dragstart as a last resort. */
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .film-card:hover .film-card-img,
@@ -280,34 +260,42 @@
 /* No plate and no plate colour: the meta is simply type under the poster.
    The start border is transparent at rest so the accent rule on the
    selected card costs no layout shift. */
-/* TWO fields, one line each, in a block whose height cannot vary.
-   Criterion's grid caption is exactly this: a <dl> with the title and the
-   director, both 13px/1.2. Letterboxd locks the caption box to the poster's
-   own width and forbids the title from wrapping. Both do it so the bottom
-   edges match by construction rather than by luck, which is what the old
-   three-field, freely-wrapping caption got wrong. */
+/* THE LABEL, AND ONLY THE FOCUSED CARD HAS ONE.
+   The rail is wordless; the card that has stood up says what it is. The label is
+   taken out of flow and pinned under the poster, which is what lets the rise
+   land it exactly on the row's baseline: the card moves up one line, the label
+   drops into the space that released, and every bottom edge in the row stays
+   flush. Out of flow also means the rail's height does not depend on how long a
+   title is.
+
+   Out-of-flow elements are not announced inside the button's own name - the
+   card's aria-label already carries the title - so this is decoration. */
 .film-card-meta,
 .series-card-meta {
-  grid-row: 2;
-  position: static;
-  z-index: auto;
-  display: grid;
-  gap: 0.15rem;
-  padding-block: var(--sp-3) 0;
+  position: absolute;
+  inset-block-start: 100%;
+  inset-inline: 0;
+  display: block;
+  padding-block: 1rem 0;
   background: none;
-  border-block-start: 1px solid transparent;
-  transition: border-color 0.3s var(--ease-out);
+  border: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.22s var(--ease-out), transform 0.22s var(--ease-out);
 }
 
 .film-card.is-active .film-card-meta,
 .series-card.is-active .series-card-meta {
-  background: none;
-  border-block-start-color: var(--color-accent);
+  opacity: 1;
+  transform: none;
 }
 
 .film-card-title,
 .series-card-title {
-  font-size: var(--fs-h4);
+  /* the label under a poster, not a heading: one line, and it must fit the
+     card's own width without wrapping */
+  display: block;
+  font-size: var(--fs-small);
   font-weight: 500;
   letter-spacing: -0.012em;
   line-height: 1.2;
@@ -341,6 +329,13 @@
 .film-card-genre,
 .series-card-category { display: none; }
 
+/* The director/year line under the poster is gone too: the label under a
+   focused poster is the title and nothing else, and the same facts are already
+   the first line of the detail block below. Hidden, not removed - the factory
+   still emits the node. */
+.film-card-meta-line,
+.series-card-meta-line { display: none; }
+
 /* The index chip is gone. It printed an opaque dark pill on all 35 cards
    and carried nothing that the strip order and the 01-16 counter do not
    already say. The node still exists in the factory's output, so it is
@@ -364,71 +359,8 @@
   .series-card-img { filter: saturate(1); }
 }
 
-/* ---------------------------------------------------------------------
-   The scrubber. The reel moves on a transform, not on scroll, so this
-   input IS the position indicator; it is kept because it is the keyboard
-   and precision path. Restyled as a rule with a thumb that sits on it.
-   --------------------------------------------------------------------- */
-.film-stage-dragwrap,
-.series-stage-dragwrap {
-  margin-block-start: 1.15rem;
-  padding: 0.6rem clamp(0.2rem, 1vw, 0.8rem);
-  background: transparent;
-  border: 0;
-}
-
-.film-stage-range,
-.series-stage-range {
-  -webkit-appearance: none;
-  appearance: none;
-  display: block;
-  width: 100%;
-  height: 22px;
-  margin: 0;
-  background: transparent;
-  outline: none;
-  cursor: pointer;
-}
-
-.film-stage-range::-webkit-slider-runnable-track,
-.series-stage-range::-webkit-slider-runnable-track {
-  height: 2px;
-  background: oklch(0 0 0 / 0.14);
-  border-radius: 0;
-}
-
-.film-stage-range::-webkit-slider-thumb,
-.series-stage-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 12px;
-  height: 12px;
-  margin-top: -5px;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--color-ink);
-  box-shadow: none;
-}
-
-.film-stage-range::-moz-range-track,
-.series-stage-range::-moz-range-track {
-  height: 2px;
-  background: oklch(0 0 0 / 0.14);
-  border-radius: 0;
-}
-
-.film-stage-range::-moz-range-thumb,
-.series-stage-range::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--color-ink);
-  box-shadow: none;
-}
-
-.film-stage-range:focus-visible,
-.series-stage-range:focus-visible {
-  outline: 2px solid var(--color-accent-text);
-  outline-offset: 4px;
-}
+/* The scrubber under the rail is gone. It was a second position control
+   mirroring the rail, and every writer had to be taught to update it; the rail
+   is dragged directly and the arrow keys step it, so the mirror had nothing
+   left to say. The head's 01-16 count and the detail block's position number
+   already answer "where am I". */

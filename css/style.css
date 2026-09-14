@@ -252,7 +252,17 @@ h1, h2 { text-wrap: balance; }
   border-radius: var(--radius-sm);
 }
 
-/* ============ 6. NAV (liquid glass pill floating over the hero) ============ */
+/* ============ 6. NAV (liquid glass bar floating over the hero) ============
+
+   FORM borrowed from the Framer Liquid Glass Navbar
+   (framer.com/m/Liquid-Glass-Navbar-6gh01a.js). Three things are taken and
+   nothing else: a rim as thick as the shell's own inset, an axial bead that
+   lights the top AND the bottom with the definition carried by dark side
+   rails, and a six-layer elevation that is wide, soft and very low alpha.
+   The labels, the type register and the material stay this site's own - the
+   reference's logo mark, menu items and CTA are its CONTENT, not its style,
+   which is the same line drawn for the two bars in DESIGN.md 4.8.
+   ========================================================================= */
 .nav {
   position: fixed;
   top: clamp(0.75rem, 1.6vh, 1.25rem);
@@ -267,7 +277,45 @@ h1, h2 { text-wrap: balance; }
   gap: var(--sp-4);
   padding-inline: var(--sp-2) var(--sp-2);
   border-radius: var(--radius-pill);
+
+  /* A CRISP EDGE INSTEAD OF A GLOW. The reference draws its shell ring 3px
+     thick and insets the content panel by that same 3px, so the bright rim
+     and the panel edge are one continuous step. The pill default is 9px,
+     which reads as a soft halo; 3px reads as a lens. */
+  --glass-edge-w: 3px;
+
+  /* Lit top and lit bottom, dark rails. The reference's shell gradient runs
+     white at 0%, grey through the middle, white again at 100%, so its
+     underside is LIT. The light glass does the opposite (a dark underside)
+     because on paper the ring has to read by its dark half; the nav floats
+     over a photograph and can take the reference's profile instead. */
+  --glass-bead-bottom: oklch(1 0 0 / 0.72);
+  --glass-bead-side: oklch(0 0 0 / 0.16);
+
+  /* The reference's elevation, transcribed as measured rather than eyeballed:
+     six stacked layers, no negative spread, the widest at 60px blur / 30px
+     offset and still only 6% alpha. --shadow-lift pulls in with an -18px
+     spread and reads far tighter, which is exactly the difference here. */
+  --glass-elevation:
+    0.29px 4.36px 2.18px oklch(0 0 0 / 0.01),
+    0.48px 7.24px 3.63px oklch(0 0 0 / 0.01),
+    0.78px 11.7px 5.86px oklch(0 0 0 / 0.02),
+    1.28px 19.15px 9.6px oklch(0 0 0 / 0.03),
+    2.2px 32.97px 16.52px oklch(0 0 0 / 0.03),
+    4px 60px 30.07px oklch(0 0 0 / 0.06);
 }
+
+/* .glass and .glass--pill live in glass.css, which loads AFTER this file, so
+   a bare .nav rule loses to them at equal specificity. The extra class is
+   load-bearing, not decoration: the same trap as .tabbar.glass. */
+.nav.glass .glass__edge { padding: 3px; }
+.nav.glass::before { padding: 3px; }
+
+/* --glass-nav is the 78% tint, and it is the only one that clears the 0.76
+   floor measured for ink labels over the worst hero photo. Everything that
+   sits on paper keeps falling back to --glass-panel (72%). It has to be
+   written with the extra class for the same load-order reason as above. */
+.nav.glass { background: var(--glass-nav); }
 
 .nav .glass__content {
   display: flex;
@@ -277,6 +325,10 @@ h1, h2 { text-wrap: balance; }
   gap: var(--sp-4);
   padding-inline-start: var(--sp-4);
 }
+/* The reference nests a second panel inside its shell and bevels it. Ported as
+   a bevel on this element it read as one extra thin ring circling inside the
+   rim - a thing neither this bar nor the reference actually shows - so it is
+   gone. The shell's own rim is the only edge on this bar. */
 
 .nav-brand {
   font-size: var(--fs-small);
@@ -295,15 +347,9 @@ h1, h2 { text-wrap: balance; }
   margin-inline-start: 0.75em;
 }
 
-/* The indicator is absolutely positioned inside this list, so the list is
-   the positioning context. The links themselves are lifted above it: without
-   the z-index the pill would paint over its own label. */
-.nav-links { position: relative; display: flex; gap: 2px; align-items: center; }
+.nav-links { display: flex; gap: 2px; align-items: center; }
 
 .nav-links a {
-  position: relative;
-  /* one above .glass-pill, so the label stays on top of its own indicator */
-  z-index: 4;
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   letter-spacing: 0.1em;
@@ -321,24 +367,14 @@ h1, h2 { text-wrap: balance; }
 
 .nav-links a:hover { color: var(--color-text); background: oklch(0 0 0 / 0.05); }
 
-/* The active link no longer paints its own background - the glass pill
-   underneath does that, and it has to stay visible through the label. */
-.nav-links a.is-active {
-  color: var(--color-on-dark);
-  background: none;
-}
-
-/* While the pill is being carried, only the link UNDER it keeps the light
-   label; everything else goes back to ink. */
-.nav-links.is-dragging a.is-active { color: var(--color-text-secondary); }
-.nav-links.is-dragging a.is-drop-target { color: var(--color-on-dark); }
-
-/* Grab affordance, but only where the drag actually exists: the pill is not
-   draggable inside a horizontal scroller (<=720px). */
-@media (min-width: 721px) {
-  .nav-links a.is-active { cursor: grab; }
-  .nav-links.is-dragging a.is-active { cursor: grabbing; }
-}
+/* THE ACTIVE LINK IS COLOUR, NOT A SHAPE. This bar used to mount the same
+   draggable dark lozenge as the archive tab strip. Over a photograph that
+   lozenge read as a black blob riding the glass, and the reference navbar
+   this bar now follows has no selected state at all. So the nav keeps only
+   the ink step - ink-900 against the ink-600 of its neighbours, 13.9:1 and
+   6.6:1 on the glass - and there is no grab cursor, because nothing up here
+   is draggable any more. js/glass-pill.js still owns the tab strip's pill. */
+.nav-links a.is-active { color: var(--color-text); background: none; }
 
 /* The nav keeps ink labels even over the dark hero. The frosted pill is
    light in every case, and white-on-frost would be invisible; ink on the
@@ -554,6 +590,19 @@ h1, h2 { text-wrap: balance; }
   width: max-content;
   max-width: 100%;
   margin-block-end: clamp(2rem, 4vw, 3rem);
+}
+
+/* The lens rim loses its brightening here, and only here. glass.css gives
+   every bar `blur(3px) brightness(1.14) saturate(1.4)` on a 9px masked ring;
+   over photographs that is the lens read, but over this paper the body is
+   already ~249 and 1.14x clips every channel to pure white. Measured on the
+   real render: the top and bottom 9px of this bar were 255,255,255 against a
+   249,249,243 body, and since the selected pill sits 6px from the rim on
+   every side, that white band read as a halo around the pill. Same layer, same
+   blur, no brightening: the rim now measures the bar's own colour. */
+#archive-tabbar .glass__edge {
+  backdrop-filter: blur(3px) saturate(1.4);
+  -webkit-backdrop-filter: blur(3px) saturate(1.4);
 }
 
 .tab-btn {
@@ -924,54 +973,83 @@ html:not(.js) .sport-wash { opacity: 1; }
 
 /* ============ 13. MUSIC ============ */
 
-.music-bar {
+/* The SEARCH row is NOT the sticky one. It scrolls away with the list; the
+   genre rail below it is what stays pinned (the user's correction: the first
+   version had these two the other way round). It paints nothing - no
+   background, no blur, no box - so only layout lives here. */
+.music-bar { margin-block-start: var(--sp-4); }
+
+/* Fallbacks, all three (AGENTS.md, glass). This pane is hand-rolled rather
+   than a .glass element, so glass.css's fallback blocks do not reach it; and
+   where there is no backdrop-filter to sample, 16% paper is not a surface at
+   all. Solid paper keeps the layout and every text pair identical to the
+   paper page. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .genre-filter { background: var(--color-surface); }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .genre-filter {
+    background: var(--color-surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+html[data-transparency="solid"] .genre-filter {
+  background: var(--color-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ---------------------------------------------------------------------
+   The music toolbar: a genre rail that stays pinned, and a search row that
+   scrolls away above it.
+
+   #genre-filter is a SIBLING of .music-bar, not a child (see index.html): a
+   sticky element is clipped by its parent's box, so the pinned row and the row
+   that scrolls must not live inside one another. The rail carries the ONLY
+   plate in this toolbar; the search row paints nothing.
+
+   NOT full-bleed (asked for): the plate spans the panel's content width, so it
+   needs no negative margins - the reference's own plate is flush with the
+   viewport only because it is a page-level nav.
+
+   THIS IS THE ONE PLACE ON THE PAGE WHERE GLASS HAS SOMETHING TO SMEAR: the
+   rail is pinned and the playlist scrolls underneath it, which is exactly the
+   condition AGENTS.md asks for before glass is allowed.
+   --------------------------------------------------------------------- */
+.music-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.genre-filter {
+  /* Recipe taken verbatim from Framer's Blur Navigation
+     (framer.com/m/Blur-Navigation-iGYrtY.js): backdrop blur(26px), a tint of
+     paper-100 at 16%, a 1px ink-12% hairline as the only edge, no radius and no
+     saturate/brightness - the reference has neither.
+     16% is see-through on purpose: covers slide under it and stay visible.
+     Consequence, accepted by the user: over a dark cover the chip labels are far
+     below 4.5:1. That is the point of this material, not an oversight - do not
+     thicken it "to fix contrast". */
   position: sticky;
   top: clamp(4.5rem, 9vh, 5.5rem);
   z-index: 30;
   display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-  padding: var(--sp-3) 0 var(--sp-4);
-  margin-block-end: var(--sp-5);
-  background: linear-gradient(var(--color-bg-deep) 90%, transparent);
-}
-
-/* ---------------------------------------------------------------------
-   The music toolbar: two trays, items flush inside them.
-
-   Shape borrowed from Framer's Compact Navbar
-   (framer.com/m/Compact-Navbar-cE1IzB.js): ONE container per row, the row's
-   items living inside it with no box of their own, a compact tray padding
-   around them, and the row's single action pill parked at the right end.
-   The reference is dark glass; this site keeps its paper-white material and
-   takes only the form (decision recorded in AGENTS.md).
-
-   These two are deliberately NOT .glass. .music-bar paints an opaque paper
-   scrim behind them, so there is nothing back there to refract and a glass
-   tray on paper only goes grey (AGENTS.md, glass). The radius is
-   --radius-lg rather than --radius-pill: the chip row WRAPS to two lines at
-   every desktop width (the 15 chips measure ~1850px against a 1296px
-   panel), and a stadium radius on a 100px-tall box would round the first
-   and last chip out of their own tray.
-   --------------------------------------------------------------------- */
-.music-search,
-.genre-filter {
-  display: flex;
   align-items: center;
   gap: 4px;
-  padding: 6px;
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow:
-    inset 0 0 0 1px var(--color-line),
-    0 0 33px oklch(0 0 0 / 0.04); /* the reference's own halo, verbatim */
+  flex-wrap: wrap;
+  padding-block: var(--sp-3);
+  margin-block: var(--sp-4) var(--sp-5);
+  background: color-mix(in oklab, var(--paper-100) 16%, transparent);
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+  box-shadow: inset 0 -1px 0 0 oklch(0 0 0 / 0.12);
 }
 
-.music-search { flex-wrap: nowrap; padding-inline-start: 1.15em; }
-.genre-filter { flex-wrap: wrap; }
-
-/* The tray is the field now, so the input keeps no box of its own: the
-   placeholder sits where the tray's text inset puts it. */
+/* The field keeps no box of its own: the caret and the placeholder are the
+   whole affordance until it is focused, when the underline appears. */
 .music-search-input {
   flex: 1 1 auto;
   min-width: 0;
@@ -981,6 +1059,8 @@ html:not(.js) .sport-wash { opacity: 1; }
   color: var(--color-text);
   padding: 0.7em 0;
   border: 0;
+  /* the focus cue rides this edge - see the focus rules below */
+  border-block-end: 1px solid transparent;
   border-radius: var(--radius-pill);
   background: none;
   box-shadow: none;
@@ -988,21 +1068,21 @@ html:not(.js) .sport-wash { opacity: 1; }
 
 .music-search-input::placeholder { color: var(--color-text-muted); text-transform: uppercase; }
 
-/* The focus ring moved up to the tray. Drawn on the input it would sit
-   inside the field it belongs to; the replacement is the tray's own ring, so
-   this is not an outline removed without one. :focus-visible still drives it
-   (a text field matches :focus-visible on click as well as on Tab), and the
-   ratio is the measured gold-on-paper pair either way. */
-.music-search:has(.music-search-input:focus-visible) {
-  outline: 2px solid var(--color-accent-text);
-  outline-offset: 3px;
-}
+/* The focus cue is this underline, not a ring around the row. The row has no
+   box of its own, so a 2px gold rectangle drawn 3px outside it read as a
+   picture frame (user: the gold frame had to go). A text
+   field matches :focus-visible on click as well as on Tab, so the underline
+   plus the caret is the visible replacement for the input's own outline -
+   this is not an outline removed without one. The small buttons inside the row
+   (clear / 随机一首) keep the global focus ring; they are controls, not the row. */
 .music-search-input:focus,
-.music-search-input:focus-visible { outline: none; }
+.music-search-input:focus-visible {
+  outline: none;
+  border-block-end-color: var(--color-text-muted);
+}
 
 .music-random,
-.music-search-clear,
-.music-search-jump {
+.music-search-clear {
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   letter-spacing: 0.1em;
@@ -1047,6 +1127,7 @@ html:not(.js) .sport-wash { opacity: 1; }
 
 .music-search-empty {
   display: flex;
+  margin-block-start: var(--sp-2);
   align-items: center;
   gap: var(--sp-3);
   flex-wrap: wrap;
@@ -1057,15 +1138,9 @@ html:not(.js) .sport-wash { opacity: 1; }
   color: var(--color-text-secondary);
 }
 
-.music-search-jump {
-  color: var(--color-accent-text);
-  background: var(--color-accent-tint);
-  box-shadow: inset 0 0 0 1px var(--color-line);
-  text-transform: none;
-  letter-spacing: var(--track-meta);
-}
-.music-search-jump:hover { background: var(--gold-100); }
-.music-search-jump:active { transform: scale(0.96); }
+/* the "no match here, try that genre" jump button is gone with the cross-genre
+   search: a query now covers every genre, so there is no elsewhere to send
+   anyone to. */
 
 /* These live IN the tray (see the toolbar block above) and carry no box of
    their own: the pill on hover and the filled pill when active are the whole
@@ -1713,10 +1788,12 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .idx-card .idx-artist { grid-column: 2; }
 
   .music-search-input { font-size: 16px; } /* iOS zooms a focused input under 16px */
-  .music-bar { top: 4.25rem; }
+  .genre-filter { top: 4.25rem; }
 
   .genre-filter { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; padding-inline-end: var(--sp-5); }
   .genre-filter::-webkit-scrollbar { display: none; }
+  /* The rail is a plain horizontal scroller here - no glass of its own since the
+     plate moved up to the bar, so nothing samples a backdrop inside a scroller. */
   .genre-chip { flex: 0 0 auto; }
 
   .lb-stage img { max-height: 52vh; }

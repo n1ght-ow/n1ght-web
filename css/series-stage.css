@@ -27,31 +27,37 @@
    Second Run all keep the artwork at one size in the row and let the selected
    item's detail be columns of type. */
 .series-stage-detail {
+  /* Whitespace, not a rule. See css/film-stage.css - the two panels share one
+     detail design. */
   margin-block-start: var(--sp-6);
-  padding-block-start: var(--sp-5);
-  border-block-start: 1px solid var(--color-line);
 }
 
+/* see css/film-stage.css: block stack + inline facts row, for the reason
+   documented there */
 .series-detail-copy {
-  display: grid;
-  grid-template-columns: minmax(0, 26ch) minmax(0, 46ch);
-  column-gap: clamp(2rem, 6vw, 6rem);
-  align-items: start;
+  display: block;
+  /* 72ch for the same reason as the film panel: the note is one line, and the
+     longest note in js/series-data.js measures 620px at --fs-h4 */
+  max-width: 72ch;
   min-width: 0;
 }
 
 .series-detail-kicker {
-  grid-column: 1 / -1;
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
-  gap: var(--sp-3);
   align-items: baseline;
-  padding-block-end: var(--sp-4);
+  gap: var(--sp-3);
+  vertical-align: baseline;
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
+}
+
+.series-detail-index {
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
 }
 
 /* category and years were tinted pills; colour is reserved for interaction */
@@ -63,38 +69,29 @@
   border-radius: 0;
 }
 
-.series-detail-title {
-  grid-column: 1;
-  margin: 0;
-  font-size: var(--fs-h2);
-  font-weight: 500;
-  letter-spacing: var(--track-h2);
-  line-height: 1.11;
-  color: var(--color-text);
-  overflow-wrap: anywhere;
-}
+/* the title lives under the raised poster; it is not repeated here */
+.series-detail-title { display: none; }
 
 .series-detail-seasons {
-  grid-column: 1;
-  margin-block-start: var(--sp-3);
+  display: inline;
+  margin: 0 0 0 var(--sp-4);
   font-family: var(--font-mono);
-  font-size: var(--fs-meta);
+  font-size: var(--fs-label);
   font-weight: 400;
-  letter-spacing: var(--track-meta);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
 
 .series-detail-quote {
-  grid-column: 2;
-  grid-row: 2;
-  max-width: 46ch;
-  margin: 0;
+  display: block;
+  margin: var(--sp-4) 0 0;
   font-family: var(--font-serif);
   font-style: italic;
   font-size: var(--fs-h4);
   line-height: 1.5;
   color: var(--color-text-secondary);
+  text-wrap: pretty;
 }
 
 /* The panel's single action, as real glass. .glass supplies the border,
@@ -102,14 +99,10 @@
    champagne tint that makes the material read on a flat paper page. All this
    rule owns is placement and type. */
 .series-detail-imdb {
-  grid-column: 2;
-  grid-row: 3;
-  justify-self: start;
-  align-self: end;
   display: inline-flex;
   align-items: center;
   min-height: 40px;
-  margin-block-start: var(--sp-4);
+  margin-block-start: var(--sp-5);
   padding: 0.85em 1.45em;
   color: var(--ink-950);
   font-family: var(--font-mono);
@@ -131,35 +124,20 @@
 }
 
 @media (max-width: 760px) {
-  /* the two measured columns collapse; the quote drops under the identity */
-  .series-detail-copy { grid-template-columns: minmax(0, 1fr); }
-
-  .series-detail-quote {
-    grid-column: 1;
-    grid-row: auto;
-    margin-block-start: var(--sp-5);
-    max-width: 46ch;
-  }
-
-  /* one column, so the action drops to the natural flow position */
-  .series-detail-imdb {
-    grid-column: 1;
-    grid-row: auto;
-    justify-self: start;
-  }
-
+  /* the detail block is already a wrapping stack, so only the card width is
+     viewport-dependent here */
   .series-card { width: min(66vw, 240px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  /* The cards are deliberately NOT in this list any more. The arc is static
-     layout, not motion, and killing its transform here flattened the series
-     rail while the film rail stayed bent - the two panels disagreed. What
-     reduced motion turns off is the auto-advance (see js/reel-stage.js), not
-     the shape. */
+  /* The card's transform itself is NOT cancelled - the rise by one line IS the
+     selection feedback, and flattening it would delete the state. What goes is
+     the travelling: the rise lands instantly, and so does the label's fade. */
+  .series-card { transition-duration: 0s !important; }
+  .series-card-meta { transition-duration: 0s !important; }
+
   .series-detail-imdb,
-  .series-detail-imdb:hover,
-  .series-stage-range {
+  .series-detail-imdb:hover {
     transform: none !important;
     transition-duration: 0s !important;
   }

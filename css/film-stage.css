@@ -33,25 +33,41 @@
    with nothing to sit against.
    --------------------------------------------------------------------- */
 .film-stage-detail {
+  /* Whitespace, not a rule: the rail above and this block are one object, and
+     the divider only ever separated two things that are not separate. */
   margin-block-start: var(--sp-6);
-  padding-block-start: var(--sp-5);
-  border-block-start: 1px solid var(--color-line);
 }
 
+/* ONE left-aligned stack.
+   The facts flow as a single wrapping row - the kicker is display:contents, so
+   its spans and the director are siblings in this row - the note takes the whole
+   measure under it, and the one action closes the column it belongs to. The old
+   grid put a 25px title in a 26ch box with nothing under it and stranded the
+   action in the far column. */
+/* A plain block stack with an inline facts row, NOT a wrapping flex row.
+   A flex row was tried first and it put the action on the same line as the note:
+   the note asks for flex-basis 100% but a max-width clamps the base size, so the
+   button fitted beside it and landed on top of the text. In normal flow the note
+   is a block (its own line), the facts are an inline-flex box that can wrap, and
+   the action starts a new line because the note before it is a block.
+
+   72ch, not 62ch, because THE NOTE IS ONE LINE. Measured at --fs-h4 (20px,
+   Instrument Serif italic): the longest note in js/film-data.js is 580px and in
+   js/series-data.js 620px, so the column has to be wider than 620px for the
+   longest one to sit on a single line. 72ch is about 739px here, which leaves
+   both of them room. Below roughly 700px of viewport the note wraps, and that is
+   correct: there is no honest way to hold one line in a phone column. */
 .film-detail-copy {
-  display: grid;
-  grid-template-columns: minmax(0, 26ch) minmax(0, 46ch);
-  column-gap: clamp(2rem, 6vw, 6rem);
-  align-items: start;
+  display: block;
+  max-width: 72ch;
 }
 
 .film-detail-kicker {
-  grid-column: 1 / -1;
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: var(--sp-3);
-  padding-block-end: var(--sp-4);
+  vertical-align: baseline;
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   letter-spacing: var(--track-label);
@@ -59,19 +75,22 @@
   color: var(--color-text-muted);
 }
 
+/* the position number is the one fact in full ink: it binds this block to the
+   poster that is currently standing up */
+.film-detail-index {
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
 /* The panel's single action, as real glass. .glass supplies the border,
    radius, isolation and the specular rim; .glass--accent supplies the
    champagne tint that makes the material read on a flat paper page. All this
    rule owns is placement and type. */
 .film-detail-imdb {
-  grid-column: 2;
-  grid-row: 3;
-  justify-self: start;
-  align-self: end;
   display: inline-flex;
   align-items: center;
   min-height: 40px;
-  margin-block-start: var(--sp-4);
+  margin-block-start: var(--sp-5);
   padding: 0.85em 1.45em;
   color: var(--ink-950);
   font-family: var(--font-mono);
@@ -102,37 +121,36 @@
   border-radius: 0;
 }
 
-.film-detail-title {
-  grid-column: 1;
-  margin: 0;
-  font-size: var(--fs-h2);
-  font-weight: 500;
-  letter-spacing: var(--track-h2);
-  line-height: 1.11;
-  color: var(--color-text);
-  overflow-wrap: anywhere;
-}
+/* The title is NOT repeated here. It is written under the raised poster, where
+   it names the thing it sits beside; printing it again 60px lower is the
+   duplication this project keeps out. The factory still emits the node, so it is
+   hidden rather than removed - the same treatment as the card's index chip and
+   sleeve. */
+.film-detail-title { display: none; }
 
+/* the director is the last fact in the row: inline, so it shares the line with
+   the kicker when it fits and wraps under it when it does not */
 .film-detail-director {
-  grid-column: 1;
-  margin-block-start: var(--sp-3);
+  display: inline;
+  margin: 0 0 0 var(--sp-4);
   font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
 
+/* the note is one line: it is the only large thing in the block, and the column
+   above is sized so the longest note fits without wrapping */
 .film-detail-quote {
-  grid-column: 2;
-  grid-row: 2;
-  max-width: 46ch;
-  margin: 0;
+  display: block;
+  margin: var(--sp-4) 0 0;
   font-family: var(--font-serif);
   font-size: var(--fs-h4);
   font-style: italic;
   line-height: 1.5;
   color: var(--color-text-secondary);
+  text-wrap: pretty;
 }
 
 @media (max-width: 680px) {
@@ -143,31 +161,14 @@
 
   .film-stage-title { font-size: var(--fs-h4); }
 
+  /* the top inset is still the room the focused card rises into - a symmetric
+     padding here would clip the top of the poster that stands up */
   .film-stage-strip {
-    padding: 0.9rem 0.4rem;
+    padding: 2.75rem 0.4rem 0.9rem;
     gap: 0.9rem;
   }
 
   .film-card { width: clamp(176px, 58vw, 244px); }
-
-  /* the two measured columns collapse; the quote drops under the identity */
-  .film-detail-copy { grid-template-columns: minmax(0, 1fr); }
-
-  .film-detail-quote {
-    grid-column: 1;
-    grid-row: auto;
-    margin-block-start: var(--sp-5);
-    max-width: 46ch;
-  }
-
-  /* one column, so the action drops to the natural flow position */
-  .film-detail-imdb {
-    grid-column: 1;
-    grid-row: auto;
-    justify-self: start;
-  }
-
-  .film-detail-title { font-size: var(--fs-h3); }
 }
 
 @media (prefers-reduced-motion: reduce) {

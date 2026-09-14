@@ -11,7 +11,6 @@
     tabToken: "films",
     title: "SIXTEEN FILMS",
     sub: "MOTION / REEL",
-    rangeAria: "Film track position",
     detailAria: "Selected film",
     cardAria: (f) => f.title + ", " + f.year,
     cardMetaLine: (f) => f.director + " / " + f.year,
@@ -21,5 +20,7 @@
       { cls: "film-detail-year", text: f.year },
     ],
     detailLine: { cls: "film-detail-director", get: (f) => f.director },
+    /* a timeline, not a ranking: oldest first */
+    sortKey: (f) => parseInt(f.year, 10) || 0,
   });
 })();

@@ -30,11 +30,11 @@
   </script>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=12">
-  <link rel="stylesheet" href="css/style.css?v=69">
-  <link rel="stylesheet" href="css/glass.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=75">
+  <link rel="stylesheet" href="css/glass.css?v=7">
   <link rel="stylesheet" href="css/reel-stage.css?v=15">
-  <link rel="stylesheet" href="css/film-stage.css?v=13">
-  <link rel="stylesheet" href="css/series-stage.css?v=15">
+  <link rel="stylesheet" href="css/film-stage.css?v=14">
+  <link rel="stylesheet" href="css/series-stage.css?v=16">
 <link rel="stylesheet" href="css/book-shelf.css?v=5">
   <link rel="stylesheet" href="css/photo-wall.css?v=5">
   <link rel="stylesheet" href="css/games-stage.css?v=2">
@@ -82,12 +82,9 @@
     <span class="glass__press" aria-hidden="true"></span>
     <div class="glass__content">
       <a class="nav-brand" href="#hero">N1GHT CHXN9<i>/ LN4 STUDY</i></a>
+      <!-- No selected indicator: the active link is marked by colour alone.
+           See the note in css/style.css. -->
       <nav class="nav-links" aria-label="Primary">
-        <!-- The selected indicator. It is a real element rather than a
-             background on the active link because it has to be draggable;
-             js/glass-pill.js owns its geometry. Decorative only: the links
-             themselves carry the semantics. -->
-        <span class="glass-pill nav-pill" id="nav-pill" aria-hidden="true"><span class="glass-pill__body"></span></span>
         <a href="#photo">Photography</a>
         <a href="#archive">Archive</a>
         <a href="#about">About</a>
@@ -326,10 +323,15 @@
                 </div>
                 <p class="music-search-empty" id="music-search-empty" role="status" aria-live="polite" hidden>
                   <span id="music-search-empty-text">No match</span>
-                  <button class="music-search-jump" id="music-search-jump" type="button" hidden></button>
                 </p>
-                <div class="genre-filter" id="genre-filter" role="group" aria-label="按流派过滤"></div>
               </div>
+              <!-- The genre rail is a SIBLING of the search row, not a child.
+                   The RAIL is the pinned one; the search row scrolls away above
+                   it. Do not move this inside .music-bar: a sticky element is
+                   clipped by its parent's box, so it would stop being pinned the
+                   moment that box scrolled past. (First pass had it the other way
+                   round; the user corrected it.) -->
+              <div class="genre-filter" id="genre-filter" role="group" aria-label="按流派过滤"></div>
               <div class="playlist" data-music-stage="auto"></div>
             </div>
           </div>
@@ -692,8 +694,8 @@
 <script src="js/book-shelf.js?v=4"></script>
 <script src="js/photo-wall.js?v=4"></script>
 <script src="js/games-stage.js?v=3"></script>
-  <script src="js/glass-pill.js?v=2"></script>
+  <script src="js/glass-pill.js?v=3"></script>
   <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=62"></script>
+  <script src="js/main.js?v=65"></script>
 </body>
 </html>

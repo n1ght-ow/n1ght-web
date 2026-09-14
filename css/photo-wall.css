@@ -1,79 +1,128 @@
-/* ============ PHOTOGRAPHY : THE WALL ============
-   The photography chapter is a full-screen view now, and the view is one
-   curved wall of frames. Both halves of that sentence are load-bearing.
+/* ============ PHOTOGRAPHY : THE BOARD ============
+   The photography chapter shows an INFINITE DRAGGABLE BOARD of frames, in the
+   flow of the page, one band tall. It is a port of PhantomInfiniteGallery (a
+   Framer code component) to plain DOM; the mechanics, the knobs and the four
+   things that changed for a paper page are documented at the top of
+   js/photo-wall.js. Nothing about it is scroll-driven.
 
-   THE VIEW. #photo-view is a fixed layer under the nav (70) and under
-   #lightbox (200), opened from the nav link, the footer link or the chapter
-   button, closed with Escape or the Close pill. It is NOT a modal: the nav
-   stays live above it and the rest of the document is made inert while it is
-   open, so nobody tabs into a page they cannot see.
+   FOUR THINGS ARE LOAD-BEARING HERE:
 
-   THE WALL. Measured off cmscurvegallery.framer.website over CDP, and the
-   first attempt at this got the layout wrong by assuming a uniform grid. The
-   reference is NOT a grid: it is a JUSTIFIED layout - every frame in a row
-   shares one height, each frame keeps its own aspect ratio, and the row is
-   then stretched until it exactly fills the row. That is where the mosaic's
-   irregularity comes from, and with eleven 3:2 photographs it is impossible
-   to reproduce without letting each tile take its OWN aspect ratio (the crop
-   is the price, and it is the price the reference pays too: its frames run
-   0.50 to 1.00).
+   1. preserve-3d and overflow: hidden live on DIFFERENT elements, same as the
+      ring wall before it: .photo-wall clips and carries the perspective,
+      .photo-wall__layer keeps the depth. A grouping property on the element
+      that carries transform-style would flatten the cells into one plane and
+      Chrome would paint them in DOM order instead of by depth.
 
-   So js/photo-wall.js packs justified rows whose tile aspects are drawn from
-   a triangular distribution peaking at 0.80, and lays those rows out on a
-   sphere. Four things here are load-bearing:
+   2. --pw-cell / --pw-cell-h are WRITTEN BY JS. The board's height is written
+      here and read by JS. Neither side keeps a second copy of the other's
+      numbers.
 
-   1. preserve-3d and overflow: hidden live on DIFFERENT elements. A grouping
-      property on the element that carries transform-style would flatten the
-      scene. .photo-wall clips and holds the perspective; .photo-wall__sphere
-      keeps the depth.
+   3. touch-action is pan-y, NOT none. The reference swallows every gesture
+      because it owns a full screen; this board is one band inside a long
+      document, so a vertical swipe has to keep scrolling the page. Horizontal
+      drags pan the board; vertical drags belong to the document (a mouse can
+      still pan both axes).
 
-   2. The sphere is a ZERO-SIZE box. It carries translateZ(R) - it has to,
-      because that is what puts its centre on the viewer - and a box the size
-      of the stage sitting exactly on the viewer's plane projects to infinity.
-      Chrome resolves that into a layer thousands of pixels across, cannot
-      raster all of it, and silently leaves whole columns unpainted.
+   4. The photograph never starts the browser's OWN image drag - pointer-events
+      is off the image entirely, so the gesture targets the button. Without it
+      Chrome paints a translucent copy of the artwork that follows the cursor
+      while the board's own 1:1 drag runs underneath. Same lesson as the film
+      rail, same four guards (the other three are in js/photo-wall.js).
 
-   3. A frame's whole transform is written by JS into --wall-t as ONE value.
-      The order (translate -> rotateY -> rotateX -> translateZ) is the
-      construction, not a style choice. Width and height come in separately as
-      --wall-w / --wall-h because they differ per frame.
+   COLOUR IS THE POINT HERE. This board is the one surface on the site where the
+   photographs ARE the page, so it runs full colour - the ring wall before it did
+   the same for the same reason. The "low saturation at rest, colour on hover and
+   focus" rule exists to stop the INTERFACE competing with the pictures, not to
+   mute the pictures themselves, and muting them at this scale only reads as a
+   rendering fault. --wall-saturate on .photo-wall is the one knob back. */
 
-   4. The focus ring is gold-400, NOT --color-accent-text. Measured: gold-700
-      on --ink-950 is 3.18:1 and fails the 3:1 non-text minimum; gold-400 is
-      7.89:1. The global :where() rule is written for paper surfaces.
+/* ---------- the band ---------- */
 
-   Geometry, the two knobs and the culling rule are documented in
-   js/photo-wall.js. Nothing about this view is scroll-driven. */
-
-/* ---------- the chapter button that opens the view ---------- */
-
-.photo-open {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7em;
-  margin-block-start: var(--sp-5);
-  padding: 0.7em 1.2em;
-  min-height: 42px;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  background: var(--color-ink);
-  color: var(--color-on-dark);
-  transition: transform 0.15s var(--ease-out), background-color 0.2s var(--ease-out);
+.photo-wall {
+  position: relative;
+  overflow: hidden;
+  height: clamp(340px, 56vh, 600px);
+  margin-block-start: var(--sp-6);
+  border-radius: var(--radius-lg);
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  /* 1 = the photographs as they were shot. Dial it down here and the whole
+     board follows; the cells never carry their own value. */
+  --wall-saturate: 1;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.photo-open:hover { background: oklch(0.24 0 0); }
-.photo-open:active { transform: scale(0.97); }
+.photo-wall.is-dragging { cursor: grabbing; }
+
+.photo-wall__layer {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* ---------- a cell ---------- */
+
+.photo-cell {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: var(--pw-cell, 180px);
+  margin: 0;
+  /* the whole placement is one transform, written per frame by the board */
+  will-change: transform, opacity;
+}
+
+.photo-cell .photo-frame-btn {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-bg-deep);
+  cursor: pointer;
+}
+
+.photo-cell img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  /* an inset ring that survives being painted over by the image itself */
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+  filter: saturate(var(--wall-saturate, 1));
+  transition: outline-color 0.3s var(--ease-out);
+  /* THE DRAG GUARDS. pointer-events is the load-bearing one: it takes the
+     pointer off the image, so the browser never sees a drag source and the
+     gesture targets the button instead. */
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.photo-cell .photo-frame-btn:hover img,
+.photo-cell .photo-frame-btn:focus-visible img {
+  outline-color: oklch(0 0 0 / 0.2);
+}
+
+.photo-cell .photo-frame-btn:focus-visible {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 3px;
+}
 
 /* ---------- what is left when the script never runs ----------
    The eleven figures ship inside .photo-fallback, a plain grid, and
-   js/photo-wall.js MOVES them into the wall the first time the view opens.
-   With scripting on the grid is never shown; with scripting off it is the
-   whole chapter. The html.js flag is set by the inline script in the head, so
-   there is no frame where both are visible. */
+   js/photo-wall.js MOVES them onto the board as soon as it runs. With scripting
+   on the grid is never shown; with scripting off it is the whole chapter. The
+   html.js flag is set by the inline script in the head, so there is no frame
+   where both are visible. */
 
 .photo-fallback {
   display: grid;
@@ -97,166 +146,9 @@
 
 html.js .photo-fallback { display: none; }
 
-/* ---------- the view ---------- */
-
-.photo-view {
-  position: fixed;
-  inset: 0;
-  /* under the nav (70) so the bar stays usable, under #lightbox (200) so a
-     frame can still be opened on top of the wall */
-  z-index: 60;
-  background: var(--ink-950);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.28s var(--ease-out), visibility 0s linear 0.28s;
-}
-
-.photo-view.is-open {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.28s var(--ease-out), visibility 0s;
-}
-
-.photo-view__bar {
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-4);
-  /* clears the nav, which is fixed at the top of the same screen (58px tall,
-     top clamp(0.75rem,1.6vh,1.25rem)) and stays live above this layer */
-  padding: clamp(5.5rem, 11vh, 7rem) clamp(1rem, 4vw, 3rem) var(--sp-5);
-  /* the bar floats over a draggable surface: only its controls may swallow a
-     pointer, or a drag started near the top would never reach the wall */
-  pointer-events: none;
-}
-
-.photo-view__bar > * { pointer-events: auto; }
-
-.photo-view__label { color: oklch(1 0 0 / 0.62); }
-
-/* the same pill as .lb-close, on purpose: the two full-screen layers should
-   read as the same control in the same place */
-.photo-view__close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.7em 1.2em;
-  min-height: 42px;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-on-dark);
-  background: oklch(1 0 0 / 0.1);
-  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.2);
-  transition: background-color 0.2s var(--ease-out), transform 0.15s var(--ease-out);
-}
-
-.photo-view__close:hover { background: oklch(1 0 0 / 0.2); }
-.photo-view__close:active { transform: scale(0.96); }
-
-/* ---------- the wall ---------- */
-
-.photo-wall {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  /* derived, never authored: R comes back from js/photo-wall.js */
-  perspective: var(--wall-r, 900px);
-  cursor: grab;
-  /* vertical panning stays with the page; the wall only claims horizontal
-     intent, so a touch drag never traps the reader */
-  touch-action: pan-y;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.photo-wall.is-dragging { cursor: grabbing; }
-
-/* A POINT, not a full-size box. See note 2 at the top of this file. Its centre
-   is the stage's centre either way: the frames position themselves from
-   left/top 50%, which on a zero-size box is the box's own origin. */
-.photo-wall__sphere {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0;
-  height: 0;
-  transform-style: preserve-3d;
-  /* the only element in this view allowed will-change: one composited layer
-     that gets a new rotation, instead of every frame getting one */
-  will-change: transform;
-}
-
-/* every direct child of the sphere is a frame, canonical or duplicate */
-.photo-wall__sphere > * {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: var(--wall-w, 18rem);
-  height: var(--wall-h, 12rem);
-  margin: 0;
-  transform-origin: 50% 50%;
-  /* no fallback value: an absent --wall-t leaves the frame at the identity
-     transform, sitting in the middle of the stage, which is visible and
-     harmless rather than invisible */
-  transform: var(--wall-t, none);
-  backface-visibility: hidden;
-}
-
-.photo-wall .photo-frame-btn {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  cursor: pointer;
-  /* a frame that has not decoded yet reads as a slightly lifted black tile,
-     which is what the reference does with rgba(0,0,0,.094) on black. No inset
-     hairline: on this stage it would draw a rim around every frame and the
-     reference has none. */
-  background: rgb(255 255 255 / 0.05);
-}
-
-.photo-wall .photo-frame-btn img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* FULL COLOUR here, and that is a deliberate exception to the site's
-     "colour is a reward, not wallpaper" rule. That rule protects the paper
-     pages, where a desaturated plate keeps the interface from competing with
-     the photograph. On the wall the photographs ARE the page: there is no
-     interface to protect, and at this scale the muted version reads as a
-     rendering fault rather than as restraint. --wall-saturate is the single
-     knob back (set it to saturate(0.45)). filter must stay on the img: it is a
-     grouping property and would flatten the 3D subtree if it moved up. */
-  filter: var(--wall-saturate, saturate(1));
-  transition: filter 0.5s var(--ease-out);
-  -webkit-user-drag: none;
-}
-
-.photo-wall .photo-frame-btn:hover img,
-.photo-wall .photo-frame-btn:focus-visible img { filter: saturate(1); }
-
-.photo-wall .photo-frame-btn:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 3px;
-}
+/* ---------- narrow ---------- */
 
 @media (max-width: 720px) {
-  .photo-view__bar { padding: 5rem 0 var(--sp-4); padding-inline: var(--gutter); }
-  .photo-view__label { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .photo-wall .photo-frame-btn img { transition: none; }
+  /* a shorter band: the section head has to stay in view above it */
+  .photo-wall { height: clamp(300px, 52vh, 460px); }
 }

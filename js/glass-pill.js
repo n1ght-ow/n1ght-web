@@ -6,19 +6,21 @@
    callers only pass configuration.
 
    WHAT IT DOES
-   Press the selected pill and it shrinks slightly under the cursor. Keep the
-   button down and drag: the lozenge follows the pointer 1:1 and morphs its
-   WIDTH live to whatever segment is underneath. Release and it fills that
-   segment at full size. Escape or pointercancel puts it back without
-   committing.
+   Press the selected pill and keep the button down: dragging carries the
+   lozenge from slot to slot - it LANDS on the segment under the pointer and
+   fills it exactly, at all times, at full size. Release and it is already
+   there. Escape or pointercancel puts it back without committing.
 
    THE ONE IDEA WORTH KEEPING
-   Position and size are animated by different clocks. While the pointer is
-   driving, transform is dropped from the transition list so the pill sits
-   exactly under the cursor, while width keeps a short tween - so crossing a
-   boundary reads as a continuous stretch rather than a snap. On release the
-   full transition comes back and the pill travels. Everything else here is
-   bookkeeping.
+   The pill is a selection indicator, not an object in the hand, so the drag
+   snaps to the segment under the pointer instead of floating between two of
+   them. That is what makes it always fill a slot: measured mid-drag before
+   this, a 90px slot held a 84.6px lozenge (a 0.94 grab shrink) parked over
+   the gap between two labels, which at the ends of the bar - where there is
+   no neighbour to compare against - reads as "the capsule did not land".
+   Snapping also lets position and width travel on ONE clock again, so
+   crossing a boundary is the lozenge sliding into the next slot.
+   Everything else here is bookkeeping.
 
    WHAT IT DELIBERATELY IS NOT
    - Not a control. The pill is aria-hidden decoration; the buttons and links
@@ -52,10 +54,6 @@
   var CLASS_SETTLING = "is-settling";
   var CLASS_DROP = "is-drop-target";
 
-  function clamp(value, lo, hi) {
-    return value < lo ? lo : value > hi ? hi : value;
-  }
-
   /**
    * @param {object} options
    * @param {HTMLElement} options.root    positioning context (must be position:relative)
@@ -85,7 +83,6 @@
        is parked on. It becomes visible in moveTo(). */
     var visible = false;
     var geo = [];         // segment rects, relative to root
-    var rootWidth = 0;
     var rootLeft = 0;     // cached at pointerdown; horizontal page scroll
                           // cannot move these bars, so re-reading per frame
                           // would buy nothing and cost a layout flush
@@ -101,7 +98,6 @@
 
     function measure() {
       var rootRect = root.getBoundingClientRect();
-      rootWidth = rootRect.width;
       rootLeft = rootRect.left;
       geo = items.map(function (el) {
         var r = el.getBoundingClientRect();
@@ -110,18 +106,14 @@
       });
     }
 
-    /* Exact rect for a segment; when a pointer x is supplied the pill is
-       centred on it but clamped so it can never overshoot either end. */
-    function geometryFor(index, pointerX) {
+    /* The exact rect of a segment. There is no pointer variant any more: the
+       drag lands ON a slot rather than tracking the cursor (see the header),
+       so this is the only geometry the pill is ever painted with - and it is
+       why the pill cannot end up 94% wide or parked over a gap. */
+    function geometryFor(index) {
       var g = geo[index];
       if (!g) return null;
-      if (pointerX == null) return { x: g.x, y: g.y, w: g.w, h: g.h };
-      return {
-        x: clamp(pointerX - g.w / 2, 0, Math.max(rootWidth - g.w, 0)),
-        y: g.y,
-        w: g.w,
-        h: g.h,
-      };
+      return { x: g.x, y: g.y, w: g.w, h: g.h };
     }
 
     function paint(g) {
@@ -207,10 +199,13 @@
     function applyDrag() {
       rafId = 0;
       if (!drag) return;
-      var x = pendingX - rootLeft;
-      var next = segmentAt(x);
+      // Snap: the segment under the POINTER is the one the pill occupies, and
+      // it occupies all of it. A pointer past either end falls through to the
+      // nearest centre inside segmentAt(), so the drag parks flush in the
+      // first/last slot instead of overshooting into the bar's padding.
+      var next = segmentAt(pendingX - rootLeft);
       setPreview(next);
-      paint(geometryFor(next, x));
+      paint(geometryFor(next));
     }
 
     function onPointerMove(event) {
