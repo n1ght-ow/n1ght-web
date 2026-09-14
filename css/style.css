@@ -476,13 +476,14 @@ h1, h2 { text-wrap: balance; }
 .sec-copy .lead { display: block; margin-block-end: var(--sp-4); }
 
 /* ============ 9. PHOTOGRAPHY ============ */
-/* The photography chapter is a curved 3D wall of frames now. Its tiles, its
-   focus ring and its no-JS fallback live in css/photo-wall.css; the geometry
-   is measured and driven by js/photo-wall.js. Nothing about it belongs in the
-   shared stylesheet: a wall positioned entirely by per-frame transforms has
-   no shared layout to inherit. The deleted rules here were the scattered
-   contact sheet and they went with the grid they described - 16-column
-   placement, the per-plate drops and lifts, --photo-drift, and the
+/* The photography chapter is an infinite draggable board of frames now, inline
+   in the page. Its cells, its focus ring and its no-JS fallback live in
+   css/photo-wall.css; the geometry is measured and driven by
+   js/photo-wall.js. Nothing about it belongs in the shared stylesheet: a board
+   positioned entirely by per-frame transforms has no shared layout to inherit.
+   The deleted rules here were the scattered contact sheet and they went with
+   the grid they described - 16-column placement, the per-plate drops and
+   lifts, --photo-drift, and the
    .photo-act-* chapter furniture. The section head above the wall is still
    the shared .sec-head. */
 
@@ -534,14 +535,21 @@ h1, h2 { text-wrap: balance; }
 /* ============ 11. ARCHIVE ============ */
 .archive { background: var(--color-bg-deep); padding-block-start: var(--section-y); }
 
+/* Compact Navbar form (framer.com/m/Compact-Navbar-cE1IzB.js): the tray
+   carries the air and the items stay tight. The reference packs its items at
+   6px 8px inside an 8px tray, which is why this is a roomier tray around
+   narrower segments - NOT smaller segments. The reference's item is 29px
+   tall; ours cannot go below the 40px desktop target, so the compactness
+   lands in the inline axis (item padding 1.25em -> 1.05em, gap 3 -> 4px).
+   The material stays this site's paper-white glass; see AGENTS.md. */
 .tabbar {
   position: relative;
   z-index: 20;
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
+  gap: 4px;
   align-items: center;
-  padding: 4px;
+  padding: 6px;
   border-radius: var(--radius-pill);
   width: max-content;
   max-width: 100%;
@@ -560,13 +568,13 @@ h1, h2 { text-wrap: balance; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
-  padding: 0.75em 1.25em;
+  padding: 0.7em 1.05em;
   min-height: 40px;
   border-radius: var(--radius-pill);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.6em;
+  gap: 0.55em;
   transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
 }
 
@@ -651,28 +659,11 @@ h1, h2 { text-wrap: balance; }
   .idx-row:hover { transition-duration: 0s; }
 }
 
-.idx-row > .idx-no,
-.idx-row > .idx-logo {
-  grid-column: 1;
-  grid-row: 1;
-}
-
 .idx-mid {
   grid-column: 2;
   grid-row: 1;
   display: block;
   min-width: 0;
-}
-
-.idx-line {
-  grid-column: 2;
-  grid-row: 2;
-  margin-block-start: var(--sp-2);
-  color: var(--color-text-secondary);
-  font-size: var(--fs-small);
-  line-height: 1.6;
-  max-width: 52ch;
-  text-wrap: pretty;
 }
 
 /* A rank is a label, not a cell: 11px, the muted token, and deliberately
@@ -684,15 +675,6 @@ h1, h2 { text-wrap: balance; }
   letter-spacing: var(--track-meta);
   color: var(--color-text-muted);
   line-height: 1.8;
-}
-
-/* The crest is a MARK, not a favicon. One optical box for every logo, so a
-   wide wordmark and a square crest occupy the same square and the column
-   stops going ragged (it ran 28px and 54px side by side before). */
-.idx-logo {
-  width: 2.75rem;
-  height: 2.75rem;
-  object-fit: contain;
 }
 
 .idx-title {
@@ -727,7 +709,221 @@ h1, h2 { text-wrap: balance; }
   color: var(--color-text-muted);
 }
 
+/* ============ 12b. SPORT (five-slide accordion) ============
+   Ported from Framer's "image animation"
+   (framer.com/m/image-animation-HJJB.js@ga1htqyg5UFN9eq91lZh). Upstream is five
+   children in a row where exactly one is expanded and the rest are slivers; the
+   fifteen variants in that module are that same accordion at fifteen sizes, so
+   there is nothing else to carry over.
+
+   Three deviations from upstream, all deliberate:
+     1. Width animates through flex-GROW, never flex-basis. A percentage basis
+        interpolates through calc(0% + 104px); two clicks inside one 0.3s
+        transition then make both panels jump and the row collapse (measured on
+        the lab page: 885px of a 1412px row). A grow factor is a plain number, so
+        an interrupted tween stays monotonic and the row sum is invariant.
+     2. No blur on the type. Upstream's text effect is blur(10px) + y:25 +
+        opacity .001; the reveal here is opacity + a 14px rise, the same motion
+        without rasterising Chinese text at 20px.
+     3. Upstream masks every photo with a full-height 0 -> 1 alpha ramp, i.e. it
+        dims the top of every image. Only the caption's own band is washed here,
+        so the photo keeps its own light.
+
+   Colours are the site's, not upstream's: upstream is a white page with pure
+   black slivers, both banned here. The closed panel is paper-100 and the caption
+   sits on an ink wash rather than on a sheet. */
+.sport {
+  --sport-h: clamp(430px, 47vw, 670px);
+  --sport-open-w: 71%;
+  --sport-closed-w: min(104px, 7vw);
+  --sport-pad: 42px;
+
+  position: relative;
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-deep);
+  box-shadow: inset 0 0 0 1px var(--color-line);
+  overflow: clip;
+  padding: 6px;
+}
+
+.sport-row {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 3px;
+  height: var(--sport-h);
+}
+
+.sport-item {
+  position: relative;
+  flex: 1 1 var(--sport-closed-w);
+  min-width: var(--sport-closed-w);
+  width: var(--sport-closed-w);
+  height: 100%;
+  overflow: clip;
+  border: 0;
+  padding: 0;
+  background: var(--paper-100);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: flex-grow 0.3s var(--ease-in-out);
+}
+
+.sport-item[aria-pressed="true"] {
+  flex-grow: 40;
+  min-width: 0;
+  cursor: default;
+}
+
+.sport-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  transition: opacity 0.45s var(--ease-soft), transform 0.7s var(--ease-soft);
+}
+
+.sport-item[aria-pressed="true"] .sport-photo { opacity: 1; }
+
+/* The crest is a MARK, not a favicon: one 48px optical box for every logo, so a
+   wide wordmark and a square crest fill the same square (the old ledger column
+   ran 28px and 54px side by side). It belongs to the sliver, pinned to the
+   sliver's own centre because text and marks must not scale with the panel, and
+   it is gone once the panel is open, where the photo speaks for itself. */
+.sport-crest {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  opacity: 0.8;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.sport-item[aria-pressed="true"] .sport-crest { opacity: 0; }
+
+/* the caption's band, and the only washed part of any photo */
+.sport-wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top,
+    oklch(0.1 0 0 / 0.86) 0%,
+    oklch(0.1 0 0 / 0.5) 30%,
+    oklch(0.1 0 0 / 0) 62%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-soft);
+}
+
+.sport-item[aria-pressed="true"] .sport-wash { opacity: 1; }
+
+/* Bottom-left, in flow, so it is laid out at the open panel's own width and
+   clipped by the panel while the panel animates open - exactly like upstream,
+   where the text block is a flow child of the expanding wrapper. */
+.sport-cap {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: var(--sport-pad);
+  color: var(--color-on-dark);
+}
+
+.sport-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 62ch;
+  pointer-events: none;
+}
+
+.sport-name {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: 400;
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--color-on-dark-muted);
+}
+
+.sport-hon {
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: var(--track-h3);
+  text-wrap: balance;
+}
+
+.sport-hon i { font-style: normal; font-variant-numeric: tabular-nums; }
+
+.sport-link {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--color-on-dark);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-color: color-mix(in oklab, var(--gold-400) 70%, transparent);
+}
+
+.sport-link:hover,
+.sport-link:focus-visible { text-decoration-color: var(--gold-400); }
+
+/* The reveal: opacity + a 14px rise, 0.2s after the width transition starts -
+   upstream's startDelay, kept because the text would otherwise arrive while the
+   panel is still moving. Outgoing captions leave in 0.16s so they are gone well
+   before the panel they live in finishes closing (upstream's repeat: false), and
+   they wait a token first so a fast pass across the row does not flicker. */
+.sport-item .sport-cap {
+  opacity: 0;
+  transform: translateY(14px);
+  visibility: hidden;
+  transition: opacity 0.16s var(--ease-out),
+              transform 0.16s var(--ease-out),
+              visibility 0.16s;
+}
+
+.sport-item[aria-pressed="true"] .sport-cap {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  transition: opacity 0.5s var(--ease-out),
+              transform 0.5s var(--ease-out),
+              visibility 0.5s;
+  transition-delay: 0.2s, 0.2s, 0s;
+}
+
+.sport-item:nth-child(2)[aria-pressed="true"] .sport-cap,
+.sport-item:nth-child(4)[aria-pressed="true"] .sport-cap { transition-delay: 0.3s, 0.3s, 0s; }
+.sport-item:nth-child(3)[aria-pressed="true"] .sport-cap { transition-delay: 0.34s, 0.34s, 0s; }
+
+/* The open panel keeps a hairline of accent: one accent hit for the whole band. */
+.sport-item[aria-pressed="true"] { box-shadow: inset 0 0 0 1px oklch(0.78 0.13 88 / 0.42); }
+
+/* Without JS no attribute is ever set, so the first slide stays open and every
+   other caption would sit on an undimmed photo. Hide those, and wash anyway so
+   the open one's type is safe on a bright image. */
+html:not(.js) .sport-item[aria-pressed="false"] .sport-cap { display: none; }
+html:not(.js) .sport-wash { opacity: 1; }
+
+/* `loading="lazy"` means a broken photo reports complete with naturalWidth 0, so
+   this cannot be an img:not([src]) test. Painting the sliver with the ink colour
+   guarantees the caption's contrast even if every photo is missing. */
+.sport-item { background-image: linear-gradient(var(--ink-950), var(--ink-950)); }
+
 /* ============ 13. MUSIC ============ */
+
 .music-bar {
   position: sticky;
   top: clamp(4.5rem, 9vh, 5.5rem);
@@ -740,31 +936,69 @@ h1, h2 { text-wrap: balance; }
   background: linear-gradient(var(--color-bg-deep) 90%, transparent);
 }
 
-.music-search { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+/* ---------------------------------------------------------------------
+   The music toolbar: two trays, items flush inside them.
 
+   Shape borrowed from Framer's Compact Navbar
+   (framer.com/m/Compact-Navbar-cE1IzB.js): ONE container per row, the row's
+   items living inside it with no box of their own, a compact tray padding
+   around them, and the row's single action pill parked at the right end.
+   The reference is dark glass; this site keeps its paper-white material and
+   takes only the form (decision recorded in AGENTS.md).
+
+   These two are deliberately NOT .glass. .music-bar paints an opaque paper
+   scrim behind them, so there is nothing back there to refract and a glass
+   tray on paper only goes grey (AGENTS.md, glass). The radius is
+   --radius-lg rather than --radius-pill: the chip row WRAPS to two lines at
+   every desktop width (the 15 chips measure ~1850px against a 1296px
+   panel), and a stadium radius on a 100px-tall box would round the first
+   and last chip out of their own tray.
+   --------------------------------------------------------------------- */
+.music-search,
+.genre-filter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow:
+    inset 0 0 0 1px var(--color-line),
+    0 0 33px oklch(0 0 0 / 0.04); /* the reference's own halo, verbatim */
+}
+
+.music-search { flex-wrap: nowrap; padding-inline-start: 1.15em; }
+.genre-filter { flex-wrap: wrap; }
+
+/* The tray is the field now, so the input keeps no box of its own: the
+   placeholder sits where the tray's text inset puts it. */
 .music-search-input {
-  flex: 1 1 16rem;
+  flex: 1 1 auto;
   min-width: 0;
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   letter-spacing: var(--track-meta);
   color: var(--color-text);
-  padding: 0.85em 1.15em;
+  padding: 0.7em 0;
   border: 0;
   border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 1px var(--color-line);
-  transition: box-shadow 0.2s var(--ease-out);
+  background: none;
+  box-shadow: none;
 }
 
 .music-search-input::placeholder { color: var(--color-text-muted); text-transform: uppercase; }
 
-.music-search-input:focus {
-  outline: none;
-  box-shadow: inset 0 0 0 2px var(--color-accent-text), 0 0 0 4px oklch(0.79 0.11 85 / 0.28);
+/* The focus ring moved up to the tray. Drawn on the input it would sit
+   inside the field it belongs to; the replacement is the tray's own ring, so
+   this is not an outline removed without one. :focus-visible still drives it
+   (a text field matches :focus-visible on click as well as on Tab), and the
+   ratio is the measured gold-on-paper pair either way. */
+.music-search:has(.music-search-input:focus-visible) {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 3px;
 }
-
-.music-search-input:focus-visible { outline: 2px solid var(--color-accent-text); outline-offset: 3px; }
+.music-search-input:focus,
+.music-search-input:focus-visible { outline: none; }
 
 .music-random,
 .music-search-clear,
@@ -773,32 +1007,42 @@ h1, h2 { text-wrap: balance; }
   font-size: var(--fs-meta);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 0.85em 1.35em;
-  min-height: 42px;
+  padding: 0.7em 1.15em;
+  min-height: 40px;
   border-radius: var(--radius-pill);
   cursor: pointer;
   transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out), transform 0.15s var(--ease-out);
 }
 
-/* the single solid primary action of this view */
-.music-random { background: var(--color-ink); color: var(--color-on-dark); }
+/* The single solid primary action of this view, kept solid ink on paper:
+   the reference parks its one CTA pill at the right end of the bar and this
+   is the same slot, inverted for a paper tray. */
+.music-random { flex: none; background: var(--color-ink); color: var(--color-on-dark); }
 .music-random:hover { background: var(--ink-900); }
 .music-random:active { transform: scale(0.96); }
 
+/* A bare item inside the tray: no box, no hairline. The pill on hover is the
+   whole affordance, exactly like a nav item in the reference. */
 .music-search-clear {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  padding-inline: 0.9em;
   color: var(--color-text-secondary);
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 1px var(--color-line);
-  padding-inline: 1em;
+  background: none;
 }
-.music-search-clear:hover { color: var(--color-text); }
+.music-search-clear:hover { color: var(--color-text); background: oklch(0 0 0 / 0.05); }
 .music-search-clear:active { transform: scale(0.96); }
 
 .music-search-count {
+  flex: none;
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   letter-spacing: var(--track-meta);
   color: var(--color-text-muted);
+  white-space: nowrap;
 }
 
 .music-search-empty {
@@ -823,33 +1067,28 @@ h1, h2 { text-wrap: balance; }
 .music-search-jump:hover { background: var(--gold-100); }
 .music-search-jump:active { transform: scale(0.96); }
 
-.genre-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-  align-items: center;
-}
-
+/* These live IN the tray (see the toolbar block above) and carry no box of
+   their own: the pill on hover and the filled pill when active are the whole
+   state language. That is what makes the row read as one bar with an item
+   lit, instead of a field of separately outlined chips. */
 .genre-chip {
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   letter-spacing: 0.06em;
   color: var(--color-text-secondary);
-  padding: 0.6em 1em;
-  min-height: 38px;
+  padding: 0.7em 0.95em;
+  min-height: 40px;
   border-radius: var(--radius-pill);
   cursor: pointer;
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 1px var(--color-line);
-  transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out);
+  background: none;
+  transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out);
 }
 
-.genre-chip:hover { color: var(--color-text); box-shadow: inset 0 0 0 1px var(--color-text-muted); }
+.genre-chip:hover { color: var(--color-text); background: oklch(0 0 0 / 0.05); }
 
 .genre-chip.is-active {
   background: var(--color-ink);
   color: var(--color-on-dark);
-  box-shadow: none;
 }
 
 /* There is deliberately no ::before marker on the active chip. The tick
@@ -967,145 +1206,12 @@ h1, h2 { text-wrap: balance; }
 
 .is-search-hidden { display: none !important; }
 
-/* ============ 14. GAMES ============ */
-.hof {
-  display: grid;
-  /* Explicit column counts, not auto-fill. 18 divides evenly at 1, 2, 3, 6
-     and 9 columns and nowhere else; auto-fill inside the 1440 shell produced
-     FOUR columns, i.e. four rows and a last row holding 2 of 4 - a shelf that
-     visibly ends in an accident. Three columns is the only exact fit that
-     also leaves a card wide enough (~415px) to carry a line of commentary. */
-  grid-template-columns: 1fr;
-  gap: clamp(1.75rem, 3.5vw, 3rem) clamp(1rem, 2vw, 1.75rem);
-  counter-reset: hof;
-}
-
-@media (min-width: 720px) { .hof { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 900px) { .hof { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-
-.hof-item { cursor: pointer; counter-increment: hof; }
-
-/* No card: no surface fill, no ring, no lift, no shadow. The cover sits on
-   the paper and the metadata is type beneath it. The white plate was the
-   single most template-looking thing on the page - it is what a streaming
-   tile looks like, not what a printed page looks like. */
-.hof-card {
-  position: relative;
-  display: block;
-}
-
-.hof-item:focus-visible { outline: none; }
-.hof-item:focus-visible .hof-card::after {
-  top: 0;
-  left: 0;
-  right: 0;
-  border-color: var(--color-accent-text);
-}
-
-/* THE hover: one signal. A 3px frame starts 3px outside the cover and
-   converges onto it. Zero transform, zero filter, zero shadow - the card
-   used to fire four signals at once (translateY, image scale, shadow-lift
-   and an inset ring), which is what makes a grid read as a template. */
-.hof-card::after {
-  content: "";
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  aspect-ratio: 16 / 9;
-  border: 3px solid transparent;
-  border-radius: var(--radius-md);
-  pointer-events: none;
-  transition:
-    top 0.18s var(--ease-out),
-    left 0.18s var(--ease-out),
-    right 0.18s var(--ease-out),
-    border-color 0.18s var(--ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .hof-item:hover .hof-card::after {
-    top: 0;
-    left: 0;
-    right: 0;
-    border-color: var(--color-accent-text);
-  }
-}
-
-.hof-inner { display: block; }
-
-.hof-img-wrap {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-radius: var(--radius-md);
-  background: var(--color-bg-deep);
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.1);
-}
-
-.hof-img-wrap img {
-  width: 100%;
-  height: 100%;
-  /* every cover in covers/ is a true 16:9, so this crops nothing today; the
-     lever for varying them later is object-position, not a scale */
-  object-fit: cover;
-  filter: saturate(0.72);
-  transition: filter 0.45s var(--ease-out);
-}
-
-.hof-item:hover .hof-img-wrap img,
-.hof-item.is-active .hof-img-wrap img { filter: saturate(1); }
-
-/* rank and hours share one line; the name gets its own */
-.hof-foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.2em var(--sp-2);
-  padding-block-start: var(--sp-3);
-}
-
-.hof-foot::before {
-  content: counter(hof, decimal-leading-zero);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text-muted);
-}
-
-.hof-hours {
-  margin-inline-start: auto;
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--track-meta);
-  color: var(--color-text-muted);
-}
-
-/* flex: 1 0 100% forces the name onto its own line without a wrapper.
-   The old min-height: 2.6em is gone - it padded every one-line title with
-   dead space purely to make the cards the same height. */
-.hof-name {
-  flex: 1 0 100%;
-  font-size: var(--fs-small);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-}
-
-/* 18 quotes shown at once was 18 competing sentences. One line, clamped;
-   the full text still lives in #lightbox, which gameItemData already feeds. */
-.hof-quote {
-  margin-block-start: var(--sp-2);
-  font-size: var(--fs-label);
-  line-height: 1.5;
-  color: var(--color-text-muted);
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+/* ============ 14. GAMES ============
+   The roster became a dial: one centred cover with the rest of the deck behind
+   it, ported from Framer's Detent. Markup stays in index.html (#hof-grid,
+   .hof-item); the skin and the motion live in css/games-stage.css and
+   js/games-stage.js, next to the other stage files. Nothing about the panel is
+   declared in this file any more. */
 
 /* ============ 15. ABOUT ============ */
 .about-grid {
@@ -1517,7 +1623,48 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .about-grid { grid-template-columns: 1fr; gap: var(--sp-7); }
   .artist-tracks { grid-template-columns: 1fr; }
   .footer-top { align-items: flex-start; flex-direction: column; }
-  .hof-name { min-height: 0; }
+}
+
+
+/* Sport: upstream's own breakpoints are 810px wide / 800 tall (tablet, 25px
+   padding) and 390px / 800 (mobile, 20px); here they become a stack, one open
+   panel plus four strips. The row needs a DEFINITE height or there is no free
+   space for a grow factor to distribute and every panel just sits at its basis -
+   measured: five at 78px, exactly the row height, with the pressed rule matching
+   and doing nothing. Height = open + four strips + four gaps. */
+@media (max-width: 900px) {
+  .sport {
+    --sport-pad: 25px;
+    --sport-strip-h: 78px;
+    --sport-open-h: 520px;
+    max-height: 94vh;
+  }
+  .sport-row {
+    height: calc(var(--sport-open-h) + 4 * var(--sport-strip-h) + 4 * 3px);
+    flex-direction: column;
+  }
+  .sport-item {
+    width: 100%;
+    min-width: 0;
+    flex-basis: var(--sport-strip-h);
+    flex-grow: 0;
+  }
+  .sport-item[aria-pressed="true"] { flex-grow: 1; }
+  .sport-crest { width: 38px; height: 38px; }
+  .sport-wash {
+    background: linear-gradient(to top,
+      oklch(0.1 0 0 / 0.9) 0%,
+      oklch(0.1 0 0 / 0.45) 46%,
+      oklch(0.1 0 0 / 0) 84%);
+  }
+}
+
+@media (max-width: 720px) {
+  .sport {
+    --sport-pad: 20px;
+    --sport-strip-h: 66px;
+    --sport-open-h: 430px;
+  }
 }
 
 @media (max-width: 720px) {
@@ -1544,9 +1691,12 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
     overscroll-behavior-inline: contain;
     scrollbar-width: none;
     flex-wrap: nowrap;
+  }
+  /* Scoped up to .tabbar.glass on purpose: a bare .tabbar loses this to
+     .glass in glass.css, which loads AFTER this file, so the solid phone
+     state below had never actually painted since the V2 rewrite. */
+  .tabbar.glass {
     background: var(--color-surface);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
     box-shadow: inset 0 0 0 1px var(--color-line);
   }
   .tabbar::-webkit-scrollbar { display: none; }
@@ -1558,9 +1708,6 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .tabbar .glass-pill__body { display: none; }
   .tab-btn { flex: 0 0 auto; }
   .tab-btn .no { display: none; }
-
-  .idx-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
-  .idx-line { grid-column: 2; }
 
   .idx-card { grid-template-columns: 2.2rem minmax(0, 1fr); row-gap: 0.15rem; }
   .idx-card .idx-artist { grid-column: 2; }
@@ -1621,9 +1768,7 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .hof-card,
-  .hof-item:hover .hof-card,
-  .hof-item.is-active .hof-card { transform: none; }
-  .hof-img-wrap img,
-  .hof-item:hover .hof-img-wrap img { transform: none; }
+  /* The games dial has nothing to still here: its motion is a transform written
+     straight onto .hof-item (never a hover or an entrance), and a reduced-motion
+     reader snaps between detents in js/games-stage.js instead. */
 }

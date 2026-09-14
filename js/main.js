@@ -31,22 +31,6 @@ if (!REDUCED && typeof Lenis !== "undefined") {
   });
 }
 
-/* The photography wall is a full-screen layer of its own (js/photo-wall.js),
-   and it needs the same scroll stop the detail layer uses without reaching
-   into this module's lenis instance. Deliberately not a counter: the only
-   overlap is #lightbox opening on top of the wall, and that is handled by the
-   night:detail-closed event below, where the wall simply re-asserts itself. */
-window.NightScroll = {
-  stop() {
-    document.body.style.overflow = "hidden";
-    if (lenis) lenis.stop();
-  },
-  start() {
-    document.body.style.overflow = "";
-    if (lenis) lenis.start();
-  },
-};
-
 /* ---------- helpers ---------- */
 
 // One shared scheduler for full ScrollTrigger.refresh passes: bursts of
@@ -92,15 +76,15 @@ if (!REDUCED) {
 }
 
 /* ---------- photography: no scroll effects at all ----------
-   The photography chapter is a 3D wall now, and it owns every transform on
-   it. The two effects that used to live here are gone with the scattered
-   grid they were written for:
+   The photography chapter is an infinite draggable board now, and it owns every
+   transform on it. The two effects that used to live here are gone with the
+   scattered grid they were written for:
 
    - the ScrollTrigger.batch entry fade wrote y + autoAlpha onto .photo-frame,
      which is exactly the element js/photo-wall.js positions by transform;
    - the per-plate --photo-drift scrub wrote yPercent onto .photo-frame-btn,
-     which is the tile inside that frame. Both would have fought the wall's
-     own matrix, and the wall has its own motion language (drag, inertia,
+     which is the cell inside that frame. Both would have fought the board's own
+     matrix, and the board has its own motion language (drag, throw, parallax,
      arrow keys) that no scroll trigger is allowed to join. See AGENTS.md.
    The captions that used to sit under each plate are still in the DOM, now
    sr-only, and the detail layer still reads them. */
@@ -515,12 +499,12 @@ function initUnifiedDetail() {
   if (!lightbox) return;
   lbBuildRail();
 
-  /* One delegated listener, because the wall shows more frames than the
-     eleven authored ones: js/photo-wall.js clones them around the ring, and a
+  /* One delegated listener, because the board shows more frames than the
+     eleven authored ones: js/photo-wall.js tiles clones across the plane, and a
      clone is as clickable as the original. The eleven real figures carry
-     data-photo-index in DOM order, which is the index openDetail wants, and
-     the clones carry the index of the photo they duplicate. A drag is already
-     swallowed in the capture phase by the wall itself, so nothing here has to
+     data-photo-index in DOM order, which is the index openDetail wants, and the
+     clones carry the index of the photo they duplicate. A drag is already
+     swallowed in the capture phase by the board itself, so nothing here has to
      know about drag state. */
   const photoWall = document.getElementById("photo-wall");
   if (photoWall) {
@@ -752,7 +736,9 @@ function initArchiveTabs() {
     // the tab strip is sized by its labels, so a selection change can move
     // every segment the pill has to snap to
     if (pill) pill.refresh();
-    const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre, .hof-item")) : [];
+    /* games contributes its TRACK, not its eighteen cards: the dial writes a
+       transform on every .hof-item itself, and a per-card wipe would fight it. */
+    const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre, .hof")) : [];
     if (instant) {
       gsap.set(rows, { y: 0, clearProps: "clipPath" });
       gsap.set(panels[idx], { clearProps: "clipPath" });
@@ -813,6 +799,45 @@ function initArchiveTabs() {
 }
 
 initArchiveTabs();
+
+/* ---------- sport panel: five-slide accordion ----------
+   Ported from Framer's "image animation" (see the markup comment in
+   index.html). Everything visual hangs off [aria-pressed], so the whole script
+   is "move that one attribute" - layout, reveal and colour are CSS. Buttons
+   already answer Enter and Space, so there is no key handler here.
+
+   The pressed panel stays pressed: this register is a choice between five, not a
+   toggle, and upstream does the same (tapping the open child re-enters its own
+   variant). Initial state is read from the markup rather than assumed, so a
+   hand-edited "which one starts open" cannot drift from what CSS paints. */
+
+function initSportStage() {
+  const stage = document.getElementById("sport-stage");
+  const items = stage
+    ? Array.from(stage.querySelectorAll(".sport-item"))
+    : [];
+  if (items.length < 2) return;
+
+  // The markup ships every panel closed so that no-JS readers get one open slide
+  // and no captions floating on undimmed photos (see the html:not(.js) rules).
+  // Everything downstream hangs off this attribute, so commit it once here
+  // rather than hard-coding aria-pressed="true" in index.html - same shape as
+  // the tab bar's roving tabindex.
+  let open = items.find((b) => b.getAttribute("aria-pressed") === "true");
+  if (!open) {
+    open = items[0];
+    open.setAttribute("aria-pressed", "true");
+  }
+
+  stage.addEventListener("click", (e) => {
+    const item = e.target.closest(".sport-item");
+    if (!item || item === open) return;
+    open = item;
+    items.forEach((b) => b.setAttribute("aria-pressed", String(b === item)));
+  });
+}
+
+initSportStage();
 
 /* ---------- music panel: genre filter + search + random pick ----------
    The playlist renders fully expanded (no accordion); the chip row filters
@@ -1221,22 +1246,13 @@ if (!REDUCED) {
     });
   }
 
-  /* ---------- game cards: staggered entrance ----------
-     enter: the roster is the longest low-frequency entrance on the page. */
-
-  gsap.from(".hof-item", {
-    y: 28,
-    autoAlpha: 0,
-    duration: MOTION.enter.longDuration,
-    stagger: MOTION.enter.stagger,
-    ease: MOTION.enter.heavyEase,
-    immediateRender: false,
-    scrollTrigger: {
-      trigger: ".hof",
-      start: "top 78%",
-      toggleActions: "play none none reverse",
-    },
-  });
+  /* ---------- game cards: no scroll entrance ----------
+     The roster used to arrive as eighteen staggered cards. It is a dial now:
+     js/games-stage.js writes a transform on every .hof-item every time the band
+     moves, so a gsap y/autoAlpha entrance on the same elements would be
+     clobbered on the first drag (and eighteen cards at stagger was 1.6s, over
+     the 300ms ceiling anyway). The panel's own tab wipe in animateIn is the
+     entrance, once. */
 
   /* ---------- about body: SplitText line masks (curtain fallback) ---------- */
 

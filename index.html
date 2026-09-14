@@ -30,13 +30,15 @@
   </script>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=12">
-  <link rel="stylesheet" href="css/style.css?v=66">
+  <link rel="stylesheet" href="css/style.css?v=69">
   <link rel="stylesheet" href="css/glass.css?v=5">
-  <link rel="stylesheet" href="css/reel-stage.css?v=14">
+  <link rel="stylesheet" href="css/reel-stage.css?v=15">
   <link rel="stylesheet" href="css/film-stage.css?v=13">
-  <link rel="stylesheet" href="css/series-stage.css?v=14">
+  <link rel="stylesheet" href="css/series-stage.css?v=15">
 <link rel="stylesheet" href="css/book-shelf.css?v=5">
-  <link rel="stylesheet" href="css/photo-wall.css?v=3">
+  <link rel="stylesheet" href="css/photo-wall.css?v=5">
+  <link rel="stylesheet" href="css/games-stage.css?v=2">
+  <link rel="stylesheet" href="css/smooth-cursor.css?v=1">
 </head>
 <body>
 
@@ -127,17 +129,16 @@
           <div class="sec-copy">
             <span class="lead">Eleven frames, kept where the light found them.</span>
             Blossom, branches, clouds and fields, all made on the same long walk through the year.
-            <button class="photo-open" type="button" data-photo-open>Open the wall</button>
           </div>
         </div>
       </div>
 
       <!-- The eleven figures ship here, as a plain grid, and that is what the
-           chapter shows when scripting is off. js/photo-wall.js MOVES them
-           into #photo-wall inside #photo-view the first time the view opens:
-           the same eleven elements are the wall's real controls, and the rest
-           of the wall is cloned decoration around them. Nothing about the wall
-           is scroll-driven. Geometry lives in js/photo-wall.js. -->
+           chapter shows when scripting is off. js/photo-wall.js MOVES them onto
+           #photo-wall as soon as it runs: the same eleven elements are the
+           board's real controls and its only tab stops, and every other visible
+           cell is cloned decoration around them. Nothing about the board is
+           scroll-driven. Geometry lives in js/photo-wall.js. -->
       <div class="shell">
         <div class="photo-fallback" data-photo-fallback>
         <figure class="photo-frame" data-photo-index="0" data-act="BLOOM">
@@ -252,41 +253,12 @@
         </div>
       </div>
 
-      <!-- ============ POEM ============ -->
+      <!-- The board itself, in the flow of the chapter: one band tall, dragged
+           directly, with the site's paper behind it. It is a port of
+           PhantomInfiniteGallery; js/photo-wall.js fills it and owns every
+           transform inside it. -->
       <div class="shell">
-        <div class="poem" id="poem">
-          <header class="poem-head">
-            <p class="label sec-eyebrow">Dylan Thomas / A villanelle / 1947</p>
-            <h2 class="sec-title">Do not go gentle.</h2>
-            <p class="poem-standfirst">One poem about refusing to go quietly. Written for a father, kept by everyone else, and the reason this page keeps everything bright.</p>
-          </header>
-
-          <div>
-            <blockquote class="poem-verse">
-              <p><span class="refrain">Do not go gentle into that good night,</span><br>
-              Old age should burn and rave at close of day;<br>
-              <span class="refrain">Rage, rage against the dying of the light.</span></p>
-              <p>Though wise men at their end know dark is right,<br>
-              Because their words had forked no lightning they<br>
-              <span class="refrain">Do not go gentle into that good night.</span></p>
-              <p>Good men, the last wave by, crying how bright<br>
-              Their frail deeds might have danced in a green bay,<br>
-              <span class="refrain">Rage, rage against the dying of the light.</span></p>
-              <p>Wild men who caught and sang the sun in flight,<br>
-              And learn, too late, they grieved it on its way,<br>
-              <span class="refrain">Do not go gentle into that good night.</span></p>
-              <p>Grave men, near death, who see with blinding sight<br>
-              Blind eyes could blaze like meteors and be gay,<br>
-              <span class="refrain">Rage, rage against the dying of the light.</span></p>
-              <p>And you, my father, there on the sad height,<br>
-              Curse, bless, me now with your fierce tears, I pray.<br>
-              <span class="refrain">Do not go gentle into that good night.</span><br>
-              <span class="refrain">Rage, rage against the dying of the light.</span></p>
-            </blockquote>
-
-            <p class="poem-sign">Dylan Thomas, 1947. Kept here because the light is not something you wait for.</p>
-          </div>
-        </div>
+        <div class="photo-wall" id="photo-wall" data-photo-wall="auto" role="group" aria-label="Photography board"></div>
       </div>
     </section>
 
@@ -344,9 +316,13 @@
                 <div class="music-search" id="music-search">
                   <label class="sr-only" for="music-search-input">Search songs by title or artist</label>
                   <input class="music-search-input" id="music-search-input" type="search" placeholder="Search title or artist" autocomplete="off" spellcheck="false">
-                  <button class="music-random" id="music-random" type="button" lang="zh">随机一首</button>
                   <button class="music-search-clear" id="music-search-clear" type="button" aria-label="Clear search" hidden>&times;</button>
                   <span class="music-search-count" id="music-search-count" hidden></span>
+                  <!-- The one action pill of this tray sits at its right end,
+                       the way the reference bars park their CTA. It is last in
+                       the DOM as well as on screen, so nothing is reordered
+                       out from under the Tab key. -->
+                  <button class="music-random" id="music-random" type="button" lang="zh">随机一首</button>
                 </div>
                 <p class="music-search-empty" id="music-search-empty" role="status" aria-live="polite" hidden>
                   <span id="music-search-empty-text">No match</span>
@@ -358,165 +334,211 @@
             </div>
           </div>
 
-          <!-- PANEL 05: SPORT -->
+          <!-- PANEL 05: SPORT - five slides, not a ledger.
+               Ported from Framer's "image animation"
+               (framer.com/m/image-animation-HJJB.js@ga1htqyg5UFN9eq91lZh). The
+               upstream component is five children in a row where exactly one is
+               expanded and the rest are slivers; its fifteen variants are that
+               same accordion at fifteen sizes, so this is five buttons and
+               nothing else. Every state hangs off [aria-pressed] and
+               js/main.js only moves that one attribute - no entrance
+               animation, no ScrollTrigger, no per-card reveal.
+               Three lines per panel: eyebrow (team and league), honours,
+               official site. The honours ARE the Chinese on this band. -->
           <div class="tab-panel" id="panel-sport" role="tabpanel" aria-labelledby="tab-sport" data-panel="sport" tabindex="0">
-            <div class="idx-list">
-              <article class="idx-row idx-team" data-sport="basketball">
-                <img class="idx-logo" src="logos/spurs.svg" alt="San Antonio Spurs official logo" loading="lazy">
-                <div class="idx-mid"><h3 class="idx-title"><a href="https://www.nba.com/spurs" target="_blank" rel="noopener">San Antonio Spurs</a></h3><div class="idx-meta">San Antonio, Texas, USA</div>
-                  <p class="idx-line" lang="zh">五个冠军，没有一次是靠喊出来的。</p></div>
-              </article>
-              <article class="idx-row idx-team" data-sport="football">
-                <img class="idx-logo" src="logos/mancity.svg" alt="Manchester City official crest" loading="lazy">
-                <div class="idx-mid"><h3 class="idx-title"><a href="https://www.mancity.com" target="_blank" rel="noopener">Manchester City Football Club</a></h3><div class="idx-meta">Manchester, England</div>
-                  <p class="idx-line" lang="zh">球一直在他们脚下，四座奖杯之后，还在传同一脚球。</p></div>
-              </article>
-              <article class="idx-row idx-team" data-sport="formula-1">
-                <img class="idx-logo" src="logos/mclaren.svg" alt="McLaren Racing official logo" loading="lazy">
-                <div class="idx-mid"><h3 class="idx-title"><a href="https://www.mclaren.com/racing/" target="_blank" rel="noopener">McLaren Formula 1 Team</a></h3><div class="idx-meta">Woking, England</div>
-                  <p class="idx-line" lang="zh">木瓜橙用了六十年，车库里的灯从来没熄过。</p></div>
-              </article>
-              <article class="idx-row idx-team" data-sport="american-football">
-                <img class="idx-logo" src="logos/ravens.svg" alt="Baltimore Ravens official logo" loading="lazy">
-                <div class="idx-mid"><h3 class="idx-title"><a href="https://www.baltimoreravens.com" target="_blank" rel="noopener">Baltimore Ravens</a></h3><div class="idx-meta">Baltimore, Maryland, USA</div>
-                  <p class="idx-line" lang="zh">他们赢球的方式很安静，安静到你能听见撞击声。</p></div>
-              </article>
-              <article class="idx-row idx-team" data-sport="esports">
-                <img class="idx-logo" src="logos/spirit.svg" alt="Team Spirit official logo" loading="lazy">
-                <div class="idx-mid"><h3 class="idx-title"><a href="https://teamspirit.gg" target="_blank" rel="noopener">Team Spirit</a></h3><div class="idx-meta">Belgrade, Serbia</div>
-                  <p class="idx-line" lang="zh">一个没人听说过的名字，赢了两次世界冠军。</p></div>
-              </article>
-            </div>
+            <section class="sport" id="sport-stage" aria-label="Sport">
+              <div class="sport-row">
+                <button class="sport-item" type="button" aria-pressed="false" data-sport="basketball">
+                  <img class="sport-photo" src="sport/spurs.webp" alt="San Antonio Spurs 夺冠合影，奖杯被举在人群中央" style="object-position: 50% 34%" draggable="false">
+                  <img class="sport-crest" src="logos/spurs.svg" alt="">
+                  <span class="sport-wash" aria-hidden="true"></span>
+                  <span class="sport-cap">
+                    <span class="sport-body">
+                      <span class="sport-name">San Antonio Spurs · NBA</span>
+                      <h3 class="sport-hon" lang="zh">五届 NBA 总冠军，<i>1999–2014</i></h3>
+                    </span>
+                    <a class="sport-link" href="https://www.nba.com/spurs" target="_blank" rel="noopener">nba.com/spurs</a>
+                  </span>
+                </button>
+                <button class="sport-item" type="button" aria-pressed="false" data-sport="football">
+                  <img class="sport-photo" src="sport/mancity.webp" alt="Manchester City 看台，满场举起的手臂" style="object-position: 50% 55%" draggable="false">
+                  <img class="sport-crest" src="logos/mancity.svg" alt="">
+                  <span class="sport-wash" aria-hidden="true"></span>
+                  <span class="sport-cap">
+                    <span class="sport-body">
+                      <span class="sport-name">Manchester City · Premier League</span>
+                      <h3 class="sport-hon" lang="zh">十座英格兰顶级联赛冠军，<i>2023 完成三冠</i></h3>
+                    </span>
+                    <a class="sport-link" href="https://www.mancity.com" target="_blank" rel="noopener">mancity.com</a>
+                  </span>
+                </button>
+                <button class="sport-item" type="button" aria-pressed="false" data-sport="formula-1">
+                  <img class="sport-photo" src="sport/mclaren.webp" alt="McLaren 车队在车库里的 2025 车队总冠军合影" style="object-position: 50% 50%" draggable="false">
+                  <img class="sport-crest" src="logos/mclaren.svg" alt="">
+                  <span class="sport-wash" aria-hidden="true"></span>
+                  <span class="sport-cap">
+                    <span class="sport-body">
+                      <span class="sport-name">McLaren Racing · Formula 1</span>
+                      <h3 class="sport-hon" lang="zh">十座车队总冠军，<i>2024–2025 连庄</i></h3>
+                    </span>
+                    <a class="sport-link" href="https://www.mclaren.com/racing/" target="_blank" rel="noopener">mclaren.com/racing</a>
+                  </span>
+                </button>
+                <button class="sport-item" type="button" aria-pressed="false" data-sport="american-football">
+                  <img class="sport-photo" src="sport/ravens.webp" alt="Baltimore Ravens 球员在端区庆祝" style="object-position: 62% 45%" draggable="false">
+                  <img class="sport-crest" src="logos/ravens.svg" alt="">
+                  <span class="sport-wash" aria-hidden="true"></span>
+                  <span class="sport-cap">
+                    <span class="sport-body">
+                      <span class="sport-name">Baltimore Ravens · NFL</span>
+                      <h3 class="sport-hon" lang="zh">两届超级碗冠军，<i>2001 与 2013</i></h3>
+                    </span>
+                    <a class="sport-link" href="https://www.baltimoreravens.com" target="_blank" rel="noopener">baltimoreravens.com</a>
+                  </span>
+                </button>
+                <button class="sport-item" type="button" aria-pressed="false" data-sport="esports">
+                  <img class="sport-photo" src="sport/spirit.webp" alt="Team Spirit 的 donk 在比赛席上托腮看着屏幕" style="object-position: 58% 58%" draggable="false">
+                  <img class="sport-crest" src="logos/spirit.svg" alt="">
+                  <span class="sport-wash" aria-hidden="true"></span>
+                  <span class="sport-cap">
+                    <span class="sport-body">
+                      <span class="sport-name">Team Spirit · CS2</span>
+                      <h3 class="sport-hon" lang="zh">三大超级精英赛事冠军，<i>2024–2025</i></h3>
+                    </span>
+                    <a class="sport-link" href="https://teamspirit.gg" target="_blank" rel="noopener">teamspirit.gg</a>
+                  </span>
+                </button>
+              </div>
+            </section>
           </div>
 
-          <!-- PANEL 06: GAMES -->
+
           <div class="tab-panel" id="panel-games" role="tabpanel" aria-labelledby="tab-games" data-panel="games" tabindex="0">
+            <!-- One centred cover on a detent dial (js/games-stage.js, a plain-DOM
+                 port of Framer's Detent). The eighteen .hof-item elements ARE the
+                 deck: each one is a tab stop and a click target for main.js, moved
+                 on a ring by transform alone, and the centred one is the only one
+                 in colour. .hof-name / .hof-hours / .hof-quote stay inside them as
+                 the data source for gameItemData() and are painted once, under the
+                 centred cover, into .hof-now. Without the stage the .is-live class
+                 is absent and css/games-stage.css falls back to a plain roster. -->
             <div class="hof" id="hof-grid">
               <div class="hof-item" data-game="cs">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/counter-strike.jpg" alt="Counter-Strike cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Counter-Strike</span><span class="mono hof-hours">2,340 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/counter-strike.jpg" alt="Counter-Strike cover" loading="lazy"></div>
+                <span class="hof-name">Counter-Strike</span>
+                <span class="mono hof-hours">2,340 HRS</span>
                 <p class="hof-quote">The dust settles the way it always has, on old angles and steady hands.</p>
               </div>
               <div class="hof-item" data-game="rdr2">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/rdr2.jpg" alt="Red Dead Redemption 2 cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Red Dead Redemption 2</span><span class="mono hof-hours">412 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/rdr2.jpg" alt="Red Dead Redemption 2 cover" loading="lazy"></div>
+                <span class="hof-name">Red Dead Redemption 2</span>
+                <span class="mono hof-hours">412 HRS</span>
                 <p class="hof-quote">The west ends like all good stories: slowly, and on a hill at sunset.</p>
               </div>
               <div class="hof-item" data-game="cyberpunk">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/cyberpunk.jpg" alt="Cyberpunk 2077 cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Cyberpunk 2077</span><span class="mono hof-hours">287 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/cyberpunk.jpg" alt="Cyberpunk 2077 cover" loading="lazy"></div>
+                <span class="hof-name">Cyberpunk 2077</span>
+                <span class="mono hof-hours">287 HRS</span>
                 <p class="hof-quote">Every alley keeps a story, and the rain only makes the colors louder.</p>
               </div>
               <div class="hof-item" data-game="gta5">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/gta5.jpg" alt="Grand Theft Auto V cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Grand Theft Auto V</span><span class="mono hof-hours">536 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/gta5.jpg" alt="Grand Theft Auto V cover" loading="lazy"></div>
+                <span class="hof-name">Grand Theft Auto V</span>
+                <span class="mono hof-hours">536 HRS</span>
                 <p class="hof-quote">A city learned street by street, with satire sharper than its neon.</p>
               </div>
               <div class="hof-item" data-game="forza">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/forza-horizon-4.jpg" alt="Forza Horizon 4 cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Forza Horizon 4</span><span class="mono hof-hours">198 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/forza-horizon-4.jpg" alt="Forza Horizon 4 cover" loading="lazy"></div>
+                <span class="hof-name">Forza Horizon 4</span>
+                <span class="mono hof-hours">198 HRS</span>
                 <p class="hof-quote">Four seasons in one blur. Britain at three hundred per hour, and finally, quiet.</p>
               </div>
               <div class="hof-item" data-game="detroit">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/detroit.jpg" alt="Detroit Become Human cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Detroit: Become Human</span><span class="mono hof-hours">64 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/detroit.jpg" alt="Detroit Become Human cover" loading="lazy"></div>
+                <span class="hof-name">Detroit: Become Human</span>
+                <span class="mono hof-hours">64 HRS</span>
                 <p class="hof-quote">Three cities, three endings; the coin still flips somewhere inside me.</p>
               </div>
               <div class="hof-item" data-game="fm">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/football-manager.jpg" alt="Football Manager cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Football Manager</span><span class="mono hof-hours">1,120 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/football-manager.jpg" alt="Football Manager cover" loading="lazy"></div>
+                <span class="hof-name">Football Manager</span>
+                <span class="mono hof-hours">1,120 HRS</span>
                 <p class="hof-quote">A spreadsheet with a heartbeat. Third tier to Europe, one Sunday at a time.</p>
               </div>
               <div class="hof-item" data-game="fc26">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/fc26.jpg" alt="EA SPORTS FC 26 cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">EA SPORTS FC 26</span><span class="mono hof-hours">386 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/fc26.jpg" alt="EA SPORTS FC 26 cover" loading="lazy"></div>
+                <span class="hof-name">EA SPORTS FC 26</span>
+                <span class="mono hof-hours">386 HRS</span>
                 <p class="hof-quote">Same pitch, new numbers. The grass still bends for a well-weighted through ball.</p>
               </div>
               <div class="hof-item" data-game="sekiro">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/sekiro.jpg" alt="Sekiro: Shadows Die Twice cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Sekiro</span><span class="mono hof-hours">142 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/sekiro.jpg" alt="Sekiro: Shadows Die Twice cover" loading="lazy"></div>
+                <span class="hof-name">Sekiro</span>
+                <span class="mono hof-hours">142 HRS</span>
                 <p class="hof-quote">Hesitation is defeat. Everything else is just footwork.</p>
               </div>
               <div class="hof-item" data-game="elden-ring">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/elden-ring.jpg" alt="Elden Ring cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Elden Ring</span><span class="mono hof-hours">415 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/elden-ring.jpg" alt="Elden Ring cover" loading="lazy"></div>
+                <span class="hof-name">Elden Ring</span>
+                <span class="mono hof-hours">415 HRS</span>
                 <p class="hof-quote">In the Lands Between, dying is a detour, not a defeat.</p>
               </div>
               <div class="hof-item" data-game="bg3">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/baldurs-gate-3.jpg" alt="Baldur's Gate 3 cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Baldur's Gate 3</span><span class="mono hof-hours">528 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/baldurs-gate-3.jpg" alt="Baldur's Gate 3 cover" loading="lazy"></div>
+                <span class="hof-name">Baldur's Gate 3</span>
+                <span class="mono hof-hours">528 HRS</span>
                 <p class="hof-quote">Every dice roll is a promise the story keeps. Fail beautifully, reload rarely.</p>
               </div>
               <div class="hof-item" data-game="wukong">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/black-myth-wukong.jpg" alt="Black Myth: Wukong cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Black Myth: Wukong</span><span class="mono hof-hours">187 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/black-myth-wukong.jpg" alt="Black Myth: Wukong cover" loading="lazy"></div>
+                <span class="hof-name">Black Myth: Wukong</span>
+                <span class="mono hof-hours">187 HRS</span>
                 <p class="hof-quote">The staff remembers every sky it has broken. So do you.</p>
               </div>
               <div class="hof-item" data-game="human-fall-flat">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/human-fall-flat.jpg" alt="Human Fall Flat cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Human Fall Flat</span><span class="mono hof-hours">73 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/human-fall-flat.jpg" alt="Human Fall Flat cover" loading="lazy"></div>
+                <span class="hof-name">Human Fall Flat</span>
+                <span class="mono hof-hours">73 HRS</span>
                 <p class="hof-quote">No legs, no plan. Gravity just wants a hug.</p>
               </div>
               <div class="hof-item" data-game="bfv">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/battlefield-v.avif" alt="Battlefield V cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Battlefield V</span><span class="mono hof-hours">264 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/battlefield-v.avif" alt="Battlefield V cover" loading="lazy"></div>
+                <span class="hof-name">Battlefield V</span>
+                <span class="mono hof-hours">264 HRS</span>
                 <p class="hof-quote">The war table is chaos; the squad makes it a story.</p>
               </div>
               <div class="hof-item" data-game="dying-light-2">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/dying%20light.webp" alt="Dying Light 2 Stay Human cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Dying Light 2</span><span class="mono hof-hours">221 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/dying%20light.webp" alt="Dying Light 2 Stay Human cover" loading="lazy"></div>
+                <span class="hof-name">Dying Light 2</span>
+                <span class="mono hof-hours">221 HRS</span>
                 <p class="hof-quote">Parkour over the day, run from the night. The city bites either way.</p>
               </div>
               <div class="hof-item" data-game="hitman-2">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/hitman.jpg" alt="Hitman 2 cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">Hitman 2</span><span class="mono hof-hours">158 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/hitman.jpg" alt="Hitman 2 cover" loading="lazy"></div>
+                <span class="hof-name">Hitman 2</span>
+                <span class="mono hof-hours">158 HRS</span>
                 <p class="hof-quote">Forty-seven ways to vanish. Patience is the loudest one.</p>
               </div>
               <div class="hof-item" data-game="it-takes-two">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/it%20takes%20two.jpg" alt="It Takes Two cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">It Takes Two</span><span class="mono hof-hours">46 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/it%20takes%20two.jpg" alt="It Takes Two cover" loading="lazy"></div>
+                <span class="hof-name">It Takes Two</span>
+                <span class="mono hof-hours">46 HRS</span>
                 <p class="hof-quote">Love is a co-op game: you fail together, you fly together.</p>
               </div>
               <div class="hof-item" data-game="nba2k">
-                <div class="hof-card"><div class="hof-inner">
-                  <div class="hof-img-wrap"><img src="covers/nba-2k.avif" alt="NBA 2K cover" loading="lazy"></div>
-                  <div class="hof-foot"><span class="hof-name">NBA 2K</span><span class="mono hof-hours">603 HRS</span></div>
-                </div></div>
+                <div class="hof-img-wrap"><img src="covers/nba-2k.avif" alt="NBA 2K cover" loading="lazy"></div>
+                <span class="hof-name">NBA 2K</span>
+                <span class="mono hof-hours">603 HRS</span>
                 <p class="hof-quote">The clock never lies; the ankle-breaker writes poetry.</p>
+              </div>
+              <div class="hof-cue" aria-hidden="true"></div>
+              <div class="hof-labels" aria-live="polite">
+                <p class="hof-rank mono"></p>
+                <div class="hof-now">
+                  <p class="hof-now-name"></p>
+                  <p class="hof-now-hours mono"></p>
+                  <p class="hof-now-quote"></p>
+                </div>
               </div>
             </div>
           </div>
@@ -556,6 +578,44 @@
           </div>
         </div>
 
+        <!-- ============ POEM ============
+             Moved here from the photography chapter: the poem is the reflective
+             half of ABOUT, so it sits between the numbers and the sign-off.
+             It has no .shell of its own - it is already inside this section's. -->
+        <div class="poem" id="poem">
+          <header class="poem-head">
+            <p class="label sec-eyebrow">Dylan Thomas / A villanelle / 1947</p>
+            <h2 class="sec-title">Do not go gentle.</h2>
+            <p class="poem-standfirst">One poem about refusing to go quietly. Written for a father, kept by everyone else, and the reason this page keeps everything bright.</p>
+          </header>
+
+          <div>
+            <blockquote class="poem-verse">
+              <p><span class="refrain">Do not go gentle into that good night,</span><br>
+              Old age should burn and rave at close of day;<br>
+              <span class="refrain">Rage, rage against the dying of the light.</span></p>
+              <p>Though wise men at their end know dark is right,<br>
+              Because their words had forked no lightning they<br>
+              <span class="refrain">Do not go gentle into that good night.</span></p>
+              <p>Good men, the last wave by, crying how bright<br>
+              Their frail deeds might have danced in a green bay,<br>
+              <span class="refrain">Rage, rage against the dying of the light.</span></p>
+              <p>Wild men who caught and sang the sun in flight,<br>
+              And learn, too late, they grieved it on its way,<br>
+              <span class="refrain">Do not go gentle into that good night.</span></p>
+              <p>Grave men, near death, who see with blinding sight<br>
+              Blind eyes could blaze like meteors and be gay,<br>
+              <span class="refrain">Rage, rage against the dying of the light.</span></p>
+              <p>And you, my father, there on the sad height,<br>
+              Curse, bless, me now with your fierce tears, I pray.<br>
+              <span class="refrain">Do not go gentle into that good night.</span><br>
+              <span class="refrain">Rage, rage against the dying of the light.</span></p>
+            </blockquote>
+
+            <p class="poem-sign">Dylan Thomas, 1947. Kept here because the light is not something you wait for.</p>
+          </div>
+        </div>
+
         <div class="coda">
           <span class="coda-title">Good light only.</span>
           <span class="coda-title coda-title-2">Still collecting hours.</span>
@@ -579,20 +639,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- ============ PHOTO VIEW ============
-       The photography chapter's own screen. Not a modal: the nav stays live
-       above it (z-index 70 against this layer's 60) and the rest of the
-       document is marked inert while it is open, so nobody tabs into a page
-       they cannot see. Escape or the Close pill returns to the chapter, and
-       #lightbox still opens on top of it. -->
-  <div class="photo-view" id="photo-view" role="group" aria-label="Photography wall" hidden>
-    <div class="photo-view__bar">
-      <p class="label mono photo-view__label">01 / Photography</p>
-      <button class="photo-view__close" id="photo-view-close" type="button" aria-label="Close the photography wall">Close</button>
-    </div>
-    <div class="photo-wall" id="photo-wall" data-photo-wall="auto"></div>
-  </div>
 
   <!-- ============ UNIFIED DETAIL LAYER ============ -->
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Archive detail viewer" aria-hidden="true">
@@ -639,13 +685,15 @@
   <script src="js/book-shelf-data.js?v=4"></script>
 <script src="js/music-data.js?v=3"></script>
   <script src="js/music-covers.js?v=3"></script>
-  <script src="js/reel-stage.js?v=22"></script>
-  <script src="js/film-stage.js?v=5"></script>
-  <script src="js/series-stage.js?v=5"></script>
+  <script src="js/reel-stage.js?v=23"></script>
+  <script src="js/film-stage.js?v=6"></script>
+  <script src="js/series-stage.js?v=6"></script>
   <script src="js/music-stage.js?v=6"></script>
 <script src="js/book-shelf.js?v=4"></script>
-<script src="js/photo-wall.js?v=3"></script>
+<script src="js/photo-wall.js?v=4"></script>
+<script src="js/games-stage.js?v=3"></script>
   <script src="js/glass-pill.js?v=2"></script>
-  <script src="js/main.js?v=60"></script>
+  <script src="js/smooth-cursor.js?v=1"></script>
+  <script src="js/main.js?v=62"></script>
 </body>
 </html>
