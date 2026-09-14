@@ -16,7 +16,7 @@
 
 **主题锁**：正文页全亮色纸面。暗色只用于三处：全屏影像 hero、`#lightbox` 详情层、`.footer`。它们都是「影像与落幕」语汇，不是分区反转。
 
-**藏品规模**（写进 `#about-stats` 与 hero 统计条的同一组数字）：书 16 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18。
+**藏品规模**（写进 hero 统计条；`#about-stats` 那 8 个计数已随 ABOUT 面板退役）：书 16 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18。
 
 ---
 
@@ -95,7 +95,7 @@
 
 ### 2.4 光学边距
 
-`text-box-trim: trim-both` + `text-box-edge: cap alphabetic` **只给展示档标题**（`.display` / `.sec-title` / `.coda-title` / `.footer-name`）。
+`text-box-trim: trim-both` + `text-box-edge: cap alphabetic` **只给展示档标题**（`.display` / `.sec-title` / `.footer-name`；`.coda-title` 已随 coda 退役）。
 
 > **红线**：它会把行盒裁到 cap-height/alphabetic，**移除降部空间**。任何同时 `overflow: hidden`（省略号截断）的元素绝不能加它，否则每个降部都会被切掉——「Maybe」会渲染成「Maube」。V2 曾因此踩坑。
 
@@ -384,7 +384,7 @@
 
 ## 7. 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab）→ 诗区（Dylan Thomas）→ ABOUT（自述 + 统计 + coda）→ footer。
+hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：眉标 + 诗题 + 导语在顶上，六节分 3+3 两列，落款收尾；自述 / 统计 / coda 已退役）→ footer。
 
 - **摄影是正文里的一屏**（`#photo` 段落内的 `.photo-wall`，高度 clamp 后约一屏），不是全屏层：`#photo-view`、「Open the wall」按钮、滚动锁与 inert 那一套都已退役，nav 与页脚链接只是普通锚点。
 - **棋盘是 PhantomInfiniteGallery 的 vanilla 移植**：**一张无限平面上的一窗格子**，两轴拖拽 + 抛掷 + 鼠标视差 + 按住 320ms 拉远（0.7×，钉住板心）。三条必须记住的：

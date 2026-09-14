@@ -4,7 +4,8 @@
    ============================================================ */
 
 gsap.registerPlugin(ScrollTrigger);
-if (window.SplitText) gsap.registerPlugin(SplitText);
+/* SplitText is no longer loaded: its only client was the ABOUT prose, which is
+   retired. css/style.css's text-box-trim already handles the display titles. */
 
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const TOUCH = window.matchMedia("(pointer: coarse)").matches;
@@ -130,44 +131,9 @@ function initGlassSpotlight() {
 initGlassSpotlight();
 
 /* ---------- counters ----------
-   textContent is not a tweenable property, so a plain object is tweened
-   with snap and written back on update. The values are tabular-nums, so
-   the digits do not reflow while they climb. */
-
-function initCounters() {
-  const nodes = Array.from(document.querySelectorAll("#about-stats b[data-count]"));
-  if (!nodes.length) return;
-
-  const write = (el, value) => {
-    const n = Math.round(value);
-    el.textContent = el.dataset.sep === "1" ? n.toLocaleString("en-US") : String(n);
-  };
-
-  if (REDUCED || !window.ScrollTrigger) {
-    nodes.forEach((el) => write(el, Number(el.dataset.count)));
-    return;
-  }
-
-  ScrollTrigger.create({
-    trigger: "#about-stats",
-    start: "top 88%",
-    once: true,
-    onEnter: () => {
-      nodes.forEach((el) => {
-        const box = { v: 0 };
-        gsap.to(box, {
-          v: Number(el.dataset.count) || 0,
-          duration: 1.2,
-          ease: "power2.out",
-          snap: { v: 1 },
-          onUpdate: () => write(el, box.v),
-        });
-      });
-    },
-  });
-}
-
-initCounters();
+   Retired with the ABOUT panel (asked for): the eight `[data-count]` figures
+   were the only counters on the page, so initCounters() and its ScrollTrigger
+   went with their markup. Re-add BOTH together if a counter ever returns. */
 
 
 
@@ -1250,69 +1216,13 @@ if (!REDUCED) {
      the 300ms ceiling anyway). The panel's own tab wipe in animateIn is the
      entrance, once. */
 
-  /* ---------- about body: SplitText line masks (curtain fallback) ---------- */
-
-  if (window.SplitText) {
-    const aboutSplit = SplitText.create(".about-body p", { type: "lines", mask: "lines", autoSplit: true });
-    gsap.from(aboutSplit.lines, {
-      yPercent: 110,
-      duration: MOTION.enter.duration,
-      stagger: 0.05,
-      ease: MOTION.enter.ease,
-      scrollTrigger: {
-        trigger: ".about-body",
-        start: "top 82%",
-        toggleActions: "play none none reverse",
-      },
-    });
-  } else {
-    gsap.from(".about-body p", {
-      y: 16,
-      clipPath: "inset(0 0 100% 0)",
-      duration: MOTION.enter.duration,
-      stagger: 0.14,
-      ease: MOTION.enter.ease,
-      clearProps: "clipPath",
-      scrollTrigger: {
-        trigger: ".about-body",
-        start: "top 82%",
-        toggleActions: "play none none reverse",
-      },
-    });
-  }
-
-  /* ---------- about stats entrance ----------
-     enter: low-frequency reveal; MOTION.enter.duration replaces the old 0.7s */
-
-  /* ---------- about stats: low-frequency reveal ---------- */
-
-  gsap.from("#about-stats div", {
-    y: 16,
-    autoAlpha: 0,
-    duration: MOTION.enter.duration,
-    stagger: 0.06,
-    ease: MOTION.enter.ease,
-    scrollTrigger: {
-      trigger: "#about-stats",
-      start: "top 88%",
-      toggleActions: "play none none reverse",
-    },
-  });
-
-  /* ---------- coda entrance ----------
-     enter: closing title is the longest low-frequency entrance (1.1s) */
-
-  gsap.from(".coda-title", {
-    yPercent: 110,
-    duration: MOTION.enter.longDuration,
-    stagger: 0.14,
-    ease: MOTION.enter.heavyEase,
-    scrollTrigger: {
-      trigger: ".coda",
-      start: "top 85%",
-      toggleActions: "play none none reverse",
-    },
-  });
+  /* ---------- poem: stanza develop ----------
+     The about-body, about-stats and coda timelines that used to sit above this
+     one went with their markup (asked for). GSAP only WARNS about a missing
+     target, so leaving them would have been a silent pile of dead
+     ScrollTriggers firing on nothing. `.poem-verse p` still finds all six
+     stanzas in DOM order, which is the visual reading order of the two
+     columns. */
 
   /* ---------- poem: stanza develop ---------- */
 

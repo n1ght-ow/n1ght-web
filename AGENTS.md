@@ -29,10 +29,10 @@ V2 删掉的东西，任何一条重新出现都算回归：
 
 ## 技术约束
 
-- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → SplitText → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js` → `music-covers.js` → `book-shelf-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js` → `book-shelf.js` → `photo-wall.js`）→ `glass-pill.js` → `main.js`。
+- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js` → `music-covers.js` → `book-shelf-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js` → `book-shelf.js` → `photo-wall.js`）→ `glass-pill.js` → `main.js`。**`js/vendor/SplitText.min.js` 已不再加载**：它唯一的客户是 ABOUT 的自述段落，随整块退役（文件还留在 vendor 里，没人引用）。
 - 样式表顺序：`fonts.css` → `style.css` → **`glass.css`** → `reel-stage.css` → `film-stage.css` → `series-stage.css` → `book-shelf.css` → `photo-wall.css`。`glass.css` 提供 `.glass` 基类，必须在组件样式之前。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
-- GSAP/ScrollTrigger/SplitText/Lenis 走本地 `js/vendor/`。Lenis 仅非 REDUCED 启用；锚点跳转统一走 `lenis.scrollTo`。
+- GSAP/ScrollTrigger/Lenis 走本地 `js/vendor/`（SplitText 已停用，见上）。Lenis 仅非 REDUCED 启用；锚点跳转统一走 `lenis.scrollTo`。
 - 内容归属红线：`#panel-books / films / series / music / sport / games` 六个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token。
 - 中文内容行加 `lang="zh"`（回退系统字体）。
 - **`.tab-panels` 必须保持为 `#archive` 的直接子元素**：`initArchiveTabs()` 用 `tabbar.closest("#archive").querySelector(":scope > .tab-panels")` 定位，包一层 `.shell` 会让整个 tab 系统静默失效。它的容器约束写在 `style.css` 里。
@@ -70,7 +70,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 ## 排版（DESIGN.md 第 2 节）
 
 - **双寄存器系统，10 个声明角色封顶**：UI 档（11 / 12 / 13 / 15 / 16px）+ 展示档（20 / 25 / 31 / 49 / 76px，模数 1.25）。两者之间的空档是刻意的，不要插中间值。
-- **红线**：`text-box-trim` **只给展示档标题**（`.display` / `.sec-title` / `.coda-title` / `.footer-name`）。它移除降部空间，与 `overflow: hidden` 同用会切掉降部——曾把「Maybe」渲染成「Maube」。
+- **红线**：`text-box-trim` **只给展示档标题**（`.display` / `.sec-title` / `.footer-name`；coda 已退役）。它移除降部空间，与 `overflow: hidden` 同用会切掉降部——曾把「Maybe」渲染成「Maube」。
 - `line-height` 一律 unitless；标题 `text-wrap: balance`，描述 `pretty`；会变的数字 `tabular-nums`。
 - 字重只用 400 / 500。层级由字号与留白承担，不由加粗承担。
 - 英文文案禁 em dash（用句号 / 逗号 / 冒号重写）；中文破折号不受限；en dash 只用于范围；正文用弯引号。
@@ -121,8 +121,8 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 ## 代码结构
 
-- `js/main.js` 站点交互层：hero 入场、玻璃高光（`initGlassSpotlight`）、滚动揭示、计数器（`initCounters`）、统一详情层（photo / film / series / game / music 共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`、`window.NightScroll`（全屏层共用的滚动锁）。**摄影的例外**：它没有任何滚动动效（墙自己会动，`ScrollTrigger.batch` 的入场与 `--photo-drift` 漂移都随散页网格一起删除），点击改成在 `#photo-wall` 上委托一次，灯箱关闭时额外派发 `night:detail-closed` 让墙重新上锁。
-- 已从 `main.js` 移除：`initCursor` / `initMagnetic` / `spawnBubble` / preloader 时间线 / ticker JS 驱动 / bighead parallax / `.sec-mask` / 计数条 / `#scroll-progress` / 摄影入场与逐张漂移。
+- `js/main.js` 站点交互层：hero 入场、玻璃高光（`initGlassSpotlight`）、滚动揭示、统一详情层（photo / film / series / game / music 共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`、`window.NightScroll`（全屏层共用的滚动锁）。**摄影的例外**：它没有任何滚动动效（墙自己会动，`ScrollTrigger.batch` 的入场与 `--photo-drift` 漂移都随散页网格一起删除），点击改成在 `#photo-wall` 上委托一次，灯箱关闭时额外派发 `night:detail-closed` 让墙重新上锁。
+- 已从 `main.js` 移除：`initCursor` / `initMagnetic` / `spawnBubble` / preloader 时间线 / ticker JS 驱动 / bighead parallax / `.sec-mask` / 计数条 / `#scroll-progress` / 摄影入场与逐张漂移 / **`initCounters` 与 about-stats、about-body、coda 三条时间线（随 ABOUT 面板一起退役）**。
 - ARCHIVE 共享工具条与收藏星标已于更早版本整体撤销，不再新增回访入口。
 - 签名：已整体退役；`js/sig-data.js` 保留在仓库但不参与加载。
 
@@ -246,7 +246,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 ## 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，11 帧 → Dylan Thomas 诗区）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ ABOUT（统计 + coda）→ footer。
+hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，11 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas，**这一段现在只有诗**：自述、8 个统计数字、section 头与 coda 都已退役）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
 
 - **照片不在正文流里**：正文只留章节导语 + 一个「Open the wall」按钮，整面墙在 `#photo-view` 这个全屏层里（nav `Photography`、页脚链接、导语按钮三处都能打开）。`z-index 60`：nav（70）仍在它之上可点，`#lightbox`（200）仍能压在它上面。**它不是模态**——只有 `main` / `footer` 被置 `inert`，nav 故意保持可用；滚动锁走 `main.js` 暴露的 `window.NightScroll`，并且监听 `night:detail-closed` 在灯箱关掉之后**重新上锁**（灯箱关闭会清掉所有 inert 并还回滚动）。
 - **无 JS 兜底**：11 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` 在**第一次打开视图时**把这 11 个元素搬进 `#photo-wall`。所以关闭 JS 时照片仍在页面上，只是没有墙。
@@ -277,7 +277,7 @@ hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，1
 - 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成。
 - 书：条目进 `js/book-shelf-data.js`，每本除了 title / author / blurb 还要给 binding（`thickness` 21–48、`height` 240–288、`lean`、`cloth`、`ink`、`band`）；**新增或换布色必须重量 ink/cloth 的 4.5:1**。行宽、缩放和书脊字号都会自己算。
 - 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`）。
-- 增删内容同步 `#about-stats` 的计数（`data-count`）与 hero 统计条。
+- 增删内容同步 **hero 统计条**；`#about-stats` 的 8 个计数已随 ABOUT 面板退役（要恢复计数就得同时把 `initCounters()` 与 `data-count` 标记一起加回来）。
 
 ## 改完自检
 

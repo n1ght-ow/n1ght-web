@@ -187,13 +187,13 @@ button { font: inherit; color: inherit; background: none; border: 0; }
    ellipsis) that slices the tail off every descender, and "Maybe" renders
    as "Maube". Never combine the two. */
 @supports (text-box-trim: trim-both) {
-  :where(.display, .sec-title, .coda-title, .footer-name) {
+  :where(.display, .sec-title, .footer-name) {
     text-box-trim: trim-both;
     text-box-edge: cap alphabetic;
   }
 }
 @supports not (text-box-trim: trim-both) {
-  :where(.display, .sec-title, .coda-title, .footer-name) { margin-block-start: -0.12em; }
+  :where(.display, .sec-title, .footer-name) { margin-block-start: -0.12em; }
 }
 
 h1, h2, h3 { font-weight: 500; }
@@ -527,16 +527,18 @@ h1, h2 { text-wrap: balance; }
    .photo-act-* chapter furniture. The section head above the wall is still
    the shared .sec-head. */
 
-/* ============ 10. POEM ============ */
+/* ============ 10. POEM ============
+   The chapter IS the poem now (asked for): the intro that used to sit above
+   it, the prose, the counters and the coda are gone. So this is a single
+   column again - the head is a block ABOVE the verses, not a column beside
+   them - and the two-up reading happens inside .poem-verse. The section's own
+   padding-block-start supplies the air above, so the poem only pays for the
+   gap to the footer. */
 .poem {
-  padding-block: var(--section-y);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-  gap: clamp(2rem, 6vw, 6rem);
-  align-items: start;
+  padding-block: 0 var(--section-y);
 }
 
-.poem-head { position: sticky; top: clamp(6rem, 14vh, 9rem); }
+.poem-head { margin-block-end: clamp(2rem, 6vw, 4rem); }
 
 .poem-head .sec-title { font-family: var(--font-serif); font-weight: 400; font-style: italic; letter-spacing: -0.02em; }
 
@@ -554,7 +556,17 @@ h1, h2 { text-wrap: balance; }
   font-size: var(--fs-h3);
   line-height: 1.5;
   color: var(--color-text);
+  /* Two columns of three stanzas, as EXPLICIT wrappers rather than
+     `columns: 2`: the split is 3 + 3 by construction and a stanza can never
+     be broken across the gutter. .poem-col is the flex column that keeps the
+     `p + p` spacing rule below working inside each half. */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
 }
+
+.poem-col { display: flex; flex-direction: column; }
 
 .poem-verse p + p { margin-block-start: 1.35em; }
 
@@ -1406,73 +1418,11 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
    js/games-stage.js, next to the other stage files. Nothing about the panel is
    declared in this file any more. */
 
-/* ============ 15. ABOUT ============ */
-.about-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(2rem, 6vw, 6rem);
-  align-items: start;
-}
-
-.about-body { display: flex; flex-direction: column; gap: var(--sp-4); }
-
-.about-body p {
-  font-size: var(--fs-small);
-  line-height: 1.7;
-  color: var(--color-text-secondary);
-  max-width: 52ch;
-  text-wrap: pretty;
-}
-
-.about-body p:first-child { font-size: var(--fs-body); color: var(--color-text); }
-
-.about-note {
-  font-weight: 500;
-  color: var(--color-text);
-  text-decoration: underline;
-  text-decoration-color: var(--color-accent);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.3em;
-}
-
-.stats {
-  display: grid;
-  /* four across, so the figures can sit at display scale without colliding */
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-  gap: var(--sp-5) var(--sp-4);
-  border-block-start: 1px solid var(--color-line);
-  padding-block-start: var(--sp-5);
-}
-
-.stats div { display: flex; flex-direction: column; gap: 0.4em; }
-
-.stats b {
-  font-family: var(--font-mono);
-  font-size: var(--fs-h2);
-  font-weight: 400;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
-.stats span {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  letter-spacing: var(--track-label);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-
-.coda {
-  padding-block: var(--section-y) clamp(3rem, 8vh, 6rem);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-}
-
-.coda-title { font-size: var(--fs-display); line-height: 1; letter-spacing: var(--track-display); font-weight: 500; }
-
-.coda-title-2 { color: var(--color-text-muted); }
+/* ============ 15. ABOUT ============
+   Retired whole (asked for): the about-me prose, the eight counters, the
+   section head that framed them and the coda. The `.stats`, `.about-*` and
+   `.coda-*` rules went with their markup - nothing in the file references
+   them any more, and `.section.about` is now just the poem's box. */
 
 /* ============ 16. FOOTER ============ */
 .footer {
@@ -1811,9 +1761,8 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
 }
 
 @media (max-width: 900px) {
-  .poem { grid-template-columns: 1fr; gap: var(--sp-7); }
-  .poem-head { position: static; }
-  .about-grid { grid-template-columns: 1fr; gap: var(--sp-7); }
+  /* the verses stack before the measure gets too narrow for a verse line */
+  .poem-verse { grid-template-columns: 1fr; gap: var(--sp-6); }
   .artist-tracks { grid-template-columns: 1fr; }
   .footer-top { align-items: flex-start; flex-direction: column; }
 }

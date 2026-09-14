@@ -30,7 +30,7 @@
   </script>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=12">
-  <link rel="stylesheet" href="css/style.css?v=78">
+  <link rel="stylesheet" href="css/style.css?v=79">
   <link rel="stylesheet" href="css/glass.css?v=7">
   <link rel="stylesheet" href="css/reel-stage.css?v=15">
   <link rel="stylesheet" href="css/film-stage.css?v=14">
@@ -87,7 +87,7 @@
       <nav class="nav-links" aria-label="Primary">
         <a href="#photo">Photography</a>
         <a href="#archive">Archive</a>
-        <a href="#about">About</a>
+        <a href="#about">Poem</a>
       </nav>
     </div>
   </header>
@@ -564,42 +564,15 @@
       </div>
     </section>
 
-    <!-- ============ ABOUT ============ -->
+    <!-- ============ POEM ============
+         The chapter is the poem and nothing else (asked for): the section head
+         that used to sit above it, the three prose paragraphs, the eight
+         counters and the coda are all gone, and the six stanzas read in two
+         columns of three. The section keeps id="about" so the nav and footer
+         anchors and every ScrollTrigger still resolve; only the nav LABEL is
+         now Poem. -->
     <section class="section about" id="about">
       <div class="shell">
-        <div class="sec-head">
-          <div>
-            <p class="label sec-eyebrow">03 / About</p>
-            <h2 class="sec-title">The person<br>behind the frames</h2>
-          </div>
-          <div class="sec-copy">
-            <span class="lead">City walker, part-time photographer, full-time enjoyer of good light and better games.</span>
-          </div>
-        </div>
-
-        <div class="about-grid">
-          <div class="about-body">
-            <p>I shoot the city the way I walk it: slowly, and mostly for the joy of it. Most of these frames were taken on the routes I walk every week, between errands and plans, whenever the light does something worth stopping for.</p>
-            <p>When I am not outside with a camera, I am inside one of eighteen worlds. The archive above is not a backlog. It is a rotation, and proof that some games simply do not leave you.</p>
-            <p class="about-note">Everything here is mine. The frames, the hours, the small joy of keeping both.</p>
-          </div>
-
-          <div class="stats" id="about-stats">
-            <div><b data-count="11">11</b><span>Frames</span></div>
-            <div><b data-count="7980" data-sep="1">7,980</b><span>Hours</span></div>
-            <div><b data-count="16">16</b><span>Books</span></div>
-            <div><b data-count="16">16</b><span>Films</span></div>
-            <div><b data-count="19">19</b><span>Series</span></div>
-            <div><b data-count="468">468</b><span>Songs</span></div>
-            <div><b data-count="5">5</b><span>Teams</span></div>
-            <div><b data-count="18">18</b><span>Games</span></div>
-          </div>
-        </div>
-
-        <!-- ============ POEM ============
-             Moved here from the photography chapter: the poem is the reflective
-             half of ABOUT, so it sits between the numbers and the sign-off.
-             It has no .shell of its own - it is already inside this section's. -->
         <div class="poem" id="poem">
           <header class="poem-head">
             <p class="label sec-eyebrow">Dylan Thomas / A villanelle / 1947</p>
@@ -607,8 +580,8 @@
             <p class="poem-standfirst">One poem about refusing to go quietly. Written for a father, kept by everyone else, and the reason this page keeps everything bright.</p>
           </header>
 
-          <div>
-            <blockquote class="poem-verse">
+          <blockquote class="poem-verse">
+            <div class="poem-col">
               <p><span class="refrain">Do not go gentle into that good night,</span><br>
               Old age should burn and rave at close of day;<br>
               <span class="refrain">Rage, rage against the dying of the light.</span></p>
@@ -618,6 +591,9 @@
               <p>Good men, the last wave by, crying how bright<br>
               Their frail deeds might have danced in a green bay,<br>
               <span class="refrain">Rage, rage against the dying of the light.</span></p>
+            </div>
+
+            <div class="poem-col">
               <p>Wild men who caught and sang the sun in flight,<br>
               And learn, too late, they grieved it on its way,<br>
               <span class="refrain">Do not go gentle into that good night.</span></p>
@@ -628,15 +604,10 @@
               Curse, bless, me now with your fierce tears, I pray.<br>
               <span class="refrain">Do not go gentle into that good night.</span><br>
               <span class="refrain">Rage, rage against the dying of the light.</span></p>
-            </blockquote>
+            </div>
+          </blockquote>
 
-            <p class="poem-sign">Dylan Thomas, 1947. Kept here because the light is not something you wait for.</p>
-          </div>
-        </div>
-
-        <div class="coda">
-          <span class="coda-title">Good light only.</span>
-          <span class="coda-title coda-title-2">Still collecting hours.</span>
+          <p class="poem-sign">Dylan Thomas, 1947. Kept here because the light is not something you wait for.</p>
         </div>
       </div>
     </section>
@@ -651,7 +622,7 @@
         <nav class="footer-links" aria-label="Footer">
           <a href="#photo">Photography</a>
           <a href="#archive">The Archive</a>
-          <a href="#about">About</a>
+          <a href="#about">Poem</a>
           <a href="#hero">Back to top</a>
         </nav>
       </div>
@@ -696,7 +667,6 @@
 
   <script src="js/vendor/gsap.min.js?v=2"></script>
   <script src="js/vendor/ScrollTrigger.min.js?v=2"></script>
-  <script src="js/vendor/SplitText.min.js?v=2"></script>
   <script src="js/vendor/lenis.min.js?v=2"></script>
   <script src="js/film-data.js?v=1"></script>
   <script src="js/series-data.js?v=1"></script>
@@ -712,6 +682,6 @@
 <script src="js/games-stage.js?v=3"></script>
   <script src="js/glass-pill.js?v=3"></script>
   <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=66"></script>
+  <script src="js/main.js?v=67"></script>
 </body>
 </html>
