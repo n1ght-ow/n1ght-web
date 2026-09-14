@@ -8,6 +8,7 @@ output/
 _preview.html
 js/main.preview.js
 .zcode/
+.commandcode/
 
 # archive/music-refresh: bulk binaries from the D:\fw audit. The screenshots
 # live on the owner's machine and every image here is regenerable from the

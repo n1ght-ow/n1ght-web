@@ -1,0 +1,461 @@
+[
+  {
+    "idx": 1,
+    "title": "红 (4U)",
+    "artist": "罗言",
+    "album": "When the world is came, take it!",
+    "dur": "02:41",
+    "good": false,
+    "pick": {
+      "id": "1918576268",
+      "name": "红",
+      "artist": "罗言",
+      "album": "When the world is came，take it！",
+      "albumId": "140087138",
+      "cover": null,
+      "duration": 161585
+    }
+  },
+  {
+    "idx": 2,
+    "title": "阿司匹林",
+    "artist": "王以太",
+    "album": "演说家",
+    "dur": "03:22",
+    "good": true,
+    "pick": {
+      "id": "1396141677",
+      "name": "阿司匹林",
+      "artist": "王以太",
+      "album": "演.说.家",
+      "albumId": "82266485",
+      "cover": null,
+      "duration": 202058
+    }
+  },
+  {
+    "idx": 3,
+    "title": "一般的一天",
+    "artist": "Wiz_H张子豪",
+    "album": "一般的一天",
+    "dur": "03:07",
+    "good": true,
+    "pick": {
+      "id": "2054300084",
+      "name": "一般的一天",
+      "artist": "Wiz_H张子豪",
+      "album": "一般的一天",
+      "albumId": "167305909",
+      "cover": null,
+      "duration": 187029
+    }
+  },
+  {
+    "idx": 4,
+    "title": "假面 (Ghost face)",
+    "artist": "法老",
+    "album": "假面 (Ghost face)",
+    "dur": "03:37",
+    "good": false,
+    "pick": {
+      "id": "2045943936",
+      "name": "假面 (Ghost face)",
+      "artist": "法老",
+      "album": "假面 (Ghost face)",
+      "albumId": "165239527",
+      "cover": null,
+      "duration": 217852
+    }
+  },
+  {
+    "idx": 5,
+    "title": "小河淌水1952",
+    "artist": "法老 龚琳娜",
+    "album": "退潮",
+    "dur": "04:03",
+    "good": false,
+    "pick": {
+      "id": "1965928052",
+      "name": "小河淌水1952",
+      "artist": "法老 / 龚琳娜",
+      "album": "退潮",
+      "albumId": "149257265",
+      "cover": null,
+      "duration": 243525
+    }
+  },
+  {
+    "idx": 6,
+    "title": "我想part2",
+    "artist": "法老 杨秋儒",
+    "album": "生于未来",
+    "dur": "04:41",
+    "good": false,
+    "pick": {
+      "id": "1336856498",
+      "name": "我想part2",
+      "artist": "法老 / 杨秋儒",
+      "album": "生于未来",
+      "albumId": "73471599",
+      "cover": null,
+      "duration": 281551
+    }
+  },
+  {
+    "idx": 7,
+    "title": "我想（正式版）",
+    "artist": "法老 泠风",
+    "album": "东海岸",
+    "dur": "04:13",
+    "good": false,
+    "pick": {
+      "id": "2069195351",
+      "name": "我想(Remix)",
+      "artist": "泠风 / H.A.T.E",
+      "album": "我想(Remix)",
+      "albumId": "170973091",
+      "cover": null,
+      "duration": 253004
+    }
+  },
+  {
+    "idx": 8,
+    "title": "星空叙爱曲",
+    "artist": "法老 阿达娃",
+    "album": "退潮",
+    "dur": "03:12",
+    "good": false,
+    "pick": {
+      "id": "3371332908",
+      "name": "星空叙爱曲 (Cover 法老 & 阿达娃)",
+      "artist": "游仙",
+      "album": "",
+      "albumId": "0",
+      "cover": null,
+      "duration": 191865
+    }
+  },
+  {
+    "idx": 9,
+    "title": "插叙人生 (Montage)",
+    "artist": "Y.Z.H于哲浩 李晨曦Chrisulous",
+    "album": "插叙人生 (Montage)",
+    "dur": "03:28",
+    "good": false,
+    "pick": {
+      "id": "2071177415",
+      "name": "插叙人生（Montage）",
+      "artist": "Y.Z.H于哲浩 / 李晨曦Chrisulous",
+      "album": "插叙人生（Montage）",
+      "albumId": "171674950",
+      "cover": null,
+      "duration": 208340
+    }
+  },
+  {
+    "idx": 10,
+    "title": "罗生门 (Follow)",
+    "artist": "梨冻紧 Wiz_H张子豪",
+    "album": "罗生门 (Follow)",
+    "dur": "04:03",
+    "good": false,
+    "pick": {
+      "id": "2633811135",
+      "name": "罗生门（Singer）",
+      "artist": "裘代表",
+      "album": "罗生门",
+      "albumId": "249886488",
+      "cover": null,
+      "duration": 242973
+    }
+  },
+  {
+    "idx": 11,
+    "title": "决爱·尽 (LIVE版)",
+    "artist": "盛宇D-SHINE Faye 詹雯婷",
+    "album": "中国说唱巅峰对决2023 第六期加更",
+    "dur": "03:56",
+    "good": true,
+    "pick": {
+      "id": "2054298885",
+      "name": "诀爱·尽 (LIVE版)",
+      "artist": "盛宇D-SHINE / Faye 詹雯婷",
+      "album": "中国说唱巅峰对决2023 第六期加更",
+      "albumId": "167305207",
+      "cover": null,
+      "duration": 236000
+    }
+  },
+  {
+    "idx": 12,
+    "title": "Hey KONG",
+    "artist": "KEY.L刘聪 c0de731",
+    "album": "街区故事",
+    "dur": "04:37",
+    "good": true,
+    "pick": {
+      "id": "1383954630",
+      "name": "Hey KONG",
+      "artist": "KEY.L刘聪 / c0de731",
+      "album": "街区故事",
+      "albumId": "96057849",
+      "cover": null,
+      "duration": 277333
+    }
+  },
+  {
+    "idx": 13,
+    "title": "经济舱 (Vol.Flightin')",
+    "artist": "KEY.L刘聪 KAFE.HU胡懿",
+    "album": "经济舱",
+    "dur": "03:39",
+    "good": true,
+    "pick": {
+      "id": "1492049185",
+      "name": "经济舱",
+      "artist": "KEY.L刘聪 / KAFE.HU胡懿",
+      "album": "经济舱",
+      "albumId": "97722841",
+      "cover": null,
+      "duration": 219311
+    }
+  },
+  {
+    "idx": 14,
+    "title": "江湖流",
+    "artist": "C-BLOCK GAI周延",
+    "album": "以下范上",
+    "dur": "04:49",
+    "good": true,
+    "pick": {
+      "id": "454966913",
+      "name": "江湖流",
+      "artist": "C-BLOCK / GAI周延",
+      "album": "以下范上",
+      "albumId": "35139431",
+      "cover": null,
+      "duration": 289090
+    }
+  },
+  {
+    "idx": 15,
+    "title": "My Man",
+    "artist": "Jony J",
+    "album": "喜新恋旧",
+    "dur": "03:25",
+    "good": true,
+    "pick": {
+      "id": "1325896303",
+      "name": "My Man",
+      "artist": "Jony J",
+      "album": "喜新恋旧",
+      "albumId": "74266126",
+      "cover": null,
+      "duration": 205298
+    }
+  },
+  {
+    "idx": 16,
+    "title": "信仰",
+    "artist": "Jony J",
+    "album": "J HOOD Mixtape",
+    "dur": "02:46",
+    "good": false,
+    "pick": {
+      "id": "31260611",
+      "name": "信仰",
+      "artist": "Jony J",
+      "album": "J HOOD Mixtape",
+      "albumId": "3115574",
+      "cover": null,
+      "duration": 166644
+    }
+  },
+  {
+    "idx": 17,
+    "title": "奴隶",
+    "artist": "Jony J",
+    "album": "奴隶",
+    "dur": "03:11",
+    "good": true,
+    "pick": {
+      "id": "534542490",
+      "name": "奴隶",
+      "artist": "Jony J",
+      "album": "奴隶",
+      "albumId": "37464169",
+      "cover": null,
+      "duration": 191000
+    }
+  },
+  {
+    "idx": 18,
+    "title": "顽家",
+    "artist": "Jony J",
+    "album": "顽家",
+    "dur": "02:55",
+    "good": false,
+    "pick": {
+      "id": "1488796175",
+      "name": "顽家",
+      "artist": "Jony J",
+      "album": "顽家",
+      "albumId": "97126939",
+      "cover": null,
+      "duration": 175833
+    }
+  },
+  {
+    "idx": 19,
+    "title": "不用去猜 (Jazz Version)",
+    "artist": "Jony J",
+    "album": "不用去猜",
+    "dur": "03:33",
+    "good": true,
+    "pick": {
+      "id": "490595927",
+      "name": "不用去猜 (Jazz Version)",
+      "artist": "Jony J",
+      "album": "不用去猜",
+      "albumId": "35758263",
+      "cover": null,
+      "duration": 213230
+    }
+  },
+  {
+    "idx": 20,
+    "title": "I don't wanna see u anymore",
+    "artist": "NINEONE#乃万",
+    "album": "I don't wanna see u anymore",
+    "dur": "02:33",
+    "good": false,
+    "pick": {
+      "id": "528326686",
+      "name": "I don't wanna see u anymore",
+      "artist": "NINEONE#乃万",
+      "album": "I don't wanna see u anymore",
+      "albumId": "37154521",
+      "cover": null,
+      "duration": 153840
+    }
+  },
+  {
+    "idx": 21,
+    "title": "风的颜色",
+    "artist": "NINEONE#乃万",
+    "album": "Dear X",
+    "dur": "03:02",
+    "good": true,
+    "pick": {
+      "id": "1355896807",
+      "name": "风的颜色",
+      "artist": "NINEONE#乃万",
+      "album": "Dear X",
+      "albumId": "78164064",
+      "cover": null,
+      "duration": 182139
+    }
+  },
+  {
+    "idx": 22,
+    "title": "But U",
+    "artist": "NINEONE#乃万",
+    "album": "But U",
+    "dur": "03:45",
+    "good": true,
+    "pick": {
+      "id": "1459232593",
+      "name": "But U",
+      "artist": "NINEONE#乃万",
+      "album": "But U",
+      "albumId": "91753626",
+      "cover": null,
+      "duration": 225417
+    }
+  },
+  {
+    "idx": 23,
+    "title": "篝火旁",
+    "artist": "吕大叶 马子林 陈觅Lynne",
+    "album": "313",
+    "dur": "03:41",
+    "good": true,
+    "pick": {
+      "id": "518725853",
+      "name": "篝火旁",
+      "artist": "吕大叶 / 马子林 / 陈觅Lynne",
+      "album": "313",
+      "albumId": "36676066",
+      "cover": null,
+      "duration": 221109
+    }
+  },
+  {
+    "idx": 24,
+    "title": "雨爱（电视剧《海派甜心》片尾曲）",
+    "artist": "杨丞琳",
+    "album": "雨爱",
+    "dur": "04:20",
+    "good": true,
+    "pick": {
+      "id": "316100",
+      "name": "雨爱",
+      "artist": "杨丞琳",
+      "album": "雨爱",
+      "albumId": "31321",
+      "cover": null,
+      "duration": 260480
+    }
+  },
+  {
+    "idx": 25,
+    "title": "忘记时间（我会好好珍惜没有你的明天）",
+    "artist": "杜宣达",
+    "album": "忘记时间（我会好好珍惜没有你的明天）",
+    "dur": "03:49",
+    "good": false,
+    "pick": {
+      "id": "2124115505",
+      "name": "忘记时间",
+      "artist": "杜宣达",
+      "album": "忘记时间",
+      "albumId": "185138722",
+      "cover": null,
+      "duration": 229807
+    }
+  },
+  {
+    "idx": 26,
+    "title": "一个人想着一个人（电视剧《终极一班2》片尾曲）",
+    "artist": "曾沛慈",
+    "album": "终极一班2（电视原声带）",
+    "dur": "04:03",
+    "good": false,
+    "pick": {
+      "id": "25714102",
+      "name": "一个人想着一个人",
+      "artist": "曾沛慈",
+      "album": "终极一班2 (电视原声带)",
+      "albumId": "2290006",
+      "cover": null,
+      "duration": 243666
+    }
+  },
+  {
+    "idx": 27,
+    "title": "Love Song",
+    "artist": "方大同",
+    "album": "未来 (Wonderland)",
+    "dur": "04:29",
+    "good": true,
+    "pick": {
+      "id": "82360",
+      "name": "Love Song",
+      "artist": "方大同",
+      "album": "未来",
+      "albumId": "8128",
+      "cover": null,
+      "duration": 269293
+    }
+  }
+]

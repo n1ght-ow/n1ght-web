@@ -34,7 +34,7 @@ for (const f of ['js/music-data.js', 'js/music-covers.js', 'js/music-stage.js'])
 const genres = mounts.list.children;
 const chips = mounts.filter.children;
 console.log('genres rendered:', genres.length, '| chips:', chips.length);
-if (genres.length !== 14 || chips.length !== 14) { console.log('!! EXPECTED 14'); process.exit(1); }
+if (genres.length !== 15 || chips.length !== 15) { console.log('!! EXPECTED 15'); process.exit(1); }
 let visible = 0, cards = 0, covers = 0, emptySleeves = 0, zhAttrs = 0;
 for (const g of genres) {
   if (!g.hidden) visible++;
@@ -52,8 +52,8 @@ console.log('visible on first paint:', visible, '(expect 1)');
 console.log('cards:', cards, '| with cover:', covers, '| placeholder sleeves:', emptySleeves);
 console.log('groups carrying lang="zh":', zhAttrs);
 console.log('first group title:', genres[0].children[0].children[0].children.map(c => c.textContent || '').join(''));
-const last = genres[13];
+const last = genres[14];
 console.log('last group title:', last.children[0].children[0].children.map(c => c.textContent || '').join(''), '| hidden:', last.hidden);
 console.log('chip labels:', chips.map(c => c.textContent).join(' / '));
-if (covers !== 441 || emptySleeves !== 0 || visible !== 1) { console.log('!! SMOKE FAILED'); process.exit(1); }
+if (covers !== 468 || emptySleeves !== 0 || visible !== 1) { console.log('!! SMOKE FAILED'); process.exit(1); }
 console.log('SMOKE OK');

@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  /* 441 tracks in 14 genre groups, curated from the owner’s own
+  /* 468 tracks in 15 genre groups, curated from the owner’s own
      NetEase “liked songs” list. Every id was resolved through the
      NetEase song/detail API against the album printed in that list, so
      each entry points at the exact release the owner saved — do NOT
@@ -434,7 +434,8 @@
         { id: "1405283464", title: "句号", artist: "G.E.M.邓紫棋" },
         { id: "2083785152", title: "唯一", artist: "G.E.M.邓紫棋" },
         { id: "1901371647", title: "孤勇者", artist: "陈奕迅" },
-        { id: "108914", title: "江南", artist: "林俊杰" }
+        { id: "108914", title: "江南", artist: "林俊杰" },
+        { id: "82360", title: "Love Song", artist: "方大同" },
       ]
     },
     {
@@ -478,7 +479,8 @@
         { id: "25727803", title: "修炼爱情", artist: "林俊杰" },
         { id: "29814898", title: "可惜没如果", artist: "林俊杰" },
         { id: "2041026502", title: "愿与愁", artist: "林俊杰" },
-        { id: "108485", title: "Always Online", artist: "林俊杰" }
+        { id: "108485", title: "Always Online", artist: "林俊杰" },
+        { id: "2124115505", title: "忘记时间（我会好好珍惜没有你的明天）", artist: "杜宣达" },
       ]
     },
     {
@@ -492,6 +494,37 @@
         { id: "355992", title: "追梦赤子心", artist: "GALA" },
         { id: "386844", title: "杀死那个石家庄人", artist: "万能青年旅店" },
         { id: "66282", title: "浮夸", artist: "陈奕迅" }
+      ]
+    },
+    {
+      id: "mandarin-hip-hop",
+      zh: "华语说唱",
+      en: "MANDARIN HIP-HOP",
+      groupLang: "zh",
+      tracks: [
+        { id: "1918576268", title: "红 (4U)", artist: "罗言" },
+        { id: "1396141677", title: "阿司匹林", artist: "王以太" },
+        { id: "2054300084", title: "一般的一天", artist: "Wiz_H张子豪" },
+        { id: "2045943936", title: "假面 (Ghost face)", artist: "法老" },
+        { id: "1965928052", title: "小河淌水1952", artist: "法老 / 龚琳娜" },
+        { id: "1336856498", title: "我想part2", artist: "法老 / 杨秋儒" },
+        { id: "444323757", title: "我想（正式版）feat.泠风", artist: "法老 / 泠风" },
+        { id: "1969908030", title: "星空叙爱曲", artist: "法老 / 阿达娃" },
+        { id: "2071177415", title: "插叙人生（Montage）", artist: "Y.Z.H于哲浩 / 李晨曦Chrisulous" },
+        { id: "1456890009", title: "罗生门（Follow）", artist: "梨冻紧 / Wiz_H张子豪" },
+        { id: "2054298885", title: "诀爱·尽 (LIVE版)", artist: "盛宇D-SHINE / Faye 詹雯婷" },
+        { id: "1383954630", title: "Hey KONG", artist: "KEY.L刘聪 / c0de731" },
+        { id: "1492049185", title: "经济舱 (Vol.Flightin')", artist: "KEY.L刘聪 / KAFE.HU胡懿" },
+        { id: "454966913", title: "江湖流", artist: "C-BLOCK / GAI周延" },
+        { id: "1325896303", title: "My Man", artist: "Jony J" },
+        { id: "31260611", title: "信仰", artist: "Jony J" },
+        { id: "534542490", title: "奴隶", artist: "Jony J" },
+        { id: "1488796175", title: "顽家", artist: "Jony J" },
+        { id: "490595927", title: "不用去猜 (Jazz Version)", artist: "Jony J" },
+        { id: "528326686", title: "I don't wanna see u anymore", artist: "NINEONE#乃万" },
+        { id: "1355896807", title: "风的颜色", artist: "NINEONE#乃万" },
+        { id: "1459232593", title: "But U", artist: "NINEONE#乃万" },
+        { id: "518725853", title: "篝火旁", artist: "吕大叶 / 马子林 / 陈觅Lynne" },
       ]
     },
     {
@@ -536,7 +569,9 @@
         { id: "454828887", title: "遇见", artist: "孙燕姿" },
         { id: "548556869", title: "半句再见", artist: "孙燕姿" },
         { id: "26207292", title: "致青春", artist: "王菲" },
-        { id: "66823", title: "岁月如歌", artist: "陈奕迅" }
+        { id: "66823", title: "岁月如歌", artist: "陈奕迅" },
+        { id: "316100", title: "雨爱（电视剧《海派甜心》片尾曲）", artist: "杨丞琳" },
+        { id: "25714102", title: "一个人想着一个人（电视剧《终极一班2》片尾曲）", artist: "曾沛慈" },
       ]
     },
     {

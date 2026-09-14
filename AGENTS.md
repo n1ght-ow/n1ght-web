@@ -160,7 +160,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 ### 音乐
 
-`js/music-data.js`（`window.MUSIC_DATA`，441 首 14 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
+`js/music-data.js`（`window.MUSIC_DATA`，468 首 15 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
 
 专辑封面走 `js/music-covers.js`（`window.MUSIC_COVERS`，songId → 文件名，图在 `album-covers/`，生成文件勿手改），详情层 `.lb-music` 显示真实封面，缺图回落 ♪ 占位 sleeve。
 
@@ -192,7 +192,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 ## 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（16 栏编辑式散页 11 帧，分 Bloom 01-07 / Horizon 08-11 两个乐章 → Dylan Thomas 诗区）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 441 首 14 组 / 球队 5 / 游戏 18 卡）→ ABOUT（统计 + coda）→ footer。
+hero（全屏影像）→ PHOTOGRAPHY（16 栏编辑式散页 11 帧，分 Bloom 01-07 / Horizon 08-11 两个乐章 → Dylan Thomas 诗区）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ ABOUT（统计 + coda）→ footer。
 
 - **照片网格只放横构图 plate**：11 张全部是 1600×1067（3:2）。不要竖裁成 4:5 或 1:1——会切掉主体。可用比例：`21:9` 全幅 / `3:2`。
 - **照片区是「散页」不是表格**：16 栏 + `row-gap: 0` + `align-items: start`，每张在 CSS 里**显式写自己的 `grid-column` 起始列**、跨度与垂直偏移（见 `style.css` 第 9 节按 `[data-photo-index]` 的区块）。**不要给每张都加偏移**——都偏等于没偏；也**不要**把 placement 改回 `nth-child(3n)` 之类的生成式规则，11 张的节奏是逐张写出来的。
