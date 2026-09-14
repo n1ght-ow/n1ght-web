@@ -708,7 +708,7 @@ function initArchiveTabs() {
     /* games contributes its TRACK, not its eighteen cards: the dial writes a
        transform on every .hof-item itself, and a per-card wipe would fight it. */
     const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre, .hof")) : [];
-    /* MUSIC IS SHOWN, NOT WIPED (asked for). The playlist is 468 cards in 15
+    /* MUSIC IS SHOWN, NOT WIPED (asked for). The playlist is 477 cards in 15
        groups, so the panel wipe plus the group unroll inside it reads as a
        loading cascade rather than an entrance - the shelf is simply there the
        moment its tab is picked. Every other panel keeps the wipe. */

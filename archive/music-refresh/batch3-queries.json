@@ -1,0 +1,83 @@
+[
+  {
+    "q": "Rapeter NO HOOK FREESTYLE Pt.3",
+    "expect": {
+      "title": "NO HOOK FREESTYLE Pt.3",
+      "artist": "Rapeter",
+      "album": "NO HOOK FREESTYLE Pt.3",
+      "dur": "3:29"
+    }
+  },
+  {
+    "q": "Rapeter NO HOOK FREESTYLE Pt.4",
+    "expect": {
+      "title": "NO HOOK FREESTYLE Pt.4 (绝不重复Pt.4)",
+      "artist": "Rapeter",
+      "album": "IMGOOD别担心我",
+      "dur": "3:45"
+    }
+  },
+  {
+    "q": "Rapeter 红的",
+    "expect": {
+      "title": "红的",
+      "artist": "Rapeter",
+      "album": "DirtyGOOD 装乖",
+      "dur": "3:18"
+    }
+  },
+  {
+    "q": "Rapeter NOT GOOD",
+    "expect": {
+      "title": "NOT GOOD（不甘）",
+      "artist": "Rapeter",
+      "album": "IMGOOD别担心我",
+      "dur": "3:10"
+    }
+  },
+  {
+    "q": "Rapeter 林宛瑜",
+    "expect": {
+      "title": "林宛瑜",
+      "artist": "Rapeter",
+      "album": "DirtyGOOD 装乖",
+      "dur": "3:06"
+    }
+  },
+  {
+    "q": "程思源 皇家蓝 Rapeter",
+    "expect": {
+      "title": "皇家蓝 (ft. Rapeter) (Royal Blue)",
+      "artist": "程思源 / Rapeter",
+      "album": "除了时间，除了变化",
+      "dur": "3:38"
+    }
+  },
+  {
+    "q": "Yamy郭颖 HowToDance",
+    "expect": {
+      "title": "HowToDance (摇就完了) (Live)",
+      "artist": "Yamy郭颖",
+      "album": "说唱巅峰对决2026 第十一期",
+      "dur": "3:43"
+    }
+  },
+  {
+    "q": "那奇沃夫 KKECHO 苦咖啡",
+    "expect": {
+      "title": "苦咖啡·唯一",
+      "artist": "那奇沃夫 / KKECHO",
+      "album": "「想念你」音乐特别企划",
+      "dur": "3:03"
+    }
+  },
+  {
+    "q": "那奇沃夫 Yamy郭颖 Trouble Maker",
+    "expect": {
+      "title": "Trouble Maker(麻烦你了) (Live)",
+      "artist": "那奇沃夫 / Yamy郭颖",
+      "album": "说唱巅峰对决2026 第三期",
+      "dur": "2:34"
+    }
+  }
+]

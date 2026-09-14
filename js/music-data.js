@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  /* 468 tracks in 15 genre groups, curated from the owner’s own
+  /* 477 tracks in 15 genre groups, curated from the owner’s own
      NetEase “liked songs” list. Every id was resolved through the
      NetEase song/detail API against the album printed in that list, so
      each entry points at the exact release the owner saved — do NOT
@@ -525,6 +525,15 @@
         { id: "1355896807", title: "风的颜色", artist: "NINEONE#乃万" },
         { id: "1459232593", title: "But U", artist: "NINEONE#乃万" },
         { id: "518725853", title: "篝火旁", artist: "吕大叶 / 马子林 / 陈觅Lynne" },
+        { id: "1962349055", title: "NO HOOK FREESTYLE Pt.3", artist: "Rapeter" },
+        { id: "2677400220", title: "NO HOOK FREESTYLE Pt.4", artist: "Rapeter" },
+        { id: "2080196564", title: "红的", artist: "Rapeter" },
+        { id: "2677396501", title: "NOT GOOD", artist: "Rapeter" },
+        { id: "2075593054", title: "林宛瑜", artist: "Rapeter" },
+        { id: "2633757005", title: "皇家蓝(ft. Rapeter)", artist: "程思源 / Rapeter" },
+        { id: "3432123420", title: "HowToDance (摇就完了) (Live)", artist: "Yamy郭颖" },
+        { id: "2023954033", title: "苦咖啡·唯一", artist: "那奇沃夫 / KKECHO" },
+        { id: "3404950706", title: "Trouble Maker(麻烦你了) (Live)", artist: "那奇沃夫 / Yamy郭颖" }
       ]
     },
     {

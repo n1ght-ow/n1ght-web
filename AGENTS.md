@@ -207,16 +207,16 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 ### 音乐
 
-`js/music-data.js`（`window.MUSIC_DATA`，468 首 15 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
+`js/music-data.js`（`window.MUSIC_DATA`，477 首 15 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
 
 专辑封面走 `js/music-covers.js`（`window.MUSIC_COVERS`，songId → 文件名，图在 `album-covers/`，生成文件勿手改），详情层 `.lb-music` 显示真实封面，缺图回落 ♪ 占位 sleeve。
 
 - **两行都是玻璃托盘、都不吸顶**（见「三条 bar」）：搜索行与流派行与标签条同一件东西；换流派的落点按**固定导航条的底边**算（`alignGenreTop()`），历史搜索跳转仍走 `scrollMarginTop`。
 - **三条 bar 的间距统一走 `--bar-gap`（`--sp-5` = 24px）**：实测标签条→搜索行→流派行→列表 = 24 / 24 / 24。标签条的下边距就是六个面板与它的距离，所以这一条同时把面板起点从 48 收到 24——这是用户选 24 时已披露的副作用。
-- **音乐面板没有入场动效**（应要求）：`js/main.js` 的 `animateIn()` 只在面板里能找到 `.idx-row / .genre / .hof` 行时才跑，所以影 / 剧 / 书 / 球队本来就是静止的，**原来只有音乐和游戏吃这套**。实测切到音乐那一帧 `#panel-music` 是 `clipPath: inset(0 0 0 100%)`、可见的 `.genre` 是 `inset(0 0 100%) + translateY(14px)`，0.85s 后才落定 —— 468 张卡 15 组读起来就是加载级联。现在 `select()` 里 `panel-music` 直接走 instant 分支，切过去第一帧就是 `clipPath: none` / `transform: none`。**游戏拨盘仍保留擦入**（改完只剩它一个），要去掉就在同一分支里加 `panel-games`。
+- **音乐面板没有入场动效**（应要求）：`js/main.js` 的 `animateIn()` 只在面板里能找到 `.idx-row / .genre / .hof` 行时才跑，所以影 / 剧 / 书 / 球队本来就是静止的，**原来只有音乐和游戏吃这套**。实测切到音乐那一帧 `#panel-music` 是 `clipPath: inset(0 0 0 100%)`、可见的 `.genre` 是 `inset(0 0 100%) + translateY(14px)`，0.85s 后才落定 —— 477 张卡 15 组读起来就是加载级联。现在 `select()` 里 `panel-music` 直接走 instant 分支，切过去第一帧就是 `clipPath: none` / `transform: none`。**游戏拨盘仍保留擦入**（改完只剩它一个），要去掉就在同一分支里加 `panel-games`。
 - 歌单默认**全展开、无手风琴**；浏览靠流派 chips 过滤 + 搜索叠加 + 随机一首。
 - 默认**单流派显示**：一次只显示一组，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。切换流派统一走 `selectGenre()`。
-- **搜索跨全部 15 组**（应要求改的）：有命中时每个命中的组都展开，组头从「136 首」变成「4 / 136」，工具条读出「18 / 468」，零命中才显示 NO MATCH。`#music-search-jump` 随之退役——查询已经覆盖全部流派，没有「别处」可跳。**搜索中点击 chip = 跳到那一组的结果**，走原生 `scrollIntoView` + `scroll-margin-top`；**不要自己算 delta**：`.genre` 是 `content-visibility: auto`，实测手算落点差 359px、加一次「修正」反而差 834px（每次重测都会让另一个块实体化）。清空关键词后回到单选流派。
+- **搜索跨全部 15 组**（应要求改的）：有命中时每个命中的组都展开，组头从「136 首」变成「4 / 136」，工具条读出「18 / 477」，零命中才显示 NO MATCH。`#music-search-jump` 随之退役——查询已经覆盖全部流派，没有「别处」可跳。**搜索中点击 chip = 跳到那一组的结果**，走原生 `scrollIntoView` + `scroll-margin-top`；**不要自己算 delta**：`.genre` 是 `content-visibility: auto`，实测手算落点差 359px、加一次「修正」反而差 834px（每次重测都会让另一个块实体化）。清空关键词后回到单选流派。
 - **切换流派把新手流派带回条带顶部**（`alignGenreTop()`，只向上、不向下）：长流派滑到深处再切短流派时，文档变矮会被浏览器夹到底部，不处理就会"直接到最底"。落点基准是**固定导航条的底边 + 16**（`header.nav` 是 `fixed`，rect 在任何滚动位置都诚实；旧版读的是 sticky 板的 pinned 几何，随吸顶一起退役）。另外两条仍然成立：落位是**瞬时跳**不是补间（补间只能从被夹住的近底部开始，会闪一路无关内容）；`lenis.scrollTo` 在目标等于上次目标时**直接 return**，而这里每组的目标都是同一个文档位置，所以要再核对 `window.scrollY` 并回落原生 `scrollTo`。实测：搜索中点 chip 落点 16 / 15px，深处切流派落点 16px。
 
 ### 书（书架）
@@ -266,7 +266,7 @@ Dylan Thomas《Do not go gentle into that good night》。**这一段只有诗**
 
 ## 站点结构
 
-hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 正文里一屏的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
+hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 正文里一屏的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 477 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
 
 - **照片在正文流里**：`#photo` 段落里 `.photo-wall` 那一屏就是全部（高度在 `css/photo-wall.css`：`clamp(340px, 56vh, 600px)`，`≤720px` 是 `clamp(300px, 52vh, 460px)`），**不是全屏层**。`#photo-view`、「Open the wall」按钮、`window.NightScroll`、以及为它写的那套滚动锁 / `inert` 重挂**已整体退役**——nav 与页脚的 `Photography` 现在只是普通锚点。灯箱自己仍会锁滚动（`document.body.style.overflow` + `lenis.stop()` + `setPageInert()`），关闭时还原。
 - **无 JS 兜底**：11 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` **一执行就把这 11 个元素搬进 `#photo-wall`**（不是等打开视图）。关闭 JS 时照片仍在页面上，只是没有棋盘。
