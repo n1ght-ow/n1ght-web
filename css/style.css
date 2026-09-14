@@ -1009,8 +1009,9 @@ html[data-transparency="solid"] .genre-filter {
    that scrolls must not live inside one another. The rail carries the ONLY
    plate in this toolbar; the search row paints nothing.
 
-   NOT full-bleed (asked for): the plate spans the panel's content width, so it
-   needs no negative margins - the reference's own plate is flush with the
+   NOT the panel's content width any more (asked for, second revision): the
+   plate is a capsule as wide as the fixed nav bar above it, centred on that same
+   axis. Still no negative margins - the reference's own plate is flush with the
    viewport only because it is a page-level nav.
 
    THIS IS THE ONE PLACE ON THE PAGE WHERE GLASS HAS SOMETHING TO SMEAR: the
@@ -1027,7 +1028,7 @@ html[data-transparency="solid"] .genre-filter {
 .genre-filter {
   /* Recipe taken verbatim from Framer's Blur Navigation
      (framer.com/m/Blur-Navigation-iGYrtY.js): backdrop blur(26px), a tint of
-     paper-100 at 16%, a 1px ink-12% hairline as the only edge, no radius and no
+     paper-100 at 16%, a 1px ink-12% hairline as its edge, and no
      saturate/brightness - the reference has neither.
      16% is see-through on purpose: covers slide under it and stay visible.
      Consequence, accepted by the user: over a dark cover the chip labels are far
@@ -1040,12 +1041,36 @@ html[data-transparency="solid"] .genre-filter {
   align-items: center;
   gap: 4px;
   flex-wrap: wrap;
-  padding-block: var(--sp-3);
+  /* Rounded and nav-wide (asked for): the SAME inline-size expression as
+     header.nav, so the pinned rail and the fixed bar above it share both edges
+     at every width. Measured difference: 0.0px on the left and on the right,
+     from 1440px down to 320px.
+     100vw is deliberate. 100% would be the panel column, which is one scrollbar
+     (15px here) narrower than the viewport, so the rail would sit 7.5px in from
+     the nav on each side below 1297px - the one range where the nav's own width
+     is the viewport-driven branch. The cost is that the plate overhangs the
+     column by half a scrollbar into the panel's padding; the gutter is at least
+     20px a side, so it never reaches the page edge and never makes a horizontal
+     scrollbar (checked at 320px: documentElement scrollWidth == clientWidth). */
+  --rail-w: min(1180px, calc(100vw - 2 * var(--gutter)));
+  width: var(--rail-w);
+  /* Centred on the nav's axis, which is NOT what auto margins give once the
+     plate is wider than the column (below 1297px): the over-constrained case
+     throws the start margin away and pushes the plate 7.5px to the right of the
+     nav. (100% - w) / 2 goes negative instead and keeps the centres equal. */
+  margin-inline: calc((100% - var(--rail-w)) / 2);
+  border-radius: var(--radius-pill);
+  /* A stadium end intrudes about 4px at a 40px chip's vertical extremes (r is
+     half the plate's height), so the chips are inset as far as the block
+     padding. The <=720px block adds its own padding-inline-end for the peek. */
+  padding: var(--sp-3);
   margin-block: var(--sp-4) var(--sp-5);
   background: color-mix(in oklab, var(--paper-100) 16%, transparent);
   backdrop-filter: blur(26px);
   -webkit-backdrop-filter: blur(26px);
-  box-shadow: inset 0 -1px 0 0 oklch(0 0 0 / 0.12);
+  /* A ring, not a bottom edge: the plate floats now, so the recipe's hairline
+     has to close on all four rounded sides. */
+  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.12);
 }
 
 /* The field keeps no box of its own: the caret and the placeholder are the
@@ -1792,8 +1817,9 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
 
   .genre-filter { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; padding-inline-end: var(--sp-5); }
   .genre-filter::-webkit-scrollbar { display: none; }
-  /* The rail is a plain horizontal scroller here - no glass of its own since the
-     plate moved up to the bar, so nothing samples a backdrop inside a scroller. */
+  /* The rail is a plain horizontal scroller here. It keeps its own plate: this
+     is the toolbar's single frosting surface, and none of its layers are
+     absolutely positioned, so nothing scrolls with the chips. */
   .genre-chip { flex: 0 0 auto; }
 
   .lb-stage img { max-height: 52vh; }

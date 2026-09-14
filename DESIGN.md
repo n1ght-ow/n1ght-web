@@ -2,7 +2,7 @@
 
 > 面向实现的单一设计事实源（V2，2026）。只记录现状，不发明新风格。
 > 结构与裁决见 `AGENTS.md`；研究留档见 `archive/design-research/` 与 `archive/premium-techniques/`。
-> **本版按代码逐条核对过**：`css/style.css?v=73`、`css/glass.css?v=7`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=14`、`css/series-stage.css?v=16`、`css/book-shelf.css?v=5`、`css/photo-wall.css?v=5`、`css/games-stage.css?v=2`、`css/smooth-cursor.css?v=1`、`js/main.js?v=63`、`js/reel-stage.js?v=23`、`js/glass-pill.js?v=3`。
+> **本版按代码逐条核对过**：`css/style.css?v=76`、`css/glass.css?v=7`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=14`、`css/series-stage.css?v=16`、`css/book-shelf.css?v=5`、`css/photo-wall.css?v=5`、`css/games-stage.css?v=2`、`css/smooth-cursor.css?v=1`、`js/main.js?v=65`、`js/reel-stage.js?v=23`、`js/glass-pill.js?v=3`。
 
 ## 0. 品牌与 Design read
 
@@ -154,7 +154,7 @@
 > 2. `--ink-400` 这一类浅灰**不能用于小字**；muted 一律 `--ink-500`。
 > 3. hero 白字依赖 scrim α0.80，任何削弱 scrim 的改动都要重新实测。
 > 4. **选中药丸（`--glass-pill` α0.84）是深色玻璃上的浅字**，和导航条不是一回事：α 越低，`#F2F2EF` 标签越差。α0.84 实测最差仍有 9.25:1。玻璃感由**边缘**（发丝边 + 轴向棱）承担，不由降低底色不透明度承担。
-> 5. **流派行是明文破例**（用户要求「整条都是磨砂」）：磨砂面**只有一层**，就是 `.genre-filter` 自己，配方照抄 Framer Blur Navigation：`blur(26px)` + `--paper-100` @**16%** + 1px `oklch(0 0 0 / 0.12)` 发丝边；**不做满宽**（用户要求），与面板正文同宽。16% 意味着**压在深色封面上时 chip 标签远低于 4.5:1** —— 这是这个材质的定义，不是疏漏：不要再顺手加厚，也不要再叠第二层。
+> 5. **流派行是明文破例**（用户要求「整条都是磨砂」）：磨砂面**只有一层**，就是 `.genre-filter` 自己，配方照抄 Framer Blur Navigation：`blur(26px)` + `--paper-100` @**16%** + 1px `oklch(0 0 0 / 0.12)` 发丝边（现在是**四边成环**）；形状按用户第二轮要求改成**胶囊圆角 + 与顶部 `header.nav` 同宽**（1180 上限、同一条居中轴，见 4.8）。16% 意味着**压在深色封面上时 chip 标签远低于 4.5:1** —— 这是这个材质的定义，不是疏漏：不要再顺手加厚，也不要再叠第二层。
 
 ---
 
@@ -270,13 +270,13 @@
 | bar | 容器 | 材质 |
 | --- | --- | --- |
 | `#archive-tabbar` | 胶囊 `--radius-pill`，托盘 6px、条目间距 4px | 纸白玻璃（配方不动），墨色药丸 |
-| `.genre-filter` | sticky 的流派行，与面板同宽（**不满宽**） | **唯一的磨砂面**：`backdrop-filter: blur(26px)` + `--paper-100` @**16%**，底部 1px `oklch(0 0 0 / 0.12)` 发丝边（Blur Navigation 逐字照抄） |
+| `.genre-filter` | sticky 的流派行，**胶囊形状 + 与顶部导航条等宽**（`min(1180px, calc(100vw - 2 * var(--gutter)))`、`--radius-pill`、居中） | **唯一的磨砂面**：`backdrop-filter: blur(26px)` + `--paper-100` @**16%** + 四边 1px `oklch(0 0 0 / 0.12)` 发丝环（Blur Navigation 的配方 + 本站的形状） |
 | `.music-bar` | 只包住搜索行与空状态，非 sticky | **不画东西**：无背景、无 backdrop-filter、无阴影；随列表滚走 |
 | `.music-search` | 行内布局 | 同上（只有 hover 药丸底与 active 实心墨） |
 
 - **tab 条的镜面棱去掉 brightness**：`#archive-tabbar .glass__edge` 从 `blur(3px) brightness(1.14) saturate(1.4)` 改成 `blur(3px) saturate(1.4)`。纸上没有可锐化的东西，1.14× 只是把已经约 249 的主体削顶成纯白——实测这条 bar 的上下 9px 是 `255,255,255`，而主体是 `249,249,243`；药丸四边各距棱 6px，于是那圈白就读成了药丸的白色光晕。改后同点实测 `248,248,240` / `244,244,237`。**只有 tab 条这样**：`header.nav` 压在照片上，那里的 brightening 就是镜面棱本身。
-- **只有流派行 sticky，搜索行随列表滚走**（这是用户更正过的方向：第一版两行反着来）：`#genre-filter` 与 `.music-bar` 是**兄弟节点**——sticky 会被父盒子裁掉，谁钉住谁就不能住在对方的盒子里。桌面实测：滚 1000px 后 rail 的 top 恒为 81px，搜索行从 −456 走到 −1456。
-- **材质照抄 Framer Blur Navigation**（`framer.com/m/Blur-Navigation-iGYrtY.js`）：`backdrop-filter: blur(26px)`（**无** saturate / brightness）、`--paper-100` @**16%**（参考是 `rgba(239,238,234,0.16)`，正好是本站 paper-100）、1px `oklch(0 0 0 / 0.12)` 发丝边、无圆角。**不做满宽**（用户要求）：与面板正文同宽，所以没有负 margin 出血那一套。参考的 superellipse 圆角、6000×3000 模糊底场、汉堡菜单是它的内容 / 框架，不抄。桌面代价：15 枚 chips 折两行，钉住时这块板 108px 高。
+- **只有流派行 sticky，搜索行随列表滚走**（这是用户更正过的方向：第一版两行反着来）：`#genre-filter` 与 `.music-bar` 是**兄弟节点**——sticky 会被父盒子裁掉，谁钉住谁就不能住在对方的盒子里。桌面实测：滚 1000px 后 rail 的 top 恒为 81px，搜索行从 −456 走到 −1456；rail 与 `header.nav` 的左右边缘**逐像素相等**。
+- **材质照抄 Framer Blur Navigation**（`framer.com/m/Blur-Navigation-iGYrtY.js`）：`backdrop-filter: blur(26px)`（**无** saturate / brightness）、`--paper-100` @**16%**（参考是 `rgba(239,238,234,0.16)`，正好是本站 paper-100）、1px `oklch(0 0 0 / 0.12)` 发丝边——**四条边**：板浮起来之后只剩底边会断在圆角切点上。**形状不再照抄**（用户第二轮要求）：`--radius-pill` 胶囊，宽度与 `header.nav` 用**同一条表达式**（`min(1180px, calc(100vw - 2 * var(--gutter)))`），`padding: var(--sp-3)` 让 chips 不压到圆角端。`100vw` 是刻意的：`100%` 是面板列，比视口窄一条滚动条（本机 15px），在 <1297px（导航条走视口分支的区间）会让 rail 每侧比导航条缩进 7.5px；代价是板会比列宽出半条滚动条、探进 `.tab-panels` 的内距里，而内距每侧至少 20px，够不到页面边缘也不产生横向滚动（320px 实测 `scrollWidth == clientWidth`）。居中**不能用** `margin-inline: auto`：宽度超过列时是 over-constrained，起始 margin 会被丢掉、整块右移 7.5px，所以写成 `margin-inline: calc((100% - var(--rail-w)) / 2)`。实测 1440 / 1418 / 1297 / 1200 / 1100 / 900 / 720 / 480 / 320 九个宽度下 dL = dR = **0.0px**。参考的 superellipse 圆角、6000×3000 模糊底场、汉堡菜单是它的内容 / 框架，不抄。桌面代价：15 枚 chips 折两行，钉住时这块板 108px 高。
 - **为什么行内一点材质都不留**：两行曾各是 @0.55 / @0.48 的玻璃，叠在已经染色又已经模糊的面上合成到 **75-78% 纸**，霜感被乘没、读起来就是两块实心白板。两层染色玻璃永远读不出「全磨砂」。
 - **行内没有容器圆角**：两行都不画盒子，圆角只剩 chip 自己的 `--radius-pill`。旧规则「chips 行折两行所以托盘不能用 stadium」随之作废——没有托盘了。
 - 条目尺寸仍是 **40px**：参考实现的 29px 条目**没有照抄**（桌面 40×40 是硬线，紧凑只落在横轴——条目内距 1.25em → 1.05em、chips 的 `min-height` 38 → 40px）。
@@ -392,7 +392,7 @@ hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋�
 - **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（键盘回车放行）。11 张正典是唯一的 tab stop，克隆体 `aria-hidden` + `tabIndex -1`。
 - **无 JS 兜底**：11 个 `.photo-frame` 留在正文的 `.photo-fallback` 网格里（`html.js` 把它 `display: none`），脚本一执行就把它们搬进 `#photo-wall`。
 - **棋盘是全彩的**（`--wall-saturate: 1`）：这里是「颜色是奖励不是壁纸」的**第一个明文例外**——墙上照片就是页面本身。
-- **音乐默认单流派显示**，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。chips 住在 `.genre-filter` 这条布局行里、自己没有盒子（4.8）；**它 sticky**——流派行钉在顶部，搜索行在它上面、跟着列表滚走。
+- **音乐默认单流派显示**，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。chips 住在 `.genre-filter` 这条布局行里、自己没有盒子（4.8）；**它 sticky**——流派行钉在顶部（胶囊板、与顶部导航条等宽），搜索行在它上面、跟着列表滚走。
 - **搜索跨全部 15 组**：有命中时每个命中的组都展开，组头从「136 首」改成「4 / 136」，工具条读出「18 / 468」，零命中才是 NO MATCH。搜索中点击 chip = 跳到那一组的结果；清空关键词回到单选流派。
 - **游戏名册是一个定位盘**（Detent）：中心一张封面、其余按几何递减排在两侧，一次只讲一个。旧的**显式三列网格只剩兜底**：`css/games-stage.css` 用 `:not(.is-live)` 门住它。
 - **球队是五格手风琴**（Framer image animation 的移植）：一行五张图，永远只有一张被撑开。
@@ -454,7 +454,7 @@ V2 把纸墨系统铺满全站时，影 / 剧那一族**没有跟上**：它保�
 | Hover | 点亮**文字**（标题转 accent），不是 2.5% 的行底染色——后者低于感知阈值 |
 | Chip | 激活态**不加对勾字形**（它会撑宽 chip，导致整条轨每次切流派都重排）；state 由填充与 `aria-pressed` 承担 |
 | 性能 | `content-visibility: auto` + `contain-intrinsic-size` 加在 **`.genre`（15 个块）**上，不加在每张卡上 |
-| 工具条 | 流派行 sticky 且是唯一磨砂面（`.genre-filter`，Blur Navigation 配方：blur 26 / paper-100 @16% / 1px ink12 边 / 与面板同宽）；搜索行是兄弟节点、在它上面、随列表滚走、不画东西，见 4.8 |
+| 工具条 | 流派行 sticky 且是唯一磨砂面（`.genre-filter`，Blur Navigation 配方：blur 26 / paper-100 @16% / 四边 1px ink12 环 / 胶囊 + 与顶部导航条等宽）；搜索行是兄弟节点、在它上面、随列表滚走、不画东西，见 4.8 |
 | 搜索 | **跨全部 15 组**：命中的组全部展开，组头读「命中 / 总数」，工具条读全站命中数；`#music-search-jump` 已随「别处还有结果」这个状态一起退役 |
 
 ### 10.3 游戏
