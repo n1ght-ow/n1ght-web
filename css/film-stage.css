@@ -19,8 +19,9 @@
    THE DETAIL REGION IS TYPE ONLY - NO IMAGE.
 
    It used to be a 250px poster with a 49px title beside it, a director line,
-   a serif quote squeezed into the remaining column and a black "OPEN ON IMDb"
-   pill floating below. Measured: the same poster appeared twice on one screen
+   a serif quote squeezed into the remaining column and a black opener pill
+   floating below (the pill survives, and it points at Douban now - see
+   js/reel-stage.js). Measured: the same poster appeared twice on one screen
    60px apart (once in the rail, once here), the title:poster ratio was
    unbalanced, and there was ~1000px of empty space to the right of the copy
    because the copy had no measure.
@@ -86,7 +87,7 @@
    radius, isolation and the specular rim; .glass--accent supplies the
    champagne tint that makes the material read on a flat paper page. All this
    rule owns is placement and type. */
-.film-detail-imdb {
+.film-detail-link {
   display: inline-flex;
   align-items: center;
   min-height: 40px;
@@ -103,10 +104,10 @@
   transition: transform 0.15s var(--ease-out);
 }
 
-.film-detail-imdb:hover { transform: translateY(-1px); }
-.film-detail-imdb:active { transform: scale(0.97); }
+.film-detail-link:hover { transform: translateY(-1px); }
+.film-detail-link:active { transform: scale(0.97); }
 
-.film-detail-imdb:focus-visible {
+.film-detail-link:focus-visible {
   outline: 2px solid var(--color-accent-text);
   outline-offset: 3px;
 }

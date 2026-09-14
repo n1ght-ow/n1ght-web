@@ -9,7 +9,7 @@
     prefix: "film",
     mountSelector: "[data-film-stage='auto']",
     tabToken: "films",
-    title: "SIXTEEN FILMS",
+    title: "TWENTY-FOUR FILMS",
     sub: "MOTION / REEL",
     detailAria: "Selected film",
     cardAria: (f) => f.title + ", " + f.year,

@@ -9,7 +9,7 @@
     prefix: "series",
     mountSelector: "[data-series-stage='auto']",
     tabToken: "series",
-    title: "NINETEEN SERIES",
+    title: "THIRTY-SIX SERIES",
     sub: "BOX / TAPE",
     detailAria: "Selected series",
     cardAria: (s) => s.title + ", " + s.years,

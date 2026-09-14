@@ -12,7 +12,7 @@
        mountSelector:   "[data-film-stage='auto']" // containers to render into
        tabToken:        "films"                    // .tab-btn[data-tab=...] that
                                                    // re-measures after the wipe
-       title, sub:      head texts ("SIXTEEN FILMS", "MOTION / REEL")
+       title, sub:      head texts ("TWENTY-FOUR FILMS", "MOTION / REEL")
        detailAria:      aria-label for the detail section
        sortKey:         item => number        // optional; the panel is shown as a
                                               //   timeline while the data file keeps
@@ -467,23 +467,23 @@
          magnifies the centre of a small pill into a bright blob - reproduced
          on the selected pill). Its material comes from the blur, the tint and
          the specular rim, which is exactly what the accent variant is for. */
-      const imdbButton = document.createElement("a");
-      imdbButton.className =
-        prefix + "-detail-imdb glass glass--pill glass--accent";
-      imdbButton.href = "#";
-      imdbButton.target = "_blank";
-      imdbButton.rel = "noopener";
-      imdbButton.dataset.cursor = "VIEW";
+      const linkButton = document.createElement("a");
+      linkButton.className =
+        prefix + "-detail-link glass glass--pill glass--accent";
+      linkButton.href = "#";
+      linkButton.target = "_blank";
+      linkButton.rel = "noopener";
+      linkButton.dataset.cursor = "VIEW";
       ["glass__body", "glass__edge", "glass__press"].forEach((cls) => {
         const layer = document.createElement("span");
         layer.className = cls;
         layer.setAttribute("aria-hidden", "true");
-        imdbButton.appendChild(layer);
+        linkButton.appendChild(layer);
       });
-      const imdbLabel = document.createElement("span");
-      imdbLabel.className = "glass__content";
-      imdbLabel.textContent = "OPEN ON IMDb";
-      imdbButton.appendChild(imdbLabel);
+      const linkLabel = document.createElement("span");
+      linkLabel.className = "glass__content";
+      linkLabel.textContent = "OPEN ON DOUBAN";
+      linkButton.appendChild(linkLabel);
 
       copy.appendChild(kicker);
       copy.appendChild(title);
@@ -492,7 +492,7 @@
       /* The action belongs to the READING column, not the identity column.
          It used to ride the trailing edge of the kicker row, which put the one
          clickable thing as far from what it acts on as the layout allowed. */
-      copy.appendChild(imdbButton);
+      copy.appendChild(linkButton);
       detail.appendChild(copy);
       stage.appendChild(detail);
     }
@@ -501,7 +501,7 @@
       const title = q(stage, "." + prefix + "-detail-title");
       const line = q(stage, "." + options.detailLine.cls);
       const quote = q(stage, "." + prefix + "-detail-quote");
-      const imdbButton = q(stage, "." + prefix + "-detail-imdb");
+      const linkButton = q(stage, "." + prefix + "-detail-link");
       if (!item) return;
 
       const indexEl = q(stage, "." + prefix + "-detail-index");
@@ -524,7 +524,9 @@
       tagLang(line, options.detailLine.get(item));
       quote.textContent = item.quote;
       tagLang(quote, item.quote);
-      imdbButton.href = "https://www.imdb.com/title/" + item.imdb + "/";
+      /* Douban, not IMDb: the archive is read in Chinese and Douban is the
+         page this reader actually opens. The id is the numeric subject id. */
+      linkButton.href = "https://movie.douban.com/subject/" + item.douban + "/";
 
       /* ONE calm settle for the whole block.
 

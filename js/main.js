@@ -142,7 +142,7 @@ initGlassSpotlight();
 
 /* ---------- unified detail layer: photo / film / series / game / music ----------
    One #lightbox serves every archive type. The photo viewer keeps its frame
-   rail; films/series add poster + meta + IMDb; games add cover + hours + quote;
+   rail; films/series add poster + meta + a Douban link; games add cover + hours + quote;
    music adds the NetEase link. Opening, closing, inert, focus trap and swipe
    are shared. */
 
@@ -383,8 +383,8 @@ function renderDetail() {
     lbLines.textContent = item.director;
     lbQuote.textContent = item.quote;
     lbLink.hidden = false;
-    lbLink.textContent = "OPEN ON IMDb";
-    lbLink.href = "https://www.imdb.com/title/" + item.imdb + "/";
+    lbLink.textContent = "OPEN ON DOUBAN";
+    lbLink.href = "https://movie.douban.com/subject/" + item.douban + "/";
     if (lbLive) {
       lbLive.textContent = "Film " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + ". " + item.director + ", " + item.year + ". " + item.quote;
     }
@@ -396,8 +396,8 @@ function renderDetail() {
     lbLines.textContent = item.seasons;
     lbQuote.textContent = item.quote;
     lbLink.hidden = false;
-    lbLink.textContent = "OPEN ON IMDb";
-    lbLink.href = "https://www.imdb.com/title/" + item.imdb + "/";
+    lbLink.textContent = "OPEN ON DOUBAN";
+    lbLink.href = "https://movie.douban.com/subject/" + item.douban + "/";
     if (lbLive) {
       lbLive.textContent = "Series " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + ". " + item.years + ", " + item.seasons + ". " + item.quote;
     }
@@ -549,7 +549,7 @@ function initUnifiedDetail() {
   lbNextBtn.addEventListener("click", () => lbLoad(lbIndex + 1));
   lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
   /* Both links funnel into the same opener: #lb-link carries the film / series
-     IMDb href, #lb-music-link the song deep link. Only the latter ever has a
+     Douban href, #lb-music-link the song deep link. Only the latter ever has a
      songId, so the guard keeps the two from cross-firing. */
   [lbLink, lbMusicLink].forEach((link) => {
     if (!link) return;

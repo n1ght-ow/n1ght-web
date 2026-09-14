@@ -98,7 +98,7 @@
    radius, isolation and the specular rim; .glass--accent supplies the
    champagne tint that makes the material read on a flat paper page. All this
    rule owns is placement and type. */
-.series-detail-imdb {
+.series-detail-link {
   display: inline-flex;
   align-items: center;
   min-height: 40px;
@@ -115,10 +115,10 @@
   transition: transform 0.15s var(--ease-out);
 }
 
-.series-detail-imdb:hover { transform: translateY(-1px); }
-.series-detail-imdb:active { transform: scale(0.97); }
+.series-detail-link:hover { transform: translateY(-1px); }
+.series-detail-link:active { transform: scale(0.97); }
 
-.series-detail-imdb:focus-visible {
+.series-detail-link:focus-visible {
   outline: 2px solid var(--color-accent-text);
   outline-offset: 3px;
 }
@@ -136,8 +136,8 @@
   .series-card { transition-duration: 0s !important; }
   .series-card-meta { transition-duration: 0s !important; }
 
-  .series-detail-imdb,
-  .series-detail-imdb:hover {
+  .series-detail-link,
+  .series-detail-link:hover {
     transform: none !important;
     transition-duration: 0s !important;
   }
