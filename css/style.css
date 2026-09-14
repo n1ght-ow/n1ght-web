@@ -90,6 +90,11 @@
      measures its spacing from this, so the stack stays even (measured 24 / 24 /
      24). It is also the tab strip's distance to all six panels. */
   --bar-gap: var(--sp-5);
+  /* ONE gutter for every chapter head AND for the poem's two columns: the
+     masthead's two cells, the verse's columns and the colophon all read it, so
+     a chapter's deck starts on the same x as the poem's second column and the
+     three heads stack into one system instead of three lookalikes. */
+  --chapter-gap: clamp(2rem, 5vw, 5rem);
   --gutter: clamp(1.25rem, 4.5vw, 4.5rem);
   --measure: 62ch;
   --shell: 1440px;
@@ -488,12 +493,22 @@ h1, h2 { text-wrap: balance; }
   pointer-events: none;
 }
 
-/* ============ 8. SECTION HEAD ============ */
+/* ============ 8. SECTION HEAD ============
+   One shape for the whole page: eyebrow + display title in the first cell, the
+   deck (serif lead + copy) in the second, both cells on the poem's gutter so
+   every chapter's deck starts on the same x. The vertical rule is the
+   BASELINE, and that is the fix this section needed: `align-items: end`
+   anchored the deck's BOTTOM to the title's bottom, so the deck's top moved
+   with the title's line count - measured, the archive's deck (one title line)
+   rode 11px ABOVE the eyebrow while photography's (two title lines) sat 39px
+   BELOW it. Two chapters, two different heads. On the baseline the eyebrow and
+   the deck's first line share one line in every chapter, whatever the title
+   does underneath them. */
 .sec-head {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  gap: clamp(1.5rem, 4vw, 5rem);
-  align-items: end;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--chapter-gap);
+  align-items: baseline;
   padding-block-end: clamp(2.5rem, 5vw, 4rem);
 }
 
@@ -536,26 +551,21 @@ h1, h2 { text-wrap: balance; }
    full-bleed hairline with the author and the year written on it twice.
    The section's own padding-block-start supplies the air above. */
 .poem {
-  /* ONE gutter for the whole folio: the masthead's two cells, the poem's two
-     columns and the colophon's two cells all read it, which is what keeps the
-     four edges in a straight line at every width. */
-  --poem-gap: clamp(2rem, 5vw, 5rem);
   padding-block: 0 var(--section-y);
 }
 
 /* Masthead: source line + display title in the left cell, the foreword in the
-   right one, bottom-aligned. Both cells ride the POEM'S OWN two columns - see
-   --poem-gap below - so the title stands over stanza i and the foreword over
-   stanza iv, and the closing line under each. That shared grid is the whole
-   redesign: the chapter stops being a head with a poem under it and becomes
-   one folio whose two columns run from the title to the colophon. It is also
-   why this is `1fr 1fr` and not .sec-head's 0.95/1.05: the head has to land
-   on the verse's tracks, not on its own editorial ratio. */
+   right one. Both cells ride the POEM'S OWN two columns, so the title stands
+   over stanza i and the foreword over stanza iv, and the closing line under
+   each. That shared grid is the whole redesign: the chapter stops being a head
+   with a poem under it and becomes one folio whose two columns run from the
+   title to the colophon. Same two cells, same gutter and the same baseline
+   rule as .sec-head - the three chapter heads are one system. */
 .poem-head {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--poem-gap);
-  align-items: end;
+  gap: var(--chapter-gap);
+  align-items: baseline;
   margin-block-end: clamp(2.5rem, 6vw, 4.5rem);
 }
 
@@ -587,7 +597,7 @@ h1, h2 { text-wrap: balance; }
      exactly what they were before the redesign - same tracks, same gap. */
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--poem-gap);
+  gap: var(--chapter-gap);
   align-items: start;
 }
 
@@ -609,7 +619,7 @@ h1, h2 { text-wrap: balance; }
 .poem-foot {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--poem-gap);
+  gap: var(--chapter-gap);
   align-items: baseline;
   margin-block-start: clamp(3rem, 7vw, 5.5rem);
 }

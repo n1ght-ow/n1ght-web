@@ -317,6 +317,7 @@
 | 阴影 | 两个 token：`--shadow-lift`（纸面控件）与 `--glass-elevation`（玻璃；导航条那六层） |
 | 间距 | `--sp-1`..`--sp-11`（0.25 / 0.5 / 0.75 / 1 / 1.5 / 2 / 3 / 4 / 5 / 6 / 7.5rem） |
 | 区间距 | `--section-y: clamp(5rem, 9vw, 7.5rem)` |
+| 章节头列距 | `--chapter-gap: clamp(2rem, 5vw, 5rem)` —— 三个章节头的两格**与诗区那两列**共用这一条 |
 | 边距 | `--gutter: clamp(1.25rem, 4.5vw, 4.5rem)` |
 | 容器 | `--shell 1440px`；正文 `--measure 62ch` |
 | 玻璃几何 | `--glass-blur`、`--glass-edge-w`、`--glass-pill-ease / travel / morph` 全在 `glass.css` 的 `:root` |
@@ -385,7 +386,7 @@
 
 ## 7. 站点结构
 
-hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：**印刷 folio**——眉标 + 诗题在左格、导语在右格，中间是 3 + 3 两列的六节诗，落款左格是诗的全名、右格是收尾那句；三块共用诗自己的两列，列距只有 `--poem-gap` 一处。自述 / 统计 / coda 已退役）→ footer。
+hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：**印刷 folio**——眉标 + 诗题在左格、导语在右格，中间是 3 + 3 两列的六节诗，落款左格是诗的全名、右格是收尾那句；三块共用诗自己的两列，列距只有 `:root` 的 `--chapter-gap` 一处，与两个 `.sec-head` 同一条。自述 / 统计 / coda 已退役）→ footer。
 
 - **摄影是正文里的一屏**（`#photo` 段落内的 `.photo-wall`，高度 clamp 后约一屏），不是全屏层：`#photo-view`、「Open the wall」按钮、滚动锁与 inert 那一套都已退役，nav 与页脚链接只是普通锚点。
 - **棋盘是 PhantomInfiniteGallery 的 vanilla 移植**：**一张无限平面上的一窗格子**，两轴拖拽 + 抛掷 + 鼠标视差 + 按住 320ms 拉远（0.7×，钉住板心）。三条必须记住的：
@@ -397,6 +398,7 @@ hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋�
 - **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（键盘回车放行）。11 张正典是唯一的 tab stop，克隆体 `aria-hidden` + `tabIndex -1`。
 - **无 JS 兜底**：11 个 `.photo-frame` 留在正文的 `.photo-fallback` 网格里（`html.js` 把它 `display: none`），脚本一执行就把它们搬进 `#photo-wall`。
 - **棋盘是全彩的**（`--wall-saturate: 1`）：这里是「颜色是奖励不是壁纸」的**第一个明文例外**——墙上照片就是页面本身。
+- **三个章节头是一种形状**（`.sec-head` ×2 + 诗的 `.poem-head`）：两格 `repeat(2, minmax(0, 1fr))`、共用 `--chapter-gap`、`align-items: baseline`——眉标与导语首行共线，**标题的行数不再改变导语的位置**（旧版 `align-items: end` 让导语底边跟着标题底边走，一行标题的章节导语顶边在眉标上方 11px、两行标题的在下方 39px）。
 - **音乐默认单流派显示**，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。chips 住在 `.genre-filter` 这条布局行里、自己没有盒子（4.8）；它是**与标签条同一件玻璃托盘**，**不吸顶**——搜索行在它上面，两行都跟着列表滚走。
 - **搜索跨全部 15 组**：有命中时每个命中的组都展开，组头从「136 首」改成「4 / 136」，工具条读出「18 / 468」，零命中才是 NO MATCH。搜索中点击 chip = 跳到那一组的结果；清空关键词回到单选流派。
 - **游戏名册是一个定位盘**（Detent）：中心一张封面、其余按几何递减排在两侧，一次只讲一个。旧的**显式三列网格只剩兜底**：`css/games-stage.css` 用 `:not(.is-live)` 门住它。
