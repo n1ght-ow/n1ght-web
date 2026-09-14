@@ -86,6 +86,10 @@
   --sp-5: 1.5rem;   --sp-6: 2rem;     --sp-7: 3rem;     --sp-8: 4rem;
   --sp-9: 5rem;     --sp-10: 6rem;    --sp-11: 7.5rem;
   --section-y: clamp(5rem, 9vw, 7.5rem);
+  /* The one gap between the three archive/music bars and the list. Every bar
+     measures its spacing from this, so the stack stays even (measured 24 / 24 /
+     24). It is also the tab strip's distance to all six panels. */
+  --bar-gap: var(--sp-5);
   --gutter: clamp(1.25rem, 4.5vw, 4.5rem);
   --measure: 62ch;
   --shell: 1440px;
@@ -589,7 +593,9 @@ h1, h2 { text-wrap: balance; }
   border-radius: var(--radius-pill);
   width: max-content;
   max-width: 100%;
-  margin-block-end: clamp(2rem, 4vw, 3rem);
+  /* the gap to every panel, and the first of the three even gaps of the bar
+     stack (search row, genre rail): 24 / 24 / 24, all from one token. */
+  margin-block-end: var(--bar-gap);
 }
 
 /* The lens rim loses its brightening here, and only here. glass.css gives
@@ -600,7 +606,9 @@ h1, h2 { text-wrap: balance; }
    249,249,243 body, and since the selected pill sits 6px from the rim on
    every side, that white band read as a halo around the pill. Same layer, same
    blur, no brightening: the rim now measures the bar's own colour. */
-#archive-tabbar .glass__edge {
+#archive-tabbar .glass__edge,
+.music-search .glass__edge,
+.genre-filter .glass__edge {
   backdrop-filter: blur(3px) saturate(1.4);
   -webkit-backdrop-filter: blur(3px) saturate(1.4);
 }
@@ -973,52 +981,35 @@ html:not(.js) .sport-wash { opacity: 1; }
 
 /* ============ 13. MUSIC ============ */
 
-/* The SEARCH row is NOT the sticky one. It scrolls away with the list; the
-   genre rail below it is what stays pinned (the user's correction: the first
-   version had these two the other way round). It paints nothing - no
-   background, no blur, no box - so only layout lives here. */
-.music-bar { margin-block-start: var(--sp-4); }
-
-/* Fallbacks, all three (AGENTS.md, glass). This pane is hand-rolled rather
-   than a .glass element, so glass.css's fallback blocks do not reach it; and
-   where there is no backdrop-filter to sample, 16% paper is not a surface at
-   all. Solid paper keeps the layout and every text pair identical to the
-   paper page. */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .genre-filter { background: var(--color-surface); }
-}
-@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .genre-filter {
-    background: var(--color-surface);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-}
-html[data-transparency="solid"] .genre-filter {
-  background: var(--color-surface);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
+/* NOTHING in this toolbar is pinned any more (asked for): the tab strip, the
+   search row and the genre rail all scroll away with the list. That is also why
+   the rail could stop being a hand-rolled 16% plate - with no list sliding
+   under it, it is just the third glass tray, so all three are real .glass
+   elements and glass.css's three fallback blocks cover them at once. The
+   hand-rolled fallback block that used to sit here is gone with the plate. */
+.music-bar { margin-block: 0; }
 
 /* ---------------------------------------------------------------------
-   The music toolbar: a genre rail that stays pinned, and a search row that
-   scrolls away above it.
+   The music toolbar: two glass trays, the same object as the tab strip above
+   them (AGENTS.md, "两条 bar"). Nothing here is pinned.
 
-   #genre-filter is a SIBLING of .music-bar, not a child (see index.html): a
-   sticky element is clipped by its parent's box, so the pinned row and the row
-   that scrolls must not live inside one another. The rail carries the ONLY
-   plate in this toolbar; the search row paints nothing.
+   #genre-filter is a SIBLING of .music-bar, not a child (see index.html): they
+   are the two bars of one toolbar, so the nesting buys layout only.
 
-   NOT the panel's content width any more (asked for, second revision): the
-   plate is a capsule as wide as the fixed nav bar above it, centred on that same
-   axis. Still no negative margins - the reference's own plate is flush with the
-   viewport only because it is a page-level nav.
-
-   THIS IS THE ONE PLACE ON THE PAGE WHERE GLASS HAS SOMETHING TO SMEAR: the
-   rail is pinned and the playlist scrolls underneath it, which is exactly the
-   condition AGENTS.md asks for before glass is allowed.
+   The geometry is the tab strip's, NOT the Blur Navigation reference's: 6px of
+   tray around 40px items, 4px between them. The WIDTHS are deliberately left
+   un-unified (measured 577 / 1275 / 1180): the three read as one family through
+   the material and stay three separate things through their width and their
+   level in the page, which is what "don't make it one toolbar" asks for.
    --------------------------------------------------------------------- */
 .music-search {
+  /* the tray. The layers are absolute; .glass__content below is the row. */
+  padding: 6px;
+}
+
+/* The live controls have to ride above the two backdrop layers, exactly like
+   .tab-btn does in the tab strip. */
+.music-search > .glass__content {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -1026,25 +1017,19 @@ html[data-transparency="solid"] .genre-filter {
 }
 
 .genre-filter {
-  /* Recipe taken verbatim from Framer's Blur Navigation
-     (framer.com/m/Blur-Navigation-iGYrtY.js): backdrop blur(26px), a tint of
-     paper-100 at 16%, a 1px ink-12% hairline as its edge, and no
-     saturate/brightness - the reference has neither.
-     16% is see-through on purpose: covers slide under it and stay visible.
-     Consequence, accepted by the user: over a dark cover the chip labels are far
-     below 4.5:1. That is the point of this material, not an oversight - do not
-     thicken it "to fix contrast". */
-  position: sticky;
-  top: clamp(4.5rem, 9vh, 5.5rem);
-  z-index: 30;
+  /* Third glass tray, the same material as the tab strip and the search row.
+     The hand-rolled Blur Navigation plate is retired together with the pinning
+     (16% paper / blur(26px) / sticky / ink-12% ring): at 72% paper the muted
+     chip labels clear 4.5:1 over anything that used to slide under it, so that
+     material's acknowledged contrast failure is gone with it. */
   display: flex;
   align-items: center;
   gap: 4px;
   flex-wrap: wrap;
-  /* Rounded and nav-wide (asked for): the SAME inline-size expression as
-     header.nav, so the pinned rail and the fixed bar above it share both edges
-     at every width. Measured difference: 0.0px on the left and on the right,
-     from 1440px down to 320px.
+  /* The one thing kept from the previous revision (asked for): the SAME
+     inline-size expression as header.nav, so this bar and the fixed one above it
+     share both edges at every width. Measured difference: 0.0px on the left and
+     on the right, from 1440px down to 320px.
      100vw is deliberate. 100% would be the panel column, which is one scrollbar
      (15px here) narrower than the viewport, so the rail would sit 7.5px in from
      the nav on each side below 1297px - the one range where the nav's own width
@@ -1059,18 +1044,11 @@ html[data-transparency="solid"] .genre-filter {
      throws the start margin away and pushes the plate 7.5px to the right of the
      nav. (100% - w) / 2 goes negative instead and keeps the centres equal. */
   margin-inline: calc((100% - var(--rail-w)) / 2);
-  border-radius: var(--radius-pill);
-  /* A stadium end intrudes about 4px at a 40px chip's vertical extremes (r is
-     half the plate's height), so the chips are inset as far as the block
-     padding. The <=720px block adds its own padding-inline-end for the peek. */
-  padding: var(--sp-3);
-  margin-block: var(--sp-4) var(--sp-5);
-  background: color-mix(in oklab, var(--paper-100) 16%, transparent);
-  backdrop-filter: blur(26px);
-  -webkit-backdrop-filter: blur(26px);
-  /* A ring, not a bottom edge: the plate floats now, so the recipe's hairline
-     has to close on all four rounded sides. */
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.12);
+  /* The tab strip's tray geometry: 6px around 40px items, and the same single
+     gap above and below. Radius, tint, blur, rim and elevation all come from
+     .glass + .glass--pill - do not re-declare them here. */
+  padding: 6px;
+  margin-block: var(--bar-gap);
 }
 
 /* The field keeps no box of its own: the caret and the placeholder are the
@@ -1082,7 +1060,8 @@ html[data-transparency="solid"] .genre-filter {
   font-size: var(--fs-meta);
   letter-spacing: var(--track-meta);
   color: var(--color-text);
-  padding: 0.7em 0;
+  /* inset from the tray rim, like the chips and the tab items */
+  padding: 0.7em 0.95em;
   border: 0;
   /* the focus cue rides this edge - see the focus rules below */
   border-block-end: 1px solid transparent;
@@ -1172,6 +1151,11 @@ html[data-transparency="solid"] .genre-filter {
    state language. That is what makes the row read as one bar with an item
    lit, instead of a field of separately outlined chips. */
 .genre-chip {
+  /* the glass layers are absolutely positioned siblings, so a static button
+     would be painted underneath them and its label would vanish - the same
+     4 as .tab-btn, for the same reason. */
+  position: relative;
+  z-index: 4;
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   letter-spacing: 0.06em;
@@ -1813,13 +1797,21 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .idx-card .idx-artist { grid-column: 2; }
 
   .music-search-input { font-size: 16px; } /* iOS zooms a focused input under 16px */
-  .genre-filter { top: 4.25rem; }
 
+  /* The rail IS a scroller at this width, so it takes the tab strip's phone
+     treatment: a backdrop-filter inside a scroll container samples a moving
+     backdrop, and absolutely positioned layers would scroll with the chips.
+     Solid paper with the ring kept. The search row does not scroll, so it keeps
+     its glass here. */
   .genre-filter { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; padding-inline-end: var(--sp-5); }
+  .genre-filter.glass {
+    background: var(--color-surface);
+    box-shadow: inset 0 0 0 1px var(--color-line);
+  }
+  .genre-filter .glass__body,
+  .genre-filter .glass__edge,
+  .genre-filter .glass__press { display: none; }
   .genre-filter::-webkit-scrollbar { display: none; }
-  /* The rail is a plain horizontal scroller here. It keeps its own plate: this
-     is the toolbar's single frosting surface, and none of its layers are
-     absolutely positioned, so nothing scrolls with the chips. */
   .genre-chip { flex: 0 0 auto; }
 
   .lb-stage img { max-height: 52vh; }

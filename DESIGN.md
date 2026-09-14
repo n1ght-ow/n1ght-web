@@ -2,7 +2,7 @@
 
 > 面向实现的单一设计事实源（V2，2026）。只记录现状，不发明新风格。
 > 结构与裁决见 `AGENTS.md`；研究留档见 `archive/design-research/` 与 `archive/premium-techniques/`。
-> **本版按代码逐条核对过**：`css/style.css?v=76`、`css/glass.css?v=7`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=14`、`css/series-stage.css?v=16`、`css/book-shelf.css?v=5`、`css/photo-wall.css?v=5`、`css/games-stage.css?v=2`、`css/smooth-cursor.css?v=1`、`js/main.js?v=65`、`js/reel-stage.js?v=23`、`js/glass-pill.js?v=3`。
+> **本版按代码逐条核对过**：`css/style.css?v=77`、`css/glass.css?v=7`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=14`、`css/series-stage.css?v=16`、`css/book-shelf.css?v=5`、`css/photo-wall.css?v=5`、`css/games-stage.css?v=2`、`css/smooth-cursor.css?v=1`、`js/main.js?v=66`、`js/reel-stage.js?v=23`、`js/glass-pill.js?v=3`。
 
 ## 0. 品牌与 Design read
 
@@ -154,7 +154,7 @@
 > 2. `--ink-400` 这一类浅灰**不能用于小字**；muted 一律 `--ink-500`。
 > 3. hero 白字依赖 scrim α0.80，任何削弱 scrim 的改动都要重新实测。
 > 4. **选中药丸（`--glass-pill` α0.84）是深色玻璃上的浅字**，和导航条不是一回事：α 越低，`#F2F2EF` 标签越差。α0.84 实测最差仍有 9.25:1。玻璃感由**边缘**（发丝边 + 轴向棱）承担，不由降低底色不透明度承担。
-> 5. **流派行是明文破例**（用户要求「整条都是磨砂」）：磨砂面**只有一层**，就是 `.genre-filter` 自己，配方照抄 Framer Blur Navigation：`blur(26px)` + `--paper-100` @**16%** + 1px `oklch(0 0 0 / 0.12)` 发丝边（现在是**四边成环**）；形状按用户第二轮要求改成**胶囊圆角 + 与顶部 `header.nav` 同宽**（1180 上限、同一条居中轴，见 4.8）。16% 意味着**压在深色封面上时 chip 标签远低于 4.5:1** —— 这是这个材质的定义，不是疏漏：不要再顺手加厚，也不要再叠第二层。
+> 5. **第三条 bar 就是第三条 bar**（用户第三轮要求）：音乐面板的搜索行与流派行现在和 `#archive-tabbar` 是**同一件玻璃托盘**（`.glass .glass--pill`），见 4.8。第二轮那套手写 Blur Navigation 配方（`blur(26px)` + `--paper-100` @16% + 墨 12% 环 + 自备三条回退）**已整体退役**，它的对比度豁免一并作废：没有东西从板下穿过，最差底色就是纸面（chip 标签 8.13:1、占位符 5.18:1）。**三条 bar 都不吸顶。**
 
 ---
 
@@ -218,7 +218,7 @@
 | --- | --- | --- |
 | 浮在 hero 照片上 | `header.nav` | 纸白玻璃 α0.78（`--glass-nav`） |
 | 浮在归档区内容上 | `#archive-tabbar`（含 `#tab-pill`） | 纸白玻璃 + 墨色药丸 |
-| 浮在歌单上（**只有流派行 sticky**） | `.genre-filter`（磨砂板；搜索行在它上面，随列表滚走） | **磨砂，见 4.8**（唯一破例） |
+| 与歌单同层（**没有一行 sticky**） | `.music-search`（搜索行）+ `.genre-filter`（流派行），两条都是玻璃托盘 | **玻璃，与 `#archive-tabbar` 同一件东西，见 4.8** |
 | 影 / 剧详情区 | `OPEN ON IMDb`（`.glass--accent`） | 香槟染色玻璃，见 4.7 |
 | 纸面上 | `.music-random`、`.lb-meta-link`、所有 chip / 按钮 | 实心色 |
 
@@ -263,26 +263,27 @@
 
 **不吃折射**：位移图按宽扁条约 16:1 写的，放到 132×40 会把中心放大成亮斑。
 
-### 4.8 两条 bar：Compact Navbar 的形态
+### 4.8 三条 bar：同一件玻璃托盘
 
-应要求把 `#archive-tabbar` 与音乐工具条换成 Framer Compact Navbar（`framer.com/m/Compact-Navbar-cE1IzB.js`）的**形态**：一行一个容器、条目直接住在容器里（自己没有盒子、没有发丝线）、容器内距紧凑、一行唯一的动作停在右端。参考实现是**深色玻璃**；**本站只借形态**。
+三条 bar —— `#archive-tabbar`、`.music-search`（搜索行）、`#genre-filter`（流派行）—— 是**同一件东西**：本站的液态玻璃托盘（`.glass .glass--pill`），托盘内距 6px、条目间距 4px、条目 40px、圆角 `--radius-pill`。形态最初借自 Framer Compact Navbar（`framer.com/m/Compact-Navbar-cE1IzB.js`）与 Blur Navigation（`framer.com/m/Blur-Navigation-iGYrtY.js`），**材质是本站的**（用户第三轮：三条都按标签条那样做）。**没有任何一行 sticky。**
 
-| bar | 容器 | 材质 |
+| bar | 尺寸（1418 视口实测） | 材质 |
 | --- | --- | --- |
-| `#archive-tabbar` | 胶囊 `--radius-pill`，托盘 6px、条目间距 4px | 纸白玻璃（配方不动），墨色药丸 |
-| `.genre-filter` | sticky 的流派行，**胶囊形状 + 与顶部导航条等宽**（`min(1180px, calc(100vw - 2 * var(--gutter)))`、`--radius-pill`、居中） | **唯一的磨砂面**：`backdrop-filter: blur(26px)` + `--paper-100` @**16%** + 四边 1px `oklch(0 0 0 / 0.12)` 发丝环（Blur Navigation 的配方 + 本站的形状） |
-| `.music-bar` | 只包住搜索行与空状态，非 sticky | **不画东西**：无背景、无 backdrop-filter、无阴影；随列表滚走 |
-| `.music-search` | 行内布局 | 同上（只有 hover 药丸底与 active 实心墨） |
+| `#archive-tabbar` | 577 × 52，`width: max-content`，左贴正文边 | `.glass--pill`：72% paper-000 + `.glass__body` `blur(20px) saturate(1.7) brightness(1.05)` + 棱环 + `--glass-elevation`；选中态是 `js/glass-pill.js` 那颗墨色药丸（`--glass-pill` 84% ink-950） |
+| `.music-search` | 1275 × 52，铺满正文列 | 同上；内容层 `.glass__content` 抬到 z-index 3 |
+| `#genre-filter` | 1180 × 96（两行 chips），与 `header.nav` 同宽同轴 | 同上；chips 抬到 `z-index: 4` |
 
-- **tab 条的镜面棱去掉 brightness**：`#archive-tabbar .glass__edge` 从 `blur(3px) brightness(1.14) saturate(1.4)` 改成 `blur(3px) saturate(1.4)`。纸上没有可锐化的东西，1.14× 只是把已经约 249 的主体削顶成纯白——实测这条 bar 的上下 9px 是 `255,255,255`，而主体是 `249,249,243`；药丸四边各距棱 6px，于是那圈白就读成了药丸的白色光晕。改后同点实测 `248,248,240` / `244,244,237`。**只有 tab 条这样**：`header.nav` 压在照片上，那里的 brightening 就是镜面棱本身。
-- **只有流派行 sticky，搜索行随列表滚走**（这是用户更正过的方向：第一版两行反着来）：`#genre-filter` 与 `.music-bar` 是**兄弟节点**——sticky 会被父盒子裁掉，谁钉住谁就不能住在对方的盒子里。桌面实测：滚 1000px 后 rail 的 top 恒为 81px，搜索行从 −456 走到 −1456；rail 与 `header.nav` 的左右边缘**逐像素相等**。
-- **材质照抄 Framer Blur Navigation**（`framer.com/m/Blur-Navigation-iGYrtY.js`）：`backdrop-filter: blur(26px)`（**无** saturate / brightness）、`--paper-100` @**16%**（参考是 `rgba(239,238,234,0.16)`，正好是本站 paper-100）、1px `oklch(0 0 0 / 0.12)` 发丝边——**四条边**：板浮起来之后只剩底边会断在圆角切点上。**形状不再照抄**（用户第二轮要求）：`--radius-pill` 胶囊，宽度与 `header.nav` 用**同一条表达式**（`min(1180px, calc(100vw - 2 * var(--gutter)))`），`padding: var(--sp-3)` 让 chips 不压到圆角端。`100vw` 是刻意的：`100%` 是面板列，比视口窄一条滚动条（本机 15px），在 <1297px（导航条走视口分支的区间）会让 rail 每侧比导航条缩进 7.5px；代价是板会比列宽出半条滚动条、探进 `.tab-panels` 的内距里，而内距每侧至少 20px，够不到页面边缘也不产生横向滚动（320px 实测 `scrollWidth == clientWidth`）。居中**不能用** `margin-inline: auto`：宽度超过列时是 over-constrained，起始 margin 会被丢掉、整块右移 7.5px，所以写成 `margin-inline: calc((100% - var(--rail-w)) / 2)`。实测 1440 / 1418 / 1297 / 1200 / 1100 / 900 / 720 / 480 / 320 九个宽度下 dL = dR = **0.0px**。参考的 superellipse 圆角、6000×3000 模糊底场、汉堡菜单是它的内容 / 框架，不抄。桌面代价：15 枚 chips 折两行，钉住时这块板 108px 高。
-- **为什么行内一点材质都不留**：两行曾各是 @0.55 / @0.48 的玻璃，叠在已经染色又已经模糊的面上合成到 **75-78% 纸**，霜感被乘没、读起来就是两块实心白板。两层染色玻璃永远读不出「全磨砂」。
-- **行内没有容器圆角**：两行都不画盒子，圆角只剩 chip 自己的 `--radius-pill`。旧规则「chips 行折两行所以托盘不能用 stadium」随之作废——没有托盘了。
-- 条目尺寸仍是 **40px**：参考实现的 29px 条目**没有照抄**（桌面 40×40 是硬线，紧凑只落在横轴——条目内距 1.25em → 1.05em、chips 的 `min-height` 38 → 40px）。
-- 音乐条目**不再各自带发丝线**：整行读成一条 bar + 一枚点亮的条目（hover 药丸底、active 实心墨）。`.music-random` 仍是这个视图**唯一**的实心主操作，只是从「输入框旁边的按钮」变成「停在 bar 右端的 CTA」，DOM 里也排最后。
-- **焦点提示在输入框底边**：1px `--color-text-muted` 底线 + 光标。整行没有盒子，给它画 2px 金环等于给一条满宽色带套相框（用户：「那个金色框删掉吧」）；输入框自身的 `outline: none` 由这条底线替代，行内的清除 / 随机一首保留全局焦点环。
-- `≤720px`：三条都还是各自的横向滚动器。`.tabbar` 的实底规则必须写成 **`.tabbar.glass`**——`.glass` 在 glass.css 里且**后加载**，bare `.tabbar` 的同名声明压不过它。
+- **托盘几何来自标签条，不是参考实现**：6px 内距 + 4px 间距 + 40px 条目（参考实现的条目只有 29px，**没有照抄**——桌面 40×40 是硬线，紧凑只落在横轴：条目内距 1.25em → 1.05em）。三条因此同一套高度公式：一行 52px，流派行两行 96px。
+- **宽度刻意不统一**（用户第三轮选定：实测 577 / 1275 / 1180）：三条靠材质读成一家、靠宽度与页面层级保持彼此独立——这是「不要弄成一组工具条」的落点。流派行仍与 `header.nav` 用同一条表达式 `min(1180px, calc(100vw - 2 * var(--gutter)))`；居中必须是 `calc((100% - var(--rail-w)) / 2)` 而不是 `margin-inline: auto`（宽度超过列时是 over-constrained，起始 margin 会被丢掉、整块右移半个滚动条）。实测 1440→320 九个宽度左右边缘差 **0.0px**。
+- **间距只有一个 token `--bar-gap`（`--sp-5` = 24px）**：实测标签条→搜索行→流派行→列表 = **24 / 24 / 24**。标签条的下边距同时就是它与六个面板的距离，所以这一条把面板起点从 48 收到 24（用户选择 24 时已披露的副作用）。
+- **没有一行 sticky**（用户第三轮，明文覆盖第二轮的「流派常驻」）：三条都随列表滚走。`alignGenreTop()` 的落点基准因此改成**固定导航条的底边 + 16**——`header.nav` 是 `fixed`，rect 在任何滚动位置都诚实；旧的「读 sticky 板的 `computed top` + `offsetHeight`」随吸顶一起退役（那条规则本来是为绕开「换组时文档变矮、sticky 板被压出视口」）。实测：搜索中点 chip 落点 16 / 15px，深处切流派 16px。
+- **材质就是 `.glass` 本体，手写那套整体退役**：流派行原来是手写的 Blur Navigation 板（`blur(26px)` + `--paper-100` @16% + 墨 12% 环）**外加自己那三条回退**——现在它就是 `.glass`，`glass.css` 一次覆盖三条。随之消失的还有它的对比度豁免：没有东西从板下穿过，最差底色就是纸面。实测（72% paper-000 合成到 `--paper-100` = `248,248,246`）：chip 标签 ink-600 **8.13:1**、占位符 / 序号 ink-500 **5.18:1**、选中 chip 与 CTA 16.96:1。
+- **玻璃层必须是 `.glass` 的静态子元素，而且写在内容之前**：两层都是绝对定位，静态的 chips / 输入框会被画在它们下面。`js/music-stage.js` 只 `appendChild`、从不清空 `#genre-filter`，所以 index.html 里写死的两层安全；chips 与 `.music-search > .glass__content` 都要 `position: relative; z-index: 4`（`.tab-btn` 同一个理由、同一个值）。`.glass__press` 只给 tab 条与流派行——文本域不是按钮，点进去打字不该让整块板的棱闪一下。
+- **三条共用去 brightness 的棱**：`#archive-tabbar .glass__edge, .music-search .glass__edge, .genre-filter .glass__edge { backdrop-filter: blur(3px) saturate(1.4) }`。纸上 1.14× 只是把已经约 249 的主体削顶成纯白——实测这条 bar 的上下 9px 是 `255,255,255` 而主体是 `249,249,243`；药丸四边各距棱 6px，于是那圈白就读成了药丸的白色光晕。改后同点实测 `248,248,240` / `244,244,237`。`header.nav` 压在照片上，**保留** brightening。
+- 音乐条目**不再各自带发丝线**：整行读成一条 bar + 一枚点亮的条目（hover 药丸底、active 实心墨）。`.music-random` 仍是这个视图**唯一**的实心主操作，停在 bar 右端，DOM 里也排最后。
+- **焦点提示在输入框底边**：1px `--color-text-muted` 底线 + 光标。输入框自身的 `outline: none` 由这条底线替代，行内的清除 / 随机一首保留全局焦点环。
+- `≤720px`：`.tabbar` 与 `#genre-filter` 都是横向滚动器，都转实底（`var(--color-surface)` + `inset 0 0 0 1px var(--color-line)`）并把两层 `display: none`——滚动容器里不放 backdrop-filter，绝对定位层也会随内容滚。实底规则必须写成 **`.tabbar.glass` / `.genre-filter.glass`**：`.glass` 在 glass.css 里且**后加载**，bare 类的同名声明压不过它（`.tabbar` 那条自 V2 起就没生效过，这次修好了）。搜索行不滚动，**保留玻璃**。
+
 
 ### 4.9 导航条：Liquid Glass Navbar 的形态
 
@@ -366,7 +367,7 @@
 - 滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis；禁裸 `window` scroll handler。
 - `transition-property` 写具体属性；禁 `transition: all`。
 - `filter` 会创建**包含块**：图片滤镜只能加在图片本身，绝不能加在任何含 `position: fixed` 后代的容器上（`#lightbox` 是 fixed）。
-- **`backdrop-filter` 是每帧重采样**：它能出现在 sticky / 浮层上，但放进横向滚动容器要付每帧的代价（音乐 chips 行是明文例外，见 4.2 第 3 条）。
+- **`backdrop-filter` 是每帧重采样**：它能出现在浮层上，但放进横向滚动容器要付每帧的代价——`≤720px` 的 tab 条与流派行因此都转实底。音乐那两条 bar 压在纸面上、且都不滚动容器化（搜索行不是滚动器，流派行只在 `≤720px` 是），所以它们留玻璃。
 
 ### 6.4 频率分治
 
@@ -392,7 +393,7 @@ hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋�
 - **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（键盘回车放行）。11 张正典是唯一的 tab stop，克隆体 `aria-hidden` + `tabIndex -1`。
 - **无 JS 兜底**：11 个 `.photo-frame` 留在正文的 `.photo-fallback` 网格里（`html.js` 把它 `display: none`），脚本一执行就把它们搬进 `#photo-wall`。
 - **棋盘是全彩的**（`--wall-saturate: 1`）：这里是「颜色是奖励不是壁纸」的**第一个明文例外**——墙上照片就是页面本身。
-- **音乐默认单流派显示**，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。chips 住在 `.genre-filter` 这条布局行里、自己没有盒子（4.8）；**它 sticky**——流派行钉在顶部（胶囊板、与顶部导航条等宽），搜索行在它上面、跟着列表滚走。
+- **音乐默认单流派显示**，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。chips 住在 `.genre-filter` 这条布局行里、自己没有盒子（4.8）；它是**与标签条同一件玻璃托盘**，**不吸顶**——搜索行在它上面，两行都跟着列表滚走。
 - **搜索跨全部 15 组**：有命中时每个命中的组都展开，组头从「136 首」改成「4 / 136」，工具条读出「18 / 468」，零命中才是 NO MATCH。搜索中点击 chip = 跳到那一组的结果；清空关键词回到单选流派。
 - **游戏名册是一个定位盘**（Detent）：中心一张封面、其余按几何递减排在两侧，一次只讲一个。旧的**显式三列网格只剩兜底**：`css/games-stage.css` 用 `:not(.is-live)` 门住它。
 - **球队是五格手风琴**（Framer image animation 的移植）：一行五张图，永远只有一张被撑开。
@@ -454,7 +455,7 @@ V2 把纸墨系统铺满全站时，影 / 剧那一族**没有跟上**：它保�
 | Hover | 点亮**文字**（标题转 accent），不是 2.5% 的行底染色——后者低于感知阈值 |
 | Chip | 激活态**不加对勾字形**（它会撑宽 chip，导致整条轨每次切流派都重排）；state 由填充与 `aria-pressed` 承担 |
 | 性能 | `content-visibility: auto` + `contain-intrinsic-size` 加在 **`.genre`（15 个块）**上，不加在每张卡上 |
-| 工具条 | 流派行 sticky 且是唯一磨砂面（`.genre-filter`，Blur Navigation 配方：blur 26 / paper-100 @16% / 四边 1px ink12 环 / 胶囊 + 与顶部导航条等宽）；搜索行是兄弟节点、在它上面、随列表滚走、不画东西，见 4.8 |
+| 工具条 | 搜索行与流派行都是**与 `#archive-tabbar` 同一件玻璃托盘**（`.glass--pill`，见 4.8）；**两行都不吸顶**、都随列表滚走；间距统一 `--bar-gap`（24px） |
 | 搜索 | **跨全部 15 组**：命中的组全部展开，组头读「命中 / 总数」，工具条读全站命中数；`#music-search-jump` 已随「别处还有结果」这个状态一起退役 |
 
 ### 10.3 游戏

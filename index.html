@@ -30,7 +30,7 @@
   </script>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=12">
-  <link rel="stylesheet" href="css/style.css?v=76">
+  <link rel="stylesheet" href="css/style.css?v=77">
   <link rel="stylesheet" href="css/glass.css?v=7">
   <link rel="stylesheet" href="css/reel-stage.css?v=15">
   <link rel="stylesheet" href="css/film-stage.css?v=14">
@@ -310,28 +310,44 @@
           <div class="tab-panel" id="panel-music" role="tabpanel" aria-labelledby="tab-music" data-panel="music" tabindex="0">
             <div class="music-drawer" id="music-drawer">
               <div class="music-bar">
-                <div class="music-search" id="music-search">
-                  <label class="sr-only" for="music-search-input">Search songs by title or artist</label>
-                  <input class="music-search-input" id="music-search-input" type="search" placeholder="Search title or artist" autocomplete="off" spellcheck="false">
-                  <button class="music-search-clear" id="music-search-clear" type="button" aria-label="Clear search" hidden>&times;</button>
-                  <span class="music-search-count" id="music-search-count" hidden></span>
-                  <!-- The one action pill of this tray sits at its right end,
-                       the way the reference bars park their CTA. It is last in
-                       the DOM as well as on screen, so nothing is reordered
-                       out from under the Tab key. -->
-                  <button class="music-random" id="music-random" type="button" lang="zh">随机一首</button>
+                <!-- The search row is a glass tray: the same object as the tab
+                     strip above it and the genre rail below it (AGENTS.md,
+                     "两条 bar"). .glass__body / .glass__edge are the two
+                     backdrop layers; .glass__content lifts the live controls
+                     above them, or the field would be painted under its own
+                     frost. No .glass__press here on purpose: a text field is
+                     not a button, and a rim flash on every focus-click is
+                     noise. -->
+                <div class="music-search glass glass--pill glass--spot" id="music-search">
+                  <div class="glass__body" aria-hidden="true"></div>
+                  <div class="glass__edge" aria-hidden="true"></div>
+                  <div class="glass__content">
+                    <label class="sr-only" for="music-search-input">Search songs by title or artist</label>
+                    <input class="music-search-input" id="music-search-input" type="search" placeholder="Search title or artist" autocomplete="off" spellcheck="false">
+                    <button class="music-search-clear" id="music-search-clear" type="button" aria-label="Clear search" hidden>&times;</button>
+                    <span class="music-search-count" id="music-search-count" hidden></span>
+                    <!-- The one action pill of this tray sits at its right end,
+                         the way the reference bars park their CTA. It is last in
+                         the DOM as well as on screen, so nothing is reordered
+                         out from under the Tab key. -->
+                    <button class="music-random" id="music-random" type="button" lang="zh">随机一首</button>
+                  </div>
                 </div>
                 <p class="music-search-empty" id="music-search-empty" role="status" aria-live="polite" hidden>
                   <span id="music-search-empty-text">No match</span>
                 </p>
               </div>
-              <!-- The genre rail is a SIBLING of the search row, not a child.
-                   The RAIL is the pinned one; the search row scrolls away above
-                   it. Do not move this inside .music-bar: a sticky element is
-                   clipped by its parent's box, so it would stop being pinned the
-                   moment that box scrolled past. (First pass had it the other way
-                   round; the user corrected it.) -->
-              <div class="genre-filter" id="genre-filter" role="group" aria-label="按流派过滤"></div>
+              <!-- The genre rail is a SIBLING of the search row, not a child:
+                   they are the two bars of one toolbar and BOTH scroll away
+                   with the list (nothing in this panel is pinned - the pinned
+                   rail was retired by request), so the nesting buys layout
+                   only. The chips are appended by js/music-stage.js, which
+                   only ever appends, so the glass layers stay put. -->
+              <div class="genre-filter glass glass--pill glass--spot" id="genre-filter" role="group" aria-label="按流派过滤">
+                <div class="glass__body" aria-hidden="true"></div>
+                <div class="glass__edge" aria-hidden="true"></div>
+                <span class="glass__press" aria-hidden="true"></span>
+              </div>
               <div class="playlist" data-music-stage="auto"></div>
             </div>
           </div>
@@ -696,6 +712,6 @@
 <script src="js/games-stage.js?v=3"></script>
   <script src="js/glass-pill.js?v=3"></script>
   <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=65"></script>
+  <script src="js/main.js?v=66"></script>
 </body>
 </html>

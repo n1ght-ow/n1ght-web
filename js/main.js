@@ -991,20 +991,19 @@ function initMusicSearch() {
   // ever scrolls up: near the top of the panel the group is already in view
   // and moving the page there would just be noise.
   function alignGenreTop(genre, always) {
-    // The pinned row is the GENRE RAIL, not the search row: the rail is what
-    // stays on screen while the list scrolls, so its own box is what the target
-    // has to clear. (The two rows were the other way round in the first pass -
-    // the user corrected it, hence the name that no longer says "bar".)
-    const rail = panel.querySelector(".genre-filter");
-    if (!genre || !rail) return;
-    // The rail's own rect is NOT usable here. Swapping a long group for a
-    // shorter one shrinks the document under the current scroll position, the
-    // browser clamps the scroll, and the sticky bar is momentarily un-pinned -
-    // its rect then sits above the viewport and the offset it yields lands the
-    // group hundreds of pixels short. Read the pinned geometry from CSS
-    // instead (the shelf reads its stage numbers the same way): the sticky
-    // offset plus the bar's own height is where its bottom sits once stuck.
-    const pinnedBottom = (parseFloat(window.getComputedStyle(rail).top) || 0) + rail.offsetHeight;
+    // Nothing in this toolbar is pinned any more (asked for): the tab strip, the
+    // search row and the genre rail all scroll away with the list, so what the
+    // swapped-in group has to clear is the FIXED nav bar - the only thing still
+    // on screen at the top of the viewport.
+    if (!genre) return;
+    // Off the nav's own rect, which is honest at every scroll position because
+    // the nav is position: fixed. The old read was the rail's pinned geometry
+    // out of CSS (computed top + offsetHeight): a sticky bar that is momentarily
+    // un-pinned - the document shrank under the scroll position - reports a rect
+    // above the viewport and lands the group hundreds of pixels short. That trap
+    // left with the pinning; do not reintroduce a sticky read.
+    const nav = document.querySelector("header.nav");
+    const clear = (nav ? nav.getBoundingClientRect().bottom : 0) + 16;
 
     if (always) {
       // A search jump can travel thousands of pixels, and .genre blocks are
@@ -1013,10 +1012,10 @@ function initMusicSearch() {
       // a POP -> HIP-HOP jump landed 359px off, and a "correct it once" pass
       // made it 834px off, because each re-measure materialises another block
       // and moves the target again. Hand it to the engine: scroll-margin-top
-      // parks the group head under the sticky bar, and the browser's scroll
+      // parks the group head under the fixed nav bar, and the browser's scroll
       // anchoring is exactly the mechanism that absorbs blocks materialising
       // mid-flight.
-      genre.style.scrollMarginTop = Math.round(pinnedBottom + 16) + "px";
+      genre.style.scrollMarginTop = Math.round(clear) + "px";
       genre.scrollIntoView({ block: "start", behavior: "instant" });
       if (lenis) lenis.scrollTo(window.scrollY, { immediate: true, force: true });
       return;
@@ -1025,7 +1024,7 @@ function initMusicSearch() {
     // Browsing only ever nudges UP: the swapped-in group is normally already in
     // view and moving the page would be noise. It travels a few pixels inside
     // blocks that are already materialised, so live rects are honest here.
-    const delta = genre.getBoundingClientRect().top - (pinnedBottom + 16);
+    const delta = genre.getBoundingClientRect().top - clear;
     if (delta > -2) return;
     const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
     const target = Math.min(Math.max(window.scrollY + delta, 0), max);

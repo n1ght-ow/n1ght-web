@@ -61,7 +61,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 回退是**三重**的（`prefers-reduced-transparency` 只有 Chromium 支持，不能单独依赖）：`@supports` 无 backdrop-filter → `prefers-reduced-transparency` / `prefers-contrast` → `html[data-transparency="solid"]`。新增玻璃层时**三条都要补**。
 
-玻璃**只给浮在内容之上的控件**：`header.nav`、`#archive-tabbar` + `#tab-pill`、`.music-bar`（整条工具条唯一的磨砂面，见「两条 bar」），以及未来的浮层。纸面上的按钮用实心色——纸上没有可折射的内容，玻璃只会发灰。
+玻璃**只给浮在内容之上的控件**：`header.nav`、`#archive-tabbar` + `#tab-pill`、音乐工具条的两条 bar（`.music-search` 与 `#genre-filter`，见「三条 bar」），以及未来的浮层。纸面上的按钮用实心色——纸上没有可折射的内容，玻璃只会发灰。
 
 **唯一的例外是 `.glass--accent`**（影 / 剧详情区的 `OPEN ON IMDb`，应要求做成玻璃）。它靠**香槟色染色**成立：染色就是重点，模糊与棱有了颜色可以读。配方与三个实测数字见 `DESIGN.md` 4.7 —— 关键是**这一版的两层都不能加 `brightness()`**，因为 `.glass__edge` 是 `inset: 0` 盖满整个控件、会与 `__body` 的亮度叠加，在浅色染上只会把通道削顶。
 
@@ -137,19 +137,21 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 - 内容面板整块**不抄**：参考填的是不透明渐变，本站填了就等于终止 backdrop 读取，玻璃随之消失。退一步只照抄那条 bevel（`inset 0 ±1px 1.5px`）也试过，渲染出来是**棱内部多出来的一圈细线**——已撤掉。**外壳的棱是这条 bar 唯一的边**，不要再往里加第二圈。
 - **导航条不再有选中指示器**（应要求）：`#nav-pill` 元素、`main.js` 的 `createGlassPill()` 调用、`.nav-links.is-dragging` / `.is-drop-target` / `cursor: grab` 全部删除。选中态改由墨色承担（active ink-900 13.9:1 / 兄弟项 ink-600 6.6:1）。代价是失去「拖药丸跳章节」这个手势——它不是无障碍通道，但确实少了一条捷径。`js/glass-pill.js` 与 tab 条不受影响。
 
-### 两条 bar（Compact Navbar 形态）
+### 三条 bar（同一件玻璃托盘）
 
-应要求把 `#archive-tabbar` 与音乐工具条（`.music-search` + `.genre-filter`）换成 Framer Compact Navbar（`framer.com/m/Compact-Navbar-cE1IzB.js`）的**形态**：一行一个容器、条目直接住在容器里（自己没有盒子）、容器内距紧凑、一行唯一的动作药丸停在右端。参考实现是**深色玻璃**胶囊；**本站只借形态、保留纸白材质**（用户选定，材质不反转）。完整表格见 `DESIGN.md` 4.8。
+三条 bar —— `#archive-tabbar`、`.music-search`（搜索行）、`#genre-filter`（流派行）—— 现在是**同一件东西**：本站的液态玻璃托盘（`.glass .glass--pill`），内距 6px、条目间距 4px、条目 40px、圆角 `--radius-pill`，选中 / 主操作用实心墨药丸。形态最初借自 Framer Compact Navbar（`framer.com/m/Compact-Navbar-cE1IzB.js`）与 Blur Navigation（`framer.com/m/Blur-Navigation-iGYrtY.js`），**材质是本站的**（用户第三轮明确：三条都做成标签条那样）。完整表格见 `DESIGN.md` 4.8。
 
 - 三个容器内距都是 6px、条目间距 4px。`.tab-btn` 目标仍是 **40px**：参考实现的条目只有 29px，**没有照抄**（桌面 40×40 是硬线，紧凑只能落在横轴——条目内距 1.25em → 1.05em）。
 - `#archive-tabbar` 仍然是玻璃（浮在内容之上），选中药丸仍然是 `js/glass-pill.js` 那一颗。**拖拽语义是在这一轮改的**：从「跟着指针 1:1 悬浮」改成「吸附到指针所在的那一栏」，并退役了 0.94 的抓取缩放——两者都是「拖到最右边小胶囊填不满」的原因（见「液态玻璃」里的药丸四条）。选中 / `moveTo` / `Escape` 的契约没动。
-- **只有流派行 sticky，搜索行随列表滚走**（用户更正过方向，第一版两行反着来）：`#genre-filter` 与 `.music-bar` 是**兄弟节点**——sticky 会被父盒子裁掉，谁钉住谁就不能住在对方盒子里。搜索行不画任何东西（无背景、无模糊、无阴影），只留布局 + 条目状态语言（hover 药丸底、active 实心墨）。
-- **材质是 Framer Blur Navigation 的配方逐字照抄**（`framer.com/m/Blur-Navigation-iGYrtY.js`）：`backdrop-filter: blur(26px)`（无 saturate / brightness）+ `--paper-100` @**16%** + 四边 1px `oklch(0 0 0 / 0.12)` 发丝环（板浮起来后只剩底边会断在圆角上）。**形状是本站的、不是参考的**（用户第二轮要求）：`--radius-pill` 胶囊、**与顶部 `header.nav` 等宽**——用同一条 `min(1180px, calc(100vw - 2 * var(--gutter)))`，居中必须是 `calc((100% - var(--rail-w)) / 2)` 而不是 `margin-inline: auto`（宽度超过列时 auto 会把起始 margin 丢掉、整块右移半个滚动条）。实测 1440→320 九个宽度左右边缘差 **0.0px**。**不要再叠第二层**：两行曾各是 @0.55 / @0.48 的玻璃，叠上去合成到 75-78% 纸，霜感被乘没、读起来是两块实心白板。**代价**：16% 面上压在深色封面时 muted 占位符远低于 4.5:1，这是这个材质的定义（用户明确要求压过这条红线），不要再加厚。
-- **三条回退写在这层旁边**：`.music-bar` 是手写玻璃、不是 `.glass` 元素，`glass.css` 的回退块够不到它。
+- **没有任何一行是 sticky**（用户第三轮的明文要求，覆盖第二轮「流派常驻」）：标签条、搜索行、流派行**都随列表滚走**。`#genre-filter` 与 `.music-bar` 仍是**兄弟节点**，但理由只剩布局。因此 `alignGenreTop()` 的落点基准从「sticky 板读出的 pinned 几何」改成**固定导航条的底边**（`header.nav` 是 `fixed`，任何滚动位置都诚实）——不要把 sticky 读法加回来。
+- **材质就是 `.glass` 本体，不要再手写第二套**：三条都读 `glass.css` 的 `--glass-panel`（72% paper-000）+ `.glass__body`（`blur(20px) saturate(1.7) brightness(1.05)`）+ `.glass__edge` 棱环 + `--glass-elevation`。**流派行原来那套手写 Blur Navigation 板（`blur(26px)` + `--paper-100` @16% + 墨 12% 环）已随吸顶一起退役**；随之消失的还有它那条「压在深色封面上 muted 标签远低于 4.5:1」的豁免——没有东西从板下穿过了，最差底色就是纸面。实测（72% 面合成到 `--paper-100` 上 = 248,248,246）：chip 标签 ink-600 **8.13:1**、占位符 / 序号 ink-500 **5.18:1**、选中 chip 16.96:1。
+- **玻璃层必须是 .glass 的静态子元素**，而且必须在内容**之前**：两层都是绝对定位，静态的 chips / 输入框会被画在它们下面。流派行的渲染器（`js/music-stage.js`）只 `appendChild`、从不清空容器，所以 index.html 里写死的两层安全；`#genre-filter` 的 chips 与 `.music-search > .glass__content` 都必须抬到 `position: relative; z-index: 4`（`.tab-btn` 同一个理由、同一个值）。
+- **宽度刻意不统一**（用户第三轮选定：实测 577 / 1275 / 1180）：三条靠材质读成一家、靠宽度与页面层级保持彼此独立——这是「不要弄成一组工具条」的落点。流派行的宽度仍与 `header.nav` 同一条表达式（`min(1180px, calc(100vw - 2 * var(--gutter)))`，居中用 `calc((100% - var(--rail-w)) / 2)` 而不是 `margin-inline: auto`——宽度超过列时 auto 会把起始 margin 丢掉、整块右移半个滚动条）。实测 1440→320 九个宽度左右边缘差 **0.0px**。
+- **回退不用自己写**：三条都是 `.glass` 元素，`glass.css` 的三条回退（无 backdrop-filter / `prefers-reduced-transparency` / `html[data-transparency="solid"]`）一次覆盖三条。手写那套已经删掉，不要再为音乐面板补一份。
 - 音乐条目**不再各自带发丝线**：整行读成一条 bar + 一枚点亮的条目。hover 是药丸底、active 是实心墨，与 tab 条同一套状态语言；`.music-random` 仍是这个视图**唯一**的实心主操作，只是从「输入框旁边的按钮」变成「停在 bar 右端的 CTA」（DOM 里也排最后，Tab 顺序与视觉顺序一致）。
 - **焦点提示在输入框底边**（1px `--color-text-muted` + 光标），不再给整行画环：满宽色带套 2px 金环就是相框（用户原话「那个金色框删掉吧」）；输入框自身的 `outline: none` 由这条底线替代，行内的清除 / 随机一首保留全局焦点环。
-- **tab 条的镜面棱不吃 `brightness()`**（`#archive-tabbar .glass__edge`）：纸上 1.14× 只会把 ~249 的主体削顶成纯白，实测上下 9px 是 `255,255,255`，而药丸四边各距棱 6px —— 那圈白就是「药丸周围的白色光晕」。改成只留 `blur(3px) saturate(1.4)` 后同点实测 `248,248,240`。`header.nav` 压在照片上，**保留** brightening。
-- `≤720px`：三条都还是各自的横向滚动器。`.tabbar` 的实底规则必须写成 **`.tabbar.glass`**——`.glass` 在 glass.css 里且**后加载**，bare `.tabbar` 的同名声明一直压不过它（顺带修好了这条自 V2 起就没生效过的死规则）。
+- **压在纸面上的三条 bar，镜面棱都不吃 `brightness()`**（`#archive-tabbar`、`.music-search`、`#genre-filter` 三条共用一条 `.glass__edge` 规则）：纸上 1.14× 只会把 ~249 的主体削顶成纯白，实测上下 9px 是 `255,255,255`，而药丸四边各距棱 6px —— 那圈白就是「药丸周围的白色光晕」。改成只留 `blur(3px) saturate(1.4)` 后同点实测 `248,248,240`。`header.nav` 压在照片上，**保留** brightening。
+- `≤720px`：`.tabbar` 与 `#genre-filter` 都是横向滚动器，都转实底（`var(--color-surface)` + `inset 0 0 0 1px var(--color-line)`）并 `display: none` 掉两层——滚动容器里不放 backdrop-filter。实底规则必须写成 **`.tabbar.glass` / `.genre-filter.glass`**：`.glass` 在 glass.css 里且**后加载**，bare 类的同名声明压不过它（`.tabbar` 那条自 V2 起就没生效过，修好了）。搜索行不滚动，**保留玻璃**。
 
 ### 影 / 剧
 
@@ -199,11 +201,12 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 专辑封面走 `js/music-covers.js`（`window.MUSIC_COVERS`，songId → 文件名，图在 `album-covers/`，生成文件勿手改），详情层 `.lb-music` 显示真实封面，缺图回落 ♪ 占位 sleeve。
 
-- **两行的方向**：流派 chips 行是**唯一 sticky 的那一行**，也是整条工具条唯一的磨砂面；它是一个**与顶部导航条等宽居中的胶囊板**（见「两条 bar」）。搜索行随列表滚走、不画任何东西。
+- **两行都是玻璃托盘、都不吸顶**（见「三条 bar」）：搜索行与流派行与标签条同一件东西；换流派的落点按**固定导航条的底边**算（`alignGenreTop()`），历史搜索跳转仍走 `scrollMarginTop`。
+- **三条 bar 的间距统一走 `--bar-gap`（`--sp-5` = 24px）**：实测标签条→搜索行→流派行→列表 = 24 / 24 / 24。标签条的下边距就是六个面板与它的距离，所以这一条同时把面板起点从 48 收到 24——这是用户选 24 时已披露的副作用。
 - 歌单默认**全展开、无手风琴**；浏览靠流派 chips 过滤 + 搜索叠加 + 随机一首。
 - 默认**单流派显示**：一次只显示一组，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。切换流派统一走 `selectGenre()`。
 - **搜索跨全部 15 组**（应要求改的）：有命中时每个命中的组都展开，组头从「136 首」变成「4 / 136」，工具条读出「18 / 468」，零命中才显示 NO MATCH。`#music-search-jump` 随之退役——查询已经覆盖全部流派，没有「别处」可跳。**搜索中点击 chip = 跳到那一组的结果**，走原生 `scrollIntoView` + `scroll-margin-top`；**不要自己算 delta**：`.genre` 是 `content-visibility: auto`，实测手算落点差 359px、加一次「修正」反而差 834px（每次重测都会让另一个块实体化）。清空关键词后回到单选流派。
-- **切换流派把新手流派带回条带顶部**（`alignGenreTop()`，只向上、不向下）：长流派滑到深处再切短流派时，文档变矮会被浏览器夹到底部，不处理就会"直接到最底"。三个坑都在注释里：目标位置要用 **CSS 读出的 pinned 几何**（`getComputedStyle(bar).top` + `bar.offsetHeight`），不能用 sticky bar 的实时 rect（换组瞬间它可能已被容器顶出视口）；落位是**瞬时跳**不是补间（补间只能从被夹住的近底部开始，会闪一路无关内容）；`lenis.scrollTo` 在目标等于上次目标时**直接 return**，而这里每组的目标都是同一个文档位置，所以要再核对 `window.scrollY` 并回落原生 `scrollTo`。
+- **切换流派把新手流派带回条带顶部**（`alignGenreTop()`，只向上、不向下）：长流派滑到深处再切短流派时，文档变矮会被浏览器夹到底部，不处理就会"直接到最底"。落点基准是**固定导航条的底边 + 16**（`header.nav` 是 `fixed`，rect 在任何滚动位置都诚实；旧版读的是 sticky 板的 pinned 几何，随吸顶一起退役）。另外两条仍然成立：落位是**瞬时跳**不是补间（补间只能从被夹住的近底部开始，会闪一路无关内容）；`lenis.scrollTo` 在目标等于上次目标时**直接 return**，而这里每组的目标都是同一个文档位置，所以要再核对 `window.scrollY` 并回落原生 `scrollTo`。实测：搜索中点 chip 落点 16 / 15px，深处切流派落点 16px。
 
 ### 书（书架）
 
@@ -279,7 +282,7 @@ hero（全屏影像）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，1
 2. 无新增长帧；reduced-motion 不破布局；引用资源无 404；`?v=` 已递增。
 3. 纯键盘走查；320px 与 200% 缩放不裁剪；对比度实测（玻璃按叠加底色）。
 4. 视觉回归自检：强调色命中元素仍 ≤ 25；圆角仍只有四档；没有复活退役清单里的任何一项。
-5. 玻璃自检：模糊声明仍在增强之前；增强门仍是 `html.has-lens`（不是 `@supports`）；没有把玻璃放进横向滚动容器；没有给任何玻璃元素或其祖先加 `opacity < 1` / `filter`（`transform` 是允许的）；新玻璃层补齐了三条回退。
+5. 玻璃自检：模糊声明仍在增强之前；增强门仍是 `html.has-lens`（不是 `@supports`）；没有把玻璃放进横向滚动容器（`≤720px` 的 tab 条与流派行都已转实底）；没有给任何玻璃元素或其祖先加 `opacity < 1` / `filter`（`transform` 是允许的）；新玻璃层补齐了三条回退——**三条 bar 都是 `.glass` 元素，所以这一条现在由 `glass.css` 自动满足**。
 6. tab 条药丸自检（导航条已无药丸，不要去那里找）：`moveTo` 在**所有**选中路径上都调用了（点击 / 方向键 / Home / End / 拖拽提交）；**拖动中与落位后药丸都精确等于某一栏的矩形**（CDP 量，别靠眼看）；`Escape` 与 `pointercancel` 不改选中态；`≤720px` 拖拽已禁用但 tab 仍可点。
 7. 提交并推送 `origin/main`。
 
