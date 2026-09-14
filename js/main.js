@@ -51,13 +51,14 @@ function scheduleRefresh(delay) {
    pick a category instead of inventing a one-off duration/ease:
    - feedback: high-frequency hover / press / drag-follow, <=150ms
    - enter: low-frequency entrances, 0.7-1.1s
-   - spring: low-frequency state changes only, never high-frequency
    Every animation still needs a one-line motivation and a reduced-motion
-   static alternative at the call site. */
+   static alternative at the call site.
+   There was a third category here, spring (back.out(1.7)), and nothing ever
+   called it: overshoot is retired site-wide, so it is gone rather than left
+   lying around as a curve for the next person to copy. */
 const MOTION = {
   feedback: { duration: 0.15, press: 0.12, ease: "power2.out" },
   enter: { duration: 0.85, longDuration: 1.1, ease: "power3.out", heavyEase: "power4.out", stagger: 0.09 },
-  spring: { duration: 0.6, ease: "back.out(1.7)" },
 };
 
 /* ---------- hero entrance ----------
@@ -458,9 +459,9 @@ function closeDetail() {
   // hand focus back to the card that opened the detail layer
   if (lbTrigger && document.contains(lbTrigger)) lbTrigger.focus();
   lbTrigger = null;
-  // the wall may still be up underneath: closing this layer just handed the
-  // page back and cleared every inert attribute, and it has to put both back
-  document.dispatchEvent(new CustomEvent("night:detail-closed"));
+  /* Nothing else to hand back. The event dispatched here used to re-lock the
+     full-screen photography layer, which was retired when the board moved into
+     the chapter; the layer that closes is now the only one open. */
 }
 
 function initUnifiedDetail() {

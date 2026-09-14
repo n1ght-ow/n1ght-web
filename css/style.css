@@ -809,16 +809,9 @@ h1, h2 { text-wrap: balance; }
   min-width: 0;
 }
 
-/* A rank is a label, not a cell: 11px, the muted token, and deliberately
-   NOT tabular. Across the corpus no site sets a rank in tabular figures -
-   that is the register a literary index reserves for tables and dates. */
-.idx-no {
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  letter-spacing: var(--track-meta);
-  color: var(--color-text-muted);
-  line-height: 1.8;
-}
+/* The rank rule that used to live here (.idx-no) went with the last list that
+   had one. What is left of the idiom is the mono role itself; a rank is a
+   label, not a cell, and it is deliberately not tabular. */
 
 .idx-title {
   display: inline;

@@ -29,8 +29,8 @@ V2 删掉的东西，任何一条重新出现都算回归：
 
 ## 技术约束
 
-- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按序加载：vendor（gsap → ScrollTrigger → lenis）→ 数据（`film-data.js` → `series-data.js` → `music-data.js` → `music-covers.js` → `book-shelf-data.js`）→ 工厂（`reel-stage.js`）→ stage（`film-stage.js` → `series-stage.js` → `music-stage.js` → `book-shelf.js` → `photo-wall.js`）→ `glass-pill.js` → `main.js`。**`js/vendor/SplitText.min.js` 已不再加载**：它唯一的客户是 ABOUT 的自述段落，随整块退役（文件还留在 vendor 里，没人引用）。
-- 样式表顺序：`fonts.css` → `style.css` → **`glass.css`** → `reel-stage.css` → `film-stage.css` → `series-stage.css` → `book-shelf.css` → `photo-wall.css`。`glass.css` 提供 `.glass` 基类，必须在组件样式之前。
+- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按这一条顺序加载（**改顺序要同时改这里**）：vendor（`gsap` → `ScrollTrigger` → `lenis`）→ 数据（`film-data` → `series-data` → `book-shelf-data` → `music-data` → `music-covers`）→ 工厂（`reel-stage`）→ stage（`film-stage` → `series-stage` → `music-stage` → `book-shelf` → `photo-wall` → `games-stage`）→ `glass-pill` → `glass-lens` → `smooth-cursor` → `main`。**`js/vendor/SplitText.min.js` 已不再加载**：它唯一的客户是 ABOUT 的自述段落，随整块退役（文件还留在 vendor 里，没人引用）。
+- **样式表顺序**：`fonts.css` → `style.css` → **`glass.css`** → `reel-stage.css` → `film-stage.css` → `series-stage.css` → `book-shelf.css` → `photo-wall.css` → `games-stage.css` → `smooth-cursor.css`。`glass.css` 提供 `.glass` 基类，必须在组件样式之前。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
 - GSAP/ScrollTrigger/Lenis 走本地 `js/vendor/`（SplitText 已停用，见上）。Lenis 仅非 REDUCED 启用；锚点跳转统一走 `lenis.scrollTo`。
 - 内容归属红线：`#panel-books / films / series / music / sport / games` 六个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token。
@@ -69,7 +69,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 ## 排版（DESIGN.md 第 2 节）
 
-- **双寄存器系统，10 个声明角色封顶**：UI 档（11 / 12 / 13 / 15 / 16px）+ 展示档（20 / 25 / 31 / 49 / 76px，模数 1.25）。两者之间的空档是刻意的，不要插中间值。
+- **双寄存器系统，9 个 `--fs-*` token 封顶**：UI 档 5 个（11 / 12 / 13 / 15 / 16px）+ 展示档 4 个（`--fs-h4` 20、`--fs-h3` 20→25、`--fs-h2` 31→49、`--fs-display` 39→76，模数 1.25）。两者之间的空档是刻意的，不要插中间值，也不要新增第 10 个 token（DESIGN.md 2.2）。
 - **hero 字标是 logotype，不是第 11 个角色**：`N1GHT CHXN9` 一个字符串、一个字号，字号按 `.hero-inner` 的内容列算（`--masthead: 14.5cqw`，实测来历写在 `css/style.css` 第 7 节）。字号表不动。
 - **红线**：`text-box-trim` **只给展示档标题**（`.display` / `.sec-title` / `.footer-name`；coda 已退役）。它移除降部空间，与 `overflow: hidden` 同用会切掉降部——曾把「Maybe」渲染成「Maube」。
 - `line-height` 一律 unitless；标题 `text-wrap: balance`，描述 `pretty`；会变的数字 `tabular-nums`。
@@ -93,7 +93,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 - 性能红线：只动 `transform` / `opacity` / `filter`；scrub 必须 `invalidateOnRefresh: true`；图片加载后 refresh 用 250ms debounce；滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis。
 - `transition-property` 写具体属性，禁 `transition: all`。
 - **`filter` 会创建包含块**：图片滤镜只加在 `img` 上，绝不加到任何含 `position: fixed` 后代的容器（`#lightbox` 是 fixed）。
-- `main.js` 的 `MOTION` 常量保留复用；`spring` 已无人使用，新代码不要引入。
+- `main.js` 的 `MOTION` 常量保留复用，现在只有 `feedback` / `enter` 两类（`spring` 已随弹性退役一起删掉，新代码不要加回来）。
 - reduced-motion：视差、入场、hover 位移全静态化，信息不丢失。
 
 ## 无障碍
@@ -110,7 +110,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 - 留白分组：组间距 ≥ 组内 2×；分隔线是密集数据的最后手段。
 - 对齐共享边缘；物理 left/right 换逻辑属性（`margin-inline-start` 等）。
-- 断点由内容驱动（1100 / 1000 / 900 / 720 / 480）。1000 是诗区自己挣来的：两列诗行到 971px 就放不下最长的一行（见「诗（folio）」）。
+- 断点由内容驱动（1100 / 1000 / 900 / 720）。1000 是诗区自己挣来的：两列诗行到 971px 就放不下最长的一行（见「诗（folio）」）。
 - **章节头只有一种形状**（`.sec-head`，PHOTO 与 THE ARCHIVE 两处；诗的 `.poem-head` 同规则）：`repeat(2, minmax(0, 1fr))` + `var(--chapter-gap)`（列距在 `:root` 定义一处），眉标 + 标题在左格、导语（`.lead` + 正文）在右格，**两格按基线对齐**（`align-items: baseline`）。旧版是 `align-items: end` + `0.95fr / 1.05fr`，导语的**底边**跟着标题的底边走：标题一行的章节，导语顶边落在眉标上方 11px；两行的落在下方 39px——同一件东西长出两个头（用户指出的「一个高一个低」）。基线规则下眉标与导语首行永远共线，标题的行数只影响头的高度。改列距只改 `--chapter-gap`，三章导语的左边缘因此永远在同一个 x（1440 下 756）。
 - 横向滚动器下一项露 16-32px 窥视；移动端按钮内缩 + 安全区。
 
@@ -123,7 +123,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 ## 代码结构
 
-- `js/main.js` 站点交互层：hero 字标升起（整块出遮罩，不逐字）、玻璃高光（`initGlassSpotlight`）、滚动揭示、统一详情层（photo / film / series / game / music 共用 `#lightbox`）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`、`window.NightScroll`（全屏层共用的滚动锁）。**摄影的例外**：它没有任何滚动动效（墙自己会动，`ScrollTrigger.batch` 的入场与 `--photo-drift` 漂移都随散页网格一起删除），点击改成在 `#photo-wall` 上委托一次，灯箱关闭时额外派发 `night:detail-closed` 让墙重新上锁。
+- `js/main.js` 站点交互层：hero 字标升起（整块出遮罩，不逐字）、玻璃高光（`initGlassSpotlight`）、滚动揭示、统一详情层（photo / game / music 共用 `#lightbox`；影 / 剧不开浮层）、tab 切换、音乐流派过滤 + 搜索 + 随机一首、网易云外链、导航高亮、共享 `scheduleRefresh`。**摄影的例外**：它没有任何滚动动效（棋盘自己会动，`ScrollTrigger.batch` 的入场与 `--photo-drift` 漂移都随散页网格一起删除），点击在 `#photo-wall` 上委托一次。
 - 已从 `main.js` 移除：`initCursor` / `initMagnetic` / `spawnBubble` / preloader 时间线 / ticker JS 驱动 / bighead parallax / `.sec-mask` / 计数条 / `#scroll-progress` / 摄影入场与逐张漂移 / **`initCounters` 与 about-stats、about-body、coda 三条时间线（随 ABOUT 面板一起退役）**。
 - ARCHIVE 共享工具条与收藏星标已于更早版本整体撤销，不再新增回访入口。
 - 签名：已整体退役；`js/sig-data.js` 保留在仓库但不参与加载。
@@ -136,7 +136,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 - **折射换成 LiquidGlass 的成形方式**（应要求，完整表格见 `DESIGN.md` 4.10）：`#lg-nav` 一条链（`feGaussianBlur → feDisplacementMap → feColorMatrix → feComponentTransfer` 全在 SVG 里，CSS 只写 `url(#lg-nav)`），位移图由 `js/glass-lens.js` 按 bar 自身尺寸现算（圆角矩形 SDF + 14px bezel + 向外径向，`scale=40` → 最大 18.5px）。**关键是染色层搬到了滤镜之上**（`.glass__body` 自己的 background）：bar 的颜色不再取决于采样到了什么。原来 `#lg-lens` 的 ±55px 位移会把 bar 外的 hero 墨色搬进来，在 POEM 旁印出一朵黑影——实测那条横带的最低亮度 0.086，现在是 0.799，且两端逐位相同。染色上移要求 `.nav.glass--refract` 的 background 透明，**三条回退都要把它交还**（漏一条 = 掉增强的浏览器上一条隐形 bar）。tab 条仍走 `#lg-lens`。
 - 覆盖必须写成 **`.nav.glass …`**：`.glass` / `.glass--pill` 在 `glass.css` 里且**后加载**，bare `.nav` 的同名声明压不过它。同 `.tabbar.glass` 那个坑；新的 `background: var(--glass-nav)` 也踩了一次。
 - `--glass-elevation` 定义在 `glass.css` 的 `:root`，默认值就是原来那两层投影；`.glass` 与三条回退都读它。**改高度只改这一个 token**，不要重抄 inset 斜面。
-- 顺手修好：`.nav` 此前没有 `background`，吃的是 72% 的 `--glass-panel`，而 78% 的 `--glass-nav` 从没被任何选择器用过。合成到纯黑背景上，α0.72 的链接色只有 **4.20:1**（不合格），α0.78 是 **4.99:1**。
+- 顺手修好：`.nav` 此前没有 `background`，吃的是 72% 的 `--glass-panel`，而 78% 的 `--glass-nav` 从没被任何选择器用过。合成到纯黑背景上，α0.72 的链接色只有 **4.20:1**（不合格），α0.78 是 **5.15:1**。
 - 内容面板整块**不抄**：参考填的是不透明渐变，本站填了就等于终止 backdrop 读取，玻璃随之消失。退一步只照抄那条 bevel（`inset 0 ±1px 1.5px`）也试过，渲染出来是**棱内部多出来的一圈细线**——已撤掉。**外壳的棱是这条 bar 唯一的边**，不要再往里加第二圈。
 - **导航条不再有选中指示器**（应要求）：`#nav-pill` 元素、`main.js` 的 `createGlassPill()` 调用、`.nav-links.is-dragging` / `.is-drop-target` / `cursor: grab` 全部删除。选中态改由墨色承担（active ink-900 13.9:1 / 兄弟项 ink-600 6.6:1）。代价是失去「拖药丸跳章节」这个手势——它不是无障碍通道，但确实少了一条捷径。`js/glass-pill.js` 与 tab 条不受影响。
 
@@ -148,7 +148,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 - `#archive-tabbar` 仍然是玻璃（浮在内容之上），选中药丸仍然是 `js/glass-pill.js` 那一颗。**拖拽语义是在这一轮改的**：从「跟着指针 1:1 悬浮」改成「吸附到指针所在的那一栏」，并退役了 0.94 的抓取缩放——两者都是「拖到最右边小胶囊填不满」的原因（见「液态玻璃」里的药丸四条）。选中 / `moveTo` / `Escape` 的契约没动。
 - **没有任何一行是 sticky**（用户第三轮的明文要求，覆盖第二轮「流派常驻」）：标签条、搜索行、流派行**都随列表滚走**。`#genre-filter` 与 `.music-bar` 仍是**兄弟节点**，但理由只剩布局。因此 `alignGenreTop()` 的落点基准从「sticky 板读出的 pinned 几何」改成**固定导航条的底边**（`header.nav` 是 `fixed`，任何滚动位置都诚实）——不要把 sticky 读法加回来。
 - **材质就是 `.glass` 本体，不要再手写第二套**：三条都读 `glass.css` 的 `--glass-panel`（72% paper-000）+ `.glass__edge` 棱环 + `--glass-elevation`；body 是 `blur(20px) saturate(1.7)`，**音乐那两条没有 `brightness()`**（原因见下面「三条同色有个坑」）。**流派行原来那套手写 Blur Navigation 板（`blur(26px)` + `--paper-100` @16% + 墨 12% 环）已随吸顶一起退役**；随之消失的还有它那条「压在深色封面上 muted 标签远低于 4.5:1」的豁免——没有东西从板下穿过了，最差底色就是纸面。实测（72% 面合成到 `--paper-100` 上 = 248,248,246）：chip 标签 ink-600 **8.13:1**、占位符 / 序号 ink-500 **5.18:1**、选中 chip 16.96:1。
-- **玻璃层必须是 .glass 的静态子元素**，而且必须在内容**之前**：两层都是绝对定位，静态的 chips / 输入框会被画在它们下面。流派行的渲染器（`js/music-stage.js`）只 `appendChild`、从不清空容器，所以 index.html 里写死的两层安全；`#genre-filter` 的 chips 与 `.music-search > .glass__content` 都必须抬到 `position: relative; z-index: 4`（`.tab-btn` 同一个理由、同一个值）。
+- **玻璃层必须是 .glass 的静态子元素**，而且必须在内容**之前**：两层都是绝对定位，静态的 chips / 输入框会被画在它们下面。流派行的渲染器（`js/music-stage.js`）只 `appendChild`、从不清空容器，所以 index.html 里写死的两层安全；`#genre-filter` 的 chips 必须抬到 `position: relative; z-index: 4`（`.tab-btn` 同一个理由、同一个值）；搜索行的 `.music-search > .glass__content` 吃玻璃基类的 `z-index: 3` 就够。
 - **宽度**（用户第四轮的最终形态：实测 577 / 1275 / **1275**）：标签条仍是 `max-content`；搜索行与流派行**逐像素同宽**（都等于 `.music-drawer` 的内容列，流派行就是普通块级，不需要任何宽度算式）。第三轮那条「流派行 = 导航条 1180、居中靠 `calc((100% - var(--rail-w)) / 2)`」**已退役**——不要再抄回来。
 - **只有流派行不是胶囊**：`--glass-radius: var(--radius-lg)`（22px）+ `--glass-edge-w: 9px`（棱厚与另两条一致；13px 默认值是给大面板的）。形状一致性锁只有四档，所以 22px 是唯一合法的「大圆角但非胶囊」值；要更圆就得新增一档 token，那是破锁的决定。
 - **三条同色有个坑（已修）**：标签条带 `glass--refract`，它的透镜规则**替换**了 `--glass-blur`（`blur(5px) saturate(1.6) url(#lg-lens)`，**没有** brightness），渲染出 249,249,243。另外两条走默认 `--glass-blur`（含 `brightness(1.05)`），而 72% 染色压在纸面上本来就到 ~248 —— ×1.05 每个通道直接削顶，实测渲染成 **255,255,252 纯白**（违反「禁纯白」）。现在这两条的 `.glass__body` **显式去掉 brightness**（保留 blur 20 / saturate 1.7），三条落回同一色（同一张 PNG 实测 247-249）。**别用「给它们也加 `glass--refract`」来对齐**：那是每次滚动多两遍位移，而纸面上看不出差别。
@@ -168,9 +168,9 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 `css/reel-stage.css` 曾经是**三层叠加覆盖**（主体 + `V2 VISUAL LAYER` + `V2 CORRECTIONS`），读它要先在脑子里做 diff。已压成一层：**新规则写进主体，不要再开覆盖区块**。同一次收敛里删掉了 7 个从未定义的 token 与 4 处硬编码 V1 暖金——它们让选中卡的 `box-shadow` 与普通卡**完全相同**，也就是选中态一直是隐形的。
 
-选中态的语言：**发丝环（静止 0.1 / hover 0.2 / 选中 0.34）+ meta 的 accent 上边框**。**OPEN chip 已退役**（`.film-card-sleeve` → `display: none`：它会飘、是条带里唯一的实心深色形状，而整张卡本来就是按钮）。不要恢复「整个 meta 面板反转为实心墨 + 38% 高度色块盖住海报」，也不要恢复编号药丸（`.film-card-no` 同样已隐藏）。
+选中态的语言：**发丝环（静止 0.1 / hover 0.2 / 选中 0.34）+ 卡片抬起一行 + 片名**（meta 的 accent 上边框与展示行都已退役）。**OPEN chip 已退役**（`.film-card-sleeve` → `display: none`：它会飘、是条带里唯一的实心深色形状，而整张卡本来就是按钮）。不要恢复「整个 meta 面板反转为实心墨 + 38% 高度色块盖住海报」，也不要恢复编号药丸（`.film-card-no` 同样已隐藏）。
 
-**条带**：卡片必须显式写 `grid-template-columns: minmax(0, 1fr)`（漏了它海报会按 JPG 固有尺寸渲染，实测 158/54/90/59/54/24px）；`grid-template-rows: auto auto 1fr`；条带 `align-items: start`；字幕**只有两个字段**、各限一行省略；hover 只让海报 `translateY(-4px)`，字幕不动。
+**条带**：卡片必须显式写 `grid-template-columns: minmax(0, 1fr)`（漏了它海报会按 JPG 固有尺寸渲染，实测 158/54/90/59/54/24px）；`grid-template-rows: auto auto 1fr`；条带 `align-items: start`；字幕**只有片名一个字段**（`-card-meta-line` 那行是 `display: none`，数据仍留在 DOM 里喂详情区）；hover 只让海报 `translateY(-4px)`，字幕不动。
 
 **详情区是纯排版、零图片**：海报只允许在条带上出现一次，同屏重复在结构上必须是**不可能**而不是「被缓解」。现在是**一条左对齐的竖列**，不是两栏栅格（旧版 26ch/46ch 的 `minmax()` 栅格与它带来的空栏已退役）：
 
@@ -184,22 +184,25 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - **排序**：适配器传 `sortKey`，工厂排序。影按年份、剧按**第一季**年份（`parseInt("1995-2013")` 取 1995），数据文件保持原本的编排顺序。
 
 **动效纪律（`DESIGN.md` 第 11 节）**：
-- **拖拽必须 1:1**：拖拽期间**直写 `transform`**，`quickTo` / tween 只用于松手、reveal、range 提交。曾经因为每一次 `pointermove` 都走 `quickTo`，实测滞后 **131px @1000px/s**。
-- `maxX()` 缓存；range 被拖动时**不回写 `range.value`**。
-- 落位用 `power3.out` + 距离成比例的时长（**证明不过冲**），不用 spring。
+- **拖拽必须 1:1**：手指按住期间**直写 `place()`**，没有任何补间参与。旧版每一次 `pointermove` 都走 `gsap.quickTo()`，拿项目自己 vendored 的 GSAP 实测滞后 **131px @1000px/s**（400 / 2000 px/s 分别是 52 / 262px）。
+- **条带是一条 LAP，不是两端 clamp 的条带**：卡片集渲染两遍（`CLONE_SETS: 2`），位置经 `wrapPos()` 取模回绕，`state.setW`（一圈的长度）是从 DOM 量的第 n 张卡相对第 1 张的 `offsetLeft`——**没有端点、没有 spacer、没有橡皮筋**。第一张与最后一张因此也能到顶点：旧版靠 clamp，把它们居中需要负位移，等于两端各留半屏白纸。
+- **`state.pos` 是唯一真值，而且刻意不取模**：它是逻辑位置、一直增长，像素 / 弧 / 选中都从它经 `wrapPos()` 推出来；把状态本身绕回来会让跨接缝的 seek 走远路。
+- **`place()` 是条带唯一的写出点**（`frame()` 循环、手指，别的都不许）：一次写 `transform` 再 `syncApex()`。**条带上已经没有 GSAP 补间**——补间会是第二个写入者，每帧跟循环打架。
+- **顶点卡 = 选中卡**（`syncApex()` 每帧按位置算）：**位置本身就是选中的函数**，所以**拖拽会改选中**（与旧版「拖拽只浏览」相反的明文决策）；反向也成立：点击 / 方向键选中的动作就是「把那张 seek 到顶点」。
+- **落位是 `frame()` 里的指数趋近**（`k = 1 - e^(-dt/SEEK_TAU)`，`SEEK_TAU = 0.16s`），`REDUCED` 下瞬时到位；**没有 spring**（`power3.out` + 距离成比例的曲线现在只活在游戏拨盘与书架里）。
+- **松手交出去的是速度，不是补间目标**：`state.vel` 按 `e^(-dt/0.5)` 衰减到 1px/s 以下归零；速度来自 **170ms 滑动窗口**（`VEL_WINDOW`），窗口过期即读 0——甩一下停住再松手，没有这道 guard 条带会自己飞出去。
+- **指针捕获在越过 `SWIPE_THRESHOLD`(6px) 之后才要**，绝不在 `pointerdown` 捕获：一接触就捕获会把随后的 click 重定向到视口，「点海报」就永远打不开。
+- **`setupMode()` 是唯一重新测量的地方**（boot / 每张海报 load / resize）：它作废 `maxX` / `setW` / 卡片偏移缓存并重新落位。面板还在 `display: none` 里时它量到「每张卡 offsetLeft = 0」（没有 lap），所以要记住这一点，等第一次真的有宽度时再把选中的那张放回顶点。
 - **不做**：滚动速度 skew、逐卡反向视差、逐卡入场 stagger（35 张 × 30ms 已经 1.62s）、containerAnimation（与直写 `x` 失步）。
 - **单位陷阱**：Lenis `velocity` 是 px/帧，ScrollTrigger `getVelocity()` 是 px/秒，差 60 倍。
-- **影 / 剧点击不开浮层**。详情块就在条带正下方，浮层是重复 —— 而且更差（250px 海报浮在暗场里）。**点击只是选中**，与 hover / Tab 同义。浮层仍是 photo / game / music 的详情机制。曾经写过一版 FLIP 飞入，**已随浮层删除，不要加回来**。点击也**不触发 `revealCard`**。
+- **影 / 剧点击不开浮层**。详情块就在条带正下方，浮层是重复 —— 而且更差（250px 海报浮在暗场里）。**点击只是选中**（`selectCard` 顺手把那张 seek 到顶点，所以点击会动条带）；**hover 不选中**，只把环抬到 0.2，键盘焦点与方向键才选中。浮层仍是 photo / game / music 的详情机制。曾经写过一版 FLIP 飞入，**已随浮层删除，不要加回来**。
 - **条带入场只在视口做一次**，永不做逐卡 stagger（35 张 × 30ms = 1.62s，UI 上限 300ms）。
 - **滚动横移已删除**（曾动 `-stage-drift` wrapper，4% 行程）。它让「居中」变成**滚动位置的函数**：实测同一张卡在不同滚动位置偏离中心 4px，而居中是选中的反馈，一个会漂的反馈等于没有反馈。
-- **选中即居中**：`selectCard` → `settle(centeredX())`。实测第 3–14 张偏移 **0px**；第 1/2/15/16 张被 clamp 在两端（条带有界，不加 spacer 就没法居中，所有 center-mode 轮播都如此）。
-- **拖拽是自由浏览**：**不吸附卡片位置、不改选中**。落点 = 当前 `x` + 惯性，仅按 `maxX` 夹紧。吸附到卡片位置会宣告「这张是当前的」，而拖拽按定义不改选中 —— 条带停在正中第 7 张、带着环的却是第 3 张，是坏状态。
-- **`:focus-visible` 是选中与浏览的分界**：`pointerdown` 会 focus 卡片（`<button>`），所以 `focusin` **只对键盘焦点选中**。漏掉这条等于「手指一碰海报就已经选中了」，整个浏览手势是假的。
+- **选中即居中，而「居中」现在只是一次 seek**：`selectCard()` 把那张卡的目标位移写进 `state.seekTarget`，由 `frame()` 的指数趋近走完（`REDUCED` 瞬时）。**没有 `settle()` / `centeredX()` / `state.settling` / `resetMover()` 这些名字了**——它们是「GSAP 补间 + 条带两套写入」时代的产物，翻到它们说明看的是旧代码。
+- **拖拽会改选中，这不是 bug**：顶点卡由 `syncApex()` 每帧按位置算，**位置就是选中的函数**，所以手指把哪张挪到顶点、选中的就是哪张；点击 / 方向键做的也是同一件事（把目标 seek 到顶点）。旧版「拖拽只浏览、选中另有一套状态」会产生条带停在正中第 7 张、环却在第 3 张的坏状态——**不要再引入第二套选中状态**。
+- **`:focus-visible` 是「手指」与「键盘」的分界**：`pointerdown` 也会 focus 卡片（`<button>`），所以 `focusin` 只用 `card.matches(":focus-visible")` 判键盘焦点。漏掉这条等于「手指一碰海报就已经选中了」。
 - **`swiped` 必须在 `pointerdown` 清掉**，不能只靠随后的 click 清：拖拽在**另一张卡**上松手时根本不产生 click，标志会留着吃掉下一次真实点击。
-- **条带位置有两个写入口，滑块必须两边都听得到**：`setStrip`（瞬时）与 `settle`（补间）。写 range 的逻辑抽成 `syncRange(state, x)`，两边都调。**曾经的 bug**：写入语句长在 `setStrip` 里，而 `settle` 走 `gsap.to` 不走 `setStrip` —— 于是居中移动了条带、滑块一个字节都没收到。它**靠运气偶尔是对的**（有海报恰好加载完 → `setupMode` → `setStrip`），图片全部缓存后掩护消失，滑块就永久冻结。用 setter tap 抓调用栈才定位到：选中期间**每一次** range 写入都来自 img load 事件，没有一次来自选中本身。
-- `settle` 的 `onUpdate` 要读**实时** x（`gsap.getProperty`）写 range，写目标值会让滑块第一帧就瞬移到终点再等条带追上来。
-- **`state.settling` 必须在 `resetMover` 里清掉**：`resetMover` 既在落位完成时跑、也在 `pointerdown` 打断落位时跑，而被打断的补间**永远不会触发 onComplete** —— 漏掉这句标志会永久为真，之后 `setupMode`（resize 与每次海报加载时的重测/重夹紧）静默失效。
-- `setupMode` 在 `settling` 期间**不得写 transform**：它写的是 `state.x`，而 `settle` 早已把 `state.x` 提交成目标值，所以居中动画途中只要有海报加载完，条带会直接闪到终点。
+- **滑块（`-stage-range`）已退役**，方向键就是键盘路径。当年那条教训仍然成立：**任何时刻只能有一个写入者**（现在是 `place()`）；一旦出现第二个写入者，所有「由位置派生」的东西都必须跟着更新——当年的症状是滑块永久冻结：写 range 的语句长在 `setStrip` 里，而居中走 `gsap.to` 不经过它，图片全部缓存后连唯一的掩护（海报 load → `setupMode` → `setStrip`）也没了。
 - **详情区的 settle 只淡文字，绝不淡那一列**：`.film-detail-copy` / `.series-detail-copy` 是 `OPEN ON IMDb`（`.glass--accent`）的**祖先**，而祖先 `opacity < 1` 会让玻璃的 backdrop 读取失效（`DESIGN.md` 4.2 那条陷阱）。整块淡入的后果是**每换一张海报都在按钮标签周围闪一下**：实测按钮内部均值在 opacity 1 时是 `212,192,132`，0.6 → `217,198,140`，0.3 → `227,218,187`，0 就是纸面 `239,239,234`，而补间中途只要祖先是 0.x 就在这条斜坡上走一遍，最后一帧再跳回真表面。现在淡入只挂在 kicker / title / line / quote 四个文字节点上，**抬起（`y: 6`）仍留在整块**——transform 在祖先上安全，所以按钮照旧跟着文字走 6px，但它的任何一帧祖先都是 opacity 1（CDP 逐帧实测：`copy: 1` 恒定，按钮内部 `224,207,150` / `212,192,132` 恒定，`kick` 0 → 1 走完 180ms）。
 
 ### 音乐
@@ -222,7 +225,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 移植自 sanyam.sh/lab/book-shelf（上游是 React + motion/react）。这一版用仓库里**已有的** GSAP 重写，所以仍然没有新增依赖、没有构建步骤；场景、数字与推理属于原作者。点书脊 → 书旋出到舞台中央、封面正对读者、scrim 压在书架前；再点一次 / 点 scrim / Escape 放回去。
 
-- **几何是契约**：`--bs-stage` / `--bs-base` / `--bs-centre` 写在 `book-shelf.css`，JS 用 `getComputedStyle` 读，任何一边都不要写死第二份。
+- **几何是契约**：`--bs-stage` / `--bs-base` / `--bs-centre` / `--bs-out` 写在 `book-shelf.css`。**JS 只读 `--bs-base` 与 `--bs-out`**（`metrics()`），舞台中心是它自己量的 `mount.clientHeight / 2`，`--bs-stage` 与 `--bs-centre` 只在 CSS 里用（`perspective-origin`）；JS 反向**写** `--bs-fit`。任何一边都不要写死第二份。
 - **封面落点 = 舞台的垂直中心**（`--bs-centre` = stage/2）。这是唯一让缩放免费的选择：场景绕中心缩放，那个点就永远不动，开书时上下两行字不必追它。
 - **每本书是盒子不是贴图**：书脊是一面、封面是另一面（`rotateY(90deg) translateZ(thickness/2)`），翻 −90° 就把封面转给读者，全程没有淡入淡出。
 - **scrim 是同一个 3D 场景里的一个平面**，不是上层遮罩：`preserve-3d` 按深度绘制并忽略 `z-index`，用 `translateZ(100px)` 挡在书架前、书后。
@@ -231,7 +234,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - **书脊字体**：`Klein Blue Night`（`fonts/KeLaiYinLanDeYeWan.ttf`，12.6 MB，非商业授权）。整排**一个字号**（13px，像出版社给一套书定的那样），只有两条长书名会被自动缩到放得下；`thickness < 18` 的书脊不排字，只留布色。
 - **中文的字号不能沿用拉丁**：封面标签作者行 10px→11px（10px 的汉字读不出来），标签标题 `line-height` 1.25→1.35（114px 标签宽只放得下 7 个 15px 汉字，长名必换两行，1.25 会让两行粘住）。
 - **布色 / 印色**：16 组全部**实测**过 4.5:1（5.05 到 12.59）。换布色必须重新量，不许估。
-- **作者在书上方、短评在书下方**，两行挂在场景的两个地标上（书顶 −46px / 底板下 +20px）并跟着 `--bs-fit` 缩放，所以短评永远落在书脊之外。
+- **字挂在地标上，而且只有一行**：打开的书上方那条短评（`.bs-blurb`）挂在场景地标上——`top: calc(50% - var(--bs-reach) * var(--bs-fit) - 54px)`，即**书上缘之上 54px**，跟着 `--bs-fit` 缩放，所以永远落在书脊之外。作者行**不在外面**：它和书名一起印在封面标签里（`.bs-label-author`）。旧文档里的「书顶 −46px / 底板下 +20px」两个地标已经不存在（`bottom: 20px` 那处是书脊底部的印章 `.bs-stamp`）。
 - 窄窗口是**整体缩排**（`--bs-fit`，按列宽算），不重排、不换行；短评是唯一允许换行的一行。
 
 ### 球队
@@ -263,24 +266,23 @@ Dylan Thomas《Do not go gentle into that good night》。**这一段只有诗**
 
 ## 站点结构
 
-hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 全屏照片墙视图，11 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
+hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 正文里一屏的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 16 / 剧 19 / 音乐 468 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
 
-- **照片不在正文流里**：正文只留章节导语 + 一个「Open the wall」按钮，整面墙在 `#photo-view` 这个全屏层里（nav `Photography`、页脚链接、导语按钮三处都能打开）。`z-index 60`：nav（70）仍在它之上可点，`#lightbox`（200）仍能压在它上面。**它不是模态**——只有 `main` / `footer` 被置 `inert`，nav 故意保持可用；滚动锁走 `main.js` 暴露的 `window.NightScroll`，并且监听 `night:detail-closed` 在灯箱关掉之后**重新上锁**（灯箱关闭会清掉所有 inert 并还回滚动）。
-- **无 JS 兜底**：11 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` 在**第一次打开视图时**把这 11 个元素搬进 `#photo-wall`。所以关闭 JS 时照片仍在页面上，只是没有墙。
-- 墙的排布是**justified 行**，复刻 cmscurvegallery.framer.website：一行里瓦片**等高**、每张保留自己的比例、整行被拉到正好填满该纬圈。几何、交互与四个坑都在 `js/photo-wall.js` 与 `css/photo-wall.css`，三条必须记住的：
-  - **`translateZ(R)` 不能漏**。CSS 的观看者在 `z = +perspective`，所以球心要落到观看者身上就得把 sphere 推前 R；漏掉它观看者就站在球**面**上，整面墙按 50% 渲染、后半圈镜像到屏幕中央（已复现）。
-  - **sphere 必须是零尺寸盒子**。它那面正好压在观看者平面上的大盒子会投影到无穷大，Chrome 会丢掉整列不画（390px 实测左侧一条黑带，DOM 里瓦片齐全且可命中）。零尺寸的盒子平移后仍是零尺寸。
-  - **行高是目标值，宽度吸收余量**（`slack = circ / (Σa·h + n·gutter)`）。反过来「解」行高（`h = (circ - n·g)/Σa`）永远解偏低——行是画到溢出为止、最后一格不会退回去，实测矮 10%，每行下面就多一条 40px 黑带。定死 h、把宽度整体缩几个百分点，环仍然闭合得**精确**，而行间距恰好是一条发丝缝。
-- **两个旋钮不许互换**：`R_RATIO`（0.66 × 舞台宽）决定**弯曲程度**；行的缩放由 `rowsVisible = clamp(2.0, 3.46 × H/W, 4.6)` 推导——一行的高度就是缩放，而竖向视口必须让瓦片更小才能保持**横跨数量**，所以它不是常数。`R` 与所有行距都是推导值，**永不手写**。
-- **瓦片比例是每张抽的**（三角分布，`[0.60, 1.06]`、峰值 0.75，即宽/高）：参考站的参差感来自「每张照片比例不同」，而本站 11 张全是 3:2，不抽比例就必然是一排排横条——这正是第一版做丑的原因。代价是 `object-fit: cover` **会裁**（原站同样在裁，它的素材从 0.50 到 1.00）。要回到零裁切就把 `A_MIN/A_MAX/A_PEAK` 一起收到 1.5 附近，但那样就不像原站了。
-- **后半圈靠 `cull()` 剔除**：经度超过 90° 的瓦片在观看者身后，投影的 w 变负，Chrome 会把它们镜像到屏幕中央、并且在奇点附近放大到离谱。只留 |经度| ≤ 60°（可见范围约 ±37°）。这不是优化，是正确性。
-- **拖拽 1:1 且逐帧直写**：`a = a0 ∓ dx / R`，拖拽期间**不经过任何补间**（`reel-stage.js` 实测 131px 滞后的教训）；落位用 `power3.out` + 距离成比例时长，reduced-motion 下瞬时。滚轮**只吃 `deltaX`**（+ Shift+纵滚）：墙只是长文档里的一屏，吞掉 deltaY 就是滚动陷阱。
-- **`data-act` 取代了 `.photo-act-horizon`**：`photoFrameData()` 现在读 `frame.dataset.act`。乐章标题已随参考站样式整体删除，属性是 `BLOOM / HORIZON` 的唯一来源。
-- **点瓦片开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（`e.detail === 0` 的键盘回车放行）。克隆体也是真 `<button>`，所以 `main.js` 在 `#photo-wall` 上**委托一次**，不再逐帧绑定。
-- **方向键挂在 `#photo-view` 上，不是墙上**：视图刚打开时焦点在 Close 药丸上，挂在墙上等于「先进某一帧才有反应」。
+- **照片在正文流里**：`#photo` 段落里 `.photo-wall` 那一屏就是全部（高度在 `css/photo-wall.css`：`clamp(340px, 56vh, 600px)`，`≤720px` 是 `clamp(300px, 52vh, 460px)`），**不是全屏层**。`#photo-view`、「Open the wall」按钮、`window.NightScroll`、以及为它写的那套滚动锁 / `inert` 重挂**已整体退役**——nav 与页脚的 `Photography` 现在只是普通锚点。灯箱自己仍会锁滚动（`document.body.style.overflow` + `lenis.stop()` + `setPageInert()`），关闭时还原。
+- **无 JS 兜底**：11 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` **一执行就把这 11 个元素搬进 `#photo-wall`**（不是等打开视图）。关闭 JS 时照片仍在页面上，只是没有棋盘。
+- **棋盘是 PhantomInfiniteGallery 的 vanilla 移植**：几何与交互全在 `js/photo-wall.js`（旋钮常量 `CELL_* / GAP / MARGIN / ARC_* / PARALLAX_* / THROW_* / HOLD_ZOOM_*` 都在文件头上；逐条事实见 `DESIGN.md` 第 7 节）。四条不许动：
+  - **内容是世界坐标的纯函数**（`index = |(x + 3y) mod n|`）：铺到哪都铺得满、同一个世界格永远是同一张照片，图案每 n 格重复一次——这也是键盘聚焦时能「抄近路」平移的前提。
+  - **11 张正典永不回收**：它们坐在世界第 0 行 x = 0..10，其余可见格子都是池化克隆（`aria-hidden` + 不在 tab 序）。所以 `main.js` 永远只找到 11 个 `.photo-frame`，tab stop 也永远只有这 11 个。
+  - **一帧一次 transform 写入**（`place()` 把位置一起写进 `translate3d + rotateY + scale`）：改成写 `left/top` 会让拖拽的每一帧都 flush 一次 layout。
+  - **只有 `frame()` 一个写入者**（`pos` / `par` / `size` 三个状态都归它）——别在别处直接改 transform。
+- **抛掷会停**（`THROW_FRICTION 0.92`、`REST 1px/s`）：参考实现故意留着 1e-4 的残余速度永不静止，本站**不要照抄**——一直爬的板子既难读又让合成器醒着。
+- **`touch-action: pan-y`，不是 `none`**：横划拖板、纵划滚页，滚轮**只吃 `deltaX`**（+ Shift+纵滚）。它是长文档里的一屏，吞掉纵划就是滚动陷阱。
+- **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > `SWIPE_SLOP`(6px) 置位，`click` 在捕获阶段消费（键盘回车放行）。克隆体也是真 `<button>`，所以 `main.js` 在 `#photo-wall` 上**委托一次**，不要逐格绑定。
+- **方向键挂在墙上**（`wall.addEventListener("keydown")`，左右各走一格），而且 `focusin` 只在 `:focus-visible` 时才把那一帧框到视野里——与影 / 剧同一条纪律：指针按下的 focus 不算「选中」。
+- **`data-act` 是 `BLOOM / HORIZON` 的唯一来源**（`photoFrameData()` 读 `frame.dataset.act`）；乐章标题与 `.photo-act-horizon` 已删。
 - **墙是全彩的**（`--wall-saturate` 默认 `saturate(1)`），这是「颜色是奖励不是壁纸」的**明文例外**：那条规则保护的是纸面页，而在墙上照片就是页面本身，没有界面要保护，压饱和在这个尺度上只会读成渲染故障。一个变量可以调回去。
-- 游戏名册是**显式三列**（≥900px；720–900 两列，≤720 单列），封面 16:9。**不要改回 `auto-fill`**：18 只能被 1/2/3/6/9/18 整除，`auto-fill minmax(250px,1fr)` 在 1440 下出 4 栏 = 4 行零 2 个孤儿。序号与时长并成一行（`counter` 仍在 `.hof-foot::before`，但不再独占一行），名称在下一行，评语一行截断。
-- **影 / 剧的卡片是「2:3 媒介盒 + 盒外的 meta」**，靠 `.film-card` 的栅格实现（`grid-template-columns: minmax(0,1fr)` + `grid-template-rows: auto auto 1fr`），**不要改回绝对定位的整盒 + meta 覆盖**，也**不要漏掉列定义**（漏了海报会按 JPG 固有尺寸渲染，实测 158/54/90/59/54/24px）。索引药丸（`.film-card-no`）与 OPEN chip（`.film-card-sleeve`）均已 `display: none`；选中态靠**可区分的环**（静止 0.1 / hover 0.2 / 选中 0.34）与 meta 的 accent 上边框两层。**详情区不放图**。
+- **游戏名册是一个定位盘**（`js/games-stage.js`，Framer Detent 的纯 DOM 移植）：舞台挂载时给 `.hof` 加 **`.is-live`**，十八张封面排在一个环上、只有中心那张是彩色，`.hof-name` / `.hof-hours` / `.hof-quote` 留在条目里当数据源并**只画一次**（画进中心下方的 `.hof-now`）。舞台没起来（无 JS / 脚本失败）时 `.is-live` 不在，`css/games-stage.css` 回落到一份**显式三列的静态名册**：`repeat(3, minmax(0,1fr))`，900px 以下两列、720px 以下单列。**不要改回 `auto-fill`**——18 只能被 1/2/3/6/9/18 整除，`auto-fill minmax(250px,1fr)` 在 1440 下出 4 栏 = 4 行零 2 个孤儿。
+- **影 / 剧的卡片是「2:3 媒介盒 + 盒外的 meta」**，靠 `.film-card` 的栅格实现（`grid-template-columns: minmax(0,1fr)` + `grid-template-rows: auto auto 1fr`），**不要改回绝对定位的整盒 + meta 覆盖**，也**不要漏掉列定义**（漏了海报会按 JPG 固有尺寸渲染，实测 158/54/90/59/54/24px）。索引药丸（`.film-card-no`）与 OPEN chip（`.film-card-sleeve`）均已 `display: none`；选中态是**三层**：可区分的环（静止 0.1 / hover 0.2 / 选中 0.34）+ 卡片抬起一行 + 片名。**详情区不放图**。
 - **索引列表（音乐）没有逐行发丝线**，靠 `padding-block` 与间距分组，用 64px 封面取代序号。**书（书架）与球队（手风琴）都已不在 `.idx-*` 里**：球队换成手风琴后，`.idx-no` / `.idx-logo` / `.idx-line` 三条孤儿规则连同 720px 下的两条响应式覆盖一起删掉了。
 - **音乐每行必须渲染 64px 真封面**（`window.MUSIC_COVERS`）；缺图回落同尺寸空 sleeve。不要恢复 `counter(track)` 编号，也不要给 `.idx-artist` 加回大写 + 字距。
 - 图片默认低饱和、hover / focus 复原：这是「颜色是奖励不是壁纸」的落点。滤镜只加在 `img` 上。
@@ -288,9 +290,12 @@ hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导�
 
 ## 内容更新
 
-- 摄影：`.photo-frame`（**正典 11 帧必须留在 HTML 里**，放在 `.photo-fallback` 网格里；墙在第一次打开时把它们搬进 `#photo-wall` 并克隆出装饰性重复），`photo/` 与 `photo/full/` 都放。新增照片数会被几何自动吸收，其它地方不用改。
+- 摄影：`.photo-frame`（**正典 11 帧必须留在 HTML 里**，放在 `.photo-fallback` 网格里；`js/photo-wall.js` 一执行就把它们搬进 `#photo-wall`，再按世界坐标铺出克隆），`photo/` 与 `photo/full/` 都放。帧数就是棋盘周期，增删会被几何自动吸收，其它地方不用改。
 - 游戏：`.hof-item`（直接进 `#hof-grid`），封面 `covers/`，时长写 `.hof-hours`，引文写 `.hof-quote`。
-- 影视：海报 `posters/<ttID>.jpg`，条目进 `film-data.js` / `series-data.js`。
+- **影视（以后加片子就照这条）**：海报存成 `posters/<ttID>.jpg`（文件名就是 IMDb ID），条目 push 进 `js/film-data.js`（`window.FILM_DATA`）或 `js/series-data.js`（`window.SERIES_DATA`）。字段形状是固定的，适配器（`js/film-stage.js` / `js/series-stage.js`）按名字取：
+  - 影：`{ id: "film-NN", imdb: "tt…", poster: "posters/tt….jpg", title, director, year, genre, quote }`
+  - 剧：`{ id: "series-NN", imdb: "tt…", poster, title, years, seasons, category, quote }`（`years` 可以写 `"1995-2013"`，排序取首个年份）
+  - `quote` 是中文短评，规矩见「文案」；面板页头的计数（`SIXTEEN FILMS` / `NINETEEN SERIES`）**是写死在适配器里的**，加片要同时改那一行；排序与年份都从数据算，不用管。改完给对应 `<script>` 的 `?v=` +1。
 - 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成。
 - 书：条目进 `js/book-shelf-data.js`，每本除了 title / author / blurb 还要给 binding（`thickness` 21–48、`height` 240–288、`lean`、`cloth`、`ink`、`band`）；**新增或换布色必须重量 ink/cloth 的 4.5:1**。行宽、缩放和书脊字号都会自己算。
 - 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`）。
@@ -309,4 +314,4 @@ hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导�
 
 ## 回滚
 
-重构前的状态标记在 git tag `pre-redesign`，工作分支 `redesign/v2`。
+重构前的状态标记在 git tag `pre-redesign`。**当前检出与工作分支都是 `main`**（`redesign/v2`、`backup/pre-sport` 是历史分支，只作参考，不要再往上提交）。

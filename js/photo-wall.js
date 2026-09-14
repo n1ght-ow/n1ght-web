@@ -447,10 +447,12 @@
   }
 
   /* Horizontal wheel only, plus Shift+wheel: this board is one band inside a
-     long document, so eating deltaY would be a scroll trap. */
+     long document, so eating a plain deltaY would be a scroll trap - with the
+     pointer over the board the page would stop scrolling. (The guard used to
+     read "if there is no deltaX, take deltaY", which is exactly that trap.) */
   function onWheel(e) {
     var dx = e.deltaX;
-    if (Math.abs(dx) < 0.5) dx = e.deltaY;
+    if (Math.abs(dx) < 0.5 && e.shiftKey) dx = e.deltaY;
     if (e.deltaMode === 1) dx *= 16;
     if (!dx) return;
     e.preventDefault();
