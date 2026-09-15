@@ -18,8 +18,8 @@
        - no background colour, no dark vignette, no cell fill, no pink hover.
          Colour here is the photographs' reward, not the interface's.
        - cells are 3:2, not square: the reference covers a square with the
-         artwork and crops a third of a landscape frame. Eleven 3:2 photographs
-         go in uncropped.
+         artwork and crops a third of a landscape frame. Twenty-one 3:2
+         photographs go in uncropped.
        - captions stay out of the cells (sr-only, as the ring wall before it).
        - the throw STOPS. The reference deliberately never comes to rest (it
          holds a 1e-4 residual velocity); a board that creeps forever is wrong to
@@ -30,28 +30,36 @@
      THE PLANE IS PERIODIC. A cell's content is a pure function of its WORLD
      coordinates - index = |(x + 3y) mod n|, the reference's diagonal rhythm - so
      panning forever never runs out and the same world cell always shows the same
-     photograph. The pattern repeats every n columns and n rows, which is also
-     what lets the focus pan below take the SHORT way round.
+     photograph. The pattern repeats every n columns, and every n / gcd(3, n)
+     rows - 21 and 7 at the current n, which is what lets the focus pan below
+     take the SHORT way round. The board is under four rows tall, so the shorter
+     row period can never read as a repeat.
 
-     THE ELEVEN AUTHORED FIGURES ARE CELLS, NOT DECORATION. They sit in world row
-     0 at x = 0..10 and are never recycled; every other visible cell is a pooled
-     clone of one of them, aria-hidden and out of the tab order. That is the same
-     contract the ring wall had, so main.js still finds exactly eleven
-     .photo-frame elements and still delegates clicks on #photo-wall once. */
+     THE TWENTY-ONE AUTHORED FIGURES ARE CELLS, NOT DECORATION. They sit in
+     world row 0 at x = 0..20 and are never recycled; every other visible cell is a
+     pooled clone of one of them, aria-hidden and out of the tab order. That is
+     the same contract the ring wall had, so main.js still finds exactly
+     twenty-one .photo-frame elements and still delegates clicks on #photo-wall
+     once. */
 
   var wall = document.getElementById("photo-wall");
   var canvas = document.querySelector("[data-photo-fallback]");
   if (!wall || !canvas) return;
 
   /* ---------- the knobs ----------
-     The board's HEIGHT comes from css/photo-wall.css (clamp(340px, 56vh,
-     600px)); --pw-cell and --pw-cell-h are written from here. Neither side keeps
-     a second copy of the other's numbers. */
+     The board's HEIGHT comes from css/photo-wall.css (clamp(400px, 62vh,
+     720px)); --pw-cell and --pw-cell-h are written from here. Neither side keeps
+     a second copy of the other's numbers.
+
+     CELL_MIN is the phone end and stays where it was: at a 350px board a 132px
+     cell already fills 38% of the width, and one more step up would leave two
+     columns and kill the plane. Everything from about 730px of viewport upward
+     is governed by CELL_VW, and CELL_MAX is the guard above it. */
   var CELL_MIN = 132;          /* px, the narrow end */
-  var CELL_VW = 0.14;          /* share of the board's width */
-  var CELL_MAX = 208;          /* px, the wide end */
+  var CELL_VW = 0.20;          /* share of the board's width */
+  var CELL_MAX = 280;          /* px, the wide end */
   var IMG_RATIO = 3 / 2;       /* the photographs' own ratio: no crop */
-  var GAP = 14;                /* px between cells, both axes */
+  var GAP = 18;                /* px between cells, both axes */
   var MARGIN = 1;              /* extra ring of cells around the window */
 
   /* The arc. ARC_MAX_ANGLE is the reference's 28deg cut down for a band: on a
@@ -79,7 +87,7 @@
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- the eleven, and the plane ---------- */
+  /* ---------- the twenty-one, and the plane ---------- */
   var figures = Array.prototype.slice.call(canvas.querySelectorAll(".photo-frame"));
   if (!figures.length) return;
   var PHOTOS = figures.length;
@@ -176,8 +184,8 @@
     return Math.abs((x + y * 3) % PHOTOS);
   }
 
-  /* The authored eleven own world row 0; anywhere else is a clone of whatever
-     the pattern asks for. */
+  /* The authored twenty-one own world row 0; anywhere else is a clone of
+     whatever the pattern asks for. */
   function canonicalAt(x, y) {
     return y === 0 && x >= 0 && x < PHOTOS ? x : -1;
   }
@@ -529,7 +537,7 @@
     measure();
     size = 1;
     sizeWant = 1;
-    /* the board opens ON the eleven: the authored row is centred, and the
+    /* the board opens ON the twenty-one: the authored row is centred, and the
        pattern fills in around it */
     pos = {
       x: ((vw - cellW) / 2) - ((PHOTOS - 1) / 2) * pitchX,

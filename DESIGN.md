@@ -2,7 +2,7 @@
 
 > 面向实现的单一设计事实源（V2，2026）。只记录现状，不发明新风格。
 > 结构与裁决见 `AGENTS.md`；研究留档见 `archive/design-research/` 与 `archive/premium-techniques/`。
-> **本版按代码逐条核对过**（2026-09-14）：`css/fonts.css?v=13`、`css/style.css?v=86`、`css/glass.css?v=8`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=14`、`css/series-stage.css?v=16`、`css/book-shelf.css?v=6`、`css/photo-wall.css?v=5`、`css/games-stage.css?v=2`、`css/smooth-cursor.css?v=1`、`js/reel-stage.js?v=24`、`js/glass-pill.js?v=3`、`js/glass-lens.js?v=1`、`js/photo-wall.js?v=5`、`js/main.js?v=73`。**任一 `?v=` 变了就说明文件改过，本文件对应段落要重新核对。**
+> **本版按代码逐条核对过**（2026-09-14）：`css/fonts.css?v=13`、`css/style.css?v=86`、`css/glass.css?v=8`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=14`、`css/series-stage.css?v=16`、`css/book-shelf.css?v=6`、`css/photo-wall.css?v=6`、`css/games-stage.css?v=2`、`css/smooth-cursor.css?v=1`、`js/reel-stage.js?v=24`、`js/glass-pill.js?v=3`、`js/glass-lens.js?v=1`、`js/photo-wall.js?v=6`、`js/main.js?v=73`。**任一 `?v=` 变了就说明文件改过，本文件对应段落要重新核对。**
 
 ## 0. 品牌与 Design read
 
@@ -10,7 +10,7 @@
 
 **Design read**：personal archive / photography，受众是同好与自己。语气是**编辑式画廊**，不是作品集官网、不是仪表盘、不是科技感暗色站。
 
-**核心判断**：站点最贵的资产是 11 张照片、60 张海报（影 24 + 剧 36）、400 张专辑封面。界面不得与这些图片抢注意力。**照片是页面上唯一被允许彩色的事物。**
+**核心判断**：站点最贵的资产是 21 张照片、60 张海报（影 24 + 剧 36）、400 张专辑封面。界面不得与这些图片抢注意力。**照片是页面上唯一被允许彩色的事物。**
 
 **Dial**：DESIGN_VARIANCE 6 / MOTION_INTENSITY 4 / VISUAL_DENSITY 4。
 
@@ -423,17 +423,18 @@
 
 ## 7. 站点结构
 
-hero（**两层**：一层全幅影像 + 压在它上面的**巨型字标**，`N1GHT CHXN9` 两行居中、字号跟着 `.shell` 的内容列走；导航条是第三个浮在上面的东西。影像层 `position: absolute; inset: 0`，完全脱离文档流，所以字标仍然精确居中在视口里。眉标、标题、统计条与滚动提示全部已退役）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：**印刷 folio**——眉标 + 诗题在左格、导语在右格，中间是 3 + 3 两列的六节诗，落款左格是诗的全名、右格是收尾那句；三块共用诗自己的两列，列距只有 `:root` 的 `--chapter-gap` 一处，与两个 `.sec-head` 同一条。自述 / 统计 / coda 已退役）→ footer。
+hero（**两层**：一层全幅影像 + 压在它上面的**巨型字标**，`N1GHT CHXN9` 两行居中、字号跟着 `.shell` 的内容列走；导航条是第三个浮在上面的东西。影像层 `position: absolute; inset: 0`，完全脱离文档流，所以字标仍然精确居中在视口里。眉标、标题、统计条与滚动提示全部已退役）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，21 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：**印刷 folio**——眉标 + 诗题在左格、导语在右格，中间是 3 + 3 两列的六节诗，落款左格是诗的全名、右格是收尾那句；三块共用诗自己的两列，列距只有 `:root` 的 `--chapter-gap` 一处，与两个 `.sec-head` 同一条。自述 / 统计 / coda 已退役）→ footer。
 
-- **摄影是正文里的一屏**（`#photo` 段落内的 `.photo-wall`，高度 clamp 后约一屏），不是全屏层：`#photo-view`、「Open the wall」按钮、滚动锁与 inert 那一套都已退役，nav 与页脚链接只是普通锚点。
+- **摄影是正文里的一屏**（`#photo` 段落内的 `.photo-wall`，高度 `clamp(400px, 62vh, 720px)`，`≤720px` 是 `clamp(320px, 56vh, 520px)`；格子宽度由 `js/photo-wall.js` 的 `CELL_VW 0.20 / CELL_MAX 280 / GAP 18` 算，实测 1440×900 下是 **262×175 的格子 + 558px 的条带**，旧的 0.14 / 208 / 14 是 183×122 + 504），不是全屏层：`#photo-view`、「Open the wall」按钮、滚动锁与 inert 那一套都已退役，nav 与页脚链接只是普通锚点。
 - **棋盘是 PhantomInfiniteGallery 的 vanilla 移植**：**一张无限平面上的一窗格子**，两轴拖拽 + 抛掷 + 鼠标视差 + 按住 320ms 拉远（0.7×，钉住板心）。三条必须记住的：
-  - **内容是世界坐标的纯函数**（`|(x + 3y) mod n|`）：铺到哪都铺得满，同一个世界格永远是同一张照片；图案以 11 格为周期。
+  - **内容是世界坐标的纯函数**（`|(x + 3y) mod n|`）：铺到哪都铺得满，同一个世界格永远是同一张照片；图案每 n 列、每 n / gcd(3, n) 行重复一次（n = 21 时是 21 列 / 7 行，而棋盘不到四行高，短的行周期读不出来）。
   - **格子按世界槽位分配**：板子挪一列只换一格的内容，离开窗口的节点回收进 `free` 池。
   - **一次 transform 写入承载位置**（`translate3d(left, top, z) rotateY(yaw) scale(s)`）：写 `left/top` 会让拖拽的每一帧 flush 一次 layout。
 - **弧是凹的**：`z = R(1 - cosθ)` 把两侧推向读者、中间留在后面，`rotateY(-θ)` 让格子与圆柱相切（`.photo-wall` 自带 `perspective: 1000px`）。
 - **`touch-action: pan-y`，不是 `none`**：横划拖板、纵划滚页（鼠标仍可两轴拖）。
-- **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（键盘回车放行）。11 张正典是唯一的 tab stop，克隆体 `aria-hidden` + `tabIndex -1`。
-- **无 JS 兜底**：11 个 `.photo-frame` 留在正文的 `.photo-fallback` 网格里（`html.js` 把它 `display: none`），脚本一执行就把它们搬进 `#photo-wall`。
+- **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（键盘回车放行）。21 张正典是唯一的 tab stop，克隆体 `aria-hidden` + `tabIndex -1`。
+- **21 帧的 `data-act` 判定口径是距离不是物种**：**BLOOM = 镜头近处活着的绿色世界**（花 / 枝 / 叶 / 树干 / 近前的动物与水面），**HORIZON = 远景，地面与天相接**（田野 / 河 / 云 / 山坡 / 村镇）。灯箱的 mono kicker 直接印这个值，全站只有这两枚，**不要为新照片新增第三个标签**。
+- **无 JS 兜底**：21 个 `.photo-frame` 留在正文的 `.photo-fallback` 网格里（`html.js` 把它 `display: none`），脚本一执行就把它们搬进 `#photo-wall`。
 - **棋盘是全彩的**（`--wall-saturate: 1`）：这里是「颜色是奖励不是壁纸」的**第一个明文例外**——墙上照片就是页面本身。
 - **hero 的影像层也是全彩的**（无 `filter`）：**第二个明文例外**，理由同棋盘——它是这一屏的图画，压饱和只会读成渲染故障。它是 `position: absolute; inset: 0` 的一层，`object-fit: cover`，无圆角（形状锁不动）。
 - **压在字标和影像之间的是 scrim，而且它是实测过的**：`linear-gradient(180deg, ink α0.46 → 0.66（20%）→ 0.66（56%）→ 0.46（78%）→ 0.70)`——中段最重，因为字标（1440×900 下 y 283–617）正好压在整张图最亮的那条带（受光云 + 燃烧环 + 尖刺星）上。实测最差像素：1440×900 **5.40:1**、390×844 6.43:1（前景 #F2F2EF；量法见 3.2 推论 3）。顶端留 0.46 是给导航玻璃留可折射的东西，底端 0.70 是让它交接到纸面那一刀干净。

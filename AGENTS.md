@@ -266,31 +266,31 @@ Dylan Thomas《Do not go gentle into that good night》。**这一段只有诗**
 
 ## 站点结构
 
-hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 正文里一屏的无限照片棋盘，11 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 24 / 剧 36 / 音乐 477 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
+hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 正文里一屏的无限照片棋盘，21 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 24 / 剧 36 / 音乐 477 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
 
-- **照片在正文流里**：`#photo` 段落里 `.photo-wall` 那一屏就是全部（高度在 `css/photo-wall.css`：`clamp(340px, 56vh, 600px)`，`≤720px` 是 `clamp(300px, 52vh, 460px)`），**不是全屏层**。`#photo-view`、「Open the wall」按钮、`window.NightScroll`、以及为它写的那套滚动锁 / `inert` 重挂**已整体退役**——nav 与页脚的 `Photography` 现在只是普通锚点。灯箱自己仍会锁滚动（`document.body.style.overflow` + `lenis.stop()` + `setPageInert()`），关闭时还原。
-- **无 JS 兜底**：11 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` **一执行就把这 11 个元素搬进 `#photo-wall`**（不是等打开视图）。关闭 JS 时照片仍在页面上，只是没有棋盘。
+- **照片在正文流里**：`#photo` 段落里 `.photo-wall` 那一屏就是全部（高度在 `css/photo-wall.css`：`clamp(400px, 62vh, 720px)`，`≤720px` 是 `clamp(320px, 56vh, 520px)`；格子宽度在 `js/photo-wall.js` 的 `CELL_VW 0.20 / CELL_MAX 280 / GAP 18`，`CELL_MIN 132` 是手机端的地板），**不是全屏层**。`#photo-view`、「Open the wall」按钮、`window.NightScroll`、以及为它写的那套滚动锁 / `inert` 重挂**已整体退役**——nav 与页脚的 `Photography` 现在只是普通锚点。灯箱自己仍会锁滚动（`document.body.style.overflow` + `lenis.stop()` + `setPageInert()`），关闭时还原。
+- **无 JS 兜底**：21 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` **一执行就把这 21 个元素搬进 `#photo-wall`**（不是等打开视图）。关闭 JS 时照片仍在页面上，只是没有棋盘。
 - **棋盘是 PhantomInfiniteGallery 的 vanilla 移植**：几何与交互全在 `js/photo-wall.js`（旋钮常量 `CELL_* / GAP / MARGIN / ARC_* / PARALLAX_* / THROW_* / HOLD_ZOOM_*` 都在文件头上；逐条事实见 `DESIGN.md` 第 7 节）。四条不许动：
-  - **内容是世界坐标的纯函数**（`index = |(x + 3y) mod n|`）：铺到哪都铺得满、同一个世界格永远是同一张照片，图案每 n 格重复一次——这也是键盘聚焦时能「抄近路」平移的前提。
-  - **11 张正典永不回收**：它们坐在世界第 0 行 x = 0..10，其余可见格子都是池化克隆（`aria-hidden` + 不在 tab 序）。所以 `main.js` 永远只找到 11 个 `.photo-frame`，tab stop 也永远只有这 11 个。
+  - **内容是世界坐标的纯函数**（`index = |(x + 3y) mod n|`）：铺到哪都铺得满、同一个世界格永远是同一张照片，图案每 n 列、每 n / gcd(3, n) 行重复一次（n = 21 时是 21 列 / 7 行）——这也是键盘聚焦时能「抄近路」平移的前提。棋盘不到四行高，短的那个行周期在屏幕上读不出来。
+  - **21 张正典永不回收**：它们坐在世界第 0 行 x = 0..20，其余可见格子都是池化克隆（`aria-hidden` + 不在 tab 序）。所以 `main.js` 永远只找到 21 个 `.photo-frame`，tab stop 也永远只有这 21 个。
   - **一帧一次 transform 写入**（`place()` 把位置一起写进 `translate3d + rotateY + scale`）：改成写 `left/top` 会让拖拽的每一帧都 flush 一次 layout。
   - **只有 `frame()` 一个写入者**（`pos` / `par` / `size` 三个状态都归它）——别在别处直接改 transform。
 - **抛掷会停**（`THROW_FRICTION 0.92`、`REST 1px/s`）：参考实现故意留着 1e-4 的残余速度永不静止，本站**不要照抄**——一直爬的板子既难读又让合成器醒着。
 - **`touch-action: pan-y`，不是 `none`**：横划拖板、纵划滚页，滚轮**只吃 `deltaX`**（+ Shift+纵滚）。它是长文档里的一屏，吞掉纵划就是滚动陷阱。
 - **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > `SWIPE_SLOP`(6px) 置位，`click` 在捕获阶段消费（键盘回车放行）。克隆体也是真 `<button>`，所以 `main.js` 在 `#photo-wall` 上**委托一次**，不要逐格绑定。
 - **方向键挂在墙上**（`wall.addEventListener("keydown")`，左右各走一格），而且 `focusin` 只在 `:focus-visible` 时才把那一帧框到视野里——与影 / 剧同一条纪律：指针按下的 focus 不算「选中」。
-- **`data-act` 是 `BLOOM / HORIZON` 的唯一来源**（`photoFrameData()` 读 `frame.dataset.act`）；乐章标题与 `.photo-act-horizon` 已删。
+- **`data-act` 是 `BLOOM / HORIZON` 的唯一来源**（`photoFrameData()` 读 `frame.dataset.act`）；乐章标题与 `.photo-act-horizon` 已删。判定口径是**距离**不是物种：**BLOOM = 镜头近处活着的绿色世界**（花 / 枝 / 叶 / 树干 / 近前的动物与水面），**HORIZON = 远景，地面与天相接**（田野 / 河 / 云 / 山坡 / 村镇）。**只有这两个值，不要为了新照片新增第三个标签。**
 - **墙是全彩的**（`--wall-saturate` 默认 `saturate(1)`），这是「颜色是奖励不是壁纸」的**明文例外**：那条规则保护的是纸面页，而在墙上照片就是页面本身，没有界面要保护，压饱和在这个尺度上只会读成渲染故障。一个变量可以调回去。
 - **游戏名册是一个定位盘**（`js/games-stage.js`，Framer Detent 的纯 DOM 移植）：舞台挂载时给 `.hof` 加 **`.is-live`**，十八张封面排在一个环上、只有中心那张是彩色，`.hof-name` / `.hof-hours` / `.hof-quote` 留在条目里当数据源并**只画一次**（画进中心下方的 `.hof-now`）。舞台没起来（无 JS / 脚本失败）时 `.is-live` 不在，`css/games-stage.css` 回落到一份**显式三列的静态名册**：`repeat(3, minmax(0,1fr))`，900px 以下两列、720px 以下单列。**不要改回 `auto-fill`**——18 只能被 1/2/3/6/9/18 整除，`auto-fill minmax(250px,1fr)` 在 1440 下出 4 栏 = 4 行零 2 个孤儿。
 - **影 / 剧的卡片是「2:3 媒介盒 + 盒外的 meta」**，靠 `.film-card` 的栅格实现（`grid-template-columns: minmax(0,1fr)` + `grid-template-rows: auto auto 1fr`），**不要改回绝对定位的整盒 + meta 覆盖**，也**不要漏掉列定义**（漏了海报会按 JPG 固有尺寸渲染，实测 158/54/90/59/54/24px）。索引药丸（`.film-card-no`）与 OPEN chip（`.film-card-sleeve`）均已 `display: none`；选中态是**三层**：可区分的环（静止 0.1 / hover 0.2 / 选中 0.34）+ 卡片抬起一行 + 片名。**详情区不放图**。
 - **索引列表（音乐）没有逐行发丝线**，靠 `padding-block` 与间距分组，用 64px 封面取代序号。**书（书架）与球队（手风琴）都已不在 `.idx-*` 里**：球队换成手风琴后，`.idx-no` / `.idx-logo` / `.idx-line` 三条孤儿规则连同 720px 下的两条响应式覆盖一起删掉了。
 - **音乐每行必须渲染 64px 真封面**（`window.MUSIC_COVERS`）；缺图回落同尺寸空 sleeve。不要恢复 `counter(track)` 编号，也不要给 `.idx-artist` 加回大写 + 字距。
 - 图片默认低饱和、hover / focus 复原：这是「颜色是奖励不是壁纸」的落点。滤镜只加在 `img` 上。
-- **照片图注仍在 DOM 里，但视觉上是 `sr-only`**：墙不显示任何文字（参考站也没有），灯箱与读屏照读。键盘可达性不变——按钮仍在、`aria-label` 未改、11 张仍各是一个 tab stop。
+- **照片图注仍在 DOM 里，但视觉上是 `sr-only`**：墙不显示任何文字（参考站也没有），灯箱与读屏照读。键盘可达性不变——按钮仍在、`aria-label` 未改、21 张仍各是一个 tab stop。
 
 ## 内容更新
 
-- 摄影：`.photo-frame`（**正典 11 帧必须留在 HTML 里**，放在 `.photo-fallback` 网格里；`js/photo-wall.js` 一执行就把它们搬进 `#photo-wall`，再按世界坐标铺出克隆），`photo/` 与 `photo/full/` 都放。帧数就是棋盘周期，增删会被几何自动吸收，其它地方不用改。
+- 摄影：`.photo-frame`（**正典 21 帧必须留在 HTML 里**，放在 `.photo-fallback` 网格里；`js/photo-wall.js` 一执行就把它们搬进 `#photo-wall`，再按世界坐标铺出克隆），`photo/` 与 `photo/full/` 都放。帧数就是棋盘周期，增删会被几何自动吸收，其它地方不用改。
 - 游戏：`.hof-item`（直接进 `#hof-grid`），封面 `covers/`，时长写 `.hof-hours`，引文写 `.hof-quote`。
 - **影视（以后加片子就照这条）**：海报存成 `posters/<豆瓣条目ID>.jpg`（文件名就是豆瓣 subject id），条目 push 进 `js/film-data.js`（`window.FILM_DATA`）或 `js/series-data.js`（`window.SERIES_DATA`）。字段形状是固定的，适配器（`js/film-stage.js` / `js/series-stage.js`）按名字取：
   - 影：`{ id: "film-NN", douban: "1291841", poster: "posters/1291841.jpg", title, director, year, genre, quote }`
