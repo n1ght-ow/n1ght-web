@@ -185,6 +185,7 @@ let lbThumbs = [];
 let detailType = "photo";
 let detailItems = [];
 let openNetEaseSong = null;
+let openNetEasePlaylist = null;
 
 function detailText(root, selector) {
   const node = root.querySelector(selector);
@@ -384,9 +385,12 @@ function renderDetail() {
         if (/[\u4e00-\u9fff]/.test(label)) lbMusicPlaylist.setAttribute("lang", "zh");
         else lbMusicPlaylist.removeAttribute("lang");
         lbMusicPlaylist.href = "https://music.163.com/#/playlist?id=" + item.playlist;
+        // the click handler reads this and prefers the app over the href
+        lbMusicPlaylist.dataset.playlistId = item.playlist;
         lbMusicPlaylist.hidden = false;
       } else {
         lbMusicPlaylist.hidden = true;
+        delete lbMusicPlaylist.dataset.playlistId;
         lbMusicPlaylist.removeAttribute("href");
       }
     }
@@ -575,9 +579,15 @@ function initUnifiedDetail() {
   /* Both links funnel into the same opener: #lb-link carries the film / series
      Douban href, #lb-music-link the song deep link. Only the latter ever has a
      songId, so the guard keeps the two from cross-firing. */
-  [lbLink, lbMusicLink].forEach((link) => {
+  [lbLink, lbMusicLink, lbMusicPlaylist].forEach((link) => {
     if (!link) return;
     link.addEventListener("click", (e) => {
+      const playlistId = link.dataset.playlistId;
+      if (playlistId) {
+        e.preventDefault();
+        if (typeof openNetEasePlaylist === "function") openNetEasePlaylist(playlistId);
+        return;
+      }
       const songId = link.dataset.songId;
       if (!songId) return;
       e.preventDefault();
@@ -1126,17 +1136,23 @@ function initNetEaseLinks() {
   const looksMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua);
   const isDesktop = /Win|Mac|Linux/.test(navigator.platform || "") && !looksMobile;
 
-  // Launch the desktop app via the OFFICIAL orpheus:// deep-link format.
-  // NetEase's own web player uses:
-  //   location.href = "orpheus://" + base64(JSON.stringify({type,id,cmd:"play"}))
-  function buildAppUrl(id) {
-    const payload = JSON.stringify({ type: "song", id: id, cmd: "play" });
-    const b64 = btoa(unescape(encodeURIComponent(payload)));
+  // Launch the desktop app via the OFFICIAL orpheus:// deep-link format, read
+  // off NetEase's own web player (s3.music.126.net/web/s/core_*.js):
+  //   location.href = "orpheus://" + btoa(JSON.stringify(hrefParam))
+  // where hrefParam starts as {type, id, cmd:"play", channel:"webset"} and its
+  // TYPE_MAP case 13 is the playlist. The song branch keeps the payload this
+  // site has always shipped (no channel field) because that one is known to
+  // land; the playlist branch copies the official call verbatim.
+  function buildAppUrl(type, id) {
+    const payload = type === "playlist"
+      ? { type: "playlist", id: id, cmd: "play", channel: "webset" }
+      : { type: "song", id: id, cmd: "play" };
+    const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
     return "orpheus://" + b64;
   }
 
-  function tryAppLaunch(id) {
-    const url = buildAppUrl(id);
+  function tryAppLaunch(type, id) {
+    const url = buildAppUrl(type, id);
     try {
       const a = document.createElement("a");
       a.href = url;
@@ -1151,8 +1167,9 @@ function initNetEaseLinks() {
   }
 
   // Dual strategy: prefer the desktop app; fall back to the web player.
-  function openSong(id) {
-    const webUrl = "https://music.163.com/#/song?id=" + id;
+  // `type` is the app's own vocabulary: "song" or "playlist".
+  function openInApp(type, id) {
+    const webUrl = "https://music.163.com/#/" + type + "?id=" + id;
 
     // ---- mobile: launch the phone app directly ----
     if (looksMobile) {
@@ -1161,12 +1178,12 @@ function initNetEaseLinks() {
         // the web player when the app isn't installed (no timer needed).
         const fallback = encodeURIComponent(webUrl);
         location.href =
-          "intent://song/" + id + "/#Intent;scheme=orpheus;package=com.netease.cloudmusic;S.browser_fallback_url=" + fallback + ";end";
+          "intent://" + type + "/" + id + "/#Intent;scheme=orpheus;package=com.netease.cloudmusic;S.browser_fallback_url=" + fallback + ";end";
         return;
       }
       // iOS / other mobile: orpheus:// scheme pulls the app and plays;
       // if nothing handles it, fall back to the web player after a beat.
-      location.href = "orpheus://song/" + id;
+      location.href = "orpheus://" + type + "/" + id;
       setTimeout(() => {
         if (!document.hidden) window.open(webUrl, "_blank", "noopener");
       }, 1500);
@@ -1178,7 +1195,7 @@ function initNetEaseLinks() {
       window.open(webUrl, "_blank", "noopener");
       return;
     }
-    const launched = tryAppLaunch(id);
+    const launched = tryAppLaunch(type, id);
     if (!launched) {
       window.open(webUrl, "_blank", "noopener");
       return;
@@ -1196,9 +1213,26 @@ function initNetEaseLinks() {
     }, 1200);
   }
 
-  // The music cards now open the unified detail layer; this function keeps
-  // the NetEase deep-link strategy for the detail layer's external link.
-  openNetEaseSong = openSong;
+  // The music cards now open the unified detail layer; these two keep the
+  // NetEase deep-link strategy for the two external actions it renders, and
+  // for the genre head's own playlist link.
+  openNetEaseSong = (id) => openInApp("song", id);
+  openNetEasePlaylist = (id) => openInApp("playlist", id);
+
+  /* The genre-head links are rendered by js/music-stage.js (fifteen of them, one
+     per group), so this is delegated rather than bound per element - a re-render
+     cannot orphan it. Modified clicks are left alone so "open in new tab" still
+     reaches the web player. */
+  const genreLinks = document.getElementById("panel-music");
+  if (genreLinks) {
+    genreLinks.addEventListener("click", (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const link = e.target.closest(".genre-playlist");
+      if (!link || !link.dataset.playlistId) return;
+      e.preventDefault();
+      openNetEasePlaylist(link.dataset.playlistId);
+    });
+  }
 }
 
 initNetEaseLinks();
