@@ -1753,6 +1753,34 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
 .lb-meta-link:hover { opacity: 0.88; }
 .lb-meta-link:active { transform: scale(0.96); }
 
+/* The music detail's SECOND action: the genre playlist this song sits in.
+   Deliberately not a second pill - OPEN IN NETEASE is the only solid fill in
+   this column. It speaks the same language as the genre head's OPEN PLAYLIST
+   (mono, gold underline), recoloured for the dark stage. It wraps instead of
+   nowrap because the longest group name ("MANDARIN OST & CHINESE STYLE") makes
+   a 38-character label, which does not fit a 320px stage on one line. */
+.lb-playlist-link {
+  align-self: center;
+  margin-block-start: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-on-dark-muted);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--gold-400);
+  transition: color 0.2s var(--ease-out), text-decoration-color 0.2s var(--ease-out);
+}
+
+.lb-playlist-link:hover,
+.lb-playlist-link:focus-visible {
+  color: var(--color-on-dark);
+  text-decoration-color: var(--color-on-dark);
+}
+
 .lb-nav,
 .lb-close {
   position: absolute;

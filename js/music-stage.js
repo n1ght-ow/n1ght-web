@@ -58,6 +58,10 @@
       link.target = "_blank";
       link.rel = "noopener";
       link.textContent = "OPEN PLAYLIST";
+      /* The song detail layer reads these two off the group's link instead of
+         keeping its own copy of the mapping (main.js, musicItemData). */
+      link.dataset.playlistId = group.playlist;
+      link.dataset.playlistLabel = group.groupLang === "zh" ? group.zh : group.en;
       /* The visible label is the same on all fifteen links, so the genre rides
          along in sr-only text. It is appended INSIDE the link, which keeps the
          accessible name containing the visible words (label in name). */

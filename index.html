@@ -33,7 +33,7 @@
        face is preloaded. 25 KB for the only thing on screen when it matters. -->
   <link rel="preload" href="fonts/DiplomataSC-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=13">
-  <link rel="stylesheet" href="css/style.css?v=89">
+  <link rel="stylesheet" href="css/style.css?v=90">
   <link rel="stylesheet" href="css/glass.css?v=8">
   <link rel="stylesheet" href="css/reel-stage.css?v=15">
   <link rel="stylesheet" href="css/film-stage.css?v=15">
@@ -793,6 +793,13 @@
         <span class="lb-music-glyph" aria-hidden="true">♪</span>
       </div>
       <a class="lb-meta-link lb-music-link" id="lb-music-link" href="#" target="_blank" rel="noopener" hidden>Open</a>
+      <!-- Second action of the music detail: the genre playlist this song sits
+           in. Quiet by design - OPEN IN NETEASE stays the only solid pill in
+           this column, and this one speaks the same language as the genre
+           head's OPEN PLAYLIST (mono text, gold underline), recoloured for the
+           dark stage. js/main.js fills the href from the group's own link, so
+           the two can never drift. -->
+      <a class="lb-playlist-link" id="lb-music-playlist" href="#" target="_blank" rel="noopener" hidden>Open playlist</a>
       <figcaption id="lb-cap" class="lb-cap"></figcaption>
     </figure>
 
@@ -821,13 +828,13 @@
   <script src="js/reel-stage.js?v=25"></script>
   <script src="js/film-stage.js?v=7"></script>
   <script src="js/series-stage.js?v=7"></script>
-  <script src="js/music-stage.js?v=7"></script>
+  <script src="js/music-stage.js?v=8"></script>
 <script src="js/book-shelf.js?v=4"></script>
 <script src="js/photo-wall.js?v=6"></script>
 <script src="js/games-stage.js?v=3"></script>
   <script src="js/glass-pill.js?v=3"></script>
   <script src="js/glass-lens.js?v=1"></script>
   <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=74"></script>
+  <script src="js/main.js?v=75"></script>
 </body>
 </html>
