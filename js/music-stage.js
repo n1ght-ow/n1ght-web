@@ -44,7 +44,29 @@
       title.appendChild(document.createTextNode(" / " + group.en));
     }
     head.appendChild(title);
-    head.appendChild(el("span", "genre-count mono", String(group.tracks.length) + " 首"));
+
+    /* The group's own NetEase playlist, one per genre, created by
+       archive/music-playlists/ (the ids live in js/music-data.js next to the
+       tracks they mirror). The count used to be the only thing at the right
+       end of this row; the link now sits after it, the way .music-random
+       parks the search tray's single action at its right end. */
+    const meta = el("div", "genre-meta");
+    meta.appendChild(el("span", "genre-count mono", String(group.tracks.length) + " 首"));
+    if (group.playlist) {
+      const link = el("a", "genre-playlist mono");
+      link.href = "https://music.163.com/#/playlist?id=" + group.playlist;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = "OPEN PLAYLIST";
+      /* The visible label is the same on all fifteen links, so the genre rides
+         along in sr-only text. It is appended INSIDE the link, which keeps the
+         accessible name containing the visible words (label in name). */
+      const sr = el("span", "sr-only", " " + group.zh + " / " + group.en + " " + group.tracks.length + " 首");
+      tagLang(sr, group.zh);
+      link.appendChild(sr);
+      meta.appendChild(link);
+    }
+    head.appendChild(meta);
     genre.appendChild(head);
 
     const index = el("div", "track-index");

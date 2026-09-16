@@ -217,6 +217,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - 歌单默认**全展开、无手风琴**；浏览靠流派 chips 过滤 + 搜索叠加 + 随机一首。
 - 默认**单流派显示**：一次只显示一组，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。切换流派统一走 `selectGenre()`。
 - **搜索跨全部 15 组**（应要求改的）：有命中时每个命中的组都展开，组头从「136 首」变成「4 / 136」，工具条读出「18 / 477」，零命中才显示 NO MATCH。`#music-search-jump` 随之退役——查询已经覆盖全部流派，没有「别处」可跳。**搜索中点击 chip = 跳到那一组的结果**，走原生 `scrollIntoView` + `scroll-margin-top`；**不要自己算 delta**：`.genre` 是 `content-visibility: auto`，实测手算落点差 359px、加一次「修正」反而差 834px（每次重测都会让另一个块实体化）。清空关键词后回到单选流派。
+- **每个流派都有自己的网易云歌单**：`music-data.js` 每组一个 `playlist: "<id>"`，`js/music-stage.js` 把它渲染成组头右端的 `OPEN PLAYLIST`（`.genre-meta` = 计数 + 链接，两条都在 DOM 里排在标题之后）。歌单是 `archive/music-playlists/` 在账号里一次性建好的（路由实测、eapi 加密、命名与重复运行规则都在那份 README），**站点只做内容跳转、不发任何请求**，也没有代理。那条链接**是这一行唯一的金色**：`--color-accent-text` 下划线（accent hue = 可交互），旁边的计数保持 muted；一次只有一个流派在屏上，所以同时只命中一处。它是 19px 高的文字链，`::after` 把命中区撑到 41px，**只往上 / 下 / 左扩，不往右**（右边缘与组头齐平，多出来的部分本来就会被裁掉）；实测命中区下沿距第一张卡还有 3px，**不要加大这个 inset** —— 再往下就会把歌曲卡的点击抢走（`main.js` 的委托是 `closest(".idx-card")`，命中的是链接就没有卡）。`≤720px` 时组头 `flex-wrap: wrap`，计数 + 链接整块落到第二行、仍贴右（320px 实测无横向溢出）。
 - **切换流派把新手流派带回条带顶部**（`alignGenreTop()`，只向上、不向下）：长流派滑到深处再切短流派时，文档变矮会被浏览器夹到底部，不处理就会"直接到最底"。落点基准是**固定导航条的底边 + 16**（`header.nav` 是 `fixed`，rect 在任何滚动位置都诚实；旧版读的是 sticky 板的 pinned 几何，随吸顶一起退役）。另外两条仍然成立：落位是**瞬时跳**不是补间（补间只能从被夹住的近底部开始，会闪一路无关内容）；`lenis.scrollTo` 在目标等于上次目标时**直接 return**，而这里每组的目标都是同一个文档位置，所以要再核对 `window.scrollY` 并回落原生 `scrollTo`。实测：搜索中点 chip 落点 16 / 15px，深处切流派落点 16px。
 
 ### 书（书架）
@@ -297,7 +298,7 @@ hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导�
   - 剧：`{ id: "series-NN", douban: "2373195", poster, title, years, seasons, category, quote }`（`years` 可以写 `"1995-2013"`，排序取首个年份）
   - `douban` 是豆瓣条目 id，详情区的 `OPEN ON DOUBAN` 指向 `movie.douban.com/subject/<id>/`；多季剧集豆瓣按季建条目，所以链接落在第一季。
   - `quote` 是中文短评，规矩见「文案」；面板页头的计数（`TWENTY-FOUR FILMS` / `THIRTY-SIX SERIES`）**是写死在适配器里的**，加片要同时改那一行；排序与年份都从数据算，不用管。改完给对应 `<script>` 的 `?v=` +1。
-- 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成。
+- 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。**每组还有 `playlist`（该流派的网易云歌单 id）**，组头的 `OPEN PLAYLIST` 就指向它；歌单内容与 `tracks` 是两份、不会自动同步——加了歌要重跑 `node archive/music-playlists/build-import.mjs` 再把那份脚本粘进网易云（同名歌单会被复用，只补缺歌），或者手动往歌单里加。新建一个流派分组时要同时给它建歌单，否则那个组头没有链接（渲染器对缺 `playlist` 是静默跳过的）。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成。
 - 书：条目进 `js/book-shelf-data.js`，每本除了 title / author / blurb 还要给 binding（`thickness` 21–48、`height` 240–288、`lean`、`cloth`、`ink`、`band`）；**新增或换布色必须重量 ink/cloth 的 4.5:1**。行宽、缩放和书脊字号都会自己算。
 - 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`）。
 - hero 影像层：`index.html` 里一个 `<picture class="hero-plate">`，三个文件——`hero/nebula-tall.jpg`（708×1532，竖屏原生切片，`max-aspect-ratio: 3/4` 时用）、`hero/nebula-1200.jpg`（1200w）、`hero/nebula.jpg`（2400w）。换图就是换这三个文件，并同步 `width` / `height` / `alt`；**原图不要预裁**，露哪一块由 `object-position` 选。它上面那层 scrim（字标对比度就靠它）写在 `css/style.css` 第 7 节，**改动必须重量对比度**（DESIGN.md 3.2 有量法）。

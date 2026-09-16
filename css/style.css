@@ -1381,6 +1381,53 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
   white-space: nowrap;
 }
 
+/* Right-hand cell of the genre head: the count, then the group's NetEase
+   playlist. That link is a quiet text action, not a pill - the music view's
+   one solid primary action is still 随机一首 up in the search tray, and the
+   accent quota does not need a fifteenth gold thing. Auto margin keeps the
+   cell hard right even when the head wraps at 720px. */
+.genre-meta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-4);
+  margin-inline-start: auto;
+}
+
+.genre-playlist {
+  font-size: var(--fs-meta);
+  letter-spacing: var(--track-meta);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  /* accent hue = interactive (AGENTS.md, 色彩). The count sitting next to it
+     stays plain muted, so the one gold underline in this row is what says
+     "this one is a link". Only one genre is on screen at a time, so it is one
+     accent hit at a time. */
+  text-decoration-color: var(--color-accent-text);
+  transition: color 0.2s var(--ease-out), text-decoration-color 0.2s var(--ease-out);
+}
+
+.genre-playlist:hover,
+.genre-playlist:focus-visible {
+  color: var(--color-text);
+  text-decoration-color: var(--color-accent);
+}
+
+/* It is a 19px-tall text link, under the 40px desktop target floor. The
+   pseudo-element grows the hit area to 41px without changing the row's height
+   or the underline's position (the row is a flex item, so this box is
+   block-level and the inset resolves against it cleanly). */
+.genre-playlist { position: relative; }
+
+.genre-playlist::after {
+  content: "";
+  position: absolute;
+  inset: -11px -8px;
+}
+
 .artist-row { border-block-start: 0; }
 
 .artist-tracks {
@@ -1936,6 +1983,10 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .genre-filter .glass__press { display: none; }
   .genre-filter::-webkit-scrollbar { display: none; }
   .genre-chip { flex: 0 0 auto; }
+
+  /* At this width "136 首 / OPEN PLAYLIST" no longer fits beside a two-line
+     genre title, so the head wraps and the meta cell keeps the right edge. */
+  .genre-head { flex-wrap: wrap; }
 
   .lb-stage img { max-height: 52vh; }
   .lightbox { --lb-nav: 44px; }

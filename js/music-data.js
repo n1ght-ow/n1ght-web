@@ -14,6 +14,7 @@
       id: "pop",
       zh: "英语 · 流行",
       en: "POP",
+      playlist: "18388069648",
       tracks: [
         { id: "24197361", title: "California Gurls", artist: "Katy Perry / Snoop Dogg" },
         { id: "1975505546", title: "Calm Down", artist: "Rema / Selena Gomez" },
@@ -157,6 +158,7 @@
       id: "ballad",
       zh: "英语 · 抒情",
       en: "BALLAD",
+      playlist: "18388009980",
       tracks: [
         { id: "19558690", title: "How to Save a Life", artist: "The Fray" },
         { id: "21730832", title: "Chasing Cars", artist: "Snow Patrol" },
@@ -203,6 +205,7 @@
       id: "rock",
       zh: "英语 · 摇滚",
       en: "ROCK",
+      playlist: "18388019942",
       tracks: [
         { id: "27697195", title: "Wrecking Ball", artist: "Miley Cyrus" },
         { id: "3225999", title: "Whataya Want from Me", artist: "P!nk" },
@@ -243,6 +246,7 @@
       id: "edm-and-dance",
       zh: "英语 · 电音舞曲",
       en: "EDM & DANCE",
+      playlist: "18388056763",
       tracks: [
         { id: "21407207", title: "Give Me Everything", artist: "Pitbull / Ne-Yo / Afrojack / Nayer" },
         { id: "29534449", title: "Unity", artist: "TheFatRat" },
@@ -293,6 +297,7 @@
       id: "randb-and-soul",
       zh: "英语 · 节奏布鲁斯",
       en: "R&B & SOUL",
+      playlist: "18388103475",
       tracks: [
         { id: "2066953372", title: "Water", artist: "Tyla" },
         { id: "426194883", title: "Pink + White", artist: "Frank Ocean" },
@@ -323,6 +328,7 @@
       id: "hip-hop",
       zh: "英语 · 说唱",
       en: "HIP-HOP",
+      playlist: "18388048788",
       tracks: [
         { id: "5103312", title: "Empire State Of Mind", artist: "JAŸ-Z / Alicia Keys" },
         { id: "17405587", title: "Still D.R.E.", artist: "Dr. Dre / Snoop Dogg" },
@@ -357,6 +363,7 @@
       id: "folk-and-country",
       zh: "英语 · 民谣与乡村",
       en: "FOLK & COUNTRY",
+      playlist: "18388036786",
       tracks: [
         { id: "1989318036", title: "Stick Season", artist: "Noah Kahan" },
         { id: "1874585362", title: "Until I Found You", artist: "Stephen Sanchez" },
@@ -388,6 +395,7 @@
       id: "golden-classics",
       zh: "英语 · 黄金经典",
       en: "CLASSICS",
+      playlist: "18388086557",
       tracks: [
         { id: "4336098", title: "Let It Be (Remastered)", artist: "The Beatles" },
         { id: "4337372", title: "Yesterday (Remastered)", artist: "The Beatles" },
@@ -401,6 +409,7 @@
       id: "mandarin-pop",
       zh: "华语流行",
       en: "MANDARIN POP",
+      playlist: "18388058708",
       groupLang: "zh",
       tracks: [
         { id: "1966162185", title: "是你", artist: "梦然" },
@@ -442,6 +451,7 @@
       id: "mandarin-ballad",
       zh: "华语抒情",
       en: "MANDARIN BALLAD",
+      playlist: "18387966149",
       groupLang: "zh",
       tracks: [
         { id: "165026", title: "时间都去哪儿了（电影《私人定制》插曲\\电视剧《老牛家的战争》主题曲\\电视剧《空巢姥爷》主题曲）", artist: "王铮亮" },
@@ -487,6 +497,7 @@
       id: "mandarin-rock",
       zh: "华语摇滚",
       en: "MANDARIN ROCK",
+      playlist: "18388026892",
       groupLang: "zh",
       tracks: [
         { id: "25706282", title: "夜空中最亮的星", artist: "逃跑计划" },
@@ -500,6 +511,7 @@
       id: "mandarin-hip-hop",
       zh: "华语说唱",
       en: "MANDARIN HIP-HOP",
+      playlist: "18387999065",
       groupLang: "zh",
       tracks: [
         { id: "1918576268", title: "红 (4U)", artist: "罗言" },
@@ -540,6 +552,7 @@
       id: "mandarin-folk",
       zh: "华语民谣独立",
       en: "MANDARIN FOLK & INDIE",
+      playlist: "18388009986",
       groupLang: "zh",
       tracks: [
         { id: "441491828", title: "水星记", artist: "郭顶" },
@@ -566,6 +579,7 @@
       id: "mandarin-ost",
       zh: "华语影视原声",
       en: "MANDARIN OST & CHINESE STYLE",
+      playlist: "18388047825",
       groupLang: "zh",
       tracks: [
         { id: "97357", title: "那些年", artist: "胡夏" },
@@ -587,6 +601,7 @@
       id: "k-pop",
       zh: "韩语",
       en: "K-POP",
+      playlist: "18387934353",
       tracks: [
         { id: "2035161156", title: "꽃(FLOWER)", artist: "JISOO" },
         { id: "3431697108", title: "Dear my crazy soulmate", artist: "IU" },
