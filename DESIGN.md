@@ -120,7 +120,7 @@
 ### 3.1 一色一义
 
 - **accent = 可交互**。静态文字**只有一处**例外：诗区叠句 `.refrain` 用 `--color-accent-text`（品牌特例，用户拍板）。
-- **每视图只一个实心填充主操作**（音乐是 `随机一首`，影 / 剧是 `OPEN ON DOUBAN`）。
+- **每视图只一个实心填充主操作**（音乐是 `SHUFFLE`，影 / 剧是 `OPEN ON DOUBAN`）。
 - 全站强调色命中元素数**上限 25**（V1 是 182）。新增强调色用法即为回归。
 - 修对比度只动 lightness，不动 hue；颜色改动需用户拍板。
 
@@ -292,7 +292,7 @@
 - **三条共用去 brightness 的棱**：`#archive-tabbar .glass__edge, .music-search .glass__edge, .genre-filter .glass__edge { backdrop-filter: blur(3px) saturate(1.4) }`。纸上 1.14× 只是把已经约 249 的主体削顶成纯白——实测这条 bar 的上下 9px 是 `255,255,255` 而主体是 `249,249,243`；药丸四边各距棱 6px，于是那圈白就读成了药丸的白色光晕。改后同点实测 `248,248,240` / `244,244,237`。`header.nav` 压在照片上，**保留** brightening。
 - 音乐条目**不再各自带发丝线**：整行读成一条 bar + 一枚点亮的条目（hover 药丸底、active 墨色玻璃）。`.music-random` 仍是这个视图**唯一**的主操作，停在 bar 右端，DOM 里也排最后。
 - **两枚墨色胶囊 = 标签条那颗指示器的材质**（用户第四轮要求）：`.music-random` 与 `.genre-chip.is-active` 共用 `background: var(--glass-pill)`（84% ink-950）+ `.glass-pill` 的斜面与两级投影 + `::before` 轴向棱 + `::after` 背板 `blur(6px) saturate(1.4)`；`::after` 走 `z-index: -1` 才落在染色与文字之间（伪元素默认压在文字上），按钮自带 `isolation: isolate` 把负层关在里面，`z-index: 4` 与 `.tab-btn` 同值地骑在托盘两层之上。hover 只加深阴影，不换实心色。三条回退写在同处。
-- **焦点提示在输入框底边**：1px `--color-text-muted` 底线 + 光标。输入框自身的 `outline: none` 由这条底线替代，行内的清除 / 随机一首保留全局焦点环。
+- **焦点提示在输入框底边**：1px `--color-text-muted` 底线 + 光标。输入框自身的 `outline: none` 由这条底线替代，行内的清除 / SHUFFLE 保留全局焦点环。
 - `≤720px`：`.tabbar` 与 `#genre-filter` 都是横向滚动器，都转实底（`var(--color-surface)` + `inset 0 0 0 1px var(--color-line)`）并把两层 `display: none`——滚动容器里不放 backdrop-filter，绝对定位层也会随内容滚。实底规则必须写成 **`.tabbar.glass` / `.genre-filter.glass`**：`.glass` 在 glass.css 里且**后加载**，bare 类的同名声明压不过它（`.tabbar` 那条自 V2 起就没生效过，这次修好了）。搜索行不滚动，**保留玻璃**。
 
 

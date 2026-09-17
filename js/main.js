@@ -162,7 +162,6 @@ const lbMusicHead = document.getElementById("lb-music-head");
 const lbMusicTitle = document.getElementById("lb-music-title");
 const lbMusicLines = document.getElementById("lb-music-lines");
 const lbMusicLink = document.getElementById("lb-music-link");
-const lbMusicPlaylist = document.getElementById("lb-music-playlist");
 const lbMeta = document.getElementById("lb-meta");
 const lbKicker = document.getElementById("lb-kicker");
 const lbTitle = document.getElementById("lb-title");
@@ -227,16 +226,13 @@ function gameItemData(item) {
 function musicItemData(card) {
   const genre = card.closest(".genre");
   const id = card.getAttribute("data-song-id");
-  /* The genre's NetEase playlist is read off the group header's own link, so
-     the detail layer cannot drift from whatever the rail currently points at
-     (js/music-stage.js writes both). A group without one ships an empty id and
-     the detail layer hides the link. */
-  const pl = genre ? genre.querySelector(".genre-playlist") : null;
+  /* No playlist fields. The detail layer used to mirror the group header's
+     NetEase playlist into a second link, which duplicated the header's own
+     OPEN PLAYLIST and was removed (asked for). The header link owns that
+     mapping now, so there is nothing to read off it here. */
   return {
     type: "music",
     id: id,
-    playlist: pl ? pl.dataset.playlistId || "" : "",
-    playlistLabel: pl ? pl.dataset.playlistLabel || "" : "",
     title: detailText(card, ".idx-title"),
     artist: detailText(card, ".idx-artist"),
     genre: genre ? detailText(genre, ".genre-title") : "",
@@ -317,7 +313,6 @@ function setDetailVisibility(show) {
   if (lbMusic) lbMusic.hidden = !show.music;
   if (lbMusicHead) lbMusicHead.hidden = !show.music;
   if (lbMusicLink) lbMusicLink.hidden = !show.music;
-  if (lbMusicPlaylist) lbMusicPlaylist.hidden = !show.music;
   if (lbMeta) lbMeta.hidden = !show.meta;
   if (lbRail) lbRail.hidden = !show.rail;
 }
@@ -375,24 +370,6 @@ function renderDetail() {
       lbMusicLink.textContent = "OPEN IN NETEASE";
       lbMusicLink.href = "https://music.163.com/#/song?id=" + item.id;
       lbMusicLink.dataset.songId = item.id;
-    }
-    if (lbMusicPlaylist) {
-      if (item.playlist) {
-        const label = "OPEN " + item.playlistLabel + " PLAYLIST";
-        lbMusicPlaylist.textContent = label;
-        /* The site's own faces are latin-subset only, so a CJK group name wants
-           the system fallback the rest of the site already asks for. */
-        if (/[\u4e00-\u9fff]/.test(label)) lbMusicPlaylist.setAttribute("lang", "zh");
-        else lbMusicPlaylist.removeAttribute("lang");
-        lbMusicPlaylist.href = "https://music.163.com/#/playlist?id=" + item.playlist;
-        // the click handler reads this and prefers the app over the href
-        lbMusicPlaylist.dataset.playlistId = item.playlist;
-        lbMusicPlaylist.hidden = false;
-      } else {
-        lbMusicPlaylist.hidden = true;
-        delete lbMusicPlaylist.dataset.playlistId;
-        lbMusicPlaylist.removeAttribute("href");
-      }
     }
     if (lbLive) {
       lbLive.textContent = "Track " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + " by " + item.artist + ". " + item.genre;
@@ -578,16 +555,12 @@ function initUnifiedDetail() {
   lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
   /* Both links funnel into the same opener: #lb-link carries the film / series
      Douban href, #lb-music-link the song deep link. Only the latter ever has a
-     songId, so the guard keeps the two from cross-firing. */
-  [lbLink, lbMusicLink, lbMusicPlaylist].forEach((link) => {
+     songId, so the guard keeps the two from cross-firing. The playlist branch
+     that used to sit here went with the detail layer's copy of that link; the
+     genre head's own links are handled further down. */
+  [lbLink, lbMusicLink].forEach((link) => {
     if (!link) return;
     link.addEventListener("click", (e) => {
-      const playlistId = link.dataset.playlistId;
-      if (playlistId) {
-        e.preventDefault();
-        if (typeof openNetEasePlaylist === "function") openNetEasePlaylist(playlistId);
-        return;
-      }
       const songId = link.dataset.songId;
       if (!songId) return;
       e.preventDefault();
@@ -1214,8 +1187,9 @@ function initNetEaseLinks() {
   }
 
   // The music cards now open the unified detail layer; these two keep the
-  // NetEase deep-link strategy for the two external actions it renders, and
-  // for the genre head's own playlist link.
+  // NetEase deep-link strategy for the two external actions the page still
+  // renders: the song detail's OPEN IN NETEASE and the genre head's own
+  // OPEN PLAYLIST.
   openNetEaseSong = (id) => openInApp("song", id);
   openNetEasePlaylist = (id) => openInApp("playlist", id);
 
