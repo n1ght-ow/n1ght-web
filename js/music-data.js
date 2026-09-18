@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  /* 477 tracks in 15 genre groups, curated from the owner’s own
+  /* 496 tracks in 15 genre groups, curated from the owner’s own
      NetEase “liked songs” list. Every id was resolved through the
      NetEase song/detail API against the album printed in that list, so
      each entry points at the exact release the owner saved — do NOT
@@ -445,6 +445,13 @@
         { id: "1901371647", title: "孤勇者", artist: "陈奕迅" },
         { id: "108914", title: "江南", artist: "林俊杰" },
         { id: "82360", title: "Love Song", artist: "方大同" },
+        { id: "354750", title: "奢香夫人", artist: "凤凰传奇" },
+        { id: "150563", title: "Melody (旋律)", artist: "陶喆" },
+        { id: "150422", title: "今天你要嫁给我 (Marry Me Today)", artist: "蔡依林 / 陶喆" },
+        { id: "22200079", title: "我的未来式", artist: "郭采洁" },
+        { id: "174944", title: "后会无期", artist: "徐良 / 汪苏泷" },
+        { id: "174963", title: "客官不可以", artist: "徐良 / 小凌" },
+        { id: "174956", title: "坏女孩", artist: "徐良 / 小凌" },
       ]
     },
     {
@@ -491,6 +498,10 @@
         { id: "2041026502", title: "愿与愁", artist: "林俊杰" },
         { id: "108485", title: "Always Online", artist: "林俊杰" },
         { id: "2124115505", title: "忘记时间（我会好好珍惜没有你的明天）", artist: "杜宣达" },
+        { id: "1984475097", title: "就让这大雨全都落下（汪苏泷概念创作集《联名》作品）", artist: "容祖儿" },
+        { id: "3387477661", title: "梦哑", artist: "任然" },
+        { id: "493735012", title: "无人之岛", artist: "任然" },
+        { id: "41656275", title: "那年", artist: "任然" },
       ]
     },
     {
@@ -595,6 +606,14 @@
         { id: "66823", title: "岁月如歌", artist: "陈奕迅" },
         { id: "316100", title: "雨爱（电视剧《海派甜心》片尾曲）", artist: "杨丞琳" },
         { id: "25714102", title: "一个人想着一个人（电视剧《终极一班2》片尾曲）", artist: "曾沛慈" },
+        { id: "209936", title: "倒带（电视剧《求婚事务所》片尾曲）", artist: "蔡依林" },
+        { id: "28387594", title: "同桌的你（电影《同桌的你》片尾主题曲）", artist: "胡夏" },
+        { id: "95843", title: "栀子花开（电影《栀子花开》主题曲）", artist: "何炅" },
+        { id: "176999", title: "情非得已（电视剧《流星花园》主题曲）", artist: "庾澄庆" },
+        { id: "165340", title: "有点甜（电视剧《微微一笑很倾城》插曲）", artist: "汪苏泷 / By2" },
+        { id: "344418", title: "我知道（电视剧《比赛开始》片尾曲）", artist: "By2" },
+        { id: "108478", title: "醉赤壁 (Tale Of The Red Cliff)", artist: "林俊杰" },
+        { id: "208902", title: "红色高跟鞋（电影《爱情呼叫转移2》主题曲）", artist: "蔡健雅" },
       ]
     },
     {

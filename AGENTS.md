@@ -207,7 +207,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 ### 音乐
 
-`js/music-data.js`（`window.MUSIC_DATA`，477 首 15 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
+`js/music-data.js`（`window.MUSIC_DATA`，496 首 15 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
 
 专辑封面走 `js/music-covers.js`（`window.MUSIC_COVERS`，songId → 文件名，图在 `album-covers/`，生成文件勿手改），详情层 `.lb-music` 显示真实封面，缺图回落 ♪ 占位 sleeve。
 
@@ -216,7 +216,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - **音乐面板没有入场动效**（应要求）：`js/main.js` 的 `animateIn()` 只在面板里能找到 `.idx-row / .genre / .hof` 行时才跑，所以影 / 剧 / 书 / 球队本来就是静止的，**原来只有音乐和游戏吃这套**。实测切到音乐那一帧 `#panel-music` 是 `clipPath: inset(0 0 0 100%)`、可见的 `.genre` 是 `inset(0 0 100%) + translateY(14px)`，0.85s 后才落定 —— 477 张卡 15 组读起来就是加载级联。现在 `select()` 里 `panel-music` 直接走 instant 分支，切过去第一帧就是 `clipPath: none` / `transform: none`。**游戏拨盘仍保留擦入**（改完只剩它一个），要去掉就在同一分支里加 `panel-games`。
 - 歌单默认**全展开、无手风琴**；浏览靠流派 chips 过滤 + 搜索叠加 + SHUFFLE。
 - 默认**单流派显示**：一次只显示一组，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。切换流派统一走 `selectGenre()`。
-- **搜索跨全部 15 组**（应要求改的）：有命中时每个命中的组都展开，组头从「136 首」变成「4 / 136」，工具条读出「18 / 477」，零命中才显示 NO MATCH。`#music-search-jump` 随之退役——查询已经覆盖全部流派，没有「别处」可跳。**搜索中点击 chip = 跳到那一组的结果**，走原生 `scrollIntoView` + `scroll-margin-top`；**不要自己算 delta**：`.genre` 是 `content-visibility: auto`，实测手算落点差 359px、加一次「修正」反而差 834px（每次重测都会让另一个块实体化）。清空关键词后回到单选流派。
+- **搜索跨全部 15 组**（应要求改的）：有命中时每个命中的组都展开，组头从「136 首」变成「4 / 136」，工具条读出「18 / 496」，零命中才显示 NO MATCH。`#music-search-jump` 随之退役——查询已经覆盖全部流派，没有「别处」可跳。**搜索中点击 chip = 跳到那一组的结果**，走原生 `scrollIntoView` + `scroll-margin-top`；**不要自己算 delta**：`.genre` 是 `content-visibility: auto`，实测手算落点差 359px、加一次「修正」反而差 834px（每次重测都会让另一个块实体化）。清空关键词后回到单选流派。
 - **每个流派都有自己的网易云歌单**：`music-data.js` 每组一个 `playlist: "<id>"`，`js/music-stage.js` 把它渲染成组头右端的 `OPEN PLAYLIST`（`.genre-meta` = 计数 + 链接，两条都在 DOM 里排在标题之后）。歌单是 `archive/music-playlists/` 在账号里一次性建好的（路由实测、eapi 加密、命名与重复运行规则都在那份 README），**站点只做内容跳转、不发任何请求**，也没有代理。那条链接**是这一行唯一的金色**：`--color-accent-text` 下划线（accent hue = 可交互），旁边的计数保持 muted；一次只有一个流派在屏上，所以同时只命中一处。它是 19px 高的文字链，`::after` 把命中区撑到 41px，**只往上 / 下 / 左扩，不往右**（右边缘与组头齐平，多出来的部分本来就会被裁掉）；实测命中区下沿距第一张卡还有 3px，**不要加大这个 inset** —— 再往下就会把歌曲卡的点击抢走（`main.js` 的委托是 `closest(".idx-card")`，命中的是链接就没有卡）。`≤720px` 时组头 `flex-wrap: wrap`，计数 + 链接整块落到第二行、仍贴右（320px 实测无横向溢出）。
 - **详情层只有一步直达**（应要求改的）：`OPEN IN NETEASE` 下面那条 `OPEN <流派> PLAYLIST` 已删除 —— 它和组头右端那条 `OPEN PLAYLIST` 指向**同一个歌单 id**，是重复入口；跳歌单这件事留给组头（一次只有一个流派在屏上，那一条就够）。随之退役的还有 `#lb-music-playlist` / `.lb-playlist-link`（css）、`#lb-music-playlist` 的可见性开关，以及 `musicItemData()` 的 `playlist` / `playlistLabel` 字段与详情层那个已无主的 playlist 点击分支；`js/music-stage.js` 也不再写 `data-playlist-label`（`data-playlist-id` **保留**：`main.js` 委托在 `#panel-music` 上的点击处理读它）。`.lb-stage` 的 `title / artist / sleeve / OPEN` 只剩一行链接，焦点顺序（`#lb-music-link` → `#lb-prev`）与 `lbFocusables()` 不受影响。**不要再加回来**：组头那条就是同一个 href。
 - **歌单链接先打客户端，不是网页**（详情层那条删掉后，歌单只剩组头生成的 15 条）：`main.js` 的 `openInApp(type, id)` 是 `openSong` 泛化来的（手机 `intent://` / `orpheus://<type>/<id>`，桌面建隐藏 `<a>` 点 `orpheus://` + `btoa(JSON)`，1200ms 内页面没被切走才回落网页）。payload 抄官方网页端自己的写法（`core_*.js`：`{type,id,cmd:"play",channel:"webset"}`，`TYPE_MAP` case 13 = playlist）：**歌单**用它，**歌曲**仍发本站一直在发的 `{type:"song",id,cmd:"play"}`（那条已知能落，不要顺手统一）。`<a href>` 保持网页地址，中键 / Ctrl+点击 / 无 JS 时仍走网页，四个修饰键的点击**不拦截**。流派那 15 条由 `music-stage.js` 生成，所以是**委托在 `#panel-music` 上**的，逐条绑定会随重渲染失效。实测：那条 `orpheus://eyJ0eXBlIjoicGxheWxpc3Qi…` 让客户端**冷启动**并直接开始放 POP（窗口标题 `Cheap Thrills - Sia`，该曲就在 `music-data.js` POP 组内）。
@@ -269,7 +269,7 @@ Dylan Thomas《Do not go gentle into that good night》。**这一段只有诗**
 
 ## 站点结构
 
-hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 正文里一屏的无限照片棋盘，21 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 24 / 剧 36 / 音乐 477 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
+hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 正文里一屏的无限照片棋盘，21 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 24 / 剧 36 / 音乐 496 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
 
 - **照片在正文流里**：`#photo` 段落里 `.photo-wall` 那一屏就是全部（高度在 `css/photo-wall.css`：`clamp(400px, 62vh, 720px)`，`≤720px` 是 `clamp(320px, 56vh, 520px)`；格子宽度在 `js/photo-wall.js` 的 `CELL_VW 0.20 / CELL_MAX 280 / GAP 18`，`CELL_MIN 132` 是手机端的地板），**不是全屏层**。`#photo-view`、「Open the wall」按钮、`window.NightScroll`、以及为它写的那套滚动锁 / `inert` 重挂**已整体退役**——nav 与页脚的 `Photography` 现在只是普通锚点。灯箱自己仍会锁滚动（`document.body.style.overflow` + `lenis.stop()` + `setPageInert()`），关闭时还原。
 - **无 JS 兜底**：21 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` **一执行就把这 21 个元素搬进 `#photo-wall`**（不是等打开视图）。关闭 JS 时照片仍在页面上，只是没有棋盘。

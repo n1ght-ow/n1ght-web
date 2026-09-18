@@ -1,7 +1,7 @@
 {
-  "generated": "2026-09-14T12:57:02Z",
+  "generated": "2026-09-18T12:56:03Z",
   "source": "NetEase Cloud Music song/detail API (picUrl), 500px",
-  "files": 400,
+  "files": 417,
   "songs": [
     {
       "songId": "64093",
@@ -84,6 +84,14 @@
       "cover": "109951168870789373.jpg"
     },
     {
+      "songId": "95843",
+      "title": "栀子花开（电影《栀子花开》主题曲）",
+      "artist": "何炅",
+      "album": "可以爱",
+      "albumId": 9350,
+      "cover": "109951171891714568.jpg"
+    },
+    {
       "songId": "97357",
       "title": "那些年",
       "artist": "胡夏",
@@ -98,6 +106,14 @@
       "album": "她说 概念自选辑",
       "albumId": 10755,
       "cover": "109951172024569374.jpg"
+    },
+    {
+      "songId": "108478",
+      "title": "醉赤壁 (Tale Of The Red Cliff)",
+      "artist": "林俊杰",
+      "album": "JJ陆",
+      "albumId": 10770,
+      "cover": "109951172814148796.jpg"
     },
     {
       "songId": "108485",
@@ -156,12 +172,36 @@
       "cover": "109951169280793265.jpg"
     },
     {
+      "songId": "150422",
+      "title": "今天你要嫁给我 (Marry Me Today)",
+      "artist": "蔡依林 / 陶喆",
+      "album": "太美丽",
+      "albumId": 15184,
+      "cover": "109951166916020363.jpg"
+    },
+    {
+      "songId": "150563",
+      "title": "Melody (旋律)",
+      "artist": "陶喆",
+      "album": "黑色柳丁",
+      "albumId": 15190,
+      "cover": "109951169237251638.jpg"
+    },
+    {
       "songId": "165026",
       "title": "时间都去哪儿了（电影《私人定制》插曲\\电视剧《老牛家的战争》主题曲\\电视剧《空巢姥爷》主题曲）",
       "artist": "王铮亮",
       "album": "听得到的时间",
       "albumId": 16566,
       "cover": "109951173657647766.jpg"
+    },
+    {
+      "songId": "165340",
+      "title": "有点甜（电视剧《微微一笑很倾城》插曲）",
+      "artist": "汪苏泷 / By2",
+      "album": "万有引力",
+      "albumId": 16606,
+      "cover": "109951164176658680.jpg"
     },
     {
       "songId": "167827",
@@ -180,6 +220,38 @@
       "cover": "109951171269232420.jpg"
     },
     {
+      "songId": "174944",
+      "title": "后会无期",
+      "artist": "徐良 / 汪苏泷",
+      "album": "不良少年",
+      "albumId": 17594,
+      "cover": "109951172050962571.jpg"
+    },
+    {
+      "songId": "174956",
+      "title": "坏女孩",
+      "artist": "徐良 / 小凌",
+      "album": "不良少年",
+      "albumId": 17594,
+      "cover": "109951172050962571.jpg"
+    },
+    {
+      "songId": "174963",
+      "title": "客官不可以",
+      "artist": "徐良 / 小凌",
+      "album": "犯贱",
+      "albumId": 17598,
+      "cover": "28587302323242.jpg"
+    },
+    {
+      "songId": "176999",
+      "title": "情非得已（电视剧《流星花园》主题曲）",
+      "artist": "庾澄庆",
+      "album": "海啸",
+      "albumId": 17918,
+      "cover": "109951169040243386.jpg"
+    },
+    {
       "songId": "191254",
       "title": "天下",
       "artist": "张杰",
@@ -194,6 +266,22 @@
       "album": "赵小雷",
       "albumId": 20339,
       "cover": "109951169213244790.jpg"
+    },
+    {
+      "songId": "208902",
+      "title": "红色高跟鞋（电影《爱情呼叫转移2》主题曲）",
+      "artist": "蔡健雅",
+      "album": "若你碰到他",
+      "albumId": 21252,
+      "cover": "109951166195459631.jpg"
+    },
+    {
+      "songId": "209936",
+      "title": "倒带（电视剧《求婚事务所》片尾曲）",
+      "artist": "蔡依林",
+      "album": "城堡",
+      "albumId": 21343,
+      "cover": "109951170708258712.jpg"
     },
     {
       "songId": "233931",
@@ -298,6 +386,22 @@
       "album": "潘朵拉",
       "albumId": 32370,
       "cover": "109951167430264389.jpg"
+    },
+    {
+      "songId": "344418",
+      "title": "我知道（电视剧《比赛开始》片尾曲）",
+      "artist": "By2",
+      "album": "Twins",
+      "albumId": 33979,
+      "cover": "109951163200171219.jpg"
+    },
+    {
+      "songId": "354750",
+      "title": "奢香夫人",
+      "artist": "凤凰传奇",
+      "album": "最炫民族风",
+      "albumId": 35006,
+      "cover": "109951163068646489.jpg"
     },
     {
       "songId": "355992",
@@ -980,6 +1084,14 @@
       "cover": "109951172764074356.jpg"
     },
     {
+      "songId": "22200079",
+      "title": "我的未来式",
+      "artist": "郭采洁",
+      "album": "隐形超人",
+      "albumId": 23496,
+      "cover": "109951167196136079.jpg"
+    },
+    {
       "songId": "22441762",
       "title": "Teenage Dream",
       "artist": "Katy Perry",
@@ -1362,6 +1474,14 @@
       "album": "Chandelier",
       "albumId": 2771038,
       "cover": "109951165997274647.jpg"
+    },
+    {
+      "songId": "28387594",
+      "title": "同桌的你（电影《同桌的你》片尾主题曲）",
+      "artist": "胡夏",
+      "album": "同桌的你",
+      "albumId": 2785184,
+      "cover": "109951167986814353.jpg"
     },
     {
       "songId": "28528999",
@@ -1852,6 +1972,14 @@
       "cover": "109951165973312283.jpg"
     },
     {
+      "songId": "41656275",
+      "title": "那年",
+      "artist": "任然",
+      "album": "那年",
+      "albumId": 3456104,
+      "cover": "18301371044542173.jpg"
+    },
+    {
       "songId": "400876320",
       "title": "Unstoppable",
       "artist": "Sia",
@@ -2298,6 +2426,14 @@
       "album": "不用去猜",
       "albumId": "35758263",
       "cover": "18523472395121303.jpg"
+    },
+    {
+      "songId": "493735012",
+      "title": "无人之岛",
+      "artist": "任然",
+      "album": "没有发生的爱情",
+      "albumId": 35835080,
+      "cover": "19188676928210304.jpg"
     },
     {
       "songId": "494865824",
@@ -3380,6 +3516,14 @@
       "cover": "109951167874368423.jpg"
     },
     {
+      "songId": "1984475097",
+      "title": "就让这大雨全都落下（汪苏泷概念创作集《联名》作品）",
+      "artist": "容祖儿",
+      "album": "联名",
+      "albumId": 152222837,
+      "cover": "109951168940374741.jpg"
+    },
+    {
       "songId": "1989318036",
       "title": "Stick Season",
       "artist": "Noah Kahan",
@@ -3778,6 +3922,14 @@
       "album": "drop dead",
       "albumId": 371187066,
       "cover": "109951173080460906.jpg"
+    },
+    {
+      "songId": "3387477661",
+      "title": "梦哑",
+      "artist": "任然",
+      "album": "梦哑",
+      "albumId": 378900959,
+      "cover": "109951173646389004.jpg"
     },
     {
       "songId": "3392742809",
