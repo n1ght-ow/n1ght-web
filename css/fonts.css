@@ -31,7 +31,17 @@
    owner; licensed for non-commercial use), so it also carries the Latin
    titles - its Latin is a marker hand, which is what a spine wants.
    display: block, not swap: a spine that reflows from a fallback after the
-   font lands would jump inside a fixed-width 3D box. */
+   font lands would jump inside a fixed-width 3D box.
+
+   THE FILE IS PATCHED IN PLACE AND THAT PATCH IS LOAD-BEARING. It shipped a
+   vhea table at version 1.1; Chrome's OTS sanitizer accepts only 1.0 and
+   rejects the WHOLE font over it - "OTS parsing error: vhea: Unsupported table
+   version: 0x10001" - so every spine silently fell back to var(--font-sans)
+   while the browser still downloaded all 12.6 MB. Bytes 0-3 of the vhea table
+   are now 0x00010000. Both versions use the same 36-byte layout and the
+   vertical advances live in vmtx, so nothing but the version number changed.
+   Re-installing the font from the original file brings the bug back; re-apply
+   the one-byte patch, or subset the face, which fixes it by construction. */
 @font-face {
   font-family: 'Klein Blue Night';
   font-style: normal;
