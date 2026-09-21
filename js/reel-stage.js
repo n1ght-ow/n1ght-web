@@ -254,6 +254,7 @@
         return;
       }
       state.seekTarget = ringTarget(state, idx);
+      kick(state);
     }
 
     /* A chosen poster, by node. A clone resolves to the real card it mirrors,
@@ -276,16 +277,35 @@
        control and nothing needs a "held" flag. */
 
     /* ONE rAF loop owns the rail's motion: the seek, and the coast after a
-       flick. Both are exponential approaches - monotone, never overshooting. */
-    function frame(state, now) {
-      state.raf = window.requestAnimationFrame((t) => frame(state, t));
-      if (!state.last) { state.last = now; return; }
-      const dt = Math.min(0.05, (now - state.last) / 1000);
-      state.last = now;
-      if (REDUCED || !state.setW) return;
+       flick. Both are exponential approaches - monotone, never overshooting.
 
-      /* a seek outranks everything else: the reader asked for THIS poster */
+       THE LOOP PARKS WHEN NOTHING IS MOVING. It used to re-request a frame at
+       the top of frame(), so films and series each ran a callback on every
+       frame of the session - while parked, while their panel was display:none,
+       forever. Measured: 650 callbacks in two idle seconds, from that one line.
+       js/photo-wall.js already had the right shape (raf = 0 at the top, kick
+       only while busy) and this is that shape. state.last is cleared whenever
+       the loop parks, so a restart seeds a zero dt instead of integrating the
+       idle gap as one 50ms step. */
+    function busy(state) {
+      return !REDUCED && !!state.setW &&
+        (state.seekTarget != null || state.dragActive || Math.abs(state.vel) >= 1);
+    }
+
+    function kick(state) {
+      if (state.raf) return;
+      state.raf = window.requestAnimationFrame((t) => frame(state, t));
+    }
+
+    function frame(state, now) {
+      state.raf = 0;
+      if (!state.last) state.last = now;
+      const dt = Math.min(0.05, Math.max(0, (now - state.last) / 1000));
+      state.last = now;
+      if (REDUCED || !state.setW) { state.last = 0; return; }
+
       if (state.seekTarget != null) {
+        /* a seek outranks everything else: the reader asked for THIS poster */
         const k = 1 - Math.exp(-dt / SEEK_TAU);
         state.pos += (state.seekTarget - state.pos) * k;
         state.vel = 0;
@@ -294,22 +314,24 @@
           state.seekTarget = null;
         }
         place(state, state.pos);
-        return;
-      }
-
-      /* A finger is the ONLY writer while it is down - not even the residue of
-         the last flick may creep under it. Without this the position kept
-         integrating for the half second the velocity took to decay, so a poster
-         that had just been grabbed went on sliding under the finger. */
-      if (state.dragActive) {
+      } else if (state.dragActive) {
+        /* A finger is the ONLY writer while it is down - not even the residue of
+           the last flick may creep under it. Without this the position kept
+           integrating for the half second the velocity took to decay, so a poster
+           that had just been grabbed went on sliding under the finger. */
         state.vel = 0;
-        return;
+      } else {
+        /* the coast after a release: momentum decaying to rest */
+        state.vel *= Math.exp(-dt / 0.5);
+        if (Math.abs(state.vel) < 1) {
+          state.vel = 0;
+        } else {
+          place(state, state.pos + state.vel * dt);
+        }
       }
 
-      /* the coast after a release: momentum decaying to rest */
-      state.vel *= Math.exp(-dt / 0.5);
-      if (Math.abs(state.vel) < 1) { state.vel = 0; return; }
-      place(state, state.pos + state.vel * dt);
+      if (busy(state)) kick(state);
+      else state.last = 0;
     }
 
     /* The poster at the apex IS the chosen one. On a lap that is a pure
@@ -708,6 +730,8 @@
         }
         state.dragActive = false;
         drag = null;
+        /* the flick is handed over as a velocity: wake the loop to spend it */
+        kick(state);
       }
 
       viewport.addEventListener("pointerup", endSwipe);
@@ -765,16 +789,30 @@
         }
       });
 
+      /* A poster landing used to re-measure the whole lap, one full pass per
+         image: the 48 film and 72 series posters land inside the same second,
+         and every pass is a querySelectorAll over both copies plus two offset
+         reads per card. The pass that MATTERS is the first one after a blank
+         measurement - that is what turns "every card at offset 0" into a real
+         lap - so it still runs at once. The rest only confirm widths the CSS
+         already fixed, and collapse into one pass 250ms after the last
+         arrival, the same budget refreshScrollTrigger() uses. */
+      let loadTimer = 0;
+      const onPosterLoad = () => {
+        if (!state.setW || state.setW <= 1) {
+          setupMode(stage, state);
+          refreshScrollTrigger();
+          return;
+        }
+        window.clearTimeout(loadTimer);
+        loadTimer = window.setTimeout(() => {
+          setupMode(stage, state);
+          refreshScrollTrigger();
+        }, 250);
+      };
       stage.querySelectorAll("img").forEach((img) => {
         if (img.complete && img.naturalWidth) return;
-        img.addEventListener(
-          "load",
-          () => {
-            setupMode(stage, state);
-            refreshScrollTrigger();
-          },
-          { once: true }
-        );
+        img.addEventListener("load", onPosterLoad, { once: true });
         img.addEventListener(
           "error",
           () => refreshScrollTrigger(),
@@ -880,7 +918,7 @@
       bindInteractions(container, state);
       selectIndex(container, state, 0, false);
       bindReveal(container, state);
-      state.raf = window.requestAnimationFrame((t) => frame(state, t));
+      kick(state);
 
       const boot = () => {
         state.last = 0;
@@ -922,8 +960,10 @@
       state.cleanup = () => {
         if (tabbar) tabbar.removeEventListener("night:archive-tab", onTabEvent);
         if (state.raf) window.cancelAnimationFrame(state.raf);
+        state.raf = 0;
         window.removeEventListener("resize", onResize);
         window.clearTimeout(resizeTimer);
+        window.clearTimeout(loadTimer);
       };
     }
 

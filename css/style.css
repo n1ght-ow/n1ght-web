@@ -1984,6 +1984,15 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .genre-filter::-webkit-scrollbar { display: none; }
   .genre-chip { flex: 0 0 auto; }
 
+  /* The selected chip carries its OWN ink layer as a backdrop pseudo
+     (see .genre-chip.is-active::after), and that pseudo is not inside
+     .genre-filter's hide list above - so at this width the chip would still
+     sample a moving backdrop inside a scroller, which is the one thing the
+     glass rules forbid. It gets the same treatment as the solid fallback:
+     real ink, no sampling. */
+  .genre-chip.is-active { background: var(--ink-950); }
+  .genre-chip.is-active::after { display: none; }
+
   /* At this width "136 首 / OPEN PLAYLIST" no longer fits beside a two-line
      genre title, so the head wraps and the meta cell keeps the right edge. */
   .genre-head { flex-wrap: wrap; }

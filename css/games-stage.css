@@ -97,9 +97,19 @@
   inset-block-start: 50%;
   inset-inline-start: 50%;
   border-radius: var(--radius-md);
-  will-change: transform, opacity, filter;
   transform-origin: 50% 50%;
   backface-visibility: hidden;
+}
+
+/* PROMOTION IS FOR THE GESTURE, NOT FOR THE SESSION. paint() writes width,
+   height, opacity, filter and transform per frame while the dial is being
+   dragged or is gliding to a detent, and every one of those is a paint-level
+   property - so the eighteen covers are worth a composited layer exactly
+   while that is happening. Parked, they are worth nothing: it is eighteen
+   promoted, filtered layers, at their full size, for the whole visit. */
+.hof.is-live.is-dragging .hof-item,
+.hof.is-live.is-gliding .hof-item {
+  will-change: transform, opacity, filter;
 }
 
 /* The centred cover is the only one in colour - the same "colour is the

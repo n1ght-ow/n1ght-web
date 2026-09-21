@@ -90,7 +90,9 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 - **光标是另一个明文例外**（`js/smooth-cursor.js`，Framer Smoothcursor 的移植）：它要的是指针的**滞后量**，所以内部是三条**不过冲**的弹簧（ζ ≥ 1，实测 1.13 / 1.73 / 1.01），与 `back.out` / `elastic` 无关。它自己管开关（指针 coarse / 窄窗 / reduced-motion 下不挂载），不要当回归删掉。见 `DESIGN.md` 6.4。
 - 现有动效每一个都能一句话说出动机；新增动效说不出的就删。
 - **弹性已退役**：不用 `back.out` / `elastic`；低频入场用 `power3/4.out`。这条管的是**过冲曲线**，不是「JS 里不许有缓动」——书架用 GSAP 的 `power3.out` 落位、`expo.out` 跟随指针，两者都不过冲，也是上游 spring 的等效时长。
-- 性能红线：只动 `transform` / `opacity` / `filter`；scrub 必须 `invalidateOnRefresh: true`；图片加载后 refresh 用 250ms debounce；滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis。
+- 性能红线：只动 `transform` / `opacity` / `filter`；scrub 必须 `invalidateOnRefresh: true`；图片加载后 refresh 用 250ms debounce（**影视条带的全量重测 `setupMode()` 也并进这 250ms**，只有「空 lap 的第一次」立即跑）；滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis。
+- **rAF 循环空闲即停**：`photo-wall.js` / `reel-stage.js` 都是 `frame()` 开头清 `raf`、结尾按 `busy()` 决定要不要 `kick()`，停的时候把 `state.last` 一起清零（不清就等于把整段空闲当成一帧 50ms 积分）。要唤醒就调 `kick(state)`：`selectIndex` / `endSwipe` / 拖拽起手。**拖拽是例外路径**——它直写 `paint()` 不经过 `kick()`，所以 `.photo-wall.is-live` 要在拖拽起手时手动加。`gsap.ticker`（Lenis 靠它驱动）本来就常驻，那是另一回事。
+- **层提升跟着动作走，不跟着页面走**：`.photo-cell` 的 `will-change` 挂在 `.photo-wall.is-live` 上，游戏拨盘的挂在 `.hof.is-live.is-dragging` / `.is-gliding` 上（`goTo` 加、`stopGlide` 与 `onComplete` 撤）。静止时挂着 = 几十个常驻合成层。
 - `transition-property` 写具体属性，禁 `transition: all`。
 - **`filter` 会创建包含块**：图片滤镜只加在 `img` 上，绝不加到任何含 `position: fixed` 后代的容器（`#lightbox` 是 fixed）。
 - `main.js` 的 `MOTION` 常量保留复用，现在只有 `feedback` / `enter` 两类（`spring` 已随弹性退役一起删掉，新代码不要加回来）。

@@ -78,7 +78,17 @@
   inset-inline-start: 0;
   width: var(--pw-cell, 180px);
   margin: 0;
-  /* the whole placement is one transform, written per frame by the board */
+}
+
+/* THE PROMOTION FOLLOWS THE MOTION. A cell is worth a composited layer exactly
+   while the board is being dragged, thrown or seeked - that is when place()
+   writes its transform and opacity every frame. Parked it is worth nothing: the
+   board is one band in the middle of a long document, and the twenty-one
+   authored figures plus their pooled clones came to sixty-one promoted layers
+   at 1440x900, alive for the whole visit, including while the band is far off
+   screen. js/photo-wall.js adds .is-live in kick() and drops it again when the
+   loop parks - the same busy() test that decides everything else here. */
+.photo-wall.is-live .photo-cell {
   will-change: transform, opacity;
 }
 

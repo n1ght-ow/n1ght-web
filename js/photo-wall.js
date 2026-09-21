@@ -287,6 +287,9 @@
   function kick() {
     if (raf) return;
     raf = window.requestAnimationFrame(frame);
+    /* the layer promotion in css/photo-wall.css is scoped to this class: it
+       goes on with the loop and comes off when the loop parks */
+    wall.classList.add("is-live");
   }
 
   function frame(now) {
@@ -336,6 +339,7 @@
 
     paint();
     if (busy()) kick();
+    else wall.classList.remove("is-live");
   }
 
   /* ---------- the hand ---------- */
@@ -413,6 +417,12 @@
       drag.moved = true;
       dragging = true;
       wall.classList.add("is-dragging");
+      /* THE DRAG WRITES PAINT() DIRECTLY, so it never goes through kick() -
+         and kick() is what turns the cells' layer promotion on. Without this
+         the one gesture that writes a transform and an opacity for every cell
+         on every frame would be the one gesture running unpromoted. The class
+         comes off again in onUp, once nothing is moving. */
+      wall.classList.add("is-live");
       window.clearTimeout(holdTimer);
       try { wall.setPointerCapture(drag.id); } catch (err) { /* older engine */ }
     }
@@ -447,6 +457,9 @@
       return;
     }
     vel = { x: 0, y: 0 };
+    /* a press that never became a drag leaves nothing to animate; the class
+       added above only exists on the drag path, this is the belt to it */
+    if (!busy()) wall.classList.remove("is-live");
   }
 
   function onLeave() {

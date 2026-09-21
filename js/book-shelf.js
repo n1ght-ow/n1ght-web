@@ -230,17 +230,31 @@
     function fitTitles() {
       nodes.forEach(function (n) {
         if (!n.title) return;
-        /* one size for the whole shelf, the way a publisher would set a series.
-           The check below only ever shrinks it, and only for the two long
-           titles that need it. */
-        var max = 13;
-        n.title.style.fontSize = max + "px";
-        var guard = 0;
-        while (n.title.offsetHeight > n.book.height - 44 && max > 7 && guard < 40) {
-          max -= 0.5;
-          n.title.style.fontSize = max + "px";
-          guard++;
+        /* One size for the whole shelf, the way a publisher would set a series.
+           The check only ever shrinks it, and only the two long titles need it.
+           The ladder is 13px down to 7px in half-pixel rungs, and a title's
+           height is monotone in its size, so the walk from the top (up to
+           thirteen write-then-read pairs per title - every one of them a forced
+           layout) is replaced by the same answer in at most five probes. */
+        var limit = n.book.height - 44;
+        var probe = function (step) {
+          n.title.style.fontSize = 13 - step * 0.5 + "px";
+          return n.title.offsetHeight;
+        };
+        var size = 13;
+        if (probe(0) > limit) {
+          /* bisect for the first rung that fits. If none does, lo lands on the
+             last rung - which is where the old walk stopped as well. */
+          var lo = 0;
+          var hi = 12;
+          while (lo < hi) {
+            var mid = (lo + hi) >> 1;
+            if (probe(mid) <= limit) hi = mid;
+            else lo = mid + 1;
+          }
+          size = 13 - lo * 0.5;
         }
+        n.title.style.fontSize = size + "px";
       });
     }
 
@@ -273,11 +287,16 @@
         var dx = (rowWidth + overhang) / 2 - (left[n.index] + book.thickness / 2);
         var dy = M.centre - (M.base - book.height / 2);
 
-        n.btn.setAttribute(
-          "aria-label",
-          (isPicked ? "合上《" + book.title + "》" : "打开《" + book.title + "》")
-        );
-        n.btn.setAttribute("data-picked", isPicked ? "true" : "false");
+        var label = isPicked ? "合上《" + book.title + "》" : "打开《" + book.title + "》";
+        if (n.label !== label) {
+          n.btn.setAttribute("aria-label", label);
+          n.label = label;
+        }
+        var flag = isPicked ? "true" : "false";
+        if (n.flag !== flag) {
+          n.btn.setAttribute("data-picked", flag);
+          n.flag = flag;
+        }
 
         var to = {
           x: isPicked ? dx : 0,
@@ -287,9 +306,23 @@
           rotateZ: isPicked ? 0 : book.lean + tip
         };
 
+        /* ONE HOVER CROSSING IS ONE BOOK'S WORTH OF WORK. This used to build up
+           to four tweens for each of the sixteen books on every hover event -
+           sixty-odd tween objects, plus inline writes and two attribute writes
+           each - while the only thing a hover can change is the rotateX of the
+           book under the pointer and, with a book already out of the row, the
+           tip of up to three neighbours. A book whose whole target is unchanged
+           has nothing to do, and the tween already carrying it finishes the
+           journey it was already on. */
+        var was = n.to;
+        n.to = to;
         if (!animate) {
           gsap.set(n.btn, to);
           gsap.set(n.box, { rotateY: isPicked ? -90 : 0 });
+          return;
+        }
+        if (was && was.x === to.x && was.y === to.y && was.z === to.z &&
+            was.rotateX === to.rotateX && was.rotateZ === to.rotateZ) {
           return;
         }
 

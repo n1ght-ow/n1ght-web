@@ -32,15 +32,15 @@
   <!-- The hero is one string in one face, and it is the first paint, so that
        face is preloaded. 25 KB for the only thing on screen when it matters. -->
   <link rel="preload" href="fonts/DiplomataSC-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/fonts.css?v=13">
-  <link rel="stylesheet" href="css/style.css?v=90">
+  <link rel="stylesheet" href="css/fonts.css?v=14">
+  <link rel="stylesheet" href="css/style.css?v=91">
   <link rel="stylesheet" href="css/glass.css?v=8">
   <link rel="stylesheet" href="css/reel-stage.css?v=15">
   <link rel="stylesheet" href="css/film-stage.css?v=15">
   <link rel="stylesheet" href="css/series-stage.css?v=17">
 <link rel="stylesheet" href="css/book-shelf.css?v=6">
-  <link rel="stylesheet" href="css/photo-wall.css?v=6">
-  <link rel="stylesheet" href="css/games-stage.css?v=2">
+  <link rel="stylesheet" href="css/photo-wall.css?v=7">
+  <link rel="stylesheet" href="css/games-stage.css?v=3">
   <link rel="stylesheet" href="css/smooth-cursor.css?v=1">
 </head>
 <body>
@@ -498,8 +498,8 @@
             <section class="sport" id="sport-stage" aria-label="Sport">
               <div class="sport-row">
                 <button class="sport-item" type="button" aria-pressed="false" data-sport="basketball">
-                  <img class="sport-photo" src="sport/spurs.webp" alt="San Antonio Spurs 夺冠合影，奖杯被举在人群中央" style="object-position: 50% 34%" draggable="false">
-                  <img class="sport-crest" src="logos/spurs.svg" alt="">
+                  <img class="sport-photo" src="sport/spurs.webp" alt="San Antonio Spurs 夺冠合影，奖杯被举在人群中央" style="object-position: 50% 34%" loading="lazy" decoding="async" draggable="false">
+                  <img class="sport-crest" src="logos/spurs.svg" alt="" loading="lazy" decoding="async">
                   <span class="sport-wash" aria-hidden="true"></span>
                   <span class="sport-cap">
                     <span class="sport-body">
@@ -510,8 +510,8 @@
                   </span>
                 </button>
                 <button class="sport-item" type="button" aria-pressed="false" data-sport="football">
-                  <img class="sport-photo" src="sport/mancity.webp" alt="Manchester City 看台，满场举起的手臂" style="object-position: 50% 55%" draggable="false">
-                  <img class="sport-crest" src="logos/mancity.svg" alt="">
+                  <img class="sport-photo" src="sport/mancity.webp" alt="Manchester City 看台，满场举起的手臂" style="object-position: 50% 55%" loading="lazy" decoding="async" draggable="false">
+                  <img class="sport-crest" src="logos/mancity.svg" alt="" loading="lazy" decoding="async">
                   <span class="sport-wash" aria-hidden="true"></span>
                   <span class="sport-cap">
                     <span class="sport-body">
@@ -522,8 +522,8 @@
                   </span>
                 </button>
                 <button class="sport-item" type="button" aria-pressed="false" data-sport="formula-1">
-                  <img class="sport-photo" src="sport/mclaren.webp" alt="McLaren 车队在车库里的 2025 车队总冠军合影" style="object-position: 50% 50%" draggable="false">
-                  <img class="sport-crest" src="logos/mclaren.svg" alt="">
+                  <img class="sport-photo" src="sport/mclaren.webp" alt="McLaren 车队在车库里的 2025 车队总冠军合影" style="object-position: 50% 50%" loading="lazy" decoding="async" draggable="false">
+                  <img class="sport-crest" src="logos/mclaren.svg" alt="" loading="lazy" decoding="async">
                   <span class="sport-wash" aria-hidden="true"></span>
                   <span class="sport-cap">
                     <span class="sport-body">
@@ -534,8 +534,8 @@
                   </span>
                 </button>
                 <button class="sport-item" type="button" aria-pressed="false" data-sport="american-football">
-                  <img class="sport-photo" src="sport/ravens.webp" alt="Baltimore Ravens 球员在端区庆祝" style="object-position: 62% 45%" draggable="false">
-                  <img class="sport-crest" src="logos/ravens.svg" alt="">
+                  <img class="sport-photo" src="sport/ravens.webp" alt="Baltimore Ravens 球员在端区庆祝" style="object-position: 62% 45%" loading="lazy" decoding="async" draggable="false">
+                  <img class="sport-crest" src="logos/ravens.svg" alt="" loading="lazy" decoding="async">
                   <span class="sport-wash" aria-hidden="true"></span>
                   <span class="sport-cap">
                     <span class="sport-body">
@@ -546,8 +546,8 @@
                   </span>
                 </button>
                 <button class="sport-item" type="button" aria-pressed="false" data-sport="esports">
-                  <img class="sport-photo" src="sport/spirit.webp" alt="Team Spirit 的 donk 在比赛席上托腮看着屏幕" style="object-position: 58% 58%" draggable="false">
-                  <img class="sport-crest" src="logos/spirit.svg" alt="">
+                  <img class="sport-photo" src="sport/spirit.webp" alt="Team Spirit 的 donk 在比赛席上托腮看着屏幕" style="object-position: 58% 58%" loading="lazy" decoding="async" draggable="false">
+                  <img class="sport-crest" src="logos/spirit.svg" alt="" loading="lazy" decoding="async">
                   <span class="sport-wash" aria-hidden="true"></span>
                   <span class="sport-cap">
                     <span class="sport-body">
@@ -821,16 +821,16 @@
   <script src="js/book-shelf-data.js?v=4"></script>
 <script src="js/music-data.js?v=6"></script>
   <script src="js/music-covers.js?v=5"></script>
-  <script src="js/reel-stage.js?v=25"></script>
+  <script src="js/reel-stage.js?v=26"></script>
   <script src="js/film-stage.js?v=7"></script>
   <script src="js/series-stage.js?v=7"></script>
   <script src="js/music-stage.js?v=9"></script>
-<script src="js/book-shelf.js?v=4"></script>
-<script src="js/photo-wall.js?v=6"></script>
-<script src="js/games-stage.js?v=3"></script>
+<script src="js/book-shelf.js?v=5"></script>
+<script src="js/photo-wall.js?v=7"></script>
+<script src="js/games-stage.js?v=4"></script>
   <script src="js/glass-pill.js?v=3"></script>
   <script src="js/glass-lens.js?v=1"></script>
   <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=77"></script>
+  <script src="js/main.js?v=78"></script>
 </body>
 </html>

@@ -149,11 +149,18 @@
   function liveW() { return CARD * fit; }
   function liveH() { return liveW() / RATIO; }
 
-  /* CSS owns the two spacing numbers the JS also needs. */
+  /* CSS owns the two spacing numbers the JS also needs. They are static
+     custom properties on .hof.is-live, so they are read ONCE: sizeTrack() runs
+     inside the paint path (paintNow -> sizeTrack), and a getComputedStyle there
+     is a forced style flush wedged into the middle of the frame's own writes.
+     The cache is dropped on resize, where the geometry is re-derived anyway. */
+  var cssCache = {};
   function cssPx(name, fallback) {
+    if (cssCache[name] !== undefined) return cssCache[name];
     var raw = window.getComputedStyle(track).getPropertyValue(name);
     var n = parseFloat(raw);
-    return isFinite(n) ? n : fallback;
+    cssCache[name] = isFinite(n) ? n : fallback;
+    return cssCache[name];
   }
 
   /* The band has to hold the furthest slot plus half its card, twice. Because
@@ -179,6 +186,14 @@
 
   /* ---------- paint ---------- */
 
+  /* The last values written per card. paint() runs on every frame of a drag and
+     of the glide; the transform carries the position and has to be written, but
+     width / height / opacity / z-index / filter only move when the card travels
+     into a different part of the band. Writing an identical string still dirties
+     style and forces the card's subtree to re-lay-out, so the ones that did not
+     change are skipped. */
+  var wrote = [];
+
   function paint() {
     var at = layout(fit, reach);
     var p = mover.pos;
@@ -201,11 +216,18 @@
         el.style.visibility = "visible";
         el.removeAttribute("data-culled");
       }
-      el.style.width = box.w.toFixed(1) + "px";
-      el.style.height = box.h.toFixed(1) + "px";
-      el.style.opacity = box.alpha.toFixed(3);
-      el.style.zIndex = String(box.depth);
-      el.style.filter = box.haze > 0.05 ? "blur(" + box.haze.toFixed(2) + "px)" : "";
+      var w = box.w.toFixed(1) + "px";
+      var h = box.h.toFixed(1) + "px";
+      var alpha = box.alpha.toFixed(3);
+      var depth = String(box.depth);
+      var haze = box.haze > 0.05 ? "blur(" + box.haze.toFixed(2) + "px)" : "";
+      var was = wrote[i] || (wrote[i] = {});
+      if (was.w !== w) { el.style.width = w; was.w = w; }
+      if (was.h !== h) { el.style.height = h; was.h = h; }
+      if (was.a !== alpha) { el.style.opacity = alpha; was.a = alpha; }
+      if (was.z !== depth) { el.style.zIndex = depth; was.z = depth; }
+      if (was.f !== haze) { el.style.filter = haze; was.f = haze; }
+      /* the one that always moves, and the only compositable one of the six */
       el.style.transform = "translate3d(" + box.x.toFixed(2) + "px, 0, 0) translate(-50%, -50%)";
       var isCentre = i === ((centre % SPAN) + SPAN) % SPAN;
       if (el.classList.contains("is-centre") !== isCentre) el.classList.toggle("is-centre", isCentre);
@@ -286,6 +308,9 @@
       glide.kill();
       glide = null;
     }
+    /* the promotion scoped to motion goes with the motion (see the
+       .is-dragging / .is-gliding rule in css/games-stage.css) */
+    track.classList.remove("is-gliding");
   }
 
   function goTo(target, keyed) {
@@ -299,6 +324,7 @@
     }
     var dur = Math.min(GLIDE_MAX, Math.max(GLIDE_MIN, 0.16 + dist * 0.09));
     stopGlide();
+    track.classList.add("is-gliding");
     glide = window.gsap.to(mover, {
       pos: target,
       duration: dur,
@@ -308,6 +334,7 @@
       onComplete: function () {
         mover.pos = target;
         glide = null;
+        track.classList.remove("is-gliding");
         paint();
       },
     });
@@ -519,6 +546,7 @@
   }
 
   window.addEventListener("resize", function () {
+    cssCache = {};
     gauge();
     sizeTrack();
     paint();

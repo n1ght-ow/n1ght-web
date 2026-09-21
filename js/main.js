@@ -471,7 +471,13 @@ function closeDetail() {
 
 function initUnifiedDetail() {
   if (!lightbox) return;
-  lbBuildRail();
+  /* The rail is NOT built here. It is twenty-one buttons around twenty-one
+     copies of the twenty-one photographs the board has already loaded, and at
+     boot it cost twenty-one extra image elements plus their decodes inside an
+     overlay that is hidden with opacity/visibility - which is not display:none,
+     so a lazy image in it still counts as in-viewport and still loads.
+     openDetail() builds it on the first photo detail (see the guard in there),
+     before renderDetail(), which is the only thing that reads lbThumbs. */
 
   /* One delegated listener, because the board shows more frames than the
      eleven authored ones: js/photo-wall.js tiles clones across the plane, and a
