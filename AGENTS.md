@@ -236,7 +236,9 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - **scrim 是同一个 3D 场景里的一个平面**，不是上层遮罩：`preserve-3d` 按深度绘制并忽略 `z-index`，用 `translateZ(100px)` 挡在书架前、书后。
 - **书脊英文、翻开全中文** —— 这是数据本身的形状：每条 entry 有 `spine`（印在书背上的短名）与 `title`（封面与详情里的正名）。书脊是整本书唯一一条 21px 的窄面，只放得下短名；封面有地方，就写这本书真正的名字。
 - `writing-mode: vertical-rl` + `text-orientation: mixed` 同时是两种书脊的排法：中文正立、拉丁与数字倒 90° 躺着。所以「1984」的英文书脊形态是免费得到的，不用开特例。书脊挂 `lang="en"`；封面标签、作者行、短评挂 `lang="zh"`。按钮的可访问名也是中文（`aria-label="打开《三体》"`）。
-- **书脊字体**：`Klein Blue Night`（`fonts/KeLaiYinLanDeYeWan.ttf`，12.6 MB，非商业授权）。整排**一个字号**（13px，像出版社给一套书定的那样），只有两条长书名会被自动缩到放得下；`thickness < 18` 的书脊不排字，只留布色。
+- **书脊字体**：`Klein Blue Night`（站点加载的是子集版 `fonts/KleinBlueNight-shelf.woff2`，46 KB，来历见 `archive/fonts-subset/`；12.6 MB 的原字体留在 `fonts/` 里不动，非商业授权）。整排**一个字号**：`TITLE_MAX = 17`，只有两条最长书名（Dawn Blossoms Plucked at Dusk / The Legend of the Condor Heroes）被自动缩到 15.5px；`thickness < 18` 的书脊不排字，只留布色。**13px 是给回退字体定的**：真正的 Klein 是宽体手写，13px 时横竖都富余得厉害（最长的一条只用掉可用长度的 61%），读起来偏小。
+- **书名要同时过两道闸，而这两道闸量纲不同**（`fitTitles()`）：`runLimit` 是**长度**（书脊高度减去头尾装饰带的 44px，按场景缩放折算），`wideLimit` 是**字号**（这行字的 line box 1.23em 必须落在书脊面宽度里）。**绝不能把 `TITLE_MAX` 塞进同一个 `min()`**——混过一次，结果是拿「跑多长」去比「17px」这个数，整排书脊掉到 8px 地板。
+- **`.bs-title` 的盒子必须是整条书脊**（`inset-block: 0` + flex 居中），不能用 `top: 50%` + `translateY(-50%)`：后者给绝对定位盒子留下的包含块只到书脊**一半**，超过一半的长书名会折出第二列，再被 `.bs-spine` 的 `overflow: hidden` 裁掉半截（实测「How the Steel Was Tempered」印成「How the Steel Was」）。文字另起一层 `.bs-title-text`，因为 `fitTitles` 必须量**这行字**的盒子——flex 容器上的 Range 报的是容器本身，不是这行字。
 - **中文的字号不能沿用拉丁**：封面标签作者行 10px→11px（10px 的汉字读不出来），标签标题 `line-height` 1.25→1.35（114px 标签宽只放得下 7 个 15px 汉字，长名必换两行，1.25 会让两行粘住）。
 - **布色 / 印色**：16 组全部**实测**过 4.5:1（5.05 到 12.59）。换布色必须重新量，不许估。
 - **字挂在地标上，而且只有一行**：打开的书上方那条短评（`.bs-blurb`）挂在场景地标上——`top: calc(50% - var(--bs-reach) * var(--bs-fit) - 54px)`，即**书上缘之上 54px**，跟着 `--bs-fit` 缩放，所以永远落在书脊之外。作者行**不在外面**：它和书名一起印在封面标签里（`.bs-label-author`）。旧文档里的「书顶 −46px / 底板下 +20px」两个地标已经不存在（`bottom: 20px` 那处是书脊底部的印章 `.bs-stamp`）。

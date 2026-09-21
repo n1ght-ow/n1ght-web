@@ -194,15 +194,27 @@
 .bs-band--head { top: 13%; }
 .bs-band--tail { bottom: 13%; }
 
-/* the title, set down the spine and centred on it. vertical-rl is the writing
+/* The title, set down the spine and centred on it. vertical-rl is the writing
    mode a spine is actually set in: CJK stands upright and Latin turns, so the
-   face works for either without a branch. */
+   face works for either without a branch.
+
+   THE BOX IS THE WHOLE SPINE, AND THAT IS NOT COSMETIC. This used to be
+   top: 50% + translateY(-50%), which centres the text but also hands the
+   absolutely positioned box a containing block that ENDS at the spine's
+   middle: any title longer than half the spine wrapped into a second column,
+   and .bs-spine's overflow: hidden then cut the second column off - the spine
+   silently lost the end of its own name ("How the Steel Was Tempered" set as
+   "How the Steel Was"). Spelling it out as inset-block: 0 costs nothing
+   visually and gives the text the full height to run down; the centring moves
+   into flex, where justify-content is the inline axis (down the spine) and
+   align-items the block axis (across it). */
 .bs-title {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  inset-block: 0;
+  inset-inline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   writing-mode: vertical-rl;
   text-orientation: mixed;
   text-align: center;
@@ -215,6 +227,10 @@
   letter-spacing: 0.01em;
   text-shadow: 0 1px 0 oklch(0 0 0 / 0.3);
 }
+
+/* the run itself, and the only box that measures it: see fitTitles() in
+   js/book-shelf.js */
+.bs-title-text { display: block; }
 
 /* ---------- the page block and the cover ---------- */
 .bs-pages {
