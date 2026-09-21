@@ -197,7 +197,12 @@ function photoFrameData(frame) {
   const no = frame.querySelector(".photo-frame-no");
   return {
     type: "photo",
+    /* src is what the BOARD paints - a 560px derivation in photo/wall/ - and
+       full is the 1600px original the lightbox opens. Both live on the img
+       (data-full, see index.html): the board clones these figures, so a field
+       read off the node survives every cell the plane tiles. */
     src: img ? img.getAttribute("src") : "",
+    full: img ? img.dataset.full || img.getAttribute("src") : "",
     alt: img ? img.alt : "",
     caption: cap ? cap.textContent.trim() : "",
     number: no ? no.textContent.trim() : "",
@@ -334,7 +339,9 @@ function renderDetail() {
     setDetailVisibility({ image: true, caption: true, music: false, meta: false, rail: true });
     lbImg.classList.remove("is-loaded");
     lbImg.alt = item.alt;
-    lbImg.src = item.src;
+    /* the lightbox reads the original, not the 560px board cell: it is the one
+       place a photograph is asked for at full size, and it is a click away */
+    lbImg.src = item.full || item.src;
     lbCap.textContent = item.caption;
     lbThumbs.forEach((btn, i) => {
       if (i === lbIndex) btn.setAttribute("aria-current", "true");

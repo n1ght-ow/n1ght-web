@@ -90,7 +90,12 @@
       if (cover) {
         const img = document.createElement("img");
         img.className = "idx-cover";
-        img.src = "album-covers/" + cover;
+        /* THE ROW READS A THUMBNAIL, NOT THE SLEEVE. It is 64 CSS px (128 on a
+           dpr2 screen) and the file behind MUSIC_COVERS is the 500px sleeve,
+           which is what the detail layer wants and roughly eight times what
+           this box can show. album-covers/thumbs/ is the 160px derivation
+           (archive/image-refresh/build-images.py); the same stem, .webp. */
+        img.src = "album-covers/thumbs/" + cover.replace(/\.[^.]+$/, ".webp");
         img.alt = "";
         img.loading = "lazy";
         img.decoding = "async";

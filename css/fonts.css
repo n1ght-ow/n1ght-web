@@ -27,27 +27,40 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* The bookshelf spine face. A full CJK family (12.6 MB, installed by the
-   owner; licensed for non-commercial use), so it also carries the Latin
-   titles - its Latin is a marker hand, which is what a spine wants.
-   display: block, not swap: a spine that reflows from a fallback after the
-   font lands would jump inside a fixed-width 3D box.
+/* The bookshelf spine face: Klein Blue Night (fonts/KeLaiYinLanDeYeWan.ttf,
+   installed by the owner, licensed for non-commercial use). Its Latin is a
+   marker hand, which is what a spine wants.
 
-   THE FILE IS PATCHED IN PLACE AND THAT PATCH IS LOAD-BEARING. It shipped a
-   vhea table at version 1.1; Chrome's OTS sanitizer accepts only 1.0 and
-   rejects the WHOLE font over it - "OTS parsing error: vhea: Unsupported table
-   version: 0x10001" - so every spine silently fell back to var(--font-sans)
-   while the browser still downloaded all 12.6 MB. Bytes 0-3 of the vhea table
-   are now 0x00010000. Both versions use the same 36-byte layout and the
-   vertical advances live in vmtx, so nothing but the version number changed.
-   Re-installing the font from the original file brings the bug back; re-apply
-   the one-byte patch, or subset the face, which fixes it by construction. */
+   THIS IS A SUBSET, NOT THE INSTALLED FAMILY. The family is 12.6 MB across
+   22,050 glyphs; the shelf sets sixteen English spines. It was 70% of the
+   first load, and it was also not rendering at all (see below), so
+   archive/fonts-subset/build-subset.py cuts it to 46 KB / 301 glyphs - the
+   characters of every spine, title and author in js/book-shelf-data.js, plus
+   ASCII and Latin-1. vmtx / vhea ride along because the spines are set in
+   writing-mode: vertical-rl. **Add or rename a book and that script has to be
+   re-run**, or the new spine falls back per character.
+
+   THE vhea VERSION IS THE WHOLE REASON THIS FACE WAS INVISIBLE. The family
+   ships vhea at version 1.1, and Chrome's OTS sanitizer accepts only 1.0 - it
+   rejects the entire font over it:
+
+     OTS parsing error: vhea: Unsupported table version: 0x10001
+
+   Every spine silently fell back to var(--font-sans) while the browser
+   downloaded all 12.6 MB anyway. The TTF in fonts/ was patched in place for
+   that (bytes 0-3 of the vhea table are 0x00010000), and the build script pins
+   the version again because fontTools re-emits what it read. Both versions
+   share the same 36-byte layout, so nothing but the number changes.
+
+   display: block, not swap: a spine that reflows from a fallback after the
+   font lands would jump inside a fixed-width 3D box. At 46 KB that block is
+   measured in milliseconds. */
 @font-face {
   font-family: 'Klein Blue Night';
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  src: url('../fonts/KeLaiYinLanDeYeWan.ttf') format('truetype');
+  src: url('../fonts/KleinBlueNight-shelf.woff2') format('woff2');
 }
 
 /* The masthead face. Diplomata SC (Eduardo Tunni, SIL OFL 1.1), the latin

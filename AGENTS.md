@@ -255,7 +255,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - **只有文案自己那一条带被压暗**；上游覆盖整张图的 0 → 1 alpha ramp 不抄（它会把每张照片上暗下亮）。文字入场是 opacity + 14px 上浮，**不用 `blur(10px)`**；出场 0.16s，比面板收拢先结束。
 - **颜色用站内的**：上游是白底 + 纯黑窄缝，两条都在禁区。窄缝是 `paper-100`，文案压在 `oklch(0.1 0 0)` 的墨色渐变上；队徽只出现在窄缝里（48px、居中、展开后淡出）。
 - **文案只有三行**：眉标（队名 + 联盟）、荣誉、官网域名。**没有中文短评** —— 荣誉那一行就是这条带子上唯一的中文，走 `--fs-h3`。
-- 图片在 `sport/`（文件名即 slug），五张都转过 webp（2.5MB → 1.3MB）；`loading="lazy"` 保留，隐藏的 tab 面板里图片不会取。
+- 图片在 `sport/`（文件名即 slug），五张都是 **1600px webp**（2.5 MB → 1.25 MB → 0.78 MB）。`loading="lazy"` **必须留着**：这五张与队徽都在 `display:none` 的面板里，没有 lazy 就会在首屏 eager 取走 1.28 MB（实测 10/10 → 0/10）。
 
 ### 诗（folio）
 
@@ -295,17 +295,18 @@ hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导�
 
 ## 内容更新
 
-- 摄影：`.photo-frame`（**正典 21 帧必须留在 HTML 里**，放在 `.photo-fallback` 网格里；`js/photo-wall.js` 一执行就把它们搬进 `#photo-wall`，再按世界坐标铺出克隆），`photo/` 与 `photo/full/` 都放。帧数就是棋盘周期，增删会被几何自动吸收，其它地方不用改。
-- 游戏：`.hof-item`（直接进 `#hof-grid`），封面 `covers/`，时长写 `.hof-hours`，引文写 `.hof-quote`。
+- 摄影：`.photo-frame`（**正典 21 帧必须留在 HTML 里**，放在 `.photo-fallback` 网格里；`js/photo-wall.js` 一执行就把它们搬进 `#photo-wall`，再按世界坐标铺出克隆）。帧数就是棋盘周期，增删会被几何自动吸收，其它地方不用改。
+- **照片三份，各司其职**：`photo/full/` 是原图（2048px，只归档、站点从不加载）、`photo/` 是 1600px 的灯箱档、`photo/wall/` 是棋盘与灯箱缩略条用的 560px webp 派生档（`archive/image-refresh/build-images.py` 生成）。所以 `.photo-frame` 的 `<img>` 写 **`src="photo/wall/<名>.webp"` + `data-full="photo/<名>.jpg"`**：`src` 是棋盘画的（格子最大 280 CSS px），`data-full` 是灯箱打开的（`main.js` 的 `photoFrameData()` 读它、`renderDetail` 用它）。新增照片**只放 `photo/` 与 `photo/full/` 而不跑生成脚本，棋盘会 404**；反过来把 `src` 指回 `photo/` 就等于首屏多背 2.5 MB。
+- 游戏：`.hof-item`（直接进 `#hof-grid`），封面 `covers/`，时长写 `.hof-hours`，引文写 `.hof-quote`。封面统一是 **1280px webp**（原生 16:9；拨盘中心在 dpr2 下约 1040 设备像素，`archive/image-refresh/build-images.py` 重压过 5.76 MB → 1.64 MB）。换封面按这个尺寸与格式放，`RATIO = 16/9` 那条注释依赖它；带空格的文件名在 HTML 里写 `%20`。
 - **影视（以后加片子就照这条）**：海报存成 `posters/<豆瓣条目ID>.jpg`（文件名就是豆瓣 subject id），条目 push 进 `js/film-data.js`（`window.FILM_DATA`）或 `js/series-data.js`（`window.SERIES_DATA`）。字段形状是固定的，适配器（`js/film-stage.js` / `js/series-stage.js`）按名字取：
   - 影：`{ id: "film-NN", douban: "1291841", poster: "posters/1291841.jpg", title, director, year, genre, quote }`
   - 剧：`{ id: "series-NN", douban: "2373195", poster, title, years, seasons, category, quote }`（`years` 可以写 `"1995-2013"`，排序取首个年份）
   - `douban` 是豆瓣条目 id，详情区的 `OPEN ON DOUBAN` 指向 `movie.douban.com/subject/<id>/`；多季剧集豆瓣按季建条目，所以链接落在第一季。
   - `quote` 是中文短评，规矩见「文案」；面板页头的计数（`TWENTY-FOUR FILMS` / `THIRTY-SIX SERIES`）**是写死在适配器里的**，加片要同时改那一行；排序与年份都从数据算，不用管。改完给对应 `<script>` 的 `?v=` +1。
-- 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。**每组还有 `playlist`（该流派的网易云歌单 id）**，组头的 `OPEN PLAYLIST` 就指向它；歌单内容与 `tracks` 是两份、不会自动同步——加了歌要重跑 `node archive/music-playlists/build-import.mjs` 再把那份脚本粘进网易云（同名歌单会被复用，只补缺歌），或者手动往歌单里加。新建一个流派分组时要同时给它建歌单，否则那个组头没有链接（渲染器对缺 `playlist` 是静默跳过的）。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成。
+- 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。**每组还有 `playlist`（该流派的网易云歌单 id）**，组头的 `OPEN PLAYLIST` 就指向它；歌单内容与 `tracks` 是两份、不会自动同步——加了歌要重跑 `node archive/music-playlists/build-import.mjs` 再把那份脚本粘进网易云（同名歌单会被复用，只补缺歌），或者手动往歌单里加。新建一个流派分组时要同时给它建歌单，否则那个组头没有链接（渲染器对缺 `playlist` 是静默跳过的）。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成，**然后跑 `archive/image-refresh/build-images.py`**。封面是两份、同一个文件名派生：列表行的 `.idx-cover` 是 64 CSS px，读 `album-covers/thumbs/<同名>.webp`（160px 派生档，约 5 KB，**由脚本生成、不要手放**）；详情层的 `.lb-music` 才读 `album-covers/<原名>.jpg` 那张 500px sleeve（`music-stage.js` 只替换一次扩展名，所以两边的 stem 必须一一对应）。缺 thumbs 那一份 = 列表里一行破图。
 - 书：条目进 `js/book-shelf-data.js`，每本除了 title / author / blurb 还要给 binding（`thickness` 21–48、`height` 240–288、`lean`、`cloth`、`ink`、`band`）；**新增或换布色必须重量 ink/cloth 的 4.5:1**。行宽、缩放和书脊字号都会自己算。
 - 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`）。
-- hero 影像层：`index.html` 里一个 `<picture class="hero-plate">`，三个文件——`hero/nebula-tall.jpg`（708×1532，竖屏原生切片，`max-aspect-ratio: 3/4` 时用）、`hero/nebula-1200.jpg`（1200w）、`hero/nebula.jpg`（2400w）。换图就是换这三个文件，并同步 `width` / `height` / `alt`；**原图不要预裁**，露哪一块由 `object-position` 选。它上面那层 scrim（字标对比度就靠它）写在 `css/style.css` 第 7 节，**改动必须重量对比度**（DESIGN.md 3.2 有量法）。
+- hero 影像层：`index.html` 里一个 `<picture class="hero-plate">`，四个文件——`hero/nebula-tall.jpg`（708×1532，竖屏原生切片，`max-aspect-ratio: 3/4` 时用）、`hero/nebula-1200.jpg`（1200w）、**`hero/nebula-1600.jpg`（1600w）**、`hero/nebula.jpg`（2400w）。1600w 那一档是补的：原来的 srcset 从 1200 直接跳到 2400，dpr1 的 1440 视口因此非取 2400w 不可（543 KB），现在取 1600w（419 KB）。**三张 jpg 都原样保留**——Pillow 重压反而大 19%，见 `archive/image-refresh/build-images.py` 里那条 guard。换图就是换这三个文件，并同步 `width` / `height` / `alt`；**原图不要预裁**，露哪一块由 `object-position` 选。它上面那层 scrim（字标对比度就靠它）写在 `css/style.css` 第 7 节，**改动必须重量对比度**（DESIGN.md 3.2 有量法）。
 - **hero 统计条已退役**（2026-09，hero 只剩字标与它背后那张影像）：藏品数字现在只住在 `DESIGN.md` 第 0 节与各面板页头里，增删内容要同步那里。`#about-stats` 的 8 个计数更早已随 ABOUT 面板退役（要恢复计数就得同时把 `initCounters()` 与 `data-count` 标记一起加回来）。
 
 ## 改完自检
