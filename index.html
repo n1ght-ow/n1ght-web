@@ -33,13 +33,13 @@
        face is preloaded. 25 KB for the only thing on screen when it matters. -->
   <link rel="preload" href="fonts/DiplomataSC-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=15">
-  <link rel="stylesheet" href="css/style.css?v=91">
+  <link rel="stylesheet" href="css/style.css?v=96">
   <link rel="stylesheet" href="css/glass.css?v=8">
   <link rel="stylesheet" href="css/reel-stage.css?v=15">
   <link rel="stylesheet" href="css/film-stage.css?v=15">
   <link rel="stylesheet" href="css/series-stage.css?v=17">
 <link rel="stylesheet" href="css/book-shelf.css?v=8">
-  <link rel="stylesheet" href="css/photo-wall.css?v=7">
+  <link rel="stylesheet" href="css/photo-wall.css?v=9">
   <link rel="stylesheet" href="css/games-stage.css?v=3">
   <link rel="stylesheet" href="css/smooth-cursor.css?v=1">
 </head>
@@ -116,32 +116,46 @@
   <main>
 
     <!-- ============ HERO : the name, over the picture ============ -->
-    <!-- Two layers, one screen. The picture is the layer (it comes first here so
-         that it is first in paint order too, not just by z-index), the name is
-         laid on top of it, and the fixed nav bar floats over both. The face is
-         Diplomata SC and the size is measured off the shell's own content column;
-         .hero-mask is what the mark rises out of on load: geometry and the scrim
-         in css/style.css section 7, gesture in js/main.js. -->
+    <!-- Two layers, one screen and a hand's width. The picture is the layer (it
+         comes first here so that it is first in paint order too, not just by
+         z-index), the name is laid on top of it, and the fixed nav bar floats
+         over both. The face is Diplomata SC and the size is measured off the
+         shell's own content column; .hero-mask is what the mark rises out of on
+         load: geometry and the scrim in css/style.css section 7, gesture in
+         js/main.js.
+
+         The section is deliberately NOT a full viewport: it stops short of the
+         fold so the photography chapter's own eyebrow shows up underneath it.
+         That strip is the handover. It is the chapter's real first line, not a
+         scroll hint - nothing new was added to say "keep going". -->
     <section class="hero" id="hero">
-      <!-- One picture, three cuts. A landscape frame covering a 390x844 screen is
-           cropped down to a 1:2.2 window anyway, so portrait viewports get that
-           window as real pixels (hero/nebula-tall.jpg is a native-resolution
-           slice, no upscale) instead of the wide file stretched to fit. The wide
-           pair only has to serve landscape: 1200w below 1200px, 2400w for a
-           desktop at dpr 2. The source keeps its whole frame either way and
-           css/style.css picks the window with object-position. -->
+      <!-- One photograph, three cuts, all made by
+           archive/hero-refresh/build-hero.py. A landscape frame covering a
+           390x844 screen is cropped down to a 1:2.16 window anyway, so portrait
+           viewports get that window as real pixels (hero/lujiazui-tall.jpg is a
+           native-resolution slice, no upscale) instead of the wide file
+           stretched to fit. The wide pair only has to serve landscape: 1200w
+           below 1200px, 1440w for everything above it. The delivered frame is
+           1440px wide, so there is no larger cut and nothing here is upscaled.
+           The source keeps its whole frame either way and css/style.css picks
+           the window with object-position. -->
       <picture class="hero-plate">
-        <source media="(max-aspect-ratio: 3/4)" srcset="hero/nebula-tall.jpg">
-        <img src="hero/nebula.jpg"
-             srcset="hero/nebula-1200.jpg 1200w, hero/nebula-1600.jpg 1600w, hero/nebula.jpg 2400w"
+        <source media="(max-aspect-ratio: 3/4)" srcset="hero/lujiazui-tall.jpg">
+        <img src="hero/lujiazui.jpg"
+             srcset="hero/lujiazui-1200.jpg 1200w, hero/lujiazui.jpg 1440w"
              sizes="100vw"
-             alt="A spiked star and a ringed nebula burning above a dark treeline, dish antennas firing light across the foreground"
-             width="2400" height="1346" decoding="async">
+             alt="Three Lujiazui towers seen from the pavement at night, the Jin Mao and Shanghai Tower leaning in from either side while low cloud crosses the sky between them"
+             width="1440" height="999" decoding="async">
       </picture>
 
       <div class="hero-inner shell">
+        <p class="hero-kicker mono">PERSONAL IMAGE ARCHIVE <span>/</span> 2026</p>
         <div class="hero-mask">
           <h1 class="hero-wordmark"><span>N1GHT</span> <span>CHXN9</span></h1>
+        </div>
+        <div class="hero-foot">
+          <p>Frames, records, and the things that stayed.</p>
+          <p class="hero-foot-index mono">FIELD NOTE 001 <span>/</span> SHANGHAI</p>
         </div>
       </div>
     </section>
@@ -161,12 +175,56 @@
         </div>
       </div>
 
+      <!-- The still opens the chapter before the draggable wall. It is a quiet
+           editorial plate, while the same frame remains a real control in the
+           board below. -->
+      <div class="shell">
+        <figure class="photo-lead">
+          <!-- NOT lazy, on purpose. It sits below the fold at boot, so `lazy`
+               would defer it until the reader scrolls and then paint it late -
+               the one picture in this chapter that has to be there already when
+               the chapter arrives. Everything else keeps its `lazy`: the
+               board's own frames under it, the posters, the covers. -->
+          <div class="photo-lead-image">
+            <img src="photo/SAVE_20260618_225310.jpg"
+                 alt="A grove of pale birch trunks under bright green leaves, with open country showing between them"
+                 width="1600" height="1067" decoding="async">
+          </div>
+          <figcaption class="photo-lead-caption">
+            <span class="photo-lead-caption-no mono">11 / 21</span>
+            <span class="photo-lead-caption-copy">A line of trunks, held long enough for the forest to become a rhythm.</span>
+            <span class="photo-lead-caption-place mono">FIELD NOTE / BIRCH GROVE</span>
+          </figcaption>
+        </figure>
+        <button class="photo-enter" id="photo-enter" type="button" aria-haspopup="dialog" aria-controls="photo-view">
+          <span>Open the photo wall</span><span aria-hidden="true">↗</span>
+        </button>
+      </div>
+
       <!-- The twenty-one figures ship here, as a plain grid, and that is what
            the chapter shows when scripting is off. js/photo-wall.js MOVES them
            onto #photo-wall as soon as it runs: the same twenty-one are the
            board's real controls and its only tab stops, and every other visible
            cell is cloned decoration around them. Nothing about the board is
-           scroll-driven. Geometry lives in js/photo-wall.js. -->
+           scroll-driven. Geometry lives in js/photo-wall.js.
+
+           THE ORDER IS THE RHYTHM (asked for). The board's content is a pure
+           function of world position - index = |(x + 3y) mod 21| - so the order
+           of these twenty-one figures IS the sequence a reader meets as the
+           board pans, and it is also what fills the rows above and below. The
+           index was authored so that:
+             - the seven close, green frames (BLOOM) sit every third position
+               after the opener, and the fourteen horizons fill between them, so
+               the row has a beat instead of two monochrome halves. It used to
+               be twelve horizons in a row (positions 08-21);
+             - the board opens on the grove - the same frame as the plate above,
+               which is what ties the still to the moving one;
+             - green runs are broken: the pond (13) is followed by the field, the
+               leaf (15) by the white frame, the bloom (16) by the blue pond, the
+               blossom (17) by the bare branches (18). Positions 12-14 are the
+               only three greens in a row and that is the chapter's own subject.
+           data-photo-index and the printed frame numbers follow this order, so
+           "frame 04" is the fourth cell the reader sees. -->
       <div class="shell">
         <div class="photo-fallback" data-photo-fallback>
         <figure class="photo-frame" data-photo-index="0" data-act="BLOOM">
@@ -190,204 +248,197 @@
         </figure>
 
         <figure class="photo-frame" data-photo-index="2" data-act="BLOOM">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 03: white blossom against a blue background">
-            <img src="photo/wall/1779456446227.webp" data-full="photo/1779456446227.jpg" alt="White blossom against a soft blue background" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">03</span>
-            <span class="photo-frame-text">Blossom against blue.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="3" data-act="BLOOM">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 04: a white branch reaching into the sky">
-            <img src="photo/wall/1779456446231.webp" data-full="photo/1779456446231.jpg" alt="A white blossom branch reaching into the blue sky" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">04</span>
-            <span class="photo-frame-text">A branch reaches for the sky.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="4" data-act="BLOOM">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 05: folded buds and leaves against green">
-            <img src="photo/wall/1779456446240.webp" data-full="photo/1779456446240.jpg" alt="Folded flower buds and leaves against a green blurred background" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">05</span>
-            <span class="photo-frame-text">Still folded, already reaching.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="5" data-act="BLOOM">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 06: a curved branch with white blossom">
-            <img src="photo/wall/1779456446245.webp" data-full="photo/1779456446245.jpg" alt="A curved branch with white blossom against the blue sky" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">06</span>
-            <span class="photo-frame-text">The arc knows where it is going.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="6" data-act="BLOOM">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 07: dense white blossom and dark branches">
-            <img src="photo/wall/1779456446248.webp" data-full="photo/1779456446248.jpg" alt="Dense white blossom on dark branches" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">07</span>
-            <span class="photo-frame-text">Too much bloom to hold.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="7" data-act="HORIZON">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 08: a green field under a wide cloud bank">
-            <img src="photo/wall/SAVE_20260616_234154.webp" data-full="photo/SAVE_20260616_234154.jpg" alt="A green field under a wide bank of clouds" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">08</span>
-            <span class="photo-frame-text">A field under a sky that keeps opening.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="8" data-act="HORIZON">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 09: a field under low clouds">
-            <img src="photo/wall/SAVE_20260616_234224.webp" data-full="photo/SAVE_20260616_234224.jpg" alt="A field under low hanging clouds" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">09</span>
-            <span class="photo-frame-text">Clouds moving slower than the road.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="9" data-act="HORIZON">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 10: a green slope and a tall cloud">
-            <img src="photo/wall/SAVE_20260616_234337.webp" data-full="photo/SAVE_20260616_234337.jpg" alt="A green grass slope below a tall cloud" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">10</span>
-            <span class="photo-frame-text">Green, then a long horizon.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="10" data-act="HORIZON">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 11: open fields and a distant band of cloud">
-            <img src="photo/wall/SAVE_20260616_234423.webp" data-full="photo/SAVE_20260616_234423.jpg" alt="Open fields with a distant band of cloud" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">11</span>
-            <span class="photo-frame-text">The day leaves the frame open.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="11" data-act="BLOOM">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 12: a black cow with a white face in sunlit grass">
-            <img src="photo/wall/SAVE_20260616_234458.webp" data-full="photo/SAVE_20260616_234458.jpg" alt="A black cow with a white face standing in sunlit green grass" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">12</span>
-            <span class="photo-frame-text">One looks up while the other eats.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="12" data-act="BLOOM">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 13: pale birch trunks under green leaves">
-            <img src="photo/wall/SAVE_20260618_225310.webp" data-full="photo/SAVE_20260618_225310.jpg" alt="A grove of pale birch trunks under bright green leaves" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">13</span>
-            <span class="photo-frame-text">Every trunk repeats the same line.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="13" data-act="BLOOM">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 14: a reindeer with broad antlers behind birch trunks">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 03: a reindeer with broad antlers behind birch trunks">
             <img src="photo/wall/SAVE_20260618_225416.webp" data-full="photo/SAVE_20260618_225416.jpg" alt="A reindeer with broad antlers standing behind pale birch trunks" width="1600" height="1067" loading="lazy" decoding="async">
           </button>
           <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">14</span>
+            <span class="photo-frame-no mono">03</span>
             <span class="photo-frame-text">Antlers fill the gap between trunks.</span>
           </figcaption>
         </figure>
 
-        <figure class="photo-frame" data-photo-index="14" data-act="BLOOM">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 15: a blue pond ringed by green brush">
-            <img src="photo/wall/SAVE_20260618_225828.webp" data-full="photo/SAVE_20260618_225828.jpg" alt="A blue pond ringed by vivid green brush and small trees" width="1600" height="1067" loading="lazy" decoding="async">
+        <figure class="photo-frame" data-photo-index="3" data-act="HORIZON">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 04: a green field under a wide cloud bank">
+            <img src="photo/wall/SAVE_20260616_234154.webp" data-full="photo/SAVE_20260616_234154.jpg" alt="A green field under a wide bank of clouds" width="1600" height="1067" loading="lazy" decoding="async">
           </button>
           <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">15</span>
-            <span class="photo-frame-text">Blue water inside a ring of green.</span>
+            <span class="photo-frame-no mono">04</span>
+            <span class="photo-frame-text">A field under a sky that keeps opening.</span>
           </figcaption>
         </figure>
 
-        <figure class="photo-frame" data-photo-index="15" data-act="HORIZON">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 16: a river curving through a green plain">
-            <img src="photo/wall/SAVE_20260618_225834_1781795044036edit.webp" data-full="photo/SAVE_20260618_225834_1781795044036edit.jpg" alt="A pale river curving through a green plain beneath distant hills" width="1600" height="1067" loading="lazy" decoding="async">
+        <figure class="photo-frame" data-photo-index="4" data-act="BLOOM">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 05: white blossom against a blue background">
+            <img src="photo/wall/1779456446227.webp" data-full="photo/1779456446227.jpg" alt="White blossom against a soft blue background" width="1600" height="1067" loading="lazy" decoding="async">
           </button>
           <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">16</span>
-            <span class="photo-frame-text">The water turns back on itself.</span>
+            <span class="photo-frame-no mono">05</span>
+            <span class="photo-frame-text">Blossom against blue.</span>
           </figcaption>
         </figure>
 
-        <figure class="photo-frame" data-photo-index="16" data-act="BLOOM">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 17: sunlit leaves on a branch against deep shadow">
-            <img src="photo/wall/SAVE_20260618_225844_1781795146234edit.webp" data-full="photo/SAVE_20260618_225844_1781795146234edit.jpg" alt="Sunlit green leaves on a thin branch against deep shadow" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">17</span>
-            <span class="photo-frame-text">One branch keeps all the light.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="17" data-act="HORIZON">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 18: a river threading through green forest">
-            <img src="photo/wall/SAVE_20260618_230015_1781795020338edit.webp" data-full="photo/SAVE_20260618_230015_1781795020338edit.jpg" alt="A river threading through wide green forest toward far hills" width="1600" height="1067" loading="lazy" decoding="async">
-          </button>
-          <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">18</span>
-            <span class="photo-frame-text">Trees crowd the water on both sides.</span>
-          </figcaption>
-        </figure>
-
-        <figure class="photo-frame" data-photo-index="18" data-act="HORIZON">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 19: wind turbines on green hills under a wide cloud bank">
+        <figure class="photo-frame" data-photo-index="5" data-act="HORIZON">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 06: wind turbines on green hills under a wide cloud bank">
             <img src="photo/wall/SAVE_20260618_230022_1781795010861edit.webp" data-full="photo/SAVE_20260618_230022_1781795010861edit.jpg" alt="Wind turbines on green hills beneath a wide bank of cloud" width="1600" height="1067" loading="lazy" decoding="async">
           </button>
           <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">19</span>
+            <span class="photo-frame-no mono">06</span>
             <span class="photo-frame-text">Small blades against a soft grey sky.</span>
           </figcaption>
         </figure>
 
-        <figure class="photo-frame" data-photo-index="19" data-act="HORIZON">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 20: a town of pale rooftops under wide cloud">
+        <figure class="photo-frame" data-photo-index="6" data-act="BLOOM">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 07: folded buds and leaves against green">
+            <img src="photo/wall/1779456446240.webp" data-full="photo/1779456446240.jpg" alt="Folded flower buds and leaves against a green blurred background" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">07</span>
+            <span class="photo-frame-text">Still folded, already reaching.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="7" data-act="BLOOM">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 08: a white branch reaching into the sky">
+            <img src="photo/wall/1779456446231.webp" data-full="photo/1779456446231.jpg" alt="A white blossom branch reaching into the blue sky" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">08</span>
+            <span class="photo-frame-text">A branch reaches for the sky.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="8" data-act="HORIZON">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 09: cumulus towers above green hills and wind turbines">
+            <img src="photo/wall/1789470372631.webp" data-full="photo/1789470372631.jpg" alt="White cumulus towers above green hills and a row of wind turbines" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">09</span>
+            <span class="photo-frame-text">The cloud sits down on the ridge.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="9" data-act="BLOOM">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 10: dense white blossom and dark branches">
+            <img src="photo/wall/1779456446248.webp" data-full="photo/1779456446248.jpg" alt="Dense white blossom on dark branches" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">10</span>
+            <span class="photo-frame-text">Too much bloom to hold.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="10" data-act="BLOOM">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 11: pale birch trunks under green leaves">
+            <img src="photo/wall/SAVE_20260618_225310.webp" data-full="photo/SAVE_20260618_225310.jpg" alt="A grove of pale birch trunks under bright green leaves" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">11</span>
+            <span class="photo-frame-text">Every trunk repeats the same line.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="11" data-act="BLOOM">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 12: a curved branch with white blossom">
+            <img src="photo/wall/1779456446245.webp" data-full="photo/1779456446245.jpg" alt="A curved branch with white blossom against the blue sky" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">12</span>
+            <span class="photo-frame-text">The arc knows where it is going.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="12" data-act="BLOOM">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 13: a blue pond ringed by green brush">
+            <img src="photo/wall/SAVE_20260618_225828.webp" data-full="photo/SAVE_20260618_225828.jpg" alt="A blue pond ringed by vivid green brush and small trees" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">13</span>
+            <span class="photo-frame-text">Blue water inside a ring of green.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="13" data-act="BLOOM">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 14: a black cow with a white face in sunlit grass">
+            <img src="photo/wall/SAVE_20260616_234458.webp" data-full="photo/SAVE_20260616_234458.jpg" alt="A black cow with a white face standing in sunlit green grass" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">14</span>
+            <span class="photo-frame-text">One looks up while the other eats.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="14" data-act="HORIZON">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 15: a town of pale rooftops under wide cloud">
             <img src="photo/wall/SAVE_20260618_230059.webp" data-full="photo/SAVE_20260618_230059.jpg" alt="A town of pale rooftops beneath a wide bank of cloud" width="1600" height="1067" loading="lazy" decoding="async">
           </button>
           <figcaption class="photo-frame-cap sr-only">
-            <span class="photo-frame-no mono">20</span>
+            <span class="photo-frame-no mono">15</span>
             <span class="photo-frame-text">Roofs, then hills, then cloud.</span>
           </figcaption>
         </figure>
 
+        <figure class="photo-frame" data-photo-index="15" data-act="BLOOM">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 16: sunlit leaves on a branch against deep shadow">
+            <img src="photo/wall/SAVE_20260618_225844_1781795146234edit.webp" data-full="photo/SAVE_20260618_225844_1781795146234edit.jpg" alt="Sunlit green leaves on a thin branch against deep shadow" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">16</span>
+            <span class="photo-frame-text">One branch keeps all the light.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="16" data-act="HORIZON">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 17: a field under low clouds">
+            <img src="photo/wall/SAVE_20260616_234224.webp" data-full="photo/SAVE_20260616_234224.jpg" alt="A field under low hanging clouds" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">17</span>
+            <span class="photo-frame-text">Clouds moving slower than the road.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="17" data-act="HORIZON">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 18: a river curving through a green plain">
+            <img src="photo/wall/SAVE_20260618_225834_1781795044036edit.webp" data-full="photo/SAVE_20260618_225834_1781795044036edit.jpg" alt="A pale river curving through a green plain beneath distant hills" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">18</span>
+            <span class="photo-frame-text">The water turns back on itself.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="18" data-act="HORIZON">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 19: a river threading through green forest">
+            <img src="photo/wall/SAVE_20260618_230015_1781795020338edit.webp" data-full="photo/SAVE_20260618_230015_1781795020338edit.jpg" alt="A river threading through wide green forest toward far hills" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">19</span>
+            <span class="photo-frame-text">Trees crowd the water on both sides.</span>
+          </figcaption>
+        </figure>
+
+        <figure class="photo-frame" data-photo-index="19" data-act="HORIZON">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 20: a green slope and a tall cloud">
+            <img src="photo/wall/SAVE_20260616_234337.webp" data-full="photo/SAVE_20260616_234337.jpg" alt="A green grass slope below a tall cloud" width="1600" height="1067" loading="lazy" decoding="async">
+          </button>
+          <figcaption class="photo-frame-cap sr-only">
+            <span class="photo-frame-no mono">20</span>
+            <span class="photo-frame-text">Green, then a long horizon.</span>
+          </figcaption>
+        </figure>
+
         <figure class="photo-frame" data-photo-index="20" data-act="HORIZON">
-          <button class="photo-frame-btn" type="button" aria-label="Open frame 21: cumulus towers above green hills and wind turbines">
-            <img src="photo/wall/1789470372631.webp" data-full="photo/1789470372631.jpg" alt="White cumulus towers above green hills and a row of wind turbines" width="1600" height="1067" loading="lazy" decoding="async">
+          <button class="photo-frame-btn" type="button" aria-label="Open frame 21: open fields and a distant band of cloud">
+            <img src="photo/wall/SAVE_20260616_234423.webp" data-full="photo/SAVE_20260616_234423.jpg" alt="Open fields with a distant band of cloud" width="1600" height="1067" loading="lazy" decoding="async">
           </button>
           <figcaption class="photo-frame-cap sr-only">
             <span class="photo-frame-no mono">21</span>
-            <span class="photo-frame-text">The cloud sits down on the ridge.</span>
+            <span class="photo-frame-text">The day leaves the frame open.</span>
           </figcaption>
         </figure>
         </div>
       </div>
 
-      <!-- The board itself, in the flow of the chapter: one band tall, dragged
-           directly, with the site's paper behind it. It is a port of
-           PhantomInfiniteGallery; js/photo-wall.js fills it and owns every
-           transform inside it. -->
-      <div class="shell">
-        <div class="photo-wall" id="photo-wall" data-photo-wall="auto" role="group" aria-label="Photography board"></div>
-      </div>
     </section>
 
     <!-- ============ THE ARCHIVE ============ -->
@@ -809,6 +860,14 @@
 
     <button class="lb-nav lb-prev" id="lb-prev" type="button" aria-label="Previous item">←</button>
     <button class="lb-nav lb-next" id="lb-next" type="button" aria-label="Next item">→</button>
+  <div class="photo-view" id="photo-view" role="dialog" aria-modal="true" aria-label="Photography wall" hidden>
+    <div class="photo-wall" id="photo-wall" data-photo-wall="auto" role="group" aria-label="Photography board"></div>
+    <div class="photo-view-bar">
+      <span class="photo-view-label mono">PHOTOGRAPHY <span aria-hidden="true">/</span> 21 FRAMES</span>
+      <button class="photo-view-close" id="photo-view-close" type="button" aria-label="Close photography wall">×</button>
+    </div>
+  </div>
+
     <div class="lb-rail" id="lb-rail" role="group" aria-label="Choose a frame"></div>
     <p class="sr-only" id="lb-live" role="status" aria-live="polite"></p>
   </div>
@@ -826,11 +885,11 @@
   <script src="js/series-stage.js?v=7"></script>
   <script src="js/music-stage.js?v=10"></script>
 <script src="js/book-shelf.js?v=9"></script>
-<script src="js/photo-wall.js?v=7"></script>
+<script src="js/photo-wall.js?v=8"></script>
 <script src="js/games-stage.js?v=4"></script>
   <script src="js/glass-pill.js?v=3"></script>
   <script src="js/glass-lens.js?v=1"></script>
   <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=79"></script>
+  <script src="js/main.js?v=82"></script>
 </body>
 </html>

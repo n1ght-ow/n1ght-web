@@ -147,6 +147,9 @@ initGlassSpotlight();
    are shared. */
 
 const lightbox = document.getElementById("lightbox");
+const photoView = document.getElementById("photo-view");
+const photoEnter = document.getElementById("photo-enter");
+const photoViewClose = document.getElementById("photo-view-close");
 const lbStage = document.getElementById("lb-stage");
 const lbImg = document.getElementById("lb-img");
 const lbCap = document.getElementById("lb-cap");
@@ -179,6 +182,7 @@ const photoFrames = Array.from(document.querySelectorAll(".photo-frame"));
 
 let lbIndex = 0;
 let isLbOpen = false;
+let isPhotoViewOpen = false;
 let lbTrigger = null;
 let lbThumbs = [];
 let detailType = "photo";
@@ -283,13 +287,60 @@ function detailAct(type, item) {
   return "";
 }
 
-function setPageInert(on) {
+function syncOverlays() {
+  const active = isLbOpen ? lightbox : isPhotoViewOpen ? photoView : null;
   Array.from(document.body.children).forEach((el) => {
-    if (el === lightbox || el.tagName === "SCRIPT") return;
-    if (on) el.setAttribute("inert", "");
+    if (el.tagName === "SCRIPT") return;
+    if (active && el !== active) el.setAttribute("inert", "");
     else el.removeAttribute("inert");
   });
+  document.body.style.overflow = active ? "hidden" : "";
+  document.documentElement.style.overflow = active ? "hidden" : "";
+  if (lenis) {
+    if (active) lenis.stop();
+    else lenis.start();
+  }
 }
+
+function initPhotoView() {
+  if (!photoView || !photoEnter || !photoViewClose) return;
+
+  function open() {
+    photoView.hidden = false;
+    isPhotoViewOpen = true;
+    syncOverlays();
+    if (window.PhotoWall) window.PhotoWall.show();
+    photoViewClose.focus();
+  }
+
+  function close() {
+    if (window.PhotoWall) window.PhotoWall.suspend();
+    isPhotoViewOpen = false;
+    photoView.hidden = true;
+    syncOverlays();
+    photoEnter.focus();
+  }
+
+  photoEnter.addEventListener("click", open);
+  photoViewClose.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (!isPhotoViewOpen || isLbOpen) return;
+    if (e.key === "Escape") { e.preventDefault(); close(); return; }
+    if (e.key !== "Tab") return;
+    const controls = Array.from(photoView.querySelectorAll("button:not([tabindex='-1'])"));
+    const first = controls[0];
+    const last = controls[controls.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+}
+
+initPhotoView();
 
 function lbBuildRail() {
   if (!lbRail) return;
@@ -447,14 +498,13 @@ function openDetail(type, index) {
   detailItems = items;
   lbIndex = Math.max(0, Math.min(Number(index) || 0, items.length - 1));
   lbTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  if (lbTrigger && lbTrigger.closest(".photo-cell[aria-hidden='true']")) lbTrigger = photoViewClose;
   if (type === "photo" && !lbThumbs.length) lbBuildRail();
   renderDetail();
   lightbox.classList.add("is-open");
   lightbox.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
-  setPageInert(true);
-  if (lenis) lenis.stop();
   isLbOpen = true;
+  syncOverlays();
   lbCloseBtn.focus();
 }
 
@@ -462,18 +512,13 @@ function closeDetail() {
   if (!lightbox) return;
   lightbox.classList.remove("is-open");
   lightbox.setAttribute("aria-hidden", "true");
-  document.body.style.overflow = "";
-  setPageInert(false);
-  if (lenis) lenis.start();
+  isLbOpen = false;
+  syncOverlays();
   // empty src would re-request the page URL itself; drop the attribute
   lbImg.removeAttribute("src");
-  isLbOpen = false;
   // hand focus back to the card that opened the detail layer
   if (lbTrigger && document.contains(lbTrigger)) lbTrigger.focus();
   lbTrigger = null;
-  /* Nothing else to hand back. The event dispatched here used to re-lock the
-     full-screen photography layer, which was retired when the board moved into
-     the chapter; the layer that closes is now the only one open. */
 }
 
 function initUnifiedDetail() {

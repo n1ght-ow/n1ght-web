@@ -1,8 +1,7 @@
 /* ============ PHOTOGRAPHY : THE BOARD ============
-   The photography chapter shows an INFINITE DRAGGABLE BOARD of frames, in the
-   flow of the page, one band tall. It is a port of PhantomInfiniteGallery (a
-   Framer code component) to plain DOM; the mechanics, the knobs and the four
-   things that changed for a paper page are documented at the top of
+   The photography chapter opens an INFINITE DRAGGABLE BOARD of frames in a
+   full-viewport viewer. It is a port of PhantomInfiniteGallery (a
+   Framer code component) to plain DOM; the mechanics and the knobs are documented at the top of
    js/photo-wall.js. Nothing about it is scroll-driven.
 
    FOUR THINGS ARE LOAD-BEARING HERE:
@@ -17,11 +16,8 @@
       here and read by JS. Neither side keeps a second copy of the other's
       numbers.
 
-   3. touch-action is pan-y, NOT none. The reference swallows every gesture
-      because it owns a full screen; this board is one band inside a long
-      document, so a vertical swipe has to keep scrolling the page. Horizontal
-      drags pan the board; vertical drags belong to the document (a mouse can
-      still pan both axes).
+   3. touch-action is none while the viewer is open: the board owns both axes.
+      The page is locked behind the viewer and resumes on close.
 
    4. The photograph never starts the browser's OWN image drag - pointer-events
       is off the image entirely, so the gesture targets the button. Without it
@@ -36,27 +32,92 @@
    mute the pictures themselves, and muting them at this scale only reads as a
    rendering fault. --wall-saturate on .photo-wall is the one knob back. */
 
-/* ---------- the band ----------
+/* ---------- the viewer ---------- */
 
-   THE TWO SIZE KNOBS ARE SPLIT ON PURPOSE: the band's HEIGHT is here and the
-   cell's WIDTH is in js/photo-wall.js (CELL_MIN / CELL_VW / CELL_MAX / GAP).
-   Neither side keeps a second copy of the other's numbers. Measured at 1440x900:
-   262x175 cells in a 558px band, where the board used to be 183x122 in 504 -
-   the cell area is what doubled, the band only came up a tenth. 62vh keeps the
-   chapter head fully visible above the board on a 900px-tall viewport. */
+.photo-enter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-6);
+  min-height: 44px;
+  margin-block-start: var(--sp-6);
+  padding-inline: var(--sp-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-ink);
+  color: var(--color-on-dark);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.photo-enter:hover { background: var(--color-text-secondary); }
+html:not(.js) .photo-enter { display: none; }
+
+.photo-view {
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+  background: var(--color-surface);
+  overscroll-behavior: contain;
+}
+
+.photo-view-bar {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: max(var(--sp-4), env(safe-area-inset-top));
+  inset-inline: max(var(--gutter), env(safe-area-inset-left)) max(var(--gutter), env(safe-area-inset-right));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  pointer-events: none;
+}
+
+.photo-view-label,
+.photo-view-close {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lift);
+  color: var(--color-text);
+  pointer-events: auto;
+}
+
+.photo-view-label {
+  padding-inline: var(--sp-4);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-label);
+  white-space: nowrap;
+}
+
+.photo-view-label span { padding-inline: var(--sp-2); }
+
+.photo-view-close {
+  width: 44px;
+  justify-content: center;
+  border: 0;
+  font-size: var(--fs-h4);
+  cursor: pointer;
+}
+
+.photo-view-close:hover { background: var(--color-bg-deep); }
 
 .photo-wall {
   position: relative;
   overflow: hidden;
-  height: clamp(400px, 62vh, 720px);
-  margin-block-start: var(--sp-6);
-  border-radius: var(--radius-lg);
+  width: 100%;
+  height: 100dvh;
   perspective: 1000px;
   perspective-origin: 50% 50%;
   /* 1 = the photographs as they were shot. Dial it down here and the whole
      board follows; the cells never carry their own value. */
   --wall-saturate: 1;
-  touch-action: pan-y;
+  touch-action: none;
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
@@ -83,10 +144,8 @@
 /* THE PROMOTION FOLLOWS THE MOTION. A cell is worth a composited layer exactly
    while the board is being dragged, thrown or seeked - that is when place()
    writes its transform and opacity every frame. Parked it is worth nothing: the
-   board is one band in the middle of a long document, and the twenty-one
-   authored figures plus their pooled clones came to sixty-one promoted layers
-   at 1440x900, alive for the whole visit, including while the band is far off
-   screen. js/photo-wall.js adds .is-live in kick() and drops it again when the
+   board can contain dozens of cells. js/photo-wall.js adds .is-live in kick()
+   and drops it again when the
    loop parks - the same busy() test that decides everything else here. */
 .photo-wall.is-live .photo-cell {
   will-change: transform, opacity;
@@ -163,10 +222,6 @@
 
 html.js .photo-fallback { display: none; }
 
-/* ---------- narrow ---------- */
-
 @media (max-width: 720px) {
-  /* a shorter band: the section head has to stay in view above it. Cells are at
-     CELL_MIN down here, so this band is the only thing that moves. */
-  .photo-wall { height: clamp(320px, 56vh, 520px); }
+  .photo-view-bar { inset-block-start: max(var(--sp-3), env(safe-area-inset-top)); }
 }

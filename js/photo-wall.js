@@ -11,10 +11,8 @@
      pointer. No WebGL, no React, no new dependency - the reference is divs,
      transforms and one rAF, and so is this.
 
-     WHAT CHANGED FOR A PAPER PAGE, and why:
-       - the board is IN the chapter, one band tall, not a full-screen layer. The
-         reference is a black canvas with nothing around it; ours sits between
-         the section head and the poem, so it reads as part of the page.
+     WHAT CHANGED FOR THIS ARCHIVE, and why:
+       - the board is a full-viewport layer entered from the photography chapter.
        - no background colour, no dark vignette, no cell fill, no pink hover.
          Colour here is the photographs' reward, not the interface's.
        - cells are 3:2, not square: the reference covers a square with the
@@ -24,16 +22,14 @@
        - the throw STOPS. The reference deliberately never comes to rest (it
          holds a 1e-4 residual velocity); a board that creeps forever is wrong to
          read and keeps the compositor awake.
-       - touch-action is pan-y, not none: inline, swallowing vertical touch would
-         be a scroll trap.
+       - the layer owns both touch axes while the page behind it is locked.
 
      THE PLANE IS PERIODIC. A cell's content is a pure function of its WORLD
      coordinates - index = |(x + 3y) mod n|, the reference's diagonal rhythm - so
      panning forever never runs out and the same world cell always shows the same
      photograph. The pattern repeats every n columns, and every n / gcd(3, n)
      rows - 21 and 7 at the current n, which is what lets the focus pan below
-     take the SHORT way round. The board is under four rows tall, so the shorter
-     row period can never read as a repeat.
+     take the SHORT way round.
 
      THE TWENTY-ONE AUTHORED FIGURES ARE CELLS, NOT DECORATION. They sit in
      world row 0 at x = 0..20 and are never recycled; every other visible cell is a
@@ -45,11 +41,11 @@
   var wall = document.getElementById("photo-wall");
   var canvas = document.querySelector("[data-photo-fallback]");
   if (!wall || !canvas) return;
+  var viewer = document.getElementById("photo-view");
 
   /* ---------- the knobs ----------
-     The board's HEIGHT comes from css/photo-wall.css (clamp(400px, 62vh,
-     720px)); --pw-cell and --pw-cell-h are written from here. Neither side keeps
-     a second copy of the other's numbers.
+     The board's HEIGHT is the viewport in css/photo-wall.css; --pw-cell and
+     --pw-cell-h are written from here. Neither side keeps a second copy.
 
      CELL_MIN is the phone end and stays where it was: at a 350px board a 132px
      cell already fills 38% of the width, and one more step up would leave two
@@ -62,8 +58,8 @@
   var GAP = 18;                /* px between cells, both axes */
   var MARGIN = 1;              /* extra ring of cells around the window */
 
-  /* The arc. ARC_MAX_ANGLE is the reference's 28deg cut down for a band: on a
-     black canvas the turn is what sells the space, on paper it only has to be
+  /* The arc. ARC_MAX_ANGLE is the reference's 28deg cut down for paper: on a
+     black canvas the turn is what sells the space, here it only has to be
      legible. ARC_AMOUNT scales it again, exactly as the reference does, and
      EDGE_FADE / EDGE_OPACITY are the reference's own edge falloff. */
   var ARC_MAX_ANGLE = 18;
@@ -72,7 +68,7 @@
   var EDGE_FADE = 0.18;
   var EDGE_OPACITY = 0.4;
 
-  var PARALLAX_STRENGTH = 0.06;   /* the reference's .1, softened for a band */
+  var PARALLAX_STRENGTH = 0.06;   /* the reference's .1, softened for this page */
   var PARALLAX_EASE = 0.12;
 
   var THROW_FRICTION = 0.92;
@@ -467,10 +463,8 @@
     kick();
   }
 
-  /* Horizontal wheel only, plus Shift+wheel: this board is one band inside a
-     long document, so eating a plain deltaY would be a scroll trap - with the
-     pointer over the board the page would stop scrolling. (The guard used to
-     read "if there is no deltaX, take deltaY", which is exactly that trap.) */
+  /* Horizontal wheel and Shift+wheel pan the board. Vertical wheel input stays
+     unused so a mouse cannot accidentally move the gallery while scrolling. */
   function onWheel(e) {
     var dx = e.deltaX;
     if (Math.abs(dx) < 0.5 && e.shiftKey) dx = e.deltaY;
@@ -565,6 +559,7 @@
   }
 
   function schedule() {
+    if (viewer && viewer.hidden) return;
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(function () {
       var before = { w: vw, h: vh };
@@ -575,6 +570,7 @@
   window.addEventListener("resize", schedule);
 
   var boot = function () {
+    if (viewer && viewer.hidden) return;
     build();
     kick();
   };
@@ -586,6 +582,26 @@
 
   /* read-only surface for the self-check and for anyone debugging the board */
   window.PhotoWall = {
+    show: function () {
+      if (!built) build();
+      else { measure(); paint(); }
+      kick();
+    },
+    suspend: function () {
+      window.cancelAnimationFrame(raf);
+      raf = 0;
+      last = 0;
+      window.clearTimeout(holdTimer);
+      window.clearTimeout(resizeTimer);
+      drag = null;
+      dragging = false;
+      holdFired = false;
+      vel = { x: 0, y: 0 };
+      seek = null;
+      sizeWant = 1;
+      parWant = { x: 0, y: 0 };
+      wall.classList.remove("is-live", "is-dragging");
+    },
     get cell() {
       return { w: cellW, h: cellH, pitchX: pitchX, pitchY: pitchY, scale: size };
     },

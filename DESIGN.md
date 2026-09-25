@@ -2,7 +2,7 @@
 
 > 面向实现的单一设计事实源（V2，2026）。只记录现状，不发明新风格。
 > 结构与裁决见 `AGENTS.md`；研究留档见 `archive/design-research/` 与 `archive/premium-techniques/`。
-> **本版按代码逐条核对过**（2026-09-14）：`css/fonts.css?v=13`、`css/style.css?v=86`、`css/glass.css?v=8`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=14`、`css/series-stage.css?v=16`、`css/book-shelf.css?v=6`、`css/photo-wall.css?v=6`、`css/games-stage.css?v=2`、`css/smooth-cursor.css?v=1`、`js/reel-stage.js?v=24`、`js/glass-pill.js?v=3`、`js/glass-lens.js?v=1`、`js/photo-wall.js?v=6`、`js/main.js?v=73`。**任一 `?v=` 变了就说明文件改过，本文件对应段落要重新核对。**
+> **本版按代码逐条核对过**（2026-09-25）：`css/fonts.css?v=15`、`css/style.css?v=96`、`css/glass.css?v=8`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=15`、`css/series-stage.css?v=17`、`css/book-shelf.css?v=8`、`css/photo-wall.css?v=9`、`css/games-stage.css?v=3`、`css/smooth-cursor.css?v=1`、`js/reel-stage.js?v=26`、`js/film-stage.js?v=7`、`js/series-stage.js?v=7`、`js/glass-pill.js?v=3`、`js/glass-lens.js?v=1`、`js/photo-wall.js?v=8`、`js/main.js?v=82`。**任一 `?v=` 变了就说明文件改过，本文件对应段落要重新核对。**
 
 ## 0. 品牌与 Design read
 
@@ -89,7 +89,7 @@
 
 > 审计时统计 **`--fs-*` 的声明条数**（9 = 5 UI + 4 展示），不要统计计算值——clamp 在同一断点会产出中间值，那是同一个 token。展示档因此读作一把 Major Third 的尺子：`--fs-h4` 20、`--fs-h3` 20→25、`--fs-h2` 31→49、`--fs-display` 39→76；`--fs-display` 的 39 与 `--fs-h2` 的 31 是各自 clamp 的下界，不是额外的两格。
 
-**hero 字标不在这个表里。** `N1GHT CHXN9` 是 logotype，不是文本角色：全站只出现一次、只有一个字号，而且那个字号是**按容器算的**，不是 ramp 上的一格——`.hero-inner` 是 `container-type: inline-size`，`--masthead: 14.5cqw` 让字标永远正好填满 `.shell` 的内容列（实测数字写在 `css/style.css` 第 7 节）。所以字号表仍然是 10 个，中间的空档也没有被填。
+**hero 字标不在这个表里。** `N1GHT CHXN9` 是 logotype，不是文本角色：全站只出现一次、只有一个字号，而且那个字号是**按容器算的**，不是 ramp 上的一格——`.hero-inner` 是 `container-type: inline-size`，`--masthead: 12.5cqw` 让字标在建筑影像周围保留呼吸，同时仍然跟着 `.shell` 的内容列缩放（实测数字写在 `css/style.css` 第 7 节）。所以字号表仍然是 10 个，中间的空档也没有被填。
 
 ### 2.3 字距
 
@@ -144,8 +144,10 @@
 | 导航玻璃 α0.78（现）/ ink-600 链接（合成 200,200,199，同 4.10） | 5.15:1 | AA |
 | 导航条玻璃（真实 hero 上渲染实测）/ 链接 | 6.58:1 | AAA |
 | 导航条玻璃（真实 hero 上渲染实测）/ 品牌 | 13.94:1 | AAA |
-| hero 字标 (#F2F2EF) / 影像层+scrim，1440×900 最差像素 | **5.40:1** | AA（大字下限 3:1） |
-| hero 字标 / 影像层+scrim，390×844 最差像素 | 6.43:1 | AA |
+| hero 字标 (#F2F2EF) / 影像层+scrim，1440×900 最差像素 | **5.02:1** | AA（大字下限 3:1） |
+| hero 字标 / 影像层+scrim，390×844 最差像素 | 8.55:1 | AAA |
+| hero 字标 / 影像层+scrim，320×720 最差像素 | 8.91:1 | AAA |
+| 摄影开场大图里的正文（纸面） | 同 `--color-text-secondary` | 即 8.04:1，无新底色 |
 | 卡片说明白字 / scrim α0.62，最差（纯白照片） | 5.66:1 | AA |
 | 选中药丸玻璃 α0.84 / on-dark 标签（渲染实测） | 9.25:1 | AAA |
 | 导航条墨色选中态 / ink-900 | 13.9:1 | AAA |
@@ -423,22 +425,24 @@
 
 ## 7. 站点结构
 
-hero（**两层**：一层全幅影像 + 压在它上面的**巨型字标**，`N1GHT CHXN9` 两行居中、字号跟着 `.shell` 的内容列走；导航条是第三个浮在上面的东西。影像层 `position: absolute; inset: 0`，完全脱离文档流，所以字标仍然精确居中在视口里。眉标、标题、统计条与滚动提示全部已退役）→ PHOTOGRAPHY（章节导语 + 内联的无限照片棋盘，21 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：**印刷 folio**——眉标 + 诗题在左格、导语在右格，中间是 3 + 3 两列的六节诗，落款左格是诗的全名、右格是收尾那句；三块共用诗自己的两列，列距只有 `:root` 的 `--chapter-gap` 一处，与两个 `.sec-head` 同一条。自述 / 统计 / coda 已退役）→ footer。
+hero（**两层**：一层全幅影像 + 压在它上面的**巨型字标**，`N1GHT CHXN9` 两行居中，配一枚顶部档案眉标和底部现场注记；字号跟着 `.shell` 的内容列走，导航条是第三个浮在上面的东西。影像层 `position: absolute; inset: 0`，完全脱离文档流。**这一块比视口矮一档**（`calc(100dvh - clamp(120px, 18vh, 170px))`，`min-height: 440px`），底部仍由 PHOTOGRAPHY 自己的内容完成交接）→ PHOTOGRAPHY（章节导语 + 带策展注记的开场大图 + 全屏照片墙入口，21 帧）→ THE ARCHIVE（六 tab）→ POEM（Dylan Thomas：**印刷 folio**——眉标 + 诗题在左格、导语在右格，中间是 3 + 3 两列的六节诗，落款左格是诗的全名、右格是收尾那句；三块共用诗自己的两列，列距只有 `:root` 的 `--chapter-gap` 一处，与两个 `.sec-head` 同一条。自述 / 统计 / coda 已退役）→ footer。
 
-- **摄影是正文里的一屏**（`#photo` 段落内的 `.photo-wall`，高度 `clamp(400px, 62vh, 720px)`，`≤720px` 是 `clamp(320px, 56vh, 520px)`；格子宽度由 `js/photo-wall.js` 的 `CELL_VW 0.20 / CELL_MAX 280 / GAP 18` 算，实测 1440×900 下是 **262×175 的格子 + 558px 的条带**，旧的 0.14 / 208 / 14 是 183×122 + 504），不是全屏层：`#photo-view`、「Open the wall」按钮、滚动锁与 inert 那一套都已退役，nav 与页脚链接只是普通锚点。
+- **摄影开场与全屏浏览分开**：正文里的 `.photo-lead` 是 21 张中第 11 张的 3:2 静帧与策展注记；`#photo-enter` 打开 `#photo-view`，其中 `.photo-wall` 占满视口。打开时才测量并绘制棋盘；关闭恢复页面滚动和入口焦点。点格子进入共用灯箱，关灯箱返回照片墙。窄屏下注记移到主图下方，照片墙仍保持 21 张正典与无限铺图。
+- **`aspect-ratio` 在 `.photo-lead-image` 上，不在 img 上**：图片旁边现在有策展注记，figure 变成两列容器。img 保留 `width="1600" height="1067"` 预留原始尺寸，图片盒子负责 3:2 裁切；这样注记不影响照片比例，窄屏也能自然排到照片下方。
+- **开场大图对应棋盘中央的格**：世界公式 `|(x + 3y) mod 21|` 加上 authored 行 0 居中，使中央槽位是 `|(0 + 3×10) mod 21| = 10`。这张图排在 slot 10；重排时 `data-photo-index`、`.photo-frame-no`、`aria-label` 三处要同步。旧的 `output/board-slots.mjs` 记录的是 558px 半屏墙，不能拿来判断现在的全屏可见行数。
 - **棋盘是 PhantomInfiniteGallery 的 vanilla 移植**：**一张无限平面上的一窗格子**，两轴拖拽 + 抛掷 + 鼠标视差 + 按住 320ms 拉远（0.7×，钉住板心）。三条必须记住的：
   - **内容是世界坐标的纯函数**（`|(x + 3y) mod n|`）：铺到哪都铺得满，同一个世界格永远是同一张照片；图案每 n 列、每 n / gcd(3, n) 行重复一次（n = 21 时是 21 列 / 7 行，而棋盘不到四行高，短的行周期读不出来）。
   - **格子按世界槽位分配**：板子挪一列只换一格的内容，离开窗口的节点回收进 `free` 池。
   - **一次 transform 写入承载位置**（`translate3d(left, top, z) rotateY(yaw) scale(s)`）：写 `left/top` 会让拖拽的每一帧 flush 一次 layout。
 - **弧是凹的**：`z = R(1 - cosθ)` 把两侧推向读者、中间留在后面，`rotateY(-θ)` 让格子与圆柱相切（`.photo-wall` 自带 `perspective: 1000px`）。
-- **`touch-action: pan-y`，不是 `none`**：横划拖板、纵划滚页（鼠标仍可两轴拖）。
+- **全屏墙用 `touch-action: none`**：触摸与鼠标都可沿两轴拖动，页面在视图打开时锁定，关闭后恢复。
 - **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > 6px 置位，`click` 在捕获阶段消费（键盘回车放行）。21 张正典是唯一的 tab stop，克隆体 `aria-hidden` + `tabIndex -1`。
 - **21 帧的 `data-act` 判定口径是距离不是物种**：**BLOOM = 镜头近处活着的绿色世界**（花 / 枝 / 叶 / 树干 / 近前的动物与水面），**HORIZON = 远景，地面与天相接**（田野 / 河 / 云 / 山坡 / 村镇）。灯箱的 mono kicker 直接印这个值，全站只有这两枚，**不要为新照片新增第三个标签**。
-- **无 JS 兜底**：21 个 `.photo-frame` 留在正文的 `.photo-fallback` 网格里（`html.js` 把它 `display: none`），脚本一执行就把它们搬进 `#photo-wall`。
+- **无 JS 兜底**：21 个 `.photo-frame` 留在正文的 `.photo-fallback` 网格里（`html.js` 把它 `display: none`），脚本一执行就把它们搬进 `#photo-wall`；无脚本时入口隐藏，正文网格可见。
 - **棋盘是全彩的**（`--wall-saturate: 1`）：这里是「颜色是奖励不是壁纸」的**第一个明文例外**——墙上照片就是页面本身。
-- **hero 的影像层也是全彩的**（无 `filter`）：**第二个明文例外**，理由同棋盘——它是这一屏的图画，压饱和只会读成渲染故障。它是 `position: absolute; inset: 0` 的一层，`object-fit: cover`，无圆角（形状锁不动）。
-- **压在字标和影像之间的是 scrim，而且它是实测过的**：`linear-gradient(180deg, ink α0.46 → 0.66（20%）→ 0.66（56%）→ 0.46（78%）→ 0.70)`——中段最重，因为字标（1440×900 下 y 283–617）正好压在整张图最亮的那条带（受光云 + 燃烧环 + 尖刺星）上。实测最差像素：1440×900 **5.40:1**、390×844 6.43:1（前景 #F2F2EF；量法见 3.2 推论 3）。顶端留 0.46 是给导航玻璃留可折射的东西，底端 0.70 是让它交接到纸面那一刀干净。
-- **一张图三个切法**：`<picture>` 在 `max-aspect-ratio: 3/4` 时换 `hero/nebula-tall.jpg`（708×1532，从原图正中裁的原生像素切片——横图铺 390×844 本来也只露一条 1:2.2 的窗，与其把宽图拉高不如直接给它那块像素），否则走 `srcset` 的 1200w / 2400w。桌面 1440×900 实测取 2400w，竖屏 390×844 取 tall，横屏 844×390 取 1200w。换图要同步 `alt` 与 `width` / `height`，**原图不要预裁**：露哪一块由 `object-position` 选（桌面横图纵向没有余量，只有横向能动）。
+- **hero 的影像层也是全彩的**（无 `filter`）：**第二个明文例外**，理由同棋盘——它是这一屏的图画，压饱和只会读成渲染故障。旧的星云图（`hero/nebula*.jpg`）**已无人引用**，文件留在仓库里，不要以为还有两个 hero。它是 `position: absolute; inset: 0` 的一层，`object-fit: cover`，无圆角（形状锁不动）。
+- **压在字标和影像之间的是 scrim，而且它是实测过的**：`linear-gradient(180deg, ink α0.50 → 0.72（22%）→ 0.72（60%）→ 0.54（80%）→ 0.78)`——中段最重，因为字标正好压在整张图最亮的那条带（三栋楼之间那块受光云）上。实测最差像素：1440×900 **5.02:1**、390×844 **8.55:1**、320×720 **8.91:1**（前景 #F2F2EF；量法见 3.2 推论 3，工具是 `output/hero-contrast.mjs` + `output/hero-analyze.py`）。顶端留 0.50 是给导航玻璃留可折射的东西，底端 0.78 是让它交接到纸面那一刀干净。**换图 / 改 object-position / 动这个渐变的任一段 alpha 都必须重新量。**
+- **一张图三个切法（本人拍的陆家嘴仰拍）**：`<picture>` 在 `max-aspect-ratio: 3/4` 时换 `hero/lujiazui-tall.jpg`（462×999，从原图正中裁的原生像素切片——横图铺 390×844 本来也只露一条 1:2.16 的窗，与其把宽图拉高不如直接给它那块像素），否则走 `srcset` 的 1200w / 1440w。**交付的原图就是 1440×999，所以没有更大的档，也没有任何放大**：`srcset` 到 1440w 为止。三档全部由 `archive/hero-refresh/build-hero.py` 从 `hero/lujiazui-source.jpg` 生成，**不要手裁**。桌面 1440×900 取 1440w（`object-position: 50% 38%`，纵向 121px 余量花掉 62% 在上方：让字标落在云上而不是上海中心被灯打亮的那面幕墙上），竖屏 390×844 取 tall。它的 `object-position` 第一值只在竖屏起作用，第二值只在横屏起作用——两个值都是量过的，不要凭感觉调。
 - **三个章节头是一种形状**（`.sec-head` ×2 + 诗的 `.poem-head`）：两格 `repeat(2, minmax(0, 1fr))`、共用 `--chapter-gap`、`align-items: baseline`——眉标与导语首行共线，**标题的行数不再改变导语的位置**（旧版 `align-items: end` 让导语底边跟着标题底边走，一行标题的章节导语顶边在眉标上方 11px、两行标题的在下方 39px）。
 - **音乐默认单流派显示**，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。chips 住在 `.genre-filter` 这条布局行里、自己没有盒子（4.8）；它是**与标签条同一件玻璃托盘**，**不吸顶**——搜索行在它上面，两行都跟着列表滚走。
 - **搜索跨全部 15 组**：有命中时每个命中的组都展开，组头从「136 首」改成「4 / 136」，工具条读出「18 / 496」，零命中才是 NO MATCH。搜索中点击 chip = 跳到那一组的结果；清空关键词回到单选流派。

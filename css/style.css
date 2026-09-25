@@ -383,15 +383,17 @@ h1, h2 { text-wrap: balance; }
    far better over this one. */
 
 /* ============ 7. HERO (the picture, and the name laid on top of it) ============ */
-/* Two layers, one screen: a full-bleed picture, and the name over it - with the
-   nav bar floating over both, because the nav is fixed. The name never leaves
-   the centre of the viewport: the picture is a LAYER, absolutely positioned and
-   out of the flow, so the mark centres exactly as it did when it was alone.
-   Nothing else lives here: no eyebrow, no title, no stat row, no scroll hint. */
+/* The photograph remains full bleed. A small archival line above the wordmark
+   and a site note below it add context without covering the photograph. The
+   fixed nav floats over the whole composition.
+
+   The chapter stops short of the viewport so the first lines of PHOTOGRAPHY
+   remain visible at the fold. The 440px floor protects the mark in a short
+   landscape viewport or at browser zoom. */
 .hero {
   position: relative;
-  min-height: 640px;
-  height: 100dvh;
+  height: calc(100dvh - clamp(120px, 18vh, 170px));
+  min-height: 440px;
   overflow: hidden;
   background: var(--ink-950);
   display: grid;
@@ -410,15 +412,45 @@ h1, h2 { text-wrap: balance; }
   position: relative;
   z-index: 1;
   container-type: inline-size;
+  min-block-size: 100%;
   display: grid;
-  place-items: center;
-  /* The mark's size, and the only place it is written.
-     Measured, not guessed: at 100px "CHXN9" advances 681.2 units, i.e. 6.812em,
-     so 100 / 6.812 = 14.68cqw fills the column exactly. 14.5 holds back the
-     hair of margin that keeps subpixel rounding off the right edge. Both lines
-     are five glyphs, so one factor sizes both, and there is no breakpoint: the
-     mark is a function of its column at every width. */
-  --masthead: 14.5cqw;
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  /* Both lines are five glyphs. The smaller scale leaves the architecture
+     legible around the mark, while cqw keeps it tied to the content column. */
+  --masthead: 12.5cqw;
+}
+
+.hero-kicker {
+  justify-self: start;
+  align-self: end;
+  padding-block-start: clamp(6rem, 13vh, 9rem);
+  color: var(--color-on-dark);
+  font-size: var(--fs-label);
+  line-height: 1.4;
+  letter-spacing: var(--track-label);
+}
+
+.hero-kicker span,
+.hero-foot-index span { padding-inline: var(--sp-2); }
+
+.hero-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-5);
+  padding-block-end: clamp(2rem, 5vh, 3rem);
+  color: var(--color-on-dark);
+  font-family: var(--font-serif);
+  font-size: var(--fs-h4);
+  line-height: 1.2;
+}
+
+.hero-foot-index {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--track-label);
+  white-space: nowrap;
 }
 
 /* The mask is what the mark rises out of on load (js/main.js). overflow:
@@ -428,6 +460,8 @@ h1, h2 { text-wrap: balance; }
    also what makes its own em the mark's em. Never give this element
    text-box-trim. */
 .hero-mask {
+  justify-self: center;
+  align-self: center;
   overflow: hidden;
   font-size: var(--masthead);
   padding-block: 0.12em;
@@ -455,14 +489,15 @@ h1, h2 { text-wrap: balance; }
 
 /* THE PICTURE. Full bleed, the whole frame, and under everything: absolute +
    inset 0 keeps it out of the flow, so nothing about where the name sits is a
-   function of the picture. object-fit covers. At 1440x900 the frame is wider
-   than the viewport (1.78 against 1.6), so cover fits the HEIGHT exactly and
-   the only slack is horizontal - which is why object-position's second value
-   does nothing on a normal desktop window and the first one is the only aim
-   there is. On a phone the slack flips to the width, and the second value
-   takes over - which is also why portrait viewports are handed a portrait cut
-   of the same picture by index.html's <picture> instead of this file trying to
-   rescue a landscape frame with object-position. */
+   function of the picture. object-fit covers.
+   The aim is the SKY. The frame is 1.44 and the box is 1.82 at 1440x790, so
+   cover fits the width and the only slack is vertical - 121px of the frame,
+   spent 62% above the centre line, which opens the gap between the Jin Mao's
+   shoulder and the tower's crown and puts the mark on cloud rather than on the
+   Shanghai Tower's lit facade. On a portrait viewport the slack flips to the
+   width and the first value takes over, which is also why portrait viewports
+   are handed a portrait cut of the same photograph by index.html's <picture>
+   instead of this file trying to rescue a landscape frame with one aim. */
 .hero-plate {
   position: absolute;
   inset: 0;
@@ -477,36 +512,45 @@ h1, h2 { text-wrap: balance; }
   inline-size: 100%;
   block-size: 100%;
   object-fit: cover;
-  object-position: 50% 42%;
+  object-position: 50% 38%;
 }
 
 /* THE SCRIM carries the type. It is measured, not decorative, and it is the one
-   thing painted between the picture and the name: the mark is laid over the
-   brightest band of this frame (lit cloud, the burning ring, the spiked star),
-   so without it #F2F2EF would sit on near-white in places. The retired hero
-   solved the same problem with a flat 0.80 ink alpha over a monochrome photo;
-   this one is graded instead, because the picture is the point: heaviest
-   through the band the name occupies (measured y 283-617 of 900, i.e. 31-69%,
-   and it is the frame's brightest zone) and at the bottom edge, where the
-   section hands over to the paper page, and lighter at the very top so the
-   glass nav still has something to refract.
-   Worst-case measured contrast on that type: 5.40:1 at 1440x900 and 6.43:1 at
-   390x844 - both above the 4.5:1 body bar and far above the 3:1 large-text one.
+   thing painted between the picture and the name: the mark is laid across the
+   brightest band of this frame (lit cloud between the towers, and the Jin Mao's
+   facade running down the left), so without it #F2F2EF would sit on near-white
+   in places. The retired nebula plate solved the same problem with a heavier
+   grade, because its bright band was a burning ring rather than cloud; against
+   this photograph the same shape is enough and it can let more of the picture
+   through, which is the point of swapping the plate at all. Heaviest through
+   the band the name occupies and at the bottom edge, where the section hands
+   over to the paper page, and lighter at the very top so the glass nav still has
+   something to refract.
+   Worst-case measured contrast on that type: 5.02:1 at 1440x900, 8.55:1 at
+   390x844, and 8.91:1 at 320x720 - all above the 4.5:1 body bar and far above
+   the 3:1 large-text one.
    Method is in DESIGN.md 3.2 (hide the mark, screenshot, read the brightest
-   pixel in its box). */
+   pixel in its box); re-measure after ANY change to this gradient, to
+   object-position, or to the plate. */
 .hero-plate::before {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    oklch(0.12 0 0 / 0.46) 0%,
-    oklch(0.12 0 0 / 0.66) 20%,
-    oklch(0.12 0 0 / 0.66) 56%,
-    oklch(0.12 0 0 / 0.46) 78%,
-    oklch(0.12 0 0 / 0.70) 100%
+    oklch(0.12 0 0 / 0.50) 0%,
+    oklch(0.12 0 0 / 0.72) 22%,
+    oklch(0.12 0 0 / 0.72) 60%,
+    oklch(0.12 0 0 / 0.54) 80%,
+    oklch(0.12 0 0 / 0.78) 100%
   );
   pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .hero-kicker { padding-block-start: 6rem; }
+  .hero-foot { display: block; padding-block-end: var(--sp-6); }
+  .hero-foot-index { margin-block-start: var(--sp-3); }
 }
 
 
@@ -550,16 +594,71 @@ h1, h2 { text-wrap: balance; }
 .sec-copy .lead { display: block; margin-block-end: var(--sp-4); }
 
 /* ============ 9. PHOTOGRAPHY ============ */
-/* The photography chapter is an infinite draggable board of frames now, inline
-   in the page. Its cells, its focus ring and its no-JS fallback live in
-   css/photo-wall.css; the geometry is measured and driven by
-   js/photo-wall.js. Nothing about it belongs in the shared stylesheet: a board
-   positioned entirely by per-frame transforms has no shared layout to inherit.
+/* The photography chapter opens an infinite draggable board of frames in a
+   full-viewport viewer, with one still plate in the page. The board's cells, its focus ring
+   and its no-JS fallback live in css/photo-wall.css; the geometry is measured
+   and driven by js/photo-wall.js. Nothing about it belongs in the shared
+   stylesheet: a board positioned entirely by per-frame transforms has no shared
+   layout to inherit.
    The deleted rules here were the scattered contact sheet and they went with
    the grid they described - 16-column placement, the per-plate drops and
-   lifts, --photo-drift, and the
-   .photo-act-* chapter furniture. The section head above the wall is still
-   the shared .sec-head. */
+   lifts, --photo-drift, and the .photo-act-* chapter furniture. The section
+   head above the plate is still the shared .sec-head. */
+
+/* The opening frame is an editorial spread with a short field note. Its 3:2
+   aspect belongs to .photo-lead-image, so the img's intrinsic size attributes
+   still reserve pixels without forcing the figure to the JPEG's height. The
+   same frame remains a button in the wall; this still is not a second control. */
+.photo-lead {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.72fr) minmax(15rem, 0.72fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: end;
+  margin: 0;
+}
+
+.photo-lead-image { aspect-ratio: 3 / 2; overflow: hidden; }
+
+.photo-lead img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  background: var(--color-bg-deep);
+}
+
+.photo-lead-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-block-end: var(--sp-4);
+}
+
+.photo-lead-caption-no,
+.photo-lead-caption-place {
+  font-size: var(--fs-label);
+  line-height: 1.5;
+  letter-spacing: var(--track-label);
+  color: var(--color-text-muted);
+}
+
+.photo-lead-caption-copy {
+  max-width: 25ch;
+  margin-block: var(--sp-7) var(--sp-6);
+  font-family: var(--font-serif);
+  font-size: var(--fs-h3);
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--color-text);
+  text-wrap: pretty;
+}
+
+@media (max-width: 720px) {
+  .photo-lead { grid-template-columns: minmax(0, 1fr); gap: var(--sp-5); }
+  .photo-lead-caption { padding-block-end: 0; }
+  .photo-lead-caption-copy { margin-block: var(--sp-3); max-width: 34ch; }
+}
 
 /* ============ 10. POEM ============
    A printed folio (asked for: redesign the chapter, keep the two columns).
