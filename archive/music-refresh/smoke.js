@@ -7,7 +7,7 @@ const P = 'C:/Users/qsr/night-web/';
 
 function makeEl(tag) {
   const el = {
-    tagName: tag, className: '', textContent: '', children: [], attrs: {}, hidden: false,
+    tagName: tag, className: '', textContent: '', children: [], attrs: {}, hidden: false, dataset: {},
     appendChild(c) { this.children.push(c); c.parent = this; return c; },
     setAttribute(k, v) { this.attrs[k] = String(v); },
     removeAttribute(k) { delete this.attrs[k]; },
@@ -55,5 +55,5 @@ console.log('first group title:', genres[0].children[0].children[0].children.map
 const last = genres[14];
 console.log('last group title:', last.children[0].children[0].children.map(c => c.textContent || '').join(''), '| hidden:', last.hidden);
 console.log('chip labels:', chips.map(c => c.textContent).join(' / '));
-if (covers !== 468 || emptySleeves !== 0 || visible !== 1) { console.log('!! SMOKE FAILED'); process.exit(1); }
+if (covers !== 534 || emptySleeves !== 0 || visible !== 1) { console.log('!! SMOKE FAILED'); process.exit(1); }
 console.log('SMOKE OK');

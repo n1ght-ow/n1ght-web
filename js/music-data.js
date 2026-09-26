@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  /* 496 tracks in 15 genre groups, curated from the owner’s own
+  /* 534 tracks in 15 genre groups, curated from the owner’s own
      NetEase “liked songs” list. Every id was resolved through the
      NetEase song/detail API against the album printed in that list, so
      each entry points at the exact release the owner saved — do NOT
@@ -151,7 +151,10 @@
         { id: "1382781100", title: "The Man", artist: "Taylor Swift" },
         { id: "1382778514", title: "Lover", artist: "Taylor Swift" },
         { id: "1382576173", title: "Cruel Summer", artist: "Taylor Swift" },
-        { id: "1382572453", title: "I Forgot That You Existed", artist: "Taylor Swift" }
+        { id: "1382572453", title: "I Forgot That You Existed", artist: "Taylor Swift" },
+        { id: "1369602061", title: "double take", artist: "Dhruv" },
+        { id: "28923579", title: "Fire", artist: "Gavin DeGraw" },
+        { id: "29009655", title: "East of Eden (伊甸之东)", artist: "Zella Day" }
       ]
     },
     {
@@ -198,7 +201,8 @@
         { id: "16232697", title: "Because of You", artist: "Kelly Clarkson" },
         { id: "402073823", title: "When We Were Young", artist: "Adele" },
         { id: "16435049", title: "Someone Like You", artist: "Adele" },
-        { id: "29966565", title: "Love Me Like You Do", artist: "Ellie Goulding" }
+        { id: "29966565", title: "Love Me Like You Do", artist: "Ellie Goulding" },
+        { id: "1401671455", title: "Love Is Gone (Acoustic)", artist: "SLANDER / Dylan Matthew" }
       ]
     },
     {
@@ -239,7 +243,8 @@
         { id: "415126537", title: "Just Like Fire", artist: "P!nk" },
         { id: "27515086", title: "Try", artist: "P!nk" },
         { id: "26569168", title: "Stronger", artist: "Kelly Clarkson" },
-        { id: "455311479", title: "Believer", artist: "Imagine Dragons" }
+        { id: "455311479", title: "Believer", artist: "Imagine Dragons" },
+        { id: "16343632", title: "Whataya Want from Me", artist: "Adam Lambert" }
       ]
     },
     {
@@ -290,7 +295,9 @@
         { id: "3313334", title: "We Found Love", artist: "Rihanna / Calvin Harris" },
         { id: "461347998", title: "Something Just Like This", artist: "The Chainsmokers / Coldplay" },
         { id: "34228719", title: "What Do You Mean?", artist: "Justin Bieber" },
-        { id: "21562994", title: "S&M", artist: "Rihanna" }
+        { id: "21562994", title: "S&M", artist: "Rihanna" },
+        { id: "521416693", title: "So Far Away (遥不可及)", artist: "Martin Garrix / David Guetta / Jamie Scott / Romy Dya" },
+        { id: "418602088", title: "Nevada (内华达)", artist: "Vicetone / Cozi Zuehlsdorff" }
       ]
     },
     {
@@ -321,7 +328,8 @@
         { id: "1830419924", title: "Peaches", artist: "Justin Bieber / Daniel Caesar / GIVĒON" },
         { id: "21563184", title: "Diamonds", artist: "Rihanna" },
         { id: "16435051", title: "Rolling in the Deep", artist: "Adele" },
-        { id: "29722263", title: "Uptown Funk", artist: "Mark Ronson / Bruno Mars" }
+        { id: "29722263", title: "Uptown Funk", artist: "Mark Ronson / Bruno Mars" },
+        { id: "2526625", title: "Booty Music", artist: "Deep Side" }
       ]
     },
     {
@@ -356,7 +364,9 @@
         { id: "1297841", title: "Love The Way You Lie", artist: "Eminem / Rihanna" },
         { id: "27902187", title: "The Monster", artist: "Eminem / Rihanna" },
         { id: "17793698", title: "Whistle", artist: "Flo Rida" },
-        { id: "30953009", title: "See You Again", artist: "Wiz Khalifa / Charlie Puth" }
+        { id: "30953009", title: "See You Again", artist: "Wiz Khalifa / Charlie Puth" },
+        { id: "29412405", title: "In The Shadow Of The Sun", artist: "Professor Green" },
+        { id: "440208643", title: "Psycho, Pt. 2", artist: "Russ" }
       ]
     },
     {
@@ -452,6 +462,11 @@
         { id: "174944", title: "后会无期", artist: "徐良 / 汪苏泷" },
         { id: "174963", title: "客官不可以", artist: "徐良 / 小凌" },
         { id: "174956", title: "坏女孩", artist: "徐良 / 小凌" },
+        { id: "327157", title: "欧若拉", artist: "张韶涵" },
+        { id: "1468115100", title: "不为谁而作的歌 (Twilight)", artist: "林俊杰" },
+        { id: "25648006", title: "麦恩莉 (My only)", artist: "方大同" },
+        { id: "1959528822", title: "紫荆花盛开（香港回归祖国25周年主题歌曲）", artist: "李荣浩 / 梁咏琪" },
+        { id: "1861479524", title: "还是劈开", artist: "张叶蕾 / 全体诺克萨斯国战士" }
       ]
     },
     {
@@ -502,6 +517,14 @@
         { id: "3387477661", title: "梦哑", artist: "任然" },
         { id: "493735012", title: "无人之岛", artist: "任然" },
         { id: "41656275", title: "那年", artist: "任然" },
+        { id: "233882", title: "下一个天亮", artist: "郭静" },
+        { id: "1341964346", title: "你的酒馆对我打了烊", artist: "陈雪凝" },
+        { id: "1345848098", title: "绿色", artist: "陈雪凝" },
+        { id: "543798652", title: "少一点天分", artist: "孙盛希" },
+        { id: "465921195", title: "还是分开", artist: "张叶蕾" },
+        { id: "208958", title: "越来越不懂", artist: "蔡健雅" },
+        { id: "108138", title: "那些你很冒险的梦 (Those Were The Days)", artist: "林俊杰" },
+        { id: "233866", title: "心墙", artist: "郭静" }
       ]
     },
     {
@@ -515,7 +538,8 @@
         { id: "139357", title: "生如夏花", artist: "朴树" },
         { id: "355992", title: "追梦赤子心", artist: "GALA" },
         { id: "386844", title: "杀死那个石家庄人", artist: "万能青年旅店" },
-        { id: "66282", title: "浮夸", artist: "陈奕迅" }
+        { id: "66282", title: "浮夸", artist: "陈奕迅" },
+        { id: "422104138", title: "后来的我们", artist: "五月天" }
       ]
     },
     {
@@ -556,7 +580,17 @@
         { id: "2633757005", title: "皇家蓝(ft. Rapeter)", artist: "程思源 / Rapeter" },
         { id: "3432123420", title: "HowToDance (摇就完了) (Live)", artist: "Yamy郭颖" },
         { id: "2023954033", title: "苦咖啡·唯一", artist: "那奇沃夫 / KKECHO" },
-        { id: "3404950706", title: "Trouble Maker(麻烦你了) (Live)", artist: "那奇沃夫 / Yamy郭颖" }
+        { id: "3404950706", title: "Trouble Maker(麻烦你了) (Live)", artist: "那奇沃夫 / Yamy郭颖" },
+        { id: "1469041281", title: "很久很久", artist: "杨和苏KeyNG" },
+        { id: "1349292048", title: "心如止水", artist: "Ice Paper" },
+        { id: "2002753297", title: "123 (Doremi)", artist: "SSr / ljz329" },
+        { id: "2744377651", title: "TALKING SH*T FREESTYLE (2017)", artist: "ljz329" },
+        { id: "3397054564", title: "老本行", artist: "ICE杨长青 / ljz329" },
+        { id: "2743505559", title: "3977 (三条A)", artist: "ljz329" },
+        { id: "2151956989", title: "人上人 (Start from the bottom Pt.2)", artist: "法老 / MC HotDog 热狗" },
+        { id: "2617646167", title: "普通女孩", artist: "沙一汀EL" },
+        { id: "3404238777", title: "周旋", artist: "王以太 / 艾热 AIR" },
+        { id: "1970396862", title: "忏悔录 (听说我妈妈)", artist: "KKECHO / 那奇沃夫 / REDBOI" }
       ]
     },
     {
@@ -583,7 +617,9 @@
         { id: "109998", title: "贝加尔湖畔", artist: "李健" },
         { id: "569214250", title: "借", artist: "毛不易" },
         { id: "569200213", title: "消愁", artist: "毛不易" },
-        { id: "569213220", title: "像我这样的人", artist: "毛不易" }
+        { id: "569213220", title: "像我这样的人", artist: "毛不易" },
+        { id: "85571", title: "我们俩", artist: "郭顶" },
+        { id: "29436904", title: "南山南", artist: "马頔" }
       ]
     },
     {
@@ -614,6 +650,8 @@
         { id: "344418", title: "我知道（电视剧《比赛开始》片尾曲）", artist: "By2" },
         { id: "108478", title: "醉赤壁 (Tale Of The Red Cliff)", artist: "林俊杰" },
         { id: "208902", title: "红色高跟鞋（电影《爱情呼叫转移2》主题曲）", artist: "蔡健雅" },
+        { id: "86369", title: "偏爱（电视剧《仙剑奇侠传三》插曲）", artist: "张芸京" },
+        { id: "376971", title: "樱花草（电视剧《米可，GO！》主题曲）", artist: "Sweety" }
       ]
     },
     {

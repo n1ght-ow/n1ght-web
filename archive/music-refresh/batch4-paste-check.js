@@ -1,0 +1,11 @@
+const fs = require('fs');
+const p = 'archive/music-playlists/netease-import.js';
+const s = fs.readFileSync(p, 'utf8');
+const names = [...s.matchAll(/"name": "(N1GHT[^"]*)"/g)].map(m => m[1]);
+console.log('playlists in file: ' + names.length);
+console.log('  ' + names.join('\n  '));
+const groups = JSON.parse(s.slice(s.indexOf('window.__nightNeteaseImport(') + 28, s.lastIndexOf('], {')) + ']');
+const total = groups.reduce((a, g) => a + g.tracks.length, 0);
+console.log('groups parsed: ' + groups.length + '   track entries: ' + total);
+const ids = new Set(groups.flatMap(g => g.tracks));
+console.log('distinct track ids across all playlists: ' + ids.size);

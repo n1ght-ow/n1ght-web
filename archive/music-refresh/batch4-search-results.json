@@ -1,0 +1,2404 @@
+{
+  "generated": "2026-09-22T16:51:15.682Z",
+  "rows": [
+    {
+      "n": 1,
+      "title": "double take",
+      "artist": "Dhruv",
+      "album": "double take",
+      "dur": "02:51",
+      "query": "double take Dhruv",
+      "top": [
+        {
+          "c": {
+            "id": "1369602061",
+            "name": "double take",
+            "alia": [],
+            "album": "double take",
+            "albumId": 79590373,
+            "artists": [
+              "Dhruv"
+            ],
+            "dur": 171743
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "1981301644",
+            "name": "double take",
+            "alia": [],
+            "album": "double take",
+            "albumId": 151569424,
+            "artists": [
+              "王OK"
+            ],
+            "dur": 168204
+          },
+          "s": {
+            "v": 105,
+            "why": "title= album= artist! dur3"
+          }
+        },
+        {
+          "c": {
+            "id": "1911183457",
+            "name": "double take",
+            "alia": [],
+            "album": "rapunzel",
+            "albumId": 138733565,
+            "artists": [
+              "Dhruv"
+            ],
+            "dur": 171743
+          },
+          "s": {
+            "v": 85,
+            "why": "title= artist= dur1"
+          }
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Fire",
+      "artist": "Gavin DeGraw",
+      "album": "Fire",
+      "dur": "03:48",
+      "query": "Fire Gavin DeGraw",
+      "top": [
+        {
+          "c": {
+            "id": "28923579",
+            "name": "Fire",
+            "alia": [],
+            "album": "Fire",
+            "albumId": 2948093,
+            "artists": [
+              "Gavin DeGraw"
+            ],
+            "dur": 228345
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "496619840",
+            "name": "Fire",
+            "alia": [],
+            "album": "Fire",
+            "albumId": 35908158,
+            "artists": [
+              "Elektronomia"
+            ],
+            "dur": 189428
+          },
+          "s": {
+            "v": 90,
+            "why": "title= album= artist! dur!39"
+          }
+        },
+        {
+          "c": {
+            "id": "1835389333",
+            "name": "Fire",
+            "alia": [],
+            "album": "Fire",
+            "albumId": 125656816,
+            "artists": [
+              "Nomad",
+              "Lizzy Soda"
+            ],
+            "dur": 158446
+          },
+          "s": {
+            "v": 90,
+            "why": "title= album= artist! dur!70"
+          }
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "很久很久",
+      "artist": "杨和苏KeyNG",
+      "album": "辩护人",
+      "dur": "05:20",
+      "query": "很久很久 杨和苏KeyNG",
+      "top": [
+        {
+          "c": {
+            "id": "1469041281",
+            "name": "很久很久",
+            "alia": [],
+            "album": "辩护人",
+            "albumId": 96777500,
+            "artists": [
+              "杨和苏KeyNG"
+            ],
+            "dur": 320131
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "1981652894",
+            "name": "很久很久",
+            "alia": [],
+            "album": "很久很久",
+            "albumId": 151637955,
+            "artists": [
+              "麋鹿",
+              "cover",
+              "杨和苏"
+            ],
+            "dur": 319503
+          },
+          "s": {
+            "v": 77,
+            "why": "title= artist~ dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "1487212156",
+            "name": "下一段旅程",
+            "alia": [],
+            "album": "辩护人",
+            "albumId": 96777500,
+            "artists": [
+              "杨和苏KeyNG",
+              "张杰"
+            ],
+            "dur": 250451
+          },
+          "s": {
+            "v": 70,
+            "why": "title! album= artist= dur!70"
+          }
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "In The Shadow Of The Sun",
+      "artist": "Professor Green",
+      "album": "Growing Up In Public",
+      "dur": "03:56",
+      "query": "In The Shadow Of The Sun Professor Green",
+      "top": [
+        {
+          "c": {
+            "id": "29412405",
+            "name": "In The Shadow Of The Sun",
+            "alia": [],
+            "album": "Growing Up In Public",
+            "albumId": 3020185,
+            "artists": [
+              "Professor Green"
+            ],
+            "dur": 236347
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "3376866379",
+            "name": "In The Shadow Of The Sun",
+            "alia": [],
+            "album": "Jing Dian Liu Xing Chang Pian Hang",
+            "albumId": 373893652,
+            "artists": [
+              "Professor Green"
+            ],
+            "dur": 236347
+          },
+          "s": {
+            "v": 85,
+            "why": "title= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "2724694650",
+            "name": "In The Shadow Of The Sun",
+            "alia": [],
+            "album": "逛街随身听 BGM",
+            "albumId": 277991634,
+            "artists": [
+              "Professor Green"
+            ],
+            "dur": 236347
+          },
+          "s": {
+            "v": 85,
+            "why": "title= artist= dur0"
+          }
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "欧若拉",
+      "artist": "张韶涵",
+      "album": "欧若拉",
+      "dur": "04:19",
+      "query": "欧若拉 张韶涵",
+      "top": [
+        {
+          "c": {
+            "id": "327157",
+            "name": "欧若拉",
+            "alia": [],
+            "album": "欧若拉",
+            "albumId": 32375,
+            "artists": [
+              "张韶涵"
+            ],
+            "dur": 259160
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "1841435547",
+            "name": "欧若拉",
+            "alia": [],
+            "album": "欧若拉",
+            "albumId": 125813671,
+            "artists": [
+              "张韶涵ㅤ",
+              "ㅤㅤ"
+            ],
+            "dur": 248000
+          },
+          "s": {
+            "v": 107,
+            "why": "title= album= artist~ dur11"
+          }
+        },
+        {
+          "c": {
+            "id": "1426919472",
+            "name": "欧若拉(翻自 张韶涵)",
+            "alia": [],
+            "album": "欧若拉",
+            "albumId": 86084052,
+            "artists": [
+              "稚屿学长"
+            ],
+            "dur": 254160
+          },
+          "s": {
+            "v": 91,
+            "why": "title~ album= artist! dur5"
+          }
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "East of Eden (伊甸之东)",
+      "artist": "Zella Day",
+      "album": "East of Eden",
+      "dur": "03:06",
+      "query": "East of Eden Zella Day",
+      "top": [
+        {
+          "c": {
+            "id": "29009655",
+            "name": "East of Eden",
+            "alia": [],
+            "album": "East of Eden",
+            "albumId": 2976629,
+            "artists": [
+              "Zella Day"
+            ],
+            "dur": 186213
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "1432001690",
+            "name": "East of Eden",
+            "alia": [],
+            "album": "East of Eden",
+            "albumId": 86597246,
+            "artists": [
+              "糙北"
+            ],
+            "dur": 184780
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album= artist! dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "1952899523",
+            "name": "East of Eden",
+            "alia": [],
+            "album": "East of Eden（Male Version）",
+            "albumId": 145929209,
+            "artists": [
+              "EDROLA",
+              "Lucy",
+              "SIDRIMON"
+            ],
+            "dur": 185835
+          },
+          "s": {
+            "v": 81,
+            "why": "title~ album~ artist! dur0"
+          }
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "title": "不为谁而作的歌 (Twilight)",
+      "artist": "林俊杰",
+      "album": "上一首情歌 (国语精选)",
+      "dur": "04:25",
+      "query": "不为谁而作的歌 林俊杰",
+      "top": [
+        {
+          "c": {
+            "id": "1468115100",
+            "name": "不为谁而作的歌",
+            "alia": [],
+            "album": "上一首情歌 (国语精选)",
+            "albumId": 93427116,
+            "artists": [
+              "林俊杰"
+            ],
+            "dur": 265800
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "40147552",
+            "name": "不为谁而作的歌",
+            "alia": [],
+            "album": "和自己对话",
+            "albumId": 3438282,
+            "artists": [
+              "林俊杰"
+            ],
+            "dur": 265800
+          },
+          "s": {
+            "v": 71,
+            "why": "title~ artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "37196629",
+            "name": "不为谁而作的歌",
+            "alia": [],
+            "album": "不为谁而作的歌",
+            "albumId": 3397890,
+            "artists": [
+              "林俊杰"
+            ],
+            "dur": 265800
+          },
+          "s": {
+            "v": 71,
+            "why": "title~ artist= dur1"
+          }
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "title": "麦恩莉 (My only)",
+      "artist": "方大同",
+      "album": "回到未来 (Back To Wonderland)",
+      "dur": "04:48",
+      "query": "麦恩莉 方大同",
+      "top": [
+        {
+          "c": {
+            "id": "25648006",
+            "name": "麦恩莉",
+            "alia": [
+              "My only"
+            ],
+            "album": "回到未来",
+            "albumId": 2265001,
+            "artists": [
+              "方大同"
+            ],
+            "dur": 288360
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album~ artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "2142991163",
+            "name": "麦恩莉",
+            "alia": [],
+            "album": "麦恩莉",
+            "albumId": 191225483,
+            "artists": [
+              "白允y"
+            ],
+            "dur": 288413
+          },
+          "s": {
+            "v": 51,
+            "why": "title~ artist! dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "25648005",
+            "name": "关于爱的定义",
+            "alia": [],
+            "album": "回到未来",
+            "albumId": 2265001,
+            "artists": [
+              "方大同"
+            ],
+            "dur": 239120
+          },
+          "s": {
+            "v": 50,
+            "why": "title! album~ artist= dur!49"
+          }
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "title": "下一个天亮",
+      "artist": "郭静",
+      "album": "下一个天亮",
+      "dur": "04:26",
+      "query": "下一个天亮 郭静",
+      "top": [
+        {
+          "c": {
+            "id": "233882",
+            "name": "下一个天亮",
+            "alia": [],
+            "album": "下一个天亮",
+            "albumId": 23492,
+            "artists": [
+              "郭静"
+            ],
+            "dur": 266546
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "2684151346",
+            "name": "下一个天亮",
+            "alia": [],
+            "album": "下一个天亮",
+            "albumId": 265722623,
+            "artists": [
+              "魏嘉莹",
+              "郭静"
+            ],
+            "dur": 260500
+          },
+          "s": {
+            "v": 125,
+            "why": "title= album= artist= dur5"
+          }
+        },
+        {
+          "c": {
+            "id": "1889511649",
+            "name": "下一个天亮",
+            "alia": [],
+            "album": "下一个天亮",
+            "albumId": 135188362,
+            "artists": [
+              "何芸希"
+            ],
+            "dur": 266971
+          },
+          "s": {
+            "v": 115,
+            "why": "title= album= artist! dur1"
+          }
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "title": "Love Is Gone (Acoustic)",
+      "artist": "SLANDER / Dylan Matthew",
+      "album": "Love Is Gone (Acoustic)",
+      "dur": "02:56",
+      "query": "Love Is Gone SLANDER",
+      "top": [
+        {
+          "c": {
+            "id": "1401671455",
+            "name": "Love Is Gone (Acoustic)",
+            "alia": [],
+            "album": "Love Is Gone (Acoustic)",
+            "albumId": 83079277,
+            "artists": [
+              "SLANDER",
+              "Dylan Matthew"
+            ],
+            "dur": 176971
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "2724994876",
+            "name": "Love Is Gone (Acoustic)",
+            "alia": [],
+            "album": "Love Is Gone (with JOSHUA of SEVENTEEN)",
+            "albumId": 278095133,
+            "artists": [
+              "SLANDER",
+              "Dylan Matthew"
+            ],
+            "dur": 176971
+          },
+          "s": {
+            "v": 85,
+            "why": "title= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "2735392258",
+            "name": "Love Is Gone (Acoustic)",
+            "alia": [],
+            "album": "Love Is Gone (with JOSHUA of SEVENTEEN and Dylan Matthew)",
+            "albumId": 281233691,
+            "artists": [
+              "SLANDER",
+              "Dylan Matthew"
+            ],
+            "dur": 176971
+          },
+          "s": {
+            "v": 85,
+            "why": "title= artist= dur1"
+          }
+        }
+      ]
+    },
+    {
+      "n": 11,
+      "title": "我们俩",
+      "artist": "郭顶",
+      "album": "微微",
+      "dur": "03:13",
+      "query": "我们俩 郭顶",
+      "top": [
+        {
+          "c": {
+            "id": "85571",
+            "name": "我们俩",
+            "alia": [],
+            "album": "微微",
+            "albumId": 8401,
+            "artists": [
+              "郭顶"
+            ],
+            "dur": 193600
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "85575",
+            "name": "不要想太多",
+            "alia": [],
+            "album": "微微",
+            "albumId": 8401,
+            "artists": [
+              "郭顶"
+            ],
+            "dur": 183954
+          },
+          "s": {
+            "v": 75,
+            "why": "title! album= artist= dur9"
+          }
+        },
+        {
+          "c": {
+            "id": "85569",
+            "name": "幸运大门",
+            "alia": [],
+            "album": "微微",
+            "albumId": 8401,
+            "artists": [
+              "郭顶"
+            ],
+            "dur": 200253
+          },
+          "s": {
+            "v": 75,
+            "why": "title! album= artist= dur7"
+          }
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "title": "So Far Away (遥不可及)",
+      "artist": "Martin Garrix / David Guetta / Jamie Scott / Romy Dya",
+      "album": "So Far Away",
+      "dur": "03:03",
+      "query": "So Far Away Martin Garrix",
+      "top": [
+        {
+          "c": {
+            "id": "521416693",
+            "name": "So Far Away",
+            "alia": [],
+            "album": "So Far Away",
+            "albumId": 36873174,
+            "artists": [
+              "Martin Garrix",
+              "David Guetta",
+              "Jamie Scott",
+              "Romy Dya"
+            ],
+            "dur": 183386
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "525565545",
+            "name": "So Far Away (BLR Remix)",
+            "alia": [],
+            "album": "So Far Away (Remixes Vol. 1)",
+            "albumId": 37019888,
+            "artists": [
+              "Martin Garrix",
+              "David Guetta",
+              "Romy Dya"
+            ],
+            "dur": 183484
+          },
+          "s": {
+            "v": 75,
+            "why": "title! album~ artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "526468315",
+            "name": "So Far Away (Cyborgs & Blamers Remix)",
+            "alia": [],
+            "album": "So Far Away (Cyborgs & Blamers Remix)",
+            "albumId": 37086111,
+            "artists": [
+              "Cyborgs",
+              "Martin Garrix",
+              "David Guetta",
+              "Jamie Scott",
+              "Romy Dya",
+              "Blamers"
+            ],
+            "dur": 181498
+          },
+          "s": {
+            "v": 75,
+            "why": "title! album~ artist= dur2"
+          }
+        }
+      ]
+    },
+    {
+      "n": 13,
+      "title": "Whataya Want from Me",
+      "artist": "Adam Lambert",
+      "album": "For Your Entertainment (Tour Edition)",
+      "dur": "03:46",
+      "query": "Whataya Want from Me Adam Lambert",
+      "top": [
+        {
+          "c": {
+            "id": "16343632",
+            "name": "Whataya Want from Me",
+            "alia": [],
+            "album": "For Your Entertainment (Tour Edition)",
+            "albumId": 1508240,
+            "artists": [
+              "Adam Lambert"
+            ],
+            "dur": 226666
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "863776740",
+            "name": "Whataya Want from Me",
+            "alia": [],
+            "album": "For Your Entertainment",
+            "albumId": 71710147,
+            "artists": [
+              "Adam Lambert"
+            ],
+            "dur": 226666
+          },
+          "s": {
+            "v": 115,
+            "why": "title= album~ artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "25890397",
+            "name": "Whataya Want from Me",
+            "alia": [],
+            "album": "For Your Entertainment (Deluxe Version)",
+            "albumId": 2339321,
+            "artists": [
+              "Adam Lambert"
+            ],
+            "dur": 226666
+          },
+          "s": {
+            "v": 85,
+            "why": "title= artist= dur1"
+          }
+        }
+      ]
+    },
+    {
+      "n": 14,
+      "title": "Nevada (内华达)",
+      "artist": "Vicetone / Cozi Zuehlsdorff",
+      "album": "Nevada",
+      "dur": "03:28",
+      "query": "Nevada Vicetone",
+      "top": [
+        {
+          "c": {
+            "id": "418602088",
+            "name": "Nevada",
+            "alia": [],
+            "album": "Nevada",
+            "albumId": 34750015,
+            "artists": [
+              "Vicetone",
+              "Cozi Zuehlsdorff"
+            ],
+            "dur": 208561
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "3351299951",
+            "name": "Nevada",
+            "alia": [],
+            "album": "Nevada",
+            "albumId": 362771792,
+            "artists": [
+              "Cozi Zuehlsdorff",
+              "Vicetone"
+            ],
+            "dur": 208561
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "3351890283",
+            "name": "Nevada",
+            "alia": [],
+            "album": "Nevada",
+            "albumId": 363044283,
+            "artists": [
+              "Cozi Zuehlsdorff",
+              "Vicetone"
+            ],
+            "dur": 208561
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur1"
+          }
+        }
+      ]
+    },
+    {
+      "n": 15,
+      "title": "心如止水",
+      "artist": "Ice Paper",
+      "album": "成语接龙",
+      "dur": "03:05",
+      "query": "心如止水 Ice Paper",
+      "top": [
+        {
+          "c": {
+            "id": "1349292048",
+            "name": "心如止水",
+            "alia": [],
+            "album": "成语接龙",
+            "albumId": 75350006,
+            "artists": [
+              "Ice Paper"
+            ],
+            "dur": 185390
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "1342823472",
+            "name": "鸦雀无声",
+            "alia": [],
+            "album": "成语接龙",
+            "albumId": 75350006,
+            "artists": [
+              "Ice Paper"
+            ],
+            "dur": 212869
+          },
+          "s": {
+            "v": 70,
+            "why": "title! album= artist= dur!28"
+          }
+        },
+        {
+          "c": {
+            "id": "3410227983",
+            "name": "心如止水",
+            "alia": [],
+            "album": "心如止水",
+            "albumId": 388567844,
+            "artists": [
+              "7wiz"
+            ],
+            "dur": 183640
+          },
+          "s": {
+            "v": 65,
+            "why": "title= artist! dur1"
+          }
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "title": "你的酒馆对我打了烊",
+      "artist": "陈雪凝",
+      "album": "你的酒馆对我打了烊",
+      "dur": "04:11",
+      "query": "你的酒馆对我打了烊 陈雪凝",
+      "top": [
+        {
+          "c": {
+            "id": "1341964346",
+            "name": "你的酒馆对我打了烊",
+            "alia": [],
+            "album": "你的酒馆对我打了烊",
+            "albumId": 75302730,
+            "artists": [
+              "陈雪凝"
+            ],
+            "dur": 251428
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "1364342898",
+            "name": "你的酒馆对我打了烊COVER陈雪凝",
+            "alia": [],
+            "album": "你的酒馆对我打了烊",
+            "albumId": 79000854,
+            "artists": [
+              "严璞"
+            ],
+            "dur": 251495
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album= artist! dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "2606265801",
+            "name": "你的酒馆对我打了烊-陈雪凝（cover）.mp3",
+            "alia": [],
+            "album": "你的酒馆对我打了烊",
+            "albumId": 241547381,
+            "artists": [
+              "一只小渔"
+            ],
+            "dur": 250632
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album= artist! dur0"
+          }
+        }
+      ]
+    },
+    {
+      "n": 17,
+      "title": "绿色",
+      "artist": "陈雪凝",
+      "album": "绿色",
+      "dur": "04:29",
+      "query": "绿色 陈雪凝",
+      "top": [
+        {
+          "c": {
+            "id": "1345848098",
+            "name": "绿色",
+            "alia": [],
+            "album": "绿色",
+            "albumId": 75528003,
+            "artists": [
+              "陈雪凝"
+            ],
+            "dur": 269590
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "1358501718",
+            "name": "绿色",
+            "alia": [],
+            "album": "绿色",
+            "albumId": 78462680,
+            "artists": [
+              "屿汐学长"
+            ],
+            "dur": 270785
+          },
+          "s": {
+            "v": 115,
+            "why": "title= album= artist! dur2"
+          }
+        },
+        {
+          "c": {
+            "id": "1356309603",
+            "name": "绿色",
+            "alia": [],
+            "album": "绿色",
+            "albumId": 78276968,
+            "artists": [
+              "孙紫涵"
+            ],
+            "dur": 269474
+          },
+          "s": {
+            "v": 115,
+            "why": "title= album= artist! dur0"
+          }
+        }
+      ]
+    },
+    {
+      "n": 18,
+      "title": "123 (Doremi)",
+      "artist": "Ssr / Jjz329",
+      "album": "123 (Doremi)",
+      "dur": "03:03",
+      "query": "123 Ssr",
+      "top": [
+        {
+          "c": {
+            "id": "2002753297",
+            "name": "123",
+            "alia": [],
+            "album": "123",
+            "albumId": 155709699,
+            "artists": [
+              "SSr",
+              "ljz329"
+            ],
+            "dur": 183934
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album~ artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "2007591619",
+            "name": "123（doremi）Cover：ljz329/ssr",
+            "alia": [],
+            "album": "123（doremi）",
+            "albumId": 156737203,
+            "artists": [
+              "阴雨天",
+              "常磐康康"
+            ],
+            "dur": 184018
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album= artist! dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "2668605728",
+            "name": "123（Doremi）（翻自：SSr/ljz329）",
+            "alia": [],
+            "album": "123（Doremi）",
+            "albumId": 260411889,
+            "artists": [
+              "江倏恒"
+            ],
+            "dur": 59563
+          },
+          "s": {
+            "v": 76,
+            "why": "title~ album= artist! dur!123"
+          }
+        }
+      ]
+    },
+    {
+      "n": 19,
+      "title": "TALKING SH*T FREESTYLE (2017)",
+      "artist": "Jjz329",
+      "album": "未知专辑",
+      "dur": "02:23",
+      "query": "TALKING SH*T FREESTYLE Jjz329",
+      "top": [
+        {
+          "c": {
+            "id": "2744377651",
+            "name": "TALKING SH*T FREESTYLE（2017）",
+            "alia": [],
+            "album": "",
+            "albumId": 0,
+            "artists": [
+              "ljz329"
+            ],
+            "dur": 143142
+          },
+          "s": {
+            "v": 65,
+            "why": "title= artist! dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "3376180070",
+            "name": "TALKING SH*T FREESTYLE",
+            "alia": [],
+            "album": "TALKING SH*T FREESTYLE",
+            "albumId": 373583099,
+            "artists": [
+              "Jade杰德"
+            ],
+            "dur": 143200
+          },
+          "s": {
+            "v": 51,
+            "why": "title~ artist! dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "3327575574",
+            "name": "Talking Sh*t Freestyle",
+            "alia": [
+              "翻自 Feral Cage"
+            ],
+            "album": "coverhhh",
+            "albumId": 354222735,
+            "artists": [
+              "Feral Cage"
+            ],
+            "dur": 143142
+          },
+          "s": {
+            "v": 51,
+            "why": "title~ artist! dur0"
+          }
+        }
+      ]
+    },
+    {
+      "n": 20,
+      "title": "老本行",
+      "artist": "ICE杨长青 / Jjz329",
+      "album": "长青 (Deluxe)",
+      "dur": "03:12",
+      "query": "老本行 ICE杨长青",
+      "top": [
+        {
+          "c": {
+            "id": "3397054564",
+            "name": "老本行",
+            "alia": [],
+            "album": "长青 (Deluxe)",
+            "albumId": 383211818,
+            "artists": [
+              "ICE杨长青",
+              "ljz329"
+            ],
+            "dur": 192000
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "3412410346",
+            "name": "I can fly",
+            "alia": [],
+            "album": "长青 (Deluxe)",
+            "albumId": 383211818,
+            "artists": [
+              "ICE杨长青",
+              "连麻Swimming"
+            ],
+            "dur": 186807
+          },
+          "s": {
+            "v": 85,
+            "why": "title! album= artist= dur5"
+          }
+        },
+        {
+          "c": {
+            "id": "3397054563",
+            "name": "踢不烂",
+            "alia": [],
+            "album": "长青 (Deluxe)",
+            "albumId": 383211818,
+            "artists": [
+              "ICE杨长青"
+            ],
+            "dur": 178615
+          },
+          "s": {
+            "v": 70,
+            "why": "title! album= artist= dur!13"
+          }
+        }
+      ]
+    },
+    {
+      "n": 21,
+      "title": "3977 (三条A)",
+      "artist": "Jjz329",
+      "album": "3977",
+      "dur": "02:21",
+      "query": "3977 Jjz329",
+      "top": [
+        {
+          "c": {
+            "id": "2743505559",
+            "name": "3977",
+            "alia": [
+              "三条A"
+            ],
+            "album": "3977",
+            "albumId": 284085051,
+            "artists": [
+              "ljz329"
+            ],
+            "dur": 141200
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album= artist! dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "2756051369",
+            "name": "3977 (三条A摇)",
+            "alia": [],
+            "album": "3977 (三条A摇)",
+            "albumId": 288646629,
+            "artists": [
+              "TieZ"
+            ],
+            "dur": 167172
+          },
+          "s": {
+            "v": 56,
+            "why": "title~ album~ artist! dur!26"
+          }
+        },
+        {
+          "c": {
+            "id": "2756051368",
+            "name": "3977 (三条A摇) [伴奏]",
+            "alia": [],
+            "album": "3977 (三条A摇)",
+            "albumId": 288646629,
+            "artists": [
+              "TieZ"
+            ],
+            "dur": 167172
+          },
+          "s": {
+            "v": 56,
+            "why": "title~ album~ artist! dur!26"
+          }
+        }
+      ]
+    },
+    {
+      "n": 22,
+      "title": "少一点天分",
+      "artist": "孙盛希",
+      "album": "希。O2 | 初雪限定",
+      "dur": "04:34",
+      "query": "少一点天分 孙盛希",
+      "top": [
+        {
+          "c": {
+            "id": "543798652",
+            "name": "少一点天分",
+            "alia": [],
+            "album": "|希。O2 | 初雪限定",
+            "albumId": 37873196,
+            "artists": [
+              "孙盛希"
+            ],
+            "dur": 274617
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "2615039625",
+            "name": "少一点天分",
+            "alia": [
+              "热播版"
+            ],
+            "album": "2024超级好听抖音必备神曲【2】",
+            "albumId": 244343863,
+            "artists": [
+              "可爱甜甜包"
+            ],
+            "dur": 268800
+          },
+          "s": {
+            "v": 55,
+            "why": "title= artist! dur5"
+          }
+        },
+        {
+          "c": {
+            "id": "2615403361",
+            "name": "少一点天分",
+            "alia": [],
+            "album": "少一点天分",
+            "albumId": 244464540,
+            "artists": [
+              "西湖的醋鱼"
+            ],
+            "dur": 276805
+          },
+          "s": {
+            "v": 55,
+            "why": "title= artist! dur3"
+          }
+        }
+      ]
+    },
+    {
+      "n": 23,
+      "title": "紫荆花盛开 (香港回归祖国25周年主题歌曲)",
+      "artist": "李荣浩 / 梁咏琪",
+      "album": "紫荆花盛开",
+      "dur": "03:30",
+      "query": "紫荆花盛开 李荣浩",
+      "top": [
+        {
+          "c": {
+            "id": "1959528822",
+            "name": "紫荆花盛开",
+            "alia": [
+              "香港回归祖国25周年主题歌曲"
+            ],
+            "album": "紫荆花盛开",
+            "albumId": 147166235,
+            "artists": [
+              "李荣浩",
+              "梁咏琪"
+            ],
+            "dur": 210667
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "2632271411",
+            "name": "紫荆花盛开",
+            "alia": [],
+            "album": "紫荆花盛开",
+            "albumId": 249296078,
+            "artists": [
+              "黎lvlv",
+              "杨鹤松",
+              "陌黎",
+              "哈根达酥",
+              "祭瑾",
+              "鸭鸭不吃草"
+            ],
+            "dur": 209578
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album= artist! dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "2613126841",
+            "name": "紫荆花盛开",
+            "alia": [],
+            "album": "紫荆花盛开",
+            "albumId": 243587073,
+            "artists": [
+              "卿卿小白",
+              "鳧泠"
+            ],
+            "dur": 210481
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album= artist! dur0"
+          }
+        }
+      ]
+    },
+    {
+      "n": 24,
+      "title": "上人上 (Start from the bottom Pt.2)",
+      "artist": "法老 / MC HotDog 热狗",
+      "album": "上人上 (Start from the bottom Pt.2)",
+      "dur": "03:00",
+      "query": "上人上 法老",
+      "top": [
+        {
+          "c": {
+            "id": "2151956989",
+            "name": "人上人",
+            "alia": [],
+            "album": "人上人",
+            "albumId": 194415320,
+            "artists": [
+              "法老",
+              "MC HotDog 热狗"
+            ],
+            "dur": 180361
+          },
+          "s": {
+            "v": 45,
+            "why": "title! artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "2153853359",
+            "name": "人上人",
+            "alia": [],
+            "album": "",
+            "albumId": 0,
+            "artists": [
+              "法老",
+              "MC HotDog 热狗"
+            ],
+            "dur": 180361
+          },
+          "s": {
+            "v": 45,
+            "why": "title! artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "3374258582",
+            "name": "人上人",
+            "alia": [
+              "他说好好做音乐你也能做人上人"
+            ],
+            "album": "人上人",
+            "albumId": 372822627,
+            "artists": [
+              "Jade杰德"
+            ],
+            "dur": 180450
+          },
+          "s": {
+            "v": 25,
+            "why": "title! artist! dur0"
+          }
+        }
+      ]
+    },
+    {
+      "n": 25,
+      "title": "Booty Music",
+      "artist": "Deep Side",
+      "album": "Git Fresh",
+      "dur": "03:01",
+      "query": "Booty Music Deep Side",
+      "top": [
+        {
+          "c": {
+            "id": "2526625",
+            "name": "Booty Music",
+            "alia": [],
+            "album": "Git Fresh",
+            "albumId": 254362,
+            "artists": [
+              "Deep Side"
+            ],
+            "dur": 181812
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "2526661",
+            "name": "What I Need",
+            "alia": [],
+            "album": "Git Fresh",
+            "albumId": 254362,
+            "artists": [
+              "Deep Side"
+            ],
+            "dur": 236000
+          },
+          "s": {
+            "v": 70,
+            "why": "title! album= artist= dur!55"
+          }
+        },
+        {
+          "c": {
+            "id": "2526628",
+            "name": "Blow Me a Kiss",
+            "alia": [],
+            "album": "Git Fresh",
+            "albumId": 254362,
+            "artists": [
+              "Deep Side"
+            ],
+            "dur": 251820
+          },
+          "s": {
+            "v": 70,
+            "why": "title! album= artist= dur!71"
+          }
+        }
+      ]
+    },
+    {
+      "n": 26,
+      "title": "后来的我们",
+      "artist": "五月天",
+      "album": "自传",
+      "dur": "05:46",
+      "query": "后来的我们 五月天",
+      "top": [
+        {
+          "c": {
+            "id": "422104138",
+            "name": "后来的我们",
+            "alia": [],
+            "album": "自传",
+            "albumId": 34746073,
+            "artists": [
+              "五月天"
+            ],
+            "dur": 346282
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "553310243",
+            "name": "后来的我们",
+            "alia": [
+              "电影《后来的我们》片名曲"
+            ],
+            "album": "后来的我们 (眼泪未干版)",
+            "albumId": 38373053,
+            "artists": [
+              "五月天"
+            ],
+            "dur": 285033
+          },
+          "s": {
+            "v": 60,
+            "why": "title= artist= dur!61"
+          }
+        },
+        {
+          "c": {
+            "id": "2147002425",
+            "name": "后来的我们（翻唱完整版）",
+            "alia": [],
+            "album": "神仙翻唱合集3",
+            "albumId": 192691696,
+            "artists": [
+              "Emo避难所"
+            ],
+            "dur": 346281
+          },
+          "s": {
+            "v": 51,
+            "why": "title~ artist! dur0"
+          }
+        }
+      ]
+    },
+    {
+      "n": 27,
+      "title": "普通女孩",
+      "artist": "沙一汀EL",
+      "album": "敏感小孩",
+      "dur": "02:24",
+      "query": "普通女孩 沙一汀EL",
+      "top": [
+        {
+          "c": {
+            "id": "2617646167",
+            "name": "普通女孩",
+            "alia": [],
+            "album": "敏感小孩",
+            "albumId": 245144455,
+            "artists": [
+              "沙一汀EL"
+            ],
+            "dur": 144352
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "2617644447",
+            "name": "G.O.A.T",
+            "alia": [],
+            "album": "敏感小孩",
+            "albumId": 245144455,
+            "artists": [
+              "沙一汀EL"
+            ],
+            "dur": 188160
+          },
+          "s": {
+            "v": 70,
+            "why": "title! album= artist= dur!44"
+          }
+        },
+        {
+          "c": {
+            "id": "2617644444",
+            "name": "敏感小孩",
+            "alia": [],
+            "album": "敏感小孩",
+            "albumId": 245144455,
+            "artists": [
+              "沙一汀EL"
+            ],
+            "dur": 225659
+          },
+          "s": {
+            "v": 70,
+            "why": "title! album= artist= dur!82"
+          }
+        }
+      ]
+    },
+    {
+      "n": 28,
+      "title": "偏爱 (电视剧《仙剑奇侠传三》插曲)",
+      "artist": "张芸京",
+      "album": "仙剑奇侠传三 电视原声带",
+      "dur": "03:32",
+      "query": "偏爱 张芸京",
+      "top": [
+        {
+          "c": {
+            "id": "86369",
+            "name": "偏爱",
+            "alia": [
+              "电视剧《仙剑奇侠传三》插曲"
+            ],
+            "album": "仙剑奇侠传三 电视原声带",
+            "albumId": 8466,
+            "artists": [
+              "张芸京"
+            ],
+            "dur": 212906
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "328076",
+            "name": "偏爱",
+            "alia": [
+              "电视剧《仙剑奇侠传三》插曲"
+            ],
+            "album": "破天荒",
+            "albumId": 32459,
+            "artists": [
+              "张芸京"
+            ],
+            "dur": 212800
+          },
+          "s": {
+            "v": 71,
+            "why": "title~ artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "5238992",
+            "name": "偏爱",
+            "alia": [
+              "电视剧《仙剑奇侠传三》插曲"
+            ],
+            "album": "爱情部落格 情歌精选辑",
+            "albumId": 511137,
+            "artists": [
+              "张芸京"
+            ],
+            "dur": 213200
+          },
+          "s": {
+            "v": 71,
+            "why": "title~ artist= dur1"
+          }
+        }
+      ]
+    },
+    {
+      "n": 29,
+      "title": "周旋",
+      "artist": "王以太 / 艾热 AIR",
+      "album": "太热",
+      "dur": "04:50",
+      "query": "周旋 王以太",
+      "top": [
+        {
+          "c": {
+            "id": "3404238777",
+            "name": "周旋",
+            "alia": [],
+            "album": "太热爱",
+            "albumId": 386145067,
+            "artists": [
+              "王以太",
+              "艾热 AIR"
+            ],
+            "dur": 290731
+          },
+          "s": {
+            "v": 115,
+            "why": "title= album~ artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "3411413936",
+            "name": "周旋",
+            "alia": [],
+            "album": "翻唱",
+            "albumId": 357242302,
+            "artists": [
+              "zoho"
+            ],
+            "dur": 290723
+          },
+          "s": {
+            "v": 65,
+            "why": "title= artist! dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "3425122206",
+            "name": "周旋（女声版）",
+            "alia": [],
+            "album": "周旋",
+            "albumId": 394248490,
+            "artists": [
+              "Hoho",
+              "DaHua"
+            ],
+            "dur": 289944
+          },
+          "s": {
+            "v": 51,
+            "why": "title~ artist! dur0"
+          }
+        }
+      ]
+    },
+    {
+      "n": 30,
+      "title": "还是劈开",
+      "artist": "张叶蕾 / 全体诺克萨斯勇士",
+      "album": "还是劈开",
+      "dur": "03:31",
+      "query": "还是劈开 张叶蕾",
+      "top": [
+        {
+          "c": {
+            "id": "1861479524",
+            "name": "还是劈开",
+            "alia": [],
+            "album": "还是劈开",
+            "albumId": 130418710,
+            "artists": [
+              "张叶蕾",
+              "全体诺克萨斯国战士"
+            ],
+            "dur": 211072
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "1862683970",
+            "name": "还是劈开 伴奏",
+            "alia": [],
+            "album": "还是劈开",
+            "albumId": 130418710,
+            "artists": [
+              "张叶蕾"
+            ],
+            "dur": 211072
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "1861485958",
+            "name": "还是劈开（纯音乐版）",
+            "alia": [],
+            "album": "还是劈开",
+            "albumId": 130418710,
+            "artists": [
+              "张叶蕾",
+              "全体诺克萨斯国战士"
+            ],
+            "dur": 220000
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album= artist= dur9"
+          }
+        }
+      ]
+    },
+    {
+      "n": 31,
+      "title": "还是分开",
+      "artist": "张叶蕾",
+      "album": "还是分开",
+      "dur": "03:46",
+      "query": "还是分开 张叶蕾",
+      "top": [
+        {
+          "c": {
+            "id": "465921195",
+            "name": "还是分开",
+            "alia": [],
+            "album": "还是分开",
+            "albumId": 35287063,
+            "artists": [
+              "张叶蕾"
+            ],
+            "dur": 226791
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "1416353822",
+            "name": "还是分开 伴奏",
+            "alia": [],
+            "album": "还是分开",
+            "albumId": 35287063,
+            "artists": [
+              "张叶蕾"
+            ],
+            "dur": 226848
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "2140448835",
+            "name": "还是分开（Acoustic Version）",
+            "alia": [],
+            "album": "还是分开（CD版）",
+            "albumId": 254180990,
+            "artists": [
+              "张叶蕾"
+            ],
+            "dur": 229194
+          },
+          "s": {
+            "v": 91,
+            "why": "title~ album~ artist= dur3"
+          }
+        }
+      ]
+    },
+    {
+      "n": 32,
+      "title": "樱花草 (电视剧《米可，GO！》主题曲)",
+      "artist": "Sweety",
+      "album": "花言乔语",
+      "dur": "04:43",
+      "query": "樱花草 Sweety",
+      "top": [
+        {
+          "c": {
+            "id": "376971",
+            "name": "樱花草",
+            "alia": [
+              "电视剧《米可，GO！》主题曲",
+              "电视剧《星苹果乐园》插曲"
+            ],
+            "album": "花言乔语",
+            "albumId": 37290,
+            "artists": [
+              "Sweety"
+            ],
+            "dur": 283840
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "2131035285",
+            "name": "樱花草",
+            "alia": [
+              "电视剧《米可，GO！》主题曲",
+              "电视剧《星苹果乐园》插曲"
+            ],
+            "album": "花言乔语 (精装版)",
+            "albumId": 187471887,
+            "artists": [
+              "Sweety"
+            ],
+            "dur": 283826
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album~ artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "5256963",
+            "name": "樱花草",
+            "alia": [
+              "电视剧《米可，GO！》主题曲",
+              "电视剧《星苹果乐园》插曲"
+            ],
+            "album": "再爱一次",
+            "albumId": 512164,
+            "artists": [
+              "Sweety"
+            ],
+            "dur": 283840
+          },
+          "s": {
+            "v": 71,
+            "why": "title~ artist= dur1"
+          }
+        }
+      ]
+    },
+    {
+      "n": 33,
+      "title": "忏悔录 (听说我谢谢你)",
+      "artist": "KKECHO / 那奇沃夫 / REDBOI",
+      "album": "MOVE IN SILENCE",
+      "dur": "03:16",
+      "query": "忏悔录 KKECHO",
+      "top": [
+        {
+          "c": {
+            "id": "1970396862",
+            "name": "忏悔录",
+            "alia": [
+              "听我说妈妈"
+            ],
+            "album": "MOVE IN SILENCE",
+            "albumId": 149341557,
+            "artists": [
+              "KKECHO",
+              "那奇沃夫",
+              "REDBOI"
+            ],
+            "dur": 196615
+          },
+          "s": {
+            "v": 121,
+            "why": "title~ album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "1970392508",
+            "name": "抽象画家",
+            "alia": [],
+            "album": "MOVE IN SILENCE",
+            "albumId": 149341557,
+            "artists": [
+              "KKECHO",
+              "REDBOI"
+            ],
+            "dur": 146875
+          },
+          "s": {
+            "v": 70,
+            "why": "title! album= artist= dur!49"
+          }
+        },
+        {
+          "c": {
+            "id": "1970396860",
+            "name": "超",
+            "alia": [],
+            "album": "MOVE IN SILENCE",
+            "albumId": 149341557,
+            "artists": [
+              "KKECHO",
+              "Ty.",
+              "REDBOI"
+            ],
+            "dur": 156923
+          },
+          "s": {
+            "v": 70,
+            "why": "title! album= artist= dur!39"
+          }
+        }
+      ]
+    },
+    {
+      "n": 34,
+      "title": "越来越不懂",
+      "artist": "蔡健雅",
+      "album": "Close To 蔡健雅 Original X Tanya Demo",
+      "dur": "03:49",
+      "query": "越来越不懂 蔡健雅",
+      "top": [
+        {
+          "c": {
+            "id": "208958",
+            "name": "越来越不懂",
+            "alia": [],
+            "album": "Close To 蔡健雅 Original X Tanya Demo",
+            "albumId": 21260,
+            "artists": [
+              "蔡健雅"
+            ],
+            "dur": 229728
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "208915",
+            "name": "越来越不懂",
+            "alia": [],
+            "album": "My Space",
+            "albumId": 21255,
+            "artists": [
+              "蔡健雅"
+            ],
+            "dur": 229120
+          },
+          "s": {
+            "v": 85,
+            "why": "title= artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "208940",
+            "name": "越来越不懂",
+            "alia": [],
+            "album": "Goodbye & Hello",
+            "albumId": 21257,
+            "artists": [
+              "蔡健雅"
+            ],
+            "dur": 249360
+          },
+          "s": {
+            "v": 60,
+            "why": "title= artist= dur!20"
+          }
+        }
+      ]
+    },
+    {
+      "n": 35,
+      "title": "Psycho, Pt. 2",
+      "artist": "Russ",
+      "album": "Psycho, Pt. 2",
+      "dur": "02:41",
+      "query": "Psycho, Pt. 2 Russ",
+      "top": [
+        {
+          "c": {
+            "id": "440208643",
+            "name": "Psycho, Pt. 2",
+            "alia": [],
+            "album": "Psycho, Pt. 2",
+            "albumId": 34985203,
+            "artists": [
+              "Russ"
+            ],
+            "dur": 161985
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "1848784822",
+            "name": "Psycho, Pt. 2",
+            "alia": [],
+            "album": "Psycho, Pt. 2",
+            "albumId": 128129607,
+            "artists": [
+              "Russell"
+            ],
+            "dur": 166115
+          },
+          "s": {
+            "v": 117,
+            "why": "title= album= artist~ dur5"
+          }
+        },
+        {
+          "c": {
+            "id": "1912975323",
+            "name": "Psycho,Pt.2",
+            "alia": [],
+            "album": "Psycho,Pt.2",
+            "albumId": 139027433,
+            "artists": [
+              "Klein Blue￰"
+            ],
+            "dur": 162626
+          },
+          "s": {
+            "v": 115,
+            "why": "title= album= artist! dur2"
+          }
+        }
+      ]
+    },
+    {
+      "n": 36,
+      "title": "南山南",
+      "artist": "马頔",
+      "album": "南山南",
+      "dur": "05:23",
+      "query": "南山南 马頔",
+      "top": [
+        {
+          "c": {
+            "id": "29436904",
+            "name": "南山南",
+            "alia": [],
+            "album": "南山南",
+            "albumId": 3027098,
+            "artists": [
+              "马頔"
+            ],
+            "dur": 323946
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "3406283385",
+            "name": "南山南",
+            "alia": [
+              "抖音女生版"
+            ],
+            "album": "南山南",
+            "albumId": 386873765,
+            "artists": [
+              "苏也莉"
+            ],
+            "dur": 125567
+          },
+          "s": {
+            "v": 90,
+            "why": "title= album= artist! dur!197"
+          }
+        },
+        {
+          "c": {
+            "id": "3368500555",
+            "name": "南山南",
+            "alia": [
+              "R&B版"
+            ],
+            "album": "南山南",
+            "albumId": 370237830,
+            "artists": [
+              "橡木"
+            ],
+            "dur": 265872
+          },
+          "s": {
+            "v": 90,
+            "why": "title= album= artist! dur!57"
+          }
+        }
+      ]
+    },
+    {
+      "n": 37,
+      "title": "那些你很冒险的梦 (Those Were The Days)",
+      "artist": "林俊杰",
+      "album": "学不会 (Lost N Found)",
+      "dur": "04:04",
+      "query": "那些你很冒险的梦 林俊杰",
+      "top": [
+        {
+          "c": {
+            "id": "108138",
+            "name": "那些你很冒险的梦",
+            "alia": [],
+            "album": "学不会",
+            "albumId": 10750,
+            "artists": [
+              "林俊杰"
+            ],
+            "dur": 244470
+          },
+          "s": {
+            "v": 101,
+            "why": "title~ album~ artist= dur0"
+          }
+        },
+        {
+          "c": {
+            "id": "108134",
+            "name": "学不会",
+            "alia": [],
+            "album": "学不会",
+            "albumId": 10750,
+            "artists": [
+              "林俊杰"
+            ],
+            "dur": 229500
+          },
+          "s": {
+            "v": 50,
+            "why": "title! album~ artist= dur!14"
+          }
+        },
+        {
+          "c": {
+            "id": "108493",
+            "name": "我还想她",
+            "alia": [],
+            "album": "JJ陆",
+            "albumId": 10770,
+            "artists": [
+              "林俊杰"
+            ],
+            "dur": 247507
+          },
+          "s": {
+            "v": 35,
+            "why": "title! artist= dur4"
+          }
+        }
+      ]
+    },
+    {
+      "n": 38,
+      "title": "心墙",
+      "artist": "郭静",
+      "album": "在树上唱歌",
+      "dur": "03:46",
+      "query": "心墙 郭静",
+      "top": [
+        {
+          "c": {
+            "id": "233866",
+            "name": "心墙",
+            "alia": [],
+            "album": "在树上唱歌",
+            "albumId": 23488,
+            "artists": [
+              "郭静"
+            ],
+            "dur": 226920
+          },
+          "s": {
+            "v": 135,
+            "why": "title= album= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "27671269",
+            "name": "心墙",
+            "alia": [],
+            "album": "致纯静",
+            "albumId": 2656047,
+            "artists": [
+              "郭静"
+            ],
+            "dur": 227013
+          },
+          "s": {
+            "v": 85,
+            "why": "title= artist= dur1"
+          }
+        },
+        {
+          "c": {
+            "id": "3406228674",
+            "name": "心墙",
+            "alia": [],
+            "album": "",
+            "albumId": 0,
+            "artists": [
+              "圣寰临玥Lume"
+            ],
+            "dur": 226998
+          },
+          "s": {
+            "v": 65,
+            "why": "title= artist! dur1"
+          }
+        }
+      ]
+    }
+  ]
+}

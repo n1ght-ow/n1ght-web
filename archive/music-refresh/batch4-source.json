@@ -1,0 +1,271 @@
+{
+  "note": "Transcribed from three NetEase 'liked songs' screenshots (2026-09-23). Title / artist / album / duration as printed in the list.",
+  "songs": [
+    {
+      "n": 1,
+      "title": "double take",
+      "artist": "Dhruv",
+      "album": "double take",
+      "dur": "02:51"
+    },
+    {
+      "n": 2,
+      "title": "Fire",
+      "artist": "Gavin DeGraw",
+      "album": "Fire",
+      "dur": "03:48"
+    },
+    {
+      "n": 3,
+      "title": "很久很久",
+      "artist": "杨和苏KeyNG",
+      "album": "辩护人",
+      "dur": "05:20"
+    },
+    {
+      "n": 4,
+      "title": "In The Shadow Of The Sun",
+      "artist": "Professor Green",
+      "album": "Growing Up In Public",
+      "dur": "03:56"
+    },
+    {
+      "n": 5,
+      "title": "欧若拉",
+      "artist": "张韶涵",
+      "album": "欧若拉",
+      "dur": "04:19"
+    },
+    {
+      "n": 6,
+      "title": "East of Eden (伊甸之东)",
+      "artist": "Zella Day",
+      "album": "East of Eden",
+      "dur": "03:06"
+    },
+    {
+      "n": 7,
+      "title": "不为谁而作的歌 (Twilight)",
+      "artist": "林俊杰",
+      "album": "上一首情歌 (国语精选)",
+      "dur": "04:25"
+    },
+    {
+      "n": 8,
+      "title": "麦恩莉 (My only)",
+      "artist": "方大同",
+      "album": "回到未来 (Back To Wonderland)",
+      "dur": "04:48"
+    },
+    {
+      "n": 9,
+      "title": "下一个天亮",
+      "artist": "郭静",
+      "album": "下一个天亮",
+      "dur": "04:26"
+    },
+    {
+      "n": 10,
+      "title": "Love Is Gone (Acoustic)",
+      "artist": "SLANDER / Dylan Matthew",
+      "album": "Love Is Gone (Acoustic)",
+      "dur": "02:56"
+    },
+    {
+      "n": 11,
+      "title": "我们俩",
+      "artist": "郭顶",
+      "album": "微微",
+      "dur": "03:13"
+    },
+    {
+      "n": 12,
+      "title": "So Far Away (遥不可及)",
+      "artist": "Martin Garrix / David Guetta / Jamie Scott / Romy Dya",
+      "album": "So Far Away",
+      "dur": "03:03"
+    },
+    {
+      "n": 13,
+      "title": "Whataya Want from Me",
+      "artist": "Adam Lambert",
+      "album": "For Your Entertainment (Tour Edition)",
+      "dur": "03:46"
+    },
+    {
+      "n": 14,
+      "title": "Nevada (内华达)",
+      "artist": "Vicetone / Cozi Zuehlsdorff",
+      "album": "Nevada",
+      "dur": "03:28"
+    },
+    {
+      "n": 15,
+      "title": "心如止水",
+      "artist": "Ice Paper",
+      "album": "成语接龙",
+      "dur": "03:05"
+    },
+    {
+      "n": 16,
+      "title": "你的酒馆对我打了烊",
+      "artist": "陈雪凝",
+      "album": "你的酒馆对我打了烊",
+      "dur": "04:11"
+    },
+    {
+      "n": 17,
+      "title": "绿色",
+      "artist": "陈雪凝",
+      "album": "绿色",
+      "dur": "04:29"
+    },
+    {
+      "n": 18,
+      "title": "123 (Doremi)",
+      "artist": "Ssr / Jjz329",
+      "album": "123 (Doremi)",
+      "dur": "03:03"
+    },
+    {
+      "n": 19,
+      "title": "TALKING SH*T FREESTYLE (2017)",
+      "artist": "Jjz329",
+      "album": "未知专辑",
+      "dur": "02:23"
+    },
+    {
+      "n": 20,
+      "title": "老本行",
+      "artist": "ICE杨长青 / Jjz329",
+      "album": "长青 (Deluxe)",
+      "dur": "03:12"
+    },
+    {
+      "n": 21,
+      "title": "3977 (三条A)",
+      "artist": "Jjz329",
+      "album": "3977",
+      "dur": "02:21"
+    },
+    {
+      "n": 22,
+      "title": "少一点天分",
+      "artist": "孙盛希",
+      "album": "希。O2 | 初雪限定",
+      "dur": "04:34"
+    },
+    {
+      "n": 23,
+      "title": "紫荆花盛开 (香港回归祖国25周年主题歌曲)",
+      "artist": "李荣浩 / 梁咏琪",
+      "album": "紫荆花盛开",
+      "dur": "03:30"
+    },
+    {
+      "n": 24,
+      "title": "上人上 (Start from the bottom Pt.2)",
+      "artist": "法老 / MC HotDog 热狗",
+      "album": "上人上 (Start from the bottom Pt.2)",
+      "dur": "03:00"
+    },
+    {
+      "n": 25,
+      "title": "Booty Music",
+      "artist": "Deep Side",
+      "album": "Git Fresh",
+      "dur": "03:01"
+    },
+    {
+      "n": 26,
+      "title": "后来的我们",
+      "artist": "五月天",
+      "album": "自传",
+      "dur": "05:46"
+    },
+    {
+      "n": 27,
+      "title": "普通女孩",
+      "artist": "沙一汀EL",
+      "album": "敏感小孩",
+      "dur": "02:24"
+    },
+    {
+      "n": 28,
+      "title": "偏爱 (电视剧《仙剑奇侠传三》插曲)",
+      "artist": "张芸京",
+      "album": "仙剑奇侠传三 电视原声带",
+      "dur": "03:32"
+    },
+    {
+      "n": 29,
+      "title": "周旋",
+      "artist": "王以太 / 艾热 AIR",
+      "album": "太热",
+      "dur": "04:50"
+    },
+    {
+      "n": 30,
+      "title": "还是劈开",
+      "artist": "张叶蕾 / 全体诺克萨斯勇士",
+      "album": "还是劈开",
+      "dur": "03:31"
+    },
+    {
+      "n": 31,
+      "title": "还是分开",
+      "artist": "张叶蕾",
+      "album": "还是分开",
+      "dur": "03:46"
+    },
+    {
+      "n": 32,
+      "title": "樱花草 (电视剧《米可，GO！》主题曲)",
+      "artist": "Sweety",
+      "album": "花言乔语",
+      "dur": "04:43"
+    },
+    {
+      "n": 33,
+      "title": "忏悔录 (听说我谢谢你)",
+      "artist": "KKECHO / 那奇沃夫 / REDBOI",
+      "album": "MOVE IN SILENCE",
+      "dur": "03:16"
+    },
+    {
+      "n": 34,
+      "title": "越来越不懂",
+      "artist": "蔡健雅",
+      "album": "Close To 蔡健雅 Original X Tanya Demo",
+      "dur": "03:49"
+    },
+    {
+      "n": 35,
+      "title": "Psycho, Pt. 2",
+      "artist": "Russ",
+      "album": "Psycho, Pt. 2",
+      "dur": "02:41"
+    },
+    {
+      "n": 36,
+      "title": "南山南",
+      "artist": "马頔",
+      "album": "南山南",
+      "dur": "05:23"
+    },
+    {
+      "n": 37,
+      "title": "那些你很冒险的梦 (Those Were The Days)",
+      "artist": "林俊杰",
+      "album": "学不会 (Lost N Found)",
+      "dur": "04:04"
+    },
+    {
+      "n": 38,
+      "title": "心墙",
+      "artist": "郭静",
+      "album": "在树上唱歌",
+      "dur": "03:46"
+    }
+  ]
+}

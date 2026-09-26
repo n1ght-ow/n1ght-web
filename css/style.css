@@ -866,6 +866,56 @@ h1, h2 { text-wrap: balance; }
 .tab-panels .tab-panel { display: none; }
 .tab-panels .tab-panel.is-active { display: block; }
 
+/* ============ 11b. THE SHELF NOTE (one per panel, six in all) ============
+   Each of the six shelves opens with one sentence saying what was kept and how
+   it was chosen. They are not decoration and they are not a second title: the
+   panel already has a head (TWENTY-FOUR FILMS, a genre name, the shelf itself),
+   and this is the one line in the panel that speaks in the first person, which
+   is what the chapter was missing - a reader could see WHAT was kept and never
+   WHY, and the six shelves therefore read as one undifferentiated pile.
+
+/* ONE ELEMENT, SIX PLACES, ONE MEASURE. The panels have six completely
+   different internal heads, so the note is finished by one rule and lets each
+   panel's own head follow it. That is deliberate: making it PART of six
+   different heads would have meant six different typesettings of the same
+   sentence, which is the failure this is meant to fix.
+   It is set in the site's own voice - the shared deck register, --fs-small on
+   the 46ch measure, exactly like .sec-copy and .lead - so it reads as the same
+   narrator who wrote the chapter decks, one level down. It carries no accent:
+   gold means "you can click this" everywhere on this site, and this sentence
+   cannot be clicked.
+
+   THE DISTANCE IS ONE VALUE FOR ALL SIX: --bar-gap, the token the archive's own
+   stack is already built from (tab strip -> panel, and inside the music drawer,
+   search row -> genre row -> list). The first version gave five of the six
+   --sp-6 and the music note --bar-gap, which put two different gaps under the
+   same sentence depending on which tab was open - and the tab strip is the
+   thing all six hang off.
+
+   WHY THERE IS A WRAPPER. .panel-note is not decoration: js/reel-stage.js
+   renders with `stage.innerHTML = ""`, and for films and series the stage
+   element IS the tab panel, so a bare note inside it was wiped on first paint
+   (measured: the note was in the DOM and both panels rendered without it). The
+   wrapper makes the note a sibling of the stage, which is what the other four
+   panels get anyway, so the six are one shape in the DOM and not only on
+   screen. Do not flatten it back into the panel. */
+.panel-note {
+  margin-block-end: var(--bar-gap);
+}
+
+/* The .curator--books ... --games classes stay on the elements as hooks - they
+   are what a future note-specific change would target - but nothing styles them
+   any more: measurement said all six land on the same gap, so the six cannot
+   drift apart without someone writing the rule on purpose. */
+.curator {
+  max-width: 46ch;
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--fs-small);
+  line-height: 1.66;
+  text-wrap: pretty;
+}
+
 /* ============ 12. LEDGERS (books / sport) ============ */
 /* A five or six item shelf is not a table.
 
@@ -1243,6 +1293,17 @@ html:not(.js) .sport-wash { opacity: 1; }
 }
 
 .music-search-input::placeholder { color: var(--color-text-muted); text-transform: uppercase; }
+
+/* 320px is the narrow end and the placeholder is the only thing that has to
+   give: the field's content box is 148px down there (input 178 minus the two
+   15.2px insets) and the label measures 239px, so it was cut mid-word at
+   "SEARCH TITLE OR ART". The field keeps its own box and its label is now
+   ellipsised instead of sliced. The real fix is that the row is a search box:
+   what it needs to say is that you can type here, and the label is only an
+   example - AGENTS.md's own rule for placeholders. */
+.music-search-input {
+  text-overflow: ellipsis;
+}
 
 /* The focus cue is this underline, not a ring around the row. The row has no
    box of its own, so a 2px gold rectangle drawn 3px outside it read as a
@@ -2024,14 +2085,53 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
 }
 
 @media (max-width: 720px) {
-  /* The hero keeps its viewport height at every width. It is a title card, not
-     a block of content: height:auto would collapse it onto the mark, and the
-     mark itself needs no breakpoint because it is sized off its column. */
+  /* The hero keeps its measured short-of-fold height at every width. It is a
+     title card, not a block of content: height:auto would collapse it onto the
+     mark, and the mark itself needs no breakpoint because it is sized off its
+     column. */
 
   .nav { height: 52px; }
-  .nav-links { overflow-x: auto; scrollbar-width: none; }
+  /* The links are a horizontal scroller at this width, and at 320px the third
+     one does not fit: measured, the row ends mid-word on "ARCHIVE" with POEM
+     entirely off the glass. That read as a broken bar rather than as a
+     scrollable one, because there was nothing to say the rest existed.
+     The fade is the affordance - one mask, no new element, and it says
+     "there is more row this way" instead of showing a sliced word. The links
+     themselves are unchanged and still scroll into view on focus. */
+  .nav-links {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+  }
   .nav-links::-webkit-scrollbar { display: none; }
   .nav-links a { white-space: nowrap; padding: 0.7em 0.9em; }
+
+  /* WHY THE FADE IS ITS OWN ELEMENT. At 320px the nav has 280px of glass and
+     the three links need 254px on top of a 95px brand, so the row is a
+     scroller and the third link ends up cut mid-word. A mask on the scroller
+     itself does nothing visible: measured, `mask-image` resolves and the
+     container is exactly the clipped width, and the clipped word still read as
+     a sliced one. So the veil is a 28px pseudo pinned to the scroller's right
+     edge, with its own mask so it fades in from the left and never draws an
+     edge of its own. Because it is a flex CHILD it costs 28px of the row,
+     which the negative margin gives straight back - the links keep the width
+     they had, and what changes is only that the last word now dissolves instead
+     of stopping. Nothing moves, nothing is hidden: the links are unchanged and
+     still scroll into view on focus. */
+  .nav-links { position: relative; }
+  .nav-links::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    inline-size: 28px;
+    margin-inline-start: -28px;
+    pointer-events: none;
+    background: var(--glass-nav);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 78%);
+    mask-image: linear-gradient(to right, transparent, #000 78%);
+  }
 
   /* the tab strip scrolls horizontally on phones. A backdrop-filter inside
      a scroll container samples a moving backdrop and the absolutely
@@ -2062,7 +2162,17 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .tab-btn { flex: 0 0 auto; }
   .tab-btn .no { display: none; }
 
-  .idx-card { grid-template-columns: 2.2rem minmax(0, 1fr); row-gap: 0.15rem; }
+  /* THE TRACK ROW'S FIRST COLUMN IS THE COVER (asked for: the music list was
+     the densest thing on the page and it was densest in the wrong way). This
+     said 2.2rem - 35.2px - against a 64px .idx-cover, so the artwork overflowed
+     its own track by 29px and the title started 16px INSIDE it. Two columns of
+     that per row, 534 times, is the crowding: covers touching their titles and
+     nothing lining up down the list.
+     The column is now the cover's own width, which is the number the cover
+     already declares, and the title and the byline both start at 64 + 12 = 76px
+     - the same edge the genre title above them starts on. Nothing about the row
+     changes but its left edge. */
+  .idx-card { grid-template-columns: 64px minmax(0, 1fr); row-gap: 0.15rem; }
   .idx-card .idx-artist { grid-column: 2; }
 
   .music-search-input { font-size: 16px; } /* iOS zooms a focused input under 16px */

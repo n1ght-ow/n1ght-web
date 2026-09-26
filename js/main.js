@@ -773,7 +773,7 @@ function initArchiveTabs() {
     /* games contributes its TRACK, not its eighteen cards: the dial writes a
        transform on every .hof-item itself, and a per-card wipe would fight it. */
     const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre, .hof")) : [];
-    /* MUSIC IS SHOWN, NOT WIPED (asked for). The playlist is 496 cards in 15
+    /* MUSIC IS SHOWN, NOT WIPED (asked for). The playlist is 534 cards in 15
        groups, so the panel wipe plus the group unroll inside it reads as a
        loading cascade rather than an entrance - the shelf is simply there the
        moment its tab is picked. Every other panel keeps the wipe. */
@@ -916,7 +916,7 @@ function initMusicSearch() {
 
   // Normalized per-card haystack, built once at init: matchCard then only
   // compares precomputed strings instead of re-querying and re-normalizing
-  // all 441 cards on every keystroke.
+  // all 534 cards on every keystroke.
   const cardHaystacks = cards.map((card) => {
     const title = card.querySelector(".idx-title");
     const artist = card.querySelector(".idx-artist");
@@ -1126,7 +1126,7 @@ function initMusicSearch() {
   }
 
   // Coalesce keystroke bursts: each frame applies at most one search pass
-  // over the 441 cards instead of one per input event.
+  // over the 534 cards instead of one per input event.
   let searchFrame = 0;
   function requestApply() {
     if (searchFrame) return;

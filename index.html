@@ -479,18 +479,47 @@
 
           <!-- PANEL 01: BOOKS -->
           <div class="tab-panel is-active" id="panel-books" role="tabpanel" aria-labelledby="tab-books" data-panel="books" tabindex="0">
+            <!-- The panel note. One per shelf, and the six are one system: the
+                 same element, the same measure, the same relation to whatever
+                 the panel opens with (see .curator in css/style.css, section
+                 11b). Each one names a decision rather than a mood - what was
+                 kept, in what order, and what was left out - because the
+                 collection is the argument and the note is the only place the
+                 page says why. -->
+            <div class="panel-note">
+              <p class="curator curator--books">Four of these are still on the shelf because I read them twice in one winter.</p>
+            </div>
             <div class="book-shelf" data-book-shelf="auto" role="group" aria-label="Books on the shelf"></div>
           </div>
 
           <!-- PANEL 02: FILMS -->
-          <div class="tab-panel" id="panel-films" role="tabpanel" aria-labelledby="tab-films" data-panel="films" data-film-stage="auto" tabindex="0"></div>
+          <!-- The stage renders into the INNER div, not into the panel. It has
+               to: js/reel-stage.js renders with `stage.innerHTML = ""`, so a
+               stage that IS the panel deletes the shelf note above it (measured
+               - the note was in the DOM and both panels painted without it).
+               The inner div also gives the panel's own content a home, which is
+               what lets the note be a sibling of the stage in all six panels. -->
+          <div class="tab-panel" id="panel-films" role="tabpanel" aria-labelledby="tab-films" data-panel="films" tabindex="0">
+            <div class="panel-note">
+              <p class="curator curator--films">Half of these I saw once, in a cinema, at the wrong age to understand them.</p>
+            </div>
+            <div data-film-stage="auto"></div>
+          </div>
 
           <!-- PANEL 03: SERIES -->
-          <div class="tab-panel" id="panel-series" role="tabpanel" aria-labelledby="tab-series" data-panel="series" data-series-stage="auto" tabindex="0"></div>
+          <div class="tab-panel" id="panel-series" role="tabpanel" aria-labelledby="tab-series" data-panel="series" tabindex="0">
+            <div class="panel-note">
+              <p class="curator curator--series">Long series here are the ones I stopped midway and finished years later.</p>
+            </div>
+            <div data-series-stage="auto"></div>
+          </div>
 
           <!-- PANEL 04: MUSIC -->
           <div class="tab-panel" id="panel-music" role="tabpanel" aria-labelledby="tab-music" data-panel="music" tabindex="0">
             <div class="music-drawer" id="music-drawer">
+              <div class="panel-note">
+              <p class="curator curator--music">There are three hundred and forty-one English tracks in here, and Pop opens the index. Most nights I am somewhere in the Mandarin groups.</p>
+            </div>
               <div class="music-bar">
                 <!-- The search row is a glass tray: the same object as the tab
                      strip above it and the genre rail below it (AGENTS.md,
@@ -546,6 +575,9 @@
                Three lines per panel: eyebrow (team and league), honours,
                official site. The honours ARE the Chinese on this band. -->
           <div class="tab-panel" id="panel-sport" role="tabpanel" aria-labelledby="tab-sport" data-panel="sport" tabindex="0">
+            <div class="panel-note">
+              <p class="curator curator--sport">Chosen in primary school, never traded since.</p>
+            </div>
             <section class="sport" id="sport-stage" aria-label="Sport">
               <div class="sport-row">
                 <button class="sport-item" type="button" aria-pressed="false" data-sport="basketball">
@@ -614,6 +646,9 @@
 
 
           <div class="tab-panel" id="panel-games" role="tabpanel" aria-labelledby="tab-games" data-panel="games" tabindex="0">
+            <div class="panel-note">
+              <p class="curator curator--games">Eighteen covers, ranked by hours, and the top one is a spreadsheet about football.</p>
+            </div>
             <!-- One centred cover on a detent dial (js/games-stage.js, a plain-DOM
                  port of Framer's Detent). The eighteen .hof-item elements ARE the
                  deck: each one is a tab stop and a click target for main.js, moved
@@ -770,7 +805,7 @@
               <p class="label sec-eyebrow">Dylan Thomas / A villanelle / 1947</p>
               <h2 class="sec-title">Do not go gentle.</h2>
             </div>
-            <p class="poem-standfirst">One poem about refusing to go quietly. Written for a father, kept by everyone else, and the reason this page keeps everything bright.</p>
+            <p class="poem-standfirst">A year spent looking, then a shelf of everything worth keeping, and now the poem that says what the looking was for. It is the shortest thing on this page: nineteen lines, one instruction, repeated until it stops being advice.</p>
           </header>
 
           <blockquote class="poem-verse">
@@ -802,7 +837,7 @@
 
           <footer class="poem-foot">
             <p class="label poem-source">Do not go gentle into that good night</p>
-            <p class="poem-sign">Kept here because the light is not something you wait for.</p>
+            <p class="poem-sign">Kept here because the light was never the reward. Catching it, and not letting go, was the whole instruction.</p>
           </footer>
         </div>
       </div>
@@ -824,6 +859,14 @@
       </div>
     </div>
   </footer>
+
+  <div class="photo-view" id="photo-view" role="dialog" aria-modal="true" aria-label="Photography wall" hidden>
+    <div class="photo-wall" id="photo-wall" data-photo-wall="auto" role="group" aria-label="Photography board"></div>
+    <div class="photo-view-bar">
+      <span class="photo-view-label mono">PHOTOGRAPHY <span aria-hidden="true">/</span> 21 FRAMES</span>
+      <button class="photo-view-close" id="photo-view-close" type="button" aria-label="Close photography wall">×</button>
+    </div>
+  </div>
 
   <!-- ============ UNIFIED DETAIL LAYER ============ -->
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Archive detail viewer" aria-hidden="true">
@@ -860,14 +903,6 @@
 
     <button class="lb-nav lb-prev" id="lb-prev" type="button" aria-label="Previous item">←</button>
     <button class="lb-nav lb-next" id="lb-next" type="button" aria-label="Next item">→</button>
-  <div class="photo-view" id="photo-view" role="dialog" aria-modal="true" aria-label="Photography wall" hidden>
-    <div class="photo-wall" id="photo-wall" data-photo-wall="auto" role="group" aria-label="Photography board"></div>
-    <div class="photo-view-bar">
-      <span class="photo-view-label mono">PHOTOGRAPHY <span aria-hidden="true">/</span> 21 FRAMES</span>
-      <button class="photo-view-close" id="photo-view-close" type="button" aria-label="Close photography wall">×</button>
-    </div>
-  </div>
-
     <div class="lb-rail" id="lb-rail" role="group" aria-label="Choose a frame"></div>
     <p class="sr-only" id="lb-live" role="status" aria-live="polite"></p>
   </div>
@@ -878,12 +913,12 @@
   <script src="js/film-data.js?v=2"></script>
   <script src="js/series-data.js?v=2"></script>
   <script src="js/book-shelf-data.js?v=4"></script>
-<script src="js/music-data.js?v=6"></script>
-  <script src="js/music-covers.js?v=5"></script>
-  <script src="js/reel-stage.js?v=26"></script>
-  <script src="js/film-stage.js?v=7"></script>
-  <script src="js/series-stage.js?v=7"></script>
-  <script src="js/music-stage.js?v=10"></script>
+<script src="js/music-data.js?v=7"></script>
+  <script src="js/music-covers.js?v=6"></script>
+  <script src="js/reel-stage.js?v=27"></script>
+  <script src="js/film-stage.js?v=8"></script>
+  <script src="js/series-stage.js?v=8"></script>
+  <script src="js/music-stage.js?v=11"></script>
 <script src="js/book-shelf.js?v=9"></script>
 <script src="js/photo-wall.js?v=8"></script>
 <script src="js/games-stage.js?v=4"></script>

@@ -163,3 +163,32 @@ owner 新加的一批，截图前 27 行几乎全是华语说唱，另有两首�
 - `smoke.js` 的期望值同步到 15 组 / 468 张封面。
 
 `?v=`：`music-data.js` 2→3，`music-covers.js` 2→3。
+
+---
+
+# 2026-09-23：又补 38 首 → 534 首 / 15 组
+
+owner 从「我喜欢的音乐」又截了三张图（38 行）。这一批全程在 node 里跑，四个脚本各自只做一件事：
+
+| 步骤 | 文件 |
+| --- | --- |
+| 截图逐行转录（歌名 / 歌手 / 截图里的专辑 / 时长） | `batch4-source.json` |
+| `cloudsearch/pc` 取 30 条候选，按 **专辑名精确 > 专辑名前缀 > 歌名 > 歌手 > 时长（≤2s 优先）** 打分 | `batch4-resolve.mjs` → `batch4-search-results.json` |
+| top-1 经 `song/detail` 复核四项（歌名 / 专辑 / 时长 / 歌手），不一致的标出来 | `batch4-verify.mjs` → `batch4-verified.json` |
+| 封面 500px 落盘 + 并进 `archive/music-album-covers/index.json` + 重生成 `js/music-covers.js` | `batch4-covers.mjs` |
+| 渲染器自检（15 组 / 534 张 / 0 空 sleeve） | `smoke.js` |
+
+- 38 条 top-1 里 **3 条被 flags 拦下**（row 24 的 ALBUM+TITLE、row 18/21 的 ARTIST），逐条裁图放大复核后全部确认是**转录错、接口对**：row 24 的歌名是 `人上人` 不是「上人上」，row 18/21 的歌手是 `ljz329`（小写 L）不是 `Jjz329`。**截图是唯一真值、接口是唯一裁判**，两边不一致时把那一行裁出来看（`batch4-crops/`，System.Drawing 2–3× 放大）。
+- **曲风由助手分**（owner 原话「曲风你自己分」）。英语 10 首：pop 3 / rock 1 / ballad 1 / edm-and-dance 2 / randb-and-soul 1 / hip-hop 2。华语 28 首：华语流行 5 / 华语抒情 8 / 华语说唱 10 / 华语民谣独立 2 / 华语影视原声 2 / 华语摇滚 1。依据是**每组已有的口径**，不是歌手的流派标签：`Whataya Want from Me` 跟着 P!nk 那一版进 rock（同一首歌不拆到两个组）、方大同跟着他自己的 `Love Song` 进华语流行、陈雪凝跟着任然进华语抒情、五月天进只有 5 首的华语摇滚。OST 两条按库内写法用**全角括号**（`偏爱（电视剧《仙剑奇侠传三》插曲）`），短 alias 用半角（`123 (Doremi)`）。
+- **12 张封面网易云返回的是 PNG**：扩展名给 `.jpg`，字节头却是 `89504e47`，4 次重试都一样。按库内标准用 System.Drawing 转成 JPEG q85（25–71KB），与 batch3 同一条路。
+- **`album-covers/thumbs/` 必须跟着补**：`js/music-stage.js` 画的是 `album-covers/thumbs/<stem>.webp`（160px），不是 500px 那张。新建封面只落 `album-covers/` 而不重跑 `build-images.py --only=albums`，列表里就是 38 个破图。已重跑：417 → **455** 张，4.90 MB → 2.46 MB。
+- `smoke.js` 的 shim 补了 `dataset: {}`：`music-stage.js` 学会写 `link.dataset.playlistId` 之后这个 shim 就一直是坏的（与这批无关，顺手修好）；期望值 468 → 534。
+- 计数：496 → **534**。`album-covers/` 417 → 455 张；封面映射 534 个键，0 缺失、0 孤儿、0 非 JPEG。
+
+`?v=`：`music-data.js` 6→7，`music-covers.js` 5→6，`music-stage.js` 10→11（只改了注释里的卡片数），`main.js` 79→80（同上）。
+
+歌单：`archive/music-playlists/` 两个生成文件都重跑了（曲风歌单 15 组 / 534 首；语言歌单 185 + 341，韩语 8 首两边都不进）。**站点侧一个字都没改**——粘贴方法与重复运行规则见那份 README；脚本按**名字**复用旧歌单，跑一遍只补缺的那几首。
+
+**2026-09-23 曲风歌单实测（owner 在控制台跑完）**：15 个歌单全部按名字复用，**id 一个都没变**；合计加入 **38 首**，正好等于本批新增的全部（pop 3 / ballad 1 / rock 1 / edm 2 / r&b 1 / hip-hop 2 / 华语流行 5 / 华语抒情 8 / 华语摇滚 1 / 华语说唱 10 / 华语民谣独立 2 / 华语影视原声 2，其余三组 0）。每组回读的 `want` 与 `music-data.js` 的 `tracks.length` 逐组一致（`batch4-run-check.js`）。
+**2026-09-23 语言歌单实测**：两个歌单同样按名字复用、id 未变，`added` 分别 **28 / 10**（合计 38 = 本批全部），与跑之前的预期逐位一致。至此「曲风歌单 + 语言歌单 + 站点」三份视图都是 534 首、逐首一致。
+

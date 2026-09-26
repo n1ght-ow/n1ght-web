@@ -1,0 +1,861 @@
+{
+  "generated": "2026-09-22T16:51:32.404Z",
+  "songs": [
+    {
+      "n": 1,
+      "id": "1369602061",
+      "score": 135,
+      "api": {
+        "name": "double take",
+        "album": "double take",
+        "albumId": 79590373,
+        "picId": "109951166964637580",
+        "duration": 172,
+        "artists": [
+          "Dhruv"
+        ]
+      },
+      "shot": {
+        "title": "double take",
+        "artist": "Dhruv",
+        "album": "double take",
+        "dur": "02:51"
+      },
+      "flags": []
+    },
+    {
+      "n": 2,
+      "id": "28923579",
+      "score": 135,
+      "api": {
+        "name": "Fire",
+        "album": "Fire",
+        "albumId": 2948093,
+        "picId": "109951166158577650",
+        "duration": 228,
+        "artists": [
+          "Gavin DeGraw"
+        ]
+      },
+      "shot": {
+        "title": "Fire",
+        "artist": "Gavin DeGraw",
+        "album": "Fire",
+        "dur": "03:48"
+      },
+      "flags": []
+    },
+    {
+      "n": 3,
+      "id": "1469041281",
+      "score": 135,
+      "api": {
+        "name": "很久很久",
+        "album": "辩护人",
+        "albumId": 96777500,
+        "picId": "109951165391735570",
+        "duration": 320,
+        "artists": [
+          "杨和苏KeyNG"
+        ]
+      },
+      "shot": {
+        "title": "很久很久",
+        "artist": "杨和苏KeyNG",
+        "album": "辩护人",
+        "dur": "05:20"
+      },
+      "flags": []
+    },
+    {
+      "n": 4,
+      "id": "29412405",
+      "score": 135,
+      "api": {
+        "name": "In The Shadow Of The Sun",
+        "album": "Growing Up In Public",
+        "albumId": 3020185,
+        "picId": "2534374302157990",
+        "duration": 236,
+        "artists": [
+          "Professor Green"
+        ]
+      },
+      "shot": {
+        "title": "In The Shadow Of The Sun",
+        "artist": "Professor Green",
+        "album": "Growing Up In Public",
+        "dur": "03:56"
+      },
+      "flags": []
+    },
+    {
+      "n": 5,
+      "id": "327157",
+      "score": 135,
+      "api": {
+        "name": "欧若拉",
+        "album": "欧若拉",
+        "albumId": 32375,
+        "picId": "109951167379867280",
+        "duration": 259,
+        "artists": [
+          "张韶涵"
+        ]
+      },
+      "shot": {
+        "title": "欧若拉",
+        "artist": "张韶涵",
+        "album": "欧若拉",
+        "dur": "04:19"
+      },
+      "flags": []
+    },
+    {
+      "n": 6,
+      "id": "29009655",
+      "score": 121,
+      "api": {
+        "name": "East of Eden",
+        "album": "East of Eden",
+        "albumId": 2976629,
+        "picId": "6667438510952720",
+        "duration": 186,
+        "artists": [
+          "Zella Day"
+        ]
+      },
+      "shot": {
+        "title": "East of Eden (伊甸之东)",
+        "artist": "Zella Day",
+        "album": "East of Eden",
+        "dur": "03:06"
+      },
+      "flags": []
+    },
+    {
+      "n": 7,
+      "id": "1468115100",
+      "score": 121,
+      "api": {
+        "name": "不为谁而作的歌",
+        "album": "上一首情歌 (国语精选)",
+        "albumId": 93427116,
+        "picId": "109951172341406690",
+        "duration": 266,
+        "artists": [
+          "林俊杰"
+        ]
+      },
+      "shot": {
+        "title": "不为谁而作的歌 (Twilight)",
+        "artist": "林俊杰",
+        "album": "上一首情歌 (国语精选)",
+        "dur": "04:25"
+      },
+      "flags": []
+    },
+    {
+      "n": 8,
+      "id": "25648006",
+      "score": 101,
+      "api": {
+        "name": "麦恩莉",
+        "album": "回到未来",
+        "albumId": 2265001,
+        "picId": "109951168870428050",
+        "duration": 288,
+        "artists": [
+          "方大同"
+        ]
+      },
+      "shot": {
+        "title": "麦恩莉 (My only)",
+        "artist": "方大同",
+        "album": "回到未来 (Back To Wonderland)",
+        "dur": "04:48"
+      },
+      "flags": []
+    },
+    {
+      "n": 9,
+      "id": "233882",
+      "score": 135,
+      "api": {
+        "name": "下一个天亮",
+        "album": "下一个天亮",
+        "albumId": 23492,
+        "picId": "109951171316025340",
+        "duration": 267,
+        "artists": [
+          "郭静"
+        ]
+      },
+      "shot": {
+        "title": "下一个天亮",
+        "artist": "郭静",
+        "album": "下一个天亮",
+        "dur": "04:26"
+      },
+      "flags": []
+    },
+    {
+      "n": 10,
+      "id": "1401671455",
+      "score": 135,
+      "api": {
+        "name": "Love Is Gone (Acoustic)",
+        "album": "Love Is Gone (Acoustic)",
+        "albumId": 83079277,
+        "picId": "109951164473460770",
+        "duration": 177,
+        "artists": [
+          "SLANDER",
+          "Dylan Matthew"
+        ]
+      },
+      "shot": {
+        "title": "Love Is Gone (Acoustic)",
+        "artist": "SLANDER / Dylan Matthew",
+        "album": "Love Is Gone (Acoustic)",
+        "dur": "02:56"
+      },
+      "flags": []
+    },
+    {
+      "n": 11,
+      "id": "85571",
+      "score": 135,
+      "api": {
+        "name": "我们俩",
+        "album": "微微",
+        "albumId": 8401,
+        "picId": "109951170514277230",
+        "duration": 194,
+        "artists": [
+          "郭顶"
+        ]
+      },
+      "shot": {
+        "title": "我们俩",
+        "artist": "郭顶",
+        "album": "微微",
+        "dur": "03:13"
+      },
+      "flags": []
+    },
+    {
+      "n": 12,
+      "id": "521416693",
+      "score": 121,
+      "api": {
+        "name": "So Far Away",
+        "album": "So Far Away",
+        "albumId": 36873174,
+        "picId": "109951165983886030",
+        "duration": 183,
+        "artists": [
+          "Martin Garrix",
+          "David Guetta",
+          "Jamie Scott",
+          "Romy Dya"
+        ]
+      },
+      "shot": {
+        "title": "So Far Away (遥不可及)",
+        "artist": "Martin Garrix / David Guetta / Jamie Scott / Romy Dya",
+        "album": "So Far Away",
+        "dur": "03:03"
+      },
+      "flags": []
+    },
+    {
+      "n": 13,
+      "id": "16343632",
+      "score": 135,
+      "api": {
+        "name": "Whataya Want from Me",
+        "album": "For Your Entertainment (Tour Edition)",
+        "albumId": 1508240,
+        "picId": "109951165991966690",
+        "duration": 227,
+        "artists": [
+          "Adam Lambert"
+        ]
+      },
+      "shot": {
+        "title": "Whataya Want from Me",
+        "artist": "Adam Lambert",
+        "album": "For Your Entertainment (Tour Edition)",
+        "dur": "03:46"
+      },
+      "flags": []
+    },
+    {
+      "n": 14,
+      "id": "418602088",
+      "score": 121,
+      "api": {
+        "name": "Nevada",
+        "album": "Nevada",
+        "albumId": 34750015,
+        "picId": "109951163640412450",
+        "duration": 209,
+        "artists": [
+          "Vicetone",
+          "Cozi Zuehlsdorff"
+        ]
+      },
+      "shot": {
+        "title": "Nevada (内华达)",
+        "artist": "Vicetone / Cozi Zuehlsdorff",
+        "album": "Nevada",
+        "dur": "03:28"
+      },
+      "flags": []
+    },
+    {
+      "n": 15,
+      "id": "1349292048",
+      "score": 135,
+      "api": {
+        "name": "心如止水",
+        "album": "成语接龙",
+        "albumId": 75350006,
+        "picId": "109951173141188510",
+        "duration": 185,
+        "artists": [
+          "Ice Paper"
+        ]
+      },
+      "shot": {
+        "title": "心如止水",
+        "artist": "Ice Paper",
+        "album": "成语接龙",
+        "dur": "03:05"
+      },
+      "flags": []
+    },
+    {
+      "n": 16,
+      "id": "1341964346",
+      "score": 135,
+      "api": {
+        "name": "你的酒馆对我打了烊",
+        "album": "你的酒馆对我打了烊",
+        "albumId": 75302730,
+        "picId": "109951163816225570",
+        "duration": 251,
+        "artists": [
+          "陈雪凝"
+        ]
+      },
+      "shot": {
+        "title": "你的酒馆对我打了烊",
+        "artist": "陈雪凝",
+        "album": "你的酒馆对我打了烊",
+        "dur": "04:11"
+      },
+      "flags": []
+    },
+    {
+      "n": 17,
+      "id": "1345848098",
+      "score": 135,
+      "api": {
+        "name": "绿色",
+        "album": "绿色",
+        "albumId": 75528003,
+        "picId": "109951163860425330",
+        "duration": 270,
+        "artists": [
+          "陈雪凝"
+        ]
+      },
+      "shot": {
+        "title": "绿色",
+        "artist": "陈雪凝",
+        "album": "绿色",
+        "dur": "04:29"
+      },
+      "flags": []
+    },
+    {
+      "n": 18,
+      "id": "2002753297",
+      "score": 101,
+      "api": {
+        "name": "123",
+        "album": "123",
+        "albumId": 155709699,
+        "picId": "109951168102899760",
+        "duration": 184,
+        "artists": [
+          "SSr",
+          "ljz329"
+        ]
+      },
+      "shot": {
+        "title": "123 (Doremi)",
+        "artist": "Ssr / Jjz329",
+        "album": "123 (Doremi)",
+        "dur": "03:03"
+      },
+      "flags": []
+    },
+    {
+      "n": 19,
+      "id": "2744377651",
+      "score": 65,
+      "api": {
+        "name": "TALKING SH*T FREESTYLE（2017）",
+        "album": "",
+        "albumId": 0,
+        "picId": "109951171990492740",
+        "duration": 143,
+        "artists": [
+          "ljz329"
+        ]
+      },
+      "shot": {
+        "title": "TALKING SH*T FREESTYLE (2017)",
+        "artist": "Jjz329",
+        "album": "未知专辑",
+        "dur": "02:23"
+      },
+      "flags": [
+        "ARTIST"
+      ]
+    },
+    {
+      "n": 20,
+      "id": "3397054564",
+      "score": 135,
+      "api": {
+        "name": "老本行",
+        "album": "长青 (Deluxe)",
+        "albumId": 383211818,
+        "picId": "109951173650298670",
+        "duration": 192,
+        "artists": [
+          "ICE杨长青",
+          "ljz329"
+        ]
+      },
+      "shot": {
+        "title": "老本行",
+        "artist": "ICE杨长青 / Jjz329",
+        "album": "长青 (Deluxe)",
+        "dur": "03:12"
+      },
+      "flags": []
+    },
+    {
+      "n": 21,
+      "id": "2743505559",
+      "score": 101,
+      "api": {
+        "name": "3977",
+        "album": "3977",
+        "albumId": 284085051,
+        "picId": "109951173483570190",
+        "duration": 141,
+        "artists": [
+          "ljz329"
+        ]
+      },
+      "shot": {
+        "title": "3977 (三条A)",
+        "artist": "Jjz329",
+        "album": "3977",
+        "dur": "02:21"
+      },
+      "flags": [
+        "ARTIST"
+      ]
+    },
+    {
+      "n": 22,
+      "id": "543798652",
+      "score": 135,
+      "api": {
+        "name": "少一点天分",
+        "album": "|希。O2 | 初雪限定",
+        "albumId": 37873196,
+        "picId": "109951163176818600",
+        "duration": 275,
+        "artists": [
+          "孙盛希"
+        ]
+      },
+      "shot": {
+        "title": "少一点天分",
+        "artist": "孙盛希",
+        "album": "希。O2 | 初雪限定",
+        "dur": "04:34"
+      },
+      "flags": []
+    },
+    {
+      "n": 23,
+      "id": "1959528822",
+      "score": 121,
+      "api": {
+        "name": "紫荆花盛开",
+        "album": "紫荆花盛开",
+        "albumId": 147166235,
+        "picId": "109951167605022960",
+        "duration": 211,
+        "artists": [
+          "李荣浩",
+          "梁咏琪"
+        ]
+      },
+      "shot": {
+        "title": "紫荆花盛开 (香港回归祖国25周年主题歌曲)",
+        "artist": "李荣浩 / 梁咏琪",
+        "album": "紫荆花盛开",
+        "dur": "03:30"
+      },
+      "flags": []
+    },
+    {
+      "n": 24,
+      "id": "2151956989",
+      "score": 45,
+      "api": {
+        "name": "人上人",
+        "album": "人上人",
+        "albumId": 194415320,
+        "picId": "109951169567752770",
+        "duration": 180,
+        "artists": [
+          "法老",
+          "MC HotDog 热狗"
+        ]
+      },
+      "shot": {
+        "title": "上人上 (Start from the bottom Pt.2)",
+        "artist": "法老 / MC HotDog 热狗",
+        "album": "上人上 (Start from the bottom Pt.2)",
+        "dur": "03:00"
+      },
+      "flags": [
+        "ALBUM",
+        "TITLE"
+      ]
+    },
+    {
+      "n": 25,
+      "id": "2526625",
+      "score": 135,
+      "api": {
+        "name": "Booty Music",
+        "album": "Git Fresh",
+        "albumId": 254362,
+        "picId": "860917604602698",
+        "duration": 182,
+        "artists": [
+          "Deep Side"
+        ]
+      },
+      "shot": {
+        "title": "Booty Music",
+        "artist": "Deep Side",
+        "album": "Git Fresh",
+        "dur": "03:01"
+      },
+      "flags": []
+    },
+    {
+      "n": 26,
+      "id": "422104138",
+      "score": 135,
+      "api": {
+        "name": "后来的我们",
+        "album": "自传",
+        "albumId": 34746073,
+        "picId": "3434874331529456",
+        "duration": 346,
+        "artists": [
+          "五月天"
+        ]
+      },
+      "shot": {
+        "title": "后来的我们",
+        "artist": "五月天",
+        "album": "自传",
+        "dur": "05:46"
+      },
+      "flags": []
+    },
+    {
+      "n": 27,
+      "id": "2617646167",
+      "score": 135,
+      "api": {
+        "name": "普通女孩",
+        "album": "敏感小孩",
+        "albumId": 245144455,
+        "picId": "109951169874834260",
+        "duration": 144,
+        "artists": [
+          "沙一汀EL"
+        ]
+      },
+      "shot": {
+        "title": "普通女孩",
+        "artist": "沙一汀EL",
+        "album": "敏感小孩",
+        "dur": "02:24"
+      },
+      "flags": []
+    },
+    {
+      "n": 28,
+      "id": "86369",
+      "score": 121,
+      "api": {
+        "name": "偏爱",
+        "album": "仙剑奇侠传三 电视原声带",
+        "albumId": 8466,
+        "picId": "109951165351505570",
+        "duration": 213,
+        "artists": [
+          "张芸京"
+        ]
+      },
+      "shot": {
+        "title": "偏爱 (电视剧《仙剑奇侠传三》插曲)",
+        "artist": "张芸京",
+        "album": "仙剑奇侠传三 电视原声带",
+        "dur": "03:32"
+      },
+      "flags": []
+    },
+    {
+      "n": 29,
+      "id": "3404238777",
+      "score": 115,
+      "api": {
+        "name": "周旋",
+        "album": "太热爱",
+        "albumId": 386145067,
+        "picId": "109951173532089940",
+        "duration": 291,
+        "artists": [
+          "王以太",
+          "艾热 AIR"
+        ]
+      },
+      "shot": {
+        "title": "周旋",
+        "artist": "王以太 / 艾热 AIR",
+        "album": "太热",
+        "dur": "04:50"
+      },
+      "flags": []
+    },
+    {
+      "n": 30,
+      "id": "1861479524",
+      "score": 135,
+      "api": {
+        "name": "还是劈开",
+        "album": "还是劈开",
+        "albumId": 130418710,
+        "picId": "109951166181489740",
+        "duration": 211,
+        "artists": [
+          "张叶蕾",
+          "全体诺克萨斯国战士"
+        ]
+      },
+      "shot": {
+        "title": "还是劈开",
+        "artist": "张叶蕾 / 全体诺克萨斯勇士",
+        "album": "还是劈开",
+        "dur": "03:31"
+      },
+      "flags": []
+    },
+    {
+      "n": 31,
+      "id": "465921195",
+      "score": 135,
+      "api": {
+        "name": "还是分开",
+        "album": "还是分开",
+        "albumId": 35287063,
+        "picId": "19218363741925310",
+        "duration": 227,
+        "artists": [
+          "张叶蕾"
+        ]
+      },
+      "shot": {
+        "title": "还是分开",
+        "artist": "张叶蕾",
+        "album": "还是分开",
+        "dur": "03:46"
+      },
+      "flags": []
+    },
+    {
+      "n": 32,
+      "id": "376971",
+      "score": 121,
+      "api": {
+        "name": "樱花草",
+        "album": "花言乔语",
+        "albumId": 37290,
+        "picId": "109951172325745500",
+        "duration": 284,
+        "artists": [
+          "Sweety"
+        ]
+      },
+      "shot": {
+        "title": "樱花草 (电视剧《米可，GO！》主题曲)",
+        "artist": "Sweety",
+        "album": "花言乔语",
+        "dur": "04:43"
+      },
+      "flags": []
+    },
+    {
+      "n": 33,
+      "id": "1970396862",
+      "score": 121,
+      "api": {
+        "name": "忏悔录",
+        "album": "MOVE IN SILENCE",
+        "albumId": 149341557,
+        "picId": "109951167757521200",
+        "duration": 197,
+        "artists": [
+          "KKECHO",
+          "那奇沃夫",
+          "REDBOI"
+        ]
+      },
+      "shot": {
+        "title": "忏悔录 (听说我谢谢你)",
+        "artist": "KKECHO / 那奇沃夫 / REDBOI",
+        "album": "MOVE IN SILENCE",
+        "dur": "03:16"
+      },
+      "flags": []
+    },
+    {
+      "n": 34,
+      "id": "208958",
+      "score": 135,
+      "api": {
+        "name": "越来越不懂",
+        "album": "Close To 蔡健雅 Original X Tanya Demo",
+        "albumId": 21260,
+        "picId": "125344325567370",
+        "duration": 230,
+        "artists": [
+          "蔡健雅"
+        ]
+      },
+      "shot": {
+        "title": "越来越不懂",
+        "artist": "蔡健雅",
+        "album": "Close To 蔡健雅 Original X Tanya Demo",
+        "dur": "03:49"
+      },
+      "flags": []
+    },
+    {
+      "n": 35,
+      "id": "440208643",
+      "score": 135,
+      "api": {
+        "name": "Psycho, Pt. 2",
+        "album": "Psycho, Pt. 2",
+        "albumId": 34985203,
+        "picId": "109951164939830020",
+        "duration": 162,
+        "artists": [
+          "Russ"
+        ]
+      },
+      "shot": {
+        "title": "Psycho, Pt. 2",
+        "artist": "Russ",
+        "album": "Psycho, Pt. 2",
+        "dur": "02:41"
+      },
+      "flags": []
+    },
+    {
+      "n": 36,
+      "id": "29436904",
+      "score": 135,
+      "api": {
+        "name": "南山南",
+        "album": "南山南",
+        "albumId": 3027098,
+        "picId": "6648746813825382",
+        "duration": 324,
+        "artists": [
+          "马頔"
+        ]
+      },
+      "shot": {
+        "title": "南山南",
+        "artist": "马頔",
+        "album": "南山南",
+        "dur": "05:23"
+      },
+      "flags": []
+    },
+    {
+      "n": 37,
+      "id": "108138",
+      "score": 101,
+      "api": {
+        "name": "那些你很冒险的梦",
+        "album": "学不会",
+        "albumId": 10750,
+        "picId": "109951168271379420",
+        "duration": 244,
+        "artists": [
+          "林俊杰"
+        ]
+      },
+      "shot": {
+        "title": "那些你很冒险的梦 (Those Were The Days)",
+        "artist": "林俊杰",
+        "album": "学不会 (Lost N Found)",
+        "dur": "04:04"
+      },
+      "flags": []
+    },
+    {
+      "n": 38,
+      "id": "233866",
+      "score": 135,
+      "api": {
+        "name": "心墙",
+        "album": "在树上唱歌",
+        "albumId": 23488,
+        "picId": "109951167343238380",
+        "duration": 227,
+        "artists": [
+          "郭静"
+        ]
+      },
+      "shot": {
+        "title": "心墙",
+        "artist": "郭静",
+        "album": "在树上唱歌",
+        "dur": "03:46"
+      },
+      "flags": []
+    }
+  ]
+}

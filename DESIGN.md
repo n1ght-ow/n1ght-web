@@ -2,7 +2,7 @@
 
 > 面向实现的单一设计事实源（V2，2026）。只记录现状，不发明新风格。
 > 结构与裁决见 `AGENTS.md`；研究留档见 `archive/design-research/` 与 `archive/premium-techniques/`。
-> **本版按代码逐条核对过**（2026-09-25）：`css/fonts.css?v=15`、`css/style.css?v=96`、`css/glass.css?v=8`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=15`、`css/series-stage.css?v=17`、`css/book-shelf.css?v=8`、`css/photo-wall.css?v=9`、`css/games-stage.css?v=3`、`css/smooth-cursor.css?v=1`、`js/reel-stage.js?v=26`、`js/film-stage.js?v=7`、`js/series-stage.js?v=7`、`js/glass-pill.js?v=3`、`js/glass-lens.js?v=1`、`js/photo-wall.js?v=8`、`js/main.js?v=82`。**任一 `?v=` 变了就说明文件改过，本文件对应段落要重新核对。**
+> **本版按代码逐条核对过**（2026-09-25）：`css/fonts.css?v=15`、`css/style.css?v=96`、`css/glass.css?v=8`、`css/reel-stage.css?v=15`、`css/film-stage.css?v=15`、`css/series-stage.css?v=17`、`css/book-shelf.css?v=8`、`css/photo-wall.css?v=9`、`css/games-stage.css?v=3`、`css/smooth-cursor.css?v=1`、`js/reel-stage.js?v=27`、`js/film-stage.js?v=8`、`js/series-stage.js?v=8`、`js/glass-pill.js?v=3`、`js/glass-lens.js?v=1`、`js/photo-wall.js?v=8`、`js/main.js?v=82`。**任一 `?v=` 变了就说明文件改过，本文件对应段落要重新核对。**
 
 ## 0. 品牌与 Design read
 
@@ -16,7 +16,7 @@
 
 **主题锁**：正文页全亮色纸面。暗色只用于三处：**hero（承载巨型字标）**、`#lightbox` 详情层、`.footer`。它们是「开场与落幕」语汇，不是分区反转。hero 是一层全幅影像加压在它上面的巨型字标（`hero/`，几何与 scrim 见第 7 节），导航条浮在两者之上；它**仍然是三个暗区之一**。
 
-**藏品规模**（**hero 统计条已退役**：hero 只有字标和它背后的那张全幅影像。这组数字现在只住在本节与各面板页头里，增删内容要同步这里；`#about-stats` 那 8 个计数更早已随 ABOUT 面板退役）：书 16 / 影 24 / 剧 36 / 音乐 496 首 15 组 / 球队 5 / 游戏 18。
+**藏品规模**（**hero 统计条已退役**：hero 只有字标和它背后的那张全幅影像。这组数字现在只住在本节与各面板页头里，增删内容要同步这里；`#about-stats` 那 8 个计数更早已随 ABOUT 面板退役）：书 16 / 影 24 / 剧 36 / 音乐 534 首 15 组 / 球队 5 / 游戏 18。
 
 ---
 
@@ -445,7 +445,7 @@ hero（**两层**：一层全幅影像 + 压在它上面的**巨型字标**，`N
 - **一张图三个切法（本人拍的陆家嘴仰拍）**：`<picture>` 在 `max-aspect-ratio: 3/4` 时换 `hero/lujiazui-tall.jpg`（462×999，从原图正中裁的原生像素切片——横图铺 390×844 本来也只露一条 1:2.16 的窗，与其把宽图拉高不如直接给它那块像素），否则走 `srcset` 的 1200w / 1440w。**交付的原图就是 1440×999，所以没有更大的档，也没有任何放大**：`srcset` 到 1440w 为止。三档全部由 `archive/hero-refresh/build-hero.py` 从 `hero/lujiazui-source.jpg` 生成，**不要手裁**。桌面 1440×900 取 1440w（`object-position: 50% 38%`，纵向 121px 余量花掉 62% 在上方：让字标落在云上而不是上海中心被灯打亮的那面幕墙上），竖屏 390×844 取 tall。它的 `object-position` 第一值只在竖屏起作用，第二值只在横屏起作用——两个值都是量过的，不要凭感觉调。
 - **三个章节头是一种形状**（`.sec-head` ×2 + 诗的 `.poem-head`）：两格 `repeat(2, minmax(0, 1fr))`、共用 `--chapter-gap`、`align-items: baseline`——眉标与导语首行共线，**标题的行数不再改变导语的位置**（旧版 `align-items: end` 让导语底边跟着标题底边走，一行标题的章节导语顶边在眉标上方 11px、两行标题的在下方 39px）。
 - **音乐默认单流派显示**，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。chips 住在 `.genre-filter` 这条布局行里、自己没有盒子（4.8）；它是**与标签条同一件玻璃托盘**，**不吸顶**——搜索行在它上面，两行都跟着列表滚走。
-- **搜索跨全部 15 组**：有命中时每个命中的组都展开，组头从「136 首」改成「4 / 136」，工具条读出「18 / 496」，零命中才是 NO MATCH。搜索中点击 chip = 跳到那一组的结果；清空关键词回到单选流派。
+- **搜索跨全部 15 组**：有命中时每个命中的组都展开，组头从「139 首」改成「4 / 139」，工具条读出「18 / 534」，零命中才是 NO MATCH。搜索中点击 chip = 跳到那一组的结果；清空关键词回到单选流派。
 - **游戏名册是一个定位盘**（Detent）：中心一张封面、其余按几何递减排在两侧，一次只讲一个。旧的**显式三列网格只剩兜底**：`css/games-stage.css` 用 `:not(.is-live)` 门住它。
 - **球队是五格手风琴**（Framer image animation 的移植）：一行五张图，永远只有一张被撑开。
 - **书是 3D 书架**：16 本书脊两面盒子，点书脊旋出封面。
@@ -499,7 +499,7 @@ V2 把纸墨系统铺满全站时，影 / 剧那一族**没有跟上**：它保�
 
 | 项 | 规则 |
 | --- | --- |
-| 封面 | 每行 **64px** 真封面（`MUSIC_COVERS` 的 496 个键**全部**指向磁盘上存在的文件，`album-covers/` 里共 417 张——多首歌共用一张；只有键缺失时才回落到同尺寸空 sleeve）。40-46px 的方块是项目符号不是图片 |
+| 封面 | 每行 **64px** 真封面（`MUSIC_COVERS` 的 534 个键**全部**指向磁盘上存在的文件，`album-covers/` 里共 455 张——多首歌共用一张；只有键缺失时才回落到同尺寸空 sleeve）。40-46px 的方块是项目符号不是图片 |
 | 编号 | **删除** `counter(track)`。个人收藏不是榜单 |
 | 分隔 | 零发丝线，靠行距 |
 | 署名 | 句首大写、`--color-text-secondary`。大写 + 哑色 + 字距 x 477 次会把署名变成纹理 |
@@ -551,6 +551,21 @@ V2 把纸墨系统铺满全站时，影 / 剧那一族**没有跟上**：它保�
 | chip 激活态的对勾字形 | 撑宽 chip 导致整轨重排 |
 | 一张卡同时四个 hover 信号 | 只留一个 |
 | 静止态出现金色 | 金只在 hover / 可交互 |
+
+---
+
+### 10.6 六栏的开场白（`.panel-note` / `.curator`）
+
+| 项 | 规则 |
+| --- | --- |
+| 结构 | 每个 `.tab-panel` 的第一块是 `.panel-note`（容器，只管间距），里面是一个 `<p class="curator curator--<tab>">`，**然后是这一栏自己的头**（书架 / `-stage-head` / 音乐抽屉 / 手风琴 / 拨盘） |
+| 排版 | `--fs-small` 15px、`line-height` 1.66、`max-width` 46ch、`--color-text-secondary`——与 `.sec-copy`、`.lead`、`.poem-standfirst` 完全同一套（同一个叙述者，低一档） |
+| 间距 | `.panel-note { margin-block-end: var(--bar-gap) }`，**六处同一个值**，与标签条→面板 / 搜索行→流派行→列表同一条栈 |
+| 颜色 | 无 accent。金色 = 可点击，而这句点不了 |
+| 为什么包一层 | `js/reel-stage.js` 的 `render()` 是 `stage.innerHTML = ""`，影 / 剧的挂载点原来是面板本身，裸 `<p>` 会被首帧清掉；现在挂载点是面板里的 `<div data-film-stage="auto">`，说明与 stage 是兄弟 |
+| 修饰类 | `.curator--books … --games` 六个类**没有任何规则**，只作钩子；六处落点已量过一致，不需要分开调 |
+
+文案规矩：第一人称、一句、**具体**（说出留下了什么、按什么挑的、或者放弃了什么），不喊口号、不概括、不写会过时的年数。六句是同一个人的六句话，不是六段广告语。
 
 ---
 

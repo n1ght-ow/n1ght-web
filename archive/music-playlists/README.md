@@ -1,10 +1,16 @@
 # N1GHT CHXN9 → 网易云歌单导入
 
-把站点 **THE ARCHIVE → 音乐** 里的 15 个流派分组，一次性变成你自己网易云账号里的 15 个歌单：
-POP 136 首、华语流行 40 首、BALLAD 39 首……合计 496 首，与 `js/music-data.js` 逐首一致。
+把站点 **THE ARCHIVE → 音乐** 里的歌，一次性变成你自己网易云账号里的 **17 个歌单**：
 
-另外还有一份**语言歌单**脚本（`netease-import-language.js`）：把同样这 496 首横向切成
-`N1GHT · 中文`（157 首）与 `N1GHT · ENGLISH`（331 首）。它是账号侧的第二视图，不参与站点渲染。
+- **15 个曲风歌单** —— 每个分组一个：POP 139 首、华语流行 45 首、BALLAD 40 首……合计 534 首；
+- **2 个语言歌单** —— 同一批歌横向切一刀：`N1GHT · 中文` 185 首、`N1GHT · ENGLISH` 341 首。
+
+> **一条歌要同时进两处。** 曲风与语言是**同一批歌的两份视图**（`js/music-data.js` 仍然只有一份），
+> 所以任何一次加歌都必须**同时**落进对应的曲风歌单和语言歌单。这件事由 `build-import.mjs` 的两道断言
+> 兜底（分桶不重不漏 + 歌单名唯一），而且**全部 17 个歌单在同一份粘贴文件里，一次跑完**。
+> **不要再把语言歌单拆成第二趟** —— 2026-09-23 那次就是这么漏的，owner 因此粘了两次。
+
+所有计数都与 `js/music-data.js` 逐首一致。站点只做内容跳转、不发任何请求，也没有代理。
 
 ## 为什么不是「网页里点一下就建好」
 
@@ -43,15 +49,17 @@ E(block)，外面再补一个 PKCS#7 就是标准 ECB）。`test-eapi-crypto.mjs
 1. 浏览器打开并登录 <https://music.163.com/>（手机 App 扫码即可，不用输密码）。
 2. `F12` 打开 DevTools → **Console** 面板。新版本 Chrome / Edge 会要求先手打一次
    `allow pasting` 回车（防止陌生代码粘贴执行），然后：
-3. 打开 `netease-import.js`，**全选、复制、粘贴进 Console、回车**。想建语言歌单就改粘
-   `netease-import-language.js`，粘贴方法一模一样（两份脚本都是自足的，粘哪个跑哪个）。
+3. 打开 `netease-import.js`，**全选、复制、粘贴进 Console、回车**。
 
-大约 25 秒跑完（建单之间刻意留了间隔，网易云对连续操作会回 405/406「操作太快了」）。
+**只要这一份。** 里面就是全部 17 个歌单（15 曲风 + 2 语言），跑一次全都到位——**不要再拆成两趟**，
+拆开跑必然漏掉语言歌单，而且两趟之间还要你自己记住跑过哪一半。
+
+大约 40 秒跑完（建单之间刻意留了间隔，网易云对连续操作会回 405/406「操作太快了」）。
 结束时控制台会 `console.table` 列一份结果，并把一段 JSON 用 `copy()` 放进剪贴板：
 
 ```json
 { "pop": { "name": "N1GHT · POP", "id": "123456789", "url": "https://music.163.com/#/playlist?id=123456789",
-           "want": 136, "added": 136 }, ... }
+           "want": 139, "added": 139 }, ... }
 ```
 
 把这段 JSON 发回给助手，就能把「每个流派 → 对应歌单」的直达入口接回站点（**已经接好了**，
@@ -85,17 +93,38 @@ E(block)，外面再补一个 PKCS#7 就是标准 ECB）。`test-eapi-crypto.mjs
 并给那个 `<script>` 的 `?v=` +1），要么让 `console-runner.js` 复用同名歌单——脚本按**名字**认歌单，
 所以只要歌单名还叫 `N1GHT · POP`，重跑就不会新建第二份。
 
+**2026-09-23 第二跑（第 4 批 38 首并进来之后，实测）**：15 个歌单**全部按名字复用，id 一个都没变**
+（上面那张表的 id 仍然有效）。本次共加入 **38 首**，正好等于本批新增的全部；逐组 `added`：
+
+| 组 | added | 组 | added |
+| --- | --- | --- | --- |
+| POP | 3 | 华语流行 | 5 |
+| BALLAD | 1 | 华语抒情 | 8 |
+| ROCK | 1 | 华语摇滚 | 1 |
+| EDM & DANCE | 2 | 华语说唱 | 10 |
+| R&B & SOUL | 1 | 华语民谣独立 | 2 |
+| HIP-HOP | 2 | 华语影视原声 | 2 |
+
+FOLK & COUNTRY / CLASSICS / K-POP 三组本来就满，`added` 为 0。脚本回读的 `want` 与
+`js/music-data.js` 的 `tracks.length` 逐组一致（15/15），所以「歌单 == 站点」这条不变量仍然成立。
+
 ## 两个语言歌单（账号侧总集，2026-09）
 
 站点按**曲风**分 15 组，语言歌单是横向切的一刀，两者是**同一批歌的两份视图**，同一首会同时躺在
 「曲风歌单」和「语言歌单」里——这不是重复数据，`js/music-data.js` 仍然只有一份。
 
+**它们和曲风歌单在同一份 `netease-import.js` 里**（数组的最后两组），不需要、也不应该单独跑一趟。
+
 | 歌单 | 内容 | 首数 | id |
 | --- | --- | --- | --- |
-| N1GHT · 中文 | `groupLang: "zh"` 的六个华语分组 | 157 | 18393654945 |
-| N1GHT · ENGLISH | 其余八个英文分组 | 331 | 18393736473 |
+| N1GHT · 中文 | `groupLang: "zh"` 的六个华语分组 | 185 | 18393654945 |
+| N1GHT · ENGLISH | 其余八个英文分组 | 341 | 18393736473 |
 
 2026-09-18 首跑：两个都是新建，`added` 分别 157 / 331（各自全量），合计 488 首。
+2026-09-23 第二跑（第 4 批 38 首并进来之后，实测）：两个歌单**都按名字复用，id 未变**；`added` 分别
+**28 / 10**（华语六组 +28、英文八组 +10），合计 **38**，正好等于本批新增的全部 —— 与跑之前的预期逐位一致。
+`want` 185 / 341 与 `js/music-data.js` 的分组逐位一致（`batch4-run-language-check.js`：zh 六组 185 /
+en 八组 341 / k-pop 8，合计 534）。
 
 - **k-pop 的 8 首两边都不进**：它是韩语，既不是中文也不是英文。生成器按 **id** 排除它，不靠
   `groupLang` 猜——`k-pop` 在数据里与英文组同形（都不写 `groupLang`），猜一定会把它算成英文。
@@ -128,19 +157,19 @@ E(block)，外面再补一个 PKCS#7 就是标准 ECB）。`test-eapi-crypto.mjs
 
 | 文件 | 作用 |
 | --- | --- |
-| `read-music-data.mjs` | 解析 `js/music-data.js` 的唯一一份实现，两个 build 脚本共用 |
-| `build-import.mjs` | 读分组，把下面三个拼成 `netease-import.js`（15 个曲风歌单） |
-| `build-language-import.mjs` | 同样读分组，横向切成中文 / 英文两组，拼成 `netease-import-language.js` |
+| `read-music-data.mjs` | 解析 `js/music-data.js` 的唯一一份实现 |
+| `build-import.mjs` | 读分组，切成 **15 曲风 + 2 语言 = 17 组**，连同加密与运行器拼成 `netease-import.js` |
 | `eapi-crypto.js` | eapi 加密：手写 MD5 + 用 AES-CBC 拼出的 AES-ECB |
 | `console-runner.js` | 运行器（`window.__nightNeteaseImport`），登录检查、建单、去重、分批加歌 |
-| `netease-import.js` | **自动生成，就是你要粘贴的那一份**（曲风歌单），别手改 |
-| `netease-import-language.js` | **自动生成**（语言歌单），同样是整份粘贴，别手改 |
+| `netease-import.js` | **自动生成，就是你要粘贴的那一份**（17 个歌单一次跑完），别手改 |
 | `test-eapi-crypto.mjs` | 把浏览器版加密与 node:crypto 参考实现逐字节比对 |
 | `probe-routes.mjs` | 无凭证探测三条路由的返回，用来复核上面那张表 |
 
+`netease-import-language.js` 与 `build-language-import.mjs` **已退役（2026-09-23）**：语言歌单并进了
+`netease-import.js`，那两个文件存在的唯一后果就是「可以只跑一半」，而那正是要避免的。
+
 ```sh
-node archive/music-playlists/build-import.mjs             # 重新生成曲风歌单的粘贴文件
-node archive/music-playlists/build-language-import.mjs    # 重新生成语言歌单的粘贴文件
+node archive/music-playlists/build-import.mjs      # 重新生成粘贴文件（17 个歌单，改完 music-data.js 就跑它）
 node archive/music-playlists/test-eapi-crypto.mjs   # 验证加密实现
 node archive/music-playlists/probe-routes.mjs       # 复核接口路由
 ```

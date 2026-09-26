@@ -70,7 +70,7 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 ## 排版（DESIGN.md 第 2 节）
 
 - **双寄存器系统，9 个 `--fs-*` token 封顶**：UI 档 5 个（11 / 12 / 13 / 15 / 16px）+ 展示档 4 个（`--fs-h4` 20、`--fs-h3` 20→25、`--fs-h2` 31→49、`--fs-display` 39→76，模数 1.25）。两者之间的空档是刻意的，不要插中间值，也不要新增第 10 个 token（DESIGN.md 2.2）。
-- **hero 字标是 logotype，不是第 11 个角色**：`N1GHT CHXN9` 一个字符串、一个字号，字号按 `.hero-inner` 的内容列算（`--masthead: 14.5cqw`，实测来历写在 `css/style.css` 第 7 节）。字号表不动。
+- **hero 字标是 logotype，不是第 11 个角色**：`N1GHT CHXN9` 一个字符串、一个字号，字号按 `.hero-inner` 的内容列算（`--masthead: 12.5cqw`，见 `css/style.css` 第 7 节）。字号表不动。
 - **红线**：`text-box-trim` **只给展示档标题**（`.display` / `.sec-title` / `.footer-name`；coda 已退役）。它移除降部空间，与 `overflow: hidden` 同用会切掉降部——曾把「Maybe」渲染成「Maube」。
 - `line-height` 一律 unitless；标题 `text-wrap: balance`，描述 `pretty`；会变的数字 `tabular-nums`。
 - 字重只用 400 / 500。层级由字号与留白承担，不由加粗承担。
@@ -160,10 +160,19 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 - **焦点提示在输入框底边**（1px `--color-text-muted` + 光标），不再给整行画环：满宽色带套 2px 金环就是相框（用户原话「那个金色框删掉吧」）；输入框自身的 `outline: none` 由这条底线替代，行内的清除 / SHUFFLE 保留全局焦点环。
 - **压在纸面上的三条 bar，镜面棱都不吃 `brightness()`**（`#archive-tabbar`、`.music-search`、`#genre-filter` 三条共用一条 `.glass__edge` 规则）：纸上 1.14× 只会把 ~249 的主体削顶成纯白，实测上下 9px 是 `255,255,255`，而药丸四边各距棱 6px —— 那圈白就是「药丸周围的白色光晕」。改成只留 `blur(3px) saturate(1.4)` 后同点实测 `248,248,240`。`header.nav` 压在照片上，**保留** brightening。
 - `≤720px`：`.tabbar` 与 `#genre-filter` 都是横向滚动器，都转实底（`var(--color-surface)` + `inset 0 0 0 1px var(--color-line)`）并 `display: none` 掉两层——滚动容器里不放 backdrop-filter。实底规则必须写成 **`.tabbar.glass` / `.genre-filter.glass`**：`.glass` 在 glass.css 里且**后加载**，bare 类的同名声明压不过它（`.tabbar` 那条自 V2 起就没生效过，修好了）。搜索行不滚动，**保留玻璃**。
+- **`≤720px` 的导航条只有一件事要记住**：`.nav-links` 在这一档是横向滚动器，而 320px 上第三个链接根本放不下（玻璃只有 280px，品牌 95px，三条链接 254px）——原来它被裁成一个断词（"ARCHIVE" 停在 "A"），看着像坏了。现在滚动器右端挂一条 28px 的 `.nav-links::after` 淡出（自带 `mask-image` 从透明到实底，`background: var(--glass-nav)`），最后一个词是**化开**而不是被切断。它是 flex 子元素，所以用 `margin-inline-start: -28px` 把占走的宽度还回去——链接的位置和以前逐像素相同。**不要改成给滚动器本身加 `mask-image`**：量过，容器宽正好等于被裁的宽度，那个遮罩什么也遮不到。
+- **搜索框的占位符在 320px 会省略号收尾**：字段内容区只有 148px，而 "SEARCH TITLE OR ARTIST" 量到 239px，原来被切在 "SEARCH TITLE OR ART"。加了 `text-overflow: ellipsis`。**占位符是示例不是标签**（见「文案」），所以这里不需要更短的文案，需要的是不要切得难看。
+
+### 六栏的开场白（`.panel-note` / `.curator`）
+
+六个面板各有一句**第一人称的英文策展文字**，说清「留下了什么、按什么挑的」。这是「档案」这一章原本缺的那一层：之前只能看到留下了什么，看不到为什么，六栏因此读成一堆没有差别的收藏。**一句话、具体、不喊口号**；不带 accent（金色 = 可点击，而这句话点不了）。
+
+- **一个元素，六处摆放，一套排版**：`.panel-note`（外层，只管与下面的间距）+ `.curator`（正文，`--fs-small` / 46ch / `--color-text-secondary`，与 `.sec-copy`、`.lead` 同一个叙述者）。六个面板的内部头各长各样，**不要把这句塞进任何一个面板自己的头里**——那就是同一句话的六种排法，正是要修的东西。`.curator--*` 六个修饰类留在元素上当钩子，但**没有任何规则用它们**（量过，六处落点一致，所以不需要分开调）。间距统一 `--bar-gap`，与标签条那条栈用同一个 token。
+- **`.panel-note` 这层包装不是装饰，是必需的**：`js/reel-stage.js` 的 `render()` 第一句就是 `stage.innerHTML = ""`，而影 / 剧的 stage 元素**原来就是那个 tab 面板本身**，所以裸写一个 `<p>` 进去会被首帧清掉（实测：DOM 里有，两个面板画出来没有）。现在影 / 剧面板里多了一个 `<div data-film-stage="auto">` / `<div data-series-stage="auto">`，stage 渲染进它，说明与 stage 成为兄弟——六个面板因此是同一个 DOM 形状。**不要把挂载点改回面板本身**，也不要把 `.panel-note` 摊平。
 
 ### 影 / 剧
 
-数据（`film-data.js` 24 部 / `series-data.js` 36 部）→ 配置适配器经 `js/reel-stage.js` 的 `createReelStage()` 工厂渲染进 `#panel-films` / `#panel-series`。
+数据（`film-data.js` 24 部 / `series-data.js` 36 部）→ 配置适配器经 `js/reel-stage.js` 的 `createReelStage()` 工厂渲染进 `#panel-films` / `#panel-series` 里的 `[data-film-stage="auto"]` / `[data-series-stage="auto"]` 挂载点（不是面板本身，见上一节）。
 
 **改动纪律**：`reel-stage.js` 是**两个面板共用的唯一实现**，适配器只传配置，**不要改工厂契约**（否则影和剧要改两遍）。
 class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑定。
@@ -209,7 +218,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 
 ### 音乐
 
-`js/music-data.js`（`window.MUSIC_DATA`，496 首 15 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
+`js/music-data.js`（`window.MUSIC_DATA`，534 首 15 组）→ `js/music-stage.js` 渲染进 `.playlist[data-music-stage="auto"]` 并生成 `#genre-filter` 过滤 chips。`.genre-count` 由渲染器自动生成。
 
 专辑封面走 `js/music-covers.js`（`window.MUSIC_COVERS`，songId → 文件名，图在 `album-covers/`，生成文件勿手改），详情层 `.lb-music` 显示真实封面，缺图回落 ♪ 占位 sleeve。
 
@@ -218,8 +227,9 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - **音乐面板没有入场动效**（应要求）：`js/main.js` 的 `animateIn()` 只在面板里能找到 `.idx-row / .genre / .hof` 行时才跑，所以影 / 剧 / 书 / 球队本来就是静止的，**原来只有音乐和游戏吃这套**。实测切到音乐那一帧 `#panel-music` 是 `clipPath: inset(0 0 0 100%)`、可见的 `.genre` 是 `inset(0 0 100%) + translateY(14px)`，0.85s 后才落定 —— 477 张卡 15 组读起来就是加载级联。现在 `select()` 里 `panel-music` 直接走 instant 分支，切过去第一帧就是 `clipPath: none` / `transform: none`。**游戏拨盘仍保留擦入**（改完只剩它一个），要去掉就在同一分支里加 `panel-games`。
 - 歌单默认**全展开、无手风琴**；浏览靠流派 chips 过滤 + 搜索叠加 + SHUFFLE。
 - 默认**单流派显示**：一次只显示一组，首屏索引 0 的 POP；chips 行没有「全部」，一次只有一枚 `aria-pressed="true"`。切换流派统一走 `selectGenre()`。
-- **搜索跨全部 15 组**（应要求改的）：有命中时每个命中的组都展开，组头从「136 首」变成「4 / 136」，工具条读出「18 / 496」，零命中才显示 NO MATCH。`#music-search-jump` 随之退役——查询已经覆盖全部流派，没有「别处」可跳。**搜索中点击 chip = 跳到那一组的结果**，走原生 `scrollIntoView` + `scroll-margin-top`；**不要自己算 delta**：`.genre` 是 `content-visibility: auto`，实测手算落点差 359px、加一次「修正」反而差 834px（每次重测都会让另一个块实体化）。清空关键词后回到单选流派。
+- **搜索跨全部 15 组**（应要求改的）：有命中时每个命中的组都展开，组头从「139 首」变成「4 / 139」，工具条读出「18 / 534」，零命中才显示 NO MATCH。`#music-search-jump` 随之退役——查询已经覆盖全部流派，没有「别处」可跳。**搜索中点击 chip = 跳到那一组的结果**，走原生 `scrollIntoView` + `scroll-margin-top`；**不要自己算 delta**：`.genre` 是 `content-visibility: auto`，实测手算落点差 359px、加一次「修正」反而差 834px（每次重测都会让另一个块实体化）。清空关键词后回到单选流派。
 - **每个流派都有自己的网易云歌单**：`music-data.js` 每组一个 `playlist: "<id>"`，`js/music-stage.js` 把它渲染成组头右端的 `OPEN PLAYLIST`（`.genre-meta` = 计数 + 链接，两条都在 DOM 里排在标题之后）。歌单是 `archive/music-playlists/` 在账号里一次性建好的（路由实测、eapi 加密、命名与重复运行规则都在那份 README），**站点只做内容跳转、不发任何请求**，也没有代理。那条链接**是这一行唯一的金色**：`--color-accent-text` 下划线（accent hue = 可交互），旁边的计数保持 muted；一次只有一个流派在屏上，所以同时只命中一处。它是 19px 高的文字链，`::after` 把命中区撑到 41px，**只往上 / 下 / 左扩，不往右**（右边缘与组头齐平，多出来的部分本来就会被裁掉）；实测命中区下沿距第一张卡还有 3px，**不要加大这个 inset** —— 再往下就会把歌曲卡的点击抢走（`main.js` 的委托是 `closest(".idx-card")`，命中的是链接就没有卡）。`≤720px` 时组头 `flex-wrap: wrap`，计数 + 链接整块落到第二行、仍贴右（320px 实测无横向溢出）。
+- **加歌要同时进两个歌单，而这件事是一次粘贴**：站点按曲风分 15 组，账号侧另有**两个语言总集歌单**（`N1GHT · 中文` / `N1GHT · ENGLISH`），它们是同一批歌横向切的一刀——所以**一首歌必须同时躺进它的曲风歌单和它的语言歌单**。两份视图都在同一份 `netease-import.js` 里（`build-import.mjs` 生成 15 曲风 + 2 语言 = 17 组），**跑一次全都到位**。`build-import.mjs` 的两道断言（语言分桶不重不漏 + 歌单名唯一）会让「只加了一半」在生成阶段就拒绝出文件。`netease-import-language.js` 与 `build-language-import.mjs` **已因此退役（2026-09-23）**：拆成两个文件就等于允许只跑一半，那次就是这么漏的，owner 被迫粘了两次。
 - **详情层只有一步直达**（应要求改的）：`OPEN IN NETEASE` 下面那条 `OPEN <流派> PLAYLIST` 已删除 —— 它和组头右端那条 `OPEN PLAYLIST` 指向**同一个歌单 id**，是重复入口；跳歌单这件事留给组头（一次只有一个流派在屏上，那一条就够）。随之退役的还有 `#lb-music-playlist` / `.lb-playlist-link`（css）、`#lb-music-playlist` 的可见性开关，以及 `musicItemData()` 的 `playlist` / `playlistLabel` 字段与详情层那个已无主的 playlist 点击分支；`js/music-stage.js` 也不再写 `data-playlist-label`（`data-playlist-id` **保留**：`main.js` 委托在 `#panel-music` 上的点击处理读它）。`.lb-stage` 的 `title / artist / sleeve / OPEN` 只剩一行链接，焦点顺序（`#lb-music-link` → `#lb-prev`）与 `lbFocusables()` 不受影响。**不要再加回来**：组头那条就是同一个 href。
 - **歌单链接先打客户端，不是网页**（详情层那条删掉后，歌单只剩组头生成的 15 条）：`main.js` 的 `openInApp(type, id)` 是 `openSong` 泛化来的（手机 `intent://` / `orpheus://<type>/<id>`，桌面建隐藏 `<a>` 点 `orpheus://` + `btoa(JSON)`，1200ms 内页面没被切走才回落网页）。payload 抄官方网页端自己的写法（`core_*.js`：`{type,id,cmd:"play",channel:"webset"}`，`TYPE_MAP` case 13 = playlist）：**歌单**用它，**歌曲**仍发本站一直在发的 `{type:"song",id,cmd:"play"}`（那条已知能落，不要顺手统一）。`<a href>` 保持网页地址，中键 / Ctrl+点击 / 无 JS 时仍走网页，四个修饰键的点击**不拦截**。流派那 15 条由 `music-stage.js` 生成，所以是**委托在 `#panel-music` 上**的，逐条绑定会随重渲染失效。实测：那条 `orpheus://eyJ0eXBlIjoicGxheWxpc3Qi…` 让客户端**冷启动**并直接开始放 POP（窗口标题 `Cheap Thrills - Sia`，该曲就在 `music-data.js` POP 组内）。
 - **切换流派把新手流派带回条带顶部**（`alignGenreTop()`，只向上、不向下）：长流派滑到深处再切短流派时，文档变矮会被浏览器夹到底部，不处理就会"直接到最底"。落点基准是**固定导航条的底边 + 16**（`header.nav` 是 `fixed`，rect 在任何滚动位置都诚实；旧版读的是 sticky 板的 pinned 几何，随吸顶一起退役）。另外两条仍然成立：落位是**瞬时跳**不是补间（补间只能从被夹住的近底部开始，会闪一路无关内容）；`lenis.scrollTo` 在目标等于上次目标时**直接 return**，而这里每组的目标都是同一个文档位置，所以要再核对 `window.scrollY` 并回落原生 `scrollTo`。实测：搜索中点 chip 落点 16 / 15px，深处切流派落点 16px。
@@ -258,6 +268,7 @@ class 前缀（`film-*` / `series-*`）不许改——CSS 和 main.js 按它绑�
 - **颜色用站内的**：上游是白底 + 纯黑窄缝，两条都在禁区。窄缝是 `paper-100`，文案压在 `oklch(0.1 0 0)` 的墨色渐变上；队徽只出现在窄缝里（48px、居中、展开后淡出）。
 - **文案只有三行**：眉标（队名 + 联盟）、荣誉、官网域名。**没有中文短评** —— 荣誉那一行就是这条带子上唯一的中文，走 `--fs-h3`。
 - 图片在 `sport/`（文件名即 slug），五张都是 **1600px webp**（2.5 MB → 1.25 MB → 0.78 MB）。`loading="lazy"` **必须留着**：这五张与队徽都在 `display:none` 的面板里，没有 lazy 就会在首屏 eager 取走 1.28 MB（实测 10/10 → 0/10）。
+- **未降采样的原图归档在 `archive/sport-sources/`**（站点不加载）：`build-images.py` 对 `sport/` 是**就地替换**，所以 `sport/` 里的 1600px webp 是产物不是源。要重出更大的一档、或换编码格式，从那里取文件（文件名已是 slug，直接放回 `sport/` 再跑 `--only=sport`）。
 
 ### 诗（folio）
 
@@ -273,17 +284,20 @@ Dylan Thomas《Do not go gentle into that good night》。**这一段只有诗**
 
 ## 站点结构
 
-hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 正文里一屏的无限照片棋盘，21 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 24 / 剧 36 / 音乐 496 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
+hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导航条浮在两者之上）→ PHOTOGRAPHY（章节导语 + 开场大图 + 全屏照片墙入口，21 帧）→ THE ARCHIVE（六 tab：书 16 本书架 / 影 24 / 剧 36 / 音乐 534 首 15 组 / 球队 5 / 游戏 18 卡）→ POEM（Dylan Thomas《Do not go gentle into that good night》，**这一段只有诗**：自述、8 个统计数字、section 头与 coda 都已退役；已是**印刷 folio**——眉标 + 诗题 + 导语是头，中间是 3 + 3 两列的诗，落款收尾，三块共用诗自己的两列）→ footer。导航与页脚的 `About` 标签改成 `Poem`，但**段的 id 仍是 `#about`**（锚点与 ScrollTrigger 都按它绑定，不要改）。
 
-- **照片在正文流里**：`#photo` 段落里 `.photo-wall` 那一屏就是全部（高度在 `css/photo-wall.css`：`clamp(400px, 62vh, 720px)`，`≤720px` 是 `clamp(320px, 56vh, 520px)`；格子宽度在 `js/photo-wall.js` 的 `CELL_VW 0.20 / CELL_MAX 280 / GAP 18`，`CELL_MIN 132` 是手机端的地板），**不是全屏层**。`#photo-view`、「Open the wall」按钮、`window.NightScroll`、以及为它写的那套滚动锁 / `inert` 重挂**已整体退役**——nav 与页脚的 `Photography` 现在只是普通锚点。灯箱自己仍会锁滚动（`document.body.style.overflow` + `lenis.stop()` + `setPageInert()`），关闭时还原。
-- **无 JS 兜底**：21 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` **一执行就把这 21 个元素搬进 `#photo-wall`**（不是等打开视图）。关闭 JS 时照片仍在页面上，只是没有棋盘。
+- **照片墙独立全屏**：`#photo-enter` 从摄影开场图下方打开 `#photo-view`，墙占 `100dvh`。打开时绘制并锁住页面滚动，关闭按钮或 Esc 关闭并把焦点送回入口。点墙上的图进入共用灯箱；关闭灯箱先返回墙，再关闭墙才回到正文。导航与页脚的 `Photography` 仍是普通锚点。
+- **开场大图与注记**：`.photo-lead` 用两列排图和文字，≤720px 时叠成一列。图是 21 张里的第 11 张，仍为非交互内容；`#photo-enter` 是进入照片墙的单独按钮。图不能 lazy，读者滚到这一章时应已加载。
+- **比例归图片盒子**：`.photo-lead-image` 保持 3:2，`img` 保留 `width="1600" height="1067"` 并填满盒子；不要把 `aspect-ratio` 写在 img 上，以免尺寸提示与 CSS 冲突。
+- **棋盘的开场格是几何，不是口味**：内容是世界坐标的纯函数（见下），authored 行 0 在打开视图时居中；正中槽位是 10，对应开场大图。重新排序要连 `data-photo-index`、`.photo-frame-no`、`aria-label` 里的序号一起改，不要只搬 `<figure>`。全屏高度下可见行数会随视口变化，旧的 558px 半屏测量不再适用。
+- **无 JS 兜底**：21 个 `.photo-frame` 放在正文的 `.photo-fallback` 网格里，`html.js` 把它 `display: none`；`js/photo-wall.js` 一执行就搬进 `#photo-wall`，首次打开全屏层时才测量并铺图。关闭 JS 时入口隐藏，照片仍在正文网格里。
 - **棋盘是 PhantomInfiniteGallery 的 vanilla 移植**：几何与交互全在 `js/photo-wall.js`（旋钮常量 `CELL_* / GAP / MARGIN / ARC_* / PARALLAX_* / THROW_* / HOLD_ZOOM_*` 都在文件头上；逐条事实见 `DESIGN.md` 第 7 节）。四条不许动：
   - **内容是世界坐标的纯函数**（`index = |(x + 3y) mod n|`）：铺到哪都铺得满、同一个世界格永远是同一张照片，图案每 n 列、每 n / gcd(3, n) 行重复一次（n = 21 时是 21 列 / 7 行）——这也是键盘聚焦时能「抄近路」平移的前提。棋盘不到四行高，短的那个行周期在屏幕上读不出来。
   - **21 张正典永不回收**：它们坐在世界第 0 行 x = 0..20，其余可见格子都是池化克隆（`aria-hidden` + 不在 tab 序）。所以 `main.js` 永远只找到 21 个 `.photo-frame`，tab stop 也永远只有这 21 个。
   - **一帧一次 transform 写入**（`place()` 把位置一起写进 `translate3d + rotateY + scale`）：改成写 `left/top` 会让拖拽的每一帧都 flush 一次 layout。
   - **只有 `frame()` 一个写入者**（`pos` / `par` / `size` 三个状态都归它）——别在别处直接改 transform。
 - **抛掷会停**（`THROW_FRICTION 0.92`、`REST 1px/s`）：参考实现故意留着 1e-4 的残余速度永不静止，本站**不要照抄**——一直爬的板子既难读又让合成器醒着。
-- **`touch-action: pan-y`，不是 `none`**：横划拖板、纵划滚页，滚轮**只吃 `deltaX`**（+ Shift+纵滚）。它是长文档里的一屏，吞掉纵划就是滚动陷阱。
+- **`touch-action: none`**：全屏墙接管触摸双轴拖拽；页面在背后锁定。滚轮只吃 `deltaX`（+ Shift+纵滚）。
 - **点格子开灯箱，拖拽不开**：`swiped` 在 `pointerdown` 清零、位移 > `SWIPE_SLOP`(6px) 置位，`click` 在捕获阶段消费（键盘回车放行）。克隆体也是真 `<button>`，所以 `main.js` 在 `#photo-wall` 上**委托一次**，不要逐格绑定。
 - **方向键挂在墙上**（`wall.addEventListener("keydown")`，左右各走一格），而且 `focusin` 只在 `:focus-visible` 时才把那一帧框到视野里——与影 / 剧同一条纪律：指针按下的 focus 不算「选中」。
 - **`data-act` 是 `BLOOM / HORIZON` 的唯一来源**（`photoFrameData()` 读 `frame.dataset.act`）；乐章标题与 `.photo-act-horizon` 已删。判定口径是**距离**不是物种：**BLOOM = 镜头近处活着的绿色世界**（花 / 枝 / 叶 / 树干 / 近前的动物与水面），**HORIZON = 远景，地面与天相接**（田野 / 河 / 云 / 山坡 / 村镇）。**只有这两个值，不要为了新照片新增第三个标签。**
@@ -291,13 +305,14 @@ hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导�
 - **游戏名册是一个定位盘**（`js/games-stage.js`，Framer Detent 的纯 DOM 移植）：舞台挂载时给 `.hof` 加 **`.is-live`**，十八张封面排在一个环上、只有中心那张是彩色，`.hof-name` / `.hof-hours` / `.hof-quote` 留在条目里当数据源并**只画一次**（画进中心下方的 `.hof-now`）。舞台没起来（无 JS / 脚本失败）时 `.is-live` 不在，`css/games-stage.css` 回落到一份**显式三列的静态名册**：`repeat(3, minmax(0,1fr))`，900px 以下两列、720px 以下单列。**不要改回 `auto-fill`**——18 只能被 1/2/3/6/9/18 整除，`auto-fill minmax(250px,1fr)` 在 1440 下出 4 栏 = 4 行零 2 个孤儿。
 - **影 / 剧的卡片是「2:3 媒介盒 + 盒外的 meta」**，靠 `.film-card` 的栅格实现（`grid-template-columns: minmax(0,1fr)` + `grid-template-rows: auto auto 1fr`），**不要改回绝对定位的整盒 + meta 覆盖**，也**不要漏掉列定义**（漏了海报会按 JPG 固有尺寸渲染，实测 158/54/90/59/54/24px）。索引药丸（`.film-card-no`）与 OPEN chip（`.film-card-sleeve`）均已 `display: none`；选中态是**三层**：可区分的环（静止 0.1 / hover 0.2 / 选中 0.34）+ 卡片抬起一行 + 片名。**详情区不放图**。
 - **索引列表（音乐）没有逐行发丝线**，靠 `padding-block` 与间距分组，用 64px 封面取代序号。**书（书架）与球队（手风琴）都已不在 `.idx-*` 里**：球队换成手风琴后，`.idx-no` / `.idx-logo` / `.idx-line` 三条孤儿规则连同 720px 下的两条响应式覆盖一起删掉了。
+- **`≤720px` 的曲目行第一栏必须等于封面宽度（64px）**：原来写的是 `2.2rem`（35.2px），而 `.idx-cover` 是 64px —— 封面**溢出自己的轨道 29px**，标题因此从封面里 16px 处开始。一行两列、534 行，整张列表就是这么挤起来的。现在标题与署名都从 64 + 12 = 76px 起，与上面的流派标题同一条左边缘。**改这个值时它必须等于 `.idx-cover` 的宽度**。
 - **音乐每行必须渲染 64px 真封面**（`window.MUSIC_COVERS`）；缺图回落同尺寸空 sleeve。不要恢复 `counter(track)` 编号，也不要给 `.idx-artist` 加回大写 + 字距。
 - 图片默认低饱和、hover / focus 复原：这是「颜色是奖励不是壁纸」的落点。滤镜只加在 `img` 上。
 - **照片图注仍在 DOM 里，但视觉上是 `sr-only`**：墙不显示任何文字（参考站也没有），灯箱与读屏照读。键盘可达性不变——按钮仍在、`aria-label` 未改、21 张仍各是一个 tab stop。
 
 ## 内容更新
 
-- 摄影：`.photo-frame`（**正典 21 帧必须留在 HTML 里**，放在 `.photo-fallback` 网格里；`js/photo-wall.js` 一执行就把它们搬进 `#photo-wall`，再按世界坐标铺出克隆）。帧数就是棋盘周期，增删会被几何自动吸收，其它地方不用改。
+- 摄影：`.photo-frame`（**正典 21 帧必须留在 HTML 里**，放在 `.photo-fallback` 网格里；`js/photo-wall.js` 一执行就把它们搬进 `#photo-wall`，打开全屏层时按世界坐标铺出克隆）。帧数就是棋盘周期，增删会被几何自动吸收，其它地方不用改。
 - **照片三份，各司其职**：`photo/full/` 是原图（2048px，只归档、站点从不加载）、`photo/` 是 1600px 的灯箱档、`photo/wall/` 是棋盘与灯箱缩略条用的 560px webp 派生档（`archive/image-refresh/build-images.py` 生成）。所以 `.photo-frame` 的 `<img>` 写 **`src="photo/wall/<名>.webp"` + `data-full="photo/<名>.jpg"`**：`src` 是棋盘画的（格子最大 280 CSS px），`data-full` 是灯箱打开的（`main.js` 的 `photoFrameData()` 读它、`renderDetail` 用它）。新增照片**只放 `photo/` 与 `photo/full/` 而不跑生成脚本，棋盘会 404**；反过来把 `src` 指回 `photo/` 就等于首屏多背 2.5 MB。
 - 游戏：`.hof-item`（直接进 `#hof-grid`），封面 `covers/`，时长写 `.hof-hours`，引文写 `.hof-quote`。封面统一是 **1280px webp**（原生 16:9；拨盘中心在 dpr2 下约 1040 设备像素，`archive/image-refresh/build-images.py` 重压过 5.76 MB → 1.64 MB）。换封面按这个尺寸与格式放，`RATIO = 16/9` 那条注释依赖它；带空格的文件名在 HTML 里写 `%20`。
 - **影视（以后加片子就照这条）**：海报存成 `posters/<豆瓣条目ID>.jpg`（文件名就是豆瓣 subject id），条目 push 进 `js/film-data.js`（`window.FILM_DATA`）或 `js/series-data.js`（`window.SERIES_DATA`）。字段形状是固定的，适配器（`js/film-stage.js` / `js/series-stage.js`）按名字取：
@@ -305,10 +320,11 @@ hero（**两层**：全幅影像层 + 压在它上面的**巨型字标**，导�
   - 剧：`{ id: "series-NN", douban: "2373195", poster, title, years, seasons, category, quote }`（`years` 可以写 `"1995-2013"`，排序取首个年份）
   - `douban` 是豆瓣条目 id，详情区的 `OPEN ON DOUBAN` 指向 `movie.douban.com/subject/<id>/`；多季剧集豆瓣按季建条目，所以链接落在第一季。
   - `quote` 是中文短评，规矩见「文案」；面板页头的计数（`TWENTY-FOUR FILMS` / `THIRTY-SIX SERIES`）**是写死在适配器里的**，加片要同时改那一行；排序与年份都从数据算，不用管。改完给对应 `<script>` 的 `?v=` +1。
-- 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。**每组还有 `playlist`（该流派的网易云歌单 id）**，组头的 `OPEN PLAYLIST` 就指向它；歌单内容与 `tracks` 是两份、不会自动同步——加了歌要重跑 `node archive/music-playlists/build-import.mjs` 再把那份脚本粘进网易云（同名歌单会被复用，只补缺歌），或者手动往歌单里加。新建一个流派分组时要同时给它建歌单，否则那个组头没有链接（渲染器对缺 `playlist` 是静默跳过的）。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成，**然后跑 `archive/image-refresh/build-images.py`**。封面是两份、同一个文件名派生：列表行的 `.idx-cover` 是 64 CSS px，读 `album-covers/thumbs/<同名>.webp`（160px 派生档，约 5 KB，**由脚本生成、不要手放**）；详情层的 `.lb-music` 才读 `album-covers/<原名>.jpg` 那张 500px sleeve（`music-stage.js` 只替换一次扩展名，所以两边的 stem 必须一一对应）。缺 thumbs 那一份 = 列表里一行破图。
+- 音乐：`data-song-id` 必须经网易云接口核实，禁止凭记忆填造；加进 `music-data.js` 对应组 `tracks`，计数自动。**每组还有 `playlist`（该流派的网易云歌单 id）**，组头的 `OPEN PLAYLIST` 就指向它；歌单内容与 `tracks` 是两份、不会自动同步——加了歌要重跑 `node archive/music-playlists/build-import.mjs`，再把那一份 `netease-import.js` 粘进网易云。**那一份里是全部 17 个歌单（15 曲风 + 2 语言），一次跑完，不要拆成两趟**：曲风与语言是同一批歌的两份视图，同一首歌必须同时进两处，分开跑必然漏掉一半。同名歌单会被复用，只补缺歌。新建一个流派分组时要同时给它建歌单，否则那个组头没有链接（渲染器对缺 `playlist` 是静默跳过的）。新歌封面从网易云 `song/detail` 的 picUrl 取 500px 存进 `album-covers/`，再跑 `archive/music-album-covers/index.json` → `js/music-covers.js` 的重新生成，**然后跑 `archive/image-refresh/build-images.py`**。封面是两份、同一个文件名派生：列表行的 `.idx-cover` 是 64 CSS px，读 `album-covers/thumbs/<同名>.webp`（160px 派生档，约 5 KB，**由脚本生成、不要手放**）；详情层的 `.lb-music` 才读 `album-covers/<原名>.jpg` 那张 500px sleeve（`music-stage.js` 只替换一次扩展名，所以两边的 stem 必须一一对应）。缺 thumbs 那一份 = 列表里一行破图。
 - 书：条目进 `js/book-shelf-data.js`，每本除了 title / author / blurb 还要给 binding（`thickness` 21–48、`height` 240–288、`lean`、`cloth`、`ink`、`band`）；**新增或换布色必须重量 ink/cloth 的 4.5:1**。行宽、缩放和书脊字号都会自己算。
 - 球队：logo `logos/`；队名是官网直达真链接（`target="_blank" rel="noopener"`）。
-- hero 影像层：`index.html` 里一个 `<picture class="hero-plate">`，四个文件——`hero/nebula-tall.jpg`（708×1532，竖屏原生切片，`max-aspect-ratio: 3/4` 时用）、`hero/nebula-1200.jpg`（1200w）、**`hero/nebula-1600.jpg`（1600w）**、`hero/nebula.jpg`（2400w）。1600w 那一档是补的：原来的 srcset 从 1200 直接跳到 2400，dpr1 的 1440 视口因此非取 2400w 不可（543 KB），现在取 1600w（419 KB）。**三张 jpg 都原样保留**——Pillow 重压反而大 19%，见 `archive/image-refresh/build-images.py` 里那条 guard。换图就是换这三个文件，并同步 `width` / `height` / `alt`；**原图不要预裁**，露哪一块由 `object-position` 选。它上面那层 scrim（字标对比度就靠它）写在 `css/style.css` 第 7 节，**改动必须重量对比度**（DESIGN.md 3.2 有量法）。
+- hero 影像层：`index.html` 里一个 `<picture class="hero-plate">`，用的是**本人拍的陆家嘴仰拍**（`hero/lujiazui*.jpg`，三档：`lujiazui-tall.jpg`（462×999，竖屏原生切片，`max-aspect-ratio: 3/4` 时用）、`lujiazui-1200.jpg`（1200w）、`lujiazui.jpg`（1440w））。**三档都由 `archive/hero-refresh/build-hero.py` 从 `hero/lujiazui-source.jpg` 生成**（1440×999，就是交付的那张，没有放大、没有发明像素）；重出图跑那支脚本，不要手裁。换图就是换 source 再跑脚本，并同步 `width` / `height` / `alt`。它上面那层 scrim（字标对比度就靠它）写在 `css/style.css` 第 7 节，**改动必须重量对比度**（`DESIGN.md` 3.2 有量法；`output/hero-contrast.mjs` + `output/hero-analyze.py` 是现成的量法）。**旧的 `hero/nebula*.jpg` 四张已无人引用**（星云首屏退役），文件留在仓库里没删——要清就单独清，别当成"还有两个 hero"。
+- **hero 不再是一整屏**：`height: calc(100dvh - clamp(120px, 18vh, 170px))`，比视口矮一档，**底部那一条露出的是 PHOTOGRAPHY 自己的眉标与导语**——这就是"交接到下一章"，没有新增任何滚动提示元素。改动这个高度要同时重量：1440×900 hero 738 / peek 162，390×844 hero 692 / peek 152，320×720 hero 590 / peek 130。`min-height: 440px` 是唯一的兜底。
 - **hero 统计条已退役**（2026-09，hero 只剩字标与它背后那张影像）：藏品数字现在只住在 `DESIGN.md` 第 0 节与各面板页头里，增删内容要同步那里。`#about-stats` 的 8 个计数更早已随 ABOUT 面板退役（要恢复计数就得同时把 `initCounters()` 与 `data-count` 标记一起加回来）。
 
 ## 改完自检

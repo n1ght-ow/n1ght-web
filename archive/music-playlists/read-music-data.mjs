@@ -1,4 +1,4 @@
-/* 读 js/music-data.js 的分组（build-import.mjs 与 build-language-import.mjs 共用这一份解析）。
+/* 读 js/music-data.js 的分组（build-import.mjs 的唯一一份解析）。
  *
  * 数据源永远是站点自己的 js/music-data.js，不另抄一份，所以歌单内容不会和站点分叉。
  * 返回 [{ id, zh, en, groupLang, tracks: [songId, ...] }]，顺序与文件一致。

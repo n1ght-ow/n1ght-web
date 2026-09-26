@@ -80,7 +80,7 @@
       const card = el("article", "idx-card track-own");
       card.setAttribute("data-song-id", t.id);
 
-      /* The cover. All 441 songs in MUSIC_DATA resolve to one of the 367
+      /* The cover. All 534 songs in MUSIC_DATA resolve to one of the 455
          distinct files in album-covers/ (see js/music-covers.js). A dense row
          WITH art is still
          a list, not a grid: Hardwax runs 700+ records this way at 80-100px.
