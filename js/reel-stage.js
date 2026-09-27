@@ -283,7 +283,7 @@
        the top of frame(), so films and series each ran a callback on every
        frame of the session - while parked, while their panel was display:none,
        forever. Measured: 650 callbacks in two idle seconds, from that one line.
-       js/photo-wall.js already had the right shape (raf = 0 at the top, kick
+       js/photo-deck.js already had the right shape (raf = 0 at the top, kick
        only while busy) and this is that shape. state.last is cleared whenever
        the loop parks, so a restart seeds a zero dt instead of integrating the
        idle gap as one 50ms step. */
@@ -575,7 +575,7 @@
          The column is an ANCESTOR of the accent glass button, and an ancestor
          at opacity < 1 erases that element's backdrop read (DESIGN.md 4.2 -
          measured there at ancestor opacity 0.99). Tweening the copy block
-         therefore faded the champagne pill up out of the paper and then
+         therefore faded the tinted pill up out of the paper and then
          snapped it onto its real surface on the final frame: a flash around
          the button's label every time a different poster was chosen.
 

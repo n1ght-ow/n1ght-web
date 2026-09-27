@@ -18,36 +18,69 @@
 
 /* ============ 1. TOKENS ============ */
 :root {
-  /* --- primitives: warm-neutral paper ramp + ink ramp + one gold ---
-     Never pure #fff, never pure #000. The paper ramp carries a faint
-     warm cast (R>G>B) so it reads as paper rather than as cool grey. */
-  --paper-000: #FCFCFA;
-  --paper-050: #F7F7F4;
-  --paper-100: #EFEFEA;
-  --paper-200: #E3E2DC;
+  /* --- primitives: cool paper ramp + blue-black ink ramp + one sky accent ---
+     Never pure #fff, never pure #000. The paper ramp carries a COOL cast
+     (B>G>R) so the page reads as cold white, not as neutral grey; the ink ramp
+     is the same near-black pushed toward navy so dark areas (hero, lightbox,
+     footer) belong to the palette instead of merely going dark.
 
-  --ink-950: #101010;
-  --ink-900: #141412;
-  --ink-600: #4C4C48;
-  --ink-500: #6A6966;
-  --on-dark: #F2F2EF;
+     The page is ONE field, not a stack of tinted sections: photography, the
+     archive and the poem all sit on --paper-050, and the chapters are told
+     apart by air alone. --sky-050 exists for a BOUNDED tinted panel (the sport
+     tray), not for a chapter background; that role used to be --color-bg-deep
+     and is retired. --sky-900 is the darkest stop of the hero plate's duotone
+     ramp, and is what .hero paints behind it, so the letterbox object-fit
+     exposes on a phone is the same colour as the plate's shadows.
 
-  --gold-400: #C9A227;
-  --gold-700: #7E5F20;
-  --gold-100: #F0E6CC;
+     Measured, not estimated (WCAG relative luminance, 2026-09-29):
+        ink-900 on paper-050  15.40:1     ink-600 on paper-050   7.26:1
+        ink-500 on paper-050   4.93:1  <- the page floor
+        ink-500 on sky-050     4.60:1  <- the new floor, the sport tray
+        sky-700 on paper-050   5.38:1     sky-700 on sky-050   5.02:1
+        ink-900 on sky-400     7.83:1  (a filled accent button's label) */
+  --paper-000: #FBFDFF;   /* surface   */
+  --paper-050: #F4F9FC;   /* page      */
+  --paper-200: #C8DDE9;   /* dividers  */
+
+  --ink-950: #101820;     /* dark areas */
+  --ink-900: #172129;     /* primary text */
+  --ink-600: #3E5666;     /* secondary text */
+  --ink-500: #56707F;     /* muted - the ONLY legal muted value */
+  --on-dark: #EDF3F8;
+
+  /* The accent is a PAIR, not one colour. A single accent cannot be both a
+     solid fill and a readable label: sky-400 on paper is 1.9:1, useless as
+     text, and sky-700 as a fill is a dead rectangle. So the light one fills
+     and the deep one speaks. */
+  --sky-050: #E6F2FC;     /* tinted panel surface (bounded, not a section) */
+  --sky-100: #D7EFFB;     /* light tint */
+  --sky-400: #59BFEA;     /* solid fills */
+  --sky-700: #006D9E;     /* links, focus rings, the poem refrain */
+  --sky-900: #081626;     /* the hero plate's shadow end - .hero's letterbox */
 
   /* --- semantic: components reference these only --- */
   --color-bg: var(--paper-050);
-  --color-bg-deep: var(--paper-100);
   --color-surface: var(--paper-000);
+  /* a BOUNDED tinted panel - corner radius and a hairline say "this is an
+     object on the page". A chapter background said something different and is
+     gone: the tint used to stop the archive reading as a second, unrelated
+     page, and it did, because it had four hard edges and the hero had five. */
+  --color-surface-tint: var(--sky-050);
+  /* an empty media slot: what a cover box paints before its image lands. */
+  --color-media-void: var(--paper-200);
+  /* the hairline around cover art, and the hover wash under a control. Both
+     used to be neutral black, which on a page this blue reads as dirty grey
+     rather than as a shadow. They are the same ink hue, not a different one. */
+  --color-media-ring: oklch(0.20 0.055 245 / 0.10);
+  --color-hover-wash: oklch(0.20 0.055 245 / 0.055);
   --color-text: var(--ink-900);
   --color-text-secondary: var(--ink-600);
   --color-text-muted: var(--ink-500);
   --color-line: var(--paper-200);
   --color-line-soft: oklch(0 0 0 / 0.055);
-  --color-accent: var(--gold-400);
-  --color-accent-text: var(--gold-700);
-  --color-accent-tint: var(--gold-100);
+  --color-accent: var(--sky-400);
+  --color-accent-text: var(--sky-700);
+  --color-accent-tint: var(--sky-100);
   --color-on-accent: var(--ink-900);
   --color-ink: var(--ink-950);
   --color-on-dark: var(--on-dark);
@@ -279,7 +312,21 @@ h1, h2 { text-wrap: balance; }
   top: clamp(0.75rem, 1.6vh, 1.25rem);
   inset-inline: 0;
   margin-inline: auto;
-  width: min(1180px, calc(100vw - 2 * var(--gutter)));
+  /* THE BAR RIDES THE SHELL'S OWN EDGES. This used to be its own centred
+     island: min(1180px, 100vw - 2*gutter), which at 1440 ran x=130..1310
+     while every chapter ran x=65..1375. Measured, the one alignment that
+     persists across every scroll position was the only line on the page that
+     did not share the page's margin - and a site whose whole argument is
+     "shared edges" was arguing against its own nav.
+
+     The width is now .shell's CONTENT width, written once and derived rather
+     than repeated: .shell is `width:100%; max-width:var(--shell)` with
+     `padding-inline:var(--gutter)`, so its content box is
+     min(--shell - 2*gutter, containing - 2*gutter) - the second term with
+     100% and not 100vw, because 100vw includes a classic scrollbar that
+     .shell's 100% does not. At 1440: 1310. At 1100: 1001. At 320: 280.
+     Do not put a literal width back here. */
+  width: min(calc(var(--shell) - 2 * var(--gutter)), calc(100% - 2 * var(--gutter)));
   height: 58px;
   z-index: 70;
   display: flex;
@@ -305,15 +352,23 @@ h1, h2 { text-wrap: balance; }
 
   /* The reference's elevation, transcribed as measured rather than eyeballed:
      six stacked layers, no negative spread, the widest at 60px blur / 30px
-     offset and still only 6% alpha. --shadow-lift pulls in with an -18px
-     spread and reads far tighter, which is exactly the difference here. */
+     offset. --shadow-lift pulls in with an -18px spread and reads far tighter,
+     which is exactly the difference here.
+
+     The alphas are the reference's, except that this bar floats over paper for
+     most of the page and a 6% halo is invisible there: the bar had no
+     boundary at all over --paper-050, so the same object read as two different
+     objects. They are raised, not doubled, and the blur/offset geometry is
+     untouched - and this is the bar's ONLY edge. glass.css is explicit that
+     the shell's rim is not to be joined by a second ring inside it, so the
+     separation is carried by elevation rather than by a hairline. */
   --glass-elevation:
-    0.29px 4.36px 2.18px oklch(0 0 0 / 0.01),
-    0.48px 7.24px 3.63px oklch(0 0 0 / 0.01),
-    0.78px 11.7px 5.86px oklch(0 0 0 / 0.02),
-    1.28px 19.15px 9.6px oklch(0 0 0 / 0.03),
-    2.2px 32.97px 16.52px oklch(0 0 0 / 0.03),
-    4px 60px 30.07px oklch(0 0 0 / 0.06);
+    0.29px 4.36px 2.18px oklch(0 0 0 / 0.03),
+    0.48px 7.24px 3.63px oklch(0 0 0 / 0.04),
+    0.78px 11.7px 5.86px oklch(0 0 0 / 0.05),
+    1.28px 19.15px 9.6px oklch(0 0 0 / 0.07),
+    2.2px 32.97px 16.52px oklch(0 0 0 / 0.08),
+    4px 60px 30.07px oklch(0 0 0 / 0.12);
 }
 
 /* .glass and .glass--pill live in glass.css, which loads AFTER this file, so
@@ -366,7 +421,7 @@ h1, h2 { text-wrap: balance; }
   transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
 }
 
-.nav-links a:hover { color: var(--color-text); background: oklch(0 0 0 / 0.05); }
+.nav-links a:hover { color: var(--color-text); background: var(--color-hover-wash); }
 
 /* THE ACTIVE LINK IS COLOUR, NOT A SHAPE. This bar used to mount the same
    draggable dark lozenge as the archive tab strip. Over a photograph that
@@ -387,15 +442,29 @@ h1, h2 { text-wrap: balance; }
    and a site note below it add context without covering the photograph. The
    fixed nav floats over the whole composition.
 
+   The plate is the DUOTONE cut (hero/lujiazui-duo*.jpg): its luminance is
+   mapped onto the palette's own blue ramp offline by
+   archive/hero-refresh/build-hero.py, so the magenta neon and the bronze
+   facades are gone and the picture is made of the same colours as the page.
+   The site applies no filter to it - the grade is baked into the file, which
+   is the one and only exception to "photographs keep their own colour", and
+   it covers this plate alone (the deck, the posters, the covers and the book
+   cloths are untouched).
+
    The chapter stops short of the viewport so the first lines of PHOTOGRAPHY
    remain visible at the fold. The 440px floor protects the mark in a short
-   landscape viewport or at browser zoom. */
+   landscape viewport or at browser zoom. --hero-fade is the band at the
+   bottom where the picture dissolves into the page; the section note is held
+   clear of it (see .hero-foot). */
 .hero {
   position: relative;
   height: calc(100dvh - clamp(120px, 18vh, 170px));
   min-height: 440px;
   overflow: hidden;
-  background: var(--ink-950);
+  /* --sky-900, not --ink-950: this is the plate's own darkest stop, so the
+     letterbox that object-fit: cover exposes on a phone is invisible. */
+  background: var(--sky-900);
+  --hero-fade: clamp(88px, 12vh, 140px);
   display: grid;
   place-items: center;
 }
@@ -439,7 +508,12 @@ h1, h2 { text-wrap: balance; }
   justify-content: space-between;
   align-items: baseline;
   gap: var(--sp-5);
-  padding-block-end: clamp(2rem, 5vh, 3rem);
+  /* Clears --hero-fade. The note is white type: any of it inside the fade
+     would be white on a nearly-white dissolve, which is how the first
+     attempt read - "Frames, records" simply disappeared. The two clamps are
+     deliberately ordered so the note stays above the fade at every viewport
+     the hero can take, from the 440px floor up. */
+  padding-block-end: clamp(6rem, 13vh, 9rem);
   color: var(--color-on-dark);
   font-family: var(--font-serif);
   font-size: var(--fs-h4);
@@ -505,9 +579,13 @@ h1, h2 { text-wrap: balance; }
 
 /* Not desaturated. "Colour is the reward, not the wallpaper" is written for
    interface photographs; here the picture is the page, exactly as it is on the
-   wall (--wall-saturate: 1, the first stated exception). There is deliberately
-   no filter property at all, so there is also no containing block created over
-   the hero. */
+   photo deck (--wall-saturate: 1 was the board's stated exception and retired
+   with the board; the deck simply never had a filter). What this plate does
+   have is its own grade - a duotone baked into the file, described at the top
+   of this section - so the correct statement is that there is deliberately no
+   `filter` property here: the colour is already decided, and a CSS filter on
+   top would be the first runtime one on the site. It also means no containing
+   block is created over the hero. */
 .hero-plate img {
   inline-size: 100%;
   block-size: 100%;
@@ -516,40 +594,61 @@ h1, h2 { text-wrap: balance; }
 }
 
 /* THE SCRIM carries the type. It is measured, not decorative, and it is the one
-   thing painted between the picture and the name: the mark is laid across the
-   brightest band of this frame (lit cloud between the towers, and the Jin Mao's
-   facade running down the left), so without it #F2F2EF would sit on near-white
-   in places. The retired nebula plate solved the same problem with a heavier
-   grade, because its bright band was a burning ring rather than cloud; against
-   this photograph the same shape is enough and it can let more of the picture
-   through, which is the point of swapping the plate at all. Heaviest through
-   the band the name occupies and at the bottom edge, where the section hands
-   over to the paper page, and lighter at the very top so the glass nav still has
-   something to refract.
-   Worst-case measured contrast on that type: 5.02:1 at 1440x900, 8.55:1 at
-   390x844, and 8.91:1 at 320x720 - all above the 4.5:1 body bar and far above
-   the 3:1 large-text one.
-   Method is in DESIGN.md 3.2 (hide the mark, screenshot, read the brightest
-   pixel in its box); re-measure after ANY change to this gradient, to
-   object-position, or to the plate. */
+   thing painted between the picture and the name. It used to be a neutral
+   black at 0.72 through the middle, which over the old full-colour plate made
+   the whole hero a black slab: the picture stopped being a picture. The scrim
+   is now the ink HUE rather than neutral black, and roughly a third thinner,
+   so it tints without flattening. The middle is still the heaviest band
+   because that is where the mark sits, and the top is still the lightest
+   because the glass nav needs something to refract.
+
+   Worst-case measured contrast on the mark, this plate and this gradient,
+   1440x900: 4.10:1 (brightest pixel in the .hero-mask rect, foreground
+   #EDF3F8). Method is DESIGN.md 3.2 inference 3 - hide the mark, screenshot,
+   read the brightest pixel in its box - and it is the same method that has to
+   be re-run after ANY change to this gradient, to object-position, or to the
+   plate. The duotone's ceiling is held at sky-400 rather than white precisely
+   so this number has somewhere to go. */
 .hero-plate::before {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    oklch(0.12 0 0 / 0.50) 0%,
-    oklch(0.12 0 0 / 0.72) 22%,
-    oklch(0.12 0 0 / 0.72) 60%,
-    oklch(0.12 0 0 / 0.54) 80%,
-    oklch(0.12 0 0 / 0.78) 100%
+    oklch(0.20 0.055 245 / 0.38) 0%,
+    oklch(0.20 0.055 245 / 0.52) 20%,
+    oklch(0.20 0.055 245 / 0.50) 62%,
+    oklch(0.20 0.055 245 / 0.36) 86%,
+    oklch(0.20 0.055 245 / 0.24) 100%
+  );
+  pointer-events: none;
+}
+
+/* THE HANDOVER. The picture does not stop: over the last --hero-fade it runs
+   out into the page, so the chapter reads as one continuous field instead of a
+   blue rectangle sitting on top of a white one. It is the same move as a
+   gradient, not a blur - the picture keeps its edges, it just stops at full
+   strength. The stops are eased rather than linear because a straight ramp
+   reads as fog: at the midpoint the picture is 50% gone and the eye reads that
+   as haze over the whole lower third, not as a transition. */
+.hero-plate::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: var(--hero-fade);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklab, var(--paper-050) 14%, transparent) 40%,
+    color-mix(in oklab, var(--paper-050) 52%, transparent) 72%,
+    var(--paper-050) 97%
   );
   pointer-events: none;
 }
 
 @media (max-width: 720px) {
   .hero-kicker { padding-block-start: 6rem; }
-  .hero-foot { display: block; padding-block-end: var(--sp-6); }
+  .hero-foot { display: block; padding-block-end: clamp(5.5rem, 12vh, 7.5rem); }
   .hero-foot-index { margin-block-start: var(--sp-3); }
 }
 
@@ -583,84 +682,30 @@ h1, h2 { text-wrap: balance; }
   letter-spacing: var(--track-h2);
 }
 
+/* THE COLUMN IS THE MEASURE. There is no `max-width` here and that is the
+   correction, not an omission. The right cell of .sec-head is
+   (100% - --chapter-gap) / 2 - 619px at 1440 - and a 46ch cap inside it
+   measured 442px, which left 177px of paper between the text and the page's
+   own right margin. Two right margins on one page, 65px and 242px, is the
+   eye's version of a typo. The cap was written for a full-width block; in a
+   cell the cell already measures the line.
+
+   Measured after: the .lead, at --fs-h3 24.88px Instrument Serif italic,
+   sets at 619px = 59ch - which is what a display italic wants. The 15px
+   sentence below it runs 79ch, over the 60-75ch body rule but it is one
+   sentence, and the alternative was a shorter line beside a hole. The
+   full-width block that genuinely needs a measure cap is .curator, and it is
+   the one that still carries 46ch. */
 .sec-copy {
   color: var(--color-text-secondary);
   font-size: var(--fs-small);
   line-height: 1.66;
-  max-width: 46ch;
   text-wrap: pretty;
 }
 
 .sec-copy .lead { display: block; margin-block-end: var(--sp-4); }
 
-/* ============ 9. PHOTOGRAPHY ============ */
-/* The photography chapter opens an infinite draggable board of frames in a
-   full-viewport viewer, with one still plate in the page. The board's cells, its focus ring
-   and its no-JS fallback live in css/photo-wall.css; the geometry is measured
-   and driven by js/photo-wall.js. Nothing about it belongs in the shared
-   stylesheet: a board positioned entirely by per-frame transforms has no shared
-   layout to inherit.
-   The deleted rules here were the scattered contact sheet and they went with
-   the grid they described - 16-column placement, the per-plate drops and
-   lifts, --photo-drift, and the .photo-act-* chapter furniture. The section
-   head above the plate is still the shared .sec-head. */
-
-/* The opening frame is an editorial spread with a short field note. Its 3:2
-   aspect belongs to .photo-lead-image, so the img's intrinsic size attributes
-   still reserve pixels without forcing the figure to the JPEG's height. The
-   same frame remains a button in the wall; this still is not a second control. */
-.photo-lead {
-  position: relative;
-  z-index: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1.72fr) minmax(15rem, 0.72fr);
-  gap: clamp(2rem, 6vw, 6rem);
-  align-items: end;
-  margin: 0;
-}
-
-.photo-lead-image { aspect-ratio: 3 / 2; overflow: hidden; }
-
-.photo-lead img {
-  inline-size: 100%;
-  block-size: 100%;
-  object-fit: cover;
-  background: var(--color-bg-deep);
-}
-
-.photo-lead-caption {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-block-end: var(--sp-4);
-}
-
-.photo-lead-caption-no,
-.photo-lead-caption-place {
-  font-size: var(--fs-label);
-  line-height: 1.5;
-  letter-spacing: var(--track-label);
-  color: var(--color-text-muted);
-}
-
-.photo-lead-caption-copy {
-  max-width: 25ch;
-  margin-block: var(--sp-7) var(--sp-6);
-  font-family: var(--font-serif);
-  font-size: var(--fs-h3);
-  font-style: italic;
-  line-height: 1.3;
-  color: var(--color-text);
-  text-wrap: pretty;
-}
-
-@media (max-width: 720px) {
-  .photo-lead { grid-template-columns: minmax(0, 1fr); gap: var(--sp-5); }
-  .photo-lead-caption { padding-block-end: 0; }
-  .photo-lead-caption-copy { margin-block: var(--sp-3); max-width: 34ch; }
-}
-
-/* ============ 10. POEM ============
+/* ============ 9. POEM ============
    A printed folio (asked for: redesign the chapter, keep the two columns).
    The chapter now OPENS and CLOSES on the same two tracks: the masthead sits
    above the plate and the colophon below it, and all three share one left
@@ -698,8 +743,10 @@ h1, h2 { text-wrap: balance; }
   color: var(--color-text-secondary);
   font-size: var(--fs-small);
   line-height: 1.66;
-  /* the site's secondary measure, same as .sec-copy */
-  max-width: 46ch;
+  /* No cap, for the reason on .sec-copy: both of these sit in the right cell
+     of the poem's own two columns, and the cell is the measure. The
+     colophon's right cell is the same track as the masthead's, so the opening
+     note and the closing one now end on the same x. */
   text-wrap: pretty;
 }
 
@@ -726,8 +773,8 @@ h1, h2 { text-wrap: balance; }
    three-line stanza stays the visible unit of the poem. */
 .poem-verse p + p { margin-block-start: 1.9em; }
 
-/* The refrain is the one place gold is allowed on static text: it is the
-   poem's structural device, and it measures 5.5:1 on paper (AA). */
+/* The refrain is the one place the accent hue is allowed on static text: it is
+   the poem's structural device, and sky-700 measures 5.44:1 on paper (AA). */
 .refrain { color: var(--color-accent-text); }
 
 /* Colophon: the head's tracks again, first baselines aligned. No rule over it
@@ -742,8 +789,14 @@ h1, h2 { text-wrap: balance; }
   margin-block-start: clamp(3rem, 7vw, 5.5rem);
 }
 
-/* ============ 11. ARCHIVE ============ */
-.archive { background: var(--color-bg-deep); padding-block-start: var(--section-y); }
+/* ============ 10. ARCHIVE ============ */
+/* No background. This chapter used to be painted a flat --color-bg-deep, and
+   that block was the loudest thing on the page: a hard-edged rectangle of a
+   different blue in the middle of a white document, which is exactly the
+   "every part is its own thing" the palette rebuild set out to fix. The
+   chapters are told apart by --section-y of air, which is the rule this
+   project already runs on. */
+.archive { padding-block-start: var(--section-y); }
 
 /* Compact Navbar form (framer.com/m/Compact-Navbar-cE1IzB.js): the tray
    carries the air and the items stay tight. The reference packs its items at
@@ -822,7 +875,7 @@ h1, h2 { text-wrap: balance; }
 
 .tab-btn .no { color: var(--color-text-muted); font-size: var(--fs-label); }
 
-.tab-btn:hover { color: var(--color-text); background: oklch(0 0 0 / 0.05); }
+.tab-btn:hover { color: var(--color-text); background: var(--color-hover-wash); }
 
 /* The active tab no longer paints its own background: the draggable glass
    pill under it does that. The :active scale is gone too - the pill now
@@ -882,8 +935,8 @@ h1, h2 { text-wrap: balance; }
    It is set in the site's own voice - the shared deck register, --fs-small on
    the 46ch measure, exactly like .sec-copy and .lead - so it reads as the same
    narrator who wrote the chapter decks, one level down. It carries no accent:
-   gold means "you can click this" everywhere on this site, and this sentence
-   cannot be clicked.
+   the accent hue means "you can click this" everywhere on this site, and this
+   sentence cannot be clicked.
 
    THE DISTANCE IS ONE VALUE FOR ALL SIX: --bar-gap, the token the archive's own
    stack is already built from (tab strip -> panel, and inside the music drawer,
@@ -916,7 +969,7 @@ h1, h2 { text-wrap: balance; }
   text-wrap: pretty;
 }
 
-/* ============ 12. LEDGERS (books / sport) ============ */
+/* ============ 11. LEDGERS (books / sport) ============ */
 /* A five or six item shelf is not a table.
 
    Measured before this change: every row was EXACTLY 95px tall whatever it
@@ -1025,7 +1078,10 @@ h1, h2 { text-wrap: balance; }
 
   position: relative;
   border-radius: var(--radius-lg);
-  background: var(--color-bg-deep);
+  /* The one BOUNDED tinted surface left on the page, and the reason
+     --color-surface-tint exists: a 22px radius and a hairline say "object",
+     where the retired chapter background said "section". */
+  background: var(--color-surface-tint);
   box-shadow: inset 0 0 0 1px var(--color-line);
   overflow: clip;
   padding: 6px;
@@ -1048,7 +1104,8 @@ h1, h2 { text-wrap: balance; }
   overflow: clip;
   border: 0;
   padding: 0;
-  background: var(--paper-100);
+  /* the sliver between two folded photographs, and the 6px tray margin */
+  background: var(--color-media-void);
   color: inherit;
   font: inherit;
   text-align: start;
@@ -1159,11 +1216,11 @@ h1, h2 { text-wrap: balance; }
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
-  text-decoration-color: color-mix(in oklab, var(--gold-400) 70%, transparent);
+  text-decoration-color: color-mix(in oklab, var(--sky-400) 70%, transparent);
 }
 
 .sport-link:hover,
-.sport-link:focus-visible { text-decoration-color: var(--gold-400); }
+.sport-link:focus-visible { text-decoration-color: var(--sky-400); }
 
 /* The reveal: opacity + a 14px rise, 0.2s after the width transition starts -
    upstream's startDelay, kept because the text would otherwise arrive while the
@@ -1194,7 +1251,7 @@ h1, h2 { text-wrap: balance; }
 .sport-item:nth-child(3)[aria-pressed="true"] .sport-cap { transition-delay: 0.34s, 0.34s, 0s; }
 
 /* The open panel keeps a hairline of accent: one accent hit for the whole band. */
-.sport-item[aria-pressed="true"] { box-shadow: inset 0 0 0 1px oklch(0.78 0.13 88 / 0.42); }
+.sport-item[aria-pressed="true"] { box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sky-400) 42%, transparent); }
 
 /* Without JS no attribute is ever set, so the first slide stays open and every
    other caption would sit on an undimmed photo. Hide those, and wash anyway so
@@ -1207,7 +1264,7 @@ html:not(.js) .sport-wash { opacity: 1; }
    guarantees the caption's contrast even if every photo is missing. */
 .sport-item { background-image: linear-gradient(var(--ink-950), var(--ink-950)); }
 
-/* ============ 13. MUSIC ============ */
+/* ============ 12. MUSIC ============ */
 
 /* NOTHING in this toolbar is pinned any more (asked for): the tab strip, the
    search row and the genre rail all scroll away with the list. That is also why
@@ -1349,7 +1406,7 @@ html:not(.js) .sport-wash { opacity: 1; }
   color: var(--color-text-secondary);
   background: none;
 }
-.music-search-clear:hover { color: var(--color-text); background: oklch(0 0 0 / 0.05); }
+.music-search-clear:hover { color: var(--color-text); background: var(--color-hover-wash); }
 .music-search-clear:active { transform: scale(0.96); }
 
 .music-search-count {
@@ -1400,7 +1457,7 @@ html:not(.js) .sport-wash { opacity: 1; }
   transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out);
 }
 
-.genre-chip:hover { color: var(--color-text); background: oklch(0 0 0 / 0.05); }
+.genre-chip:hover { color: var(--color-text); background: var(--color-hover-wash); }
 
 .genre-chip.is-active { background: var(--glass-pill); color: var(--color-on-dark); }
 
@@ -1544,7 +1601,7 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
 /* Right-hand cell of the genre head: the count, then the group's NetEase
    playlist. That link is a quiet text action, not a pill - the music view's
    one solid primary action is still SHUFFLE up in the search tray, and the
-   accent quota does not need a fifteenth gold thing. Auto margin keeps the
+   accent quota does not need a fifteenth accent thing. Auto margin keeps the
    cell hard right even when the head wraps at 720px. */
 .genre-meta {
   display: flex;
@@ -1563,7 +1620,7 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
   /* accent hue = interactive (AGENTS.md, 色彩). The count sitting next to it
-     stays plain muted, so the one gold underline in this row is what says
+     stays plain muted, so the one accent underline in this row is what says
      "this one is a link". Only one genre is on screen at a time, so it is one
      accent hit at a time. */
   text-decoration-color: var(--color-accent-text);
@@ -1626,8 +1683,8 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
   height: 64px;
   object-fit: cover;
   border-radius: var(--radius-sm);
-  background: var(--color-bg-deep);
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.08);
+  background: var(--color-media-void);
+  box-shadow: inset 0 0 0 1px var(--color-media-ring);
 }
 
 .idx-cover-empty { display: block; }
@@ -1670,20 +1727,20 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
 
 .is-search-hidden { display: none !important; }
 
-/* ============ 14. GAMES ============
+/* ============ 13. GAMES ============
    The roster became a dial: one centred cover with the rest of the deck behind
    it, ported from Framer's Detent. Markup stays in index.html (#hof-grid,
    .hof-item); the skin and the motion live in css/games-stage.css and
    js/games-stage.js, next to the other stage files. Nothing about the panel is
    declared in this file any more. */
 
-/* ============ 15. ABOUT ============
+/* ============ 14. ABOUT ============
    Retired whole (asked for): the about-me prose, the eight counters, the
    section head that framed them and the coda. The `.stats`, `.about-*` and
    `.coda-*` rules went with their markup - nothing in the file references
    them any more, and `.section.about` is now just the poem's box. */
 
-/* ============ 16. FOOTER ============ */
+/* ============ 15. FOOTER ============ */
 .footer {
   background: var(--color-ink);
   color: var(--color-on-dark);
@@ -1716,7 +1773,7 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
 
 .footer-links a:hover { color: var(--color-on-dark); }
 
-/* ============ 17. LIGHTBOX (the one dark layer) ============ */
+/* ============ 16. LIGHTBOX (the one dark layer) ============ */
 .lightbox {
   /* The four pieces of chrome - counter, close button, prev and next arrow -
      all sit on one vertical edge instead of the two they used to (the arrows
@@ -1736,7 +1793,14 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
   justify-content: center;
   gap: var(--sp-4);
   padding: clamp(1rem, 3vh, 2rem) var(--gutter);
-  background: oklch(0.1 0 0 / 0.94);
+  /* The lightbox is one of the three DARK AREAS of the page, so its scrim is
+     --color-ink (the navy black) and not an achromatic oklch(0.1 0 0). An
+     alpha-black over warm paper reads warm-grey; the footer and the hero are
+     already on the blue-black and this was the last surface not in the
+     palette. The two photo scrims - the sport wash and the game caption
+     gradient - keep their neutral oklch on purpose: they sit ON photographs,
+     where a tinted scrim would stain the image. */
+  background: color-mix(in oklab, var(--color-ink) 94%, transparent);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
   backdrop-filter: blur(24px) saturate(1.2);
   color: var(--color-on-dark);
@@ -1823,7 +1887,7 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
   border-radius: var(--radius-lg);
   background: var(--color-accent-tint);
   padding: var(--sp-5);
-  box-shadow: 0 0 0 1px oklch(0.79 0.11 85 / 0.5), 0 24px 70px -20px oklch(0.82 0.13 85 / 0.55);
+  box-shadow: 0 0 0 1px oklch(0.79 0.11 220 / 0.5), 0 24px 70px -20px oklch(0.82 0.13 220 / 0.55);
 }
 
 .lb-stage .lb-music-cover {
@@ -1847,7 +1911,7 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
      8px   eyebrow -> title   the eyebrow labels the title, so it hugs it
     12px   title   -> artist  the byline is a separate fact
     24px   head    -> sleeve  same object, kept close
-    32px   sleeve  -> action  a band of its own, and clear of the gold bloom
+    32px   sleeve  -> action  a band of its own, and clear of the tint bloom
    ------------------------------------------------------------------------ */
 .lightbox[data-detail="music"] .lb-stage { gap: 0; }
 
@@ -2004,17 +2068,30 @@ html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
 .lb-thumb:active { transform: scale(0.96); }
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .lightbox { background: oklch(0.1 0 0 / 0.99); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .lightbox { background: color-mix(in oklab, var(--color-ink) 99%, transparent); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
-html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); backdrop-filter: none; -webkit-backdrop-filter: none; }
+html[data-transparency="solid"] .lightbox { background: color-mix(in oklab, var(--color-ink) 99%, transparent); backdrop-filter: none; -webkit-backdrop-filter: none; }
 
-/* ============ 18. RESPONSIVE ============ */
+/* ============ 17. RESPONSIVE ============ */
 @media (max-width: 1100px) {
   .sec-head { grid-template-columns: 1fr; gap: var(--sp-5); }
   /* the folio's masthead and colophon stack on the same breakpoint as every
      other chapter head - and the foreword/closing line keep their measure */
   .poem-head,
   .poem-foot { grid-template-columns: 1fr; gap: var(--sp-5); }
+
+  /* THE MEASURE COMES BACK HERE, AND ONLY HERE. In the two-column head the
+     cell is the measure - 619px at 1440, which is what removed the 46ch cap
+     and the 177px hole with it (see the note on .sec-copy). The moment the
+     head stacks, the cell becomes the whole column: measured 1001px at 1100,
+     about 126 characters, which is not a measure, it is a race. So the cap
+     returns, and it returns as --measure rather than 46ch: this is a full
+     sentence on a wide screen now, not a 15px label, and 62ch is the
+     measure this project already uses for long text. */
+  .sec-copy,
+  .poem-standfirst,
+  .poem-sign { max-width: var(--measure); }
+
   .lb-meta {
     position: static;
     transform: none;
@@ -2243,7 +2320,7 @@ html[data-transparency="solid"] .lightbox { background: oklch(0.1 0 0 / 0.99); b
   .lightbox[data-detail="music"] .lb-music-link { margin-block-start: var(--sp-3); }
 }
 
-/* ============ 19. REDUCED MOTION ============ */
+/* ============ 18. REDUCED MOTION ============ */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

@@ -1,0 +1,235 @@
+/* ============ PHOTOGRAPHY : THE DECK ============
+   The photography chapter IS a deck of twenty-one photographs. There is no
+   full-screen board any more and no separate opening plate: the first card of
+   the stack is the chapter's opening image, and the whole chapter is reached
+   by dealing the pile.
+
+   The mechanics and every knob are documented at the top of js/photo-deck.js.
+   Nothing about the deck is scroll-driven, and nothing about it touches the
+   wheel.
+
+   FIVE THINGS ARE LOAD-BEARING HERE:
+
+   1. THE PLATE IS 800px BECAUSE THE SOURCE IS 1600px. `--deck-w` is the
+      linearised `photo/` rendition, not the 560px `photo/wall/` one the old
+      board painted - a 560px source stretched across an 800px plate is
+      softness, not texture. 800 CSS px is exactly 1600 device px, so the plate
+      is never upscaled at dpr2 either. See AGENTS.md, "照片三份".
+
+   2. `touch-action: pan-y`. The deck lives IN THE PAGE, so it must never
+      take the vertical axis - a full-screen board could, this cannot, and a
+      stack you cannot scroll past is a trap. Vertical drags stay with the
+      document; only the horizontal axis is the deal gesture. The horizontal
+      tell is the cursor and the tilt, not a written instruction.
+
+   3. THE STACK DOES NOT CLIP. The three cards behind the top one sit up to
+      30px lower (see --deck-y in js/photo-deck.js) and that band is the whole
+      reason the pile reads as a pile. `padding-block-end` on the wrapper pays
+      for it. A card leaving the pile travels FLY_PX sideways and dissolves, so
+      nothing ever needs clipping horizontally either.
+
+   4. `pointer-events: none` on the img. Without it Chrome starts its own
+      image drag and paints a translucent copy of the photograph that follows
+      the cursor while the deck's own 1:1 drag runs underneath. Same lesson as
+      the film rail, same guard.
+
+   5. `will-change` hangs on .photo-deck.is-live, not on the page. Twenty-one
+      resident compositor layers for a stack that is not moving is exactly the
+      cost this rule exists to avoid.
+
+   COLOUR IS THE POINT HERE, and it is now a shorter argument than the board's
+   was. The board had to be argued for, because a board of tiny cells puts its
+   own grid up against the pictures. A stack of twenty-one photographs has no
+   grid, no chrome and no indicator to compete with - the pictures are the
+   interface. So there is no desaturation rule, no hover filter, and no
+   --wall-saturate knob: they all went with the thing they were defending
+   against. */
+
+  /* ---------- the plate ---------- */
+
+  .photo-deck {
+    /* The linearised rendition, capped at exactly half of the 1600px source.
+       See note 1. --deck-gap is the one place the pile's own metrics live;
+       js/photo-deck.js reads the offset and the fan off --deck-y only. */
+    --deck-w: min(100%, 800px);
+    --deck-gap: var(--sp-5);
+  }
+
+  .photo-deck__stack {
+    position: relative;
+    inline-size: var(--deck-w);
+    /* 3:2 belongs to the BOX, never to the img: the <img> keeps its intrinsic
+       width/height attributes for the no-JS grid, and the plate stays a true
+       3:2 whatever the photograph inside it is. */
+    aspect-ratio: 3 / 2;
+    /* FLUSH TO THE PAGE'S LEFT MARGIN, not centred. See the note on the foot:
+       the plate and its note used to sit on three different axes. Centring
+       was the safe default - a picture floating in the middle of the paper
+       with equal space either side. Flush left, the same margin every other
+       block in the chapter uses, with the dead space moved to the right where
+       the note rail uses it, is the composed choice. `auto` here is what put
+       the plate at x=320 while its own caption sat at x=65. */
+    margin-inline: 0;
+    /* Paid out of the wrapper, see note 3. */
+    margin-block-end: 2rem;
+    cursor: grab;
+    /* The vertical axis belongs to the page. See note 2. */
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .photo-deck__stack:active { cursor: grabbing; }
+
+  /* Every card fills the plate and is then transformed: the pile is depth, not
+     layout. A card that leaves the visible window gets `visibility: hidden`
+     from js/photo-deck.js, which is cheaper than a display toggle and keeps the
+     node measurable for the next deal. */
+  .photo-deck__stack .photo-frame {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    transform-origin: 50% 100%;
+    visibility: hidden;
+  }
+
+  .photo-deck__stack .photo-frame-btn {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--color-media-void);
+    /* Only the top card is lifted off the paper. The three behind it are edges,
+       and an edge with a shadow reads as a card on a card, not as a pile. */
+    box-shadow: none;
+  }
+
+  .photo-deck__stack .photo-frame.is-top .photo-frame-btn {
+    box-shadow: var(--shadow-lift);
+  }
+
+  .photo-deck__stack .photo-frame img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    pointer-events: none; /* note 4 */
+  }
+
+  /* The caption is sr-only here and never was anything else: it is the data
+     source for the foot below and for the shared detail layer, and the foot
+     prints it. Two visible copies of the same line would be a repetition, not
+     a caption. */
+  .photo-deck__stack .photo-frame-cap { display: none; }
+
+  /* A card in flight is a card being picked up, not a card scrolling. It leaves
+     along the drag, drops a little in scale, and dissolves. opacity is legal
+     here - nothing inside the deck is an ancestor of any glass (DESIGN.md 4.2),
+     and the card that fades is a photograph leaving the pile, not a control
+     being held. */
+  .photo-deck__stack .photo-frame.is-flying { pointer-events: none; }
+
+  .photo-deck.is-live .photo-frame { will-change: transform, opacity; }
+
+  /* ---------- the foot ----------
+     A RAIL beside the plate, not a row under it. Measured before this change,
+     the chapter carried three axes: the plate centred at x=320 (800 wide),
+     the caption on the shell's left margin at x=65 (287 wide) and the index
+     in the head's right cell at x=756 - a label sitting 255px to the left of
+     the photograph it labels, because the foot was the .sec-head grid again
+     and the plate was never on that grid.
+
+     The note's track starts where the plate ENDS, one --chapter-gap after it,
+     so the caption is literally beside the picture it captions and the two
+     are separated by exactly one gutter. The alternative - starting the rail
+     on the head's own second column at x=756 - was measured and rejected:
+     the plate ends at 865, so 109px of it sat under the note's column, which
+     reads as a collision rather than a system. The rail is the plate's, not
+     the head's.
+
+     The page keeps its two margins (65 and 1375); the rail's left edge is a
+     derived axis, plate + gap, which is what a printed margin note does. */
+  .photo-deck-foot {
+    display: grid;
+    grid-template-columns: var(--deck-w) minmax(0, 1fr);
+    column-gap: var(--chapter-gap);
+    row-gap: var(--sp-2);
+    margin-block-start: var(--deck-gap);
+  }
+
+  /* Both cells are pinned to the rail; the first track stays empty on purpose,
+     so the note can never drift back under the plate and re-open the old gap. */
+  .photo-deck-caption {
+    grid-column: 2;
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--fs-h3);
+    font-style: italic;
+    line-height: 1.3;
+    color: var(--color-text);
+    text-wrap: pretty;
+  }
+
+  .photo-deck-index {
+    grid-column: 2;
+    margin: 0;
+    font-size: var(--fs-label);
+    line-height: 1.5;
+    letter-spacing: var(--track-label);
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* THE RAIL HAS A FLOOR, AND IT IS NOT 720. The plate is a fixed 800px, so
+     the rail is (column - 800 - gap), and it stops holding the caption long
+     before a phone. Measured, not estimated: of the twenty-one captions the
+     widest is 340px on one line ("Before the leaves, the shape is the
+     story."), the narrowest 169px, and the index line 132px. So the rail
+     needs >= 340, which is column >= 800 + gap + 340 - a 1340 viewport
+     measured 1341 of rail, 1366 measured 375, and 1280 measured 292, which
+     is where the widest caption starts wrapping to a second line. Below
+     1340 the note drops under the plate, where the measure returns as 34ch
+     and the index follows underneath.
+
+     So this is a CONTENT-driven breakpoint in the sense the project means it
+     (DESIGN.md 5) and the only one in this file. It is not the project's
+     720 and it is not the plate's 800: it is the viewport at which the
+     widest caption no longer fits on one line beside the picture. */
+  @media (max-width: 1340px) {
+    .photo-deck-foot { grid-template-columns: minmax(0, 1fr); row-gap: var(--sp-3); }
+    .photo-deck-caption,
+    .photo-deck-index { grid-column: 1; }
+    .photo-deck-caption { max-width: 34ch; }
+  }
+
+  /* ---------- no-JS fallback ----------
+     The twenty-one figures ship in the markup, in DOM order, and that order IS
+     the order of the pile - so a reader without scripting gets the same
+     sequence as a flat contact sheet instead of a different archive. With
+     scripting on this grid is never shown: js/photo-deck.js has moved its
+     children into the plate. The html.js flag is set by the inline script in
+     the head, so there is no frame where both are visible. */
+
+  .photo-fallback {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: var(--sp-3);
+    padding-block-end: var(--section-y);
+  }
+
+  .photo-fallback .photo-frame { aspect-ratio: 3 / 2; margin: 0; }
+
+  .photo-fallback .photo-frame-btn {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--color-media-void);
+  }
+
+  .photo-fallback .photo-frame-btn img { inline-size: 100%; block-size: 100%; object-fit: cover; }
+
+  html.js .photo-fallback { display: none; }

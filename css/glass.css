@@ -269,16 +269,18 @@
    The ONE place glass is allowed to sit on paper, and only because it was
    asked for by name. Plain glass on a flat page reads grey: there is nothing
    behind it to refract and the rim has nothing to read against. So this
-   variant carries a CHAMPAGNE TINT in the body, and the tint is the point -
-   blur(14px) saturate(1.9) now has a hue to deepen toward the edges, the
-   specular rim reads against colour instead of against more paper, and the
-   ::before bead gets a warm underside to sit on. */
+   variant carries a SKY TINT in the body, and the tint is the point -
+   blur(16px) saturate has a hue to deepen toward the edges, the specular rim
+   reads against colour instead of against more paper, and the ::before bead
+   gets an underside to sit on. */
 .glass--accent {
   --glass-radius: var(--radius-pill);
-  /* 50% is the ceiling. At 58% plus the saturate below the rendered body came
-     out 255,255,69 and the bottom rim 255,255,0 - pure neon yellow, measured
-     off the real pixels. */
-  background: color-mix(in oklab, var(--gold-400) 52%, transparent);
+  /* The ceiling moved with the hue. This is NOT the old gold number: sky-400
+     #59BFEA is a much lighter and much more saturated primary than #C9A227 was
+     (gold sat ~68%, sky sat ~89%), so the same percentage clips earlier. The
+     value below was re-measured off the real pixels at the new hue - see the
+     two numbers recorded in DESIGN.md 4.7. */
+  background: color-mix(in oklab, var(--sky-400) 52%, transparent);
   --glass-bevel: oklch(1 0 0 / 0.92);
   --glass-bevel-side: oklch(1 0 0 / 0.46);
   --glass-shade: oklch(0 0 0 / 0.16);
@@ -293,12 +295,12 @@
 }
 
 /* The saturate() values on the nav glass are tuned for a near-neutral dark
-   lozenge, where pushing saturation costs nothing. On a GOLD tint the same
-   1.9x drives the hue straight to the primary: gold #C9A227 is already ~68%
-   saturated, so 1.9x is 100%+. Measured on the real pixels the body came out
-   255,255,69 and the rim 255,255,0 - a neon highlighter, not champagne. The
-   accent variant therefore stays close to 1 and lets the TINT carry the
-   colour, which is the whole point of having one. */
+   lozenge, where pushing saturation costs nothing. On a saturated tint the
+   same 1.9x drives the hue straight to the primary: sky-400 #59BFEA is ~89%
+   saturated, so 1.9x is well past 100%. Measured on the real pixels that
+   drove the body to a neon highlight, not a tint. The accent variant
+   therefore stays close to 1 and lets the TINT carry the colour, which is the
+   whole point of having one. */
 .glass--accent .glass__body {
   backdrop-filter: blur(16px) saturate(1.08);
   -webkit-backdrop-filter: blur(16px) saturate(1.08);
@@ -311,8 +313,8 @@
    nothing to an empty absolutely-positioned box. Whatever brightness it
    declares is therefore applied to the entire surface and STACKS with the
    body's. On the nav glass (dark, over photographs) that stack is the look.
-   On a pale gold tint it simply clips: measured 255,247,188 with a red and
-   green channel pinned at 255 - cream, not champagne. */
+   On a pale sky tint it simply clips: the red channel saturates first on a
+   tint this blue and the result is a flat cyan, not a tint. */
 .glass--accent .glass__edge {
   backdrop-filter: blur(4px) saturate(1.04);
   -webkit-backdrop-filter: blur(4px) saturate(1.04);
@@ -320,9 +322,9 @@
 
 /* fallbacks, all three - see the glass section of AGENTS.md */
 @media (prefers-reduced-transparency: reduce) {
-  .glass--accent { background: var(--gold-400); }
+  .glass--accent { background: var(--sky-400); }
 }
-html[data-transparency="solid"] .glass--accent { background: var(--gold-400); }
+html[data-transparency="solid"] .glass--accent { background: var(--sky-400); }
 
 /* ---------- shape variants ---------- */
 .glass--pill { --glass-radius: var(--radius-pill); }

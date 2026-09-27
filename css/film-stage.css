@@ -85,7 +85,7 @@
 
 /* The panel's single action, as real glass. .glass supplies the border,
    radius, isolation and the specular rim; .glass--accent supplies the
-   champagne tint that makes the material read on a flat paper page. All this
+   sky tint that makes the material read on a flat paper page. All this
    rule owns is placement and type. */
 .film-detail-link {
   display: inline-flex;
@@ -93,7 +93,7 @@
   min-height: 40px;
   margin-block-start: var(--sp-5);
   padding: 0.85em 1.45em;
-  color: var(--ink-950);
+  color: var(--color-ink);
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   font-weight: 500;

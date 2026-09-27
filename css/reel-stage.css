@@ -198,12 +198,12 @@
   height: auto;
   object-fit: cover;
   display: block;
-  background: var(--color-bg-deep);
+  background: var(--color-media-void);
   border-radius: var(--radius-md);
   /* an inset ring that survives being painted over by the image itself:
      outline draws above the element's own box, and with a radius the engine
      rounds it, so no wrapper element is needed. */
-  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline: 1px solid var(--color-media-ring);
   outline-offset: -1px;
   filter: saturate(0.72);
   transition:

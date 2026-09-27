@@ -80,18 +80,21 @@ if (!REDUCED && heroMark) {
 }
 
 /* ---------- photography: no scroll effects at all ----------
-   The photography chapter is an infinite draggable board now, and it owns every
-   transform on it. The two effects that used to live here are gone with the
-   scattered grid they were written for:
+   The chapter is a hand-dealt pile now, and it owns every transform on it.
+   That is still why nothing below runs, and the reason is stronger than it
+   was: a card's position IS the reader's index into the sequence, so anything
+   that moved a card behind the reader's back would be lying about where they
+   are. Both retired effects were exactly that:
 
    - the ScrollTrigger.batch entry fade wrote y + autoAlpha onto .photo-frame,
-     which is exactly the element js/photo-wall.js positions by transform;
+     which is the element js/photo-deck.js positions by transform;
    - the per-plate --photo-drift scrub wrote yPercent onto .photo-frame-btn,
-     which is the cell inside that frame. Both would have fought the board's own
-     matrix, and the board has its own motion language (drag, throw, parallax,
-     arrow keys) that no scroll trigger is allowed to join. See AGENTS.md.
-   The captions that used to sit under each plate are still in the DOM, now
-   sr-only, and the detail layer still reads them. */
+     the control inside that frame. It fought the pile's own matrix, and the
+     pile has a motion language (1:1 drag, settle, arrow keys) that no scroll
+     trigger is allowed to join. See AGENTS.md.
+   The captions that used to sit under each plate are still in the DOM as
+   sr-only: the deck's foot prints the top card's, and the detail layer still
+   reads all twenty-one. */
 
 /* ---------- glass spotlight ----------
    One rAF-throttled style write per frame. GSAP quickTo cannot tween a
@@ -147,9 +150,6 @@ initGlassSpotlight();
    are shared. */
 
 const lightbox = document.getElementById("lightbox");
-const photoView = document.getElementById("photo-view");
-const photoEnter = document.getElementById("photo-enter");
-const photoViewClose = document.getElementById("photo-view-close");
 const lbStage = document.getElementById("lb-stage");
 const lbImg = document.getElementById("lb-img");
 const lbCap = document.getElementById("lb-cap");
@@ -182,7 +182,6 @@ const photoFrames = Array.from(document.querySelectorAll(".photo-frame"));
 
 let lbIndex = 0;
 let isLbOpen = false;
-let isPhotoViewOpen = false;
 let lbTrigger = null;
 let lbThumbs = [];
 let detailType = "photo";
@@ -201,18 +200,23 @@ function photoFrameData(frame) {
   const no = frame.querySelector(".photo-frame-no");
   return {
     type: "photo",
-    /* src is what the BOARD paints - a 560px derivation in photo/wall/ - and
-       full is the 1600px original the lightbox opens. Both live on the img
-       (data-full, see index.html): the board clones these figures, so a field
-       read off the node survives every cell the plane tiles. */
-    src: img ? img.getAttribute("src") : "",
-    full: img ? img.dataset.full || img.getAttribute("src") : "",
+    /* Three fields, three jobs, all read off the one img:
+         full  - the 1600px linearised file, what the lightbox opens
+         src   - the 560px derivation the rail paints, ONE small thumbnail for
+                 all twenty-one. js/photo-deck.js snapshots the markup's src
+                 into data-rail before it starts swapping src for the plate, so
+                 the rail never inherits the plate's bigger file: asking both
+                 off `src` would download twenty-one linearised photographs to
+                 draw twenty-one 48px thumbs.
+         alt / caption / number - unchanged. */
+    src: img ? (img.getAttribute("data-rail") || img.getAttribute("src")) : "",
+    full: img ? img.dataset.full || img.getAttribute("data-rail") || "" : "",
     alt: img ? img.alt : "",
     caption: cap ? cap.textContent.trim() : "",
     number: no ? no.textContent.trim() : "",
-    // read off the figure, not off the section it sits in: the wall has no
-    // movement headings left to be a child of, and the data-act attribute is
-    // the only thing keeping the kicker from reporting BLOOM for all eleven
+    // read off the figure, not off the section it sits in: the data-act
+    // attribute is the only thing keeping the kicker from reporting BLOOM for
+    // all twenty-one
     act: frame.getAttribute("data-act") || "BLOOM",
   };
 }
@@ -288,7 +292,7 @@ function detailAct(type, item) {
 }
 
 function syncOverlays() {
-  const active = isLbOpen ? lightbox : isPhotoViewOpen ? photoView : null;
+  const active = isLbOpen ? lightbox : null;
   Array.from(document.body.children).forEach((el) => {
     if (el.tagName === "SCRIPT") return;
     if (active && el !== active) el.setAttribute("inert", "");
@@ -302,45 +306,11 @@ function syncOverlays() {
   }
 }
 
-function initPhotoView() {
-  if (!photoView || !photoEnter || !photoViewClose) return;
-
-  function open() {
-    photoView.hidden = false;
-    isPhotoViewOpen = true;
-    syncOverlays();
-    if (window.PhotoWall) window.PhotoWall.show();
-    photoViewClose.focus();
-  }
-
-  function close() {
-    if (window.PhotoWall) window.PhotoWall.suspend();
-    isPhotoViewOpen = false;
-    photoView.hidden = true;
-    syncOverlays();
-    photoEnter.focus();
-  }
-
-  photoEnter.addEventListener("click", open);
-  photoViewClose.addEventListener("click", close);
-  document.addEventListener("keydown", (e) => {
-    if (!isPhotoViewOpen || isLbOpen) return;
-    if (e.key === "Escape") { e.preventDefault(); close(); return; }
-    if (e.key !== "Tab") return;
-    const controls = Array.from(photoView.querySelectorAll("button:not([tabindex='-1'])"));
-    const first = controls[0];
-    const last = controls[controls.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  });
-}
-
-initPhotoView();
+/* The full-screen photo layer is retired (asked for). The deck deals in the
+   page and the shared #lightbox is what a photograph opens into, so that layer
+   was a second copy of the detail mechanism - plus a second scroll lock, a
+   second Escape path and a second focus trap to keep honest. Its retirement is
+   also what lets syncOverlays() know about exactly one overlay. */
 
 function lbBuildRail() {
   if (!lbRail) return;
@@ -498,7 +468,6 @@ function openDetail(type, index) {
   detailItems = items;
   lbIndex = Math.max(0, Math.min(Number(index) || 0, items.length - 1));
   lbTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-  if (lbTrigger && lbTrigger.closest(".photo-cell[aria-hidden='true']")) lbTrigger = photoViewClose;
   if (type === "photo" && !lbThumbs.length) lbBuildRail();
   renderDetail();
   lightbox.classList.add("is-open");
@@ -523,28 +492,35 @@ function closeDetail() {
 
 function initUnifiedDetail() {
   if (!lightbox) return;
-  /* The rail is NOT built here. It is twenty-one buttons around twenty-one
-     copies of the twenty-one photographs the board has already loaded, and at
-     boot it cost twenty-one extra image elements plus their decodes inside an
-     overlay that is hidden with opacity/visibility - which is not display:none,
-     so a lazy image in it still counts as in-viewport and still loads.
-     openDetail() builds it on the first photo detail (see the guard in there),
-     before renderDetail(), which is the only thing that reads lbThumbs. */
+  /* The rail is NOT built here. It is twenty-one buttons around twenty-one more
+     image elements, and at boot they land inside an overlay that is hidden
+     with opacity/visibility - which is not display:none, so a lazy image in it
+     still counts as in-viewport and still loads. openDetail() builds it on the
+     first photo detail (see the guard in there), before renderDetail(), which
+     is the only thing that reads lbThumbs.
+     It is also the only way to reach an arbitrary frame now that the deck has
+     a top and a bottom: it owns the same twenty-one, in the same order, and
+     every thumb carries the caption in its label. */
 
-  /* One delegated listener, because the board shows more frames than the
-     eleven authored ones: js/photo-wall.js tiles clones across the plane, and a
-     clone is as clickable as the original. The eleven real figures carry
-     data-photo-index in DOM order, which is the index openDetail wants, and the
-     clones carry the index of the photo they duplicate. A drag is already
-     swallowed in the capture phase by the board itself, so nothing here has to
-     know about drag state. */
-  const photoWall = document.getElementById("photo-wall");
-  if (photoWall) {
-    photoWall.addEventListener("click", (e) => {
-      const frame = e.target.closest("[data-photo-index]");
-      if (!frame || !photoWall.contains(frame)) return;
+  /* One delegated listener on the deck. Clicking a card that is not yet on
+     top puts it on top - four cards are visible, so "that one" is something a
+     reader can point at - and clicking the card that IS on top opens the
+     detail layer at that index. data-photo-index is in DOM order, which is the
+     order of the pile, so it is the index openDetail wants. A drag is already
+     swallowed in the capture phase by js/photo-deck.js before this runs, so
+     nothing here has to know about drag state. */
+  const photoDeck = document.getElementById("photo-deck");
+  if (photoDeck) {
+    photoDeck.addEventListener("click", (e) => {
+      const frame = e.target.closest(".photo-frame");
+      if (!frame || !photoDeck.contains(frame)) return;
       const i = Number(frame.getAttribute("data-photo-index"));
-      if (i >= 0) openDetail("photo", i);
+      if (!(i >= 0)) return;
+      if (window.PhotoDeck && window.PhotoDeck.top() !== i) {
+        window.PhotoDeck.select(i);
+        return;
+      }
+      openDetail("photo", i);
     });
   }
 

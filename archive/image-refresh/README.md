@@ -8,7 +8,7 @@ what each one cost in bytes and in measured error.
 | --- | --- | --- | --- | --- |
 | `covers/` (18) | 5.76 MB | **1.64 MB** | 1280px webp | the dial's centre card measures ~447-520 CSS px; dpr2 needs ~1040 |
 | `album-covers/thumbs/` (417, new) | (14.60 MB source) | **2.27 MB** | 160px webp | the row's `.idx-cover` is 64 CSS px, i.e. 128 device px on dpr2 |
-| `photo/wall/` (21, new) | 3.14 MB | **0.65 MB** | 560px webp | a board cell is 258 CSS px wide (280 at the widest viewport), so 560 covers dpr2 |
+| `photo/wall/` (21, new) | 3.14 MB | **0.65 MB** | 560px webp | the lightbox rail thumbnail is 48 CSS px, i.e. 96 device px on dpr2 |
 | `sport/` (5, in place) | 1.25 MB | **0.78 MB** | 1600px webp | the open accordion panel is ~812 CSS px wide |
 | `hero/` | 0.91 MB | +0.41 MB | unchanged + a **1600w** cut | the srcset jumped 1200 -> 2400, so a dpr1 1440 viewport had to take 2400w |
 
@@ -60,3 +60,5 @@ into `.venv` (that one belongs to the site and is not touched - same pattern as
 entry (the board's `src` points there and will 404 without it), and a new album
 cover needs a `album-covers/thumbs/` entry (the list row points there). Both
 are covered by the corresponding AGENTS.md bullets.
+
+> **2026-09 更新**：摄影章节的呈现方式换成了**牌堆**（`css/photo-deck.css` + `js/photo-deck.js`），牌面封顶 **800 CSS px**。所以牌面与灯箱大图都走 `photo/` 的 **1600px 线性档**（800 正好是它的一半，dpr2 下也不放大），`photo/wall/` 的 560px 现在**只喂灯箱缩略条**（48 CSS px）。原来那条「棋盘格 258 CSS px」的说法随全屏棋盘一起退役。

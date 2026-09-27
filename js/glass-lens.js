@@ -105,8 +105,12 @@
   }
 
   sync();
-  /* the bar's width is min(1180px, 100vw - 2 * gutter), so it changes with the
-     viewport; regenerate only when the measured box actually changes */
+  /* the bar's width tracks the shell's content width, so it changes with the
+     viewport; regenerate only when the measured box actually changes.
+     (The formula in the comment used to be min(1180px, 100vw - 2*gutter) and
+     the bar is no longer 1180 - it is min(--shell - 2*gutter, 100% - 2*gutter),
+     1310 at 1440. Nothing above needed touching: the map is built from the
+     measured box, which is why this file has no bar width in it at all.) */
   if (typeof ResizeObserver !== "undefined") new ResizeObserver(sync).observe(body);
   else window.addEventListener("resize", sync, { passive: true });
 })();
