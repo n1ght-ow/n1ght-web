@@ -16,7 +16,8 @@
  * picture. That is the method in DESIGN.md 3.2 inference 3.
  *
  * Prints the rect as JSON on the last line so a caller can feed it straight
- * into pixel-contrast.py.
+ * into pixel-contrast.py. Anything --eval returned comes back in the same line
+ * under `eval`.
  */
 import { spawn } from "node:child_process";
 import { existsSync, mkdtempSync, writeFileSync } from "node:fs";
@@ -45,6 +46,7 @@ const hide = arg("hide", "");
 const out = arg("out", "shot.png");
 const scrollTo = arg("scroll", "");
 const run = arg("eval", "");
+let evalResult = null;
 const settle = Number(arg("settle", 4500));
 const port = Number(arg("port", 9333));
 
@@ -111,6 +113,13 @@ try {
     deviceScaleFactor: 1,
     mobile: width < 600,
   });
+  if (has("reduced-motion")) {
+    /* The site has a whole reduced-motion contract and no way to look at
+       it from a headless shot, because the media query is not a URL. */
+    await send("Emulation.setEmulatedMedia", {
+      features: [{ name: "prefers-reduced-motion", value: "reduce" }],
+    });
+  }
   await send("Page.navigate", { url });
   await sleep(settle);
   if (run) {
@@ -118,7 +127,11 @@ try {
        tab, for instance. It is the page's own code doing the work, not a
        screenshot-specific state, so what renders here is what renders for a
        reader. */
-    await evaluate(`(() => { ${run} })(); 1`);
+    /* The body is a function body, so a `return` in it comes back out
+       with the shot. That is how a computed style gets checked without a
+       second script: --eval "return getComputedStyle(document.querySelector('.nav')).backgroundColor".
+       The documented no-return form still works and still reports null. */
+    evalResult = await evaluate(`(() => { ${run} })()`);
     await sleep(1200);
   }
   if (scrollTo) {
@@ -153,7 +166,7 @@ try {
 
   const { data } = await send("Page.captureScreenshot", { format: "png" });
   writeFileSync(out, Buffer.from(data, "base64"));
-  console.log(JSON.stringify({ out, viewport: `${width}x${height}`, rect }));
+  console.log(JSON.stringify({ out, viewport: `${width}x${height}`, rect, ...(evalResult === undefined ? {} : { eval: evalResult }) }));
 } finally {
   ws.close();
   child.kill();

@@ -1,7 +1,11 @@
 /* ============================================================
    N1GHT CHXN9 - personal archive
-   V2 identity: editorial image archive. Paper canvas, ink type,
-   one rationed accent, liquid glass on the controls that float.
+   V3 identity: a printed poster. Warm stock, navy plate ink, cobalt as
+   the one authority colour, a hard offset instead of a glow, and a 3px
+   misregistration on the display type. Depth on this page is PRINTED
+   depth: the plate sits ON the sheet, so its shadow is square and
+   unblurred. The floating glass controls are gone; what replaced them
+   is in css/glass.css and it is called "printed surfaces".
 
    Structure of this file:
      1  tokens        2  reset        3  type roles   4  layout
@@ -11,80 +15,115 @@
     17  lightbox     18  responsive  19  reduced motion
 
    Type is a TWO-REGISTER system, not a continuous ramp: a tight UI
-   register (11/13/15/16) and a modular display register on a Major
-   Third (1.25) ladder (20/25/31/39/49/61/76). That gap is deliberate.
-   Numbers live in DESIGN.md.
+   register (11/13/15/16) and a display register that is now UNMODULAR
+   (20/25/40-84/48-100) - see the note in section 1, because breaking
+   the ladder is a decision and not an oversight. The gap between the
+   two registers is still a gap, and it is a wider one. Numbers live in
+   DESIGN.md.
    ============================================================ */
 
 /* ============ 1. TOKENS ============ */
 :root {
-  /* --- primitives: cool paper ramp + blue-black ink ramp + one sky accent ---
-     Never pure #fff, never pure #000. The paper ramp carries a COOL cast
-     (B>G>R) so the page reads as cold white, not as neutral grey; the ink ramp
-     is the same near-black pushed toward navy so dark areas (hero, lightbox,
-     footer) belong to the palette instead of merely going dark.
+  /* --- primitives: warm paper ramp + navy plate ink + one cobalt ---
+     V3, 2026 色相重置: the surreal-poster skin promoted to the default. V2
+     was a cool paper with a single sky accent and no chapter grounds. This
+     is PRINT rather than SCREEN - warm cream stock, a navy plate ink, cobalt
+     as the one authority colour - and the reason the page reads as a poster
+     instead of a dashboard is that its depth is an OFFSET SHADOW and its
+     only optical effect is a hard 3px misregistration on the display type.
 
-     The page is ONE field, not a stack of tinted sections: photography, the
-     archive and the poem all sit on --paper-050, and the chapters are told
-     apart by air alone. --sky-050 exists for a BOUNDED tinted panel (the sport
-     tray), not for a chapter background; that role used to be --color-bg-deep
-     and is retired. --sky-900 is the darkest stop of the hero plate's duotone
-     ramp, and is what .hero paints behind it, so the letterbox object-fit
-     exposes on a phone is the same colour as the plate's shadows.
+     The paper ramp carries a WARM cast (R>B>G) so the page reads as stock
+     rather than as screen white; the ink ramp is navy, not a neutral black,
+     so the dark areas (hero, lightbox, footer) belong to the palette instead
+     of merely going dark.
 
-     Measured, not estimated (WCAG relative luminance, 2026-09-29):
-        ink-900 on paper-050  15.40:1     ink-600 on paper-050   7.26:1
-        ink-500 on paper-050   4.93:1  <- the page floor
-        ink-500 on sky-050     4.60:1  <- the new floor, the sport tray
-        sky-700 on paper-050   5.38:1     sky-700 on sky-050   5.02:1
-        ink-900 on sky-400     7.83:1  (a filled accent button's label) */
-  --paper-000: #FBFDFF;   /* surface   */
-  --paper-050: #F4F9FC;   /* page      */
-  --paper-200: #C8DDE9;   /* dividers  */
+     Every number below came out of archive/color-audit/theme-contrast.mjs,
+     which PARSES THIS FILE. That is the point: a contrast table written next
+     to the tokens is a table that starts lying the first time somebody edits
+     a hex. Change a value, re-run the script, paste the numbers back.
 
-  --ink-950: #101820;     /* dark areas */
-  --ink-900: #172129;     /* primary text */
-  --ink-600: #3E5666;     /* secondary text */
-  --ink-500: #56707F;     /* muted - the ONLY legal muted value */
-  --on-dark: #EDF3F8;
+        ink-900 on paper-050  14.92:1     ink-600 on paper-050   6.86:1
+        ink-500 on paper-050   5.30:1  <- the page floor
+        ink-500 on sky-050     4.85:1  <- the sport tray floor
+        sky-700 on paper-050   8.88:1  (links, focus rings, the refrain)
+        ink-900 on sky-400     3.02:1  <- FAILS, and that is the point.
+                                      Cobalt is a DARK fill, so its label is
+                                      --color-on-accent (#FFF4E4) at 4.90:1.
+                                      Do not "fix" the 3.02 by darkening the
+                                      fill: the fill is the brand here. */
+  --paper-000: #FFFDF7;   /* the sheet   */
+  --paper-050: #FAF6EE;   /* the page    */
+  --paper-200: #E4D9C6;   /* dividers    */
 
-  /* The accent is a PAIR, not one colour. A single accent cannot be both a
-     solid fill and a readable label: sky-400 on paper is 1.9:1, useless as
-     text, and sky-700 as a fill is a dead rectangle. So the light one fills
-     and the deep one speaks. */
-  --sky-050: #E6F2FC;     /* tinted panel surface (bounded, not a section) */
-  --sky-100: #D7EFFB;     /* light tint */
-  --sky-400: #59BFEA;     /* solid fills */
-  --sky-700: #006D9E;     /* links, focus rings, the poem refrain */
-  --sky-900: #081626;     /* the hero plate's shadow end - .hero's letterbox */
+  --ink-950: #101A33;     /* dark areas, plate ink */
+  --ink-900: #16203C;     /* primary text */
+  --ink-600: #4A5573;     /* secondary text */
+  --ink-500: #5B6684;     /* muted - the ONLY legal muted value */
+  --on-dark: #FFF4E4;
+
+  /* The accent is a PAIR, not one colour, and the pair is the one rule that
+     has survived every palette this site has had. Here the light end is not a
+     tint but a full-strength cobalt, which is a second reason the label
+     flips: in this palette the accent is a PLATE, not a wash. */
+  --sky-050: #E7ECFF;     /* the sport tray, and only that */
+  --sky-100: #CFD8FF;     /* light tint */
+  --sky-400: #3157FF;     /* solid fills - a printed plate */
+  --sky-700: #1B32B8;     /* links, focus rings, the poem refrain */
+  --sky-900: #0C1230;     /* the hero plate's shadow end - .hero's letterbox */
+
+  /* the three other plates this palette prints with. Reached only through
+     color-mix(): a component never names one of these directly. */
+  --accent-2: #FF774A;    /* fluorescent orange */
+  --accent-3: #B5EA3C;    /* acid green */
+  --accent-4: #C86BFF;    /* magenta */
+  --accent-2-ink: #A8340B;
+  --accent-3-ink: #3F6A00;
+  --accent-4-ink: #7426B8;
 
   /* --- semantic: components reference these only --- */
   --color-bg: var(--paper-050);
   --color-surface: var(--paper-000);
-  /* a BOUNDED tinted panel - corner radius and a hairline say "this is an
-     object on the page". A chapter background said something different and is
-     gone: the tint used to stop the archive reading as a second, unrelated
-     page, and it did, because it had four hard edges and the hero had five. */
   --color-surface-tint: var(--sky-050);
   /* an empty media slot: what a cover box paints before its image lands. */
   --color-media-void: var(--paper-200);
   /* the hairline around cover art, and the hover wash under a control. Both
-     used to be neutral black, which on a page this blue reads as dirty grey
-     rather than as a shadow. They are the same ink hue, not a different one. */
-  --color-media-ring: oklch(0.20 0.055 245 / 0.10);
-  --color-hover-wash: oklch(0.20 0.055 245 / 0.055);
+     are the plate ink's own hue, never a neutral black: neutral black on warm
+     stock reads as dirt, which is the one thing a printed page never has. */
+  --color-media-ring: color-mix(in oklab, var(--ink-950) 16%, transparent);
+  --color-hover-wash: color-mix(in oklab, var(--ink-950) 7%, transparent);
   --color-text: var(--ink-900);
   --color-text-secondary: var(--ink-600);
   --color-text-muted: var(--ink-500);
   --color-line: var(--paper-200);
-  --color-line-soft: oklch(0 0 0 / 0.055);
+  --color-line-soft: color-mix(in oklab, var(--ink-950) 10%, transparent);
   --color-accent: var(--sky-400);
   --color-accent-text: var(--sky-700);
   --color-accent-tint: var(--sky-100);
-  --color-on-accent: var(--ink-900);
+  /* cobalt is a dark fill, so its label is light. This is the one value on the
+     site that inverts the usual relationship, and it is why the token exists:
+     the film / series detail action reads this, never ink. */
+  --color-on-accent: #FFF4E4;
   --color-ink: var(--ink-950);
   --color-on-dark: var(--on-dark);
-  --color-on-dark-muted: oklch(1 0 0 / 0.62);
+  --color-on-dark-muted: color-mix(in oklab, var(--on-dark) 66%, transparent);
+
+  /* --- chapter grounds: one sheet per chapter, edgeless ---
+     These reverse a V2 rule outright ("no chapter may own a background"),
+     and the reason is the one that mattered: a poster is made of sheets, and
+     sheets have colours. What they are NOT is blocks - each is a gradient
+     with no edge, because a hard edge is exactly what made the archive read
+     as a second, unrelated page back in V2.
+
+     They are NAMED rather than inlined so the audit can read each one's
+     darkest stop and check muted text against it; all 21 clear 4.5:1. Change
+     one and re-run archive/color-audit/theme-contrast.mjs. */
+  --ground-photo: linear-gradient(180deg, #FCF8F0 0%, #F2EDDF 100%);
+  --ground-books: linear-gradient(180deg, #F6F9EA 0%, #EDF2D8 100%);
+  --ground-films: linear-gradient(180deg, #EFF1FF 0%, #E3E8FF 100%);
+  --ground-series: linear-gradient(180deg, #FEF1E9 0%, #FBE3D4 100%);
+  --ground-music: linear-gradient(180deg, #F8F2FF 0%, #EDE3FF 100%);
+  --ground-games: linear-gradient(180deg, #F4FAE4 0%, #E7F2CB 100%);
+  --ground-poem: linear-gradient(180deg, #FAF6EE 0%, #F1EEE8 100%);
 
   /* --- families --- */
   --font-sans: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
@@ -100,16 +139,27 @@
   --fs-small: 0.9375rem;    /* 15 - secondary body */
   --fs-body: 1rem;          /* 16 - body */
 
-  /* --- type: display register (Major Third 1.25) --- */
+  /* --- type: display register ---
+     THE LADDER IS BROKEN HERE, ON PURPOSE, AND ONLY HERE. V2 ran this
+     register on a Major Third (1.25) from 20 to 76. The poster direction
+     needs a title that is a poster title: 84px at 1440, not 49. So the
+     display register was re-scaled and the modular relationship dropped.
+
+     The two things that are NOT touched are the ones that were doing the
+     real work. The UI register is identical (a poster's captions are still
+     captions), and there are still exactly NINE tokens - no tenth value was
+     introduced to reach this, the four display sizes simply moved. The gap
+     between the two registers is still a gap, and it is now a wider one,
+     which is the poster argument rather than a contradiction of it. */
   --fs-h4: 1.25rem;                                        /* 20 */
   --fs-h3: clamp(1.25rem, 1.15rem + 0.45vw, 1.5625rem);    /* 20 -> 25 */
-  --fs-h2: clamp(1.9375rem, 1.5rem + 1.9vw, 3.0625rem);    /* 31 -> 49 */
-  --fs-display: clamp(2.4375rem, 1.5rem + 4.2vw, 4.75rem); /* 39 -> 76 */
+  --fs-h2: clamp(2.5rem, 1.5rem + 4vw, 5.25rem);           /* 40 -> 84 */
+  --fs-display: clamp(3rem, 1.8rem + 5.2vw, 6.25rem);     /* 48 -> 100 */
 
   /* tracking scales inversely with size (research: measured on premium
      portfolios as -0.03em <=34px easing to -0.05em >=48px) */
-  --track-display: -0.045em;
-  --track-h2: -0.038em;
+  --track-display: -0.05em;
+  --track-h2: -0.05em;
   --track-h3: -0.02em;
   --track-label: 0.16em;
   --track-meta: 0.08em;
@@ -140,10 +190,22 @@
   --radius-lg: 22px;
   --radius-pill: 999px;
 
-  /* --- elevation: ONE. The references ship flat by default; depth is
-     carried by the border and the glass, not by stacked shadows. --- */
-  --shadow-lift: 0 1px 2px oklch(0 0 0 / 0.05), 0 18px 44px -18px oklch(0 0 0 / 0.22);
-
+  /* --- elevation: ONE, and it is a PRINT offset ---
+     V2's two-layer soft shadow was a screen object floating over paper. A
+     printed page has exactly one shadow and it is hard-edged and square: the
+     plate sits ON the sheet, so the shadow is the same shape, offset, with
+     no blur at all. That single change is most of why this skin reads as
+     print rather than as UI - every raised object on the page inherits it. */
+  --shadow-lift: 6px 6px 0 0 color-mix(in oklab, var(--ink-950) 16%, transparent);
+  /* the harder grade, for the one object per view that is meant to be loud:
+     a selected poster, a raised card, the tab strip itself. */
+  --shadow-lift-hard: 9px 9px 0 0 color-mix(in oklab, var(--ink-950) 22%, transparent);
+  /* the registration slip. TWO hard offsets in two plates, never a blur: a
+     blurred shadow is a glow, and a glow is the direction this palette just
+     retired. Written once so every piece of display type misprints the same
+     way - the whole point of a press is that it is one machine. */
+  --misreg: 3px 0 0 color-mix(in oklab, var(--accent-2) 58%, transparent),
+            -3px 0 0 color-mix(in oklab, var(--sky-400) 52%, transparent);
   /* --- motion: four named easings, no one-off curves --- */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -336,52 +398,30 @@ h1, h2 { text-wrap: balance; }
   padding-inline: var(--sp-2) var(--sp-2);
   border-radius: var(--radius-pill);
 
-  /* A CRISP EDGE INSTEAD OF A GLOW. The reference draws its shell ring 3px
-     thick and insets the content panel by that same 3px, so the bright rim
-     and the panel edge are one continuous step. The pill default is 9px,
-     which reads as a soft halo; 3px reads as a lens. */
-  --glass-edge-w: 3px;
+  /* This bar used to override four glass tokens of its own: a 3px lens
+     rim, a lit-underneath axial bead, and the Liquid Glass Navbar's
+     six-layer elevation. All four described a glass edge, and there is
+     no glass edge any more, so all four are gone and the bar takes
+     --glass-elevation and --glass-edge-w from glass.css like every
+     other bar on the site.
 
-  /* Lit top and lit bottom, dark rails. The reference's shell gradient runs
-     white at 0%, grey through the middle, white again at 100%, so its
-     underside is LIT. The light glass does the opposite (a dark underside)
-     because on paper the ring has to read by its dark half; the nav floats
-     over a photograph and can take the reference's profile instead. */
-  --glass-bead-bottom: oklch(1 0 0 / 0.72);
-  --glass-bead-side: oklch(0 0 0 / 0.16);
-
-  /* The reference's elevation, transcribed as measured rather than eyeballed:
-     six stacked layers, no negative spread, the widest at 60px blur / 30px
-     offset. --shadow-lift pulls in with an -18px spread and reads far tighter,
-     which is exactly the difference here.
-
-     The alphas are the reference's, except that this bar floats over paper for
-     most of the page and a 6% halo is invisible there: the bar had no
-     boundary at all over --paper-050, so the same object read as two different
-     objects. They are raised, not doubled, and the blur/offset geometry is
-     untouched - and this is the bar's ONLY edge. glass.css is explicit that
-     the shell's rim is not to be joined by a second ring inside it, so the
-     separation is carried by elevation rather than by a hairline. */
-  --glass-elevation:
-    0.29px 4.36px 2.18px oklch(0 0 0 / 0.03),
-    0.48px 7.24px 3.63px oklch(0 0 0 / 0.04),
-    0.78px 11.7px 5.86px oklch(0 0 0 / 0.05),
-    1.28px 19.15px 9.6px oklch(0 0 0 / 0.07),
-    2.2px 32.97px 16.52px oklch(0 0 0 / 0.08),
-    4px 60px 30.07px oklch(0 0 0 / 0.12);
+     One override survives and it is not about material: this bar floats
+     over a photograph for the whole first screen, and it is the only
+     control on the page that does. A 6px offset disappears against a
+     night image, so this one bar is lifted to the harder grade. The
+     frame does the rest of the work, and the frame is cobalt - which is
+     a deliberate choice, because a cobalt trim is the one thing on the
+     page that reads as a trim line against both paper and night. */
+  --glass-elevation: 7px 7px 0 0 color-mix(in oklab, var(--ink-950) 38%, transparent);
 }
 
-/* .glass and .glass--pill live in glass.css, which loads AFTER this file, so
-   a bare .nav rule loses to them at equal specificity. The extra class is
-   load-bearing, not decoration: the same trap as .tabbar.glass. */
-.nav.glass .glass__edge { padding: 3px; }
-.nav.glass::before { padding: 3px; }
-
-/* --glass-nav is the 78% tint, and it is the only one that clears the 0.76
-   floor measured for ink labels over the worst hero photo. Everything that
-   sits on paper keeps falling back to --glass-panel (72%). It has to be
-   written with the extra class for the same load-order reason as above. */
-.nav.glass { background: var(--glass-nav); }
+/* NOTHING OVERRIDES THE NAV'S MATERIAL ANY MORE. This block used to
+   carry three things: a 3px inset on the lens rim, a padding on the axial
+   bead, and the nav's own background. All three went with the layers they
+   described - and so did the load-order trap commented on here, because
+   there is no longer a background on .nav for .glass to beat. The bar
+   takes its paper from .glass__body and its offset from
+   --glass-elevation, both from glass.css, like every other bar. */
 
 .nav .glass__content {
   display: flex;
@@ -821,35 +861,14 @@ h1, h2 { text-wrap: balance; }
   margin-block-end: var(--bar-gap);
 }
 
-/* The lens rim loses its brightening here, and only here. glass.css gives
-   every bar `blur(3px) brightness(1.14) saturate(1.4)` on a 9px masked ring;
-   over photographs that is the lens read, but over this paper the body is
-   already ~249 and 1.14x clips every channel to pure white. Measured on the
-   real render: the top and bottom 9px of this bar were 255,255,255 against a
-   249,249,243 body, and since the selected pill sits 6px from the rim on
-   every side, that white band read as a halo around the pill. Same layer, same
-   blur, no brightening: the rim now measures the bar's own colour. */
-#archive-tabbar .glass__edge,
-.music-search .glass__edge,
-.genre-filter .glass__edge {
-  backdrop-filter: blur(3px) saturate(1.4);
-  -webkit-backdrop-filter: blur(3px) saturate(1.4);
-}
-
-/* Colour parity with the tab strip (asked for). The strip refracts, and the
-   lens rule REPLACES --glass-blur, so its body renders 249,249,243 - the
-   honest composite of the 72% tint over the paper. These two bars keep
-   --glass-blur, whose brightness(1.05) has nothing to lift on paper: 248 x
-   1.05 clips every channel, so they painted 255,255,252 - pure white, which
-   AGENTS.md forbids outright. Measured off one screenshot with the same
-   239,239,234 backdrop: strip 249,249,243 / search 255,255,252 / rail
-   255,255,255. Dropping the brightness here lands all three on one colour and
-   costs nothing: blur and saturate are untouched. */
-.music-search .glass__body,
-.genre-filter .glass__body {
-  backdrop-filter: blur(20px) saturate(1.7);
-  -webkit-backdrop-filter: blur(20px) saturate(1.7);
-}
+/* A block of three bars used to sit here, all of it about matching one
+   colour across three layers that no longer exist: the lens rim's
+   brightening (which clipped to pure white over paper and read as a halo
+   around the selected pill), the two music bars' --glass-blur, and the
+   parity note explaining why. All three questions were questions ABOUT
+   the material, so when the material went they went with it. The three
+   bars are now the same sheet with the same frame, which is why there is
+   nothing left to equalise. */
 
 .tab-btn {
   /* the glass layers are absolutely positioned siblings, so an unpositioned
@@ -1317,12 +1336,12 @@ html:not(.js) .sport-wash { opacity: 1; }
      corners are quarter circles. The shape lock only has four radii, so 22px
      (--radius-lg) is the one legal "big rounded rectangle": measured against a
      96px tall plate it still reads as a rectangle, where --radius-pill gave a
-     48px stadium end. The rim keeps the 9px of the other two bars; the 13px
-     default is sized for a much larger surface.
-     The nav-width maths (--rail-w, the (100% - w) / 2 centring) is retired with
-     the second revision - do not copy it back. */
+     48px stadium end.
+     The frame keeps the 2px of the other two bars. It used to be 9px here, on
+     the reasoning that a lens rim has to be thick; a printed trim line has the
+     opposite requirement, and 9px of cobalt on a 96px plate is a frame, not a
+     rule. The nav-width maths (--rail-w) is retired - do not copy it back. */
   --glass-radius: var(--radius-lg);
-  --glass-edge-w: 9px;
   /* The tab strip's tray geometry: 6px around 40px items, and the same single
      gap above and below. Tint, blur, rim and elevation come from .glass -
      do not re-declare them here. */
@@ -1459,7 +1478,7 @@ html:not(.js) .sport-wash { opacity: 1; }
 
 .genre-chip:hover { color: var(--color-text); background: var(--color-hover-wash); }
 
-.genre-chip.is-active { background: var(--glass-pill); color: var(--color-on-dark); }
+.genre-chip.is-active { background: var(--glass-pill); color: var(--color-on-accent); }
 
 /* There is deliberately no tick marker on the active chip: it added width, so
    the whole chip rail reflowed on every genre change. The filled pill carries
@@ -1497,6 +1516,10 @@ html:not(.js) .sport-wash { opacity: 1; }
     0 8px 20px -10px oklch(0 0 0 / 0.45);
 }
 
+/* The frame on these two plates is a 1px orange outline offset 1px
+   outward: the same mis-registered second pass every other surface gets,
+   and it costs no element. The old recipe drew a masked axial bead for the
+   same purpose and described a glass rim. */
 .music-random::after,
 .genre-chip.is-active::after {
   content: "";
@@ -1505,69 +1528,31 @@ html:not(.js) .sport-wash { opacity: 1; }
   z-index: -1;
   border-radius: inherit;
   pointer-events: none;
-  backdrop-filter: blur(6px) saturate(1.4);
-  -webkit-backdrop-filter: blur(6px) saturate(1.4);
+  outline: 1px solid color-mix(in oklab, var(--accent-2) 62%, transparent);
+  outline-offset: 1px;
 }
 
-/* The axial bead - .glass-pill::before verbatim: dark flank rails, lit top and
-   lit bottom. Painted over the label, which is fine: it is a 1px ring on the
-   border, and the labels keep >= 11px of padding. */
-.music-random::before,
-.genre-chip.is-active::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  padding: 1px;
-  background:
-    linear-gradient(
-      to right,
-      oklch(0 0 0 / 0.42) 0,
-      transparent 8px,
-      transparent calc(100% - 8px),
-      oklch(0 0 0 / 0.42) 100%
-    ),
-    linear-gradient(
-      to bottom,
-      oklch(1 0 0 / 0.5) 0,
-      transparent 9px,
-      transparent calc(100% - 9px),
-      oklch(1 0 0 / 0.36) 100%
-    );
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-}
-
-/* Hover keeps the glass: deepening the shadow is the move the tab pill makes
-   when it is grabbed, and the solid --ink-900 this CTA used to swap in threw
-   the whole material away on the first pointer move. */
+/* Hover PUSHES THE PLATE INSTEAD OF LIFTING IT. The old recipe
+   deepened a four-layer shadow, which was the right move while these were a
+   tint over a blur. A printed plate has ONE shadow, so hover shortens that
+   one offset and adds a wash: the button reads as pressed rather than as
+   raised, which is the only hover a sheet of paper can do. */
 .music-random:hover,
 .genre-chip.is-active:hover {
-  box-shadow:
-    inset 0 1px 0 0 oklch(1 0 0 / 0.28),
-    inset 0 -1px 0 0 oklch(0 0 0 / 0.44),
-    0 2px 4px oklch(0 0 0 / 0.24),
-    0 12px 26px -10px oklch(0 0 0 / 0.5);
+  box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--ink-950) 34%, transparent);
+  background: color-mix(in oklab, var(--sky-400) 92%, var(--paper-000));
 }
 
-/* The three fallbacks, next to the material they belong to. These two are not
-   .glass elements, so glass.css's blocks cannot reach them - and with no
-   backdrop-filter to sample, the layer is not a surface at all. */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .music-random::after,
-  .genre-chip.is-active::after { display: none; }
-}
+/* The three fallbacks that stood here are gone with the backdrop they
+   existed for. What replaces them is one line and it is a different
+   concern: where shadows are suppressed, a chip that separates itself only
+   by an offset would lose its edge, so it gets a rule. Same residue as
+   glass.css section 5, applied to the one surface on the page that is not
+   a .glass element and so cannot be reached from there. */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .music-random::after,
-  .genre-chip.is-active::after { display: none; }
+  .music-random,
+  .genre-chip.is-active { box-shadow: none; outline: 2px solid var(--ink-950); }
 }
-html[data-transparency="solid"] .music-random,
-html[data-transparency="solid"] .genre-chip.is-active { background: var(--ink-950); }
-html[data-transparency="solid"] .music-random::after,
-html[data-transparency="solid"] .genre-chip.is-active::after { display: none; }
 
 .playlist { display: flex; flex-direction: column; gap: var(--sp-6); }
 
@@ -2222,20 +2207,15 @@ html[data-transparency="solid"] .lightbox { background: color-mix(in oklab, var(
     scrollbar-width: none;
     flex-wrap: nowrap;
   }
-  /* Scoped up to .tabbar.glass on purpose: a bare .tabbar loses this to
-     .glass in glass.css, which loads AFTER this file, so the solid phone
-     state below had never actually painted since the V2 rewrite. */
-  .tabbar.glass {
-    background: var(--color-surface);
-    box-shadow: inset 0 0 0 1px var(--color-line);
-  }
+  /* THE STRIP IS A SCROLLER AT THIS WIDTH AND THAT IS ALL THAT CHANGES.
+     It used to become a flat inset ring here, because a backdrop-filter
+     inside a horizontal scroller samples a moving backdrop. There is no
+     backdrop-filter on the site any more, so the reason is gone and so is
+     the flat state: the strip is the same printed bar it is on a desktop,
+     scrolling, with its frame and its offset. The indicator stays a
+     cobalt block and the drag stays off - that is a width decision, not
+     a material one. */
   .tabbar::-webkit-scrollbar { display: none; }
-  .tabbar .glass__body,
-  .tabbar .glass__edge { display: none; }
-  /* the indicator stays, as a solid pill: there is no backdrop to sample in
-     a scroller, and the drag that would need the glass is off at this width */
-  .tabbar .glass-pill { background: var(--ink-950); }
-  .tabbar .glass-pill__body { display: none; }
   .tab-btn { flex: 0 0 auto; }
   .tab-btn .no { display: none; }
 
@@ -2254,19 +2234,9 @@ html[data-transparency="solid"] .lightbox { background: color-mix(in oklab, var(
 
   .music-search-input { font-size: 16px; } /* iOS zooms a focused input under 16px */
 
-  /* The rail IS a scroller at this width, so it takes the tab strip's phone
-     treatment: a backdrop-filter inside a scroll container samples a moving
-     backdrop, and absolutely positioned layers would scroll with the chips.
-     Solid paper with the ring kept. The search row does not scroll, so it keeps
-     its glass here. */
+  /* Same as the tab strip above: the rail is a scroller at this width,
+     and in a printed palette that changes nothing about the bar itself. */
   .genre-filter { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; padding-inline-end: var(--sp-5); }
-  .genre-filter.glass {
-    background: var(--color-surface);
-    box-shadow: inset 0 0 0 1px var(--color-line);
-  }
-  .genre-filter .glass__body,
-  .genre-filter .glass__edge,
-  .genre-filter .glass__press { display: none; }
   .genre-filter::-webkit-scrollbar { display: none; }
   .genre-chip { flex: 0 0 auto; }
 

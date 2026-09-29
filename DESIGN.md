@@ -693,9 +693,60 @@ V2 把纸墨系统铺满全站时，影 / 剧那一族**没有跟上**：它保�
 
 ## 12. 收尾：这一版的状态
 
-- **整页是一张纸加两头**（2026-09-29 色彩层重建的核心）：深蓝双色调 hero（底部渐隐进纸面）→ 一整张 `--paper-050`（photography / archive / poem 三个章节只靠留白分隔）→ 墨色 footer。有颜色的面只剩有边界的物件。
+- **V3 已改这一条：每章重新有了自己的 `--ground-*` 底**（V2 那条「一整张纸」是 2026-09-29 的结论，V3 推翻它，理由与七张底见第 13 节）：深蓝双色调 hero（底部渐隐进纸面）→ **V3：每章一张自己的 `--ground-*` 无边底**（V2 是一整张 `--paper-050`（photography / archive / poem 三个章节只靠留白分隔）→ 墨色 footer。有颜色的面只剩有边界的物件。
 - **六个 tab 各有自己的物理**：书是 3D 书架、影 / 剧是循环条带、音乐是索引长列表 + 磨砂工具条、球队是手风琴、游戏是定位盘、照片是**一副逐张发掉的牌**（**photo 的浮层是唯一的了**——`#photo-view` 已随棋盘退役，点顶牌进的就是共用的 `#lightbox`）。共享的只有 token、玻璃、缓动与无障碍基线。
 - **玻璃只有四个落点**（4.4）；音乐工具条是唯一真的有东西可磨的一处，而它的磨砂面只有一层（4.8）。
 - **一条药丸**（tab 条），**一条染色玻璃**（OPEN ON DOUBAN）。
 - **影像调色只有一处**（hero 的双色调，离线烘进文件）；其余一切影像——牌堆、海报、唱片封面、书布色——保留原色，这条红线没有松。
 - **每一处「为什么」都写在代码注释里**，本文件只记结论与实测数字；两者的冲突以本文件 + 代码为准，改完请同步三处（代码注释 / 本文件 / `AGENTS.md`）。
+
+---
+
+## 13. V3: THE POSTER (surreal-poster, promoted)
+
+2026-03. Three light skins were built side by side (`neon-lab` / `surreal-poster` / `future-archive`) and **`surreal-poster` won**; it is now the only one, moved into `style.css` / `glass.css` as the default. Section 12 above is V2 and is kept as the record of what it was.
+
+### 13.1 The two files V3 added
+
+| file | what it is | its boundary |
+| --- | --- | --- |
+| `css/glass.css` | **printed surfaces** - what a raised object looks like | class names and the DOM contract unchanged, material entirely replaced |
+| `css/poster.css` | **the poster vocabulary** - five printing moves | a component's LAYOUT goes in that component's file; PRINT goes here |
+
+Liquid glass is retired in full: `backdrop-filter`, the `#lg-lens` / `#lg-nav` chains, the `html.has-lens` gate, `js/glass-lens.js`, the axial bead, the inset bevels, the three fallback mechanisms, and every token or variant that measured zero references outside `glass.css`. The class names stay because index.html, style.css, reel-stage.js, glass-pill.js and main.js all bind to them; what changed is each layer's JOB. `.glass__edge` is a cobalt trim line, not a lens rim. `.glass--spot::after` is a registration crosshair that follows the pointer, not a specular highlight - `initGlassSpotlight()` is untouched, it has always only written `--mx` / `--my`; what reads them changed. `js/glass-pill.js` is untouched too: it was never glass, it is a shape that follows a pointer and can be dragged to another shelf.
+
+### 13.2 The palette
+
+| role | value | measured |
+| --- | --- | --- |
+| page `--paper-050` | `#FAF6EE` warm cream | - |
+| sheet `--paper-000` | `#FFFDF7` | - |
+| primary text `--ink-900` | `#16203C` navy plate ink | 14.92:1 on the page |
+| secondary `--ink-600` | `#4A5573` | 6.86:1 |
+| **muted floor** `--ink-500` | `#5B6684` | **5.30:1** |
+| accent fill `--sky-400` | `#3157FF` cobalt | - |
+| accent text `--sky-700` | `#1B32B8` | 8.88:1 (links, focus ring, refrain) |
+| **label on the fill** `--color-on-accent` | `#FFF4E4` | **4.90:1** |
+| second / third / fourth plate | `--accent-2` #FF774A, `--accent-3` #B5EA3C, `--accent-4` #C86BFF` | 6.16 / 5.95 / 7.18:1 as text |
+
+`archive/color-audit/palette-contrast.mjs` computes that table by PARSING `css/style.css`, so it cannot drift from what ships. The one pair that fails is deliberate: **`ink-900` on `--sky-400` is 3.02:1**, because cobalt is a DARK fill. That is why `--color-on-accent` exists and why the film / series action and the genre chip / SHUFFLE read it. Do not "fix" the 3.02 by darkening the fill - the fill is the brand.
+
+Seven `--ground-*` chapter grounds, all edgeless gradients, all clearing the muted floor: photo 4.88, books 4.97, films 4.69, series 4.63, music 4.63, games 4.88, poem 4.93:1.
+
+### 13.3 The five moves, and the one rule they share
+
+**ground** (an edgeless chapter gradient) / **plate** (a hard square offset + a cobalt frame) / **slip** (a 3px two-plate misprint, display sizes only; 1px at a third strength below 20px, because at 11px a 3px fringe is wider than the stem) / **tape** (a 30x13px rotated bar, corners only) / **stub** (a perforated edge, on the film and series detail block and nowhere else).
+
+They are written once and reused at the same values everywhere. **A sixth move is not allowed**, and neither is a tape across anything: a corner is the only structurally free place, and this page has 534 song rows.
+
+**NOTHING GLOWS.** No blurred shadow, no `mix-blend-mode`, no brightness filter on the hero plate. That is measured, not stylistic: a `screen` halo put the wordmark at 2.75:1, a `color` blend at 1.91:1, `multiply` at 2.98:1, against the base palette's 4.43:1 on the same pixels. **The brightest pixel of the plate behind the mark IS the mark's contrast**, and 190px of light type is sitting on it. V3 measures **4.56:1 at 1440 and 5.90:1 at 390**.
+
+### 13.4 Three rates
+
+`--poster-turn` (the chapter ground, 1 -> 0 once, written by main.js), `.sec-title` (+/-22px scrub), `.sec-eyebrow` (+/-9px scrub). The body copy does not move - a reader's eye tracks a line of text, and 26px of travel under an eye that is mid-line is a bug. The photographs do not move: the deck and the two rails each already own every transform on themselves, and a second writer is the regression this file's motion rules exist to prevent. The six panels get no ScrollTrigger at all - five are `display: none` when it would fire - and their page turn IS the tab wipe in `select()`.
+
+### 13.5 What was deliberately not flattened
+
+The book shelf is a 3D `preserve-3d` scene; making it a type wall would be a rewrite of `book-shelf.js`, not a change of design. What was done is the part that is actually about type: the one-line review became a pull-quote with a rule, the cover label takes the slip, and each end of the run gets a tape. **Not one line of the sixteen books changed** - the cloths are the collection.
+
+The lightbox stays a dark wall, because twelve `.lb-*` text roles were measured against `--ink-950` and flipping the ground means re-measuring all twelve. What changed is the print hanging on it: a 10px cream mount, a 1px ink line, a hard offset, a ticket-stub caption and a rail of stubs.

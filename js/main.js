@@ -96,46 +96,14 @@ if (!REDUCED && heroMark) {
    sr-only: the deck's foot prints the top card's, and the detail layer still
    reads all twenty-one. */
 
-/* ---------- glass spotlight ----------
-   One rAF-throttled style write per frame. GSAP quickTo cannot tween a
-   custom property, so this is hand-rolled on purpose. Fine pointers only:
-   there is no hover to track on touch. */
-
-function initGlassSpotlight() {
-  if (REDUCED || !FINE_POINTER) return;
-  document.querySelectorAll(".glass--spot").forEach((el) => {
-    let frame = 0;
-    let px = 50;
-    let py = 50;
-    const apply = () => {
-      frame = 0;
-      el.style.setProperty("--mx", px + "%");
-      el.style.setProperty("--my", py + "%");
-    };
-    el.addEventListener(
-      "pointermove",
-      (e) => {
-        const r = el.getBoundingClientRect();
-        if (!r.width || !r.height) return;
-        px = ((e.clientX - r.left) / r.width) * 100;
-        py = ((e.clientY - r.top) / r.height) * 100;
-        if (!frame) frame = requestAnimationFrame(apply);
-      },
-      { passive: true }
-    );
-    el.addEventListener("pointerleave", () => {
-      if (frame) {
-        cancelAnimationFrame(frame);
-        frame = 0;
-      }
-      el.style.removeProperty("--mx");
-      el.style.removeProperty("--my");
-    });
-  });
-}
-
-initGlassSpotlight();
-
+/* The pointer spotlight that used to live here is gone with the glass it
+   lit. It tracked the pointer and wrote --mx / --my onto every
+   .glass--spot, once per frame, hand-rolled because GSAP quickTo cannot
+   tween a custom property. The printed surface has nothing specular to
+   light, and the crosshair that was briefly drawn from those two numbers
+   read as a glitch around the cursor rather than as a print mark - so
+   the gesture went and the feeder went with it. The class stays in the
+   markup; nothing reads it now. */
 /* ---------- counters ----------
    Retired with the ABOUT panel (asked for): the eight `[data-count]` figures
    were the only counters on the page, so initCounters() and its ScrollTrigger
@@ -704,12 +672,35 @@ function initArchiveTabs() {
     }));
   };
 
+  /* THE REVEAL IS A MASK, NOT A SLIDE, AND NOT A FADE.
+
+     This used to be `y: 14` under a clip wipe, which is two reveals at
+     once and reads as a dissolve. The poster direction asks for one:
+     a sheet is uncovered. So the y is gone and only the wipe is left,
+     and it wipes from the bottom edge upward - the way a stencil comes
+     off a print.
+
+     The panel's own left-to-right wipe stays a state change (power4.inOut,
+     deliberately different from MOTION.enter) and the rows keep the
+     entrance ease. clearProps on both, because a clip-path left on the
+     panel slices every focus ring that reaches past the panel box - the
+     search field sits flush with the panel's left edge - and one left on
+     a row slices the row's own ticket-stub perforation. */
+  const revealWipe = (targets, opts) =>
+    gsap.from(targets, {
+      clipPath: "inset(0 0 100% 0)",
+      duration: 0.75,
+      ease: "power3.out",
+      clearProps: "clipPath",
+      ...opts,
+    });
+
   const animateIn = (idx, rows) => {
     const panel = panels[idx];
     if (!panel) return;
     if (!rows || !rows.length) return;
     if (REDUCED) {
-      gsap.set(rows, { y: 0 });
+      gsap.set(rows, { clearProps: "clipPath" });
       return;
     }
     // one-off state transition: tab wipe uses power4.inOut, deliberately
@@ -720,20 +711,9 @@ function initArchiveTabs() {
         clipPath: "inset(0 0 0 0%)",
         duration: 0.8,
         ease: "power4.inOut",
-        // the wipe is the reveal, not a permanent mask: any clip-path left on
-        // the panel also slices every focus ring / glow that reaches past the
-        // panel box (the search field sits flush with the panel's left edge)
         clearProps: "clipPath",
       });
-    gsap.from(rows, {
-      clipPath: "inset(0 0 100% 0)",
-      y: 14,
-      duration: 0.75,
-      stagger: { each: 0.06, from: "start" },
-      ease: "power3.out",
-      delay: 0.08,
-      clearProps: "clipPath",
-    });
+    revealWipe(rows, { stagger: { each: 0.06, from: "start" }, delay: 0.08 });
   };
 
   const select = (idx, instant) => {
@@ -754,8 +734,18 @@ function initArchiveTabs() {
        loading cascade rather than an entrance - the shelf is simply there the
        moment its tab is picked. Every other panel keeps the wipe. */
     const plain = panels[idx] && panels[idx].id === "panel-music";
-    if (instant || plain) {
-      gsap.set(rows, { y: 0, clearProps: "clipPath" });
+    if (instant) {
+      gsap.set(rows, { clearProps: "clipPath" });
+      gsap.set(panels[idx], { clearProps: "clipPath" });
+    } else if (plain) {
+      /* MUSIC GETS A WIPE TOO, BUT ON ITS FIFTEEN GROUPS AND NOT ON ITS 477
+         CARDS. The old reasoning for skipping it was the cascade: a per-card
+         stagger over 477 rows is 28s of queued tweens and reads as loading.
+         A wipe on the fifteen .genre groups is the same entrance at a scale
+         the eye can hold, and the cards inside each group are simply there -
+         which is what a printed contents page does. */
+      const groups = panels[idx] ? Array.from(panels[idx].querySelectorAll(".genre")) : [];
+      if (groups.length) revealWipe(groups, { stagger: 0.035, duration: 0.6 });
       gsap.set(panels[idx], { clearProps: "clipPath" });
     } else {
       animateIn(idx, rows);
@@ -1341,6 +1331,117 @@ if (!REDUCED) {
       toggleActions: "play none none reverse",
     },
   });
+
+  /* ============================================================
+     THE POSTER'S THREE RATES.
+
+     A printed collage is layers that do not line up. On this page that
+     is three layers at three speeds, and this block is the whole of it:
+
+       the GROUND   --poster-turn, 1 -> 0 as the chapter arrives
+       the TITLE    -22px across the chapter's own height
+       the EYEBROW   -8px across the same span
+
+     The result is that a chapter's eyebrow and its own title visibly
+     separate as you read past them, and the sheet they are printed on
+     settles underneath both. That is the collage, and it costs two
+     scrubs and one property tween.
+
+     WHAT IS DELIBERATELY NOT HERE, and the reasons are the interesting
+     part of this note:
+
+     - the body copy does not move. `.sec-copy` is 15-16px running text
+       and a reader tracks a line with their eye; 26px of travel under
+       an eye that is mid-line is not atmosphere, it is a bug. The
+       layers that slip are the ones nobody is reading as a sentence.
+     - the photographs do not move. The photo deck owns every transform
+       on itself (js/photo-deck.js writes them per frame for the deal and
+       the drag), and the film and series rails own theirs for the same
+       reason. A scrub on either would be a second writer on elements
+       that already have one, which is the single rule this file's
+       motion section exists to protect. The pictures stay still; the
+       print moves around them.
+     - the panels do not get a ScrollTrigger at all. Five of the six are
+       display:none when it would run, so a trigger would measure a
+       collapsed box; their page turn IS the tab wipe in select().
+
+     Transform and one registered custom property only. No opacity, no
+     filter, no will-change left behind: these are two scrubs and they
+     stop the moment the chapter leaves.
+     ============================================================ */
+
+  const slipLayers = () => {
+    const titles = gsap.utils.toArray(".sec-title");
+    titles.forEach((title) => {
+      const chapter = title.closest("section") || title.closest("[data-panel]");
+      if (!chapter) return;
+      gsap.fromTo(
+        title,
+        { y: 22 },
+        {
+          y: -22,
+          ease: "none",
+          scrollTrigger: {
+            trigger: chapter,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+      const eyebrow = chapter.querySelector(".sec-eyebrow");
+      if (!eyebrow) return;
+      gsap.fromTo(
+        eyebrow,
+        { y: 9 },
+        {
+          y: -9,
+          ease: "none",
+          scrollTrigger: {
+            trigger: chapter,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+    });
+  };
+
+  /* THE PAGE TURN. `--poster-turn` is declared with @property in
+     css/poster.css, which is what makes it interpolable - an unregistered
+     custom property is a string and GSAP would tween it as one, snapping
+     the ground instead of turning it.
+
+     It runs once, forward only, and clears itself. A reverse would be
+     wrong twice over: the turn is a sheet being SET DOWN, and a sheet
+     that picks itself back up when you scroll away is a page that
+     cannot be trusted. toggleActions "play none none none" is the same
+     choice bindReveal() makes for the rail, for the same reason. */
+  const pageTurn = () => {
+    gsap.utils.toArray("#photo, #about").forEach((chapter) => {
+      gsap.fromTo(
+        chapter,
+        { "--poster-turn": 1 },
+        {
+          "--poster-turn": 0,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: chapter,
+            start: "top 92%",
+            toggleActions: "play none none none",
+            once: true,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+    });
+  };
+
+  slipLayers();
+  pageTurn();
 
   /* ---------- refresh after everything settles ---------- */
   window.addEventListener("load", () => scheduleRefresh(100));

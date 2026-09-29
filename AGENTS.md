@@ -23,15 +23,18 @@ V2 删掉的东西，任何一条重新出现都算回归：
 | 排版装饰 | `-webkit-text-stroke` 空心大字、双色大标题、**金色左边框条**、金色小方块编号 chip、表格隔行染色、首字下沉 |
 | 结构 | ticker 走马灯（两条全部移除）、`.sec-mask` 幕帘、bighead 双词居中 scrub、`photo-roll-meter` 进度线 |
 | 动效 | 弹性 spring（`back.out` / `elastic`）整体退役；`.poem-stamp` 盖章交互退役 |
-| 色彩 | 暖金沙色板（`--sand-*` / `--gold-300` / `--ink-400`）已被中性纸墨 ramp 取代；**单色强调（`--gold-400/700/100` 香槟金）已被天蓝一对（`--sky-400/700/100`）取代**。书脊 / 封面 / 海报 / 唱片封面的原色**不在退役范围内**——那是藏品。**2026-09-29 追加：分区底色**（`--color-bg-deep` / `--paper-100` / `.archive` 自己的 `background`）——「章节有一张属于自己的底」这件事整体退役，见「视觉基调」；**hero 影像的暖金/洋红原色**也一并退役（换成调进色板的双色调） |
+| 色彩 | 暖金沙色板（`--sand-*` / `--gold-300` / `--ink-400`）已被中性纸墨 ramp 取代；**单色强调（`--gold-400/700/100` 香槟金）已被天蓝一对（`--sky-400/700/100`）取代**。书脊 / 封面 / 海报 / 唱片封面的原色**不在退役范围内**——那是藏品。**2026-09-29 追加：分区底色**（`--color-bg-deep` / `--paper-100` / `.archive` 自己的 `background`）——2026-03 又被 V3 推翻，见「视觉基调」；**hero 影像的暖金/洋红原色**也一并退役（换成调进色板的双色调） |
+| **材质** | **V3（2026-03）整体退役液态玻璃**：`backdrop-filter`、`#lg-lens` / `#lg-nav` 两条折射链、`html.has-lens` 门、`js/glass-lens.js`、轴向棱 `.glass::before`、内斜面 bevel 三件套、`--glass-control/-dark/-blur/-bead-w/-bloom`、`glass--simple/-sm/-dark`、**三条回退机制**（正常态已是实底，没有可回退的东西）。类名与 DOM 契约**保留**（见「印刷面」）。**不要把任何一层加回来**——理由与实测写在 `css/glass.css` 的文件头 |
+| **装饰** | **V3：任何发光 / 任何模糊投影 / 任何 `mix-blend-mode`**。深度只有一个来源：硬边方形偏移。**这一条是有实测的**——把 `mix-blend-mode: screen` 的光晕加在 hero 上，字标对比度从 4.43:1 掉到 2.75:1；`color` 混合 1.91:1。混合与亮度滤镜都碰字标背后那层板的最亮像素，而那是 190px 白字唯一的对比度来源 |
 
 **形状一致性锁**：全站只有 `--radius-sm/md/lg/pill` 四档。出现 `2px` / `9px` / `50%` / 24px 之类的散值即为回归。
 
 ## 技术约束
 
-- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按这一条顺序加载（**改顺序要同时改这里**）：vendor（`gsap` → `ScrollTrigger` → `lenis`）→ 数据（`film-data` → `series-data` → `book-shelf-data` → `music-data` → `music-covers`）→ 工厂（`reel-stage`）→ stage（`film-stage` → `series-stage` → `music-stage` → `book-shelf` → `photo-deck` → `games-stage`）→ `glass-pill` → `glass-lens` → `smooth-cursor` → `main`。**`js/vendor/SplitText.min.js` 已不再加载**：它唯一的客户是 ABOUT 的自述段落，随整块退役（文件还留在 vendor 里，没人引用）。
-- **样式表顺序**：`fonts.css` → `style.css` → **`glass.css`** → `reel-stage.css` → `film-stage.css` → `series-stage.css` → `book-shelf.css` → `photo-deck.css` → `games-stage.css` → `smooth-cursor.css`。`glass.css` 提供 `.glass` 基类，必须在组件样式之前。
+- 单页静态：`index.html` + `css/` + `js/`。脚本在 `<body>` 尾部按这一条顺序加载（**改顺序要同时改这里**）：vendor（`gsap` → `ScrollTrigger` → `lenis`）→ 数据（`film-data` → `series-data` → `book-shelf-data` → `music-data` → `music-covers`）→ 工厂（`reel-stage`）→ stage（`film-stage` → `series-stage` → `music-stage` → `book-shelf` → `photo-deck` → `games-stage`）→ `glass-pill` → `smooth-cursor` → `main`。**`glass-lens` 与 `theme-switch` 已随 V3 删除，不要加回来**（见「印刷面」与「三套皮肤」的退役说明）。**`js/vendor/SplitText.min.js` 已不再加载**：它唯一的客户是 ABOUT 的自述段落，随整块退役（文件还留在 vendor 里，没人引用）。
+- **样式表顺序**：`fonts.css` → `style.css` → **`glass.css`** → `reel-stage.css` → `film-stage.css` → `series-stage.css` → `book-shelf.css` → `photo-deck.css` → `games-stage.css` → `smooth-cursor.css` → **`poster.css`（必须最后，见「印刷面」）**。`glass.css` 提供 `.glass` 基类，必须在组件样式之前；`poster.css` 重新声明了前两者设过的属性，所以必须在它们之后。
 - 缓存失效：改了哪个带 `?v=N` 的 css/js 就把它的版本号 +1；改数据文件时给对应 `<script>` 补挂 `?v=`。
+- **绝不用 PowerShell 重写本仓库的任何文件。**`Get-Content -Raw` 在 PS 5.1 上按 ANSI 码页解码，`[System.IO.File]::WriteAllText` 再按 UTF-8 写回——这两个一起来的净效果是把**每一个非 ASCII 字符**换成乱码，而 `index.html` 里有中文、有 `←` `→`、有 46k 的内联 SVG data URL，损坏后**肉眼看 HTML 是「有中文乱码」，只有渲染出来才知道**（V3 这一轮真的发生过：箭头变成 `闖?/button>`，球队那段中文全毁）。要批量改文件用 harness 的 edit / write 工具；非要用 PowerShell，就显式走 .NET 并自己验一遍无损：`[System.IO.File]::ReadAllText($p, (New-Object System.Text.UTF8Encoding($false)))` 配 `[System.IO.File]::WriteAllText($p, $c, (New-Object System.Text.UTF8Encoding($false)))`——这两个显式重载是无损的（已实测 byte-identical），而 `Get-Content` / `Set-Content` 不是。
 - GSAP/ScrollTrigger/Lenis 走本地 `js/vendor/`（SplitText 已停用，见上）。Lenis 仅非 REDUCED 启用；锚点跳转统一走 `lenis.scrollTo`。
 - 内容归属红线：`#panel-books / films / series / music / sport / games` 六个面板各放本类内容，禁止跨面板搬移或新增；标识符沿用现有 token。
 - 中文内容行加 `lang="zh"`（回退系统字体）。
@@ -44,19 +47,23 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 
 **核心判断**：照片是页面上唯一被允许彩色的事物。界面不得与图片抢注意力——这决定了下面几乎每一条规则。（**唯一的例外是 hero 那一张影像**，见下。）
 
-- **整页是一张纸加两头**（2026-09-29 色彩层重建的第一条纪律）。此前 hero 是黑、纸面是白、归档是一整块浅蓝、再白、再黑，四道硬切让每一部分都像别人的页面。规则因此收紧成：**任何一个章节都不许有自己的 `background`**，photography / archive / poem 全部落在 `--paper-050` 上，章节之间只靠 `--section-y` 的留白分隔。要颜色就做成**有边界的物件**（圆角 + 描边）——`--color-surface-tint`（`#E6F2FC`，球场的托盘、书架舞台的远角）或 `--color-media-void`（`--paper-200`，空的媒体格）。**`--color-bg-deep` 与 `--paper-100` 已退役，不要复活**：前者是「归档区有一张自己的底」这个角色的唯一载体，那个角色已经删了。
+- **整页是一张纸加两头**（2026-09-29 色彩层重建的第一条纪律）。此前 hero 是黑、纸面是白、归档是一整块浅蓝、再白、再黑，四道硬切让每一部分都像别人的页面。规则因此收紧成：**任何一个章节都不许有自己的 `background`**，photography / archive / poem 全部落在 `--paper-050` 上，章节之间只靠 `--section-y` 的留白分隔。**2026-03 V3 推翻这一条：每章重新有了一张 `--ground-*` 底**（token 在 `style.css` 的 `:root`，实现在 `css/poster.css`）。「一张纸」是对的，**「一张没有区别的纸」不是**——海报由多张纸拼成，每张纸有自己的色温。底是**无边的渐变**（不是分色块：硬边让每章像别人的页面，而四条硬切正是这条纪律当初要治的病），七条 `--ground-*` 的最暗档全部过了 `palette-contrast.mjs` 的 muted 地板（4.63 – 4.97:1）；**改任何一条都要重跑那个脚本**。要颜色就做成**有边界的物件**（圆角 + 描边）——`--color-surface-tint`（`#E6F2FC`，球场的托盘、书架舞台的远角）或 `--color-media-void`（`--paper-200`，空的媒体格）。**`--color-bg-deep` 与 `--paper-100` 已退役，不要复活**：前者是「归档区有一张自己的底」这个角色的唯一载体，那个角色已经删了。
 - **明暗**：正文页全亮色纸面。暗色只用于三处——**hero（承载巨型字标）**、`#lightbox`、`.footer`。hero 自 2026-09 起只剩字标，字标压在**一层全幅双色调影像**上（`hero/lujiazui-duo*.jpg`，见「站点结构」与 `DESIGN.md` 第 7 节），影像在最后 `--hero-fade` 里**渐隐**进纸面；它**仍然是暗区**；不要把任何普通分区反转为暗色。
-- **色彩**：冷白纸墨 ramp + **一对**天蓝强调（`#59BFEA` 填 / `#006D9E` 说）。**禁紫、禁纯黑 `#000`、禁纯白 `#fff`**（用 `--ink-950 #101820` / `--on-dark #EDF3F8`）。accent hue = 可交互，静态文字只有诗区叠句一处例外。**为什么是「一对」**：一个色撑不住两种角色，`#59BFEA` 压在纸面上是 1.90:1（当文字等于没有），`#006D9E` 当实底是一块死掉的矩形——浅的负责填，深的负责说。
-- **强调色配额**：全站命中元素 **≤ 25**（V1 是 182，V2 是 14）。新增一处强调色就要问自己是不是在稀释它。**也不要出现第 5 个 accent 值**：任何「看起来像强调色」的硬编码都必须写成 `var(--sky-*)` 或 `color-mix(... var(--sky-400) ...)`（球场的选中环曾经就是一个裸 `oklch(0.78 0.11 220 / …)`）。
+- **色彩（V3）**：暖奶油纸 ramp（`#FAF6EE` / `#FFFDF7` / `#E4D9C6`）+ 海军蓝版油墨（`#16203C`）+ **钴蓝** `#3157FF` 填 / `#1B32B8` 说，另加三块印版 `--accent-2` 荧橙 / `--accent-3` 酸绿 / `--accent-4` 品红（各有 `-ink` 说话版本）。**禁纯黑 `#000`、禁纯白 `#fff`**（用 `--ink-950 #101A33` / `--on-dark #FFF4E4`）。「禁紫」随 V3 解除：品红是第四印版，只经 `--accent-4-ink` 当文字（7.18:1）。accent hue = 可交互，静态文字只有诗区叠句一处例外。**为什么是「一对」**：一个色撑不住两种角色，`#59BFEA` 压在纸面上是 1.90:1（当文字等于没有），`#006D9E` 当实底是一块死掉的矩形——浅的负责填，深的负责说。
+- **强调色配额**：全站命中元素 **≤ 25**（V1 是 182，V2 是 14）。新增一处强调色就要问自己是不是在稀释它。**也不要出现第 5 个 accent 值**：任何「看起来像强调色」的硬编码都必须写成 `var(--sky-*)` 或 `color-mix(... var(--sky-400) ...)`（球场的选中环曾经就是一个裸 `oklch(0.78 0.11 220 / …)`）。**2026 色相重置：这条从「一个色有配额」改成「每套 skin 四个，且只从 `--sky-*` 与 `--t-accent-1..4` 出去」**——组件文件里仍然一处硬编码都不许有，理由从「配额」换成「换肤必须能整体换掉」。
 - **藏品保留原色**：`js/book-shelf-data.js` 里 16 组 `cloth / ink / band` 是书本身的颜色（照片、海报、唱片封面同理），**换色板时不动它们**——它们是页面上唯一被允许「不听话」的颜色。
 - **留白优先于线条**：分组靠间距与留白，不靠描边、底色块、分隔线。分隔线只给密集表格数据。
 - **图片优先于装饰**：任何新装饰元素都要先回答「它有没有在和照片抢注意力」。
 
-## 液态玻璃（V2 核心）
+## 液态玻璃（V2 核心，**V3 已整体退役**）
 
-完整配方与原理见 `DESIGN.md` 第 4 节。**四条**操作红线：
+**这一节是 V2 的历史记录，不是现行配方。**玻璃的六层、折射链、`html.has-lens` 门、`js/glass-lens.js`、轴向棱与三条回退**已在 2026-03 全部删除**，理由与实测在 `css/glass.css` 的文件头与「印刷面」一节。现行的是**印刷面**：类名与 DOM 契约不变，材质全换。
 
-1. **会杀掉玻璃的是 `filter` / `opacity < 1` / `mask` / `mix-blend-mode`，而且 `opacity < 1` 与 `filter` 在元素自身也成立**（本机 Chrome 152 实测对照表见 `DESIGN.md` 4.2）。`transform` 在**自身和祖先上都安全**——这是「药丸每帧被 transform 拖动、玻璃仍然成立」的前提。两条推论：**药丸绝不能用 opacity 淡入**；按压环必须是独立元素，不能靠改 `.glass__edge` 的 opacity 淡入。
+下面保留的是**仍然有效**的部分——它们不是关于玻璃的，是关于 `js/glass-pill.js` 与 `.glass` 基类的用法纪律，换了材质依然成立。
+
+**仍然成立的四条**（原为玻璃而写）：
+
+1. **`transform` 在自身和祖先上都安全；`filter` / `opacity < 1` / `mask` / `mix-blend-mode` 不安全**（`filter` 还会创建包含块，所以绝不能加到任何含 `position: fixed` 后代的容器上——`#lightbox` 是 fixed）。`transform` 在**自身和祖先上都安全**——这是「药丸每帧被 transform 拖动、玻璃仍然成立」的前提。两条推论：**药丸绝不能用 opacity 淡入**；按压环必须是独立元素，不能靠改 `.glass__edge` 的 opacity 淡入。
 2. **折射的门是 `html.has-lens`，不是 `@supports`**。Safari 解析 `url()` 后 `@supports` 返回 true 却不渲染；而 Chrome 已移除 `-webkit-backdrop-filter`，旧门在 Chrome 152 返回 **false**，等于这个增强从来没有生效过。门设在 `index.html` 的 head。**模糊声明永远写在增强之前**，挂不上只丢折射、不丢模糊。位移图**必须内联为 data URL**（`feImage` 外链会静默失败），`color-interpolation-filters="sRGB"` 是强制的。
 3. **不把多层玻璃放进横向滚动容器**（滚动时 backdrop 跟随、绝对定位层随内容滚）。`≤720px` 的 tab 条已因此改实底，药丸在该宽度下也禁用拖拽。
 4. **药丸不吃折射**：位移图的内部压平形状是按宽扁条（约 16:1）写的，放到 95×40 上会变形、中心不再是中性、整颗被放大成亮斑（已复现）。它的玻璃感来自模糊 + 轴向棱。
@@ -139,6 +146,35 @@ Design read：个人影像档案，受众是同好与自己。气质 = **编辑�
 - ARCHIVE 共享工具条与收藏星标已于更早版本整体撤销，不再新增回访入口。
 - 签名：已整体退役；`js/sig-data.js` 保留在仓库但不参与加载。
 
+### 印刷面（V3 核心）与海报词汇
+
+2026-03 色相重置的第二阶段，也是第一阶段的收尾。三套皮肤并排比过之后，**`surreal-poster` 胜出并被搬进默认**，另外两套连同切换机制一起删除。删除清单在上面的「已退役」表里，**不要加回来**。
+
+**两件事现在各有一个文件，不要再开第三个**：
+
+| 文件 | 它是什么 | 它的边界 |
+| --- | --- | --- |
+| [css/glass.css](css/glass.css) | **印刷面**：一个抬起来的物件长什么样 | 类名与 DOM 契约不变，材质全换 |
+| [css/poster.css](css/poster.css) | **海报词汇**：五件印刷品的做法 | **组件的布局归组件自己的文件，印刷归这里** |
+
+- **印刷面 = 纸 + 一个硬边方形偏移 + 一条钴蓝画框**。类名全部保留（`.glass` / `.glass__body` / `.glass__edge` / `.glass--pill` / `.glass--accent` / `.glass--spot` / `.glass__press` / `.glass-pill`），因为 index.html、style.css、reel-stage.js、glass-pill.js、main.js 全都绑着它们。**变的是每层的工作**：`.glass__edge` 从镜面棱变成画框，`.glass--spot::after` 从高光变成**跟着指针走的十字套准标记**——`initGlassSpotlight()` 一行没改，它一直在写 `--mx/--my`，换的是读它的那条规则。这是把一个交互从一种设计语言翻到另一种最便宜的做法。
+- **`js/glass-pill.js` 一行没改**，它从来不是玻璃，是一个**跟着指针走的形状 + 拖拽到另一栏**的指示器。它读的 `--glass-pill-ease` / `--glass-pill-travel` 还在。它是这个站上最好的一个交互，**别在换材质的时候顺手改它**。
+- **套准偏移有一条硬线：40px。** 40px 及以上才给（章节标题、footer 名、190px 的字标），**以下一律不给**，强调色改由颜色承担。**曾经有过一档 1px、三分之一强度的小号版，理由是「半个缺陷不算缺陷」——它算。** 11-15px 上 1px 硬偏移不是套准，是紧挨着正字多出来的另一个错字，而且字面越清晰读起来越糟，正好和「更含蓄」的原意相反。它当时在眉标、页签编号、`.label`、`.meta`、计数和流派数上，全部删除。3px 那档也不是 20px 以上就安全：它在流派标题（25px）和游戏当前标题（25px）上各试过一轮，两处都读成损坏而不是印刷。**眉标的橙影不算这个效果**——那是**偏移整块版**，字不动，11px 也读得清。
+- **指针十字套准标记已退役**，`initGlassSpotlight()` 一起删。它是「把高光翻译成印刷语汇」的结果，错了：光标周围四条细线读起来是故障不是印迹，而 96px 的流派行上四条能同时看见三条。**手势是删掉而不是调小的**，喂它的脚本也一起删——一个只写两个没人读的自定义属性的函数，正是本仓库自己那条「不留死代码」禁止的东西。`.glass--spot` 类名暂时留着（四个属性，等有人整体改名玻璃契约时再一起处理），**它现在什么都不画**。
+- **胶带只在一个地方：每个货架的左上角。** 它本来还在**照片牌堆的上沿**（两条），那是错的——牌堆是这一页唯一一个边缘「应该只有照片」的东西，而且那里的记号会先于照片被读到，读成故障而不是胶带。已删。
+- **海报词汇一共五件，第六件不许有**：`底`（无边的章节渐变）、`版`（硬偏移 + 画框）、`套准`（3px 双色硬偏移，只给展示档字号）、`胶带`（30×13px 旋转小条，**只上角**）、`票根`（打孔边，只给影 / 剧详情块）。每件都写在一处，全站复用同一组数值——**这才是它们成系统而不是十一个各自的好点子的原因**。
+- **全站不发光、不用模糊投影、不用 `mix-blend-mode`**。这不是审美，是实测：`screen` 光晕把 hero 字标压到 2.75:1，`color` 混合压到 1.91:1，base 是 4.43:1。**字标背后那层板的最亮像素就是 190px 白字唯一的对比度来源**，动它之前先量。V3 的字标实测 4.56:1 @1440 / 5.90:1 @390。
+- **彩度是深色填充，标签必须翻面**：`ink-900` 压 `--sky-400` 只有 **3.02:1**。所以 V3 声明 `--color-on-accent: #FFF4E4`（**4.90:1**），影 / 剧的 `OPEN ON DOUBAN` 与流派 chip / SHUFFLE 全部读它。**这是 `--color-on-accent` 存在的唯一理由，不要在组件里写死墨色，也不要为了"修好那个 3.02"去调暗填充——填充就是品牌**。
+- **三个速度**：`--poster-turn`（章节底 1→0，main.js 写）、`--fs-h2` 的 `.sec-title`（±22px scrub）、`.sec-eyebrow`（±9px）。**正文不参与**（读者用眼睛跟着一行字走，26px 的位移不是氛围是 bug），**照片不参与**（牌堆与条带各自已经是一个 transform 的唯一写入者，第二个写入者就是回归）。六个面板**不挂 ScrollTrigger**（五个在触发时是 `display: none`，量到的是塌掉的盒子；它们的翻页就是 `select()` 里那条 tab 擦除）。
+- **胶带只上两个地方**：照片牌堆的两个上角，和每个货架的一个上左角。**角是唯一结构性安全的位置**——横跨标题或图注的胶带是可用性问题，而这个页面有 534 行歌和 24 张海报，一个需要逐个核对位置的装饰早晚会贴错地方。
+- **裁切与票根分工**：海报自己**不做票根**（打孔口贴在海报上不像海报），票根给详情块；海报拿的是 1px 墨框 + 选中态的橙色第二印。**静止态不旋转**——十六条海报都歪着读起来像出错，都对齐才读成书架；歪的是 hover。
+- **深色区域只剩两处**：hero、`#lightbox`、`.footer` 里的 hero 算一处。**Lightbox 保持暗墙**（V2 的十二个 `.lb-*` 文字对全是对着 `--ink-950` 量的，翻成纸面要重量十二个角色），变的是那张**印品**：10px 卡纸 + 1px 墨线 + 硬偏移的装裱，图注变成票根，缩略图条变成一排票根。**墙还是墙。**
+- **书架没有被拍平成排版墙**。它是一个 3D `preserve-3d` 场景，拍平它是重写 `book-shelf.js` 而不是换设计。做的是那部分真正关于字的事：短评变成带橙线的引文，封面标签吃套准偏移，两端各一条胶带。**书本身一根线都没改**——16 组布色是藏品。
+- **改任何 token 都要跑** `node archive/color-audit/palette-contrast.mjs`（**它解析 `css/style.css` 本身**，所以数字不会和 CSS 脱节），并把新数字写回 `:root` 上方。合成类（字标压在影像上、画框压在纸上）仍然用 `capture.mjs` + `pixel-contrast.py`；capture.mjs 多两个开关：`--eval` 里的 `return` 随截图回传，`--reduced-motion` 直接看 reduced 下的样子。
+
+### 三套皮肤（THEMES，已删除）
+
+2026-03 的第一阶段：`neon-lab` / `surreal-poster` / `future-archive` 三套浅色皮肤并排比较。**`surreal-poster` 胜出**并被搬进默认（见「印刷面」），另外两套与切换机制已删除，完整清单在上面的「已退役」表。**当时记下的教训保留在这里，因为它们是 V3 的设计依据**：三套皮肤之间只经 token 相通，组件文件一处硬编码都不许有；**hero 影像不许被改亮度**（`screen` 光晕 2.75:1、`color` 混合 1.91:1、base 4.43:1）；深色填充上的标签必须翻面（钴蓝上的墨字 3.02:1，浅字 4.90:1）。
 ### 导航条（Liquid Glass Navbar 形态）
 
 应要求把 `header.nav` 换成 Framer Liquid Glass Navbar（`framer.com/m/Liquid-Glass-Navbar-6gh01a.js`）的**形态**，材质仍是本站玻璃。完整表格与实测数字见 `DESIGN.md` 4.9。

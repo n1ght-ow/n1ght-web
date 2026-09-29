@@ -606,15 +606,25 @@
               clearProps: "opacity"
             }
           );
+          /* THE STUB IS PULLED, NOT SLID. This block used to rise 6px; it is
+             a ticket now - perforated edge, printed ground, hard offset - and
+             the reveal that belongs to a ticket is the one that shows the
+             perforation first. A clip wipe left-to-right does exactly that:
+             the dashed edge is the first thing on screen, and the note is
+             uncovered behind it.
+
+             clearProps is not optional on either tween. A clip-path left on
+             the copy would slice its own perforation, and an opacity left on
+             the copy would dim the cobalt plate under the action. */
           window.gsap.fromTo(
             copy,
-            { y: 6 },
+            { clipPath: "inset(0 100% 0 0)" },
             {
-              y: 0,
-              duration: 0.18,
-              ease: "power2.out",
+              clipPath: "inset(0 0% 0 0)",
+              duration: 0.22,
+              ease: "power3.out",
               overwrite: true,
-              clearProps: "transform"
+              clearProps: "clipPath"
             }
           );
         } else {

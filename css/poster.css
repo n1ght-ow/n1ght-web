@@ -1,0 +1,603 @@
+/* ============================================================
+   N1GHT CHXN9 - THE POSTER
+   The V3 design layer. Loaded LAST, after every component sheet.
+
+   WHY THIS IS A SEPARATE FILE
+   style.css is the identity - tokens, type, layout, the page's own
+   structure. glass.css is the material of a raised surface. This file is
+   the third thing: the vocabulary of a printed poster, applied across
+   components that each already own their own layout. The rule for where
+   a declaration goes:
+
+     describes a component's LAYOUT   -> that component's own file
+     describes PRINT                 -> here
+
+   Every chapter ground, every plate, every registration slip and every
+   piece of tape on this site is in this file, and none of them is in a
+   component file. That is what makes them a system instead of eleven
+   separate good ideas: the same 3px slip at the same strength, the same
+   6px offset at the same ink alpha, the same tape at the same angle.
+
+   THE VOCABULARY, IN FULL. There are five things and no sixth:
+     1  the ground      a sheet of paper, edge-less, one per chapter
+     2  the plate       a raised sheet: hard 6px offset, cobalt frame
+     3  the slip        a hard 3px two-plate misprint, display type only
+     4  the tape        a small rotated translucent bar, corners only
+     5  the stub        a perforated edge, for the one card that is a
+                        ticket: the film and series detail block
+
+   NOTHING ON THIS PAGE GLOWS. That is not a style preference, it is the
+   reason the wordmark survived: a glow over a photograph lifts the exact
+   pixels 190px of light type is read against, and that measurement is
+   4.69:1 in a file that used to be 1.91:1 when a blend mode was
+   involved. See the note on .hero in style.css.
+
+   CONTRAST. Every pair this file creates was measured, not chosen.
+   archive/color-audit/theme-contrast.mjs parses style.css for the token
+   pairs and the chapter grounds; the composites (a plate over a ground,
+   a frame against a sheet) were read pixel by pixel off a screenshot.
+   ============================================================ */
+
+/* ============ 1. THE GROUND ============
+   One sheet per chapter, and each is a gradient with no edge. A hard
+   edge is the thing that once made the archive read as a second,
+   unrelated page: a block of colour with four corners is an object
+   pretending to be a region. A gradient with no edge is a different
+   stock on the same run.
+
+   The panels are BOUNDED, which is a separate decision: the six shelves
+   each get a rounded sheet with a cobalt frame, because a shelf IS an
+   object on the page and the ground is not. Padding is what makes that
+   read, and it is why the padding lives on .tab-panel rather than on
+   the inner stage - the stage measures itself against its own content
+   box, and a panel that gained horizontal padding would quietly narrow
+   the reel, the shelf and the music drawer by 2x24px. */
+#photo { background: var(--ground-photo); }
+#about { background: var(--ground-poem); }
+#archive { background: var(--color-bg); }
+#panel-books  { background: var(--ground-books); }
+#panel-films  { background: var(--ground-films); }
+#panel-series { background: var(--ground-series); }
+#panel-music  { background: var(--ground-music); }
+#panel-games  { background: var(--ground-games); }
+
+[data-panel] {
+  position: relative;
+  padding: clamp(1.25rem, 2.6vw, 2.5rem);
+  border-radius: var(--radius-lg);
+  outline: 1px solid color-mix(in oklab, var(--sky-400) 34%, transparent);
+  outline-offset: -1px;
+}
+#panel-books  { outline-color: color-mix(in oklab, var(--accent-3) 46%, transparent); }
+#panel-films  { outline-color: color-mix(in oklab, var(--sky-400) 40%, transparent); }
+#panel-series { outline-color: color-mix(in oklab, var(--accent-2) 38%, transparent); }
+#panel-music  { outline-color: color-mix(in oklab, var(--accent-4) 36%, transparent); }
+#panel-games  { outline-color: color-mix(in oklab, var(--accent-3) 52%, transparent); }
+
+/* THE PAGE TURN. Each ground is a gradient, and a gradient has a
+   direction - so the turn is the gradient being pulled flat as the
+   chapter arrives, which is what a sheet of paper does when you set it
+   down. --poster-turn is written by main.js from 1 to 0; the rule
+   below is the whole implementation, and the fallback is the finished
+   state so a page with scripting off is identical to a page with it. */
+@property --poster-turn {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+[id][class] {
+  --poster-turn: 0;
+}
+#photo, #archive, #about,
+#panel-books, #panel-films, #panel-series, #panel-music, #panel-games {
+  background-blend-mode: normal;
+  background-repeat: no-repeat;
+  background-size: 100% calc(100% + 6% * var(--poster-turn));
+  background-position: 50% calc(-3% * var(--poster-turn));
+}
+
+/* ============ 2. THE SLIP ============
+   A hard 3px misprint in two plates. It is applied to the THREE
+   display-register titles and to nothing else, and that limit is the
+   whole rule.
+
+   THE SMALL GRADE IS GONE, and it took three passes to admit why. There
+   was a 1px version at a third of the strength for small type, on the
+   reasoning that half a defect is not a defect. It is. At 11-15px a 1px
+   hard offset is not a misprint, it is a second, wrong letter sitting
+   beside the first one - and the sharper the face, the worse it reads,
+   which is exactly backwards from what "subtle" was supposed to mean.
+   It was on the eyebrow, the tab numbers, the labels, the metads, the
+   empty-cover glyph and the genre count. All of it removed.
+
+   Nor is the 3px version safe below 40px. It spent a few passes on the
+   genre title (25px) and on the games panel's current title (25px), and
+   both read as damage rather than as print. So the line is drawn at the
+   token, not at taste:
+
+     40px and up  ->  the slip
+     below 40px   ->  nothing; accent comes from colour instead
+
+   What is left is .sec-title, .footer-name, and the hero wordmark
+   (190px, set in style.css). The shadows paint BEHIND the glyph, so the
+   pair that carries the text never changes - the fill is still ink on
+   paper - which is what makes this safe on the largest type on the
+   page and nowhere else. */
+.sec-title,
+.footer-name {
+  text-shadow: var(--misreg);
+}
+
+/* THE EYEBROW IS A PRINTED SLIP, WHICH IS NOT THE SAME THING. A
+   chapter's number and name on a bar of ink, hung 3px off true - that is
+   an OFFSET PLATE, not a text fringe, and it stays legible because it
+   is the block that moves and the type that holds still. This is the
+   form the gesture takes when the type is too small to misprint. */
+.sec-eyebrow {
+  display: inline-block;
+  padding: 0.34em 0.62em 0.3em;
+  color: var(--color-on-accent);
+  background: var(--ink-950);
+  box-shadow: 3px 3px 0 0 color-mix(in oklab, var(--accent-2) 74%, transparent);
+}
+
+/* The tab strip's numbers: same idea, on the selected one only, where
+   the cobalt plate is already a block and the number sits on it. */
+.tab-btn.is-active .no { color: color-mix(in oklab, var(--color-on-accent) 72%, transparent); }
+
+/* THE COLOURED UNDERLINE. A printed rule under a title is a bar, not a
+   text-decoration: 8px, ink at 62%, and skewed 1.2 degrees because a
+   perfectly parallel bar under 84px type reads as a mistake. It is a
+   background layer on the title's own box, so it adds no element and no
+   line box. */
+.sec-title {
+  position: relative;
+  display: inline-block;
+}
+.sec-title::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0.04em -0.02em;
+  /* -0.14em, not -0.06em. At 84px a 0.06em drop put the rule straight
+     through the descender of "p" and "y" in every chapter title, which
+     reads as a mistake rather than as a printed rule. A descender is
+     about 0.21em, so the bar has to clear that and then some. */
+  inset-block-end: -0.14em;
+  block-size: 0.085em;
+  min-block-size: 5px;
+  background: color-mix(in oklab, var(--accent-2) 72%, transparent);
+  transform: skewX(-1.2deg);
+  pointer-events: none;
+}
+
+/* ============ 3. THE STUB ============
+   The film and series detail block is the one piece of this page that is
+   literally a ticket, so it gets the one treatment the other cards do
+   not: a perforated edge. The perforation is a column of 5px dashes in
+   a 1px band, drawn as a background layer rather than punched with a
+   mask - a mask would need four layers and a composite to do the same
+   thing, and mask on this element is a worse idea than it was in V2
+   anyway (it was only ever a problem because of the backdrop read, and
+   there is no backdrop read any more, but a one-line background beats
+   four composited gradients).
+
+   The left padding is 26px rather than the base's 0 because the
+   perforation needs somewhere to live, and the number moves into that
+   strip: a ticket's number is on the stub, not on the body. That is why
+   .film-detail-index and .series-detail-index get absolutely positioned
+   here - the strip did not exist before this, and it is the only place
+   on the page where a number belongs somewhere other than in a line of
+   text. */
+.film-detail-copy,
+.series-detail-copy {
+  position: relative;
+  max-width: min(72ch, 100%);
+  padding: var(--sp-5) var(--sp-5) var(--sp-5) 34px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--ink-950) 38%, transparent) 0 5px,
+    transparent 5px 13px
+  );
+  background-size: 1px 100%;
+  background-position: 13px 0;
+  background-repeat: no-repeat;
+  box-shadow: 6px 6px 0 0 color-mix(in oklab, var(--ink-950) 14%, transparent);
+}
+/* the two hairlines that close the stub top and bottom, so the dashes
+   are dashes and not a stray stripe */
+.film-detail-copy::before,
+.series-detail-copy::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 13px;
+  inline-size: 1px;
+  background: color-mix(in oklab, var(--ink-950) 16%, transparent);
+  box-shadow: 13px 0 0 0 color-mix(in oklab, var(--ink-950) 16%, transparent);
+  clip-path: polygon(0 0, 1px 0, 1px 8px, 0 8px, 0 100%, 1px 100%, 1px calc(100% - 8px), 0 calc(100% - 8px));
+  pointer-events: none;
+}
+.film-detail-index,
+.series-detail-index {
+  position: absolute;
+  inset-block-start: var(--sp-5);
+  inset-inline-start: 0;
+  inline-size: 24px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--color-accent-text);
+  writing-mode: vertical-rl;
+  text-orientation: sideways;
+}
+.film-detail-kicker,
+.series-detail-kicker {
+  margin-inline-start: 10px;
+}
+.film-detail-link,
+.series-detail-link {
+  margin-inline-start: 10px;
+  box-shadow: 5px 5px 0 0 color-mix(in oklab, var(--ink-950) 34%, transparent);
+}
+.film-detail-link:hover,
+.series-detail-link:hover { transform: translate(2px, 2px); }
+
+/* THE RAIL'S POSTERS. A trim line on every card and a second print
+   behind the two that matter. The base used outline for the ring, which
+   is right for a hairline; a poster needs a frame, so the frame is a
+   1px ink box-shadow sitting under the image and the selected card gets
+   the offset print in the second plate. Rotation is deliberately absent
+   from the resting state: a rail of sixteen rotated posters reads as a
+   mistake, and a rail of sixteen aligned posters reads as a shelf. It
+   is the hover that tips one. */
+.film-card-img,
+.series-card-img {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--ink-950) 22%, transparent);
+}
+.film-card:hover .film-card-img,
+.film-card:focus-visible .film-card-img,
+.series-card:hover .series-card-img,
+.series-card:focus-visible .series-card-img {
+  transform: translateY(-4px) rotate(-1.6deg);
+  outline-color: transparent;
+  box-shadow:
+    0 0 0 1px var(--ink-950),
+    7px 7px 0 0 color-mix(in oklab, var(--sky-400) 86%, transparent);
+}
+.film-card.is-active .film-card-img,
+.series-card.is-active .film-card-img,
+.series-card.is-active .series-card-img {
+  outline-color: transparent;
+  box-shadow:
+    0 0 0 2px var(--ink-950),
+    8px 8px 0 0 var(--accent-2);
+}
+.film-card.is-active,
+.series-card.is-active {
+  box-shadow: none;
+}
+.film-card-title,
+.series-card-title {
+  color: var(--color-accent-text);
+}
+
+/* ============ 4. THE LABEL ============
+   Music. A record sleeve is a printed square with a trim, and a genre
+   heading is a printed label pasted over the list. Both are the same
+   two moves the rest of the file uses; the only new thing here is that
+   the sleeve tips on hover, which the posters do not do at rest. */
+.idx-cover {
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--ink-950) 18%, transparent);
+  transition: transform 0.28s var(--ease-snap), box-shadow 0.28s var(--ease-snap);
+}
+.idx-card:hover .idx-cover,
+.idx-card:focus-within .idx-cover {
+  transform: rotate(-3deg) scale(1.06);
+  box-shadow:
+    0 0 0 1px var(--ink-950),
+    5px 5px 0 0 color-mix(in oklab, var(--accent-3) 88%, transparent);
+}
+.idx-card {
+  transition: background-color 0.2s var(--ease-out);
+}
+/* THE HOVER IS A WASH, NOT A BAR. There was an `inset 3px 0 0 0` ink
+   stripe down the row's left edge here, meant as "the row lights from
+   the left". It read as a black vertical line standing at the start of
+   the row - and it appeared only under the pointer, which made it look
+   like something the cursor was dragging. On a 534-row list that is
+   the worst possible place for an unexplained mark.
+
+   The row already has a boundary to give: the album cover's own ink
+   trim, which is what a hover should be talking to. So the hover is the
+   green wash plus a 2px accent edge on the COVER, and nothing touches
+   the row's own box. */
+.idx-card:hover {
+  background: color-mix(in oklab, var(--accent-3) 22%, transparent);
+}
+
+/* the group heading is a label, and a label is ink on a bar */
+.genre-head {
+  padding-block-end: var(--sp-3);
+  border-block-end: 2px solid color-mix(in oklab, var(--ink-950) 16%, transparent);
+}
+.genre-title {
+  color: var(--color-accent-text);
+  letter-spacing: var(--track-h3);
+}
+.genre-count { color: var(--color-text-muted); }
+
+/* the one interactive line in a genre heading, so it is the one place
+   under it that gets the full underline treatment */
+.genre-playlist {
+  text-decoration: none;
+  border-block-end: 2px solid var(--color-accent);
+  padding-block-end: 1px;
+}
+.genre-playlist:hover { color: var(--color-accent-text); border-block-end-color: var(--accent-2); }
+
+/* ============ 5. THE SCORE ============
+   Games. An arcade cabinet's number is not a caption, it is a score,
+   and a score is printed at a size you can read across a room. The
+   centred panel is the only one that gets the loud grade; the other
+   seventeen stay in the cabinet's own paper. */
+.hof-item .hof-rank {
+  color: var(--color-text-muted);
+}
+.hof.is-live .hof-item.is-centre .hof-rank {
+  color: var(--color-accent-text);
+  text-shadow: var(--misreg);
+}
+.hof.is-live .hof-item.is-centre .hof-img-wrap img {
+  outline: 3px solid var(--ink-950);
+  outline-offset: -3px;
+  box-shadow: 7px 7px 0 0 var(--accent-2);
+}
+.hof.is-live .hof-now {
+  padding: var(--sp-4) var(--sp-5);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  box-shadow: 6px 6px 0 0 color-mix(in oklab, var(--ink-950) 16%, transparent);
+}
+.hof.is-live .hof-now-name { color: var(--color-accent-text); }
+.hof.is-live .hof-cue {
+  color: var(--color-accent-text);
+  border-block-end: 2px solid var(--accent-2);
+  padding-block-end: 2px;
+}
+
+/* ============ 6. THE TAPE ============
+   FOUR pieces of tape on the whole site, and the count is the point: a
+   poster that tapes everything looks like a scrapbook, and a scrapbook
+   is not what this is. One grade - 30×13px, warm white at 30%, a 1px
+   shadow under it - in two places: the two top corners of the
+   photograph plate, and the top-left corner of a shelf.
+
+   THE DECK TAPE WAS REMOVED AND PUT BACK, and the reason it was removed
+   was wrong, which is worth recording. A black vertical line was
+   reported on the photography plate; the tape was blamed, cut, and the
+   line turned out to be a hover stripe two chapters away on the music
+   rows. The deck's top edge was never the problem. Tape does not
+   compete with a photograph for a corner - it is how a print gets hung.
+
+   The corner, not the middle, is the whole discipline. Tape across a
+   caption or a title is a legibility problem, and this site has 534
+   song rows and 24 posters; a decoration that has to be checked against
+   every one of them is a decoration that will eventually be in the wrong
+   place. A corner is structurally free.
+
+   TWO DECK PIECES, NOT THREE: the plate is a landscape rectangle and its
+   top-right corner is where the eye leaves, so a mark there reads as
+   something the composition is pointing at. */
+.photo-deck__stack::before,
+.photo-deck__stack::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inline-size: 30px;
+  block-size: 13px;
+  pointer-events: none;
+  background: color-mix(in oklab, #FFF6E4 30%, transparent);
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--ink-950) 22%, transparent);
+}
+.photo-deck__stack::before {
+  inset-block-start: -7px;
+  inset-inline-start: 22px;
+  rotate: -7deg;
+}
+.photo-deck__stack::after {
+  inset-block-start: -7px;
+  inset-inline-end: 22px;
+  rotate: 5deg;
+} The deck's
+   top edge is fine; the deck's problem was somewhere else entirely.
+
+   The corner, not the middle, is the whole discipline. Tape across a
+   caption or a title is a legibility problem, and this site has 534
+   song rows and 24 posters; a decoration that has to be checked against
+   every one of them is a decoration that will eventually be in the wrong
+   place. A corner is structurally free. */
+[data-panel].is-active::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset-block-start: -7px;
+  inset-inline-start: 30px;
+  inline-size: 30px;
+  block-size: 13px;
+  rotate: -6deg;
+  pointer-events: none;
+  background: color-mix(in oklab, #FFF6E4 30%, transparent);
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--ink-950) 18%, transparent);
+}
+
+/* ============ 7. THE PRINTED LIGHTBOX ============
+   The viewer stays a dark wall. That is a measured decision, not a
+   leftover: in V2 every .lb-* pair was measured against --ink-950 and
+   the whole block reads at 15:1 or better on it. Flipping the ground to
+   paper would mean re-measuring twelve text roles, and a poster seen
+   against a dark gallery wall is the older and truer image anyway -
+   it is a print hanging in a room, not a print on the desk.
+
+   What changes is what the print is. The image gets a real mount: 10px
+   of cream board, a 1px ink line, and a hard offset. The caption
+   becomes a stub. The rail becomes a strip of stubs. Three moves, and
+   the wall is still the wall. */
+.lb-stage img,
+.lb-stage .lb-music {
+  box-shadow:
+    0 0 0 10px var(--paper-000),
+    0 0 0 11px color-mix(in oklab, var(--on-dark) 40%, transparent),
+    14px 14px 0 0 oklch(0 0 0 / 0.42);
+}
+.lb-stage .lb-music { background: var(--color-surface); border-radius: 0; }
+
+.lb-cap {
+  position: relative;
+  margin-block-start: var(--sp-5);
+  padding: var(--sp-3) var(--sp-4) var(--sp-3) 26px;
+  border-radius: 0;
+  color: var(--color-text);
+  background: var(--paper-000);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--ink-950) 40%, transparent) 0 5px,
+    transparent 5px 13px
+  );
+  background-size: 1px 100%;
+  background-position: 12px 0;
+  background-repeat: no-repeat;
+  box-shadow: 6px 6px 0 0 oklch(0 0 0 / 0.4);
+}
+.lb-cap-kicker { color: var(--color-text-muted); }
+.lb-cap-title { color: var(--color-text); }
+
+/* the rail: a strip of 40px stubs on the wall, and the current one is
+   the only one with a second print behind it */
+.lb-thumb {
+  border-radius: 0;
+  outline: 1px solid color-mix(in oklab, var(--on-dark) 26%, transparent);
+  outline-offset: -1px;
+}
+.lb-thumb:hover { opacity: 0.86; }
+.lb-thumb[aria-current="true"] {
+  opacity: 1;
+  box-shadow: 5px 5px 0 0 var(--accent-2);
+  outline: 2px solid var(--on-dark);
+  outline-offset: -2px;
+}
+
+/* the controls sit on the wall, so they keep their light-on-dark
+   contract - and the focus ring on the wall flips to the same light
+   ring the footer uses, because a cobalt ring on a near-black wall is
+   1.8:1 and a ring you cannot see is not a focus ring. */
+.lb-nav:hover,
+.lb-close:hover { background: oklch(1 0 0 / 0.2); }
+.lightbox :focus-visible,
+.footer :focus-visible {
+  outline-color: var(--on-dark);
+}
+.lb-thumb:focus-visible { outline-color: var(--on-dark); }
+
+/* ============ 8. THE EDITORIAL SHELF ============
+   The brief asked for an editorial type wall. The shelf is a 3D
+   preserve-3d scene with sixteen cloth-bound boxes on it, and
+   flattening that into a wall would be a rewrite of book-shelf.js
+   rather than a change of design - so the wall was not flattened. What
+   was done instead is the part that was actually about type: the
+   one-line review becomes a pull-quote with a rule, the cover label
+   takes the slip, and each end of the run gets a tape. The books
+   themselves are untouched, and they are the one thing on this page
+   that must never be re-coloured - the cloths are the collection. */
+.bs-blurb {
+  padding-inline-start: var(--sp-4);
+  border-inline-start: 3px solid var(--accent-2);
+  color: var(--color-text);
+}
+/* THE COVER LABEL DOES NOT TAKE THE SLIP, and this line is a
+   correction. The rule above says the slip belongs to display sizes and
+   drops to 1px at a third strength below 20px. The cover label's title
+   is 15px, and a 3px fringe on a 15px Chinese glyph is not a misprint -
+   it is two unrecognisable characters where there was one. The label
+   keeps its type and loses the effect. */
+.bs-row::before,
+.bs-row::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset-block-start: -6px;
+  inline-size: 26px;
+  block-size: 11px;
+  pointer-events: none;
+  background: color-mix(in oklab, #FFF6E4 30%, transparent);
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--ink-950) 18%, transparent);
+}
+.bs-row::before { inset-inline-start: 8px; rotate: -5deg; }
+.bs-row::after { inset-inline-end: 8px; rotate: 6deg; }
+
+/* ============ 9. RESPONSIVE ============
+   Three things get cut, and each one is cut because it was a
+   two-element gesture that a phone cannot afford or cannot hold.
+
+   The slip halves below 560px. A 3px fringe on a 40px title is a print
+   artefact; a 3px fringe on a 31px title at 320 wide is two
+   overlapping colours in the space between two letters, and the
+   letters stop being the thing you read.
+
+   The tape goes below 900px, all of it. Four small rotated bars are
+   nothing on a 1440 screen and four extra composited layers on a phone
+   whose scroll budget is already the tightest thing on the page.
+
+   The stub keeps its perforation at every width but loses its offset
+   below 560px, where a 6px shadow on a 280px card is a fifth of it. */
+@media (max-width: 560px) {
+  .sec-title,
+  .footer-name {
+    text-shadow:
+      2px 0 0 color-mix(in oklab, var(--accent-2) 52%, transparent),
+      -2px 0 0 color-mix(in oklab, var(--sky-400) 46%, transparent);
+  }
+  .film-detail-copy,
+  .series-detail-copy,
+  .lb-cap,
+  .hof.is-live .hof-now { box-shadow: 3px 3px 0 0 color-mix(in oklab, var(--ink-950) 16%, transparent); }
+  .photo-deck__stack::before,
+  .photo-deck__stack::after,
+  [data-panel].is-active::after,
+  .bs-row::before,
+  .bs-row::after { display: none; }
+  .lb-stage img,
+  .lb-stage .lb-music { box-shadow: 0 0 0 6px var(--paper-000), 0 0 0 7px color-mix(in oklab, var(--on-dark) 40%, transparent); }
+}
+@media (max-width: 900px) {
+  .photo-deck__stack::before,
+  .photo-deck__stack::after,
+  [data-panel].is-active::after,
+  .bs-row::before,
+  .bs-row::after { display: none; }
+  /* INLINE PADDING IS 0.5rem, NOT 0.85rem, and the reason is the book
+     shelf. The six panels share this number and the shelf is the one
+     that spends it: --bs-fit scales the whole 16-book run to the column
+     it is given, so every pixel of inline padding is taken straight off
+     the size of sixteen books. Measured at 320: 0.85rem cost the run
+     10% of its width (--bs-fit 0.20 -> 0.18). Block padding is free -
+     nothing inside measures against the height. */
+  [data-panel] { padding: 1rem 0.5rem; }
+}
+
+/* ============ 10. REDUCED MOTION ============
+   Nothing in this file animates on its own: the states it decorates
+   are carried by colour, offset and rotation, so under reduced motion
+   the only thing to remove is the rotation and the lift, and even those
+   are cheap enough to keep. The one rule here is the page-turn, and
+   main.js owns the value rather than this file - see --poster-turn in
+   section 1. What is left is making sure nothing here can reintroduce
+   movement. */
+@media (prefers-reduced-motion: reduce) {
+  .idx-cover,
+  .film-card-img,
+  .series-card-img { transition: none; }
+}

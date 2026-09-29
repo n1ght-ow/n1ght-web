@@ -10,19 +10,11 @@
   <meta property="og:title" content="N1GHT CHXN9 - Photography and Archive">
   <meta property="og:description" content="Frames kept bright, eighteen games, and everything that shaped the person behind both.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23172129'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='16' font-weight='bold' fill='%2359BFEA' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
-  <!-- Blink is the only engine that renders url() inside backdrop-filter.
-       Safari parses the value, reports @supports true, then paints nothing
-       and drops the blur along with it, so the gate has to be a POSITIVE
-       Blink test rather than a feature query. Chrome also dropped the
-       -webkit-backdrop-filter alias, which is what the old CSS gate keyed
-       on, so that gate had quietly stopped matching anywhere. Set here, in
-       the head, so the nav never paints once without its lens. See
-       css/glass.css, layer 6. -->
+  <!-- The refraction gate that used to live here is gone with the
+       refraction: there is no url() inside backdrop-filter any more, so there
+       is no engine to test for and nothing to gate. css/glass.css's header
+       lists everything that was deleted with it. -->
   <script>
-    document.documentElement.classList.toggle(
-      "has-lens",
-      CSS.supports("background", "paint(lg)") && CSS.supports("backdrop-filter", "url(#lg-lens)")
-    );
     // Scripting is on: the photography chapter's fallback grid is replaced by
     // the deck, and css/photo-deck.css uses this flag so the grid is never
     // painted first. Set before <body> parses, so there is no flash.
@@ -33,8 +25,8 @@
        face is preloaded. 25 KB for the only thing on screen when it matters. -->
   <link rel="preload" href="fonts/DiplomataSC-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=15">
-  <link rel="stylesheet" href="css/style.css?v=103">
-  <link rel="stylesheet" href="css/glass.css?v=9">
+  <link rel="stylesheet" href="css/style.css?v=105">
+  <link rel="stylesheet" href="css/glass.css?v=12">
   <link rel="stylesheet" href="css/reel-stage.css?v=16">
   <link rel="stylesheet" href="css/film-stage.css?v=17">
   <link rel="stylesheet" href="css/series-stage.css?v=19">
@@ -42,62 +34,19 @@
   <link rel="stylesheet" href="css/photo-deck.css?v=3">
   <link rel="stylesheet" href="css/games-stage.css?v=5">
   <link rel="stylesheet" href="css/smooth-cursor.css?v=1">
+  <!-- LAST, and that is load-bearing: poster.css is the V3 design layer. It
+       re-declares properties that style.css and glass.css set, so it has to
+       come after both of them, and after every component sheet, because the
+       whole of it is one vocabulary applied across components. -->
+  <link rel="stylesheet" href="css/poster.css?v=4">
 </head>
 <body>
 
-  <!-- Chromium-only refraction layer for the floating glass. Safari and
-       Firefox parse url() inside backdrop-filter but render nothing, so the
-       blur-only declaration always stands first and this stays an
-       enhancement. See css/glass.css.
-
-       This is a real edge lens, not a noise warp. The feImage is a vector
-       displacement map built in a nested SVG: R drives X, G drives Y,
-       #808080 is neutral. Two gradient ramps are screened onto a neutral
-       grey field so each only writes its own channel, and a blurred rounded
-       rect of EXACTLY neutral grey then punches the middle back to 0.5, so
-       the displacement survives only in a band around the rim. That band is
-       the bezel; its width is the blur radius on that rect.
-
-       Three things are load-bearing and must not be "simplified":
-       - color-interpolation-filters="sRGB". In the default linearRGB the
-         128 neutral drifts after conversion and the whole backdrop shifts.
-       - the map is INLINED as a data URL. feImage silently fails on
-         external URLs from zero-size SVGs.
-       - width="100%" preserveAspectRatio="none" on the feImage: percentages
-         resolve against the ELEMENT's filter region, which is what lets one
-         filter id serve both bars at their different sizes.
-       The 1600x100 viewBox is deliberate: it keeps the map's aspect close to
-       a wide thin bar, so the bezel stays uniform instead of stretching into
-       a wide ellipse on one axis. -->
-  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
-    <filter id="lg-lens" x="-12%" y="-30%" width="124%" height="160%" color-interpolation-filters="sRGB">
-      <feImage x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'1600'%20height%3D'100'%20viewBox%3D'0%200%201600%20100'%3E%3Cdefs%3E%3ClinearGradient%20id%3D'Y'%20x1%3D'0'%20x2%3D'0'%20y1%3D'10%25'%20y2%3D'90%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230F0'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D'X'%20x1%3D'1.2%25'%20x2%3D'98.8%25'%20y1%3D'0'%20y2%3D'0'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%23F00'%2F%3E%3Cstop%20offset%3D'50%25'%20stop-color%3D'%23808080'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23000'%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1600'%20height%3D'100'%20fill%3D'%23808080'%2F%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1600'%20height%3D'100'%20fill%3D'url(%23Y)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1600'%20height%3D'100'%20fill%3D'url(%23X)'%20style%3D'mix-blend-mode%3Ascreen'%2F%3E%3Crect%20x%3D'19.2'%20y%3D'10'%20width%3D'1561.6'%20height%3D'80'%20rx%3D'40'%20ry%3D'40'%20fill%3D'%23808080'%20filter%3D'blur(5)'%2F%3E%3C%2Fsvg%3E" result="MAP"/>
-      <feDisplacementMap in="SourceGraphic" in2="MAP" scale="110" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-    <!-- The NAV's lens, built the way Framer's LiquidGlass builds it: the whole
-         chain (blur -> displacement -> saturation -> brightness) lives inside
-         ONE filter, and the map is not a fixed picture any more - js/glass-lens.js
-         generates it for the bar's own size out of a signed-distance field.
-         The href below is a 1x1 neutral grey on purpose: a missing map reads as
-         0, not as 128, so an un-run script would displace every pixel by half
-         the scale in the same direction. Neutral degrades to a plain blur. -->
-    <filter id="lg-nav" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-      <feImage x="0" y="0" width="1" height="1" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'1'%20height%3D'1'%3E%3Crect%20width%3D'1'%20height%3D'1'%20fill%3D'%23808080'%2F%3E%3C%2Fsvg%3E" result="map"/>
-      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="softBackdrop"/>
-      <feDisplacementMap in="softBackdrop" in2="map" scale="40" xChannelSelector="R" yChannelSelector="G" result="refracted"/>
-      <feColorMatrix in="refracted" type="saturate" values="1.4" result="saturated"/>
-      <feComponentTransfer in="saturated">
-        <feFuncR type="linear" slope="1.05"/>
-        <feFuncG type="linear" slope="1.05"/>
-        <feFuncB type="linear" slope="1.05"/>
-      </feComponentTransfer>
-    </filter>
-  </svg>
 
   <a class="skip-link mono" href="#hero">SKIP TO CONTENT</a>
 
   <!-- ============ NAV : liquid glass pill floating over the hero ============ -->
-  <header class="nav glass glass--pill glass--spot glass--refract" id="nav">
+  <header class="nav glass glass--pill glass--spot" id="nav">
     <div class="glass__body" aria-hidden="true"></div>
     <div class="glass__edge" aria-hidden="true"></div>
     <span class="glass__press" aria-hidden="true"></span>
@@ -448,7 +397,7 @@
           </div>
         </div>
 
-        <div class="tabbar glass glass--pill glass--spot glass--refract" role="tablist" aria-label="Archive shelves" id="archive-tabbar">
+        <div class="tabbar glass glass--pill glass--spot" role="tablist" aria-label="Archive shelves" id="archive-tabbar">
           <div class="glass__body" aria-hidden="true"></div>
           <div class="glass__edge" aria-hidden="true"></div>
           <span class="glass__press" aria-hidden="true"></span>
@@ -900,7 +849,7 @@
   <script src="js/book-shelf-data.js?v=4"></script>
 <script src="js/music-data.js?v=7"></script>
   <script src="js/music-covers.js?v=6"></script>
-  <script src="js/reel-stage.js?v=28"></script>
+  <script src="js/reel-stage.js?v=29"></script>
   <script src="js/film-stage.js?v=8"></script>
   <script src="js/series-stage.js?v=8"></script>
   <script src="js/music-stage.js?v=11"></script>
@@ -908,8 +857,7 @@
 <script src="js/photo-deck.js?v=2"></script>
 <script src="js/games-stage.js?v=4"></script>
   <script src="js/glass-pill.js?v=3"></script>
-  <script src="js/glass-lens.js?v=2"></script>
   <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=83"></script>
+  <script src="js/main.js?v=85"></script>
 </body>
 </html>
