@@ -1,9 +1,11 @@
 /* ============================================================
    N1GHT CHXN9 - the draggable glass pill.
 
-   One factory, two call sites (the archive tab bar and the primary nav),
-   the same discipline as reel-stage.js: the implementation is shared, the
-   callers only pass configuration.
+   ONE FACTORY, ONE CALL SITE TODAY (#tab-pill, inside #archive-tabbar)
+   The nav bar's pill was retired with the nav's drag gesture, so this file
+   has exactly one caller again. It stays a factory on purpose, same
+   discipline as reel-stage.js: the implementation is shared, callers only
+   pass configuration - do not inline it back into main.js.
 
    WHAT IT DOES
    Press the selected pill and keep the button down: dragging carries the
@@ -46,12 +48,10 @@
   "use strict";
 
   var DRAG_MIN_WIDTH = "(min-width: 721px)";
-  var SETTLE_MS = 320;
   var SUPPRESS_MS = 120;
   var HIT_SLOP = 4;
   var CLASS_DRAGGING = "is-dragging";
   var CLASS_GRABBED = "is-grabbed";
-  var CLASS_SETTLING = "is-settling";
   var CLASS_DROP = "is-drop-target";
 
   /**
@@ -92,7 +92,6 @@
     var pendingX = 0;
     var suppressClick = false;
     var suppressTimer = 0;
-    var settleTimer = 0;
 
     /* ---------- measurement ---------- */
 
@@ -235,10 +234,12 @@
       window.clearTimeout(suppressTimer);
       suppressTimer = window.setTimeout(function () { suppressClick = false; }, SUPPRESS_MS);
 
-      pill.classList.add(CLASS_SETTLING);
-      window.clearTimeout(settleTimer);
-      settleTimer = window.setTimeout(function () { pill.classList.remove(CLASS_SETTLING); }, SETTLE_MS);
-
+      /* The release needs no settling class. The travel is restored by removing
+       .is-dragging: css/glass.css scopes `transition: none` to that state
+       alone, so the moment the pointer lets go the pill animates home on
+       --glass-pill-travel. A previous version added an `is-settling` class
+       here that no stylesheet in the repo matched - it inverted a class list
+       on every drag end to no effect. */
       moveTo(target);
       if (target !== from) onChange(target, { via: "drag" });
     }

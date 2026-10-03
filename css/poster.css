@@ -400,8 +400,8 @@
   inline-size: 30px;
   block-size: 13px;
   pointer-events: none;
-  background: color-mix(in oklab, #FFF6E4 30%, transparent);
-  box-shadow: 0 1px 2px color-mix(in oklab, var(--ink-950) 22%, transparent);
+  background: color-mix(in oklab, var(--paper-050) 30%, transparent);
+  box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--ink-950) 22%, transparent);
 }
 .photo-deck__stack::before {
   inset-block-start: -7px;
@@ -412,7 +412,7 @@
   inset-block-start: -7px;
   inset-inline-end: 22px;
   rotate: 5deg;
-} The deck's
+} /* The deck's
    top edge is fine; the deck's problem was somewhere else entirely.
 
    The corner, not the middle, is the whole discipline. Tape across a
@@ -430,8 +430,8 @@
   block-size: 13px;
   rotate: -6deg;
   pointer-events: none;
-  background: color-mix(in oklab, #FFF6E4 30%, transparent);
-  box-shadow: 0 1px 2px color-mix(in oklab, var(--ink-950) 18%, transparent);
+  background: color-mix(in oklab, var(--paper-050) 30%, transparent);
+  box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--ink-950) 18%, transparent);
 }
 
 /* ============ 7. THE PRINTED LIGHTBOX ============
@@ -451,9 +451,14 @@
   box-shadow:
     0 0 0 10px var(--paper-000),
     0 0 0 11px color-mix(in oklab, var(--on-dark) 40%, transparent),
-    14px 14px 0 0 oklch(0 0 0 / 0.42);
+    14px 14px 0 0 color-mix(in oklab, var(--ink-950) 42%, transparent);
 }
-.lb-stage .lb-music { background: var(--color-surface); border-radius: 0; }
+/* style.css still gives .lb-stage img a --radius-md, left over from when the
+   viewer was a card. Every other object in this box - the music tile, the
+   caption, the rail - is flush, because a mounted print has square corners. */
+.lb-stage img,
+.lb-stage .lb-music { border-radius: 0; }
+.lb-stage .lb-music { background: var(--color-surface); }
 
 .lb-cap {
   position: relative;
@@ -470,7 +475,7 @@
   background-size: 1px 100%;
   background-position: 12px 0;
   background-repeat: no-repeat;
-  box-shadow: 6px 6px 0 0 oklch(0 0 0 / 0.4);
+  box-shadow: 6px 6px 0 0 color-mix(in oklab, var(--ink-950) 40%, transparent);
 }
 .lb-cap-kicker { color: var(--color-text-muted); }
 .lb-cap-title { color: var(--color-text); }
@@ -495,7 +500,7 @@
    ring the footer uses, because a cobalt ring on a near-black wall is
    1.8:1 and a ring you cannot see is not a focus ring. */
 .lb-nav:hover,
-.lb-close:hover { background: oklch(1 0 0 / 0.2); }
+.lb-close:hover { background: color-mix(in oklab, var(--on-dark) 20%, transparent); }
 .lightbox :focus-visible,
 .footer :focus-visible {
   outline-color: var(--on-dark);
@@ -532,8 +537,8 @@
   inline-size: 26px;
   block-size: 11px;
   pointer-events: none;
-  background: color-mix(in oklab, #FFF6E4 30%, transparent);
-  box-shadow: 0 1px 2px color-mix(in oklab, var(--ink-950) 18%, transparent);
+  background: color-mix(in oklab, var(--paper-050) 30%, transparent);
+  box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--ink-950) 18%, transparent);
 }
 .bs-row::before { inset-inline-start: 8px; rotate: -5deg; }
 .bs-row::after { inset-inline-end: 8px; rotate: 6deg; }

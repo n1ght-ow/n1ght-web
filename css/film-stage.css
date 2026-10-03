@@ -83,10 +83,13 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* The panel's single action, as real glass. .glass supplies the border,
-   radius, isolation and the specular rim; .glass--accent supplies the
-   sky tint that makes the material read on a flat paper page. All this
-   rule owns is placement and type. */
+/* The panel's single action, as a printed plate. .glass supplies the
+   position, the radius, the isolation and --glass-elevation, the square
+   offset that is the site's only shadow; .glass__edge supplies the
+   registration frame (a cobalt trim inset by --glass-edge-w plus the
+   mis-registered second plate) and .glass--accent swaps the body fill to
+   cobalt, which is why the label below must come from --color-on-accent.
+   All this rule owns is placement and type. */
 .film-detail-link {
   display: inline-flex;
   align-items: center;

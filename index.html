@@ -25,12 +25,12 @@
        face is preloaded. 25 KB for the only thing on screen when it matters. -->
   <link rel="preload" href="fonts/DiplomataSC-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=15">
-  <link rel="stylesheet" href="css/style.css?v=105">
-  <link rel="stylesheet" href="css/glass.css?v=12">
-  <link rel="stylesheet" href="css/reel-stage.css?v=16">
-  <link rel="stylesheet" href="css/film-stage.css?v=17">
+  <link rel="stylesheet" href="css/style.css?v=106">
+  <link rel="stylesheet" href="css/glass.css?v=13">
+  <link rel="stylesheet" href="css/reel-stage.css?v=17">
+  <link rel="stylesheet" href="css/film-stage.css?v=18">
   <link rel="stylesheet" href="css/series-stage.css?v=19">
-<link rel="stylesheet" href="css/book-shelf.css?v=10">
+  <link rel="stylesheet" href="css/book-shelf.css?v=11">
   <link rel="stylesheet" href="css/photo-deck.css?v=3">
   <link rel="stylesheet" href="css/games-stage.css?v=5">
   <link rel="stylesheet" href="css/smooth-cursor.css?v=1">
@@ -38,14 +38,18 @@
        re-declares properties that style.css and glass.css set, so it has to
        come after both of them, and after every component sheet, because the
        whole of it is one vocabulary applied across components. -->
-  <link rel="stylesheet" href="css/poster.css?v=4">
+  <link rel="stylesheet" href="css/poster.css?v=5">
 </head>
 <body>
 
 
   <a class="skip-link mono" href="#hero">SKIP TO CONTENT</a>
 
-  <!-- ============ NAV : liquid glass pill floating over the hero ============ -->
+  <!-- ============ NAV : a printed tray floating over the hero ============
+       The class names are the print-surface contract (AGENTS.md "印刷面"):
+       .glass--spot draws nothing any more - it walked two steps (pointer
+       crosshair, then retired) and its four properties are still here only
+       so the rename can happen once, for every element at the same time. -->
   <header class="nav glass glass--pill glass--spot" id="nav">
     <div class="glass__body" aria-hidden="true"></div>
     <div class="glass__edge" aria-hidden="true"></div>
@@ -463,14 +467,14 @@
               <p class="curator curator--music">There are three hundred and forty-one English tracks in here, and Pop opens the index. Most nights I am somewhere in the Mandarin groups.</p>
             </div>
               <div class="music-bar">
-                <!-- The search row is a glass tray: the same object as the tab
+                <!-- The search row is a printed tray: the same object as the tab
                      strip above it and the genre rail below it (AGENTS.md,
-                     "两条 bar"). .glass__body / .glass__edge are the two
-                     backdrop layers; .glass__content lifts the live controls
-                     above them, or the field would be painted under its own
-                     frost. No .glass__press here on purpose: a text field is
-                     not a button, and a rim flash on every focus-click is
-                     noise. -->
+                     "三条 bar"). .glass__body is the paper, .glass__edge is the
+                     cobalt crop line, and .glass__content lifts the live
+                     controls above both of them - statically positioned children
+                     would be painted underneath their own tray. No .glass__press
+                     here on purpose: a text field is not a button, and a rim
+                     flash on every focus-click is noise. -->
                 <div class="music-search glass glass--pill glass--spot" id="music-search">
                   <div class="glass__body" aria-hidden="true"></div>
                   <div class="glass__edge" aria-hidden="true"></div>
@@ -478,7 +482,11 @@
                     <label class="sr-only" for="music-search-input">Search songs by title or artist</label>
                     <input class="music-search-input" id="music-search-input" type="search" placeholder="Search title or artist" autocomplete="off" spellcheck="false">
                     <button class="music-search-clear" id="music-search-clear" type="button" aria-label="Clear search" hidden>&times;</button>
-                    <span class="music-search-count" id="music-search-count" hidden></span>
+                    <!-- aria-live because main.js rewrites this on every keystroke
+                         and the sibling empty-state below already announces; a
+                         search that returns "39 / 534" was the one half of this
+                         interaction a screen reader never heard. -->
+                    <span class="music-search-count" id="music-search-count" role="status" aria-live="polite" aria-atomic="true" hidden></span>
                     <!-- The one action pill of this tray sits at its right end,
                          the way the reference bars park their CTA. It is last in
                          the DOM as well as on screen, so nothing is reordered
@@ -495,7 +503,7 @@
                    with the list (nothing in this panel is pinned - the pinned
                    rail was retired by request), so the nesting buys layout
                    only. The chips are appended by js/music-stage.js, which
-                   only ever appends, so the glass layers stay put. -->
+                   only ever appends, so the tray layers stay put. -->
               <div class="genre-filter glass glass--spot" id="genre-filter" role="group" aria-label="Filter by genre">
                 <div class="glass__body" aria-hidden="true"></div>
                 <div class="glass__edge" aria-hidden="true"></div>
@@ -521,67 +529,87 @@
               <p class="curator curator--sport">Chosen in primary school, never traded since.</p>
             </div>
             <section class="sport" id="sport-stage" aria-label="Sport">
+              <!-- Each slide is a .sport-card, and inside it the <button> holds ONLY the
+                 photograph, the crest and the wash. The caption - including the
+                 official-site <a> - is a SIBLING of the button, not a descendant:
+                 <button> permits no interactive content inside it, so nesting the
+                 link there left five official sites off the tab order entirely
+                 (they could only be reached by a pointer). The card carries the
+                 flex sizing and the caption's clipping; aria-pressed stays on the
+                 button, where it belongs, and css/style.css reaches the caption
+                 through :has(). -->
+
               <div class="sport-row">
-                <button class="sport-item" type="button" aria-pressed="false" data-sport="basketball">
-                  <img class="sport-photo" src="sport/spurs.webp" alt="San Antonio Spurs 夺冠合影，奖杯被举在人群中央" style="object-position: 50% 34%" loading="lazy" decoding="async" draggable="false">
-                  <img class="sport-crest" src="logos/spurs.svg" alt="" loading="lazy" decoding="async">
-                  <span class="sport-wash" aria-hidden="true"></span>
+                <div class="sport-card">
+                  <button class="sport-item" type="button" aria-pressed="false" data-sport="basketball">
+                    <img class="sport-photo" src="sport/spurs.webp" alt="San Antonio Spurs 夺冠合影，奖杯被举在人群中央" style="object-position: 50% 34%" loading="lazy" decoding="async" draggable="false">
+                    <img class="sport-crest" src="logos/spurs.svg" alt="" loading="lazy" decoding="async">
+                    <span class="sport-wash" aria-hidden="true"></span>
+                  </button>
                   <span class="sport-cap">
                     <span class="sport-body">
                       <span class="sport-name">San Antonio Spurs · NBA</span>
-                      <h3 class="sport-hon" lang="zh">五届 NBA 总冠军，<i>1999–2014</i></h3>
+                      <span class="sport-hon" lang="zh">五届 NBA 总冠军，<i>1999–2014</i></span>
                     </span>
                     <a class="sport-link" href="https://www.nba.com/spurs" target="_blank" rel="noopener">nba.com/spurs</a>
                   </span>
-                </button>
-                <button class="sport-item" type="button" aria-pressed="false" data-sport="football">
-                  <img class="sport-photo" src="sport/mancity.webp" alt="Manchester City 看台，满场举起的手臂" style="object-position: 50% 55%" loading="lazy" decoding="async" draggable="false">
-                  <img class="sport-crest" src="logos/mancity.svg" alt="" loading="lazy" decoding="async">
-                  <span class="sport-wash" aria-hidden="true"></span>
+                </div>
+                <div class="sport-card">
+                  <button class="sport-item" type="button" aria-pressed="false" data-sport="football">
+                    <img class="sport-photo" src="sport/mancity.webp" alt="Manchester City 看台，满场举起的手臂" style="object-position: 50% 55%" loading="lazy" decoding="async" draggable="false">
+                    <img class="sport-crest" src="logos/mancity.svg" alt="" loading="lazy" decoding="async">
+                    <span class="sport-wash" aria-hidden="true"></span>
+                  </button>
                   <span class="sport-cap">
                     <span class="sport-body">
                       <span class="sport-name">Manchester City · Premier League</span>
-                      <h3 class="sport-hon" lang="zh">十座英格兰顶级联赛冠军，<i>2023 完成三冠</i></h3>
+                      <span class="sport-hon" lang="zh">十座英格兰顶级联赛冠军，<i>2023 完成三冠</i></span>
                     </span>
                     <a class="sport-link" href="https://www.mancity.com" target="_blank" rel="noopener">mancity.com</a>
                   </span>
-                </button>
-                <button class="sport-item" type="button" aria-pressed="false" data-sport="formula-1">
-                  <img class="sport-photo" src="sport/mclaren.webp" alt="McLaren 车队在车库里的 2025 车队总冠军合影" style="object-position: 50% 50%" loading="lazy" decoding="async" draggable="false">
-                  <img class="sport-crest" src="logos/mclaren.svg" alt="" loading="lazy" decoding="async">
-                  <span class="sport-wash" aria-hidden="true"></span>
+                </div>
+                <div class="sport-card">
+                  <button class="sport-item" type="button" aria-pressed="false" data-sport="formula-1">
+                    <img class="sport-photo" src="sport/mclaren.webp" alt="McLaren 车队在车库里的 2025 车队总冠军合影" style="object-position: 50% 50%" loading="lazy" decoding="async" draggable="false">
+                    <img class="sport-crest" src="logos/mclaren.svg" alt="" loading="lazy" decoding="async">
+                    <span class="sport-wash" aria-hidden="true"></span>
+                  </button>
                   <span class="sport-cap">
                     <span class="sport-body">
                       <span class="sport-name">McLaren Racing · Formula 1</span>
-                      <h3 class="sport-hon" lang="zh">十座车队总冠军，<i>2024–2025 连庄</i></h3>
+                      <span class="sport-hon" lang="zh">十座车队总冠军，<i>2024–2025 连庄</i></span>
                     </span>
                     <a class="sport-link" href="https://www.mclaren.com/racing/" target="_blank" rel="noopener">mclaren.com/racing</a>
                   </span>
-                </button>
-                <button class="sport-item" type="button" aria-pressed="false" data-sport="american-football">
-                  <img class="sport-photo" src="sport/ravens.webp" alt="Baltimore Ravens 球员在端区庆祝" style="object-position: 62% 45%" loading="lazy" decoding="async" draggable="false">
-                  <img class="sport-crest" src="logos/ravens.svg" alt="" loading="lazy" decoding="async">
-                  <span class="sport-wash" aria-hidden="true"></span>
+                </div>
+                <div class="sport-card">
+                  <button class="sport-item" type="button" aria-pressed="false" data-sport="american-football">
+                    <img class="sport-photo" src="sport/ravens.webp" alt="Baltimore Ravens 球员在端区庆祝" style="object-position: 62% 45%" loading="lazy" decoding="async" draggable="false">
+                    <img class="sport-crest" src="logos/ravens.svg" alt="" loading="lazy" decoding="async">
+                    <span class="sport-wash" aria-hidden="true"></span>
+                  </button>
                   <span class="sport-cap">
                     <span class="sport-body">
                       <span class="sport-name">Baltimore Ravens · NFL</span>
-                      <h3 class="sport-hon" lang="zh">两届超级碗冠军，<i>2001 与 2013</i></h3>
+                      <span class="sport-hon" lang="zh">两届超级碗冠军，<i>2001 与 2013</i></span>
                     </span>
                     <a class="sport-link" href="https://www.baltimoreravens.com" target="_blank" rel="noopener">baltimoreravens.com</a>
                   </span>
-                </button>
-                <button class="sport-item" type="button" aria-pressed="false" data-sport="esports">
-                  <img class="sport-photo" src="sport/spirit.webp" alt="Team Spirit 的 donk 在比赛席上托腮看着屏幕" style="object-position: 58% 58%" loading="lazy" decoding="async" draggable="false">
-                  <img class="sport-crest" src="logos/spirit.svg" alt="" loading="lazy" decoding="async">
-                  <span class="sport-wash" aria-hidden="true"></span>
+                </div>
+                <div class="sport-card">
+                  <button class="sport-item" type="button" aria-pressed="false" data-sport="esports">
+                    <img class="sport-photo" src="sport/spirit.webp" alt="Team Spirit 的 donk 在比赛席上托腮看着屏幕" style="object-position: 58% 58%" loading="lazy" decoding="async" draggable="false">
+                    <img class="sport-crest" src="logos/spirit.svg" alt="" loading="lazy" decoding="async">
+                    <span class="sport-wash" aria-hidden="true"></span>
+                  </button>
                   <span class="sport-cap">
                     <span class="sport-body">
                       <span class="sport-name">Team Spirit · CS2</span>
-                      <h3 class="sport-hon" lang="zh">三大超级精英赛事冠军，<i>2024–2025</i></h3>
+                      <span class="sport-hon" lang="zh">三大超级精英赛事冠军，<i>2024–2025</i></span>
                     </span>
                     <a class="sport-link" href="https://teamspirit.gg" target="_blank" rel="noopener">teamspirit.gg</a>
                   </span>
-                </button>
+                </div>
               </div>
             </section>
           </div>
@@ -847,17 +875,17 @@
   <script src="js/film-data.js?v=2"></script>
   <script src="js/series-data.js?v=2"></script>
   <script src="js/book-shelf-data.js?v=4"></script>
-<script src="js/music-data.js?v=7"></script>
+  <script src="js/music-data.js?v=7"></script>
   <script src="js/music-covers.js?v=6"></script>
-  <script src="js/reel-stage.js?v=29"></script>
+  <script src="js/reel-stage.js?v=30"></script>
   <script src="js/film-stage.js?v=8"></script>
   <script src="js/series-stage.js?v=8"></script>
   <script src="js/music-stage.js?v=11"></script>
-<script src="js/book-shelf.js?v=9"></script>
-<script src="js/photo-deck.js?v=2"></script>
-<script src="js/games-stage.js?v=4"></script>
-  <script src="js/glass-pill.js?v=3"></script>
+  <script src="js/book-shelf.js?v=9"></script>
+  <script src="js/photo-deck.js?v=2"></script>
+  <script src="js/games-stage.js?v=4"></script>
+  <script src="js/glass-pill.js?v=4"></script>
   <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=85"></script>
+  <script src="js/main.js?v=86"></script>
 </body>
 </html>

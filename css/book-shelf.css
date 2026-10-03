@@ -45,6 +45,21 @@
      ramp - a board lighter than the wall it stands on stops being an object. */
   --bs-board-top: #DFEAF2;
   --bs-board-face: #C5D8E5;
+  /* the block of pages, striped 1px leaf / 1px edge. Cool, like the board it
+     sits in: folding these into --paper-000 / --paper-050 would put a warm
+     cream block into a cool object and the open spread would stop reading as
+     paper in the same light as its own cover. */
+  --bs-page-leaf: #f5f9fc;
+  --bs-page-edge: #dde8f0;
+  /* A book's own corner, and the one place this component steps outside the
+     four-step shape lock. The lock is for controls: a rounded rect you aim at
+     with a pointer. A book is a printed object photographed at an angle, and
+     its corners are the edge of a card - 2px, with the blind border inside it
+     at 1px. Eight pixels would round a 182px cover into a lozenge and the
+     spine would stop reading as a spine. Named here so the four call sites
+     cannot drift apart, which is the actual failure this guards against. */
+  --bs-edge-radius: 2px;
+  --bs-blind-radius: 1px;
 
   position: relative;
   width: 100%;
@@ -89,20 +104,26 @@
   top: var(--bs-base);
   height: 9px;
   background: linear-gradient(180deg, var(--bs-board-top) 0%, var(--bs-board-face) 100%);
-  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.9);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--paper-000) 90%, transparent);
   transform: translateZ(calc(var(--bs-cover) / 2));
 }
 
-/* what the row casts on the board, which is the only shadow at rest. Drawn with
-   a box-shadow rather than a blur(): a filter here would be one more thing
+/* What the row casts on the board - the only shadow at rest, and the one
+   place the shelf needed its own geometry.
+   It was a box-shadow blur (0 0 14px 5px) on an element with no background,
+   which is two rules at once: a blurred shadow is a glow (AGENTS.md:28), and
+   `border-radius: 50%` is outside the four-step shape lock - and 238 lines
+   below, .bs-stamp's own comment says exactly that, in those words. So the
+   same ellipse is now painted as a fill: a hard-edged contact band in the
+   plate ink, on --radius-pill. A filter here would still be one more thing
    flattening a preserve-3d subtree for no gain. */
 .bs-cast {
   position: absolute;
   left: 50%;
   top: calc(var(--bs-base) - 4px);
   height: 10px;
-  border-radius: 50%;
-  box-shadow: 0 0 14px 5px oklch(0 0 0 / 0.16);
+  border-radius: var(--radius-pill);
+  background: color-mix(in oklab, var(--ink-950) 14%, transparent);
   transform: translateZ(calc(var(--bs-cover) / 2 - 2px));
 }
 
@@ -145,10 +166,10 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  border-radius: 2px;
+  border-radius: var(--bs-edge-radius);
   backface-visibility: hidden;
   transform: translateZ(calc(var(--bs-cover) / 2));
-  box-shadow: inset -1px 0 0 oklch(0 0 0 / 0.3), inset 1px 0 0 oklch(1 0 0 / 0.14);
+  box-shadow: inset -1px 0 0 color-mix(in oklab, var(--ink-950) 30%, transparent), inset 1px 0 0 color-mix(in oklab, var(--paper-000) 14%, transparent);
 }
 
 /* the round of the spine, which is a light along it, not a fill */
@@ -157,22 +178,28 @@
   inset: 0;
   background: linear-gradient(
     90deg,
-    oklch(0 0 0 / 0.28) 0%,
-    oklch(1 0 0 / 0.16) 26%,
-    oklch(1 0 0 / 0.05) 54%,
-    oklch(0 0 0 / 0.3) 100%
+    color-mix(in oklab, var(--ink-950) 28%, transparent) 0%,
+    color-mix(in oklab, var(--paper-000) 16%, transparent) 26%,
+    color-mix(in oklab, var(--paper-000) 5%, transparent) 54%,
+    color-mix(in oklab, var(--ink-950) 30%, transparent) 100%
   );
 }
 
 /* the cloth's tooth, over any surface that is meant to be cloth. Inline, so the
    page makes no request for it: a diffuse surface scatters light and grain is
-   what that looks like. */
+   what that looks like.
+
+   The turbulence tile is drawn once and stamped on top at low opacity, NOT
+   blended. mix-blend-mode: overlay here was the page's only blend mode, and it
+   did two forbidden things at once - it read the backdrop, which the V3 print
+   surface is not allowed to do, and it made the result depend on whatever
+   happened to sit underneath. Stamping the tile at 0.2 over a known surface is
+   the same picture with one less compositing pass. */
 .bs-grain {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.35;
-  mix-blend-mode: overlay;
+  opacity: 0.2;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
   background-size: 120px 120px;
 }
@@ -184,7 +211,7 @@
   right: 2px;
   top: 9%;
   bottom: 9%;
-  box-shadow: inset 0 1px 0 oklch(0 0 0 / 0.35), inset 0 -1px 0 oklch(1 0 0 / 0.14);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--ink-950) 35%, transparent), inset 0 -1px 0 color-mix(in oklab, var(--paper-000) 14%, transparent);
 }
 
 /* the head and tail bands, which is most of what says hardback */
@@ -229,7 +256,7 @@
      gives each glyph a little air, but 0.04em was the CJK setting and this is
      not that */
   letter-spacing: 0.01em;
-  text-shadow: 0 1px 0 oklch(0 0 0 / 0.3);
+  text-shadow: 0 1px 0 color-mix(in oklab, var(--ink-950) 30%, transparent);
 }
 
 /* the run itself, and the only box that measures it: see fitTitles() in
@@ -244,26 +271,28 @@
   backface-visibility: hidden;
   background: repeating-linear-gradient(
     90deg,
-    #f5f9fc 0px,
-    #f5f9fc 1px,
-    #dde8f0 1px,
-    #dde8f0 2px
+    var(--bs-page-leaf) 0px,
+    var(--bs-page-leaf) 1px,
+    var(--bs-page-edge) 1px,
+    var(--bs-page-edge) 2px
   );
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.2);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink-950) 20%, transparent);
 }
 
 .bs-cover {
   position: absolute;
   top: 0;
   overflow: hidden;
-  border-radius: 2px;
+  border-radius: var(--bs-edge-radius);
   backface-visibility: hidden;
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.18);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink-950) 18%, transparent);
 }
 
+/* the picked book's lift. One hard offset in ink, like every other raised
+   object in the archive - it used to be two stacked blurs (18px 40px and 3px
+   10px), which made this the shelf's last soft shadow. */
 .book-shelf[data-picked] .bs-book[data-picked="true"] .bs-cover {
-  box-shadow: inset 0 0 0 1px oklch(0 0 0 / 0.18), 0 18px 40px oklch(0 0 0 / 0.28),
-    0 3px 10px oklch(0 0 0 / 0.18);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink-950) 18%, transparent), 6px 6px 0 0 color-mix(in oklab, var(--ink-950) 22%, transparent);
 }
 
 .bs-cover-light {
@@ -271,10 +300,10 @@
   inset: 0;
   background: linear-gradient(
     118deg,
-    oklch(1 0 0 / 0.14) 0%,
+    color-mix(in oklab, var(--paper-000) 14%, transparent) 0%,
     transparent 38%,
     transparent 62%,
-    oklch(0 0 0 / 0.2) 100%
+    color-mix(in oklab, var(--ink-950) 20%, transparent) 100%
   );
 }
 
@@ -283,9 +312,9 @@
 .bs-cover-border {
   position: absolute;
   inset: 9px;
-  border-radius: 1px;
-  box-shadow: inset 0 1px 0 oklch(0 0 0 / 0.3), inset 1px 0 0 oklch(0 0 0 / 0.24),
-    inset 0 -1px 0 oklch(1 0 0 / 0.16), inset -1px 0 0 oklch(1 0 0 / 0.12);
+  border-radius: var(--bs-blind-radius);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--ink-950) 30%, transparent), inset 1px 0 0 color-mix(in oklab, var(--ink-950) 24%, transparent),
+    inset 0 -1px 0 color-mix(in oklab, var(--paper-000) 16%, transparent), inset -1px 0 0 color-mix(in oklab, var(--paper-000) 12%, transparent);
 }
 
 /* the label, pasted on, so it sits proud of the cloth and casts */
@@ -294,7 +323,7 @@
   left: 22px;
   right: 22px;
   top: 19%;
-  border-radius: 2px;
+  border-radius: var(--bs-edge-radius);
   padding: 12px;
   /* the pasted-on label's own paper. It was a raw #f4f9fd, one step off the
      page, and ink-900 on it measured 15.41:1; on --color-surface it measures
@@ -302,7 +331,8 @@
      a colour that was never in the palette to begin with. */
   background: var(--color-surface);
   color: var(--color-text);
-  box-shadow: 0 2px 5px oklch(0 0 0 / 0.32), inset 0 0 0 1px oklch(0 0 0 / 0.12);
+  /* a pasted label is a sticker, not a float: 2px of hard offset, no blur. */
+  box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--ink-950) 24%, transparent), inset 0 0 0 1px color-mix(in oklab, var(--ink-950) 12%, transparent);
 }
 
 .bs-label-rule {
@@ -326,10 +356,16 @@
   margin: 4px 0 0;
   /* 10px is a Latin size. A CJK glyph needs a step more before it reads, and
      11px still fits the longest name here (奥斯特洛夫斯基, 7 glyphs = 77px) */
-  font-size: 11px;
+  font-size: var(--fs-label);
   line-height: 1.35;
-  color: var(--color-text);
-  opacity: 0.6;
+  /* --color-text-muted, NOT --color-text at opacity 0.6. The opacity was
+     compositing --ink-900 at 60% over --color-surface down to rgb(115,120,135),
+     which measures 4.32:1 - under the 4.5:1 AA floor for 11px text, and the
+     only place on the site where a body string was dimmed with raw opacity
+     (every other opacity: is a hover or ghost state). --ink-500 on paper is
+     5.28:1 and is the token that already exists for exactly this role.
+     Measured with archive/color-audit/palette-contrast.mjs. */
+  color: var(--color-text-muted);
 }
 
 /* the stamp at the foot, pressed rather than printed */
@@ -362,15 +398,24 @@
   inset: -100%;
   padding: 0;
   border: 0;
-  background: oklch(0 0 0 / 0.28);
+  background: color-mix(in oklab, var(--ink-950) 28%, transparent);
   opacity: 0;
+  /* visibility, not just opacity. .bs-scrim is a <button> (js/book-shelf.js
+     builds it as the "put the book back" target), and opacity:0 does NOT take
+     an element out of the tab order - only visibility does. Without this line
+     a keyboard user tabbed onto an invisible button named "Put the book back"
+     that did nothing until they guessed and pressed Enter. .bs-blurb below
+     already does exactly this, with the same 0.22s delayed visibility so the
+     fade is not cut short. */
+  visibility: hidden;
   pointer-events: none;
   transform: translateZ(var(--bs-scrim-z));
-  transition: opacity 0.22s var(--ease-out);
+  transition: opacity 0.22s var(--ease-out), visibility 0s linear 0.22s;
 }
 
 .book-shelf[data-picked] .bs-scrim {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
   cursor: pointer;
 }

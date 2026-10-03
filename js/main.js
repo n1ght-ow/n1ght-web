@@ -8,8 +8,9 @@ gsap.registerPlugin(ScrollTrigger);
    retired. css/style.css's text-box-trim already handles the display titles. */
 
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const TOUCH = window.matchMedia("(pointer: coarse)").matches;
-const FINE_POINTER = window.matchMedia("(pointer: fine)").matches;
+/* (pointer: coarse) used to be probed here as TOUCH, for the game-card hover
+   stand-in that has since been removed. js/smooth-cursor.js answers the same
+   question on its own with NATIVE_CURSOR, so there is nothing left for it. */
 
 /* ---------- smooth scrolling (Lenis, full-motion only) ----------
    Native scroll under reduced motion. Programmatic jumps (anchors) route
@@ -221,14 +222,12 @@ function musicItemData(card) {
   };
 }
 
+/* photo / game / music only. Film and series had branches here that returned
+   a copy of FILM_DATA / SERIES_DATA; they were unreachable, because the only
+   three openDetail() calls in this file pass those three strings. See the
+   comment in renderDetail and AGENTS.md:144. */
 function detailItemsFor(type) {
   if (type === "photo") return photoFrames.map(photoFrameData);
-  if (type === "film") {
-    return (window.FilmStage && window.FilmStage.data ? window.FilmStage.data : (window.FILM_DATA || [])).slice();
-  }
-  if (type === "series") {
-    return (window.SeriesStage && window.SeriesStage.data ? window.SeriesStage.data : (window.SERIES_DATA || [])).slice();
-  }
   if (type === "game") {
     return Array.from(document.querySelectorAll("#panel-games .hof-item")).map(gameItemData);
   }
@@ -243,8 +242,6 @@ function detailItemsFor(type) {
 }
 
 function detailLabel(type) {
-  if (type === "film") return "FILM";
-  if (type === "series") return "SERIES";
   if (type === "game") return "GAME";
   if (type === "music") return "TRACK";
   return "FRAME";
@@ -252,8 +249,6 @@ function detailLabel(type) {
 
 function detailAct(type, item) {
   if (type === "photo") return item.act;
-  if (type === "film") return item.genre;
-  if (type === "series") return item.category;
   if (type === "game") return "GAME";
   if (type === "music") return item.genre || "TRACK";
   return "";
@@ -319,19 +314,21 @@ function renderDetail() {
   if (lightbox) lightbox.dataset.detail = detailType;
   const label = detailLabel(detailType);
   const total = detailItems.length;
-  lbCount.textContent = label + " " + String(lbIndex + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0");
+  if (lbCount) lbCount.textContent = label + " " + String(lbIndex + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0");
   if (lbAct) lbAct.textContent = detailAct(detailType, item);
   if (lbPrevBtn) lbPrevBtn.setAttribute("aria-label", "Previous " + label.toLowerCase());
   if (lbNextBtn) lbNextBtn.setAttribute("aria-label", "Next " + label.toLowerCase());
 
   if (detailType === "photo") {
     setDetailVisibility({ image: true, caption: true, music: false, meta: false, rail: true });
-    lbImg.classList.remove("is-loaded");
-    lbImg.alt = item.alt;
-    /* the lightbox reads the original, not the 560px board cell: it is the one
-       place a photograph is asked for at full size, and it is a click away */
-    lbImg.src = item.full || item.src;
-    lbCap.textContent = item.caption;
+    if (lbImg) {
+      lbImg.classList.remove("is-loaded");
+      lbImg.alt = item.alt;
+      /* the lightbox reads the original, not the 560px board cell: it is the one
+         place a photograph is asked for at full size, and it is a click away */
+      lbImg.src = item.full || item.src;
+    }
+    if (lbCap) lbCap.textContent = item.caption;
     lbThumbs.forEach((btn, i) => {
       if (i === lbIndex) btn.setAttribute("aria-current", "true");
       else btn.removeAttribute("aria-current");
@@ -374,42 +371,25 @@ function renderDetail() {
   }
 
   setDetailVisibility({ image: true, caption: false, music: false, meta: true, rail: false });
-  lbImg.classList.remove("is-loaded");
-  lbLink.dataset.songId = "";
-  if (detailType === "film") {
-    lbImg.alt = item.title + " poster";
-    lbImg.src = item.poster;
-    lbKicker.textContent = item.genre + " · " + item.year;
-    lbTitle.textContent = item.title;
-    lbLines.textContent = item.director;
-    lbQuote.textContent = item.quote;
-    lbLink.hidden = false;
-    lbLink.textContent = "OPEN ON DOUBAN";
-    lbLink.href = "https://movie.douban.com/subject/" + item.douban + "/";
-    if (lbLive) {
-      lbLive.textContent = "Film " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + ". " + item.director + ", " + item.year + ". " + item.quote;
-    }
-  } else if (detailType === "series") {
-    lbImg.alt = item.title + " poster";
-    lbImg.src = item.poster;
-    lbKicker.textContent = item.category + " · " + item.years;
-    lbTitle.textContent = item.title;
-    lbLines.textContent = item.seasons;
-    lbQuote.textContent = item.quote;
-    lbLink.hidden = false;
-    lbLink.textContent = "OPEN ON DOUBAN";
-    lbLink.href = "https://movie.douban.com/subject/" + item.douban + "/";
-    if (lbLive) {
-      lbLive.textContent = "Series " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + ". " + item.years + ", " + item.seasons + ". " + item.quote;
-    }
-  } else if (detailType === "game") {
+  if (lbImg) {
+    lbImg.classList.remove("is-loaded");
     lbImg.alt = item.alt;
     lbImg.src = item.src;
-    lbKicker.textContent = "RANK " + String(item.rank).padStart(2, "0");
-    lbTitle.textContent = item.name;
-    lbLines.textContent = item.hours;
-    lbQuote.textContent = item.quote;
-    lbLink.hidden = true;
+  }
+  if (lbLink) lbLink.dataset.songId = "";
+  /* No film / series branches. There were two, ~25 lines between them, and
+     neither could run: the only three openDetail() calls in this file are
+     "photo", "game" and "music". AGENTS.md:144 and AGENTS.md:255 both record
+     why - the film / series detail block already sits under the strip, so a
+     lightbox for it would be the same information in a worse place. lbQuote
+     survives below because the game card is the one kind that still carries a
+     pull quote worth reading at size. */
+  if (detailType === "game") {
+    if (lbKicker) lbKicker.textContent = "RANK " + String(item.rank).padStart(2, "0");
+    if (lbTitle) lbTitle.textContent = item.name;
+    if (lbLines) lbLines.textContent = item.hours;
+    if (lbQuote) lbQuote.textContent = item.quote;
+    if (lbLink) lbLink.hidden = true;
     if (lbLive) {
       lbLive.textContent = "Game " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.name + ". " + item.hours + ". " + item.quote;
     }
@@ -442,7 +422,12 @@ function openDetail(type, index) {
   lightbox.setAttribute("aria-hidden", "false");
   isLbOpen = true;
   syncOverlays();
-  lbCloseBtn.focus();
+  /* lbCloseBtn is nullable for the same reason the writes in renderDetail are:
+     if a future markup pass drops #lb-close, this throws inside openDetail and
+     the lightbox opens with focus still on the page behind it. The backdrop
+     click below and Escape both still close it, so a missing button degrades
+     to "one fewer way out" rather than a trap. */
+  if (lbCloseBtn) lbCloseBtn.focus();
 }
 
 function closeDetail() {
@@ -551,10 +536,15 @@ function initUnifiedDetail() {
     });
   }
 
-  lbCloseBtn.addEventListener("click", closeDetail);
-  lbPrevBtn.addEventListener("click", () => lbLoad(lbIndex - 1));
-  lbNextBtn.addEventListener("click", () => lbLoad(lbIndex + 1));
-  lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
+  /* Every listener below is guarded. initUnifiedDetail() is called from the
+     middle of this file, so a single missing id used to throw a TypeError that
+     aborted EVERYTHING after it: initMusicSearch, initNetEaseLinks, the whole
+     GSAP block and the nav ScrollTrigger never ran. That is a lot of damage for
+     a renamed id. */
+  if (lbCloseBtn) lbCloseBtn.addEventListener("click", closeDetail);
+  if (lbPrevBtn) lbPrevBtn.addEventListener("click", () => lbLoad(lbIndex - 1));
+  if (lbNextBtn) lbNextBtn.addEventListener("click", () => lbLoad(lbIndex + 1));
+  if (lbImg) lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
   /* Both links funnel into the same opener: #lb-link carries the film / series
      Douban href, #lb-music-link the song deep link. Only the latter ever has a
      songId, so the guard keeps the two from cross-firing. The playlist branch
@@ -575,11 +565,18 @@ function initUnifiedDetail() {
     if (e.target === lightbox) closeDetail();
   });
 
-  document.addEventListener("keydown", (e) => {
+  // Escape / arrows / Tab while the viewer is open.
+  //
+  // Capture phase on window, not bubble phase on document: js/book-shelf.js and
+  // the music search below also listen for Escape on document, and they were
+  // loaded first, so a bubble-phase listener here could not take the key back -
+  // one Escape closed the viewer AND deselected the book shelf hidden behind it.
+  // Claiming only the keys this viewer owns keeps the two paths separate.
+  window.addEventListener("keydown", (e) => {
     if (!isLbOpen) return;
-    if (e.key === "Escape") { e.preventDefault(); closeDetail(); return; }
-    if (e.key === "ArrowLeft") { e.preventDefault(); lbLoad(lbIndex - 1); return; }
-    if (e.key === "ArrowRight") { e.preventDefault(); lbLoad(lbIndex + 1); return; }
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); closeDetail(); return; }
+    if (e.key === "ArrowLeft") { e.preventDefault(); e.stopPropagation(); lbLoad(lbIndex - 1); return; }
+    if (e.key === "ArrowRight") { e.preventDefault(); e.stopPropagation(); lbLoad(lbIndex + 1); return; }
     if (e.key !== "Tab") return;
     // focus trap: cycle through every control inside the viewer
     const focusables = lbFocusables();
@@ -593,7 +590,7 @@ function initUnifiedDetail() {
       e.preventDefault();
       first.focus();
     }
-  });
+  }, true);
 
   // touch: horizontal swipe on the stage changes items
   if (lbStage) {
@@ -835,7 +832,15 @@ function initSportStage() {
   }
 
   stage.addEventListener("click", (e) => {
-    const item = e.target.closest(".sport-item");
+    // The card, not the button. .sport-cap - and the official-site link inside
+    // it - now sit OUTSIDE the <button>: a <button> may not contain
+    // interactive content, and nesting the link there left five official sites
+    // off the tab order (pointer-only). The caption is absolutely positioned
+    // over the photo, so it has to resolve the same card by itself.
+    // A click ON the link must open the link, not flip the panel.
+    if (e.target.closest("a")) return;
+    const card = e.target.closest(".sport-card");
+    const item = card && card.querySelector(".sport-item");
     if (!item || item === open) return;
     open = item;
     items.forEach((b) => b.setAttribute("aria-pressed", String(b === item)));
@@ -876,8 +881,19 @@ function initMusicSearch() {
   // SEARCHING the query owns visibility instead.
   let activeGenre = 0;
 
+  // NFD first, so a diacritic is FOLDED rather than turned into a separator:
+  // "Señorita" -> "senorita" instead of "se orita", which no query could ever
+  // match (the tolerance below needs a 4+ character token). Then the filter
+  // keeps the four scripts the collection actually uses: Latin, digits, CJK,
+  // Kana and Hangul. Kana and Hangul were missing here, and a query written
+  // only in them normalized to "" - see applySearch below.
   function normalize(value) {
-    return String(value || "").toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g, " ").trim();
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]+/g, " ")
+      .trim();
   }
 
   // Normalized per-card haystack, built once at init: matchCard then only
@@ -950,8 +966,14 @@ function initMusicSearch() {
   // query now covers every genre, so there is no elsewhere to send anyone to.
   function applySearch() {
     const trimmed = input.value.trim();
-    const searching = Boolean(trimmed);
-    const qNorm = searching ? normalize(trimmed) : "";
+    const qNorm = normalize(trimmed);
+    // qNorm and NOT trimmed, and the difference was a silent wrong answer: a
+    // query in a script normalize() dropped came out as the empty string, but
+    // `searching` was still true, and matchCard's `if (!qNorm) return true`
+    // then called every one of the 534 cards a hit. The readout said
+    // "534 / 534" and all fifteen groups expanded, as though the query had
+    // matched the entire collection.
+    const searching = Boolean(qNorm);
     const hitsByGenre = new Array(genres.length).fill(0);
     let total = 0;
 
@@ -1237,17 +1259,18 @@ initNetEaseLinks();
 
 initMusicSearch();
 
-/* ---------- game cards on touch: tap toggles the hover state ---------- */
+/* ---------- game cards on touch: tap toggles the hover state ----------
 
-if (TOUCH) {
-  document.querySelectorAll(".hof-item").forEach((item) => {
-    item.addEventListener("click", () => {
-      const wasOpen = item.classList.contains("is-active");
-      document.querySelectorAll(".hof-item.is-active").forEach((other) => other.classList.remove("is-active"));
-      if (!wasOpen) item.classList.add("is-active");
-    });
-  });
-}
+   GONE, and the reason is worth keeping. This used to add a second click
+   listener to every .hof-item that toggled an `is-active` class, on the theory
+   that touch needed a stand-in for hover. Two reasons it could not stay:
+   initUnifiedDetail() already delegates one click on the same panel to
+   openDetail("game"), so a single tap both opened the lightbox and flipped
+   this class; and no stylesheet in the repo styles .hof-item.is-active (the
+   class list is .nav-links a, .tab-btn, .tab-panel, .genre-chip, .film-card,
+   .series-card, [data-panel]). It cost a listener per card to set a class
+   nothing read. Touch gets :hover from js/games-stage.js and the focus ring
+   from the keyboard path at line 505. ---------- */
 
 /* ---------- books/sport rows: hover feedback is CSS-only (immediate
    background + chip swap, no transform) — high-frequency interactions
@@ -1450,7 +1473,11 @@ if (!REDUCED) {
   }
 }
 
-/* ---------- nav active section + scroll progress (always active) ---------- */
+/* ---------- nav active section (always active) ----------
+   Named for what it does. It used to drive a scroll-progress bar too, but
+   that bar is in the retired list (AGENTS.md "已退役" -> 装饰 -> 滚动进度条);
+   the name outlived the feature, so reading "progress" here meant reading
+   code that no longer exists. */
 
 const navAnchors = Array.from(document.querySelectorAll(".nav-links a"));
 // Pair each anchor with its section up front so a missing href target can
@@ -1470,11 +1497,11 @@ function cacheNavMetrics() {
 
 // The nav carries NO selected indicator. It used to mount the same draggable
 // dark lozenge as the archive tab strip, but on a bar that floats over a
-// photograph that lozenge read as a black blob riding the glass, and the
+// photograph that lozenge read as a black blob riding the tray, and the
 // reference navbar this bar follows has no selected state at all. The active
 // link is carried by ink colour instead - see .nav-links a.is-active in
 // css/style.css. js/glass-pill.js is still the tab strip's only pill.
-function updateNavAndProgress(self) {
+function updateNavActive(self) {
   const y = self.scroll() + window.innerHeight * 0.45;
   let current = -1;
   for (let i = 0; i < navOffsets.length; i++) {
@@ -1490,9 +1517,9 @@ function updateNavAndProgress(self) {
 ScrollTrigger.create({
   start: 0,
   end: "max",
-  onUpdate: updateNavAndProgress,
+  onUpdate: updateNavActive,
   onRefresh: (self) => {
     cacheNavMetrics();
-    updateNavAndProgress(self);
+    updateNavActive(self);
   },
 });

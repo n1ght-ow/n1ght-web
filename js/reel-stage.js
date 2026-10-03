@@ -385,7 +385,8 @@
       card.className = prefix + "-card";
       card.dataset[prefix + "Id"] = item.id;
       card.dataset.cursor = "OPEN";
-      card.setAttribute("role", "button");
+      /* no role="button" here: createElement("button") above already is one,
+         and re-asserting it only adds noise a reader has to check. */
       card.setAttribute("aria-pressed", index === 0 ? "true" : "false");
       card.setAttribute("aria-label", options.cardAria(item));
       if (clone) {
@@ -772,9 +773,12 @@
         if (next < 0) return;
 
         event.preventDefault();
+        /* .focus() is the whole selection step. It fires focusin synchronously,
+           and the focusin handler below selects on :focus-visible - which is
+           always true here, because the event that got us here is a keydown. So
+           calling selectCard again on the next line ran it twice per arrow key,
+           and selectCard is the expensive one: it rebuilds the detail block. */
         cards[next].focus({ preventScroll: true });
-        /* selectCard centres now, so there is no separate reveal step. */
-        selectCard(stage, state, cards[next], true);
       });
 
       /* Keyboard focus selects; POINTER focus does not.
@@ -807,15 +811,19 @@
          lap - so it still runs at once. The rest only confirm widths the CSS
          already fixed, and collapse into one pass 250ms after the last
          arrival, the same budget refreshScrollTrigger() uses. */
-      let loadTimer = 0;
+      /* on `state`, NOT as a local: state.cleanup() runs in init(), which is a
+         different function scope, and it has to be able to cancel this. As a
+         local `loadTimer` here it was out of scope there, so destroy() threw
+         ReferenceError: loadTimer is not defined the moment it was called. */
+      state.loadTimer = 0;
       const onPosterLoad = () => {
         if (!state.setW || state.setW <= 1) {
           setupMode(stage, state);
           refreshScrollTrigger();
           return;
         }
-        window.clearTimeout(loadTimer);
-        loadTimer = window.setTimeout(() => {
+        window.clearTimeout(state.loadTimer);
+        state.loadTimer = window.setTimeout(() => {
           setupMode(stage, state);
           refreshScrollTrigger();
         }, 250);
@@ -961,6 +969,9 @@
       const onResize = () => {
         window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(() => {
+          state.last = 0; // same as boot() and onTabEvent(): the cached frame
+          // time is stale after a re-measure, and the next tick would animate
+          // the new geometry as if the pointer had dragged it there.
           setupMode(container, state);
           refreshScrollTrigger();
         }, 160);
@@ -973,7 +984,8 @@
         state.raf = 0;
         window.removeEventListener("resize", onResize);
         window.clearTimeout(resizeTimer);
-        window.clearTimeout(loadTimer);
+        window.clearTimeout(state.loadTimer);
+        state.loadTimer = 0;
       };
     }
 

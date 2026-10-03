@@ -211,7 +211,14 @@
     0 0 0 2px color-mix(in oklab, var(--accent-2) 60%, transparent);
 }
 
-.glass-pill,
+/* only while the pointer owns it: the pill must track the shelf with no lag
+   during the drag. This used to list the bare `.glass-pill` too, which had the
+   same specificity as section 3 and came later, so it killed the 420ms/180ms
+   travel in EVERY state - and because js/glass-pill.js suppresses the
+   transition by writing an inline "none" and then clears it with "", the escape
+   hatch restored this same `none` rather than the travel. The tab indicator
+   snapped, and --glass-pill-travel / --glass-pill-morph / --glass-pill-ease
+   were referenced only by a declaration that never applied. */
 .glass-pill.is-dragging { transition: none; }
 
 /* ---------- 4. (section retired: the pointer crosshair) ----------

@@ -183,10 +183,13 @@
    row's baseline and the strip still reads as bottom-flush. The focused poster
    is one line taller, not one card taller. Derived, not typed: change the label
    size and the rise follows. */
+/* The lift only. The focused poster used to also carry a 26px drop shadow here,
+   but css/poster.css loads last and replaces it with the flat plate the rest of
+   the archive uses (`.film-card.is-active { box-shadow: none }`), so that shadow
+   had not painted for some time - it was the last blur shadow on the page. */
 .film-card.is-active,
 .series-card.is-active {
   transform: translateY(calc(-1rem - 1.2 * var(--fs-small)));
-  box-shadow: 0 12px 26px -16px oklch(0 0 0 / 0.3);
 }
 
 .film-card-img,
@@ -226,7 +229,7 @@
 .film-card:focus-visible .film-card-img,
 .series-card:hover .series-card-img,
 .series-card:focus-visible .series-card-img {
-  outline-color: oklch(0 0 0 / 0.2);
+  outline-color: color-mix(in oklab, var(--ink-950) 20%, transparent);
   /* Criterion lifts its cards 4px on hover and does NOT scale the artwork.
      The caption deliberately stays put: moving it too would make the rail
      look like it was breathing. */
@@ -247,7 +250,7 @@
    silently dead before - the ring token it used did not exist. */
 .film-card.is-active .film-card-img,
 .series-card.is-active .series-card-img {
-  outline-color: oklch(0 0 0 / 0.34);
+  outline-color: color-mix(in oklab, var(--ink-950) 34%, transparent);
 }
 
 .film-card:focus-visible,

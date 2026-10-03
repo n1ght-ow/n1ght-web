@@ -67,7 +67,7 @@
 | `--color-text-secondary` | ink-600 | 描述、次级信息 |
 | `--color-text-muted` | ink-500 | 标签、编号、meta |
 | `--color-line` | paper-200 | 分隔线 |
-| `--color-line-soft` | oklch(0 0 0 / .055) | 密集数据行分隔 |
+| ~~`--color-line-soft`~~ | — | **已删除**（2026-09）：全仓零读取者。密集数据改用 `--color-line` |
 | `--color-accent` | sky-400 | 强调实底 |
 | `--color-accent-text` | sky-700 | 强调文字 / 焦点环 |
 | `--color-accent-tint` | sky-100 | 强调浅底 |
@@ -399,7 +399,7 @@
 | --- | --- |
 | 圆角 | `--radius-sm 8px` / `--radius-md 14px` / `--radius-lg 22px` / `--radius-pill` —— **只有四档**，出现 2px / 9px / 50% / 24px 之类散值即为回归 |
 | 阴影 | 两个 token：`--shadow-lift`（纸面控件）与 `--glass-elevation`（玻璃；导航条那六层） |
-| 间距 | `--sp-1`..`--sp-11`（0.25 / 0.5 / 0.75 / 1 / 1.5 / 2 / 3 / 4 / 5 / 6 / 7.5rem） |
+| 间距 | `--sp-1`..`--sp-6` + `--sp-8` / `--sp-9`（0.25 / 0.5 / 0.75 / 1 / 1.5 / 2 / 3 / 4 / 5rem），**7.5rem 那档是 `--section-y`（`clamp(5rem, 9vw, 7.5rem)`），不是 `--sp-11`** —— `--sp-7` / `--sp-10` / `--sp-11` 从未有人读，已删；`--sp-8` / `--sp-9` 被 `_detent-lab.html` 读，保留 |
 | 区间距 | `--section-y: clamp(5rem, 9vw, 7.5rem)` |
 | 章节头列距 | `--chapter-gap: clamp(2rem, 5vw, 5rem)` —— 三个章节头的两格**与诗区那两列**共用这一条 |
 | 边距 | `--gutter: clamp(1.25rem, 4.5vw, 4.5rem)` |
@@ -408,7 +408,7 @@
 
 - 深度由边框、玻璃与留白承担，不由堆叠阴影承担。
 - 圆角嵌套遵守 concentric（外圆角 = 内圆角 + padding）。
-- 分隔线是密集数据的最后手段：账本行用 `--color-line-soft`，其余分组靠间距（组间距 ≥ 组内 2×）。
+- 分隔线是密集数据的最后手段：账本行用 `--color-line`，其余分组靠间距（组间距 ≥ 组内 2×）。
 
 ### 5.1 轴（2026-09-28 新增）
 
@@ -474,7 +474,7 @@
 - 滚动监听只走 ScrollTrigger / IntersectionObserver / Lenis；禁裸 `window` scroll handler。
 - `transition-property` 写具体属性；禁 `transition: all`。
 - `filter` 会创建**包含块**：图片滤镜只能加在图片本身，绝不能加在任何含 `position: fixed` 后代的容器上（`#lightbox` 是 fixed）。
-- **`backdrop-filter` 是每帧重采样**：它能出现在浮层上，但放进横向滚动容器要付每帧的代价——`≤720px` 的 tab 条与流派行因此都转实底（见 4.8 最后一条）。音乐那两条 bar 压在纸面上：**搜索行**永远不滚动，所以永远留玻璃；**流派行**只在 `>720px` 留玻璃，`≤720px` 跟 tab 条一样转实底。
+- **`backdrop-filter` 是每帧重采样**（已随 V3 整体删除，本条只留判断本身）：它能出现在浮层上，但放进横向滚动容器要付每帧的代价——`≤720px` 的 tab 条与流派行因此都转实底（见 4.8 最后一条）。音乐那两条 bar 压在纸面上：**搜索行**永远不滚动；**流派行**只在 `>720px` 走托盘，`≤720px` 跟 tab 条一样转实底——**理由今天只剩定位（滚动容器里绝对定位的层会随内容滚），与 `backdrop-filter` 无关**。
 
 ### 6.4 频率分治
 

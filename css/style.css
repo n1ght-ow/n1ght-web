@@ -95,7 +95,10 @@
   --color-text-secondary: var(--ink-600);
   --color-text-muted: var(--ink-500);
   --color-line: var(--paper-200);
-  --color-line-soft: color-mix(in oklab, var(--ink-950) 10%, transparent);
+  /* --color-line-soft (ink at 10%) used to sit here for hairlines softer than a
+     rule. Nothing read it, and the line work on this site is one weight - see
+     .bs-cover-border, which presses its edge into the board instead of drawing
+     it. DESIGN.md:70 and :411 named it; both now point at --color-line. */
   --color-accent: var(--sky-400);
   --color-accent-text: var(--sky-700);
   --color-accent-tint: var(--sky-100);
@@ -166,10 +169,13 @@
 
   /* --- spacing: one 4px-based ladder + a named section rhythm ---
      Section gaps cluster at 80-120px across every reference system
-     examined; below 64px the page stops reading as editorial. */
+     examined; below 64px the page stops reading as editorial. The ladder
+     stops at --sp-9: --sp-7 and --sp-10 had no reader in the stylesheets,
+     and --section-y already covers the 7.5rem step. --sp-8 and --sp-9 are
+     still read by _detent-lab.html, so they stay. */
   --sp-1: 0.25rem;  --sp-2: 0.5rem;   --sp-3: 0.75rem;  --sp-4: 1rem;
-  --sp-5: 1.5rem;   --sp-6: 2rem;     --sp-7: 3rem;     --sp-8: 4rem;
-  --sp-9: 5rem;     --sp-10: 6rem;    --sp-11: 7.5rem;
+  --sp-5: 1.5rem;   --sp-6: 2rem;     --sp-8: 4rem;
+  --sp-9: 5rem;
   --section-y: clamp(5rem, 9vw, 7.5rem);
   /* The one gap between the three archive/music bars and the list. Every bar
      measures its spacing from this, so the stack stays even (measured 24 / 24 /
@@ -197,9 +203,11 @@
      no blur at all. That single change is most of why this skin reads as
      print rather than as UI - every raised object on the page inherits it. */
   --shadow-lift: 6px 6px 0 0 color-mix(in oklab, var(--ink-950) 16%, transparent);
-  /* the harder grade, for the one object per view that is meant to be loud:
-     a selected poster, a raised card, the tab strip itself. */
-  --shadow-lift-hard: 9px 9px 0 0 color-mix(in oklab, var(--ink-950) 22%, transparent);
+  /* --shadow-lift-hard (9px, 22%) used to sit here for "the one object per view
+     that is meant to be loud". Nothing read it: every loud object here - a
+     picked poster, a raised card, the tab strip - was given its offset by hand
+     where its plate was drawn, because the offset has to match the plate. One
+     elevation token is the whole vocabulary now. */
   /* the registration slip. TWO hard offsets in two plates, never a blur: a
      blurred shadow is a glow, and a glow is the direction this palette just
      retired. Written once so every piece of display type misprints the same
@@ -358,13 +366,16 @@ h1, h2 { text-wrap: balance; }
   border-radius: var(--radius-sm);
 }
 
-/* ============ 6. NAV (liquid glass bar floating over the hero) ============
+/* ============ 6. NAV (a solid tray floating over the hero) ================
 
-   FORM borrowed from the Framer Liquid Glass Navbar
-   (framer.com/m/Liquid-Glass-Navbar-6gh01a.js). Three things are taken and
-   nothing else: a rim as thick as the shell's own inset, an axial bead that
-   lights the top AND the bottom with the definition carried by dark side
-   rails, and a six-layer elevation that is wide, soft and very low alpha.
+   The FORM came from the Framer Liquid Glass Navbar
+   (framer.com/m/Liquid-Glass-Navbar-6gh01a.js). Three things were taken and
+   nothing else: a rim as thick as the shell's own inset, a bead that lights
+   the top AND the bottom with the definition carried by dark side rails, and
+   an elevation that read as depth. All three have since been re-expressed in
+   this site's own print vocabulary: the rim is .glass__edge (a crop line), the
+   bead is the same hairline above and below, and the elevation is one hard
+   square offset - six soft layers were retired with the rest of the glass.
    The labels, the type register and the material stay this site's own - the
    reference's logo mark, menu items and CTA are its CONTENT, not its style,
    which is the same line drawn for the two bars in DESIGN.md 4.8.
@@ -465,17 +476,18 @@ h1, h2 { text-wrap: balance; }
 
 /* THE ACTIVE LINK IS COLOUR, NOT A SHAPE. This bar used to mount the same
    draggable dark lozenge as the archive tab strip. Over a photograph that
-   lozenge read as a black blob riding the glass, and the reference navbar
+   lozenge read as a black blob riding the tray, and the reference navbar
    this bar now follows has no selected state at all. So the nav keeps only
    the ink step - ink-900 against the ink-600 of its neighbours, 13.9:1 and
-   6.6:1 on the glass - and there is no grab cursor, because nothing up here
+   6.6:1 on paper - and there is no grab cursor, because nothing up here
    is draggable any more. js/glass-pill.js still owns the tab strip's pill. */
 .nav-links a.is-active { color: var(--color-text); background: none; }
 
-/* The nav keeps ink labels even over the dark hero. The frosted pill is
-   light in every case, and white-on-frost would be invisible; ink on the
-   frosted pill measures 9.1:1 over the darkest possible photo backdrop and
-   far better over this one. */
+/* The nav keeps ink labels even over the dark hero. The tray is paper in every
+   case, and white on paper would be invisible; ink on paper measures 13.9:1
+   and costs nothing. The old frosted-pill reading here (9.1:1 over the darkest
+   possible photo backdrop) died with the pill: header.nav has had no pill
+   since the drag-the-nav gesture was withdrawn. */
 
 /* ============ 7. HERO (the picture, and the name laid on top of it) ============ */
 /* The photograph remains full bleed. A small archival line above the wordmark
@@ -505,6 +517,13 @@ h1, h2 { text-wrap: balance; }
      letterbox that object-fit: cover exposes on a phone is invisible. */
   background: var(--sky-900);
   --hero-fade: clamp(88px, 12vh, 140px);
+  /* The plate's dimmer, as one colour rather than five literals. The five
+     stops are a measured set - re-read the comment above .hero-plate::before
+     before touching them, because the brightest-pixel number depends on this
+     exact value and the alphas below are what hold the masthead's type over
+     the sky. Kept off --ink-950 on purpose: this is a night-blue wash over a
+     night-blue photograph, and a neutral one would grey the whole plate. */
+  --hero-scrim: oklch(0.2 0.055 245);
   display: grid;
   place-items: center;
 }
@@ -640,26 +659,33 @@ h1, h2 { text-wrap: balance; }
    is now the ink HUE rather than neutral black, and roughly a third thinner,
    so it tints without flattening. The middle is still the heaviest band
    because that is where the mark sits, and the top is still the lightest
-   because the glass nav needs something to refract.
+   because the nav floats over it and a bar sitting on raw photograph is a bar
+   with no edge.
 
    Worst-case measured contrast on the mark, this plate and this gradient,
-   1440x900: 4.10:1 (brightest pixel in the .hero-mask rect, foreground
-   #EDF3F8). Method is DESIGN.md 3.2 inference 3 - hide the mark, screenshot,
-   read the brightest pixel in its box - and it is the same method that has to
-   be re-run after ANY change to this gradient, to object-position, or to the
-   plate. The duotone's ceiling is held at sky-400 rather than white precisely
-   so this number has somewhere to go. */
+   against the mark's own colour (--color-on-dark, #FFF4E4): 4.44:1 at
+   1440x900, 5.90:1 at 390x844, 6.24:1 at 320x780 - brightest pixels
+   rgb(63,120,152) / rgb(60,99,125) / rgb(61,95,118). Method is DESIGN.md 3.2
+   inference 3 - hide the mark (visibility:hidden, so the box still measures
+   the same), screenshot, read the brightest pixel in the .hero-mask rect - and
+   it is the same method that has to be re-run after ANY change to this
+   gradient, to object-position, or to the plate. The duotone's ceiling is held
+   at sky-400 rather than white precisely so this number has somewhere to go.
+
+   The mark is 190px, so 3:1 is the AA bar it has to clear and it clears it by
+   more than a point and a half. Do not "improve" the number by lifting the
+   top of the gradient: the mask sits in the middle band on purpose. */
 .hero-plate::before {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    oklch(0.20 0.055 245 / 0.38) 0%,
-    oklch(0.20 0.055 245 / 0.52) 20%,
-    oklch(0.20 0.055 245 / 0.50) 62%,
-    oklch(0.20 0.055 245 / 0.36) 86%,
-    oklch(0.20 0.055 245 / 0.24) 100%
+    color-mix(in oklab, var(--hero-scrim) 38%, transparent) 0%,
+    color-mix(in oklab, var(--hero-scrim) 52%, transparent) 20%,
+    color-mix(in oklab, var(--hero-scrim) 50%, transparent) 62%,
+    color-mix(in oklab, var(--hero-scrim) 36%, transparent) 86%,
+    color-mix(in oklab, var(--hero-scrim) 24%, transparent) 100%
   );
   pointer-events: none;
 }
@@ -844,7 +870,7 @@ h1, h2 { text-wrap: balance; }
    narrower segments - NOT smaller segments. The reference's item is 29px
    tall; ours cannot go below the 40px desktop target, so the compactness
    lands in the inline axis (item padding 1.25em -> 1.05em, gap 3 -> 4px).
-   The material stays this site's paper-white glass; see AGENTS.md. */
+   The material stays this site's paper tray (css/glass.css); see AGENTS.md. */
 .tabbar {
   position: relative;
   z-index: 20;
@@ -900,26 +926,28 @@ h1, h2 { text-wrap: balance; }
    pill under it does that. The :active scale is gone too - the pill now
    carries the press, and scaling the label as well would double it up. */
 .tab-btn.is-active {
-  color: var(--color-on-dark);
+  /* the label reads on the cobalt pill, so this is the accent's own label
+     token. --on-dark happens to be the same #FFF4E4 today, which is exactly
+     why the inversion survived: nothing looked wrong, so nothing was fixed. */
+  color: var(--color-on-accent);
   background: none;
 }
 
-.tab-btn.is-active .no { color: oklch(1 0 0 / 0.55); }
+/* the shelf number, faded against the cobalt it sits on - the same warm white
+   as the label, at 72%. poster.css:146 sets the same value and loads last, so
+   this line exists to keep the base layer readable on its own; the two must
+   not be allowed to drift. */
+.tab-btn.is-active .no { color: color-mix(in oklab, var(--color-on-accent) 72%, transparent); }
 
-/* While the pill is being carried, only the shelf UNDER it keeps the light
-   label. Everywhere else the label goes back to ink, because it is sitting on
-   bare glass. Without this the shelf the pill came from stays white-on-white
-   for the whole drag. */
-.tabbar.is-dragging .tab-btn.is-active { color: var(--color-text-secondary); }
-.tabbar.is-dragging .tab-btn.is-active .no { color: var(--color-text-muted); }
-.tabbar.is-dragging .tab-btn.is-drop-target { color: var(--color-on-dark); }
-.tabbar.is-dragging .tab-btn.is-drop-target .no { color: oklch(1 0 0 / 0.55); }
+/* The four .tabbar.is-dragging / .is-drop-target rules that sat here are gone:
+   carrying the pill between shelves was retired with the drag itself, and
+   nothing in js/ ever put is-dragging or is-drop-target on a .tabbar. Only
+   games-stage's .hof track and the glass pill still carry those classes. */
 
 /* Grab affordance, but only where the drag actually exists: inside the
    horizontal scroller at <=720px the strip is not draggable. */
 @media (min-width: 721px) {
   .tab-btn.is-active { cursor: grab; }
-  .tabbar.is-dragging .tab-btn.is-active { cursor: grabbing; }
 }
 
 /* .tab-panels is a direct child of #archive (see index.html), so it carries
@@ -1091,7 +1119,9 @@ h1, h2 { text-wrap: balance; }
    sits on an ink wash rather than on a sheet. */
 .sport {
   --sport-h: clamp(430px, 47vw, 670px);
-  --sport-open-w: 71%;
+  /* --sport-open-w (71%) used to sit here and had no reader: the open panel is
+     sized by flex-grow, not by a width, because the closed panels have to keep
+     their own basis while the open one grows. */
   --sport-closed-w: min(104px, 7vw);
   --sport-pad: 42px;
 
@@ -1114,13 +1144,31 @@ h1, h2 { text-wrap: balance; }
   height: var(--sport-h);
 }
 
-.sport-item {
+/* The sizing lives on .sport-card, not on the button: the caption and the
+   official-site link are siblings of the button (a <button> may not contain
+   interactive content), so the clip that keeps a caption inside its own sliver
+   has to be the card's. aria-pressed stays on the button. */
+.sport-card {
   position: relative;
   flex: 1 1 var(--sport-closed-w);
   min-width: var(--sport-closed-w);
   width: var(--sport-closed-w);
   height: 100%;
   overflow: clip;
+  transition: flex-grow 0.3s var(--ease-in-out);
+}
+
+.sport-card:has(> .sport-item[aria-pressed="true"]) {
+  flex-grow: 40;
+  min-width: 0;
+  cursor: default;
+}
+
+.sport-item {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   border: 0;
   padding: 0;
   /* the sliver between two folded photographs, and the 6px tray margin */
@@ -1129,13 +1177,6 @@ h1, h2 { text-wrap: balance; }
   font: inherit;
   text-align: start;
   cursor: pointer;
-  transition: flex-grow 0.3s var(--ease-in-out);
-}
-
-.sport-item[aria-pressed="true"] {
-  flex-grow: 40;
-  min-width: 0;
-  cursor: default;
 }
 
 .sport-photo {
@@ -1175,9 +1216,9 @@ h1, h2 { text-wrap: balance; }
   position: absolute;
   inset: 0;
   background: linear-gradient(to top,
-    oklch(0.1 0 0 / 0.86) 0%,
-    oklch(0.1 0 0 / 0.5) 30%,
-    oklch(0.1 0 0 / 0) 62%);
+    color-mix(in oklab, var(--ink-950) 86%, transparent) 0%,
+    color-mix(in oklab, var(--ink-950) 50%, transparent) 30%,
+    transparent 62%);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s var(--ease-soft);
@@ -1185,9 +1226,10 @@ h1, h2 { text-wrap: balance; }
 
 .sport-item[aria-pressed="true"] .sport-wash { opacity: 1; }
 
-/* Bottom-left, in flow, so it is laid out at the open panel's own width and
-   clipped by the panel while the panel animates open - exactly like upstream,
-   where the text block is a flow child of the expanding wrapper. */
+/* Bottom-left, sized against the open panel's own width and clipped by the
+   .sport-card while that card animates open - exactly like upstream, where the
+   text block is a child of the expanding wrapper. It is a sibling of the button
+   rather than a child, so it resolves .sport-card as its containing block. */
 .sport-cap {
   position: absolute;
   inset-block-end: 0;
@@ -1246,7 +1288,7 @@ h1, h2 { text-wrap: balance; }
    panel is still moving. Outgoing captions leave in 0.16s so they are gone well
    before the panel they live in finishes closing (upstream's repeat: false), and
    they wait a token first so a fast pass across the row does not flicker. */
-.sport-item .sport-cap {
+.sport-card .sport-cap {
   opacity: 0;
   transform: translateY(14px);
   visibility: hidden;
@@ -1255,7 +1297,7 @@ h1, h2 { text-wrap: balance; }
               visibility 0.16s;
 }
 
-.sport-item[aria-pressed="true"] .sport-cap {
+.sport-card:has(> .sport-item[aria-pressed="true"]) .sport-cap {
   opacity: 1;
   transform: none;
   visibility: visible;
@@ -1265,18 +1307,26 @@ h1, h2 { text-wrap: balance; }
   transition-delay: 0.2s, 0.2s, 0s;
 }
 
-.sport-item:nth-child(2)[aria-pressed="true"] .sport-cap,
-.sport-item:nth-child(4)[aria-pressed="true"] .sport-cap { transition-delay: 0.3s, 0.3s, 0s; }
-.sport-item:nth-child(3)[aria-pressed="true"] .sport-cap { transition-delay: 0.34s, 0.34s, 0s; }
+.sport-card:nth-child(2):has(> .sport-item[aria-pressed="true"]) .sport-cap,
+.sport-card:nth-child(4):has(> .sport-item[aria-pressed="true"]) .sport-cap { transition-delay: 0.3s, 0.3s, 0s; }
+.sport-card:nth-child(3):has(> .sport-item[aria-pressed="true"]) .sport-cap { transition-delay: 0.34s, 0.34s, 0s; }
 
 /* The open panel keeps a hairline of accent: one accent hit for the whole band. */
 .sport-item[aria-pressed="true"] { box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sky-400) 42%, transparent); }
 
-/* Without JS no attribute is ever set, so the first slide stays open and every
-   other caption would sit on an undimmed photo. Hide those, and wash anyway so
-   the open one's type is safe on a bright image. */
-html:not(.js) .sport-item[aria-pressed="false"] .sport-cap { display: none; }
+/* Without JS no aria-pressed is ever set, so the row would be five equal slivers
+   with no caption at all. Open the first slide from CSS instead - the same
+   picture initSportStage() commits on load - wash every photo so the open
+   caption's type is safe on a bright image, and hide the rest. */
+html:not(.js) .sport-card:first-child { flex-grow: 40; min-width: 0; }
 html:not(.js) .sport-wash { opacity: 1; }
+html:not(.js) .sport-card:first-child .sport-crest { opacity: 0; }
+html:not(.js) .sport-card:not(:first-child) .sport-cap { display: none; }
+html:not(.js) .sport-card:first-child .sport-cap {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+}
 
 /* `loading="lazy"` means a broken photo reports complete with naturalWidth 0, so
    this cannot be an img:not([src]) test. Painting the sliver with the ink colour
@@ -1294,8 +1344,9 @@ html:not(.js) .sport-wash { opacity: 1; }
 .music-bar { margin-block: 0; }
 
 /* ---------------------------------------------------------------------
-   The music toolbar: two glass trays, the same object as the tab strip above
-   them (AGENTS.md, "两条 bar"). Nothing here is pinned.
+   The music toolbar: two printed trays, the same object as the tab strip above
+   them (AGENTS.md, "三条 bar" - that section counts all three bars on the
+   page, of which these are the two in the music panel). Nothing here is pinned.
 
    #genre-filter is a SIBLING of .music-bar, not a child (see index.html): they
    are the two bars of one toolbar, so the nesting buys layout only.
@@ -1485,35 +1536,30 @@ html:not(.js) .sport-wash { opacity: 1; }
    the state, and aria-pressed carries it for AT. The ::before this selector
    does get below is the glass bead - inset: 0, so it adds no layout. */
 
-/* ---- the ink pill, as LIQUID GLASS (asked for) --------------------------
-   The music CTA and the active genre chip now carry the SAME material as the
-   tab strip's selected indicator (#tab-pill in js/glass-pill.js), copied from
-   .glass-pill in glass.css: the 84% ink-950 tint, the +-1px bevel, the two
-   elevation shadows, a blur(6px) saturate(1.4) backdrop layer and the axial
-   bead. It is written here rather than as a shared class because the chips are
-   generated by js/music-stage.js and their state is an is-active toggle, so a
-   markup-applied variant would need JS plumbing for no gain.
+/* ---- the ink pill, as a PRINTED PLATE -------------------------------------
+   The music CTA and the active genre chip share one material: a solid sky fill,
+   one hard offset shadow in ink, and nothing else. They are written here rather
+   than as a shared class because the chips are generated by js/music-stage.js
+   and their state is an is-active toggle, so a markup-applied variant would
+   need JS plumbing for no gain.
 
-   The backdrop layer is a ::after at z-index: -1, and both halves of that are
-   load-bearing: a positioned pseudo paints ABOVE the label by default, and
-   z-index: -1 is what drops it between the button's own tint and its text -
-   the layering the tab bar gets for free by keeping its pill and its labels in
-   separate elements. isolate keeps that negative layer inside this button
-   instead of letting it escape to the nearest ancestor stacking context.
-   z-index: 4 is the same value .tab-btn and .genre-chip use to ride above the
-   tray's .glass__body / .glass__edge. */
+   This block used to carry the tab pill's whole liquid-glass recipe - a +-1px
+   bevel, two elevation shadows, a blur(6px) saturate(1.4) backdrop layer and an
+   axial bead - pasted in while the rest of the page moved to V3. A 24px
+   viewport-wide blur on every chip is not a print surface, and the recipe it
+   left behind is the reason this file still had the page's last backdrop read.
+   The pill's foreground is --color-on-accent because its background is an
+   accent: --glass-pill resolves to --sky-400. That said --color-on-dark here,
+   which is the same colour with the wrong name, and meant the two rules above
+   disagreed about why. */
 .music-random,
 .genre-chip.is-active {
   position: relative;
   isolation: isolate;
   z-index: 4;
   background: var(--glass-pill);
-  color: var(--color-on-dark);
-  box-shadow:
-    inset 0 1px 0 0 oklch(1 0 0 / 0.22),
-    inset 0 -1px 0 0 oklch(0 0 0 / 0.4),
-    0 1px 2px oklch(0 0 0 / 0.18),
-    0 8px 20px -10px oklch(0 0 0 / 0.45);
+  color: var(--color-on-accent);
+  box-shadow: 4px 4px 0 0 color-mix(in oklab, var(--ink-950) 34%, transparent);
 }
 
 /* The frame on these two plates is a 1px orange outline offset 1px
@@ -1786,8 +1832,10 @@ html:not(.js) .sport-wash { opacity: 1; }
      gradient - keep their neutral oklch on purpose: they sit ON photographs,
      where a tinted scrim would stain the image. */
   background: color-mix(in oklab, var(--color-ink) 94%, transparent);
-  -webkit-backdrop-filter: blur(24px) saturate(1.2);
-  backdrop-filter: blur(24px) saturate(1.2);
+  /* No backdrop-filter here. The scrim above is already 94% opaque, so a blur
+     behind it costs a full-screen compositing pass to render six percent of an
+     image nobody can see - and it was the last reader of the backdrop on the
+     page, which is what "There is no backdrop read" in css/glass.css means. */
   color: var(--color-on-dark);
   opacity: 0;
   visibility: hidden;
@@ -1854,7 +1902,10 @@ html:not(.js) .sport-wash { opacity: 1; }
   text-wrap: pretty;
 }
 
-/* music sleeve: the only glowing object in the archive.
+/* music sleeve: the one MOUNTED object in the archive - a sheet of paper behind
+   the artwork with a hairline edge, which is what css/poster.css gives every
+   other mounted object above 560px. It used to be the one glowing object too,
+   a 70px sky blur, and both the glow and the words were retired with V3.
    The vh term is the sleeve's whole budget, not a taste call: the column is
    centred, so it clears the fixed .lb-top bar only while
        sleeve <= 94vh - 84px (bar + gutters) - 182px (caption + gaps + action)
@@ -1872,7 +1923,7 @@ html:not(.js) .sport-wash { opacity: 1; }
   border-radius: var(--radius-lg);
   background: var(--color-accent-tint);
   padding: var(--sp-5);
-  box-shadow: 0 0 0 1px oklch(0.79 0.11 220 / 0.5), 0 24px 70px -20px oklch(0.82 0.13 220 / 0.55);
+  box-shadow: 0 0 0 6px var(--paper-000), 0 0 0 7px color-mix(in oklab, var(--on-dark) 40%, transparent);
 }
 
 .lb-stage .lb-music-cover {
@@ -1981,11 +2032,11 @@ html:not(.js) .sport-wash { opacity: 1; }
   width: var(--lb-nav);
   height: var(--lb-nav);
   font-size: var(--fs-h4);
-  background: oklch(1 0 0 / 0.1);
-  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.2);
+  background: color-mix(in oklab, var(--on-dark) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--on-dark) 20%, transparent);
 }
 
-.lb-nav:hover { background: oklch(1 0 0 / 0.2); }
+.lb-nav:hover { background: color-mix(in oklab, var(--on-dark) 20%, transparent); }
 .lb-nav:active { transform: translateY(-50%) scale(0.96); }
 .lb-prev { inset-inline-start: var(--lb-edge); }
 .lb-next { inset-inline-end: var(--lb-edge); }
@@ -2006,8 +2057,8 @@ html:not(.js) .sport-wash { opacity: 1; }
   text-transform: uppercase;
   padding: 0.7em 1.2em;
   min-height: 42px;
-  background: oklch(1 0 0 / 0.1);
-  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.2);
+  background: color-mix(in oklab, var(--on-dark) 10%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--on-dark) 20%, transparent);
 }
 
 .lb-count {
@@ -2018,7 +2069,7 @@ html:not(.js) .sport-wash { opacity: 1; }
   color: var(--color-on-dark);
 }
 
-.lb-close:hover { background: oklch(1 0 0 / 0.2); }
+.lb-close:hover { background: color-mix(in oklab, var(--on-dark) 20%, transparent); }
 .lb-close:active { transform: scale(0.96); }
 
 .lb-rail {
@@ -2043,7 +2094,7 @@ html:not(.js) .sport-wash { opacity: 1; }
   overflow: hidden;
   cursor: pointer;
   opacity: 0.5;
-  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.24);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--on-dark) 24%, transparent);
   transition: opacity 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
 
@@ -2052,10 +2103,14 @@ html:not(.js) .sport-wash { opacity: 1; }
 .lb-thumb[aria-current="true"] { opacity: 1; box-shadow: inset 0 0 0 2px var(--color-accent-tint); }
 .lb-thumb:active { transform: scale(0.96); }
 
+/* One fallback, and it only has to move the scrim: the layer no longer reads a
+   backdrop at all. The other two paths that used to stand here (an html.js -
+   html:not(.js) swap, and the data-transparency attribute) were deleted with
+   the liquid-glass pass; nothing ever set that attribute - it only appears in
+   archive/liquid-glass/ - and AGENTS.md now describes this single level too. */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .lightbox { background: color-mix(in oklab, var(--color-ink) 99%, transparent); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .lightbox { background: color-mix(in oklab, var(--color-ink) 99%, transparent); }
 }
-html[data-transparency="solid"] .lightbox { background: color-mix(in oklab, var(--color-ink) 99%, transparent); backdrop-filter: none; -webkit-backdrop-filter: none; }
 
 /* ============ 17. RESPONSIVE ============ */
 @media (max-width: 1100px) {
@@ -2122,13 +2177,13 @@ html[data-transparency="solid"] .lightbox { background: color-mix(in oklab, var(
     height: calc(var(--sport-open-h) + 4 * var(--sport-strip-h) + 4 * 3px);
     flex-direction: column;
   }
-  .sport-item {
+  .sport-card {
     width: 100%;
     min-width: 0;
     flex-basis: var(--sport-strip-h);
     flex-grow: 0;
   }
-  .sport-item[aria-pressed="true"] { flex-grow: 1; }
+  .sport-card:has(> .sport-item[aria-pressed="true"]) { flex-grow: 1; }
   .sport-crest { width: 38px; height: 38px; }
   .sport-wash {
     background: linear-gradient(to top,
