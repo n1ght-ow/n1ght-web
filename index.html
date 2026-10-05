@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="atelier">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
   <meta property="og:site_name" content="N1GHT CHXN9">
   <meta property="og:title" content="N1GHT CHXN9 - Photography and Archive">
   <meta property="og:description" content="Frames kept bright, eighteen games, and everything that shaped the person behind both.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23172129'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='16' font-weight='bold' fill='%2359BFEA' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23243A33'/%3E%3Ctext x='16' y='22' font-family='Georgia' font-size='16' fill='%23F5F5F0' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
   <!-- The refraction gate that used to live here is gone with the
        refraction: there is no url() inside backdrop-filter any more, so there
        is no engine to test for and nothing to gate. css/glass.css's header
@@ -21,9 +21,8 @@
     document.documentElement.classList.add("js");
   </script>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- The hero is one string in one face, and it is the first paint, so that
-       face is preloaded. 25 KB for the only thing on screen when it matters. -->
-  <link rel="preload" href="fonts/DiplomataSC-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- The opening italic is self-hosted and preloaded. -->
+  <link rel="preload" href="fonts/InstrumentSerif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=15">
   <link rel="stylesheet" href="css/style.css?v=106">
   <link rel="stylesheet" href="css/glass.css?v=13">
@@ -33,12 +32,12 @@
   <link rel="stylesheet" href="css/book-shelf.css?v=11">
   <link rel="stylesheet" href="css/photo-deck.css?v=3">
   <link rel="stylesheet" href="css/games-stage.css?v=5">
-  <link rel="stylesheet" href="css/smooth-cursor.css?v=1">
-  <!-- LAST, and that is load-bearing: poster.css is the V3 design layer. It
-       re-declares properties that style.css and glass.css set, so it has to
-       come after both of them, and after every component sheet, because the
-       whole of it is one vocabulary applied across components. -->
-  <link rel="stylesheet" href="css/poster.css?v=5">
+  <!-- Atelier is the new gallery layer, after the existing component geometry. -->
+  <link rel="stylesheet" href="css/atelier.css?v=3">
+  <link rel="stylesheet" href="css/atelier-hero.css?v=2">
+  <link rel="stylesheet" href="css/atelier-photo.css?v=2">
+  <link rel="stylesheet" href="css/atelier-archive.css?v=7">
+  <link rel="stylesheet" href="css/atelier-poem.css?v=1">
 </head>
 <body>
 
@@ -68,56 +67,31 @@
 
   <main>
 
-    <!-- ============ HERO : the name, over the picture ============ -->
-    <!-- Two layers, one screen and a hand's width. The picture is the layer (it
-         comes first here so that it is first in paint order too, not just by
-         z-index), the name is laid on top of it, and the fixed nav bar floats
-         over both. The face is Diplomata SC and the size is measured off the
-         shell's own content column; .hero-mask is what the mark rises out of on
-         load: geometry and the scrim in css/style.css section 7, gesture in
-         js/main.js.
-
-         The section is deliberately NOT a full viewport: it stops short of the
-         fold so the photography chapter's own eyebrow shows up underneath it.
-         That strip is the handover. It is the chapter's real first line, not a
-         scroll hint - nothing new was added to say "keep going". -->
-    <section class="hero" id="hero">
-      <!-- One photograph, three cuts, all made by
-           archive/hero-refresh/build-hero.py - and all DUOTONE: the plate's
-           luminance mapped onto the palette's blue ramp offline, so the picture
-           is made of the same colours as the page. That grade is baked into
-           the file on purpose; the site applies no filter to it. The
-           full-colour pair next to these in hero/ is the same frame, kept for
-           the record and loaded by nothing.
-
-           A landscape frame covering a 390x844 screen is cropped down to a
-           1:2.16 window anyway, so portrait viewports get that window as real
-           pixels (hero/lujiazui-duo-tall.jpg is a native-resolution slice, no
-           upscale) instead of the wide file stretched to fit. The wide pair
-           only has to serve landscape: 1200w below 1200px, 1440w for
-           everything above it. The source frame is 1440px wide, so there is
-           no larger cut and nothing here is upscaled. The source keeps its
-           whole frame either way and css/style.css picks the window with
-           object-position. -->
-      <picture class="hero-plate">
-        <source media="(max-aspect-ratio: 3/4)" srcset="hero/lujiazui-duo-tall.jpg">
-        <img src="hero/lujiazui-duo.jpg"
-             srcset="hero/lujiazui-duo-1200.jpg 1200w, hero/lujiazui-duo.jpg 1440w"
-             sizes="100vw"
-             alt="Three Lujiazui towers seen from the pavement at night, the Jin Mao and Shanghai Tower leaning in from either side while low cloud crosses the sky between them"
-             width="1440" height="999" decoding="async">
-      </picture>
-
-      <div class="hero-inner shell">
-        <p class="hero-kicker mono">PERSONAL IMAGE ARCHIVE <span>/</span> 2026</p>
-        <div class="hero-mask">
-          <h1 class="hero-wordmark"><span>N1GHT</span> <span>CHXN9</span></h1>
-        </div>
-        <div class="hero-foot">
-          <p>Frames, records, and the things that stayed.</p>
-          <p class="hero-foot-index mono">FIELD NOTE 001 <span>/</span> SHANGHAI</p>
-        </div>
+    <!-- Opening spread: its photograph and typography paint without scripting. -->
+    <section class="hero atelier-hero" id="hero">
+    <div class="hero-inner shell">
+      <p class="atelier-edition">A PERSONAL COLLECTION <span>VOL. 01 / 2026</span></p>
+      <div class="atelier-copy">
+        <div class="hero-mask"><h1 class="hero-wordmark"><span>N1GHT</span> <span>CHXN9</span></h1></div>
+        <p class="atelier-subtitle">A life, quietly collected.</p>
+        <p class="atelier-intro" lang="zh">把走过的地方、反复聆听的声音，<br>和不愿忘记的片刻，慢慢收藏。</p>
       </div>
+      <figure class="atelier-media">
+        <div class="atelier-frame">
+          <div class="atelier-image-window">
+            <picture class="hero-plate">
+              <img src="hero/lujiazui.jpg" srcset="hero/lujiazui-1200.jpg 1200w, hero/lujiazui.jpg 1440w" sizes="(max-width: 720px) 80vw, 40vw" alt="仰望上海陆家嘴的夜色，高楼与云层在画面中相遇" width="1440" height="999" decoding="async" fetchpriority="high">
+            </picture>
+          </div>
+        </div>
+        <span class="atelier-image-label" aria-hidden="true">31°14′ N · 121°30′ E</span>
+        <figcaption class="atelier-caption"><span>001 / SHANGHAI</span><em>A moment, kept.</em></figcaption>
+      </figure>
+      <div class="atelier-bottom">
+        <a class="atelier-enter" href="#photo"><span>EXPLORE THE COLLECTION</span><span aria-hidden="true">↓</span></a>
+        <p class="atelier-scroll-note" aria-hidden="true"><span class="atelier-scroll-track"><i></i></span>Take your time</p>
+      </div>
+    </div>
     </section>
 
     <!-- ============ PHOTOGRAPHY ============ -->
@@ -491,7 +465,7 @@
                          the way the reference bars park their CTA. It is last in
                          the DOM as well as on screen, so nothing is reordered
                          out from under the Tab key. -->
-                    <button class="music-random" id="music-random" type="button">SHUFFLE</button>
+                    <button class="music-random" id="music-random" type="button" aria-label="Pick a song at random"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h2c5 0 9 12 14 12h2M17 14l4 4-4 4M3 18h2c2 0 4-3 5-5m4-2c2-3 3-5 5-5h2M17 2l4 4-4 4"/></svg><span>Pick a song</span></button>
                   </div>
                 </div>
                 <p class="music-search-empty" id="music-search-empty" role="status" aria-live="polite" hidden>
@@ -872,8 +846,8 @@
   <script src="js/vendor/gsap.min.js?v=2"></script>
   <script src="js/vendor/ScrollTrigger.min.js?v=2"></script>
   <script src="js/vendor/lenis.min.js?v=2"></script>
-  <script src="js/film-data.js?v=2"></script>
-  <script src="js/series-data.js?v=2"></script>
+  <script src="js/film-data.js?v=3"></script>
+  <script src="js/series-data.js?v=3"></script>
   <script src="js/book-shelf-data.js?v=4"></script>
   <script src="js/music-data.js?v=7"></script>
   <script src="js/music-covers.js?v=6"></script>
@@ -881,11 +855,14 @@
   <script src="js/film-stage.js?v=8"></script>
   <script src="js/series-stage.js?v=8"></script>
   <script src="js/music-stage.js?v=11"></script>
-  <script src="js/book-shelf.js?v=9"></script>
-  <script src="js/photo-deck.js?v=2"></script>
-  <script src="js/games-stage.js?v=4"></script>
+  <script src="js/book-shelf.js?v=11"></script>
+  <script src="js/games-stage.js?v=6"></script>
   <script src="js/glass-pill.js?v=4"></script>
-  <script src="js/smooth-cursor.js?v=1"></script>
-  <script src="js/main.js?v=86"></script>
+  <script src="js/main.js?v=88"></script>
+  <script src="js/atelier.js?v=1"></script>
+  <script src="js/atelier-hero.js?v=2"></script>
+  <script src="js/atelier-photo.js?v=1"></script>
+  <script src="js/atelier-archive.js?v=1"></script>
+  <script src="js/atelier-poem.js?v=1"></script>
 </body>
 </html>

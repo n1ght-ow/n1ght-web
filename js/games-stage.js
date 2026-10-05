@@ -59,7 +59,7 @@
      The lab (a scratch page, not in the repo) shipped these as sliders; this is
      the tuned "fits the site" position they were left on. css/games-stage.css
      reads none of them, so this is the only copy. */
-  var CARD = 520;        /* centre card width, before fit() */
+  var CARD = 640;        /* maximum centre card width, before fit() */
   var RATIO = 16 / 9;    /* every cover in covers/ is 16:9, so nothing crops */
   var GAP = 14;          /* between slots */
   /* This is what makes the dial big or small, and CARD is NOT: the band is
@@ -177,11 +177,16 @@
      such rule - it only scales - which is why it is a desktop component. */
   function gauge() {
     var avail = Math.max(160, track.clientWidth - 2 * cssPx("--hof-pad", PAD_FALLBACK));
+    /* Give the selected artwork half the wide stage. Side slots yield first,
+       so adding neighbours cannot shrink the main artwork to a thumbnail. */
+    var compact = track.clientWidth <= 480;
+    var wanted = compact ? avail * 0.86 : Math.min(CARD, Math.max(MIN_CARD, avail * 0.52));
     reach = 1;
     for (var r = REACH; r > 1; r--) {
-      if (CARD * fitFor(r, avail) >= MIN_CARD) { reach = r; break; }
+      if (CARD * fitFor(r, avail) >= wanted) { reach = r; break; }
     }
-    fit = fitFor(reach, avail);
+    /* On phones the neighbouring covers peek through the clipped stage. */
+    fit = compact ? wanted / CARD : Math.min(wanted / CARD, fitFor(reach, avail));
   }
 
   /* ---------- paint ---------- */
@@ -265,9 +270,8 @@
     }
   }
 
-  /* The label block is centred on the card, so BOTH rows overflow it
-     symmetrically: the band has to clear twice the taller row, not the sum of
-     the two. Getting this wrong clips the hours line and the note. */
+  /* Rank and caption have different heights. Reserve their actual space on
+     each side, then place the artwork at that asymmetric vertical centre. */
   function sizeTrack() {
     /* WIDTH FIRST, then measure. The label rows are sized by the box they sit
        in, so measuring before place() sets that box reports the height the rows
@@ -279,7 +283,10 @@
     var pad = cssPx("--hof-pad", PAD_FALLBACK);
     var rankH = elRank ? elRank.offsetHeight : 0;
     var nowH = elNow ? elNow.offsetHeight : 0;
-    var need = liveH() + 2 * (gap + Math.max(rankH, nowH) + pad);
+    var above = gap + rankH + pad;
+    var below = gap + nowH + pad;
+    var need = liveH() + above + below;
+    track.style.setProperty("--hof-center-y", (above + liveH() / 2).toFixed(1) + "px");
     track.style.height = Math.round(need) + "px";
   }
 

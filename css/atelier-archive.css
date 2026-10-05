@@ -1,0 +1,427 @@
+/* Private collection. The catalogue remains the original ARIA tablist. */
+#archive {
+  --collection-paper: #f5f5f0;
+  --collection-ink: #243a33;
+  --collection-muted: #5c6c63;
+  --collection-bronze: #746c5d;
+  --collection-line: rgba(36, 58, 51, 0.16);
+  background: var(--collection-paper);
+}
+
+#archive .sec-head { padding-block-end: 0; margin-block-end: clamp(32px, 3.5vw, 48px); }
+#archive .tabbar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  width: 100%;
+  max-width: none;
+  padding: 8px;
+  gap: 5px;
+  margin-block-end: 48px;
+  border-radius: 14px;
+  background: #eceee8;
+  box-shadow: none;
+}
+#archive .tabbar > .glass__body,
+#archive .tabbar > .glass__edge,
+#archive .tabbar > .glass__press { display: none; }
+#archive .tab-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 94px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-content: center;
+  align-items: baseline;
+  gap: 6px 12px;
+  padding: 16px clamp(12px, 1.8vw, 26px);
+  border-radius: 9px;
+  color: var(--collection-muted);
+  font-family: var(--font-sans);
+  text-transform: none;
+  letter-spacing: 0;
+  text-align: start;
+  background: none;
+  transition: color 0.25s ease, background-color 0.25s ease;
+}
+#archive .tab-btn:hover { background: rgba(245, 245, 240, 0.5); color: var(--collection-ink); }
+#archive .tab-btn.is-active { color: var(--collection-ink); background: none; }
+#archive .tab-btn .no,
+#archive .tab-btn.is-active .no {
+  color: var(--collection-bronze);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+#archive .collection-tab-name { font-family: Georgia, serif; font-size: clamp(18px, 1.6vw, 23px); line-height: 1.1; }
+#archive .collection-tab-caption {
+  grid-column: 2;
+  color: var(--collection-muted);
+  font-size: 10px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+#archive .glass-pill {
+  border-radius: 9px;
+  background: var(--collection-paper);
+  box-shadow: 0 3px 14px rgba(36, 58, 51, 0.06);
+  border: 1px solid rgba(36, 58, 51, 0.12);
+}
+#archive .glass-pill__body { box-shadow: none; }
+#archive .glass-pill.is-grabbed { box-shadow: 0 5px 18px rgba(36, 58, 51, 0.13); }
+
+.collection-catalogue {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  margin-block-end: 22px;
+  color: var(--collection-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.5;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.collection-catalogue p { margin: 0; }
+.collection-count { font-variant-numeric: tabular-nums; }
+.collection-room {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-block-end: 32px;
+}
+.collection-room-name {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: clamp(24px, 2.5vw, 36px);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--collection-ink);
+}
+.collection-room-number { font-family: var(--font-mono); font-size: 11px; color: var(--collection-bronze); letter-spacing: 0.06em; }
+.collection-room-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 10px 0;
+  min-height: 44px;
+  color: var(--collection-muted);
+  border: 0;
+  border-block-end: 1px solid var(--collection-line);
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+.collection-room-action:hover { color: var(--collection-ink); border-color: var(--collection-ink); }
+.collection-room-action span { display: inline-block; transition: transform 0.25s ease; }
+.collection-room-action:hover span { transform: translate(3px, -3px); }
+#archive .tab-panels { padding-block-end: clamp(24px, 3vw, 40px); }
+#about.section { padding-block-start: clamp(32px, 4vw, 56px); }
+#archive [data-panel] {
+  background: none;
+  padding: 0;
+  outline: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+#archive [data-panel]::after { display: none; }
+#archive [data-panel]:focus-visible { outline: 2px solid var(--collection-ink); outline-offset: 8px; }
+#archive .panel-note { margin-block-end: 36px; }
+#archive .curator {
+  max-width: 58ch;
+  color: var(--collection-muted);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.8;
+  font-style: normal;
+}
+
+/* An illuminated cabinet. Book covers keep their own cloth and ink. */
+#archive .book-shelf {
+  --bs-band-inset: 36px;
+  --bs-band-width: 3px;
+  --bs-title-padding: 10px;
+  overflow: clip;
+  --bs-board-top: #e1e3da;
+  --bs-board-face: #c9cfc0;
+  --bs-page-leaf: #f7f6ef;
+  --bs-page-edge: #e1e0d4;
+  border-radius: 10px;
+  background: radial-gradient(ellipse at 50% 30%, #f9f9f3 0%, #edefe6 65%, #e5e9df 100%);
+  box-shadow: inset 0 0 0 1px var(--collection-line), 0 20px 50px -30px rgba(36, 58, 51, 0.18);
+}
+#archive .bs-row::before,
+#archive .bs-row::after { display: none; }
+#archive .bs-blurb { font-family: var(--font-sans); color: var(--collection-ink); text-shadow: none; }
+#archive .bs-band--head { top: var(--bs-band-inset); }
+#archive .bs-band--tail { bottom: var(--bs-band-inset); }
+#archive .bs-band { height: var(--bs-band-width); }
+#archive .bs-title {
+  inset: calc(var(--bs-band-inset) + var(--bs-band-width) + var(--bs-title-padding)) 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.015em;
+  white-space: nowrap;
+  text-shadow: none;
+}
+#archive .bs-blurb { top: calc(50% - var(--bs-reach) * var(--bs-fit) - 30px); }
+#archive .bs-cast { background: rgba(36, 58, 51, 0.1); filter: blur(5px); }
+
+/* A screening room. Film titles read like an exhibition label. */
+#archive .film-stage-title,
+#archive .series-stage-title { font-family: Georgia, serif; font-weight: 400; text-transform: none; letter-spacing: -0.015em; color: var(--collection-ink); }
+#archive .film-stage-head,
+#archive .series-stage-head { border-block-end: 1px solid var(--collection-line); padding-block-end: 18px; }
+#archive .film-card-img,
+#archive .series-card-img { border-radius: 5px; outline: 1px solid rgba(36, 58, 51, 0.12); outline-offset: -1px; box-shadow: 0 8px 20px -12px rgba(36, 58, 51, 0.25); }
+#archive .film-card.is-active .film-card-img,
+#archive .series-card.is-active .series-card-img { outline: 1px solid rgba(36, 58, 51, 0.35); box-shadow: 0 14px 28px -13px rgba(36, 58, 51, 0.26); }
+#archive .film-card:hover .film-card-img,
+#archive .series-card:hover .series-card-img { transform: translateY(-5px); box-shadow: 0 14px 28px -13px rgba(36, 58, 51, 0.28); }
+#archive .film-card-title,
+#archive .series-card-title { font-family: var(--font-sans); color: var(--collection-ink); font-weight: 400; text-shadow: none; }
+#archive .film-detail-copy,
+#archive .series-detail-copy {
+  max-width: none;
+  width: 100%;
+  padding: 28px 0 0;
+  background: none;
+  border-block-start: 1px solid var(--collection-line);
+  border-radius: 0;
+  box-shadow: none;
+}
+#archive .film-detail-copy::before,
+#archive .series-detail-copy::before { display: none; }
+#archive .film-detail-index,
+#archive .series-detail-index { position: static; inline-size: auto; writing-mode: horizontal-tb; color: var(--collection-bronze); }
+#archive .film-detail-kicker,
+#archive .series-detail-kicker,
+#archive .film-detail-link,
+#archive .series-detail-link { margin-inline-start: 0; }
+#archive .film-detail-quote,
+#archive .series-detail-quote { font-style: normal; font-family: Georgia, "Songti SC", serif; color: var(--collection-ink); font-size: 20px; line-height: 1.7; }
+#archive .film-detail-link,
+#archive .series-detail-link { font-size: 10px; padding: 12px 21px; border-radius: 999px; box-shadow: none; color: var(--collection-paper); }
+#archive .film-detail-link .glass__body,
+#archive .series-detail-link .glass__body { background: var(--collection-ink); }
+#archive .film-detail-link .glass__edge,
+#archive .series-detail-link .glass__edge { display: none; }
+#archive .film-detail-link:hover,
+#archive .series-detail-link:hover { transform: translateY(-2px); }
+
+/* The record index. Quiet rhythm, colour in the record sleeves. */
+#archive .artist-tracks {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px clamp(24px, 3vw, 40px);
+}
+#archive .idx-card {
+  grid-template-columns: 80px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: center;
+  min-height: 104px;
+  padding-block: 12px;
+  gap: 6px 18px;
+}
+#archive .idx-cover {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  align-self: center;
+  width: 80px;
+  height: 80px;
+}
+#archive .idx-card .idx-title {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  min-width: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  padding: 0;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  color: var(--collection-ink);
+}
+#archive .idx-artist {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--collection-muted);
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+#archive .music-search { padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+#archive .music-search > .glass__content { gap: 20px; flex-wrap: wrap; }
+#archive .genre-filter {
+  padding: 14px 0;
+  gap: 8px 12px;
+  border: 0;
+  border-block-end: 1px solid var(--collection-line);
+  border-radius: 0;
+  box-shadow: none;
+}
+#archive .music-search > .glass__body,
+#archive .genre-filter > .glass__body,
+#archive .music-search > .glass__edge,
+#archive .genre-filter > .glass__edge { display: none; }
+#archive .music-search-input {
+  flex: 1 1 220px;
+  min-height: 52px;
+  padding: 12px 0;
+  border-block-end: 1px solid var(--collection-line);
+  border-radius: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  letter-spacing: 0;
+}
+#archive .music-search-input:focus { border-block-end-color: var(--collection-ink); }
+#archive .music-search-input::placeholder { text-transform: none; }
+#archive .music-random {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px 20px;
+  border: 1px solid var(--collection-ink);
+  border-radius: 6px;
+  background: var(--paper-000);
+  color: var(--collection-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: none;
+}
+#archive .music-random svg { width: 20px; height: 20px; flex: none; transition: transform 0.3s var(--ease-out); }
+#archive .music-random::after,
+#archive .genre-chip.is-active::after { display: none; }
+#archive .music-random:hover { background: var(--collection-ink); color: var(--paper-000); box-shadow: none; }
+#archive .music-random:hover svg { transform: rotate(-8deg); }
+#archive .genre-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 9px 11px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
+  color: var(--collection-muted);
+  background: none;
+  box-shadow: none;
+}
+#archive .genre-chip::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0;
+  flex: none;
+  transition: opacity 0.2s var(--ease-out);
+}
+#archive .genre-chip:hover { background: #eceee8; color: var(--collection-ink); }
+#archive .genre-chip.is-active,
+#archive .genre-chip.is-active:hover { background: #e7ede3; color: var(--collection-ink); border-color: #a9b8a3; box-shadow: none; }
+#archive .genre-chip.is-active::before { opacity: 1; }
+#archive .genre-head { border-block-end: 1px solid var(--collection-line); padding-block-end: 20px; }
+#archive .genre-title { font-family: Georgia, serif; font-weight: 400; color: var(--collection-ink); letter-spacing: -0.01em; }
+#archive .genre-playlist { border-block-end: 1px solid var(--collection-line); }
+#archive .genre-playlist:hover { border-color: var(--collection-ink); }
+#archive .idx-card { border-radius: 5px; transition: background-color 0.25s ease; }
+#archive .idx-card:hover { background: rgba(36, 58, 51, 0.045); }
+#archive .idx-cover { border-radius: 4px; box-shadow: 0 3px 10px rgba(36, 58, 51, 0.08); transition: transform 0.35s ease, box-shadow 0.35s ease; }
+#archive .idx-card:hover .idx-cover,
+#archive .idx-card:focus-within .idx-cover { transform: translateY(-3px) rotate(-2deg); box-shadow: 0 8px 16px rgba(36, 58, 51, 0.14); }
+
+/* The sporting wall and the playable cabinet. */
+#archive .hof.is-live { --hof-gap: 32px; --hof-pad: 12px; }
+#archive .hof.is-live .hof-item,
+#archive .hof.is-live .hof-cue,
+#archive .hof.is-live .hof-labels { inset-block-start: var(--hof-center-y, 50%); }
+#archive .sport { border-radius: 8px; background: #e9ede5; padding: 7px; box-shadow: inset 0 0 0 1px var(--collection-line); }
+#archive .sport-row { gap: 7px; }
+#archive .sport-card { border-radius: 4px; transition: flex-grow 0.75s cubic-bezier(0.22, 1, 0.36, 1); }
+#archive .sport-photo { opacity: 0.7; }
+#archive .sport-item:hover .sport-photo { transform: scale(1.035); }
+#archive .sport-name { font-family: Georgia, serif; font-weight: 400; }
+#archive .sport-item[aria-pressed="true"] { box-shadow: none; }
+#archive .hof.is-live .hof-img-wrap img { border-radius: 7px; box-shadow: 0 9px 25px -12px rgba(36, 58, 51, 0.2); }
+#archive .hof.is-live .hof-item.is-centre .hof-img-wrap img { outline: 1px solid rgba(36, 58, 51, 0.24); outline-offset: -1px; box-shadow: 0 18px 32px -16px rgba(36, 58, 51, 0.3); }
+#archive .hof.is-live .hof-now { padding: 0; background: none; border-radius: 0; box-shadow: none; }
+#archive .hof.is-live .hof-now-name { font-family: Georgia, serif; font-weight: 400; color: var(--collection-ink); text-shadow: none; }
+#archive .hof.is-live .hof-rank,
+#archive .hof.is-live .hof-item.is-centre .hof-rank { color: var(--collection-bronze); text-shadow: none; }
+#archive .hof.is-live .hof-cue { border: 0; color: var(--collection-muted); }
+
+@media (max-width: 1100px) {
+  #archive .artist-tracks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1000px) {
+  #archive .tab-btn { grid-template-columns: 1fr; gap: 5px; padding: 13px 12px; }
+  #archive .collection-tab-caption { grid-column: 1; font-size: 9px; }
+  #archive .tab-btn .no { font-size: 9px; }
+}
+@media (max-width: 720px) {
+  #archive .hof.is-live { overflow: clip; }
+  #archive .artist-tracks { grid-template-columns: minmax(0, 1fr); }
+  #archive .idx-card { grid-template-columns: 72px minmax(0, 1fr); column-gap: 16px; min-height: 96px; }
+  #archive .idx-cover { width: 72px; height: 72px; }
+  #archive .music-search > .glass__content { gap: 12px; }
+  #archive .music-search-input { flex-basis: 100%; }
+  #archive .music-random { min-height: 44px; padding: 10px 16px; }
+  #archive .genre-filter { gap: 8px; }
+  #archive .tabbar { flex-wrap: nowrap; overflow-x: auto; padding: 6px; border-radius: 9px; margin-block-end: 32px; }
+  #archive .tab-btn { flex: 0 0 108px; min-height: 82px; padding: 11px 15px; }
+  #archive .tab-btn .no { display: block; }
+  #archive .collection-tab-name { font-size: 20px; }
+  #archive .tab-btn.is-active { background: var(--collection-paper); box-shadow: 0 2px 8px rgba(36, 58, 51, 0.06); }
+  #archive .tabbar > .glass-pill { display: none; }
+  #archive .curator { font-size: 13px; }
+  .collection-catalogue { font-size: 9px; letter-spacing: 0.07em; }
+  .collection-room { gap: 12px; margin-block-end: 23px; }
+  .collection-room-name { gap: 12px; font-size: 27px; }
+  .collection-room-action { gap: 16px; font-size: 11px; }
+  #archive .music-search-input { font-size: 16px; }
+  #archive .film-detail-quote,
+  #archive .series-detail-quote { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #archive .tab-btn,
+  #archive .glass-pill,
+  #archive .sport-card,
+  #archive .idx-cover,
+  #archive .music-random svg,
+  #archive .genre-chip::before,
+  #archive .collection-room-action span { transition: none; }
+  #archive .sport-item:hover .sport-photo,
+  #archive .idx-card:hover .idx-cover,
+  #archive .idx-card:focus-within .idx-cover,
+  #archive .film-card:hover .film-card-img,
+  #archive .series-card:hover .series-card-img { transform: none; }
+  #archive .music-random:hover svg { transform: none; }
+}

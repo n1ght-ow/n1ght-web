@@ -12,7 +12,10 @@
      anything. Because the cover lands centred on the box's own middle, the
      travel to the centre is a plain translation the layout already knows. */
 
-  var BOOKS = window.BOOK_SHELF || [];
+  /* Display geometry belongs to the shelf, not the collection data. */
+  var BOOKS = (window.BOOK_SHELF || []).map(function (book) {
+    return Object.assign({}, book);
+  });
   if (!BOOKS.length) return;
 
   /* how wide a cover is, which is also how deep a book sits on the shelf */
@@ -183,7 +186,7 @@
       cover.appendChild(stamp);
 
       row.appendChild(btn);
-      return { book: book, index: index, btn: btn, box: box, title: title };
+      return { book: book, originalHeight: book.height, index: index, btn: btn, box: box, title: title, pages: pages, cover: cover };
     });
 
     /* the scrim is a button because it is the other way out of the modal */
@@ -200,7 +203,7 @@
     mount.appendChild(blurb);
     mount.appendChild(live);
 
-    return { scene: scene, nodes: nodes, scrim: scrim, blurb: blurb, live: live };
+    return { scene: scene, board: board, cast: cast, row: row, nodes: nodes, scrim: scrim, blurb: blurb, live: live };
   }
 
   function init(mount) {
@@ -232,83 +235,49 @@
       mount.style.setProperty("--bs-fit", String(fit));
     }
 
-    /* One size for the whole shelf, the way a publisher would set a series:
-       BASE px, shrunk only for a title that cannot carry it.
-
-       IT HAS TO HOLD ON BOTH AXES, and this only ever checked one of them - the
-       wrong one. The run of text down the spine must clear the head and tail
-       bands (that is the 44px reserve), and the face's own line box - 1.23em
-       for Klein Blue Night, measured - must fit across the spine's face, or the
-       glyphs are clipped by .bs-spine's overflow. The old test compared against
-       the spine's FULL height while the box it was measuring only had half of
-       it, so the shrink almost never fired and long titles were silently cut
-       instead (see the note on .bs-title in css/book-shelf.css).
-
-       Both quantities are monotone in the font size, so a bisection over the
-       same half-pixel ladder replaces the walk - five probes instead of up to
-       thirteen, per title, and every probe is a write-then-read. */
-    var TITLE_MAX = 17;      /* px: the shelf's size, before fit */
-    var TITLE_MIN = 8;       /* px: the ladder's floor */
-    var LINE_BOX = 1.23;     /* the face's line box, in em, measured */
-    var TITLE_RESERVE = 44;  /* px of spine height held for the head and tail */
-    var TITLE_EDGE = 2;      /* px of cloth held across the spine's face */
+    /* Keep a readable type size and lengthen the book to contain its title.
+       The bands and clearance come from the same CSS values as the artwork. */
+    var TITLE_MAX = 17;
+    var LINE_BOX = 1.23;
+    var TITLE_EDGE = 2;
 
     function fitTitles() {
+      var cs = getComputedStyle(mount);
+      var reserve = 2 * (
+        (parseFloat(cs.getPropertyValue("--bs-band-inset")) || 36) +
+        (parseFloat(cs.getPropertyValue("--bs-band-width")) || 3) +
+        (parseFloat(cs.getPropertyValue("--bs-title-padding")) || 10)
+      );
+      var changed = false;
       nodes.forEach(function (n) {
-        if (!n.title) return;
-        /* MEASURE THE BOX THE TEXT IS ACTUALLY IN, not the book's data. The
-           shelf renders the scene scaled (the data's 240-288px spines come out
-           260-312 on screen), so a limit built from book.height and a run
-           measured on screen were in two different spaces - which is how a
-           17px probe kept coming back as "too long" for every book at once.
-           The spine's own box is the honest limit, and the reserve scales with
-           it because the head and tail bands do. */
-        var face = n.title.parentNode;
-        var rect = face && face.getBoundingClientRect ? face.getBoundingClientRect() : null;
-        /* NO BOX YET: the shelf builds inside a tab panel that is still
-           display:none (main.js marks the active tab after this file runs), so
-           every spine measures 0x0 on the first pass. A zero box is not a
-           measurement, it is the absence of one - falling back to the data's
-           own numbers for the limit and to whatever the run measures (also 0)
-           keeps the first pass harmless, and the ResizeObserver below runs the
-           real one the moment the panel has a size. */
-        if (rect && (!rect.width || !rect.height)) rect = null;
-        var scale = rect && n.book.height ? rect.height / n.book.height : 1;
-        /* TWO DIFFERENT KINDS OF LIMIT, AND THEY MUST NOT BE MIXED. runLimit is
-           a LENGTH in spine pixels - how far the text may run between the head
-           and tail bands. wideLimit is a FONT SIZE in px - the largest the
-           face's line box (LINE_BOX em) may be and still fit across the
-           spine's face. Feeding TITLE_MAX into the same min() as the length
-           was a bug worth remembering: the run length was then compared against
-           a number that means "17 px of type", nothing fit, and every spine
-           fell to the floor. */
-        var runLimit = rect ? rect.height - TITLE_RESERVE * scale : n.book.height - TITLE_RESERVE;
-        var wideLimit = rect
-          ? (rect.width - TITLE_EDGE * scale) / LINE_BOX
-          : (n.book.thickness - TITLE_EDGE) / LINE_BOX;
+        if (!n.title || !n.title.getClientRects().length) return;
+        var wideLimit = (n.book.thickness - TITLE_EDGE) / LINE_BOX;
         var cap = Math.min(TITLE_MAX, Math.floor(wideLimit * 2) / 2);
-        var rungs = Math.max(1, Math.floor((cap - TITLE_MIN) / 0.5));
-        /* the run is the inner span: .bs-title itself spans the whole spine */
         var text = n.title.firstElementChild || n.title;
-        var probe = function (step) {
-          n.title.style.fontSize = cap - step * 0.5 + "px";
-          return text.getBoundingClientRect().height;
-        };
-        var size = cap;
-        if (probe(0) > runLimit) {
-          /* the first rung that fits. If none does, lo lands on the floor -
-             which is where the old walk stopped as well. */
-          var lo = 0;
-          var hi = rungs;
-          while (lo < hi) {
-            var mid = (lo + hi) >> 1;
-            if (probe(mid) <= runLimit) hi = mid;
-            else lo = mid + 1;
-          }
-          size = cap - lo * 0.5;
+        n.title.style.fontSize = cap + "px";
+        /* scrollHeight measures the untransformed, unwrapped run, so a tilted
+           or open book and a scaled phone shelf cannot change its geometry. */
+        var height = Math.max(n.originalHeight, Math.ceil(text.scrollHeight + reserve));
+        if (n.book.height !== height) {
+          n.book.height = height;
+          n.btn.style.height = height + "px";
+          n.pages.style.height = height + "px";
+          n.cover.style.height = height + "px";
+          changed = true;
         }
-        n.title.style.fontSize = size + "px";
       });
+      if (changed) {
+        overhang = Math.ceil(BOOKS.reduce(function (most, book) {
+          return Math.max(most, book.height * Math.sin(book.lean * Math.PI / 180));
+        }, 0));
+        parts.board.style.width = rowWidth + overhang + 30 + "px";
+        parts.board.style.marginLeft = -(rowWidth + overhang + 30) / 2 + "px";
+        parts.cast.style.width = rowWidth + overhang + 14 + "px";
+        parts.cast.style.marginLeft = -(rowWidth + overhang + 14) / 2 + "px";
+        parts.row.style.marginLeft = -(rowWidth + overhang) / 2 + "px";
+        var tallest = BOOKS.reduce(function (most, book) { return Math.max(most, book.height); }, 0);
+        mount.style.setProperty("--bs-reach", String(Math.ceil(tallest * 0.62)) + "px");
+      }
     }
 
     function render(animate) {
@@ -476,6 +445,7 @@
       window.addEventListener("resize", function () {
         fit();
         M = metrics();
+        fitTitles();
         render(false);
       });
     }

@@ -62,55 +62,7 @@ const MOTION = {
   enter: { duration: 0.85, longDuration: 1.1, ease: "power3.out", heavyEase: "power4.out", stagger: 0.09 },
 };
 
-/* ---------- hero entrance ----------
-   The hero is one object now, so the entrance is one gesture: the wordmark
-   rises out of the mask in css/style.css and stops. The whole mark moves at
-   once - per-character rises were retired with the preloader, and a stagger
-   across two lines would be a two-step animation of a single word.
-   Transform only, no overshoot, and skipped entirely under reduced motion
-   (the mark is simply there). */
-
-const heroMark = document.querySelector(".hero-wordmark");
-
-if (!REDUCED && heroMark) {
-  gsap.from(heroMark, {
-    yPercent: 115,
-    duration: MOTION.enter.longDuration,
-    ease: MOTION.enter.heavyEase,
-  });
-}
-
-/* ---------- photography: no scroll effects at all ----------
-   The chapter is a hand-dealt pile now, and it owns every transform on it.
-   That is still why nothing below runs, and the reason is stronger than it
-   was: a card's position IS the reader's index into the sequence, so anything
-   that moved a card behind the reader's back would be lying about where they
-   are. Both retired effects were exactly that:
-
-   - the ScrollTrigger.batch entry fade wrote y + autoAlpha onto .photo-frame,
-     which is the element js/photo-deck.js positions by transform;
-   - the per-plate --photo-drift scrub wrote yPercent onto .photo-frame-btn,
-     the control inside that frame. It fought the pile's own matrix, and the
-     pile has a motion language (1:1 drag, settle, arrow keys) that no scroll
-     trigger is allowed to join. See AGENTS.md.
-   The captions that used to sit under each plate are still in the DOM as
-   sr-only: the deck's foot prints the top card's, and the detail layer still
-   reads all twenty-one. */
-
-/* The pointer spotlight that used to live here is gone with the glass it
-   lit. It tracked the pointer and wrote --mx / --my onto every
-   .glass--spot, once per frame, hand-rolled because GSAP quickTo cannot
-   tween a custom property. The printed surface has nothing specular to
-   light, and the crosshair that was briefly drawn from those two numbers
-   read as a glitch around the cursor rather than as a print mark - so
-   the gesture went and the feeder went with it. The class stays in the
-   markup; nothing reads it now. */
-/* ---------- counters ----------
-   Retired with the ABOUT panel (asked for): the eight `[data-count]` figures
-   were the only counters on the page, so initCounters() and its ScrollTrigger
-   went with their markup. Re-add BOTH together if a counter ever returns. */
-
-
+/* Gallery entrances and scroll gestures live in atelier modules. */
 
 /* ---------- unified detail layer: photo / film / series / game / music ----------
    One #lightbox serves every archive type. The photo viewer keeps its frame
@@ -669,83 +621,21 @@ function initArchiveTabs() {
     }));
   };
 
-  /* THE REVEAL IS A MASK, NOT A SLIDE, AND NOT A FADE.
-
-     This used to be `y: 14` under a clip wipe, which is two reveals at
-     once and reads as a dissolve. The poster direction asks for one:
-     a sheet is uncovered. So the y is gone and only the wipe is left,
-     and it wipes from the bottom edge upward - the way a stencil comes
-     off a print.
-
-     The panel's own left-to-right wipe stays a state change (power4.inOut,
-     deliberately different from MOTION.enter) and the rows keep the
-     entrance ease. clearProps on both, because a clip-path left on the
-     panel slices every focus ring that reaches past the panel box - the
-     search field sits flush with the panel's left edge - and one left on
-     a row slices the row's own ticket-stub perforation. */
-  const revealWipe = (targets, opts) =>
-    gsap.from(targets, {
-      clipPath: "inset(0 0 100% 0)",
-      duration: 0.75,
-      ease: "power3.out",
-      clearProps: "clipPath",
-      ...opts,
-    });
-
-  const animateIn = (idx, rows) => {
-    const panel = panels[idx];
-    if (!panel) return;
-    if (!rows || !rows.length) return;
-    if (REDUCED) {
-      gsap.set(rows, { clearProps: "clipPath" });
-      return;
-    }
-    // one-off state transition: tab wipe uses power4.inOut, deliberately
-    // different from MOTION.enter (it is a state change, not an entrance).
-    gsap.fromTo(panel,
-      { clipPath: "inset(0 0 0 100%)" },
-      {
-        clipPath: "inset(0 0 0 0%)",
-        duration: 0.8,
-        ease: "power4.inOut",
-        clearProps: "clipPath",
-      });
-    revealWipe(rows, { stagger: { each: 0.06, from: "start" }, delay: 0.08 });
-  };
-
   const select = (idx, instant) => {
     if (idx === current && !instant) return;
+    panels.forEach((panel) => {
+      gsap.killTweensOf(panel);
+      gsap.set(panel, { clearProps: "clipPath,opacity,transform" });
+    });
     current = idx;
     showMeta(idx);
-    // the games panel measures lazily (it mounts display:none); refresh so
-    // the in-panel ScrollTrigger and the drag scroller re-measure
-    scheduleRefresh();
-    // the tab strip is sized by its labels, so a selection change can move
-    // every segment the pill has to snap to
+    scheduleRefresh(250);
     if (pill) pill.refresh();
-    /* games contributes its TRACK, not its eighteen cards: the dial writes a
-       transform on every .hof-item itself, and a per-card wipe would fight it. */
-    const rows = panels[idx] ? Array.from(panels[idx].querySelectorAll(".idx-row, .genre, .hof")) : [];
-    /* MUSIC IS SHOWN, NOT WIPED (asked for). The playlist is 534 cards in 15
-       groups, so the panel wipe plus the group unroll inside it reads as a
-       loading cascade rather than an entrance - the shelf is simply there the
-       moment its tab is picked. Every other panel keeps the wipe. */
-    const plain = panels[idx] && panels[idx].id === "panel-music";
-    if (instant) {
-      gsap.set(rows, { clearProps: "clipPath" });
-      gsap.set(panels[idx], { clearProps: "clipPath" });
-    } else if (plain) {
-      /* MUSIC GETS A WIPE TOO, BUT ON ITS FIFTEEN GROUPS AND NOT ON ITS 477
-         CARDS. The old reasoning for skipping it was the cascade: a per-card
-         stagger over 477 rows is 28s of queued tweens and reads as loading.
-         A wipe on the fifteen .genre groups is the same entrance at a scale
-         the eye can hold, and the cards inside each group are simply there -
-         which is what a printed contents page does. */
-      const groups = panels[idx] ? Array.from(panels[idx].querySelectorAll(".genre")) : [];
-      if (groups.length) revealWipe(groups, { stagger: 0.035, duration: 0.6 });
-      gsap.set(panels[idx], { clearProps: "clipPath" });
-    } else {
-      animateIn(idx, rows);
+    if (!instant && !REDUCED && panels[idx]) {
+      gsap.fromTo(panels[idx], { opacity: 0, y: 12 }, {
+        opacity: 1, y: 0, duration: 0.55, ease: "power3.out",
+        clearProps: "opacity,transform", overwrite: true,
+      });
     }
   };
 
@@ -776,28 +666,7 @@ function initArchiveTabs() {
     });
   });
 
-  // first panel: baseline entrance on scroll into view. Skipped under
-  // reduced motion — the rows simply render in their final position.
-  // enter: dense rows use a tighter 0.06 stagger; duration/ease stay shared.
-  if (!REDUCED) {
-    const firstPanel = panels[0];
-    const firstRows = Array.from(firstPanel.querySelectorAll(".idx-row, .genre"));
-    if (firstRows.length) {
-      gsap.from(firstRows, {
-        clipPath: "inset(0 0 100% 0)",
-        y: 14,
-        duration: MOTION.enter.duration,
-        stagger: { each: 0.06, from: "start" },
-        ease: MOTION.enter.ease,
-        clearProps: "clipPath",
-        scrollTrigger: {
-          trigger: firstPanel,
-          start: "top 85%",
-          toggleActions: "play none none reverse",
-        },
-      });
-    }
-  }
+
 }
 
 initArchiveTabs();
@@ -1275,203 +1144,6 @@ initMusicSearch();
 /* ---------- books/sport rows: hover feedback is CSS-only (immediate
    background + chip swap, no transform) — high-frequency interactions
    get instant feedback per the motion rules in AGENTS.md ---------- */
-
-/* ---------- reduced motion: decorative animations only ---------- */
-if (!REDUCED) {
-  /* ---------- game cards: no scroll entrance ----------
-     The roster used to arrive as eighteen staggered cards. It is a dial now:
-     js/games-stage.js writes a transform on every .hof-item every time the band
-     moves, so a gsap y/autoAlpha entrance on the same elements would be
-     clobbered on the first drag (and eighteen cards at stagger was 1.6s, over
-     the 300ms ceiling anyway). The panel's own tab wipe in animateIn is the
-     entrance, once. */
-
-  /* ---------- poem: folio develop ----------
-     The about-body, about-stats and coda timelines that used to sit above this
-     one went with their markup (asked for). GSAP only WARNS about a missing
-     target, so leaving them would have been a silent pile of dead
-     ScrollTriggers firing on nothing.
-
-     Motivation for both pieces: the poem is the last chapter and the only
-     thing between the reader and the footer, so the chapter sets itself the
-     way it is read - the head and the colophon (the frame) arrive first as one
-     movement, then the six stanzas develop in DOM order, which is the visual
-     reading order of the two columns. Reduced motion skips the whole block. */
-
-  /* The frame - the masthead's two cells and the colophon - arrives as ONE
-     movement on the section's own trigger, in DOM order (title, foreword,
-     closing line). It hangs off the masthead rather than off the colophon on
-     purpose: a tween keyed to the colophon would leave the section's last line
-     pre-hidden until it reached 92% of the viewport, and this chapter is the
-     last one before the footer, so that is a short and fragile run of scroll. */
-  const poemFrame = [...document.querySelectorAll(".poem-head > *, .poem-foot")];
-  if (poemFrame.length) {
-    gsap.from(poemFrame, {
-      y: 14,
-      autoAlpha: 0,
-      duration: MOTION.enter.duration,
-      stagger: 0.08,
-      ease: MOTION.enter.ease,
-      scrollTrigger: {
-        trigger: ".poem-head",
-        start: "top 88%",
-        toggleActions: "play none none reverse",
-      },
-    });
-  }
-
-  const poemLines = gsap.utils.toArray(".poem-verse p");
-  if (poemLines.length) {
-    gsap.from(poemLines, {
-      y: 18,
-      autoAlpha: 0,
-      duration: MOTION.enter.duration,
-      stagger: 0.07,
-      ease: MOTION.enter.ease,
-      scrollTrigger: {
-        trigger: ".poem-verse",
-        start: "top 84%",
-        toggleActions: "play none none reverse",
-      },
-    });
-  }
-
-  /* ---------- footer entrance ---------- */
-
-  gsap.from(".footer-name", {
-    clipPath: "inset(0 0 100% 0)",
-    yPercent: 60,
-    duration: 1,
-    ease: "power4.out",
-    clearProps: "clipPath",
-    // never pre-hide the wordmark before the trigger fires: if the trigger
-    // is missed (short page, restored scroll position) the name would stay
-    // clipped out of existence instead of simply not animating.
-    immediateRender: false,
-    scrollTrigger: {
-      trigger: ".footer",
-      start: "top 85%",
-      toggleActions: "play none none reverse",
-    },
-  });
-
-  /* ============================================================
-     THE POSTER'S THREE RATES.
-
-     A printed collage is layers that do not line up. On this page that
-     is three layers at three speeds, and this block is the whole of it:
-
-       the GROUND   --poster-turn, 1 -> 0 as the chapter arrives
-       the TITLE    -22px across the chapter's own height
-       the EYEBROW   -8px across the same span
-
-     The result is that a chapter's eyebrow and its own title visibly
-     separate as you read past them, and the sheet they are printed on
-     settles underneath both. That is the collage, and it costs two
-     scrubs and one property tween.
-
-     WHAT IS DELIBERATELY NOT HERE, and the reasons are the interesting
-     part of this note:
-
-     - the body copy does not move. `.sec-copy` is 15-16px running text
-       and a reader tracks a line with their eye; 26px of travel under
-       an eye that is mid-line is not atmosphere, it is a bug. The
-       layers that slip are the ones nobody is reading as a sentence.
-     - the photographs do not move. The photo deck owns every transform
-       on itself (js/photo-deck.js writes them per frame for the deal and
-       the drag), and the film and series rails own theirs for the same
-       reason. A scrub on either would be a second writer on elements
-       that already have one, which is the single rule this file's
-       motion section exists to protect. The pictures stay still; the
-       print moves around them.
-     - the panels do not get a ScrollTrigger at all. Five of the six are
-       display:none when it would run, so a trigger would measure a
-       collapsed box; their page turn IS the tab wipe in select().
-
-     Transform and one registered custom property only. No opacity, no
-     filter, no will-change left behind: these are two scrubs and they
-     stop the moment the chapter leaves.
-     ============================================================ */
-
-  const slipLayers = () => {
-    const titles = gsap.utils.toArray(".sec-title");
-    titles.forEach((title) => {
-      const chapter = title.closest("section") || title.closest("[data-panel]");
-      if (!chapter) return;
-      gsap.fromTo(
-        title,
-        { y: 22 },
-        {
-          y: -22,
-          ease: "none",
-          scrollTrigger: {
-            trigger: chapter,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        }
-      );
-      const eyebrow = chapter.querySelector(".sec-eyebrow");
-      if (!eyebrow) return;
-      gsap.fromTo(
-        eyebrow,
-        { y: 9 },
-        {
-          y: -9,
-          ease: "none",
-          scrollTrigger: {
-            trigger: chapter,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        }
-      );
-    });
-  };
-
-  /* THE PAGE TURN. `--poster-turn` is declared with @property in
-     css/poster.css, which is what makes it interpolable - an unregistered
-     custom property is a string and GSAP would tween it as one, snapping
-     the ground instead of turning it.
-
-     It runs once, forward only, and clears itself. A reverse would be
-     wrong twice over: the turn is a sheet being SET DOWN, and a sheet
-     that picks itself back up when you scroll away is a page that
-     cannot be trusted. toggleActions "play none none none" is the same
-     choice bindReveal() makes for the rail, for the same reason. */
-  const pageTurn = () => {
-    gsap.utils.toArray("#photo, #about").forEach((chapter) => {
-      gsap.fromTo(
-        chapter,
-        { "--poster-turn": 1 },
-        {
-          "--poster-turn": 0,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: chapter,
-            start: "top 92%",
-            toggleActions: "play none none none",
-            once: true,
-            invalidateOnRefresh: true,
-          },
-        }
-      );
-    });
-  };
-
-  slipLayers();
-  pageTurn();
-
-  /* ---------- refresh after everything settles ---------- */
-  window.addEventListener("load", () => scheduleRefresh(100));
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(() => scheduleRefresh(100));
-  }
-}
 
 /* ---------- nav active section (always active) ----------
    Named for what it does. It used to drive a scroll-progress bar too, but
