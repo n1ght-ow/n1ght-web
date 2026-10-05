@@ -84,6 +84,16 @@
   /* pre-boot insurance only: sizeTrack() overwrites this with the real
      height (centre card + both label rows + the pad) before first paint */
   height: 420px;
+  /* THE DIAL IS A STAGE, NOT A LAYER ABOVE THE PAGE. paint() writes an inline
+     z-index per cover - 400 at the centre down to 352 at the far slot of
+     reach 4 (makeLayout, js/games-stage.js) - and 400 beats the fixed bar's
+     70 (css/style.css, .nav). Scrolled up under the masthead, the centred
+     cover therefore climbed over it and cut the reading line in two. Isolated,
+     the eighteen covers stack among themselves and only among themselves, and
+     the bar stays in front - the same containment #hero.atelier-hero and
+     .atelier-photo__room already carry. The strip panels never needed it: no
+     z-index is written there at all. */
+  isolation: isolate;
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
