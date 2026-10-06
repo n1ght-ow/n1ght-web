@@ -7,7 +7,8 @@ gsap.registerPlugin(ScrollTrigger);
 /* SplitText is no longer loaded: its only client was the ABOUT prose, which is
    retired. css/style.css's text-box-trim already handles the display titles. */
 
-const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+let REDUCED = motionPreference.matches;
 /* (pointer: coarse) used to be probed here as TOUCH, for the game-card hover
    stand-in that has since been removed. js/smooth-cursor.js answers the same
    question on its own with NATIVE_CURSOR, so there is nothing left for it. */
@@ -16,22 +17,34 @@ const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
    Native scroll under reduced motion. Programmatic jumps (anchors) route
    through lenis.scrollTo so the internal value stays in sync. */
 let lenis = null;
-if (!REDUCED && typeof Lenis !== "undefined") {
+const tickScroll = (time) => { if (lenis) lenis.raf(time * 1000); };
+function syncSmoothScroll() {
+  gsap.ticker.remove(tickScroll);
+  if (lenis) lenis.destroy();
+  lenis = null;
+  if (REDUCED || typeof Lenis === "undefined") return;
   lenis = new Lenis({ autoRaf: false });
   lenis.on("scroll", ScrollTrigger.update);
-  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.add(tickScroll);
   gsap.ticker.lagSmoothing(0);
-
-  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+  if (isLbOpen) lenis.stop();
+}
+// isLbOpen is initialized below before the initial scrolling setup.
+motionPreference.addEventListener("change", () => {
+  REDUCED = motionPreference.matches;
+  syncSmoothScroll();
+  scheduleRefresh();
+});
+document.querySelectorAll('a[href^="#"]').forEach((a) => {
     a.addEventListener("click", (e) => {
+      if (!lenis || e.defaultPrevented) return;
       const target = a.getAttribute("href");
       if (target.length > 1 && document.querySelector(target)) {
         e.preventDefault();
         lenis.scrollTo(target, { duration: 1.4 });
       }
     });
-  });
-}
+});
 
 /* ---------- helpers ---------- */
 
@@ -103,6 +116,7 @@ const photoFrames = Array.from(document.querySelectorAll(".photo-frame"));
 
 let lbIndex = 0;
 let isLbOpen = false;
+syncSmoothScroll();
 let lbTrigger = null;
 let lbThumbs = [];
 let detailType = "photo";
@@ -391,7 +405,7 @@ function closeDetail() {
   // empty src would re-request the page URL itself; drop the attribute
   lbImg.removeAttribute("src");
   // hand focus back to the card that opened the detail layer
-  if (lbTrigger && document.contains(lbTrigger)) lbTrigger.focus();
+  if (lbTrigger && document.contains(lbTrigger)) lbTrigger.focus({ preventScroll: true });
   lbTrigger = null;
 }
 

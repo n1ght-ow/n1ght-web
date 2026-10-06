@@ -88,5 +88,5 @@
     dial.to(reader.querySelector('.poem-reader-needle'), { rotation: 140, ease: 'none' }, 0)
       .to(reader.querySelector('.poem-reader-arc'), { strokeDashoffset: 0, ease: 'none' }, 0);
   });
-  ScrollTrigger.refresh();
+  scheduleRefresh();
 })();

@@ -8,7 +8,7 @@
   var active = 0;
   var manual = false;
   var animations = [];
-  var refreshTimer;
+  var refreshLayout = function () { window.scheduleRefresh(250); };
 
   host.classList.add('atelier-photo');
   host.setAttribute('aria-label', '摄影阅览室，21 张照片');
@@ -88,12 +88,6 @@
   host.appendChild(catalog);
   host.appendChild(live);
 
-  function scheduleRefresh() {
-    clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(function () {
-      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-    }, 250);
-  }
   function select(index, animate) {
     active = (index + frames.length) % frames.length;
     var visible = [active, (active + 7) % frames.length, (active + 14) % frames.length];
@@ -109,7 +103,6 @@
       var image = frame.querySelector('img');
       var full = image.getAttribute('data-full');
       if (full && image.getAttribute('src') !== full) {
-        image.addEventListener('load', scheduleRefresh, { once: true });
         image.src = full;
       }
       if (animate && !reduced.matches && window.gsap) {
@@ -119,7 +112,7 @@
     thumbs.forEach(function (button, i) { button.setAttribute('aria-pressed', String(i === active)); });
     host.querySelector('.atelier-photo__count').textContent = '/ ' + String(active + 1).padStart(2, '0') + ' of ' + frames.length;
     if (animate) live.textContent = '照片 ' + (active + 1) + '，' + frames[active].querySelector('.photo-frame-text').textContent;
-    scheduleRefresh();
+    refreshLayout();
   }
   catalog.querySelectorAll('[data-step]').forEach(function (button) {
     button.addEventListener('click', function () {

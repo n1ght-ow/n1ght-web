@@ -92,8 +92,9 @@
   var swiped = false;
   var pooled = 0;
   var glide = null;
-  var followFocus = false;  /* an arrow key asked focus to walk with the dial */
-  var warmed = false;
+  var followFocus = null;  /* destination requested by a keyboard gesture */
+  var warmTimer = 0;
+  var lastWidth = 0;
 
   /* ---------- geometry ---------- */
 
@@ -209,6 +210,7 @@
       var el = items[i];
       var box = at(wrapDelta(i - p));
       if (box.alpha <= 0.001) {
+        el.classList.remove('is-centre');
         /* out of the band: one write, once. These are the ones the browser is
            allowed to keep unloaded, and the ones the tab order skips. */
         if (el.getAttribute("data-culled") !== "1") {
@@ -221,19 +223,20 @@
         el.style.visibility = "visible";
         el.removeAttribute("data-culled");
       }
-      var w = box.w.toFixed(1) + "px";
-      var h = box.h.toFixed(1) + "px";
+      // Keep the layout box fixed while moving; perspective size is a scale.
+      var w = liveW().toFixed(1) + "px";
+      var h = liveH().toFixed(1) + "px";
+      var scale = box.w / liveW();
       var alpha = box.alpha.toFixed(3);
       var depth = String(box.depth);
-      var haze = box.haze > 0.05 ? "blur(" + box.haze.toFixed(2) + "px)" : "";
+      var haze = box.haze > 0.05 ? "blur(" + (box.haze / scale).toFixed(2) + "px)" : "";
       var was = wrote[i] || (wrote[i] = {});
       if (was.w !== w) { el.style.width = w; was.w = w; }
       if (was.h !== h) { el.style.height = h; was.h = h; }
       if (was.a !== alpha) { el.style.opacity = alpha; was.a = alpha; }
       if (was.z !== depth) { el.style.zIndex = depth; was.z = depth; }
       if (was.f !== haze) { el.style.filter = haze; was.f = haze; }
-      /* the one that always moves, and the only compositable one of the six */
-      el.style.transform = "translate3d(" + box.x.toFixed(2) + "px, 0, 0) translate(-50%, -50%)";
+      el.style.transform = "translate3d(" + box.x.toFixed(2) + "px, 0, 0) translate(-50%, -50%) scale(" + scale.toFixed(5) + ")";
       var isCentre = i === ((centre % SPAN) + SPAN) % SPAN;
       if (el.classList.contains("is-centre") !== isCentre) el.classList.toggle("is-centre", isCentre);
     }
@@ -249,6 +252,7 @@
     if (want !== shown) {
       shown = want;
       paintNow(want);
+      if (panel.classList.contains('is-active')) warm();
     }
   }
 
@@ -264,8 +268,8 @@
     sizeTrack();
     /* Keyboard focus walks with the dial, but only when the dial was asked to
        move by a key: tabbing in must not fight the browser. */
-    if (followFocus) {
-      followFocus = false;
+    if (followFocus === i) {
+      followFocus = null;
       focusAt(i);
     }
   }
@@ -321,7 +325,7 @@
   }
 
   function goTo(target, keyed) {
-    if (keyed) followFocus = true;
+    followFocus = keyed ? ((target % SPAN) + SPAN) % SPAN : null;
     var dist = Math.abs(target - mover.pos);
     if (reduce.matches || dist < 0.002) {
       stopGlide();
@@ -367,9 +371,11 @@
      slot of travel costs DRAG_SPAN px, so the dial is 1:1 with the hand. */
   function onDown(e) {
     if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (drag || !e.isPrimary) return;
+    followFocus = null;
     swiped = false;              /* never left set from the previous gesture */
     stopGlide();
-    drag = { x: e.clientX, pos: mover.pos, moved: false };
+    drag = { id: e.pointerId, x: e.clientX, pos: mover.pos, moved: false };
     trail = [{ x: e.clientX, t: e.timeStamp }];
     track.classList.add("is-dragging");
     /* The rest of the gesture is heard on the window, NOT by capturing the
@@ -396,7 +402,7 @@
   }
 
   function onMove(e) {
-    if (!drag) return;
+    if (!drag || e.pointerId !== drag.id) return;
     var dx = e.clientX - drag.x;
     if (!drag.moved && Math.abs(dx) > 6) {
       drag.moved = true;
@@ -411,13 +417,14 @@
   }
 
   function onUp(e) {
-    if (!drag) return;
+    if (!drag || e.pointerId !== drag.id) return;
     var moved = drag.moved;
     /* Read the velocity BEFORE endDrag(): it empties the trail, and an empty
        trail reads as zero, which silently turned every flick into a plain
        drop-on-the-nearest-slot. Measured before the fix: a 1.5-detent gesture
        finished on +1.5 rounded, exactly as if it had been dragged slowly. */
-    var v = moved ? Math.max(-FLICK_MAX, Math.min(FLICK_MAX, velocity())) : 0;
+    var v = moved && e.type !== "pointercancel" && !reduce.matches
+      ? Math.max(-FLICK_MAX, Math.min(FLICK_MAX, velocity(e.timeStamp, e.clientX))) : 0;
     endDrag();
     if (!moved) return;   /* a tap is decided by the click, below */
     /* The flick decides how far it travels. Detent integrates a free throw and
@@ -428,14 +435,15 @@
     goTo(Math.round(target));
   }
 
-  function velocity() {
+  function velocity(now, x) {
     if (trail.length < 2) return 0;
     var head = trail[0];
     var tail = trail[trail.length - 1];
-    var gap = tail.t - head.t;
+    if (now - tail.t > 110) return 0;
+    var gap = now - head.t;
     if (gap <= 0) return 0;
     var span = Math.max(40, DRAG_SPAN * fit);
-    return -(tail.x - head.x) / span * (1000 / gap);
+    return -(x - head.x) / span * (1000 / gap);
   }
 
   function onDragStart(e) { e.preventDefault(); }
@@ -518,7 +526,15 @@
      night:archive-tab, and a ResizeObserver catches the 0 -> real transition
      even if that event is ever renamed. */
   function activate() {
-    if (!panel.classList.contains("is-active")) return;
+    if (!panel.classList.contains("is-active")) {
+      followFocus = null;
+      stopGlide();
+      mover.pos = Math.round(mover.pos);
+      endDrag();
+      window.clearTimeout(warmTimer);
+      warmTimer = 0;
+      return;
+    }
     gauge();
     paintNow(((Math.round(mover.pos) % SPAN) + SPAN) % SPAN);
     paint();
@@ -526,40 +542,55 @@
     warm();
   }
 
-  document.addEventListener("night:archive-tab", activate);
+  var tabbar = document.getElementById("archive-tabbar");
+  if (tabbar) tabbar.addEventListener("night:archive-tab", activate);
 
-  /* Covers are lazy. The browser loads the band on its own; the seven cards
-     hidden behind it are not in the viewport, and a dial must not deal a blank
-     card. Deferred past the tab wipe (0.8s) so six megabytes of covers are not
-     competing with the entrance. */
+  /* Warm the next two neighbours on either side after the entrance. Distant
+     covers stay lazy rather than competing with the active artwork. */
   function warm() {
-    if (warmed) return;
-    warmed = true;
-    window.setTimeout(function () {
-      for (var i = 0; i < SPAN; i++) {
-        var img = items[i].querySelector("img");
+    window.clearTimeout(warmTimer);
+    warmTimer = window.setTimeout(function () {
+      warmTimer = 0;
+      if (!panel.classList.contains("is-active")) return;
+      var centre = Math.round(mover.pos);
+      for (var i = -2; i <= 2; i++) {
+        var img = items[((centre + i) % SPAN + SPAN) % SPAN].querySelector("img");
         if (img) img.loading = "eager";
       }
-    }, 900);
+    }, 650);
   }
 
   if (typeof ResizeObserver !== "undefined") {
     new ResizeObserver(function () {
-      if (!track.clientWidth) return;
+      var width = track.clientWidth;
+      if (!width || width === lastWidth) return;
+      lastWidth = width;
       gauge();
       sizeTrack();
       paint();
     }).observe(track);
   }
 
+  var resizeFrame = 0;
   window.addEventListener("resize", function () {
-    cssCache = {};
-    gauge();
-    sizeTrack();
-    paint();
+    if (resizeFrame) return;
+    resizeFrame = window.requestAnimationFrame(function () {
+      resizeFrame = 0;
+      cssCache = {};
+      if (!track.clientWidth) return;
+      gauge();
+      sizeTrack();
+      paint();
+    });
   });
 
-  if (reduce.addEventListener) reduce.addEventListener("change", function () { stopGlide(); paint(); });
+  if (reduce.addEventListener) reduce.addEventListener("change", function () {
+    stopGlide();
+    endDrag();
+    mover.pos = Math.round(mover.pos);
+    paint();
+  });
+  window.addEventListener('blur', function () { endDrag(); stopGlide(); });
 
   /* ---------- boot ----------
      .is-live first, so the band is never measured against the fallback grid. */

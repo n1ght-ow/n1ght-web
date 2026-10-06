@@ -47,12 +47,11 @@
   }, 0);
   overhang = Math.round(overhang);
 
-  var reduce =
-    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var motion = window.matchMedia("(prefers-reduced-motion: reduce)");
   /* the original's spring is stiffness 210 / damping 26, which settles at about
      0.35s with roughly half a percent of overshoot; power3.out is that curve */
-  var SPRING = reduce ? { duration: 0 } : { duration: 0.5, ease: "power3.out" };
-  var SNAP = reduce ? { duration: 0 } : { duration: 0.16, ease: "expo.out" };
+  var SPRING = { duration: 0.5, ease: "power3.out" };
+  var SNAP = { duration: 0.16, ease: "expo.out" };
 
   function el(tag, cls) {
     var n = document.createElement(tag);
@@ -281,6 +280,7 @@
     }
 
     function render(animate) {
+      animate = animate && !motion.matches;
       var gap = -1;
       if (picked) {
         for (var i = 0; i < BOOKS.length; i++) if (BOOKS[i].id === picked) gap = i;
@@ -339,14 +339,19 @@
         var was = n.to;
         n.to = to;
         if (!animate) {
+          gsap.killTweensOf([n.btn, n.box]);
           gsap.set(n.btn, to);
           gsap.set(n.box, { rotateY: isPicked ? -90 : 0 });
           return;
         }
+
         if (was && was.x === to.x && was.y === to.y && was.z === to.z &&
             was.rotateX === to.rotateX && was.rotateZ === to.rotateZ) {
           return;
         }
+
+        // Cancel delayed closing gestures before another state owns the book.
+        gsap.killTweensOf([n.btn, n.box]);
 
         gsap.to(n.btn, {
           x: to.x,
@@ -402,6 +407,8 @@
       hovered = null;
       render(true);
     }
+
+    motion.addEventListener("change", function () { render(false); });
 
     nodes.forEach(function (n) {
       n.btn.addEventListener("click", function () {

@@ -46,9 +46,7 @@
         return options.sortKey(a) - options.sortKey(b);
       });
     }
-    const REDUCED = window.matchMedia
-      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      : false;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const prefix = options.prefix;
 
     /* How far a finger must travel before a touch on the strip counts as a
@@ -86,7 +84,7 @@
     const SEEK_TAU = 0.16;
 
     const canTween = () =>
-      !REDUCED &&
+      !motion.matches &&
       typeof window.gsap !== "undefined" &&
       typeof window.ScrollTrigger !== "undefined";
 
@@ -104,15 +102,8 @@
     /* Debounced global refresh: lazy poster loads settle in bursts, so many
        load events inside 250ms collapse into one refresh pass. setupMode()
        still runs per image; only the global recalc is batched. */
-    let refreshTimer = 0;
     function refreshScrollTrigger() {
-      if (!window.ScrollTrigger || !window.ScrollTrigger.refresh) return;
-      window.clearTimeout(refreshTimer);
-      refreshTimer = window.setTimeout(() => {
-        if (window.ScrollTrigger && window.ScrollTrigger.refresh) {
-          window.ScrollTrigger.refresh();
-        }
-      }, 250);
+      if (typeof window.scheduleRefresh === "function") window.scheduleRefresh(250);
     }
 
     /* ---------- reel position: one continuous, wrapped lap ----------
@@ -248,8 +239,9 @@
       setActive(state, idx);
       renderDetail(stage, item, animate !== false);
 
-      if (animate === false) {
+      if (animate === false || motion.matches) {
         state.seekTarget = null;
+        state.vel = 0;
         place(state, ringTarget(state, idx));
         return;
       }
@@ -288,12 +280,12 @@
        the loop parks, so a restart seeds a zero dt instead of integrating the
        idle gap as one 50ms step. */
     function busy(state) {
-      return !REDUCED && !!state.setW &&
-        (state.seekTarget != null || state.dragActive || Math.abs(state.vel) >= 1);
+      return !motion.matches && state.active && !state.destroyed && !document.hidden &&
+        state.setW > 1 && (state.seekTarget != null || Math.abs(state.vel) >= 1);
     }
 
     function kick(state) {
-      if (state.raf) return;
+      if (state.raf || !busy(state)) return;
       state.raf = window.requestAnimationFrame((t) => frame(state, t));
     }
 
@@ -302,7 +294,7 @@
       if (!state.last) state.last = now;
       const dt = Math.min(0.05, Math.max(0, (now - state.last) / 1000));
       state.last = now;
-      if (REDUCED || !state.setW) { state.last = 0; return; }
+      if (!busy(state)) { state.last = 0; return; }
 
       if (state.seekTarget != null) {
         /* a seek outranks everything else: the reader asked for THIS poster */
@@ -429,7 +421,7 @@
     function render(stage) {
       stage.innerHTML = "";
       stage.classList.add(prefix + "-stage");
-      stage.classList.toggle(prefix + "-stage-reduced", REDUCED);
+      stage.classList.toggle(prefix + "-stage-reduced", motion.matches);
 
       const head = el("div", prefix + "-stage-head");
       const headLeft = el("div", prefix + "-stage-head-left");
@@ -684,6 +676,7 @@
 
       viewport.addEventListener("pointerdown", (event) => {
         if (event.pointerType === "mouse" && event.button !== 0) return;
+        if (drag || !event.isPrimary) return;
         /* Clear the swipe guard HERE, not only in the click handler.
            It used to be cleared by the click that follows a drag - but a drag
            that ends over a DIFFERENT card produces no click at all (down and
@@ -696,6 +689,7 @@
         /* a finger owns the rail while it is down: drop any seek, or the loop
            and the finger would be two writers on the same position */
         state.seekTarget = null;
+        state.vel = 0;
         drag = {
           id: event.pointerId,
           pointerType: event.pointerType,
@@ -747,6 +741,10 @@
 
       viewport.addEventListener("pointerup", endSwipe);
       viewport.addEventListener("pointercancel", endSwipe);
+      state.cancelDrag = () => {
+        state.vel = 0;
+        if (drag) endSwipe({ pointerId: drag.id, type: "pointercancel" });
+      };
 
       viewport.addEventListener("click", (event) => {
         // a drag that ends back on the same poster must not also select it
@@ -845,11 +843,12 @@
        that re-clamps, so invalidating here keeps maxX and the card offsets in
        step with the layout without an extra observer. */
     function setupMode(stage, state) {
+      // display:none has no geometry; preserve the selection until it is shown.
+      if (state.destroyed || !state.viewport.clientWidth) return;
       /* The very first measurement happens while this panel may still be
          display:none inside an inactive tab - and a hidden panel measures every
          card at offset 0, so there is no lap to centre on. Remember that, and
          put the chosen poster back on the apex the first time there IS one. */
-      const wasBlank = !state.setW || state.setW <= 1;
       /* Read the chosen index BEFORE place() re-derives it: with a blank
          measurement every card sits at 0, so the first real place() would
          declare whatever card happens to fall under the apex the "chosen" one
@@ -867,10 +866,11 @@
       state.viewportW = state.viewport.clientWidth;
       /* place() -> maxX() -> measureMax() re-derives setW and the curve radius
          with it, so there is no second copy of that maths here. */
-      place(state, state.pos || 0);
-      if (wasBlank && state.realCards && state.realCards.length) {
-        selectIndex(stage, state, keep, false);
-      }
+      measureMax(state);
+      cardOffsets(state);
+      if (state.dragActive || state.seekTarget != null || Math.abs(state.vel) >= 1) {
+        place(state, state.pos || 0);
+      } else selectIndex(stage, state, keep, false);
       refreshScrollTrigger();
     }
 
@@ -883,7 +883,7 @@
        reveal language this component already uses for its detail text, so the
        rail inherits it rather than inventing a second one. */
     function bindReveal(stage, state) {
-      if (!canTween() || REDUCED || !state.viewport) return;
+      if (!canTween() || !state.viewport) return;
       window.gsap.fromTo(
         state.viewport,
         { clipPath: "inset(0 100% 0 0)" },
@@ -929,7 +929,9 @@
         apexIndex: 0,
         seekTarget: null,
         viewportW: 0,
-        dragActive: false
+        dragActive: false,
+        active: !container.closest('.tab-panel') || container.closest('.tab-panel').classList.contains('is-active'),
+        destroyed: false
       };
       states.set(container, state);
 
@@ -950,20 +952,44 @@
         requestAnimationFrame(boot);
       }
 
-      /* Re-arm on every path that can reveal this panel. main.js's showMeta
-         dispatches night:archive-tab for clicks, arrow keys, Home/End AND the
-         draggable tab pill; a plain click listener only ever saw the first of
-         those. The 420ms delay is the tab wipe's length - measuring earlier
-         measures a panel that is still fully hidden. */
+      /* The panel is laid out before this event; its entrance changes opacity
+         and transform, so layout measurements need no delayed tab callback. */
       const tabbar = document.getElementById("archive-tabbar");
       const onTabEvent = (event) => {
-        if (!event.detail || event.detail.token !== options.tabToken) return;
-        window.setTimeout(() => {
-          state.last = 0;
-          setupMode(container, state);
-        }, 420);
+        if (!event.detail) return;
+        state.active = event.detail.token === options.tabToken;
+        state.last = 0;
+        if (!state.active) {
+          state.cancelDrag();
+          state.seekTarget = null;
+          if (state.raf) window.cancelAnimationFrame(state.raf);
+          state.raf = 0;
+          return;
+        }
+        setupMode(container, state);
       };
       if (tabbar) tabbar.addEventListener("night:archive-tab", onTabEvent);
+
+      const onMotion = () => {
+        container.classList.toggle(prefix + "-stage-reduced", motion.matches);
+        if (!motion.matches) return;
+        state.cancelDrag();
+        const keep = state.apexIndex;
+        window.gsap.killTweensOf(container.querySelectorAll('*'));
+        window.gsap.set(container.querySelectorAll('*'), { clearProps: 'clipPath,opacity' });
+        state.seekTarget = null;
+        if (state.active) selectIndex(container, state, keep, false);
+      };
+      motion.addEventListener('change', onMotion);
+      const onVisibility = () => {
+        state.last = 0;
+        if (document.hidden) {
+          state.cancelDrag();
+          if (state.raf) window.cancelAnimationFrame(state.raf);
+          state.raf = 0;
+        } else kick(state);
+      };
+      document.addEventListener('visibilitychange', onVisibility);
 
       let resizeTimer = null;
       const onResize = () => {
@@ -979,6 +1005,10 @@
       window.addEventListener("resize", onResize);
 
       state.cleanup = () => {
+        state.destroyed = true;
+        state.cancelDrag();
+        motion.removeEventListener('change', onMotion);
+        document.removeEventListener('visibilitychange', onVisibility);
         if (tabbar) tabbar.removeEventListener("night:archive-tab", onTabEvent);
         if (state.raf) window.cancelAnimationFrame(state.raf);
         state.raf = 0;

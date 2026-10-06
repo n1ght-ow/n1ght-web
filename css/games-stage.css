@@ -111,14 +111,10 @@
   backface-visibility: hidden;
 }
 
-/* PROMOTION IS FOR THE GESTURE, NOT FOR THE SESSION. paint() writes width,
-   height, opacity, filter and transform per frame while the dial is being
-   dragged or is gliding to a detent, and every one of those is a paint-level
-   property - so the eighteen covers are worth a composited layer exactly
-   while that is happening. Parked, they are worth nothing: it is eighteen
-   promoted, filtered layers, at their full size, for the whole visit. */
-.hof.is-live.is-dragging .hof-item,
-.hof.is-live.is-gliding .hof-item {
+/* Only visible covers need temporary layers. Dimensions stay fixed during
+   motion; translate and scale carry the dial without relaying out each card. */
+.hof.is-live.is-dragging .hof-item:not([data-culled]),
+.hof.is-live.is-gliding .hof-item:not([data-culled]) {
   will-change: transform, opacity, filter;
 }
 

@@ -48,15 +48,11 @@
       scrollTrigger: { trigger: '.footer', start: 'top 94%', once: true },
     });
   });
-  let refreshTimer;
-  const refresh = () => {
-    window.clearTimeout(refreshTimer);
-    refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 250);
-  };
+  const refresh = () => scheduleRefresh(250);
   window.addEventListener('load', refresh, { once: true });
   if (document.fonts) document.fonts.ready.then(refresh);
   document.addEventListener('load', (event) => {
-    if (event.target instanceof HTMLImageElement) refresh();
+    if (event.target instanceof HTMLImageElement &&
+        !event.target.closest('#lightbox, .tab-panel:not(.is-active)')) refresh();
   }, true);
-  window.addEventListener('pagehide', () => mm.revert(), { once: true });
 })();
