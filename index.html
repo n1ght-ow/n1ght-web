@@ -31,13 +31,14 @@
   <link rel="stylesheet" href="css/series-stage.css?v=19">
   <link rel="stylesheet" href="css/book-shelf.css?v=11">
   <link rel="stylesheet" href="css/photo-deck.css?v=3">
-  <link rel="stylesheet" href="css/games-stage.css?v=7">
+  <link rel="stylesheet" href="css/games-stage.css?v=8">
   <!-- Atelier is the new gallery layer, after the existing component geometry. -->
   <link rel="stylesheet" href="css/atelier.css?v=3">
   <link rel="stylesheet" href="css/atelier-hero.css?v=2">
   <link rel="stylesheet" href="css/atelier-photo.css?v=2">
   <link rel="stylesheet" href="css/atelier-archive.css?v=7">
   <link rel="stylesheet" href="css/atelier-poem.css?v=1">
+  <link rel="stylesheet" href="css/curator-desk.css?v=5">
 </head>
 <body>
 
@@ -60,6 +61,7 @@
       <nav class="nav-links" aria-label="Primary">
         <a href="#photo">Photography</a>
         <a href="#archive">Archive</a>
+        <a href="#curate">Curate</a>
         <a href="#about">Poem</a>
       </nav>
     </div>
@@ -74,13 +76,13 @@
       <div class="atelier-copy">
         <div class="hero-mask"><h1 class="hero-wordmark"><span>N1GHT</span> <span>CHXN9</span></h1></div>
         <p class="atelier-subtitle">A life, quietly collected.</p>
-        <p class="atelier-intro" lang="zh">把走过的地方、反复聆听的声音，<br>和不愿忘记的片刻，慢慢收藏。</p>
+        <p class="atelier-intro" lang="en">Places I have walked, sounds I return to,<br>and moments I am not ready to forget.</p>
       </div>
       <figure class="atelier-media">
         <div class="atelier-frame">
           <div class="atelier-image-window">
             <picture class="hero-plate">
-              <img src="hero/lujiazui.jpg" srcset="hero/lujiazui-1200.jpg 1200w, hero/lujiazui.jpg 1440w" sizes="(max-width: 720px) 80vw, 40vw" alt="仰望上海陆家嘴的夜色，高楼与云层在画面中相遇" width="1440" height="999" decoding="async" fetchpriority="high">
+              <img src="hero/lujiazui.jpg" srcset="hero/lujiazui-1200.jpg 1200w, hero/lujiazui.jpg 1440w" sizes="(max-width: 720px) 80vw, 40vw" alt="Looking up at Shanghai at night, where towers meet the clouds" width="1440" height="999" decoding="async" fetchpriority="high">
             </picture>
           </div>
         </div>
@@ -516,70 +518,70 @@
               <div class="sport-row">
                 <div class="sport-card">
                   <button class="sport-item" type="button" aria-pressed="false" data-sport="basketball">
-                    <img class="sport-photo" src="sport/spurs.webp" alt="San Antonio Spurs 夺冠合影，奖杯被举在人群中央" style="object-position: 50% 34%" loading="lazy" decoding="async" draggable="false">
+                    <img class="sport-photo" src="sport/spurs.webp" alt="San Antonio Spurs celebrating with the championship trophy" style="object-position: 50% 34%" loading="lazy" decoding="async" draggable="false">
                     <img class="sport-crest" src="logos/spurs.svg" alt="" loading="lazy" decoding="async">
                     <span class="sport-wash" aria-hidden="true"></span>
                   </button>
                   <span class="sport-cap">
                     <span class="sport-body">
                       <span class="sport-name">San Antonio Spurs · NBA</span>
-                      <span class="sport-hon" lang="zh">五届 NBA 总冠军，<i>1999–2014</i></span>
+                      <span class="sport-hon" lang="en">Five NBA championships, <i>1999–2014</i></span>
                     </span>
                     <a class="sport-link" href="https://www.nba.com/spurs" target="_blank" rel="noopener">nba.com/spurs</a>
                   </span>
                 </div>
                 <div class="sport-card">
                   <button class="sport-item" type="button" aria-pressed="false" data-sport="football">
-                    <img class="sport-photo" src="sport/mancity.webp" alt="Manchester City 看台，满场举起的手臂" style="object-position: 50% 55%" loading="lazy" decoding="async" draggable="false">
+                    <img class="sport-photo" src="sport/mancity.webp" alt="Manchester City supporters raising their arms in the stands" style="object-position: 50% 55%" loading="lazy" decoding="async" draggable="false">
                     <img class="sport-crest" src="logos/mancity.svg" alt="" loading="lazy" decoding="async">
                     <span class="sport-wash" aria-hidden="true"></span>
                   </button>
                   <span class="sport-cap">
                     <span class="sport-body">
                       <span class="sport-name">Manchester City · Premier League</span>
-                      <span class="sport-hon" lang="zh">十座英格兰顶级联赛冠军，<i>2023 完成三冠</i></span>
+                      <span class="sport-hon" lang="en">Ten English league titles, <i>the treble in 2023</i></span>
                     </span>
                     <a class="sport-link" href="https://www.mancity.com" target="_blank" rel="noopener">mancity.com</a>
                   </span>
                 </div>
                 <div class="sport-card">
                   <button class="sport-item" type="button" aria-pressed="false" data-sport="formula-1">
-                    <img class="sport-photo" src="sport/mclaren.webp" alt="McLaren 车队在车库里的 2025 车队总冠军合影" style="object-position: 50% 50%" loading="lazy" decoding="async" draggable="false">
+                    <img class="sport-photo" src="sport/mclaren.webp" alt="McLaren celebrating the 2025 constructors championship in the garage" style="object-position: 50% 50%" loading="lazy" decoding="async" draggable="false">
                     <img class="sport-crest" src="logos/mclaren.svg" alt="" loading="lazy" decoding="async">
                     <span class="sport-wash" aria-hidden="true"></span>
                   </button>
                   <span class="sport-cap">
                     <span class="sport-body">
                       <span class="sport-name">McLaren Racing · Formula 1</span>
-                      <span class="sport-hon" lang="zh">十座车队总冠军，<i>2024–2025 连庄</i></span>
+                      <span class="sport-hon" lang="en">Ten constructors titles, <i>back-to-back in 2024–2025</i></span>
                     </span>
                     <a class="sport-link" href="https://www.mclaren.com/racing/" target="_blank" rel="noopener">mclaren.com/racing</a>
                   </span>
                 </div>
                 <div class="sport-card">
                   <button class="sport-item" type="button" aria-pressed="false" data-sport="american-football">
-                    <img class="sport-photo" src="sport/ravens.webp" alt="Baltimore Ravens 球员在端区庆祝" style="object-position: 62% 45%" loading="lazy" decoding="async" draggable="false">
+                    <img class="sport-photo" src="sport/ravens.webp" alt="Baltimore Ravens players celebrating in the end zone" style="object-position: 62% 45%" loading="lazy" decoding="async" draggable="false">
                     <img class="sport-crest" src="logos/ravens.svg" alt="" loading="lazy" decoding="async">
                     <span class="sport-wash" aria-hidden="true"></span>
                   </button>
                   <span class="sport-cap">
                     <span class="sport-body">
                       <span class="sport-name">Baltimore Ravens · NFL</span>
-                      <span class="sport-hon" lang="zh">两届超级碗冠军，<i>2001 与 2013</i></span>
+                      <span class="sport-hon" lang="en">Two Super Bowl titles, <i>2001 and 2013</i></span>
                     </span>
                     <a class="sport-link" href="https://www.baltimoreravens.com" target="_blank" rel="noopener">baltimoreravens.com</a>
                   </span>
                 </div>
                 <div class="sport-card">
                   <button class="sport-item" type="button" aria-pressed="false" data-sport="esports">
-                    <img class="sport-photo" src="sport/spirit.webp" alt="Team Spirit 的 donk 在比赛席上托腮看着屏幕" style="object-position: 58% 58%" loading="lazy" decoding="async" draggable="false">
+                    <img class="sport-photo" src="sport/spirit.webp" alt="Team Spirit player donk watching his screen at the tournament desk" style="object-position: 58% 58%" loading="lazy" decoding="async" draggable="false">
                     <img class="sport-crest" src="logos/spirit.svg" alt="" loading="lazy" decoding="async">
                     <span class="sport-wash" aria-hidden="true"></span>
                   </button>
                   <span class="sport-cap">
                     <span class="sport-body">
                       <span class="sport-name">Team Spirit · CS2</span>
-                      <span class="sport-hon" lang="zh">三大超级精英赛事冠军，<i>2024–2025</i></span>
+                      <span class="sport-hon" lang="en">Three premier tournament titles, <i>2024–2025</i></span>
                     </span>
                     <a class="sport-link" href="https://teamspirit.gg" target="_blank" rel="noopener">teamspirit.gg</a>
                   </span>
@@ -591,137 +593,167 @@
 
           <div class="tab-panel" id="panel-games" role="tabpanel" aria-labelledby="tab-games" data-panel="games" tabindex="0">
             <div class="panel-note">
-              <p class="curator curator--games">Eighteen covers, ranked by hours, and the top one is a spreadsheet about football.</p>
+              <p class="curator curator--games">Eighteen games, ordered by their original release dates. Some timelines begin before the millennium.</p>
             </div>
             <!-- One centred cover on a detent dial (js/games-stage.js, a plain-DOM
                  port of Framer's Detent). The eighteen .hof-item elements ARE the
                  deck: each one is a tab stop and a click target for main.js, moved
                  on a ring by transform alone, and the centred one is the only one
-                 in colour. .hof-name / .hof-hours / .hof-quote stay inside them as
+                 in colour. .hof-name / .hof-release stay inside them as
                  the data source for gameItemData() and are painted once, under the
                  centred cover, into .hof-now. Without the stage the .is-live class
                  is absent and css/games-stage.css falls back to a plain roster. -->
             <div class="hof" id="hof-grid">
-              <div class="hof-item" data-game="cs">
+              <div class="hof-item" data-game="cs" data-release-kind="series">
                 <div class="hof-img-wrap"><img src="covers/counter-strike.webp" alt="Counter-Strike cover" loading="lazy"></div>
                 <span class="hof-name">Counter-Strike</span>
-                <span class="mono hof-hours">2,340 HRS</span>
-                <p class="hof-quote">The dust settles the way it always has, on old angles and steady hands.</p>
+                <time class="mono hof-release" datetime="1999">1999</time>
               </div>
-              <div class="hof-item" data-game="rdr2">
-                <div class="hof-img-wrap"><img src="covers/rdr2.webp" alt="Red Dead Redemption 2 cover" loading="lazy"></div>
-                <span class="hof-name">Red Dead Redemption 2</span>
-                <span class="mono hof-hours">412 HRS</span>
-                <p class="hof-quote">The west ends like all good stories: slowly, and on a hill at sunset.</p>
+              <div class="hof-item" data-game="nba2k" data-release-kind="series">
+                <div class="hof-img-wrap"><img src="covers/nba-2k.webp" alt="NBA 2K cover" loading="lazy"></div>
+                <span class="hof-name">NBA 2K</span>
+                <time class="mono hof-release" datetime="1999">1999</time>
               </div>
-              <div class="hof-item" data-game="cyberpunk">
-                <div class="hof-img-wrap"><img src="covers/cyberpunk.webp" alt="Cyberpunk 2077 cover" loading="lazy"></div>
-                <span class="hof-name">Cyberpunk 2077</span>
-                <span class="mono hof-hours">287 HRS</span>
-                <p class="hof-quote">Every alley keeps a story, and the rain only makes the colors louder.</p>
+              <div class="hof-item" data-game="fm" data-release-kind="series">
+                <div class="hof-img-wrap"><img src="covers/football-manager.webp" alt="Football Manager cover" loading="lazy"></div>
+                <span class="hof-name">Football Manager</span>
+                <time class="mono hof-release" datetime="2004">2004</time>
               </div>
               <div class="hof-item" data-game="gta5">
                 <div class="hof-img-wrap"><img src="covers/gta5.webp" alt="Grand Theft Auto V cover" loading="lazy"></div>
                 <span class="hof-name">Grand Theft Auto V</span>
-                <span class="mono hof-hours">536 HRS</span>
-                <p class="hof-quote">A city learned street by street, with satire sharper than its neon.</p>
-              </div>
-              <div class="hof-item" data-game="forza">
-                <div class="hof-img-wrap"><img src="covers/forza-horizon-4.webp" alt="Forza Horizon 4 cover" loading="lazy"></div>
-                <span class="hof-name">Forza Horizon 4</span>
-                <span class="mono hof-hours">198 HRS</span>
-                <p class="hof-quote">Four seasons in one blur. Britain at three hundred per hour, and finally, quiet.</p>
-              </div>
-              <div class="hof-item" data-game="detroit">
-                <div class="hof-img-wrap"><img src="covers/detroit.webp" alt="Detroit Become Human cover" loading="lazy"></div>
-                <span class="hof-name">Detroit: Become Human</span>
-                <span class="mono hof-hours">64 HRS</span>
-                <p class="hof-quote">Three cities, three endings; the coin still flips somewhere inside me.</p>
-              </div>
-              <div class="hof-item" data-game="fm">
-                <div class="hof-img-wrap"><img src="covers/football-manager.webp" alt="Football Manager cover" loading="lazy"></div>
-                <span class="hof-name">Football Manager</span>
-                <span class="mono hof-hours">1,120 HRS</span>
-                <p class="hof-quote">A spreadsheet with a heartbeat. Third tier to Europe, one Sunday at a time.</p>
-              </div>
-              <div class="hof-item" data-game="fc26">
-                <div class="hof-img-wrap"><img src="covers/fc26.webp" alt="EA SPORTS FC 26 cover" loading="lazy"></div>
-                <span class="hof-name">EA SPORTS FC 26</span>
-                <span class="mono hof-hours">386 HRS</span>
-                <p class="hof-quote">Same pitch, new numbers. The grass still bends for a well-weighted through ball.</p>
-              </div>
-              <div class="hof-item" data-game="sekiro">
-                <div class="hof-img-wrap"><img src="covers/sekiro.webp" alt="Sekiro: Shadows Die Twice cover" loading="lazy"></div>
-                <span class="hof-name">Sekiro</span>
-                <span class="mono hof-hours">142 HRS</span>
-                <p class="hof-quote">Hesitation is defeat. Everything else is just footwork.</p>
-              </div>
-              <div class="hof-item" data-game="elden-ring">
-                <div class="hof-img-wrap"><img src="covers/elden-ring.webp" alt="Elden Ring cover" loading="lazy"></div>
-                <span class="hof-name">Elden Ring</span>
-                <span class="mono hof-hours">415 HRS</span>
-                <p class="hof-quote">In the Lands Between, dying is a detour, not a defeat.</p>
-              </div>
-              <div class="hof-item" data-game="bg3">
-                <div class="hof-img-wrap"><img src="covers/baldurs-gate-3.webp" alt="Baldur's Gate 3 cover" loading="lazy"></div>
-                <span class="hof-name">Baldur's Gate 3</span>
-                <span class="mono hof-hours">528 HRS</span>
-                <p class="hof-quote">Every dice roll is a promise the story keeps. Fail beautifully, reload rarely.</p>
-              </div>
-              <div class="hof-item" data-game="wukong">
-                <div class="hof-img-wrap"><img src="covers/black-myth-wukong.webp" alt="Black Myth: Wukong cover" loading="lazy"></div>
-                <span class="hof-name">Black Myth: Wukong</span>
-                <span class="mono hof-hours">187 HRS</span>
-                <p class="hof-quote">The staff remembers every sky it has broken. So do you.</p>
+                <time class="mono hof-release" datetime="2013-09-17">September 17, 2013</time>
               </div>
               <div class="hof-item" data-game="human-fall-flat">
                 <div class="hof-img-wrap"><img src="covers/human-fall-flat.webp" alt="Human Fall Flat cover" loading="lazy"></div>
                 <span class="hof-name">Human Fall Flat</span>
-                <span class="mono hof-hours">73 HRS</span>
-                <p class="hof-quote">No legs, no plan. Gravity just wants a hug.</p>
+                <time class="mono hof-release" datetime="2016-07-22">July 22, 2016</time>
               </div>
-              <div class="hof-item" data-game="bfv">
-                <div class="hof-img-wrap"><img src="covers/battlefield-v.webp" alt="Battlefield V cover" loading="lazy"></div>
-                <span class="hof-name">Battlefield V</span>
-                <span class="mono hof-hours">264 HRS</span>
-                <p class="hof-quote">The war table is chaos; the squad makes it a story.</p>
+              <div class="hof-item" data-game="detroit">
+                <div class="hof-img-wrap"><img src="covers/detroit.webp" alt="Detroit Become Human cover" loading="lazy"></div>
+                <span class="hof-name">Detroit: Become Human</span>
+                <time class="mono hof-release" datetime="2018-05-25">May 25, 2018</time>
               </div>
-              <div class="hof-item" data-game="dying-light-2">
-                <div class="hof-img-wrap"><img src="covers/dying%20light.webp" alt="Dying Light 2 Stay Human cover" loading="lazy"></div>
-                <span class="hof-name">Dying Light 2</span>
-                <span class="mono hof-hours">221 HRS</span>
-                <p class="hof-quote">Parkour over the day, run from the night. The city bites either way.</p>
+              <div class="hof-item" data-game="forza">
+                <div class="hof-img-wrap"><img src="covers/forza-horizon-4.webp" alt="Forza Horizon 4 cover" loading="lazy"></div>
+                <span class="hof-name">Forza Horizon 4</span>
+                <time class="mono hof-release" datetime="2018-10-02">October 2, 2018</time>
+              </div>
+              <div class="hof-item" data-game="rdr2">
+                <div class="hof-img-wrap"><img src="covers/rdr2.webp" alt="Red Dead Redemption 2 cover" loading="lazy"></div>
+                <span class="hof-name">Red Dead Redemption 2</span>
+                <time class="mono hof-release" datetime="2018-10-26">October 26, 2018</time>
               </div>
               <div class="hof-item" data-game="hitman-2">
                 <div class="hof-img-wrap"><img src="covers/hitman.webp" alt="Hitman 2 cover" loading="lazy"></div>
                 <span class="hof-name">Hitman 2</span>
-                <span class="mono hof-hours">158 HRS</span>
-                <p class="hof-quote">Forty-seven ways to vanish. Patience is the loudest one.</p>
+                <time class="mono hof-release" datetime="2018-11-13">November 13, 2018</time>
+              </div>
+              <div class="hof-item" data-game="bfv">
+                <div class="hof-img-wrap"><img src="covers/battlefield-v.webp" alt="Battlefield V cover" loading="lazy"></div>
+                <span class="hof-name">Battlefield V</span>
+                <time class="mono hof-release" datetime="2018-11-20">November 20, 2018</time>
+              </div>
+              <div class="hof-item" data-game="sekiro">
+                <div class="hof-img-wrap"><img src="covers/sekiro.webp" alt="Sekiro: Shadows Die Twice cover" loading="lazy"></div>
+                <span class="hof-name">Sekiro</span>
+                <time class="mono hof-release" datetime="2019-03-22">March 22, 2019</time>
+              </div>
+              <div class="hof-item" data-game="cyberpunk">
+                <div class="hof-img-wrap"><img src="covers/cyberpunk.webp" alt="Cyberpunk 2077 cover" loading="lazy"></div>
+                <span class="hof-name">Cyberpunk 2077</span>
+                <time class="mono hof-release" datetime="2020-12-10">December 10, 2020</time>
               </div>
               <div class="hof-item" data-game="it-takes-two">
                 <div class="hof-img-wrap"><img src="covers/it%20takes%20two.webp" alt="It Takes Two cover" loading="lazy"></div>
                 <span class="hof-name">It Takes Two</span>
-                <span class="mono hof-hours">46 HRS</span>
-                <p class="hof-quote">Love is a co-op game: you fail together, you fly together.</p>
+                <time class="mono hof-release" datetime="2021-03-26">March 26, 2021</time>
               </div>
-              <div class="hof-item" data-game="nba2k">
-                <div class="hof-img-wrap"><img src="covers/nba-2k.webp" alt="NBA 2K cover" loading="lazy"></div>
-                <span class="hof-name">NBA 2K</span>
-                <span class="mono hof-hours">603 HRS</span>
-                <p class="hof-quote">The clock never lies; the ankle-breaker writes poetry.</p>
+              <div class="hof-item" data-game="dying-light-2">
+                <div class="hof-img-wrap"><img src="covers/dying%20light.webp" alt="Dying Light 2 Stay Human cover" loading="lazy"></div>
+                <span class="hof-name">Dying Light 2</span>
+                <time class="mono hof-release" datetime="2022-02-04">February 4, 2022</time>
+              </div>
+              <div class="hof-item" data-game="elden-ring">
+                <div class="hof-img-wrap"><img src="covers/elden-ring.webp" alt="Elden Ring cover" loading="lazy"></div>
+                <span class="hof-name">Elden Ring</span>
+                <time class="mono hof-release" datetime="2022-02-25">February 25, 2022</time>
+              </div>
+              <div class="hof-item" data-game="bg3">
+                <div class="hof-img-wrap"><img src="covers/baldurs-gate-3.webp" alt="Baldur's Gate 3 cover" loading="lazy"></div>
+                <span class="hof-name">Baldur's Gate 3</span>
+                <time class="mono hof-release" datetime="2023-08-03">August 3, 2023</time>
+              </div>
+              <div class="hof-item" data-game="wukong">
+                <div class="hof-img-wrap"><img src="covers/black-myth-wukong.webp" alt="Black Myth: Wukong cover" loading="lazy"></div>
+                <span class="hof-name">Black Myth: Wukong</span>
+                <time class="mono hof-release" datetime="2024-08-20">August 20, 2024</time>
+              </div>
+              <div class="hof-item" data-game="fc26">
+                <div class="hof-img-wrap"><img src="covers/fc26.webp" alt="EA SPORTS FC 26 cover" loading="lazy"></div>
+                <span class="hof-name">EA SPORTS FC 26</span>
+                <time class="mono hof-release" datetime="2025-09-26">September 26, 2025</time>
               </div>
               <div class="hof-cue" aria-hidden="true"></div>
               <div class="hof-labels" aria-live="polite">
                 <p class="hof-rank mono"></p>
                 <div class="hof-now">
                   <p class="hof-now-name"></p>
-                  <p class="hof-now-hours mono"></p>
-                  <p class="hof-now-quote"></p>
+                  <p class="hof-now-release mono"></p>
                 </div>
               </div>
             </div>
-          </div>
+    </section>
 
+    <!-- ============ THE CURATOR'S DESK ============ -->
+    <section class="section curator-section" id="curate" lang="en" aria-labelledby="curator-title">
+      <div class="shell">
+        <header class="curator-head">
+          <p class="curator-kicker mono">03 / A VISITOR EXHIBITION</p>
+          <h2 id="curator-title">The curator’s desk<span lang="en">Make it yours.</span></h2>
+          <p>One photograph, one book, one film, one series, one song.<br>Bring them together. Make a little exhibition of who you are today.</p>
+        </header>
+        <div id="curator-workspace" hidden>
+          <div class="curator-workspace">
+            <div class="curator-edit">
+              <div class="curator-toolbar">
+                <p id="curator-count" class="mono">Selected 0 / 5</p>
+                <button type="button" id="curator-surprise" class="curator-text-btn">Find me five ↗</button>
+              </div>
+              <ol id="curator-slots" class="curator-slots" aria-label="Exhibition order"></ol>
+              <p class="curator-hint">Choose a piece for each place. Drag a card by its handle, or use the arrows to arrange your exhibition.</p>
+              <div class="curator-fields">
+                <label class="curator-title-field" for="curator-name">Exhibition title
+                  <input id="curator-name" maxlength="48" placeholder="e.g. Somewhere beyond the city" autocomplete="off">
+                </label>
+                <label for="curator-by">Curator
+                  <input id="curator-by" maxlength="32" placeholder="Your name, or a pen name" autocomplete="off">
+                </label>
+                <label class="curator-note-field" for="curator-note">A few words about your exhibition
+                  <textarea id="curator-note" maxlength="120" rows="2" placeholder="What brings these five pieces together?"></textarea>
+                </label>
+              </div>
+              <fieldset class="curator-layouts">
+                <legend>Choose a layout</legend>
+                <label><input type="radio" name="curator-layout" value="gallery" checked><span class="curator-layout-icon" data-layout="gallery" aria-hidden="true"></span><span>Gallery</span></label>
+                <label><input type="radio" name="curator-layout" value="contact"><span class="curator-layout-icon" data-layout="contact" aria-hidden="true"></span><span>Contact sheet</span></label>
+                <label><input type="radio" name="curator-layout" value="night"><span class="curator-layout-icon" data-layout="night" aria-hidden="true"></span><span>After dark</span></label>
+              </fieldset>
+              <div class="curator-actions">
+                <button type="button" id="curator-export" class="curator-primary" disabled>Save exhibition poster ↓</button>
+                <button type="button" id="curator-reset" class="curator-text-btn">Start again</button>
+              </div>
+              <p id="curator-status" class="curator-status" role="status" aria-live="polite">Choose all five pieces to save your poster.</p>
+              <p id="curator-storage" class="curator-hint">Your draft stays in this browser on this device.</p>
+            </div>
+            <figure class="curator-preview">
+              <div class="curator-preview-head mono"><span>YOUR EXHIBITION</span><span>1200 × 1800 · PNG</span></div>
+              <canvas id="curator-poster" width="1200" height="1800" role="img" aria-label="Exhibition poster preview"></canvas>
+              <figcaption id="curator-preview-caption">Every choice on the desk becomes part of this poster.</figcaption>
+            </figure>
+          </div>
+        </div>
+        <noscript><p class="curator-noscript">Enable JavaScript to choose pieces and make an exhibition poster.</p></noscript>
       </div>
     </section>
 
@@ -797,6 +829,7 @@
         <nav class="footer-links" aria-label="Footer">
           <a href="#photo">Photography</a>
           <a href="#archive">The Archive</a>
+          <a href="#curate">Curate</a>
           <a href="#about">Poem</a>
           <a href="#hero">Back to top</a>
         </nav>
@@ -843,26 +876,38 @@
     <p class="sr-only" id="lb-live" role="status" aria-live="polite"></p>
   </div>
 
+  <dialog id="curator-picker" class="curator-picker" lang="en" aria-labelledby="curator-picker-title" data-lenis-prevent>
+    <div class="curator-picker-head">
+      <div><p class="mono">SELECT A PIECE / FROM THE COLLECTION</p><h2 id="curator-picker-title">Choose a photograph</h2></div>
+      <button type="button" id="curator-picker-close" class="curator-text-btn" aria-label="Close collection picker">Close ×</button>
+    </div>
+    <label class="curator-search" for="curator-search">Search the collection<input id="curator-search" type="search" placeholder="Enter a title or keyword" autocomplete="off"></label>
+    <p id="curator-results-count" class="curator-hint" role="status" aria-live="polite"></p>
+    <div id="curator-results" class="curator-results"></div>
+    <button id="curator-more" class="curator-more curator-text-btn" type="button" hidden>Show more ↓</button>
+  </dialog>
+
   <script src="js/vendor/gsap.min.js?v=2"></script>
   <script src="js/vendor/ScrollTrigger.min.js?v=2"></script>
   <script src="js/vendor/lenis.min.js?v=2"></script>
-  <script src="js/film-data.js?v=3"></script>
-  <script src="js/series-data.js?v=3"></script>
-  <script src="js/book-shelf-data.js?v=4"></script>
+  <script src="js/film-data.js?v=4"></script>
+  <script src="js/series-data.js?v=4"></script>
+  <script src="js/book-shelf-data.js?v=5"></script>
   <script src="js/music-data.js?v=7"></script>
   <script src="js/music-covers.js?v=6"></script>
   <script src="js/reel-stage.js?v=31"></script>
   <script src="js/film-stage.js?v=8"></script>
   <script src="js/series-stage.js?v=8"></script>
-  <script src="js/music-stage.js?v=11"></script>
-  <script src="js/book-shelf.js?v=12"></script>
-  <script src="js/games-stage.js?v=7"></script>
+  <script src="js/music-stage.js?v=12"></script>
+  <script src="js/book-shelf.js?v=13"></script>
+  <script src="js/games-stage.js?v=8"></script>
   <script src="js/glass-pill.js?v=4"></script>
-  <script src="js/main.js?v=89"></script>
-  <script src="js/atelier.js?v=2"></script>
+  <script src="js/main.js?v=90"></script>
+  <script src="js/atelier.js?v=3"></script>
   <script src="js/atelier-hero.js?v=2"></script>
-  <script src="js/atelier-photo.js?v=2"></script>
+  <script src="js/atelier-photo.js?v=3"></script>
   <script src="js/atelier-archive.js?v=1"></script>
   <script src="js/atelier-poem.js?v=2"></script>
+  <script src="js/curator-desk.js?v=7"></script>
 </body>
 </html>

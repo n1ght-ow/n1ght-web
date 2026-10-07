@@ -175,7 +175,7 @@
       label.appendChild(lt);
       var la = el("p", "bs-label-author");
       la.textContent = book.author;
-      la.setAttribute("lang", "zh");
+      la.setAttribute("lang", "en");
       label.appendChild(la);
       cover.appendChild(label);
 
@@ -195,7 +195,7 @@
     scene.appendChild(scrim);
 
     var blurb = el("p", "bs-blurb");
-    blurb.setAttribute("lang", "zh");
+    blurb.setAttribute("lang", "en");
     var live = el("p", "sr-only");
     live.setAttribute("role", "status");
     live.setAttribute("aria-live", "polite");
@@ -309,7 +309,7 @@
         var dx = (rowWidth + overhang) / 2 - (left[n.index] + book.thickness / 2);
         var dy = M.centre - (M.base - book.height / 2);
 
-        var label = isPicked ? "合上《" + book.title + "》" : "打开《" + book.title + "》";
+        var label = isPicked ? "Close “" + book.title + "”" : "Open “" + book.title + "”";
         if (n.label !== label) {
           n.btn.setAttribute("aria-label", label);
           n.label = label;

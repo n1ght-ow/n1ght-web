@@ -28,21 +28,11 @@
 
   function renderGenre(group) {
     const genre = el("div", "genre");
-    if (group.groupLang === "zh") genre.setAttribute("lang", "zh");
+    genre.setAttribute("lang", "en");
 
     const head = el("div", "genre-head");
     const title = el("h3", "genre-title");
-    if (group.groupLang === "zh") {
-      // the whole group is zh: plain "华语流行 / MANDARIN POP"
-      title.textContent = group.zh + " / " + group.en;
-    } else {
-      // english group: wrap only the zh segment for font fallback
-      const zhSpan = document.createElement("span");
-      zhSpan.setAttribute("lang", "zh");
-      zhSpan.textContent = group.zh;
-      title.appendChild(zhSpan);
-      title.appendChild(document.createTextNode(" / " + group.en));
-    }
+    title.textContent = group.en;
     head.appendChild(title);
 
     /* The group's own NetEase playlist, one per genre, created by
@@ -51,7 +41,7 @@
        end of this row; the link now sits after it, the way .music-random
        parks the search tray's single action at its right end. */
     const meta = el("div", "genre-meta");
-    meta.appendChild(el("span", "genre-count mono", String(group.tracks.length) + " 首"));
+    meta.appendChild(el("span", "genre-count mono", String(group.tracks.length) + " tracks"));
     if (group.playlist) {
       const link = el("a", "genre-playlist mono");
       link.href = "https://music.163.com/#/playlist?id=" + group.playlist;
@@ -65,8 +55,8 @@
       /* The visible label is the same on all fifteen links, so the genre rides
          along in sr-only text. It is appended INSIDE the link, which keeps the
          accessible name containing the visible words (label in name). */
-      const sr = el("span", "sr-only", " " + group.zh + " / " + group.en + " " + group.tracks.length + " 首");
-      tagLang(sr, group.zh);
+      const sr = el("span", "sr-only", " " + group.en + " " + group.tracks.length + " tracks");
+      tagLang(sr, group.en);
       link.appendChild(sr);
       meta.appendChild(link);
     }
@@ -152,7 +142,7 @@
       chip.type = "button";
       chip.setAttribute("data-genre", String(i));
       chip.setAttribute("aria-pressed", i === 0 ? "true" : "false");
-      const label = (group.groupLang === "zh" ? group.zh : group.en) + " · " + group.tracks.length;
+      const label = group.en + " · " + group.tracks.length;
       chip.textContent = label;
       tagLang(chip, label);
       mount.appendChild(chip);

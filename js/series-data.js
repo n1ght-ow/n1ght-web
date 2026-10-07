@@ -8,9 +8,9 @@
       poster: "posters/1864810.jpg",
       title: "红楼梦",
       years: "1987",
-      seasons: "36 集",
+      seasons: "36 episodes",
       category: "CLASSICS",
-      quote: "最珍惜个体真心的人，偏偏生在一个把婚姻、亲情与体面都计入家族账本的世界。"
+      quote: "Those who cherish an individual heart are born into a world that enters marriage, kinship and dignity into the family ledger."
     },
     {
       id: "series-02",
@@ -18,9 +18,9 @@
       poster: "posters/2156663.jpg",
       title: "西游记",
       years: "1986",
-      seasons: "25 集",
+      seasons: "25 episodes",
       category: "CLASSICS",
-      quote: "一路降伏的既有妖魔也有自己的执念，自由的心必须学会与责任同行。"
+      quote: "The journey defeats demons and personal obsessions alike. A free heart must learn to travel with responsibility."
     },
     {
       id: "series-03",
@@ -28,9 +28,9 @@
       poster: "posters/33447642.jpg",
       title: "沉默的真相",
       years: "2020",
-      seasons: "12 集",
+      seasons: "12 episodes",
       category: "CRIME & MYSTERY",
-      quote: "当正义只能靠好人耗尽一生来换取，真相的抵达也成了对沉默者最沉重的质问。"
+      quote: "When justice costs good people their whole lives, the arrival of truth becomes a question no silent witness can escape."
     },
     {
       id: "series-04",
@@ -38,9 +38,9 @@
       poster: "posters/33404425.jpg",
       title: "隐秘的角落",
       years: "2020",
-      seasons: "12 集",
+      seasons: "12 episodes",
       category: "CRIME & MYSTERY",
-      quote: "孩子懂得谎言能让自己被爱，也渐渐发现，讲出真相可能意味着再没有人愿意留下。"
+      quote: "A child learns that lies can win love, then discovers that telling the truth may leave no one willing to stay."
     },
     {
       id: "series-05",
@@ -48,9 +48,9 @@
       poster: "posters/35588177.jpg",
       title: "漫长的季节",
       years: "2023",
-      seasons: "12 集",
+      seasons: "12 episodes",
       category: "CRIME & MYSTERY",
-      quote: "时代夺走工作与亲人之后，一个父亲仍困在自责里，迟来的真相让他重新学着向前活。"
+      quote: "An era takes his work and his family. A father remains trapped in guilt until a late truth teaches him to live forward."
     },
     {
       id: "series-06",
@@ -58,9 +58,9 @@
       poster: "posters/26883064.jpg",
       title: "白夜追凶",
       years: "2017",
-      seasons: "32 集",
+      seasons: "32 episodes",
       category: "CRIME & MYSTERY",
-      quote: "血缘让两个人替彼此活着，也把查明真相变成一场亲情与自保都无法全身而退的审判。"
+      quote: "Blood makes two men live for each other. The search for truth puts both family loyalty and self-preservation on trial."
     },
     {
       id: "series-07",
@@ -68,9 +68,9 @@
       poster: "posters/2373195.jpg",
       title: "Breaking Bad",
       years: "2008-2013",
-      seasons: "5 季",
+      seasons: "5 seasons",
       category: "CRIME & MYSTERY",
-      quote: "他用家人的未来解释每一次越界，直到所有失去都证明，最需要被满足的是自己的骄傲。"
+      quote: "He explains every transgression with his family's future, until each loss reveals that his own pride was the real need."
     },
     {
       id: "series-08",
@@ -78,9 +78,9 @@
       poster: "posters/25726259.jpg",
       title: "Better Call Saul",
       years: "2015-2022",
-      seasons: "6 季",
+      seasons: "6 seasons",
       category: "CRIME & MYSTERY",
-      quote: "被最亲近的人认定无可救药之后，他把偏见活成身份，又在承担罪责时夺回自己的名字。"
+      quote: "Written off by those closest to him, he turns prejudice into an identity, then reclaims his name by accepting responsibility."
     },
     {
       id: "series-09",
@@ -88,9 +88,9 @@
       poster: "posters/10748120.jpg",
       title: "True Detective",
       years: "2014-2024",
-      seasons: "4 季",
+      seasons: "4 seasons",
       category: "CRIME & MYSTERY",
-      quote: "看透人性的腐烂并没有让人免于责任，追问罪恶的人也必须承认自己仍渴望一点光。"
+      quote: "Seeing human corruption does not excuse anyone from responsibility. Those who question evil must admit they still want some light."
     },
     {
       id: "series-10",
@@ -98,9 +98,9 @@
       poster: "posters/26310143.jpg",
       title: "信号",
       years: "2016",
-      seasons: "16 集",
+      seasons: "16 episodes",
       category: "CRIME & MYSTERY",
-      quote: "过去的呼救抵达今天，修正遗憾的机会也逼人承担另一段命运被改变的责任。"
+      quote: "A cry from the past reaches the present. The chance to mend regret also brings responsibility for another altered fate."
     },
     {
       id: "series-11",
@@ -108,9 +108,9 @@
       poster: "posters/26934346.jpg",
       title: "秘密森林",
       years: "2017-2020",
-      seasons: "2 季",
+      seasons: "2 seasons",
       category: "CRIME & MYSTERY",
-      quote: "不肯用人情替证据作解释的人，必须在一个把忠诚当作遮羞布的体系里学会信任。"
+      quote: "Refusing to let relationships explain away evidence, he must learn trust inside a system that uses loyalty as cover."
     },
     {
       id: "series-12",
@@ -118,9 +118,9 @@
       poster: "posters/25754848.jpg",
       title: "琅琊榜",
       years: "2015",
-      seasons: "54 集",
+      seasons: "54 episodes",
       category: "POWER & HISTORY",
-      quote: "他以复仇者的手段归来，却仍想保住正直者相信的秩序，这使每一步算计都带着代价。"
+      quote: "He returns with a revenger's methods, hoping to preserve an honest person's faith in order. Every calculation carries a cost."
     },
     {
       id: "series-13",
@@ -128,9 +128,9 @@
       poster: "posters/25853071.jpg",
       title: "庆余年",
       years: "2019-2024",
-      seasons: "3 季",
+      seasons: "3 seasons",
       category: "POWER & HISTORY",
-      quote: "带着平等观念进入权力世界，最难的是成为赢家以后，仍拒绝把人当作可以交换的筹码。"
+      quote: "He brings equality into a world of power. The hardest test comes after winning: refusing to turn people into bargaining chips."
     },
     {
       id: "series-14",
@@ -138,9 +138,9 @@
       poster: "posters/7054120.jpg",
       title: "黑镜",
       years: "2011-2023",
-      seasons: "6 季",
+      seasons: "6 seasons",
       category: "SCI-FI & FANTASY",
-      quote: "技术把人的欲望照顾得无微不至，也让控制、惩罚与孤独披上了自愿选择的外衣。"
+      quote: "Technology tends to every desire, dressing control, punishment and loneliness as freely chosen experiences."
     },
     {
       id: "series-15",
@@ -148,9 +148,9 @@
       poster: "posters/26359270.jpg",
       title: "Stranger Things",
       years: "2016-2025",
-      seasons: "5 季",
+      seasons: "5 seasons",
       category: "SCI-FI & FANTASY",
-      quote: "被成人世界当作异类的孩子们，用彼此的信任抵抗恐惧，也守住了成长尚未夺走的亲密。"
+      quote: "Children treated as outsiders resist fear through trust, preserving the closeness that growing up has not yet taken."
     },
     {
       id: "series-16",
@@ -158,9 +158,9 @@
       poster: "posters/23011215.jpg",
       title: "Sense8",
       years: "2015-2018",
-      seasons: "2 季",
+      seasons: "2 seasons",
       category: "SCI-FI & FANTASY",
-      quote: "当别人的痛苦能穿过自己的身体，差异不再是隔离的理由，亲密也成为抵抗控制的力量。"
+      quote: "When another's pain can pass through your body, difference stops being a reason for isolation. Intimacy becomes resistance."
     },
     {
       id: "series-17",
@@ -168,9 +168,9 @@
       poster: "posters/32579283.jpg",
       title: "The Queen's Gambit",
       years: "2020",
-      seasons: "7 集",
+      seasons: "7 episodes",
       category: "SCI-FI & FANTASY",
-      quote: "她把孤独磨成计算的天赋，却要学会接受帮助，才能不再把每一份靠近都当作软弱。"
+      quote: "She sharpens solitude into a gift for calculation, but must accept help before every approach stops feeling like weakness."
     },
     {
       id: "series-18",
@@ -178,9 +178,9 @@
       poster: "posters/25698722.jpg",
       title: "来自星星的你",
       years: "2013",
-      seasons: "21 集",
+      seasons: "21 episodes",
       category: "SCI-FI & FANTASY",
-      quote: "漫长的生命让他习惯旁观，爱却让永恒第一次有了代价，也让短暂的人生变得无法替代。"
+      quote: "A long life has taught him to watch from a distance. Love gives eternity a price and a brief life irreplaceable value."
     },
     {
       id: "series-19",
@@ -188,9 +188,9 @@
       poster: "posters/24702659.jpg",
       title: "听见你的声音",
       years: "2013",
-      seasons: "18 集",
+      seasons: "18 episodes",
       category: "SCI-FI & FANTASY",
-      quote: "听见心声并不等于懂得一个人，当复仇足够有理由，拒绝让恨替自己作主才最艰难。"
+      quote: "Hearing a heart is not the same as understanding a person. When revenge seems justified, refusing hatred is the hardest choice."
     },
     {
       id: "series-20",
@@ -198,9 +198,9 @@
       poster: "posters/26761935.jpg",
       title: "孤单又灿烂的神：鬼怪",
       years: "2016",
-      seasons: "16 集",
+      seasons: "16 episodes",
       category: "SCI-FI & FANTASY",
-      quote: "永生把失去变成无休止的惩罚，爱让他重新想活，也让他终于有勇气面对生命的终点。"
+      quote: "Immortality turns loss into endless punishment. Love makes him want to live again, and finally brave enough to face an ending."
     },
     {
       id: "series-21",
@@ -208,9 +208,9 @@
       poster: "posters/26727298.jpg",
       title: "W-两个世界",
       years: "2016",
-      seasons: "16 集",
+      seasons: "16 episodes",
       category: "SCI-FI & FANTASY",
-      quote: "当角色知道人生由别人执笔，爱与自由意志便一起追问：谁有权替真实的生命安排结局。"
+      quote: "When characters discover someone else writes their lives, love and free will ask who has the right to decide a real life's ending."
     },
     {
       id: "series-22",
@@ -218,9 +218,9 @@
       poster: "posters/26887064.jpg",
       title: "当你沉睡时",
       years: "2017",
-      seasons: "32 集",
+      seasons: "32 episodes",
       category: "SCI-FI & FANTASY",
-      quote: "预见灾难的人无法再用不知道来宽恕自己，每一次改变未来，都从愿意相信另一个人开始。"
+      quote: "Foreseeing disaster removes ignorance as an excuse. Each changed future begins with the willingness to trust another person."
     },
     {
       id: "series-23",
@@ -228,9 +228,9 @@
       poster: "posters/3703650.jpg",
       title: "The Boys",
       years: "2019-2024",
-      seasons: "4 季",
+      seasons: "4 seasons",
       category: "DARK SATIRE",
-      quote: "当英雄成为商品，拯救只是权力的广告，而复仇者也不断接近自己最痛恨的模样。"
+      quote: "When heroes become products, rescue becomes an advertisement for power. Their opponents approach the very thing they hate."
     },
     {
       id: "series-24",
@@ -238,9 +238,9 @@
       poster: "posters/6037429.jpg",
       title: "House of Cards",
       years: "2013-2018",
-      seasons: "6 季",
+      seasons: "6 seasons",
       category: "DARK SATIRE",
-      quote: "权力把信任变成工具，两个最懂彼此的人也只能靠共同的野心维持随时会互相吞噬的亲密。"
+      quote: "Power makes trust a tool. Two people who know each other best hold on through an ambition that may consume them both."
     },
     {
       id: "series-25",
@@ -248,9 +248,9 @@
       poster: "posters/26813224.jpg",
       title: "Succession",
       years: "2018-2023",
-      seasons: "4 季",
+      seasons: "4 seasons",
       category: "DARK SATIRE",
-      quote: "他们拥有足以买下世界的财富，却仍把父亲的一次认可当作奖赏，在争夺中继承了他的残忍。"
+      quote: "They can buy the world, yet still prize one word of approval from their father. Their rivalry inherits his cruelty."
     },
     {
       id: "series-26",
@@ -258,9 +258,9 @@
       poster: "posters/1393859.jpg",
       title: "Friends",
       years: "1994-2004",
-      seasons: "10 季",
+      seasons: "10 seasons",
       category: "FAMILY & LIFE",
-      quote: "他们一边学着各自成家，一边保留一个可以承认失败的地方，让友谊承担血缘以外的亲情。"
+      quote: "While learning to build families, they keep a place where failure can be admitted. Friendship becomes a family beyond blood."
     },
     {
       id: "series-27",
@@ -268,9 +268,9 @@
       poster: "posters/3754382.jpg",
       title: "Modern Family",
       years: "2009-2020",
-      seasons: "11 季",
+      seasons: "11 seasons",
       category: "FAMILY & LIFE",
-      quote: "家人的形状一直在变，固执的人也得练习让步，才能让爱不只是以自己的方式要求别人。"
+      quote: "Family keeps changing shape. Even the stubborn must practice giving way, so love becomes more than a demand made on their terms."
     },
     {
       id: "series-28",
@@ -278,9 +278,9 @@
       poster: "posters/4729738.jpg",
       title: "Shameless",
       years: "2011-2021",
-      seasons: "11 季",
+      seasons: "11 seasons",
       category: "FAMILY & LIFE",
-      quote: "贫穷逼他们用彼此求生，亲情却也索取每个人的未来，离开与留下都难免带着亏欠。"
+      quote: "Poverty makes them rely on one another, while family claims each person's future. Both leaving and staying carry a debt."
     },
     {
       id: "series-29",
@@ -288,9 +288,9 @@
       poster: "posters/26302614.jpg",
       title: "请回答1988",
       years: "2015",
-      seasons: "20 集",
+      seasons: "20 episodes",
       category: "FAMILY & LIFE",
-      quote: "长大让人拥有选择，也让那些理所当然的陪伴逐一散去，家的温度常常要在离开之后才懂。"
+      quote: "Growing up brings choices and takes familiar company away. Home's warmth is often understood only after leaving."
     },
     {
       id: "series-30",
@@ -298,9 +298,9 @@
       poster: "posters/27602137.jpg",
       title: "我的大叔",
       years: "2018",
-      seasons: "16 集",
+      seasons: "16 episodes",
       category: "FAMILY & LIFE",
-      quote: "他们认出彼此不愿示人的狼狈，理解便不再是居高临下的拯救，而是允许一个人保有尊严。"
+      quote: "They recognize the wounds each would rather hide. Understanding becomes permission to keep one's dignity, rather than rescue from above."
     },
     {
       id: "series-31",
@@ -308,9 +308,9 @@
       poster: "posters/30464551.jpg",
       title: "浪漫的体质",
       years: "2019",
-      seasons: "16 集",
+      seasons: "16 episodes",
       category: "FAMILY & LIFE",
-      quote: "把爱情写成故事的人也无法写好自己的生活，失去与狼狈只能靠笑声和朋友一点点容纳。"
+      quote: "Those who write love stories cannot write their own lives so neatly. Laughter and friends slowly make room for loss and disorder."
     },
     {
       id: "series-32",
@@ -318,9 +318,9 @@
       poster: "posters/34660401.jpg",
       title: "棒球大联盟",
       years: "2019",
-      seasons: "16 集",
+      seasons: "16 episodes",
       category: "FAMILY & LIFE",
-      quote: "改变一支习惯失败的球队，要拆掉以感情维系的利益，也要让被当作数字的人重新得到信任。"
+      quote: "Changing a team used to losing means undoing interests held together by sentiment, and trusting people treated as numbers again."
     },
     {
       id: "series-33",
@@ -328,9 +328,9 @@
       poster: "posters/33464863.jpg",
       title: "机智医生生活",
       years: "2020-2021",
-      seasons: "2 季",
+      seasons: "2 seasons",
       category: "FAMILY & LIFE",
-      quote: "医生可以熟练处理病痛，却无法替人决定离别的重量，朋友让他们在照顾别人时也被照顾。"
+      quote: "Doctors can treat pain with practiced hands, but cannot decide the weight of goodbye. Friends care for them as they care for others."
     },
     {
       id: "series-34",
@@ -338,9 +338,9 @@
       poster: "posters/25831874.jpg",
       title: "太阳的后裔",
       years: "2016",
-      seasons: "16 集",
+      seasons: "16 episodes",
       category: "ROMANCE & MELO",
-      quote: "同样以保护生命为职责的人，却必须接受彼此不同的使命，爱情因此始终与危险和分歧同行。"
+      quote: "Both protect life, yet must accept different duties. Their love travels alongside danger and disagreement."
     },
     {
       id: "series-35",
@@ -348,9 +348,9 @@
       poster: "posters/34861170.jpg",
       title: "虽然是精神病但没关系",
       years: "2020",
-      seasons: "16 集",
+      seasons: "16 episodes",
       category: "ROMANCE & MELO",
-      quote: "一个靠照顾别人隐藏欲望，一个用伤害掩盖孤独，亲密让他们开始承认自己也需要被照顾。"
+      quote: "One hides desire by caring for others; one hides loneliness by hurting them. Closeness lets both admit they need care too."
     },
     {
       id: "series-36",
@@ -358,9 +358,9 @@
       poster: "posters/35402776.jpg",
       title: "那年，我们的夏天",
       years: "2021",
-      seasons: "16 集",
+      seasons: "16 episodes",
       category: "ROMANCE & MELO",
-      quote: "重逢让他们看见，当年最深的误解不是爱得不够，而是谁都不敢把自己的不安交给对方。"
+      quote: "Meeting again reveals the old misunderstanding: love was there, but neither dared entrust their insecurity to the other."
     }
   ];
 })();

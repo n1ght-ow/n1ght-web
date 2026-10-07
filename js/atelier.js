@@ -10,8 +10,8 @@
     const closing = document.createElement('em');
     closing.textContent = 'Some things are worth keeping.';
     const description = document.createElement('span');
-    description.lang = 'zh';
-    description.textContent = '一座小小的私人馆藏。持续收藏，慢慢观看。';
+    description.lang = 'en';
+    description.textContent = 'A small private collection. Keep collecting. Take your time.';
     note.append(closing, description);
     footerShell.appendChild(note);
   }

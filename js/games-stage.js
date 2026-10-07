@@ -15,12 +15,11 @@
        - the eighteen .hof-item elements ARE the deck. The reference keeps a
          ring of eleven recycled cells and swaps their art; that would mean
          eleven buttons for eighteen games, and main.js's gameItemData() reads
-         rank, name, hours, quote and src off each item. Here every game keeps
+         position, name, release date and src off each item. Here every game keeps
          its own element, its own alt text and its own tab stop, and the ring
          is applied to the LAYOUT instead: an item's offset is its index
          measured the short way round the deck.
-       - the meta is painted once, not eighteen times. .hof-name / .hof-hours /
-         .hof-quote stay in the DOM as the data source and are painted under the
+       - the meta is painted once, not eighteen times. .hof-name / .hof-release stay in the DOM as the data source and are painted under the
          centred cover into .hof-now. Eighteen covers at once was the grid; a
          dial shows one, so it says one.
        - the settle is gsap power3.out with a distance-proportional duration,
@@ -52,8 +51,7 @@
   var elRank = track.querySelector(".hof-rank");
   var elNow = track.querySelector(".hof-now");
   var elName = track.querySelector(".hof-now-name");
-  var elHours = track.querySelector(".hof-now-hours");
-  var elQuote = track.querySelector(".hof-now-quote");
+  var elRelease = track.querySelector(".hof-now-release");
 
   /* ---------- the knobs ----------
      The lab (a scratch page, not in the repo) shipped these as sliders; this is
@@ -259,12 +257,10 @@
   function paintNow(i) {
     var el = items[i];
     var name = el.querySelector(".hof-name");
-    var hours = el.querySelector(".hof-hours");
-    var quote = el.querySelector(".hof-quote");
+    var release = el.querySelector(".hof-release");
     if (elRank) elRank.textContent = pad2(i + 1) + " / " + pad2(SPAN);
     if (elName) elName.textContent = name ? name.textContent : "";
-    if (elHours) elHours.textContent = hours ? hours.textContent : "";
-    if (elQuote) elQuote.textContent = quote ? quote.textContent : "";
+    if (elRelease) elRelease.textContent = release ? (el.dataset.releaseKind === "series" ? "SERIES DEBUT " : "RELEASED ") + release.textContent : "";
     sizeTrack();
     /* Keyboard focus walks with the dial, but only when the dial was asked to
        move by a key: tabbing in must not fight the browser. */
@@ -280,7 +276,7 @@
     /* WIDTH FIRST, then measure. The label rows are sized by the box they sit
        in, so measuring before place() sets that box reports the height the rows
        had at the PREVIOUS width - and a resize then leaves the band one reflow
-       stale, which clips the hours line and the note. */
+       stale, which clips the release date. */
     place(labels);
     place(cue);
     var gap = cssPx("--hof-gap", LABEL_FALLBACK);

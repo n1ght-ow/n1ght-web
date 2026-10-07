@@ -163,8 +163,8 @@ function gameItemData(item) {
     type: "game",
     id: item.getAttribute("data-game"),
     name: name,
-    hours: detailText(item, ".hof-hours"),
-    quote: detailText(item, ".hof-quote"),
+    release: detailText(item, ".hof-release"),
+    releaseLabel: item.dataset.releaseKind === "series" ? "Series debut" : "Released",
     src: img ? img.getAttribute("src") : "",
     alt: img ? img.alt : name,
     rank: Array.from(document.querySelectorAll("#panel-games .hof-item")).indexOf(item) + 1,
@@ -343,21 +343,15 @@ function renderDetail() {
     lbImg.src = item.src;
   }
   if (lbLink) lbLink.dataset.songId = "";
-  /* No film / series branches. There were two, ~25 lines between them, and
-     neither could run: the only three openDetail() calls in this file are
-     "photo", "game" and "music". AGENTS.md:144 and AGENTS.md:255 both record
-     why - the film / series detail block already sits under the strip, so a
-     lightbox for it would be the same information in a worse place. lbQuote
-     survives below because the game card is the one kind that still carries a
-     pull quote worth reading at size. */
+  // Film and series use their own inline details. Games show the original release date.
   if (detailType === "game") {
-    if (lbKicker) lbKicker.textContent = "RANK " + String(item.rank).padStart(2, "0");
+    if (lbKicker) lbKicker.textContent = "GAME " + String(item.rank).padStart(2, "0") + " / " + String(total).padStart(2, "0");
     if (lbTitle) lbTitle.textContent = item.name;
-    if (lbLines) lbLines.textContent = item.hours;
-    if (lbQuote) lbQuote.textContent = item.quote;
+    if (lbLines) lbLines.textContent = item.releaseLabel + " " + item.release;
+    if (lbQuote) lbQuote.hidden = true;
     if (lbLink) lbLink.hidden = true;
     if (lbLive) {
-      lbLive.textContent = "Game " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.name + ". " + item.hours + ". " + item.quote;
+      lbLive.textContent = "Game " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.name + ". " + item.releaseLabel + " " + item.release;
     }
   }
 }
@@ -457,7 +451,7 @@ function initUnifiedDetail() {
     Array.from(gamePanel.querySelectorAll(".hof-item")).forEach((item) => {
       item.setAttribute("role", "button");
       item.setAttribute("tabindex", "0");
-      item.setAttribute("aria-label", "Open details for " + detailText(item, ".hof-name") + ", " + detailText(item, ".hof-hours"));
+      item.setAttribute("aria-label", "Open details for " + detailText(item, ".hof-name") + ", " + "Released " + detailText(item, ".hof-release"));
     });
     const openGame = (item) => {
       const items = Array.from(gamePanel.querySelectorAll(".hof-item"));
@@ -877,7 +871,7 @@ function initMusicSearch() {
       if (genreCounts[gi]) {
         genreCounts[gi].textContent = searching
           ? hits + " / " + genreTotals[gi]
-          : genreTotals[gi] + " 首";
+          : genreTotals[gi] + " tracks";
       }
     });
 

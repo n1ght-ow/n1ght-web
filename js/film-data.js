@@ -10,7 +10,7 @@
       director: "Francis Ford Coppola",
       year: "1972",
       genre: "CRIME & NOIR",
-      quote: "他以守护家人为名接过权力，终于让家成为所有人都无法自由离开的地方。"
+      quote: "He takes power to protect his family, then turns home into a place no one can freely leave."
     },
     {
       id: "film-02",
@@ -20,7 +20,7 @@
       director: "Quentin Tarantino",
       year: "1994",
       genre: "CRIME & NOIR",
-      quote: "暴力把人活成可替换的角色，偶然的一次幸存，却让有人开始追问自己能否换一种活法。"
+      quote: "Violence makes people interchangeable. One accidental survival opens the question of living differently."
     },
     {
       id: "film-03",
@@ -30,17 +30,17 @@
       director: "Curtis Hanson",
       year: "1997",
       genre: "CRIME & NOIR",
-      quote: "警徽既替欲望遮羞，也让三个各有污点的人不得不为正义支付自己的代价。"
+      quote: "The badge conceals desire, yet makes three flawed men pay their own price for justice."
     },
     {
       id: "film-04",
       douban: "1307914",
       poster: "posters/1307914.jpg",
       title: "无间道",
-      director: "刘伟强、麦兆辉",
+      director: "Andrew Lau / Alan Mak",
       year: "2002",
       genre: "CRIME & NOIR",
-      quote: "身份可以被交换，良心却无法移交，最深的惩罚是活着也得不到成为好人的证明。"
+      quote: "Identities can change hands; conscience cannot. The deepest punishment is living without proof that you are good."
     },
     {
       id: "film-05",
@@ -50,7 +50,7 @@
       director: "Bong Joon-ho",
       year: "2003",
       genre: "CRIME & NOIR",
-      quote: "当暴力比证据更快抵达答案，追凶的人也成了那个时代无法洗清的嫌疑人。"
+      quote: "When violence reaches an answer before evidence does, the hunters become suspects their era cannot clear."
     },
     {
       id: "film-06",
@@ -60,7 +60,7 @@
       director: "Quentin Tarantino",
       year: "2003",
       genre: "CRIME & NOIR",
-      quote: "复仇替被剥夺的人夺回名字，却必须面对一个问题：杀尽过去之后，还能为谁活着。"
+      quote: "Revenge gives the dispossessed their names back. Once the past is dead, who is left to live for?"
     },
     {
       id: "film-07",
@@ -70,7 +70,7 @@
       director: "Christopher Nolan",
       year: "2005",
       genre: "CRIME & NOIR",
-      quote: "把恐惧变成象征的人，必须先分清惩罚罪恶的快感与守护他人的责任。"
+      quote: "Before making fear a symbol, he must separate the pleasure of punishment from the duty of protection."
     },
     {
       id: "film-08",
@@ -80,7 +80,7 @@
       director: "Ethan Coen / Joel Coen",
       year: "2007",
       genre: "CRIME & NOIR",
-      quote: "他坚信世界正在变坏，最难承认的却是暴力从未答应服从他熟悉的道理。"
+      quote: "He believes the world is getting worse. Harder to admit: violence never promised to obey his familiar rules."
     },
     {
       id: "film-09",
@@ -90,7 +90,7 @@
       director: "Christopher Nolan",
       year: "2008",
       genre: "CRIME & NOIR",
-      quote: "当城市需要一个无瑕的英雄，守护它的人是否还拥有说出真相的自由。"
+      quote: "When a city needs a spotless hero, can its protector still afford to tell the truth?"
     },
     {
       id: "film-10",
@@ -100,7 +100,7 @@
       director: "Martin Scorsese",
       year: "2010",
       genre: "CRIME & NOIR",
-      quote: "为了继续把自己当成好人，他造出一个世界，而醒来意味着亲手拆掉唯一的庇护。"
+      quote: "He builds a world to keep believing he is good. Waking means dismantling his only shelter."
     },
     {
       id: "film-11",
@@ -110,7 +110,7 @@
       director: "Christopher Nolan",
       year: "2012",
       genre: "CRIME & NOIR",
-      quote: "救世的身份让他忘了如何生活，真正的归来，是允许城市与自己都不再依赖那个神话。"
+      quote: "Being a savior has made him forget how to live. Returning means letting both the city and himself outgrow the myth."
     },
     {
       id: "film-12",
@@ -120,7 +120,7 @@
       director: "Stanley Kubrick",
       year: "1971",
       genre: "SCI-FI",
-      quote: "一个被强行剥夺作恶能力的人，究竟获得了善良，还是失去了作为人的最后自由。"
+      quote: "If a man is stripped of the ability to do wrong, has he become good, or lost his last human freedom?"
     },
     {
       id: "film-13",
@@ -130,7 +130,7 @@
       director: "Lana Wachowski / Lilly Wachowski",
       year: "1999",
       genre: "SCI-FI",
-      quote: "舒适的幻觉要求人交出选择，而自由最残酷的诚意，是允许你看见自己不愿承受的真实。"
+      quote: "Comfortable illusion asks you to surrender choice. Freedom lets you see truths you may not wish to bear."
     },
     {
       id: "film-14",
@@ -140,7 +140,7 @@
       director: "Christopher Nolan",
       year: "2010",
       genre: "SCI-FI",
-      quote: "能潜入别人的意识，却无法说服自己放过过去，最牢固的囚笼是被误认成爱情的愧疚。"
+      quote: "He can enter other minds but cannot release his own past. Guilt mistaken for love makes the strongest prison."
     },
     {
       id: "film-15",
@@ -150,7 +150,7 @@
       director: "Christopher Nolan",
       year: "2014",
       genre: "SCI-FI",
-      quote: "为人类的未来离开女儿，却只能以一个父亲最私人的牵挂寻找回去的路。"
+      quote: "He leaves his daughter for humanity's future. Only a father's private longing can guide him home."
     },
     {
       id: "film-16",
@@ -160,7 +160,7 @@
       director: "Roberto Benigni",
       year: "1997",
       genre: "DRAMA",
-      quote: "父亲把谎言变成最后的保护，让孩子在没有尊严的世界里仍保有选择相信的能力。"
+      quote: "A father makes a lie his last act of protection, preserving a child's ability to believe in a world without dignity."
     },
     {
       id: "film-17",
@@ -170,7 +170,7 @@
       director: "Frank Darabont",
       year: "1999",
       genre: "DRAMA",
-      quote: "法律可以按时完成处决，却没有办法让执行的人卸下亲手毁掉善良的重量。"
+      quote: "The law can carry out an execution on time. It cannot lift the weight of destroying goodness from those who do it."
     },
     {
       id: "film-18",
@@ -180,7 +180,7 @@
       director: "Steve McQueen",
       year: "2013",
       genre: "DRAMA",
-      quote: "当整个社会把一个人写成财产，他坚持的不只是回家，更是没有谁能替他定义自己。"
+      quote: "When society writes a man down as property, his struggle is for home and the right to define himself."
     },
     {
       id: "film-19",
@@ -190,7 +190,7 @@
       director: "Damien Chazelle",
       year: "2014",
       genre: "DRAMA",
-      quote: "他把被摧毁当作成为伟大的代价，掌声越响，越难辨认那一刻究竟是谁赢了。"
+      quote: "He accepts destruction as the price of greatness. The louder the applause, the harder it is to tell who won."
     },
     {
       id: "film-20",
@@ -200,7 +200,7 @@
       director: "Todd Phillips",
       year: "2019",
       genre: "DRAMA",
-      quote: "一个渴望被看见的人终于获得注视，代价是让真实的痛苦变成众人消费的暴力符号。"
+      quote: "A man desperate to be seen finally gets attention, as real suffering becomes a violent symbol for public consumption."
     },
     {
       id: "film-21",
@@ -210,7 +210,7 @@
       director: "Bong Joon-ho",
       year: "2019",
       genre: "DRAMA",
-      quote: "阶级把人隔开，又逼迫最接近的人彼此争夺，连同情也带着居高临下的气味。"
+      quote: "Class keeps people apart, then makes those closest compete. Even sympathy carries the scent of looking down."
     },
     {
       id: "film-22",
@@ -220,7 +220,7 @@
       director: "Christopher Nolan",
       year: "2023",
       genre: "DRAMA",
-      quote: "他能算出毁灭如何发生，却算不清一个发明者应该为被释放的力量承担多少责任。"
+      quote: "He can calculate how destruction happens, but not how much responsibility its inventor must bear."
     },
     {
       id: "film-23",
@@ -230,7 +230,7 @@
       director: "Charlie Chaplin",
       year: "1936",
       genre: "ROMANCE & CLASSIC",
-      quote: "机器许诺效率，人却连喘息都成了过错，两个没有位置的人仍试着为彼此留下位置。"
+      quote: "Machines promise efficiency; even breathing becomes a fault. Two people without a place still try to make room for each other."
     },
     {
       id: "film-24",
@@ -240,7 +240,7 @@
       director: "Richard Linklater",
       year: "1995-2013",
       genre: "ROMANCE & CLASSIC",
-      quote: "相遇可以靠偶然，长久却要一次次面对那个被日常磨损、仍不肯轻易放弃的爱人。"
+      quote: "Chance can bring two people together. Staying means choosing, again and again, the person everyday life has worn down."
     }
   ];
 })();

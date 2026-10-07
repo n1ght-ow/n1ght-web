@@ -44,8 +44,7 @@
 
 /* ---------- the meta type, shared by both modes ---------- */
 .hof-name { font-size: var(--fs-small); font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
-.hof-hours { font-family: var(--font-mono); font-size: var(--fs-label); font-variant-numeric: tabular-nums; letter-spacing: var(--track-meta); color: var(--color-text-muted); }
-.hof-quote { font-size: var(--fs-label); line-height: 1.5; color: var(--color-text-muted); }
+.hof-release { font-family: var(--font-mono); font-size: var(--fs-label); font-variant-numeric: tabular-nums; letter-spacing: var(--track-meta); color: var(--color-text-muted); }
 
 /* Hide the dial's chrome until there is a dial. */
 .hof-cue, .hof-labels { display: none; }
@@ -64,15 +63,8 @@
 
 .hof:not(.is-live) .hof-item { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em var(--sp-2); }
 .hof:not(.is-live) .hof-img-wrap { flex: 1 0 100%; }
-.hof:not(.is-live) .hof-hours { margin-inline-start: auto; }
-.hof:not(.is-live) .hof-quote {
-  flex: 1 0 100%;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+.hof:not(.is-live) .hof-release { margin-inline-start: auto; }
+
 
 /* ---------- the dial ---------- */
 .hof.is-live {
@@ -126,8 +118,7 @@
 
 /* The meta belongs to the centred card, so it is painted once, there. */
 .hof.is-live .hof-name,
-.hof.is-live .hof-hours,
-.hof.is-live .hof-quote { display: none; }
+.hof.is-live .hof-release { display: none; }
 
 .hof.is-live .hof-cue {
   display: block;
@@ -178,18 +169,4 @@
    name is the only thing on the panel the size of a small heading, and at
    --fs-h4 it read as a caption under a 440px cover. */
 .hof.is-live .hof-now-name { font-size: var(--fs-h3); font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; text-wrap: balance; }
-.hof.is-live .hof-now-hours { font-family: var(--font-mono); font-size: var(--fs-label); font-variant-numeric: tabular-nums; letter-spacing: var(--track-meta); color: var(--color-text-muted); }
-
-/* One line of the collection note, clamped: it is the same sentence the
-   detail layer will show in full when the cover is opened. */
-.hof.is-live .hof-now-quote {
-  font-size: var(--fs-label);
-  line-height: 1.55;
-  color: var(--color-text-muted);
-  max-inline-size: 46ch;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+.hof.is-live .hof-now-release { font-family: var(--font-mono); font-size: var(--fs-label); font-variant-numeric: tabular-nums; letter-spacing: var(--track-meta); color: var(--color-text-muted); }

@@ -11,7 +11,7 @@
   var refreshLayout = function () { window.scheduleRefresh(250); };
 
   host.classList.add('atelier-photo');
-  host.setAttribute('aria-label', '摄影阅览室，21 张照片');
+  host.setAttribute('aria-label', 'Photography viewing room, 21 photographs');
   var heading = document.createElement('div');
   heading.className = 'atelier-photo__heading';
   heading.innerHTML = '<span>Field notes / A year in light</span><span>21 photographs · one long walk</span>';
@@ -22,16 +22,16 @@
   room.appendChild(plane);
   var catalog = document.createElement('div');
   catalog.className = 'atelier-photo__catalog';
-  catalog.innerHTML = '<div class="atelier-photo__catalog-head"><p class="atelier-photo__catalog-label">The contact sheet <span class="atelier-photo__count">/ 01 of 21</span></p><div class="atelier-photo__controls"><button class="atelier-photo__step" type="button" data-step="-1" aria-label="上一张照片">←</button><button class="atelier-photo__step" type="button" data-step="1" aria-label="下一张照片">→</button></div></div>';
+  catalog.innerHTML = '<div class="atelier-photo__catalog-head"><p class="atelier-photo__catalog-label">The contact sheet <span class="atelier-photo__count">/ 01 of 21</span></p><div class="atelier-photo__controls"><button class="atelier-photo__step" type="button" data-step="-1" aria-label="Previous photograph">←</button><button class="atelier-photo__step" type="button" data-step="1" aria-label="Next photograph">→</button></div></div>';
   var sheet = document.createElement('div');
   sheet.className = 'atelier-photo__sheet';
   sheet.setAttribute('role', 'group');
-  sheet.setAttribute('aria-label', '选择照片');
+  sheet.setAttribute('aria-label', 'Select photograph');
   catalog.appendChild(sheet);
   var note = document.createElement('p');
   note.className = 'atelier-photo__note';
-  note.lang = 'zh';
-  note.textContent = '点选一枚印相，翻到那一天。点击照片，走近一点。';
+  note.lang = 'en';
+  note.textContent = 'Choose a print to revisit a day. Open the photograph for a closer look.';
   catalog.appendChild(note);
   var live = document.createElement('p');
   live.className = 'atelier-photo__live';
@@ -50,7 +50,7 @@
     var button = document.createElement('button');
     button.type = 'button';
     button.className = 'atelier-photo__thumb';
-    button.setAttribute('aria-label', '选择照片 ' + (i + 1) + '：' + image.alt);
+    button.setAttribute('aria-label', 'Select photograph ' + (i + 1) + ': ' + image.alt);
     button.setAttribute('aria-pressed', 'false');
     var small = document.createElement('img');
     small.src = rail;
@@ -111,7 +111,7 @@
     });
     thumbs.forEach(function (button, i) { button.setAttribute('aria-pressed', String(i === active)); });
     host.querySelector('.atelier-photo__count').textContent = '/ ' + String(active + 1).padStart(2, '0') + ' of ' + frames.length;
-    if (animate) live.textContent = '照片 ' + (active + 1) + '，' + frames[active].querySelector('.photo-frame-text').textContent;
+    if (animate) live.textContent = 'Photograph ' + (active + 1) + ', ' + frames[active].querySelector('.photo-frame-text').textContent;
     refreshLayout();
   }
   catalog.querySelectorAll('[data-step]').forEach(function (button) {
