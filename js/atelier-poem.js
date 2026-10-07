@@ -1,92 +1,147 @@
-/* The six stanzas remain fully readable. Motion follows the reader, never a timer. */
+/* An anthology within Archive: select and read without leaving the room. */
 (() => {
   'use strict';
+
   const poem = document.getElementById('poem');
-  if (!poem || poem.dataset.atelierPoem) return;
-  poem.dataset.atelierPoem = 'true';
+  const grid = document.getElementById('poem-selection-grid');
+  const panel = document.getElementById('panel-poems');
+  const works = Array.isArray(window.POEM_DATA) ? window.POEM_DATA : [];
+  if (!poem || !grid || !panel || poem.dataset.atelierPoem || !works.length) return;
   const verse = poem.querySelector('.poem-verse');
-  const originals = [...verse.querySelectorAll('.poem-col > p')];
-  const numerals = ['I', 'II', 'III', 'IV', 'V', 'VI'];
-  const fragment = document.createDocumentFragment();
-  originals.forEach((stanza, index) => {
-    const pieces = stanza.innerHTML.split(/<br\s*\/?\s*>/i);
-    stanza.replaceChildren();
-    stanza.className = 'poem-stanza';
-    const note = document.createElement('span');
-    note.className = 'poem-stanza-note';
-    note.setAttribute('aria-hidden', 'true');
-    note.innerHTML = `<span>${numerals[index]}</span><em>Reading here</em>`;
-    stanza.append(note);
-    pieces.forEach(piece => {
-      const line = document.createElement('span');
-      line.className = 'poem-line';
-      line.innerHTML = piece.trim();
-      stanza.append(line);
-    });
-    fragment.append(stanza);
-  });
-  verse.replaceChildren(fragment);
+  const credit = poem.querySelector('.poem-credit');
+  const title = poem.querySelector('.poem-title');
+  const standfirst = poem.querySelector('.poem-standfirst');
+  const source = poem.querySelector('.poem-source-link');
+  const signature = poem.querySelector('.poem-sign');
+  const position = panel.querySelector('.poem-position');
+  const status = document.getElementById('poem-selection-status');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (!verse || !credit || !title || !standfirst || !source || !signature) return;
+  poem.dataset.atelierPoem = 'true';
 
-  const reader = document.createElement('div');
-  reader.className = 'poem-reader';
-  reader.setAttribute('aria-hidden', 'true');
-  reader.innerHTML = '<div class="poem-reader-dial"><svg viewBox="0 0 62 62"><circle class="poem-reader-track" cx="31" cy="31" r="28"/><circle class="poem-reader-arc" cx="31" cy="31" r="28"/></svg><span class="poem-reader-needle"></span></div><div class="poem-reader-copy"><em>Stay with the light.</em><span class="poem-reader-count">Stanza I / VI</span></div>';
-  poem.querySelector('.poem-head').append(reader);
-
-  const stanzas = [...verse.querySelectorAll('.poem-stanza')];
-  const count = reader.querySelector('.poem-reader-count');
-  const setCurrent = index => {
-    stanzas.forEach((stanza, i) => stanza.classList.toggle('is-reading', i === index));
-    count.textContent = `Stanza ${numerals[index]} / VI`;
+  let selected = 0;
+  let tween = null;
+  const stopMotion = () => {
+    if (tween) tween.kill();
+    tween = null;
+    verse.style.removeProperty('opacity');
+    verse.style.removeProperty('transform');
   };
-  setCurrent(0);
-  if (!window.gsap || !window.ScrollTrigger) return;
-  const { gsap, ScrollTrigger } = window;
-  gsap.registerPlugin(ScrollTrigger);
-  const mm = gsap.matchMedia();
-  mm.add('(prefers-reduced-motion: no-preference)', () => {
-    stanzas.forEach((stanza, index) => {
-      ScrollTrigger.create({
-        trigger: stanza,
-        start: 'top 65%',
-        end: 'bottom 35%',
-        onEnter: () => setCurrent(index),
-        onEnterBack: () => setCurrent(index)
-      });
-      gsap.fromTo(stanza, { y: 16 }, {
-        y: -8,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: stanza,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1,
-          invalidateOnRefresh: true
-        }
-      });
-      gsap.fromTo(stanza.querySelectorAll('.refrain'), { '--poem-mark': 0 }, {
-        '--poem-mark': 1,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: stanza,
-          start: 'top 75%',
-          end: 'bottom 45%',
-          scrub: 0.6,
-          invalidateOnRefresh: true
-        }
-      });
-    });
-    const dial = gsap.timeline({
-      scrollTrigger: {
-        trigger: verse,
-        start: 'top 65%',
-        end: 'bottom 45%',
-        scrub: 0.8,
-        invalidateOnRefresh: true
-      }
-    });
-    dial.to(reader.querySelector('.poem-reader-needle'), { rotation: 140, ease: 'none' }, 0)
-      .to(reader.querySelector('.poem-reader-arc'), { strokeDashoffset: 0, ease: 'none' }, 0);
+  const refresh = () => {
+    if (typeof scheduleRefresh === 'function') scheduleRefresh();
+  };
+
+  const choices = works.map((work, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'poem-choice';
+    button.dataset.poemId = work.id;
+    button.setAttribute('aria-pressed', 'false');
+    button.setAttribute('aria-controls', 'poem');
+    button.setAttribute('aria-label', `Read ${work.title} by ${work.author}`);
+    const number = document.createElement('span');
+    number.className = 'poem-choice-index';
+    number.setAttribute('aria-hidden', 'true');
+    number.textContent = String(index + 1).padStart(2, '0');
+    const name = document.createElement('span');
+    name.className = 'poem-choice-title';
+    name.textContent = work.title;
+    const author = document.createElement('span');
+    author.className = 'poem-choice-author';
+    author.textContent = work.author;
+    button.append(number, name, author);
+    return button;
   });
-  scheduleRefresh();
+  grid.replaceChildren(...choices);
+
+  const select = (index, announce = true) => {
+    stopMotion();
+    selected = (index + works.length) % works.length;
+    const work = works[selected];
+    choices.forEach((button, i) => button.setAttribute('aria-pressed', String(i === selected)));
+    const authorLink = document.createElement('a');
+    authorLink.href = work.authorUrl;
+    authorLink.target = '_blank';
+    authorLink.rel = 'noopener';
+    authorLink.textContent = work.author;
+    credit.replaceChildren(authorLink, document.createTextNode(` · ${work.form} · ${work.year}`));
+    title.textContent = work.title;
+    standfirst.textContent = work.note;
+    source.href = work.sourceUrl;
+    source.textContent = work.sourceLabel;
+    const lineCount = work.stanzas.reduce((total, lines) => total + lines.length, 0);
+    signature.textContent = `${lineCount} lines · ${work.stanzas.length} stanzas`;
+    if (position) position.textContent = `${String(selected + 1).padStart(2, '0')} / ${String(works.length).padStart(2, '0')}`;
+
+    const split = Math.ceil(work.stanzas.length / 2);
+    const leaves = [work.stanzas.slice(0, split), work.stanzas.slice(split)].filter((leaf) => leaf.length);
+    const fragment = document.createDocumentFragment();
+    leaves.forEach((stanzas, leafIndex) => {
+      const leaf = document.createElement('div');
+      leaf.className = 'poem-col';
+      const label = document.createElement('span');
+      label.className = 'poem-leaf-label';
+      label.setAttribute('aria-hidden', 'true');
+      label.textContent = leafIndex === 0 ? 'THE POEM / I' : 'CONTINUED / II';
+      leaf.append(label);
+      stanzas.forEach((lines) => {
+        const stanza = document.createElement('p');
+        stanza.className = 'poem-stanza';
+        lines.forEach((text, lineIndex) => {
+          if (lineIndex) stanza.append(document.createTextNode('\n'));
+          const line = document.createElement('span');
+          line.className = 'poem-line';
+          if ((work.refrains || []).includes(text)) line.classList.add('refrain');
+          line.textContent = text;
+          stanza.append(line);
+        });
+        leaf.append(stanza);
+      });
+      fragment.append(leaf);
+    });
+    verse.replaceChildren(fragment);
+    if (announce && status) status.textContent = `${work.title} by ${work.author}. ${lineCount} lines. Full poem displayed below the contents.`;
+    if (announce && !reduced.matches && window.gsap && panel.classList.contains('is-active')) {
+      tween = window.gsap.fromTo(verse, { opacity: .6, y: 6 }, {
+        opacity: 1, y: 0, duration: .3, ease: 'power1.out', clearProps: 'opacity,transform',
+        onComplete: () => { tween = null; }
+      });
+    }
+    refresh();
+  };
+
+  grid.addEventListener('click', (event) => {
+    const button = event.target.closest('.poem-choice');
+    const index = choices.indexOf(button);
+    if (index >= 0 && index !== selected) select(index);
+  });
+  grid.addEventListener('keydown', (event) => {
+    const index = choices.indexOf(event.target.closest('.poem-choice'));
+    if (index < 0) return;
+    const keys = { ArrowRight: index + 1, ArrowDown: index + 1, ArrowLeft: index - 1, ArrowUp: index - 1, Home: 0, End: works.length - 1 };
+    if (!(event.key in keys)) return;
+    event.preventDefault();
+    select(keys[event.key]);
+    choices[selected].focus({ preventScroll: true });
+  });
+  panel.querySelectorAll('[data-poem-step]').forEach((button) => {
+    button.addEventListener('click', () => select(selected + Number(button.dataset.poemStep)));
+  });
+  reduced.addEventListener('change', () => { stopMotion(); refresh(); });
+  document.getElementById('archive-tabbar')?.addEventListener('night:archive-tab', (event) => {
+    if (event.detail?.token !== 'poems') stopMotion();
+  });
+  const poemsTab = document.getElementById('tab-poems');
+  document.querySelectorAll('a[href="#tab-poems"]').forEach((link) => {
+    link.addEventListener('click', () => {
+      if (poemsTab?.getAttribute('aria-selected') !== 'true') poemsTab.click();
+    });
+  });
+  select(0, false);
+  if (location.hash === '#tab-poems' || location.hash === '#about') {
+    poemsTab?.click();
+    if (location.hash === '#about') {
+      requestAnimationFrame(() => document.getElementById('about')?.scrollIntoView({ behavior: 'auto', block: 'start' }));
+    }
+  }
 })();

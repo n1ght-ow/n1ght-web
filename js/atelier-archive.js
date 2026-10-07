@@ -14,6 +14,7 @@
     music: { name: "A listening library", caption: "On repeat", count: (window.MUSIC_DATA || []).reduce((sum, group) => sum + group.tracks.length, 0), unit: "tracks" },
     sport: { name: "A lifelong allegiance", caption: "Always our side", count: archive.querySelectorAll(".sport-card").length, unit: "teams" },
     games: { name: "Worlds lived in", caption: "Time well lost", count: archive.querySelectorAll(".hof-item").length, unit: "worlds" },
+    poems: { name: "The reading room", caption: "A line to return to", count: (window.POEM_DATA || []).length, unit: "poems" },
   };
 
   tabs.forEach((tab) => {
@@ -35,7 +36,7 @@
   const catalogue = document.createElement("div");
   catalogue.className = "collection-catalogue";
   const catalogueLabel = document.createElement("p");
-  catalogueLabel.textContent = "A personal collection / Six rooms";
+  catalogueLabel.textContent = `A personal collection / ${tabs.length} rooms`;
   const count = document.createElement("p");
   count.className = "collection-count";
   catalogue.append(catalogueLabel, count);

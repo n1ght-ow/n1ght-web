@@ -179,7 +179,7 @@
   --section-y: clamp(5rem, 9vw, 7.5rem);
   /* The one gap between the three archive/music bars and the list. Every bar
      measures its spacing from this, so the stack stays even (measured 24 / 24 /
-     24). It is also the tab strip's distance to all six panels. */
+     24). It is also the tab strip's distance to all seven panels. */
   --bar-gap: var(--sp-5);
   /* ONE gutter for every chapter head AND for the poem's two columns: the
      masthead's two cells, the verse's columns and the colophon all read it, so
@@ -966,18 +966,18 @@ h1, h2 { text-wrap: balance; }
 .tab-panels .tab-panel { display: none; }
 .tab-panels .tab-panel.is-active { display: block; }
 
-/* ============ 11b. THE SHELF NOTE (one per panel, six in all) ============
-   Each of the six shelves opens with one sentence saying what was kept and how
+/* ============ 11b. THE SHELF NOTE (one per panel, seven in all) ============
+   Each of the seven shelves opens with one sentence saying what was kept and how
    it was chosen. They are not decoration and they are not a second title: the
    panel already has a head (TWENTY-FOUR FILMS, a genre name, the shelf itself),
    and this is the one line in the panel that speaks in the first person, which
    is what the chapter was missing - a reader could see WHAT was kept and never
-   WHY, and the six shelves therefore read as one undifferentiated pile.
+   WHY, and the seven shelves therefore read as one undifferentiated pile.
 
-/* ONE ELEMENT, SIX PLACES, ONE MEASURE. The panels have six completely
+/* ONE ELEMENT, SEVEN PLACES, ONE MEASURE. The panels have seven completely
    different internal heads, so the note is finished by one rule and lets each
-   panel's own head follow it. That is deliberate: making it PART of six
-   different heads would have meant six different typesettings of the same
+   panel's own head follow it. That is deliberate: making it PART of seven
+   different heads would have meant seven different typesettings of the same
    sentence, which is the failure this is meant to fix.
    It is set in the site's own voice - the shared deck register, --fs-small on
    the 46ch measure, exactly like .sec-copy and .lead - so it reads as the same
@@ -985,27 +985,26 @@ h1, h2 { text-wrap: balance; }
    the accent hue means "you can click this" everywhere on this site, and this
    sentence cannot be clicked.
 
-   THE DISTANCE IS ONE VALUE FOR ALL SIX: --bar-gap, the token the archive's own
+   THE DISTANCE IS ONE VALUE FOR ALL SEVEN: --bar-gap, the token the archive's own
    stack is already built from (tab strip -> panel, and inside the music drawer,
    search row -> genre row -> list). The first version gave five of the six
    --sp-6 and the music note --bar-gap, which put two different gaps under the
    same sentence depending on which tab was open - and the tab strip is the
-   thing all six hang off.
+   thing all seven hang off.
 
    WHY THERE IS A WRAPPER. .panel-note is not decoration: js/reel-stage.js
    renders with `stage.innerHTML = ""`, and for films and series the stage
    element IS the tab panel, so a bare note inside it was wiped on first paint
    (measured: the note was in the DOM and both panels rendered without it). The
-   wrapper makes the note a sibling of the stage, which is what the other four
-   panels get anyway, so the six are one shape in the DOM and not only on
+   wrapper makes the note a sibling of the stage, which is what the other panels get anyway, so the seven are one shape in the DOM and not only on
    screen. Do not flatten it back into the panel. */
 .panel-note {
   margin-block-end: var(--bar-gap);
 }
 
-/* The .curator--books ... --games classes stay on the elements as hooks - they
+/* The .curator--books ... --games and --poems classes stay on the elements as hooks - they
    are what a future note-specific change would target - but nothing styles them
-   any more: measurement said all six land on the same gap, so the six cannot
+   any more: measurement said all seven land on the same gap, so the seven cannot
    drift apart without someone writing the rule on purpose. */
 .curator {
   max-width: 46ch;

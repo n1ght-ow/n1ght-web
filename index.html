@@ -27,7 +27,7 @@
   <!-- The opening italic is self-hosted and preloaded. -->
   <link rel="preload" href="fonts/InstrumentSerif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=15">
-  <link rel="stylesheet" href="css/style.css?v=106">
+  <link rel="stylesheet" href="css/style.css?v=107">
   <link rel="stylesheet" href="css/glass.css?v=13">
   <link rel="stylesheet" href="css/reel-stage.css?v=17">
   <link rel="stylesheet" href="css/film-stage.css?v=18">
@@ -39,8 +39,8 @@
   <link rel="stylesheet" href="css/atelier.css?v=3">
   <link rel="stylesheet" href="css/atelier-hero.css?v=2">
   <link rel="stylesheet" href="css/atelier-photo.css?v=2">
-  <link rel="stylesheet" href="css/atelier-archive.css?v=7">
-  <link rel="stylesheet" href="css/atelier-poem.css?v=1">
+  <link rel="stylesheet" href="css/atelier-archive.css?v=11">
+  <link rel="stylesheet" href="css/atelier-poem.css?v=3">
   <link rel="stylesheet" href="css/curator-desk.css?v=5">
 </head>
 <body>
@@ -65,7 +65,6 @@
         <a href="#photo">Photography</a>
         <a href="#archive">Archive</a>
         <a href="#curate">Curate</a>
-        <a href="#about">Poem</a>
       </nav>
     </div>
   </header>
@@ -376,7 +375,7 @@
           </div>
           <div class="sec-copy">
             <span class="lead">Read, rewatched, repeated, rooted for.</span>
-            Six shelves of things that did not just stay. They built the person who keeps them.
+            Seven shelves of things that did not just stay. They built the person who keeps them.
           </div>
         </div>
 
@@ -389,11 +388,12 @@
                so keyboard and screen-reader behaviour is untouched. -->
           <span class="glass-pill" id="tab-pill" aria-hidden="true"><span class="glass-pill__body"></span></span>
           <button class="tab-btn is-active" id="tab-books" type="button" role="tab" aria-selected="true" aria-controls="panel-books" data-tab="books"><span class="no" aria-hidden="true">01</span>Books</button>
-          <button class="tab-btn" id="tab-films" type="button" role="tab" aria-selected="false" aria-controls="panel-films" data-tab="films" tabindex="-1"><span class="no" aria-hidden="true">02</span>Films</button>
-          <button class="tab-btn" id="tab-series" type="button" role="tab" aria-selected="false" aria-controls="panel-series" data-tab="series" tabindex="-1"><span class="no" aria-hidden="true">03</span>Series</button>
-          <button class="tab-btn" id="tab-music" type="button" role="tab" aria-selected="false" aria-controls="panel-music" data-tab="music" tabindex="-1"><span class="no" aria-hidden="true">04</span>Music</button>
-          <button class="tab-btn" id="tab-sport" type="button" role="tab" aria-selected="false" aria-controls="panel-sport" data-tab="sport" tabindex="-1"><span class="no" aria-hidden="true">05</span>Sport</button>
-          <button class="tab-btn" id="tab-games" type="button" role="tab" aria-selected="false" aria-controls="panel-games" data-tab="games" tabindex="-1"><span class="no" aria-hidden="true">06</span>Games</button>
+          <button class="tab-btn" id="tab-poems" type="button" role="tab" aria-selected="false" aria-controls="panel-poems" data-tab="poems" tabindex="-1"><span class="no" aria-hidden="true">02</span>Poems</button>
+          <button class="tab-btn" id="tab-music" type="button" role="tab" aria-selected="false" aria-controls="panel-music" data-tab="music" tabindex="-1"><span class="no" aria-hidden="true">03</span>Music</button>
+          <button class="tab-btn" id="tab-sport" type="button" role="tab" aria-selected="false" aria-controls="panel-sport" data-tab="sport" tabindex="-1"><span class="no" aria-hidden="true">04</span>Sport</button>
+          <button class="tab-btn" id="tab-series" type="button" role="tab" aria-selected="false" aria-controls="panel-series" data-tab="series" tabindex="-1"><span class="no" aria-hidden="true">05</span>Series</button>
+          <button class="tab-btn" id="tab-films" type="button" role="tab" aria-selected="false" aria-controls="panel-films" data-tab="films" tabindex="-1"><span class="no" aria-hidden="true">06</span>Films</button>
+          <button class="tab-btn" id="tab-games" type="button" role="tab" aria-selected="false" aria-controls="panel-games" data-tab="games" tabindex="-1"><span class="no" aria-hidden="true">07</span>Games</button>
         </div>
       </div>
 
@@ -402,9 +402,9 @@
            the lookup fails. Its shell constraint lives in CSS instead. -->
       <div class="tab-panels">
 
-          <!-- PANEL 01: BOOKS -->
+          <!-- PANEL: BOOKS -->
           <div class="tab-panel is-active" id="panel-books" role="tabpanel" aria-labelledby="tab-books" data-panel="books" tabindex="0">
-            <!-- The panel note. One per shelf, and the six are one system: the
+            <!-- The panel note. One per shelf, and the seven are one system: the
                  same element, the same measure, the same relation to whatever
                  the panel opens with (see .curator in css/style.css, section
                  11b). Each one names a decision rather than a mood - what was
@@ -417,13 +417,13 @@
             <div class="book-shelf" data-book-shelf="auto" role="group" aria-label="Books on the shelf"></div>
           </div>
 
-          <!-- PANEL 02: FILMS -->
+          <!-- PANEL: FILMS -->
           <!-- The stage renders into the INNER div, not into the panel. It has
                to: js/reel-stage.js renders with `stage.innerHTML = ""`, so a
                stage that IS the panel deletes the shelf note above it (measured
                - the note was in the DOM and both panels painted without it).
                The inner div also gives the panel's own content a home, which is
-               what lets the note be a sibling of the stage in all six panels. -->
+               what lets the note be a sibling of the stage in all seven panels. -->
           <div class="tab-panel" id="panel-films" role="tabpanel" aria-labelledby="tab-films" data-panel="films" tabindex="0">
             <div class="panel-note">
               <p class="curator curator--films">Half of these I saw once, in a cinema, at the wrong age to understand them.</p>
@@ -431,7 +431,7 @@
             <div data-film-stage="auto"></div>
           </div>
 
-          <!-- PANEL 03: SERIES -->
+          <!-- PANEL: SERIES -->
           <div class="tab-panel" id="panel-series" role="tabpanel" aria-labelledby="tab-series" data-panel="series" tabindex="0">
             <div class="panel-note">
               <p class="curator curator--series">Long series here are the ones I stopped midway and finished years later.</p>
@@ -439,7 +439,7 @@
             <div data-series-stage="auto"></div>
           </div>
 
-          <!-- PANEL 04: MUSIC -->
+          <!-- PANEL: MUSIC -->
           <div class="tab-panel" id="panel-music" role="tabpanel" aria-labelledby="tab-music" data-panel="music" tabindex="0">
             <div class="music-drawer" id="music-drawer">
               <div class="panel-note">
@@ -492,7 +492,7 @@
             </div>
           </div>
 
-          <!-- PANEL 05: SPORT - five slides, not a ledger.
+          <!-- PANEL: SPORT - five slides, not a ledger.
                Ported from Framer's "image animation"
                (framer.com/m/image-animation-HJJB.js@ga1htqyg5UFN9eq91lZh). The
                upstream component is five children in a row where exactly one is
@@ -594,6 +594,7 @@
           </div>
 
 
+          <!-- PANEL: GAMES -->
           <div class="tab-panel" id="panel-games" role="tabpanel" aria-labelledby="tab-games" data-panel="games" tabindex="0">
             <div class="panel-note">
               <p class="curator curator--games">Eighteen games, ordered by their original release dates. Some timelines begin before the millennium.</p>
@@ -706,6 +707,66 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div class="tab-panel" id="panel-poems" role="tabpanel" aria-labelledby="tab-poems" data-panel="poems" tabindex="0">
+            <!-- Contents and complete text form one anthology inside Archive. -->
+            <div class="poem-library">
+              <div class="poem-library-label"><span>A small anthology</span><span>Three voices, kept close.</span></div>
+              <div class="poem-selection-grid" id="poem-selection-grid" role="group" aria-label="Choose a poem"></div>
+              <p class="sr-only" id="poem-selection-status" role="status" aria-live="polite" aria-atomic="true"></p>
+              <div class="poem-reading" id="about">
+                <article class="poem" id="poem" aria-labelledby="poem-title">
+                  <header class="poem-head">
+                    <div class="poem-head-main">
+                      <p class="poem-folio-kicker">A line to return to</p>
+                      <h3 class="poem-title" id="poem-title">Do not go gentle into that good night</h3>
+                      <p class="poem-credit">Dylan Thomas · A villanelle · 1947</p>
+                    </div>
+                    <p class="poem-standfirst">Kept here because the light was never the reward. Catching it, and not letting go, was the whole instruction.</p>
+                  </header>
+
+                  <blockquote class="poem-verse">
+                    <div class="poem-col">
+                      <p><span class="refrain">Do not go gentle into that good night,</span><br>
+                      Old age should burn and rave at close of day;<br>
+                      <span class="refrain">Rage, rage against the dying of the light.</span></p>
+                      <p>Though wise men at their end know dark is right,<br>
+                      Because their words had forked no lightning they<br>
+                      <span class="refrain">Do not go gentle into that good night.</span></p>
+                      <p>Good men, the last wave by, crying how bright<br>
+                      Their frail deeds might have danced in a green bay,<br>
+                      <span class="refrain">Rage, rage against the dying of the light.</span></p>
+                    </div>
+
+                    <div class="poem-col">
+                      <p>Wild men who caught and sang the sun in flight,<br>
+                      And learn, too late, they grieved it on its way,<br>
+                      <span class="refrain">Do not go gentle into that good night.</span></p>
+                      <p>Grave men, near death, who see with blinding sight<br>
+                      Blind eyes could blaze like meteors and be gay,<br>
+                      <span class="refrain">Rage, rage against the dying of the light.</span></p>
+                      <p>And you, my father, there on the sad height,<br>
+                      Curse, bless, me now with your fierce tears, I pray.<br>
+                      <span class="refrain">Do not go gentle into that good night.</span><br>
+                      <span class="refrain">Rage, rage against the dying of the light.</span></p>
+                    </div>
+                  </blockquote>
+
+                  <footer class="poem-foot">
+                    <p class="label poem-source"><a class="poem-source-link" href="https://www.poetryfoundation.org/poems/46569/do-not-go-gentle-into-that-good-night" target="_blank" rel="noopener">Read the poem at Poetry Foundation ↗</a></p>
+                    <p class="poem-sign">19 lines · 6 stanzas</p>
+                  </footer>
+                </article>
+              </div>
+              <nav class="poem-pagination" aria-label="Browse poems">
+                <button class="poem-turn" type="button" data-poem-step="-1" aria-label="Previous poem">← Previous poem</button>
+                <span class="poem-position" aria-hidden="true">01 / 03</span>
+                <button class="poem-turn" type="button" data-poem-step="1" aria-label="Next poem">Next poem →</button>
+              </nav>
+            </div>
+          </div>
+      </div>
+    </div>
     </section>
 
     <!-- ============ THE CURATOR'S DESK ============ -->
@@ -760,67 +821,7 @@
       </div>
     </section>
 
-    <!-- ============ POEM ============
-         The chapter is the poem and nothing else (asked for): the section head
-         that used to sit above it, the three prose paragraphs, the eight
-         counters and the coda are all gone, and the six stanzas read in two
-         columns of three. The section keeps id="about" so the nav and footer
-         anchors and every ScrollTrigger still resolve; only the nav LABEL is
-         now Poem.
 
-         Redesigned as a printed folio (asked for; the two columns stay): the
-         chapter now OPENS and CLOSES on the same two tracks. Masthead on top -
-         source line and title in the left cell, the foreword in the right one,
-         bottom-aligned like every other chapter head on the page. Colophon
-         underneath - the poem's full title in the left cell (the h2 is only
-         its first clause, so this is where the poem is actually named), the
-         closing line in the right one. The plate between them is untouched:
-         same six stanzas, same order, same two .poem-col wrappers. -->
-    <section class="section about" id="about">
-      <div class="shell">
-        <div class="poem" id="poem">
-          <header class="poem-head">
-            <div class="poem-head-main">
-              <p class="label sec-eyebrow">Dylan Thomas / A villanelle / 1947</p>
-              <h2 class="sec-title">Do not go gentle.</h2>
-            </div>
-            <p class="poem-standfirst">A year spent looking, then a shelf of everything worth keeping, and now the poem that says what the looking was for. It is the shortest thing on this page: nineteen lines, one instruction, repeated until it stops being advice.</p>
-          </header>
-
-          <blockquote class="poem-verse">
-            <div class="poem-col">
-              <p><span class="refrain">Do not go gentle into that good night,</span><br>
-              Old age should burn and rave at close of day;<br>
-              <span class="refrain">Rage, rage against the dying of the light.</span></p>
-              <p>Though wise men at their end know dark is right,<br>
-              Because their words had forked no lightning they<br>
-              <span class="refrain">Do not go gentle into that good night.</span></p>
-              <p>Good men, the last wave by, crying how bright<br>
-              Their frail deeds might have danced in a green bay,<br>
-              <span class="refrain">Rage, rage against the dying of the light.</span></p>
-            </div>
-
-            <div class="poem-col">
-              <p>Wild men who caught and sang the sun in flight,<br>
-              And learn, too late, they grieved it on its way,<br>
-              <span class="refrain">Do not go gentle into that good night.</span></p>
-              <p>Grave men, near death, who see with blinding sight<br>
-              Blind eyes could blaze like meteors and be gay,<br>
-              <span class="refrain">Rage, rage against the dying of the light.</span></p>
-              <p>And you, my father, there on the sad height,<br>
-              Curse, bless, me now with your fierce tears, I pray.<br>
-              <span class="refrain">Do not go gentle into that good night.</span><br>
-              <span class="refrain">Rage, rage against the dying of the light.</span></p>
-            </div>
-          </blockquote>
-
-          <footer class="poem-foot">
-            <p class="label poem-source">Do not go gentle into that good night</p>
-            <p class="poem-sign">Kept here because the light was never the reward. Catching it, and not letting go, was the whole instruction.</p>
-          </footer>
-        </div>
-      </div>
-    </section>
 
   </main>
 
@@ -833,7 +834,7 @@
           <a href="#photo">Photography</a>
           <a href="#archive">The Archive</a>
           <a href="#curate">Curate</a>
-          <a href="#about">Poem</a>
+          <a href="#tab-poems">Poem</a>
           <a href="#hero">Back to top</a>
         </nav>
       </div>
@@ -897,6 +898,7 @@
   <script src="js/series-data.js?v=4"></script>
   <script src="js/book-shelf-data.js?v=5"></script>
   <script src="js/music-data.js?v=7"></script>
+  <script src="js/poems-data.js?v=2"></script>
   <script src="js/music-covers.js?v=6"></script>
   <script src="js/reel-stage.js?v=32"></script>
   <script src="js/film-stage.js?v=8"></script>
@@ -909,8 +911,8 @@
   <script src="js/atelier.js?v=4"></script>
   <script src="js/atelier-hero.js?v=2"></script>
   <script src="js/atelier-photo.js?v=3"></script>
-  <script src="js/atelier-archive.js?v=1"></script>
-  <script src="js/atelier-poem.js?v=2"></script>
+  <script src="js/atelier-archive.js?v=2"></script>
+  <script src="js/atelier-poem.js?v=5"></script>
   <script src="js/curator-desk.js?v=8"></script>
 </body>
 </html>
