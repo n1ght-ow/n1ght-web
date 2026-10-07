@@ -697,6 +697,11 @@
           startAt: state.pos,
           moved: false
         };
+        // Before capture, a vertical exit can release outside the viewport.
+        // Listen only for this gesture so the next pointerdown cannot get stuck.
+        window.addEventListener("pointerup", endSwipe, true);
+        window.addEventListener("pointercancel", endSwipe, true);
+        window.addEventListener("blur", state.cancelDrag);
         velReset(state.pos);
       });
 
@@ -718,9 +723,14 @@
 
       function endSwipe(event) {
         if (!drag || (event && event.pointerId !== drag.id)) return;
-        if (drag.moved) {
+        const current = drag;
+        drag = null;
+        window.removeEventListener("pointerup", endSwipe, true);
+        window.removeEventListener("pointercancel", endSwipe, true);
+        window.removeEventListener("blur", state.cancelDrag);
+        if (current.moved) {
           swiped = true;
-          try { viewport.releasePointerCapture(drag.id); } catch (err) { /* already released */ }
+          try { viewport.releasePointerCapture(current.id); } catch (err) { /* already released */ }
           viewport.classList.remove(prefix + "-stage-dragging");
 
           if (!event || event.type !== "pointercancel") {
@@ -734,7 +744,6 @@
           }
         }
         state.dragActive = false;
-        drag = null;
         /* the flick is handed over as a velocity: wake the loop to spend it */
         kick(state);
       }
@@ -745,6 +754,7 @@
         state.vel = 0;
         if (drag) endSwipe({ pointerId: drag.id, type: "pointercancel" });
       };
+      viewport.addEventListener("lostpointercapture", () => { if (drag) state.cancelDrag(); });
 
       viewport.addEventListener("click", (event) => {
         // a drag that ends back on the same poster must not also select it

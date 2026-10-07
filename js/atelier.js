@@ -53,6 +53,6 @@
   if (document.fonts) document.fonts.ready.then(refresh);
   document.addEventListener('load', (event) => {
     if (event.target instanceof HTMLImageElement &&
-        !event.target.closest('#lightbox, .tab-panel:not(.is-active)')) refresh();
+        !event.target.closest('#lightbox, dialog, [hidden], .tab-panel:not(.is-active)')) refresh();
   }, true);
 })();

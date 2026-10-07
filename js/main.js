@@ -27,7 +27,7 @@ function syncSmoothScroll() {
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add(tickScroll);
   gsap.ticker.lagSmoothing(0);
-  if (isLbOpen) lenis.stop();
+  if (isLbOpen || document.querySelector("dialog[open]")) lenis.stop();
 }
 // isLbOpen is initialized below before the initial scrolling setup.
 motionPreference.addEventListener("change", () => {
@@ -221,7 +221,7 @@ function detailAct(type, item) {
 }
 
 function syncOverlays() {
-  const active = isLbOpen ? lightbox : null;
+  const active = isLbOpen ? lightbox : document.querySelector("dialog[open]");
   Array.from(document.body.children).forEach((el) => {
     if (el.tagName === "SCRIPT") return;
     if (active && el !== active) el.setAttribute("inert", "");
@@ -768,6 +768,8 @@ function initMusicSearch() {
     return String(value || "")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
+      // NFD also splits Hangul into Jamo. Recompose before the script filter.
+      .normalize("NFC")
       .toLowerCase()
       .replace(/[^a-z0-9\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]+/g, " ")
       .trim();

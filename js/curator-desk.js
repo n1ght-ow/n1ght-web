@@ -29,6 +29,10 @@
       src: window.MUSIC_COVERS[t.id] ? "album-covers/" + window.MUSIC_COVERS[t.id] : "",
       thumb: window.MUSIC_COVERS[t.id] ? "album-covers/thumbs/" + window.MUSIC_COVERS[t.id].replace(/\.[^.]+$/, ".webp") : "" })))
   };
+  const searchIndex = new Map();
+  TYPES.forEach((type) => catalog[type].forEach((item) => {
+    searchIndex.set(item, [item.title, item.meta, item.alt, item.tag, item.spine].filter(Boolean).join(" ").toLocaleLowerCase());
+  }));
   // Store only IDs and visitor text. Collection metadata stays in the original sources.
   const blank = () => ({ order: TYPES.slice(), picks: {}, name: "", by: "", note: "", layout: "gallery" });
   let state = blank(), undo = null, exporting = false, saveTimer = 0;
@@ -174,27 +178,28 @@
   slots.addEventListener("pointercancel", () => finishDrag(false));
   slots.addEventListener("lostpointercapture", () => finishDrag(false));
 
-  function renderPicker() {
+  function renderPicker(append) {
     const query = $("curator-search").value.trim().toLocaleLowerCase();
-    const list = catalog[pickerType].filter((item) => [item.title, item.meta, item.alt, item.tag, item.spine].filter(Boolean).join(" ").toLocaleLowerCase().includes(query));
-    const results = $("curator-results"); results.replaceChildren();
-    list.slice(0, pickerLimit).forEach((item) => {
+    const list = catalog[pickerType].filter((item) => searchIndex.get(item).includes(query));
+    const results = $("curator-results");
+    if (!append) results.replaceChildren();
+    const fragment = document.createDocumentFragment();
+    list.slice(results.children.length, pickerLimit).forEach((item) => {
       const b = button("curator-result", "", "Choose “" + item.title + "”, " + item.meta);
       b.dataset.id = item.id; b.setAttribute("aria-pressed", String(String(state.picks[pickerType]) === String(item.id)));
       b.append(art(item, true), el("p", "curator-result-title", item.title), el("p", "curator-result-meta", item.meta));
       if (item.type === "photo") b.append(el("p", "curator-result-meta", item.alt));
-      results.append(b);
+      fragment.append(b);
     });
+    results.append(fragment);
     $("curator-results-count").textContent = list.length ? list.length + " pieces found; showing " + Math.min(pickerLimit, list.length) + ". Choose one piece to replace your current selection." : "No pieces found. Try another title, author or artist.";
     $("curator-more").hidden = pickerLimit >= list.length;
   }
-  let oldOverflow = "";
   function openPicker(type, trigger) {
     pickerType = type; pickerLimit = 40; pickerReturn = trigger;
     $("curator-picker-title").textContent = INVITES[type]; $("curator-search").value = "";
-    renderPicker(); picker.showModal(); picker.scrollTop = 0; oldOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    if (typeof lenis !== "undefined" && lenis) lenis.stop();
+    renderPicker(); picker.showModal(); picker.scrollTop = 0;
+    syncOverlays();
     $("curator-search").focus();
   }
   $("curator-search").addEventListener("input", () => { pickerLimit = 40; renderPicker(); picker.scrollTop = 0; });
@@ -204,7 +209,7 @@
     if (item) { select(pickerType, item); picker.close(); }
   });
   $("curator-more").addEventListener("click", () => {
-    const previous = pickerLimit; pickerLimit += 40; renderPicker();
+    const previous = pickerLimit; pickerLimit += 40; renderPicker(true);
     $("curator-results").children[previous]?.focus({ preventScroll: true });
   });
   $("curator-picker-close").addEventListener("click", () => picker.close());
@@ -217,8 +222,7 @@
     if (event.target === picker && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) picker.close();
   });
   picker.addEventListener("close", () => {
-    document.body.style.overflow = oldOverflow;
-    if (typeof lenis !== "undefined" && lenis && !document.querySelector("#lightbox.is-open")) lenis.start();
+    syncOverlays();
     const target = pickerReturn?.isConnected ? pickerReturn : slots.querySelector('[data-type="' + pickerType + '"] [data-action="pick"]');
     target?.focus({ preventScroll: true });
   });
@@ -245,12 +249,24 @@
   // One cached decode per selected artwork, never load the full catalog into canvas.
   function loadImage(item) {
     if (!item?.src) return Promise.resolve(null);
-    if (!images.has(item.src)) images.set(item.src, new Promise((resolve) => {
-      const img = new Image(); let finished = false;
-      const finish = (value) => { if (finished) return; finished = true; clearTimeout(timer); resolve(value); };
-      const timer = setTimeout(() => finish(null), 10000);
-      img.onload = () => finish(img); img.onerror = () => finish(null); img.src = item.src;
-    }));
+    if (!images.has(item.src)) {
+      const pending = new Promise((resolve) => {
+        const img = new Image(); let finished = false;
+        const finish = (value) => {
+          if (finished) return;
+          finished = true; clearTimeout(timer);
+          img.onload = img.onerror = null;
+          resolve(value);
+        };
+        const timer = setTimeout(() => finish(null), 10000);
+        img.onload = () => finish(img); img.onerror = () => finish(null); img.src = item.src;
+      });
+      images.set(item.src, pending);
+      // Failed previews must not poison a later export after the network recovers.
+      pending.then((value) => {
+        if (!value && images.get(item.src) === pending) images.delete(item.src);
+      });
+    }
     if (images.size > 15) {
       const keep = new Set(selected().map((entry) => entry?.src));
       for (const source of images.keys()) { if (images.size <= 15) break; if (!keep.has(source)) images.delete(source); }
