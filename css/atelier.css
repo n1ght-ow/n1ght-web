@@ -35,10 +35,11 @@
   --fs-display: clamp(3.75rem, 7.6vw, 7.5rem);
   --track-display: -0.045em;
   --track-h2: -0.04em;
-  --radius-sm: 3px;
-  --radius-md: 6px;
-  --radius-lg: 12px;
-  --radius-pill: 999px;
+  --radius-frame: 10px;
+  --radius-sm: var(--radius-frame);
+  --radius-md: var(--radius-frame);
+  --radius-lg: var(--radius-frame);
+  --radius-pill: var(--radius-frame);
   --shell: 1440px;
   --gutter: clamp(1.25rem, 6vw, 6.5rem);
   --section-y: clamp(5.5rem, 10vw, 9rem);
@@ -188,17 +189,6 @@ body, button, input { -webkit-font-smoothing: antialiased; }
   line-height: 1.6;
 }
 .atelier-colophon em { font-family: var(--font-editorial); font-size: 15px; }
-
-/* Images are mounted with a whisper of depth. The viewer keeps its dark wall. */
-.lightbox { background: rgb(20 32 27 / 98%); }
-.lb-stage img, .lb-stage .lb-music {
-  border-radius: 3px;
-  box-shadow: 0 0 0 8px var(--paper-000), 0 24px 70px rgb(0 0 0 / 25%);
-}
-.lb-cap { background: none; box-shadow: none; border: 0; }
-.lightbox :where(a, button, [tabindex]):focus-visible {
-  outline-color: var(--color-on-dark);
-}
 
 @media (max-width: 720px) {
   html { scroll-padding-top: 84px; }

@@ -436,7 +436,7 @@
   attachReelCollectors();
   // main.js initializes the two reels on DOMContentLoaded; attach after that mount exists.
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", attachReelCollectors, { once: true });
-  const lbTray = collector(document.querySelector(".lb-top"), () => {
+  const lbTray = collector(document.getElementById("lb-actions"), () => {
     if (typeof detailType === "undefined" || typeof detailItems === "undefined") return null;
     const data = detailItems[lbIndex];
     if (detailType === "music") return catalog.music.find((item) => String(item.id) === String(data?.id));

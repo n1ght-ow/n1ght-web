@@ -48,7 +48,7 @@
 .curator-layout-icon[data-layout="contact"] { background: repeating-linear-gradient(0deg, transparent 0 3px, var(--ink-600) 3px 5px) center / 12px 17px no-repeat; }
 .curator-layout-icon[data-layout="night"] { background: var(--ink-900); border: 3px solid var(--paper-200); }
 .curator-actions { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
-.curator-primary { background: var(--ink-900); color: var(--paper-000) !important; border: 1px solid var(--ink-900); padding: .85rem 1.25rem; min-height: 48px; border-radius: 3px; font-size: 14px !important; white-space: nowrap; }
+.curator-primary { background: var(--ink-900); color: var(--paper-000) !important; border: 1px solid var(--ink-900); padding: .85rem 1.25rem; min-height: 48px; border-radius: var(--radius-frame); font-size: 14px !important; white-space: nowrap; }
 .curator-primary:hover:not(:disabled) { background: var(--ink-950); }
 .curator-primary:disabled { background: var(--paper-200); color: var(--ink-600) !important; border-color: var(--paper-200); cursor: default; }
 .curator-status { color: var(--ink-900); font-size: 12px; line-height: 1.8; min-height: 1.8em; margin-block-start: .9rem; }
@@ -73,15 +73,30 @@
 .curator-more { display: block; margin: 1.5rem auto 0; border: 1px solid var(--ink-600); padding-inline: 1.5rem; }
 .curator-picker [hidden], .curator-section [hidden] { display: none !important; }
 .curator-collect-tray { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem 1rem; margin-block-start: 1rem; }
-.curator-collect { font: inherit; font-size: 12px; min-height: 44px; padding: .5rem .9rem; background: var(--paper-000); border: 1px solid var(--ink-600); border-radius: 3px; color: var(--ink-900); cursor: pointer; }
+.curator-collect { font: inherit; font-size: 12px; min-height: 44px; padding: .5rem .9rem; background: var(--paper-000); border: 1px solid var(--ink-600); border-radius: var(--radius-frame); color: var(--ink-900); cursor: pointer; }
 .curator-collect:hover { background: var(--sky-050); }
 .curator-collect:focus-visible, .curator-collect-link:focus-visible { outline: 2px solid var(--ink-900); outline-offset: 4px; }
 .curator-collect-link { font-size: 12px; min-height: 44px; display: inline-flex; align-items: center; color: var(--ink-900); text-decoration: underline; text-underline-offset: 4px; }
 .curator-collect-status { font-size: 12px; line-height: 1.6; color: var(--ink-600); overflow-wrap: anywhere; }
-.lb-top .curator-collect-tray { margin: 0; margin-inline-start: auto; }
-.lb-top .curator-collect-link, .lb-top .curator-collect-status { color: var(--on-dark); }
-.lb-top .curator-collect-status { flex-basis: 100%; }
 .curator-collect-tray[hidden] { display: none !important; }
+/* All rectangular surfaces use the gallery's shared corner. */
+.curator-slots,
+.curator-slot,
+.curator-art,
+.curator-book,
+.curator-layouts label,
+.curator-preview,
+.curator-preview canvas,
+.curator-picker,
+.curator-result,
+.curator-text-btn { border-radius: var(--radius-frame); }
+.curator-art img { border-radius: var(--radius-frame); }
+.curator-art:not(.is-photo) img { width: auto; height: auto; max-width: 100%; max-height: 100%; }
+.curator-handle { border-radius: var(--radius-frame) var(--radius-frame) 0 0; }
+.curator-slot-tools { border-radius: 0 0 var(--radius-frame) var(--radius-frame); overflow: clip; }
+.curator-slot-tools button:focus-visible { outline-offset: -4px; }
+.curator-fields :is(input, textarea):focus-visible,
+.curator-search input:focus-visible { border-radius: var(--radius-frame); }
 @media (max-width: 1200px) {
   .curator-workspace { grid-template-columns: 1fr; gap: 1.5rem; }
   .curator-preview { width: min(100%, 480px); justify-self: center; }
@@ -94,8 +109,6 @@
   .curator-book strong { font-size: 16px; }
 }
 @media (max-width: 720px) {
-  .lb-top { flex-wrap: wrap; }
-  .lb-top .curator-collect-tray { flex-basis: 100%; margin-inline: 0; gap: .3rem .75rem; }
   .curator-slots { display: flex; overflow-x: auto; scroll-snap-type: x proximity; padding: 1rem .75rem 1.3rem; gap: .75rem; }
   .curator-slot { flex: 0 0 140px; scroll-snap-align: start; }
   .curator-piece-title { font-size: 13px; }

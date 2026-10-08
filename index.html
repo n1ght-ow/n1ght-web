@@ -27,21 +27,22 @@
   <!-- The opening italic is self-hosted and preloaded. -->
   <link rel="preload" href="fonts/InstrumentSerif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=15">
-  <link rel="stylesheet" href="css/style.css?v=107">
+  <link rel="stylesheet" href="css/style.css?v=109">
   <link rel="stylesheet" href="css/glass.css?v=13">
   <link rel="stylesheet" href="css/reel-stage.css?v=17">
   <link rel="stylesheet" href="css/film-stage.css?v=18">
   <link rel="stylesheet" href="css/series-stage.css?v=19">
-  <link rel="stylesheet" href="css/book-shelf.css?v=11">
+  <link rel="stylesheet" href="css/book-shelf.css?v=12">
   <link rel="stylesheet" href="css/photo-deck.css?v=3">
   <link rel="stylesheet" href="css/games-stage.css?v=8">
   <!-- Atelier is the new gallery layer, after the existing component geometry. -->
-  <link rel="stylesheet" href="css/atelier.css?v=3">
-  <link rel="stylesheet" href="css/atelier-hero.css?v=2">
-  <link rel="stylesheet" href="css/atelier-photo.css?v=2">
-  <link rel="stylesheet" href="css/atelier-archive.css?v=11">
-  <link rel="stylesheet" href="css/atelier-poem.css?v=3">
-  <link rel="stylesheet" href="css/curator-desk.css?v=5">
+  <link rel="stylesheet" href="css/atelier.css?v=5">
+  <link rel="stylesheet" href="css/atelier-hero.css?v=6">
+  <link rel="stylesheet" href="css/atelier-photo.css?v=3">
+  <link rel="stylesheet" href="css/atelier-archive.css?v=13">
+  <link rel="stylesheet" href="css/atelier-poem.css?v=5">
+  <link rel="stylesheet" href="css/curator-desk.css?v=9">
+  <link rel="stylesheet" href="css/atelier-viewer.css?v=2">
 </head>
 <body>
 
@@ -74,26 +75,25 @@
     <!-- Opening spread: its photograph and typography paint without scripting. -->
     <section class="hero atelier-hero" id="hero">
     <div class="hero-inner shell">
-      <p class="atelier-edition">A PERSONAL COLLECTION <span>VOL. 01 / 2026</span></p>
+      <p class="atelier-edition"><span>A PERSONAL COLLECTION</span><span>VOL. 01 / 2026</span></p>
       <div class="atelier-copy">
         <div class="hero-mask"><h1 class="hero-wordmark"><span>N1GHT</span> <span>CHXN9</span></h1></div>
-        <p class="atelier-subtitle">A life, quietly collected.</p>
-        <p class="atelier-intro" lang="en">Places I have walked, sounds I return to,<br>and moments I am not ready to forget.</p>
       </div>
       <figure class="atelier-media">
         <div class="atelier-frame">
           <div class="atelier-image-window">
             <picture class="hero-plate">
-              <img src="hero/lujiazui.jpg" srcset="hero/lujiazui-1200.jpg 1200w, hero/lujiazui.jpg 1440w" sizes="(max-width: 720px) 80vw, 40vw" alt="Looking up at Shanghai at night, where towers meet the clouds" width="1440" height="999" decoding="async" fetchpriority="high">
+              <source type="image/webp" srcset="hero/launch-800.webp?v=1 800w, hero/launch-1600.webp?v=1 1600w, hero/launch-2400.webp?v=1 2400w" sizes="(min-width: 1680px) 1232px, 88vw">
+              <img src="hero/launch-original.jpg?v=1" alt="A rocket lifting off between towering clouds of smoke, with orange light reflected in the water" width="3360" height="1890" decoding="async" fetchpriority="high">
             </picture>
           </div>
         </div>
-        <span class="atelier-image-label" aria-hidden="true">31°14′ N · 121°30′ E</span>
-        <figcaption class="atelier-caption"><span>001 / SHANGHAI</span><em>A moment, kept.</em></figcaption>
+        <figcaption class="atelier-caption"><span>001 / LIFTOFF</span><em>A beginning, in motion.</em></figcaption>
       </figure>
       <div class="atelier-bottom">
-        <a class="atelier-enter" href="#photo"><span>EXPLORE THE COLLECTION</span><span aria-hidden="true">↓</span></a>
-        <p class="atelier-scroll-note" aria-hidden="true"><span class="atelier-scroll-track"><i></i></span>Take your time</p>
+        <p class="atelier-subtitle">Keep looking up.</p>
+        <p class="atelier-intro" lang="en">Photographs, poems, and things worth coming back to. A personal collection, still growing.</p>
+        <a class="atelier-enter" href="#photo"><span>Explore the collection</span><span aria-hidden="true">↓</span></a>
       </div>
     </div>
     </section>
@@ -711,7 +711,7 @@
           <div class="tab-panel" id="panel-poems" role="tabpanel" aria-labelledby="tab-poems" data-panel="poems" tabindex="0">
             <!-- Contents and complete text form one anthology inside Archive. -->
             <div class="poem-library">
-              <div class="poem-library-label"><span>A small anthology</span><span>Three voices, kept close.</span></div>
+              <div class="poem-library-label"><span>Contents</span><span>Choose a poem to read.</span></div>
               <div class="poem-selection-grid" id="poem-selection-grid" role="group" aria-label="Choose a poem"></div>
               <p class="sr-only" id="poem-selection-status" role="status" aria-live="polite" aria-atomic="true"></p>
               <div class="poem-reading" id="about">
@@ -834,7 +834,6 @@
           <a href="#photo">Photography</a>
           <a href="#archive">The Archive</a>
           <a href="#curate">Curate</a>
-          <a href="#tab-poems">Poem</a>
           <a href="#hero">Back to top</a>
         </nav>
       </div>
@@ -843,40 +842,54 @@
 
   <!-- ============ UNIFIED DETAIL LAYER ============ -->
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Archive detail viewer" aria-hidden="true">
-    <div class="lb-top">
-      <span id="lb-count" class="lb-count">FRAME 01 / 11</span>
-      <span id="lb-act" class="lb-act">BLOOM</span>
-      <button class="lb-close" id="lb-close" type="button" aria-label="Close detail viewer">Close</button>
-    </div>
-
-    <figure class="lb-stage" id="lb-stage">
-      <img id="lb-img" alt="" loading="lazy" decoding="async">
-      <div class="lb-music-head" id="lb-music-head" hidden>
-        <h3 class="lb-meta-title" id="lb-music-title"></h3>
-        <p class="lb-meta-lines" id="lb-music-lines"></p>
+    <div class="lb-dialog" data-lenis-prevent>
+      <header class="lb-top">
+        <div class="lb-context">
+          <span id="lb-act" class="lb-act">Photography</span>
+          <span id="lb-count" class="lb-count">Frame 01 / 21</span>
+        </div>
+        <button class="lb-close" id="lb-close" type="button" aria-label="Close detail viewer"><span>Close</span><span aria-hidden="true">×</span></button>
+      </header>
+      <div class="lb-body">
+        <figure class="lb-stage" id="lb-stage">
+          <img id="lb-img" alt="" loading="lazy" decoding="async">
+          <div class="lb-music" id="lb-music" hidden>
+            <img class="lb-music-cover" id="lb-music-cover" alt="" decoding="async" hidden>
+            <span class="lb-music-glyph" aria-hidden="true">♪</span>
+          </div>
+        </figure>
+        <div class="lb-info">
+          <div class="lb-photo-info" id="lb-photo-info" hidden>
+            <p class="lb-info-label">From the contact sheet</p>
+            <h3 class="lb-meta-title" id="lb-photo-title"></h3>
+            <p class="lb-photo-description" id="lb-photo-description"></p>
+          </div>
+          <div class="lb-music-head" id="lb-music-head" hidden>
+            <p class="lb-info-label">On repeat</p>
+            <h3 class="lb-meta-title" id="lb-music-title"></h3>
+            <p class="lb-meta-lines" id="lb-music-lines"></p>
+          </div>
+          <div class="lb-meta" id="lb-meta" hidden>
+            <p class="lb-meta-kicker" id="lb-kicker"></p>
+            <h3 class="lb-meta-title" id="lb-title"></h3>
+            <p class="lb-meta-lines" id="lb-lines"></p>
+            <p class="lb-meta-quote" id="lb-quote"></p>
+            <a class="lb-meta-link" id="lb-link" href="#" target="_blank" rel="noopener" hidden>Open</a>
+          </div>
+          <div class="lb-actions" id="lb-actions">
+            <a class="lb-meta-link lb-music-link" id="lb-music-link" href="#" target="_blank" rel="noopener" hidden>Open in NetEase ↗</a>
+          </div>
+        </div>
       </div>
-      <div class="lb-music" id="lb-music" hidden>
-        <img class="lb-music-cover" id="lb-music-cover" alt="" decoding="async" hidden>
-        <span class="lb-music-glyph" aria-hidden="true">♪</span>
-      </div>
-      <a class="lb-meta-link lb-music-link" id="lb-music-link" href="#" target="_blank" rel="noopener" hidden>Open</a>
-      <!-- No second action here (asked for): the genre playlist this song sits
-           in already has a link in the genre head's own OPEN PLAYLIST, so a
-           copy in this column only duplicated it. Do not re-add one. -->
-      <figcaption id="lb-cap" class="lb-cap"></figcaption>
-    </figure>
-
-    <div class="lb-meta" id="lb-meta" hidden>
-      <p class="lb-meta-kicker" id="lb-kicker"></p>
-      <h3 class="lb-meta-title" id="lb-title"></h3>
-      <p class="lb-meta-lines" id="lb-lines"></p>
-      <p class="lb-meta-quote" id="lb-quote"></p>
-      <a class="lb-meta-link" id="lb-link" href="#" target="_blank" rel="noopener" hidden>Open</a>
+      <footer class="lb-bottom">
+        <div class="lb-pagination">
+          <button class="lb-nav lb-prev" id="lb-prev" type="button" aria-label="Previous item">←</button>
+          <button class="lb-nav lb-next" id="lb-next" type="button" aria-label="Next item">→</button>
+          <span class="lb-key-hint">Browse with ← →</span>
+        </div>
+        <div class="lb-rail" id="lb-rail" role="group" aria-label="Choose a frame"></div>
+      </footer>
     </div>
-
-    <button class="lb-nav lb-prev" id="lb-prev" type="button" aria-label="Previous item">←</button>
-    <button class="lb-nav lb-next" id="lb-next" type="button" aria-label="Next item">→</button>
-    <div class="lb-rail" id="lb-rail" role="group" aria-label="Choose a frame"></div>
     <p class="sr-only" id="lb-live" role="status" aria-live="polite"></p>
   </div>
 
@@ -907,12 +920,12 @@
   <script src="js/book-shelf.js?v=13"></script>
   <script src="js/games-stage.js?v=8"></script>
   <script src="js/glass-pill.js?v=4"></script>
-  <script src="js/main.js?v=91"></script>
+  <script src="js/main.js?v=93"></script>
   <script src="js/atelier.js?v=4"></script>
-  <script src="js/atelier-hero.js?v=2"></script>
+  <script src="js/atelier-hero.js?v=5"></script>
   <script src="js/atelier-photo.js?v=3"></script>
   <script src="js/atelier-archive.js?v=2"></script>
-  <script src="js/atelier-poem.js?v=5"></script>
-  <script src="js/curator-desk.js?v=8"></script>
+  <script src="js/atelier-poem.js?v=6"></script>
+  <script src="js/curator-desk.js?v=9"></script>
 </body>
 </html>

@@ -51,15 +51,9 @@
      paper in the same light as its own cover. */
   --bs-page-leaf: #f5f9fc;
   --bs-page-edge: #dde8f0;
-  /* A book's own corner, and the one place this component steps outside the
-     four-step shape lock. The lock is for controls: a rounded rect you aim at
-     with a pointer. A book is a printed object photographed at an angle, and
-     its corners are the edge of a card - 2px, with the blind border inside it
-     at 1px. Eight pixels would round a 182px cover into a lozenge and the
-     spine would stop reading as a spine. Named here so the four call sites
-     cannot drift apart, which is the actual failure this guards against. */
-  --bs-edge-radius: 2px;
-  --bs-blind-radius: 1px;
+  /* Book surfaces share the gallery frame geometry. */
+  --bs-edge-radius: var(--radius-frame);
+  --bs-blind-radius: var(--radius-frame);
 
   position: relative;
   width: 100%;
@@ -375,9 +369,7 @@
   bottom: 20px;
   width: 20px;
   height: 20px;
-  /* a circle, written with the site's own pill token: the shape lock has four
-     steps and "50%" is not one of them (a 20px box rounds to the same disc) */
-  border-radius: var(--radius-pill);
+  border-radius: 50%;
 }
 
 /* ---------- the scrim ----------

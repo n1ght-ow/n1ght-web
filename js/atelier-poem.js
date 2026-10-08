@@ -49,7 +49,11 @@
     const author = document.createElement('span');
     author.className = 'poem-choice-author';
     author.textContent = work.author;
-    button.append(number, name, author);
+    const mark = document.createElement('span');
+    mark.className = 'poem-choice-mark';
+    mark.setAttribute('aria-hidden', 'true');
+    mark.textContent = '→';
+    button.append(number, name, author, mark);
     return button;
   });
   grid.replaceChildren(...choices);

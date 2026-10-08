@@ -86,15 +86,13 @@ const MOTION = {
 const lightbox = document.getElementById("lightbox");
 const lbStage = document.getElementById("lb-stage");
 const lbImg = document.getElementById("lb-img");
-const lbCap = document.getElementById("lb-cap");
+const lbPhotoInfo = document.getElementById("lb-photo-info");
+const lbPhotoTitle = document.getElementById("lb-photo-title");
+const lbPhotoDescription = document.getElementById("lb-photo-description");
 const lbMusic = document.getElementById("lb-music");
 const lbMusicCover = document.getElementById("lb-music-cover");
 const lbMusicGlyph = lbMusic ? lbMusic.querySelector(".lb-music-glyph") : null;
-/* music carries its own identity and its one action inside .lb-stage (a centred
-   column: title / artist, sleeve, OPEN). The genre lives only in the top bar,
-   which is where the layer already reads it. Film, series and game keep theirs
-   in the right-hand .lb-meta column, so both sets of nodes coexist and each
-   render branch fills only the pair it owns. */
+/* Media occupies the stage; identity and actions share the adjacent label. */
 const lbMusicHead = document.getElementById("lb-music-head");
 const lbMusicTitle = document.getElementById("lb-music-title");
 const lbMusicLines = document.getElementById("lb-music-lines");
@@ -264,7 +262,7 @@ function lbBuildRail() {
 
 function setDetailVisibility(show) {
   if (lbImg) lbImg.hidden = !show.image;
-  if (lbCap) lbCap.hidden = !show.caption;
+  if (lbPhotoInfo) lbPhotoInfo.hidden = !show.photo;
   if (lbMusic) lbMusic.hidden = !show.music;
   if (lbMusicHead) lbMusicHead.hidden = !show.music;
   if (lbMusicLink) lbMusicLink.hidden = !show.music;
@@ -275,18 +273,18 @@ function setDetailVisibility(show) {
 function renderDetail() {
   const item = detailItems[lbIndex];
   if (!item) return;
-  // CSS hook: the music column owns its own vertical rhythm, which the shared
-  // .lb-stage gap cannot express (see .lightbox[data-detail="music"] in style.css)
+  // The shared viewer adapts its media proportions to each collection type.
   if (lightbox) lightbox.dataset.detail = detailType;
   const label = detailLabel(detailType);
   const total = detailItems.length;
   if (lbCount) lbCount.textContent = label + " " + String(lbIndex + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0");
-  if (lbAct) lbAct.textContent = detailAct(detailType, item);
+  if (lbAct) lbAct.textContent = detailType === "photo" ? "Photography" : detailAct(detailType, item);
+  if (lightbox) lightbox.setAttribute("aria-label", detailType === "photo" ? item.caption || item.alt : item.title || item.name || "Collection detail viewer");
   if (lbPrevBtn) lbPrevBtn.setAttribute("aria-label", "Previous " + label.toLowerCase());
   if (lbNextBtn) lbNextBtn.setAttribute("aria-label", "Next " + label.toLowerCase());
 
   if (detailType === "photo") {
-    setDetailVisibility({ image: true, caption: true, music: false, meta: false, rail: true });
+    setDetailVisibility({ image: true, photo: true, music: false, meta: false, rail: true });
     if (lbImg) {
       lbImg.classList.remove("is-loaded");
       lbImg.alt = item.alt;
@@ -294,21 +292,28 @@ function renderDetail() {
          place a photograph is asked for at full size, and it is a click away */
       lbImg.src = item.full || item.src;
     }
-    if (lbCap) lbCap.textContent = item.caption;
+    if (lbPhotoTitle) lbPhotoTitle.textContent = item.caption || "Photograph " + String(lbIndex + 1).padStart(2, "0");
+    if (lbPhotoDescription) lbPhotoDescription.textContent = item.alt;
     lbThumbs.forEach((btn, i) => {
       if (i === lbIndex) btn.setAttribute("aria-current", "true");
       else btn.removeAttribute("aria-current");
     });
+    // Keep the selected print visible without moving the page or focus.
+    const activeThumb = lbThumbs[lbIndex];
+    if (lbRail && activeThumb) {
+      const railBox = lbRail.getBoundingClientRect();
+      const thumbBox = activeThumb.getBoundingClientRect();
+      if (thumbBox.left < railBox.left + 5) lbRail.scrollLeft -= railBox.left + 5 - thumbBox.left;
+      else if (thumbBox.right > railBox.right - 5) lbRail.scrollLeft += thumbBox.right - railBox.right + 5;
+    }
     if (lbLive) {
-      lbLive.textContent = "Frame " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.act + ". " + item.caption;
+      lbLive.textContent = "Frame " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ". " + item.caption;
     }
     return;
   }
 
   if (detailType === "music") {
-    // no right-hand column for music: identity sits above the sleeve and the
-    // single action below it, both inside .lb-stage
-    setDetailVisibility({ image: false, caption: false, music: true, meta: false, rail: false });
+    setDetailVisibility({ image: false, photo: false, music: true, meta: false, rail: false });
     // real sleeve when the archive has artwork for this song, otherwise the
     // placeholder sleeve keeps the layer honest instead of showing a broken img
     if (lbMusicCover) {
@@ -326,7 +331,7 @@ function renderDetail() {
     if (lbMusicTitle) lbMusicTitle.textContent = item.title;
     if (lbMusicLines) lbMusicLines.textContent = item.artist;
     if (lbMusicLink) {
-      lbMusicLink.textContent = "OPEN IN NETEASE";
+      lbMusicLink.textContent = "Open in NetEase ↗";
       lbMusicLink.href = "https://music.163.com/#/song?id=" + item.id;
       lbMusicLink.dataset.songId = item.id;
     }
@@ -336,7 +341,7 @@ function renderDetail() {
     return;
   }
 
-  setDetailVisibility({ image: true, caption: false, music: false, meta: true, rail: false });
+  setDetailVisibility({ image: true, photo: false, music: false, meta: true, rail: false });
   if (lbImg) {
     lbImg.classList.remove("is-loaded");
     lbImg.alt = item.alt;
@@ -378,6 +383,8 @@ function openDetail(type, index) {
   lbTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   if (type === "photo" && !lbThumbs.length) lbBuildRail();
   renderDetail();
+  const viewerDialog = lightbox.querySelector(".lb-dialog");
+  if (viewerDialog) viewerDialog.scrollTop = 0;
   lightbox.classList.add("is-open");
   lightbox.setAttribute("aria-hidden", "false");
   isLbOpen = true;
