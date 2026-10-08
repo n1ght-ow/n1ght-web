@@ -99,7 +99,7 @@
   overflow: hidden;
   border-radius: var(--radius-frame);
 }
-.lb-music-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.lb-music-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
 .lb-music-glyph { color: var(--ink-600); font-family: var(--font-editorial); font-size: 100px; }
 .lb-info { min-width: 0; display: flex; flex-direction: column; gap: 28px; }
 .lb-info-label,

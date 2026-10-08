@@ -83,14 +83,15 @@
 .curator-slots,
 .curator-slot,
 .curator-art,
-.curator-book,
 .curator-layouts label,
 .curator-preview,
 .curator-preview canvas,
 .curator-picker,
 .curator-result,
 .curator-text-btn { border-radius: var(--radius-frame); }
-.curator-art img { border-radius: var(--radius-frame); }
+.curator-art img { border-radius: var(--radius-frame); corner-shape: var(--corner-frame); }
+.curator-art.is-photo img { border-radius: 0; }
+.curator-book { border-radius: 2px; }
 .curator-art:not(.is-photo) img { width: auto; height: auto; max-width: 100%; max-height: 100%; }
 .curator-handle { border-radius: var(--radius-frame) var(--radius-frame) 0 0; }
 .curator-slot-tools { border-radius: 0 0 var(--radius-frame) var(--radius-frame); overflow: clip; }

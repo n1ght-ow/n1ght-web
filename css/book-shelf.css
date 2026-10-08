@@ -51,9 +51,9 @@
      paper in the same light as its own cover. */
   --bs-page-leaf: #f5f9fc;
   --bs-page-edge: #dde8f0;
-  /* Book surfaces share the gallery frame geometry. */
-  --bs-edge-radius: var(--radius-frame);
-  --bs-blind-radius: var(--radius-frame);
+  /* Printed objects keep their original binding, separate from UI frames. */
+  --bs-edge-radius: 2px;
+  --bs-blind-radius: 1px;
 
   position: relative;
   width: 100%;

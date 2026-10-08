@@ -370,7 +370,7 @@
 #archive .sport-item:hover .sport-photo { transform: scale(1.035); }
 #archive .sport-name { font-family: Georgia, serif; font-weight: 400; }
 #archive .sport-item[aria-pressed="true"] { box-shadow: none; }
-#archive .hof.is-live .hof-img-wrap img { border-radius: var(--radius-frame); box-shadow: 0 9px 25px -12px rgba(36, 58, 51, 0.2); }
+#archive .hof.is-live .hof-img-wrap img { border-radius: 0; box-shadow: 0 9px 25px -12px rgba(36, 58, 51, 0.2); }
 #archive .hof.is-live .hof-item.is-centre .hof-img-wrap img { outline: 1px solid rgba(36, 58, 51, 0.24); outline-offset: -1px; box-shadow: 0 18px 32px -16px rgba(36, 58, 51, 0.3); }
 #archive .hof.is-live .hof-now { padding: 0; background: none; border-radius: 0; box-shadow: none; }
 #archive .hof.is-live .hof-now-name { font-family: Georgia, serif; font-weight: 400; color: var(--collection-ink); text-shadow: none; }
