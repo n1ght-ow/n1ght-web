@@ -131,6 +131,8 @@ let detailSource = null;
 let detailFlightState = null;
 let detailClosing = false;
 let detailAfterClose = null;
+let detailPhotoRequest = 0;
+let detailPhotoReady = Promise.resolve();
 const detailBackdrop = document.createElement('div');
 detailBackdrop.className = 'lb-backdrop';
 detailBackdrop.setAttribute('aria-hidden', 'true');
@@ -154,13 +156,13 @@ function stopDetailMotion() {
   }
 }
 
-function makeDetailFlight(image, box) {
+function makeDetailFlight(image, box, preparedCopy) {
   const flight = document.createElement('div');
   flight.className = 'lb-flight';
   if (detailType === 'music') flight.classList.add('is-sleeve');
   flight.setAttribute('aria-hidden', 'true');
-  const copy = document.createElement('img');
-  copy.src = image.currentSrc || image.src;
+  const copy = preparedCopy || document.createElement('img');
+  if (!preparedCopy) copy.src = image.currentSrc || image.src;
   copy.alt = '';
   flight.append(copy);
   Object.assign(flight.style, { left: box.left + 'px', top: box.top + 'px', width: box.width + 'px', height: box.height + 'px' });
@@ -185,6 +187,15 @@ function paintDetailFlight() {
 }
 
 function photoPrintBox(image) {
+  // Spatial prints are rotated; a rectangular shared-element flight would warp them.
+  if (image?.closest('.atelier-photo[data-view="wander"]')) return null;
+  if (image?.closest('.photo-feature__button') && image.naturalWidth) {
+    const box = image.getBoundingClientRect();
+    const scale = Math.min(box.width / image.naturalWidth, box.height / image.naturalHeight);
+    const width = image.naturalWidth * scale, height = image.naturalHeight * scale;
+    const left = box.left + (box.width - width) / 2, top = box.top + (box.height - height) / 2;
+    return { left, top, width, height, bottom: top + height };
+  }
   const button = image?.closest('.photo-frame-btn');
   if (!button) return image?.getBoundingClientRect();
   const box = button.getBoundingClientRect();
@@ -209,17 +220,30 @@ function musicSourceCard() {
     .find(card => card.dataset.songId === String(id) && card.offsetParent !== null);
 }
 
-function arriveDetailMedia() {
+async function arriveDetailMedia() {
   const arrival = detailArrival;
-  if (!arrival || detailClosing || !isLbOpen || REDUCED || !arrival.image.naturalWidth) return;
+  if (!arrival || arrival.preparing || detailClosing || !isLbOpen || REDUCED || !arrival.image.naturalWidth) return;
+  arrival.preparing = true;
+  const copy = new Image();
+  copy.src = arrival.image.currentSrc || arrival.image.src;
+  // A new img can be complete before its pixels are decoded. Keep the source
+  // visible until the exact bitmap used by the flight is ready to paint.
+  try { await copy.decode(); } catch {
+    if (detailArrival === arrival) {
+      detailArrival = null;
+      fadeDetailPhoto();
+    }
+    return;
+  }
+  if (detailArrival !== arrival || detailClosing || !isLbOpen || REDUCED) return;
   detailArrival = null;
   const media = detailMedia();
   const music = detailType === 'music';
   const dialog = lightbox.querySelector('.lb-dialog');
   const info = lightbox.querySelector('.lb-info');
   const box = media.getBoundingClientRect();
-  if (!box.width || !box.height) return;
-  const flight = makeDetailFlight(arrival.image, box);
+  if (!box.width || !box.height) { fadeDetailPhoto(); return; }
+  const flight = makeDetailFlight(arrival.image, box, copy);
   media.classList.add('is-shared-hidden');
   hideDetailSource(arrival.image);
   Object.assign(detailFlightState, { x: arrival.box.left - box.left, y: arrival.box.top - box.top, sx: arrival.box.width / box.width, sy: arrival.box.height / box.height, zoom: Math.max(arrival.box.width / box.width, arrival.box.height / box.height) });
@@ -234,17 +258,56 @@ function arriveDetailMedia() {
       media.classList.remove('is-shared-hidden');
     };
     // Keep the already visible print until its full-size replacement is ready.
-    if (media.complete && media.naturalWidth) handoff();
-    else media.decode().then(handoff).catch(() => {
-      if (detailFlight !== flight || detailClosing) return;
-      media.src = flight.firstElementChild.src;
-      media.decode().then(handoff).catch(() => { /* The visible flight remains usable. */ });
-    });
+    const reveal = () => {
+      const src = media.src;
+      media.decode().then(handoff).catch(() => {
+        if (detailFlight !== flight || detailClosing) return;
+        // Upgrading the thumbnail can abort its pending decode. Decode the
+        // new source rather than replacing a healthy original with the print.
+        if (media.src !== src) { reveal(); return; }
+        media.src = flight.firstElementChild.src;
+        media.decode().then(handoff).catch(() => { /* The visible flight remains usable. */ });
+      });
+    };
+    reveal();
   } })
     .to(detailFlightState, { x: 0, y: 0, sx: 1, sy: 1, zoom: 1, duration: music ? .56 : .42, ease: 'power2.inOut', onUpdate: paintDetailFlight }, 0)
     .fromTo(detailBackdrop, { opacity: 0 }, { opacity: 1, duration: music ? .4 : .3, ease: 'power1.out' }, 0)
     .fromTo(dialog, { opacity: 0, y: music ? 14 : 0, scale: music ? .985 : 1 }, { opacity: 1, y: 0, scale: 1, duration: music ? .46 : .3, ease: 'power2.out' }, .06);
   if (music) detailMotion.fromTo(info, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: .34, ease: 'power2.out' }, .18);
+}
+
+function fadeDetailPhoto() {
+  const request = detailPhotoRequest;
+  detailPhotoReady.then(() => {
+    if (request !== detailPhotoRequest || detailClosing || !isLbOpen || REDUCED) return;
+    // Let the room dim first, then bring the viewing table gently into focus.
+    detailMotion = gsap.timeline({ onComplete: () => { detailMotion = null; } })
+      .to(detailBackdrop, { opacity: 1, duration: .42, ease: 'power2.out', clearProps: 'opacity' }, 0)
+      .fromTo(lightbox.querySelector('.lb-dialog'), { opacity: 0, y: 12, scale: .992 },
+        { opacity: 1, y: 0, scale: 1, duration: .46, ease: 'power2.out', clearProps: 'transform,opacity' }, .05);
+  });
+}
+
+function renderDetailPhoto(item, sourceImage) {
+  const request = ++detailPhotoRequest;
+  const preview = sourceImage?.currentSrc || sourceImage?.src || item.src;
+  const full = item.full || item.src;
+  lbImg.classList.remove('is-loaded');
+  lbImg.src = preview;
+  // Decode both renditions before revealing or swapping them. A request token
+  // prevents a slow previous photograph from replacing a newer selection.
+  const ready = detailPhotoReady = lbImg.decode().catch(() => {}).then(() => {
+    if (request === detailPhotoRequest && lbImg.naturalWidth) lbImg.classList.add('is-loaded');
+  });
+  if (preview === full) return;
+  const original = new Image();
+  original.src = full;
+  original.decode().then(() => ready).then(() => {
+    if (request !== detailPhotoRequest || detailClosing || !isLbOpen) return;
+    lbImg.src = full;
+    lbImg.classList.add('is-loaded');
+  }).catch(() => { /* Keep the decoded print if the larger rendition fails. */ });
 }
 
 function detailText(root, selector) {
@@ -258,25 +321,15 @@ function photoFrameData(frame) {
   const no = frame.querySelector(".photo-frame-no");
   return {
     type: "photo",
-    /* Three fields, three jobs, all read off the one img:
-         full  - the 1600px linearised file, what the lightbox opens
-         src   - the 560px derivation the rail paints, ONE small thumbnail for
-                 all twenty-one. js/photo-deck.js snapshots the markup's src
-                 into data-rail before it starts swapping src for the plate, so
-                 the rail never inherits the plate's bigger file: asking both
-                 off `src` would download twenty-one linearised photographs to
-                 draw twenty-one 48px thumbs.
-         alt / caption / number - unchanged. */
+    // The rail keeps the small print; the viewer loads the larger rendition.
     src: img ? (img.getAttribute("data-rail") || img.getAttribute("src")) : "",
     full: img ? img.dataset.full || img.getAttribute("data-rail") || "" : "",
-    width: img?.naturalWidth || 1600,
-    height: img?.naturalHeight || 1067,
+    width: Number(img?.getAttribute('width')) || img?.naturalWidth || 1600,
+    height: Number(img?.getAttribute('height')) || img?.naturalHeight || 1067,
     alt: img ? img.alt : "",
     caption: cap ? cap.textContent.trim() : "",
     number: no ? no.textContent.trim() : "",
-    // read off the figure, not off the section it sits in: the data-act
-    // attribute is the only thing keeping the kicker from reporting BLOOM for
-    // all twenty-one
+    // Subject metadata belongs to each original frame.
     act: frame.getAttribute("data-act") || "BLOOM",
   };
 }
@@ -397,7 +450,7 @@ function setDetailVisibility(show) {
   if (lbRail) lbRail.hidden = !show.rail;
 }
 
-function renderDetail() {
+function renderDetail(sourceImage) {
   const item = detailItems[lbIndex];
   if (!item) return;
   // The shared viewer adapts its media proportions to each collection type.
@@ -413,15 +466,13 @@ function renderDetail() {
   if (detailType === "photo") {
     setDetailVisibility({ image: true, photo: true, music: false, meta: false, rail: true });
     if (lbImg) {
-      lbImg.classList.toggle('is-loaded', lbImg.getAttribute('src') === (item.full || item.src) && lbImg.complete);
       lbImg.alt = item.alt;
       lbImg.width = item.width;
       lbImg.height = item.height;
       lightbox.style.setProperty('--detail-ratio', item.width / item.height);
       /* the lightbox reads the original, not the 560px board cell: it is the one
          place a photograph is asked for at full size, and it is a click away */
-      lbImg.src = item.full || item.src;
-      if (lbImg.complete && lbImg.naturalWidth) lbImg.classList.add('is-loaded');
+      renderDetailPhoto(item, sourceImage);
     }
     if (lbPhotoTitle) lbPhotoTitle.textContent = item.caption || "Photograph " + String(lbIndex + 1).padStart(2, "0");
     if (lbPhotoDescription) lbPhotoDescription.textContent = item.alt;
@@ -513,18 +564,22 @@ function openDetail(type, index, origin) {
   const items = detailItemsFor(type);
   if (!items.length) return;
   stopDetailMotion();
+  ++detailPhotoRequest;
   detailClosing = false;
   detailAfterClose = null;
   detailType = type;
   detailItems = items;
   lbIndex = Math.max(0, Math.min(Number(index) || 0, items.length - 1));
   lbTrigger = origin || (document.activeElement instanceof HTMLElement ? document.activeElement : null);
-  const sourceImage = type === 'photo' ? photoFrames[lbIndex]?.querySelector('img') : type === 'music' ? musicSourceCard()?.querySelector('img.idx-cover') : null;
+  const sourceImage = type === 'photo' ? (origin?.classList.contains('photo-feature__button') ? window.AtelierPhoto?.source(lbIndex) : photoFrames[lbIndex]?.querySelector('img')) : type === 'music' ? musicSourceCard()?.querySelector('img.idx-cover') : null;
   const sourceBox = photoPrintBox(sourceImage);
   if (type === "photo" && !lbThumbs.length) lbBuildRail();
-  renderDetail();
+  renderDetail(sourceImage);
   const viewerDialog = lightbox.querySelector(".lb-dialog");
   if (viewerDialog) viewerDialog.scrollTop = 0;
+  // Establish the first frame before exposing the overlay, including the
+  // asynchronous decode path. Otherwise the opaque table flashes first.
+  if (!REDUCED) gsap.set([detailBackdrop, viewerDialog], { opacity: 0 });
   lightbox.classList.add("is-open");
   lightbox.setAttribute("aria-hidden", "false");
   isLbOpen = true;
@@ -534,11 +589,13 @@ function openDetail(type, index, origin) {
      the lightbox opens with focus still on the page behind it. The backdrop
      click below and Escape both still close it, so a missing button degrades
      to "one fewer way out" rather than a trap. */
-  if (lbCloseBtn) lbCloseBtn.focus();
+  if (lbCloseBtn) lbCloseBtn.focus({ preventScroll: true });
   if (!REDUCED) {
     if (sourceImage?.naturalWidth && sourceBox?.width && sourceBox?.height && sourceBox.bottom > 0 && sourceBox.top < innerHeight) {
       detailArrival = { image: sourceImage, box: sourceBox };
       arriveDetailMedia();
+    } else if (type === 'photo') {
+      fadeDetailPhoto();
     } else if (type === 'music') {
       detailMotion = gsap.timeline({ onComplete: () => { detailMotion = null; } })
         .fromTo(detailBackdrop, { opacity: 0 }, { opacity: 1, duration: .38, ease: 'power1.out', clearProps: 'opacity' }, 0)
@@ -547,22 +604,25 @@ function openDetail(type, index, origin) {
   }
 }
 
-function closeDetail(afterClose) {
+async function closeDetail(afterClose) {
   if (typeof afterClose === 'function') detailAfterClose = afterClose;
   if (!lightbox || !isLbOpen || detailClosing) return;
   // Reverse from the currently painted flight, including an early Escape.
   // Clearing its transforms here would snap back to the full-size image.
+  const awaitingArrival = !!detailArrival;
   if (detailMotion) detailMotion.kill();
   detailMotion = null;
   detailArrival = null;
   gsap.killTweensOf([detailBackdrop, lightbox.querySelector('.lb-dialog'), lightbox.querySelector('.lb-info')]);
   detailClosing = true;
+  const request = ++detailPhotoRequest;
   let destination = null;
   if (detailType === 'photo') {
     const frame = photoFrames[lbIndex];
-    if (frame?.hidden) window.AtelierPhoto?.select(lbIndex, false);
-    destination = frame?.querySelector('img');
-    if (frame) lbTrigger = frame.querySelector('button');
+    const target = window.AtelierPhoto?.returnTarget(lbIndex, lbTrigger);
+    destination = target?.image || frame?.querySelector('img');
+    if (target?.button) lbTrigger = target.button;
+    else if (frame) lbTrigger = frame.querySelector('button');
   } else if (detailType === 'music') {
     const card = musicSourceCard();
     destination = card?.querySelector('img.idx-cover');
@@ -584,16 +644,28 @@ function closeDetail(afterClose) {
     if (callback) callback();
   };
   const media = detailMedia();
-  const from = media?.getBoundingClientRect();
-  const to = photoPrintBox(destination);
+  let from = media?.getBoundingClientRect();
+  let to = photoPrintBox(destination);
+  // Escape before the opening bitmap is ready must never conjure a full-size
+  // return flight from a table that has not appeared yet.
+  if (!detailFlight && (awaitingArrival || parseFloat(getComputedStyle(lightbox.querySelector('.lb-dialog')).opacity) < 1)) to = null;
+  let copy;
+  if (!REDUCED && !detailFlight && from?.width && to?.width && media?.naturalWidth) {
+    copy = new Image();
+    copy.src = media.currentSrc || media.src;
+    try { await copy.decode(); } catch { to = null; }
+    if (request !== detailPhotoRequest || !isLbOpen || !detailClosing) return;
+    from = media.getBoundingClientRect();
+    if (to) to = photoPrintBox(destination);
+  }
   if (REDUCED) { finish(); return; }
   if (!from?.width || !to?.width || to.bottom <= 0 || to.top >= innerHeight || (!media.naturalWidth && !detailFlight)) {
     detailMotion = gsap.timeline({ onComplete: finish })
       .to(detailBackdrop, { opacity: 0, duration: .28, ease: 'power1.inOut' }, 0)
-      .to(lightbox.querySelector('.lb-dialog'), { opacity: 0, y: detailType === 'music' ? 10 : 0, duration: .24, ease: 'power1.in' }, 0);
+      .to(lightbox.querySelector('.lb-dialog'), { opacity: 0, y: detailType === 'photo' || detailType === 'music' ? 8 : 0, duration: .28, ease: 'power2.in' }, 0);
     return;
   }
-  if (!detailFlight) makeDetailFlight(media, from);
+  if (!detailFlight) makeDetailFlight(media, from, copy);
   hideDetailSource(destination);
   media.classList.add('is-shared-hidden');
   const base = detailFlightState;
@@ -606,23 +678,8 @@ function closeDetail(afterClose) {
 
 function initUnifiedDetail() {
   if (!lightbox) return;
-  /* The rail is NOT built here. It is twenty-one buttons around twenty-one more
-     image elements, and at boot they land inside an overlay that is hidden
-     with opacity/visibility - which is not display:none, so a lazy image in it
-     still counts as in-viewport and still loads. openDetail() builds it on the
-     first photo detail (see the guard in there), before renderDetail(), which
-     is the only thing that reads lbThumbs.
-     It is also the only way to reach an arbitrary frame now that the deck has
-     a top and a bottom: it owns the same twenty-one, in the same order, and
-     every thumb carries the caption in its label. */
-
-  /* One delegated listener on the deck. Clicking a card that is not yet on
-     top puts it on top - four cards are visible, so "that one" is something a
-     reader can point at - and clicking the card that IS on top opens the
-     detail layer at that index. data-photo-index is in DOM order, which is the
-     order of the pile, so it is the index openDetail wants. A drag is already
-     swallowed in the capture phase by js/photo-deck.js before this runs, so
-     nothing here has to know about drag state. */
+  // Build the thumbnail rail only when the viewer first opens.
+  // Frame IDs match the sequence captured before the album visually reorders it.
   const photoDeck = document.getElementById("photo-deck");
   if (photoDeck) {
     photoDeck.addEventListener("click", (e) => {
@@ -630,11 +687,7 @@ function initUnifiedDetail() {
       if (!frame || !photoDeck.contains(frame)) return;
       const i = Number(frame.getAttribute("data-photo-index"));
       if (!(i >= 0)) return;
-      if (window.PhotoDeck && window.PhotoDeck.top() !== i) {
-        window.PhotoDeck.select(i);
-        return;
-      }
-      openDetail("photo", i);
+      openDetail("photo", i, frame.querySelector('.photo-frame-btn'));
     });
   }
 
@@ -705,7 +758,10 @@ function initUnifiedDetail() {
   if (lbCloseBtn) lbCloseBtn.addEventListener("click", closeDetail);
   if (lbPrevBtn) lbPrevBtn.addEventListener("click", () => lbLoad(lbIndex - 1));
   if (lbNextBtn) lbNextBtn.addEventListener("click", () => lbLoad(lbIndex + 1));
-  if (lbImg) lbImg.addEventListener("load", () => { lbImg.classList.add("is-loaded"); arriveDetailMedia(); });
+  if (lbImg) lbImg.addEventListener("load", () => {
+    if (detailType !== 'photo') lbImg.classList.add("is-loaded");
+    arriveDetailMedia();
+  });
   const settleDetailMotion = () => {
     if (detailClosing && detailMotion) detailMotion.progress(1);
     stopDetailMotion();

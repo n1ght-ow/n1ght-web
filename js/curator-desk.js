@@ -20,7 +20,7 @@
       const img = frame.querySelector("img");
       return { id: frame.dataset.photoIndex, type: "photo", title: "Photograph " + String(Number(frame.dataset.photoIndex) + 1).padStart(2, "0"),
         meta: frame.querySelector(".photo-frame-text").textContent.trim(), alt: img.alt,
-        src: img.dataset.full || img.getAttribute("src"), thumb: "photo/wall/" + (img.dataset.full || img.getAttribute("src")).split("/").pop().replace(/\.[^.]+$/, ".webp"), tag: frame.dataset.act };
+        src: img.dataset.full || img.getAttribute("src"), thumb: img.dataset.rail || img.getAttribute("src"), tag: frame.dataset.act };
     }),
     book: (window.BOOK_SHELF || []).map((b) => ({ ...b, type: "book", meta: b.author, src: "" })),
     film: (window.FILM_DATA || []).map((f) => ({ ...f, type: "film", meta: f.director + " / " + f.year, src: f.poster })),
@@ -511,7 +511,7 @@
     });
     return tray;
   }
-  collector(document.querySelector(".atelier-photo__catalog"), () => {
+  collector(document.querySelector(".photo-feature__label"), () => {
     const frame = document.querySelector(".photo-frame.is-featured");
     return catalog.photo.find((item) => item.id === frame?.dataset.photoIndex);
   }, "Add the current photograph to the desk");
@@ -536,7 +536,7 @@
     if (typeof detailType === "undefined" || typeof detailItems === "undefined") return null;
     const data = detailItems[lbIndex];
     if (detailType === "music") return catalog.music.find((item) => String(item.id) === String(data?.id));
-    if (detailType === "photo") return catalog.photo[lbIndex];
+    if (detailType === "photo") return catalog.photo.find((item) => item.id === String(lbIndex));
     return null;
   }, "Add the current piece to the desk");
   if (lbTray) {

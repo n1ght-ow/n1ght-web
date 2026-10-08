@@ -34,11 +34,24 @@
 .curator-slot-tools button:hover:not(:disabled) { background: var(--sky-050); }
 .curator-slot-tools button:disabled { color: var(--ink-600); opacity: .4; cursor: default; }
 .curator-hint { font-size: 12px; color: var(--ink-600); line-height: 1.8; margin-block: .85rem; }
-.curator-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(100px, .5fr); gap: 1.25rem; margin-block: 1.75rem; }
-.curator-fields label, .curator-search { font-size: 12px; line-height: 1.6; color: var(--ink-900); }
+.curator-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, .55fr); gap: 1.4rem 1.75rem; margin-block: 1.75rem; padding: clamp(1.1rem, 2.5vw, 1.75rem); background: var(--paper-000); border: 1px solid var(--color-line); border-radius: var(--radius-frame); corner-shape: var(--corner-frame); }
+.curator-fields-head { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .4rem 1rem; }
+.curator-fields-head h3 { font-family: var(--font-editorial); font-size: 22px; line-height: 1.3; font-weight: 400; letter-spacing: -.025em; }
+.curator-fields-head p { font-size: 11px; line-height: 1.6; color: var(--ink-600); }
+.curator-fields label { display: block; min-width: 0; font-size: 12px; line-height: 1.6; color: var(--ink-600); }
+.curator-field-label { display: block; margin-block-end: .55rem; }
 .curator-fields :is(input, textarea), .curator-search input { display: block; width: 100%; border: 0; border-bottom: 1px solid var(--ink-600); padding: .7rem 0; background: transparent; border-radius: 0; font: inherit; font-size: 15px; color: var(--ink-900); resize: vertical; }
+.curator-search { font-size: 12px; line-height: 1.6; color: var(--ink-900); }
+.curator-fields input { min-height: 48px; padding: .2rem 0 .65rem; border-bottom-color: var(--color-line); font-size: 16px; transition: border-color .18s, box-shadow .18s; }
+.curator-title-field input { font-family: var(--font-editorial); font-size: clamp(20px, 2vw, 25px); line-height: 1.4; letter-spacing: -.015em; }
+.curator-fields :is(input, textarea):focus-visible { outline: none; border-radius: 0; }
+.curator-fields input:focus { border-bottom-color: var(--ink-900); box-shadow: 0 1px 0 var(--ink-900); }
+.curator-fields label:focus-within .curator-field-label { color: var(--ink-900); }
 .curator-fields :is(input, textarea)::placeholder, .curator-search input::placeholder { color: var(--ink-600); opacity: 1; }
-.curator-note-field { grid-column: 1 / -1; }
+.curator-note-field { grid-column: 1 / -1; border-top: 1px solid var(--color-line); padding-block-start: 1.25rem; }
+.curator-fields textarea { min-height: 100px; padding: .55rem .85rem; border: 0; border-inline-start: 2px solid var(--paper-200); background: var(--paper-050); font-size: 16px; line-height: 1.8; transition: border-color .18s, background-color .18s; }
+.curator-fields textarea:focus { border-inline-start-color: var(--ink-900); background: var(--sky-050); }
+.curator-note-hint { grid-column: 1 / -1; display: flex; justify-content: space-between; flex-wrap: wrap; gap: .3rem 1rem; margin-block-start: -.85rem; font-size: 11px; line-height: 1.6; color: var(--ink-600); }
 .curator-layouts { display: flex; gap: .75rem; border: 0; padding: 0; margin: 0 0 1.5rem; }
 .curator-layouts legend { font-size: 12px; margin-block-end: .75rem; }
 .curator-layouts label { display: flex; align-items: center; gap: .5rem; font-size: 13px; cursor: pointer; padding: .65rem .75rem; border: 1px solid var(--color-line); min-height: 44px; }
@@ -96,7 +109,6 @@
 .curator-handle { border-radius: var(--radius-frame) var(--radius-frame) 0 0; }
 .curator-slot-tools { border-radius: 0 0 var(--radius-frame) var(--radius-frame); overflow: clip; }
 .curator-slot-tools button:focus-visible { outline-offset: -4px; }
-.curator-fields :is(input, textarea):focus-visible,
 .curator-search input:focus-visible { border-radius: var(--radius-frame); }
 @media (max-width: 1200px) {
   .curator-workspace { grid-template-columns: 1fr; gap: 1.5rem; }
@@ -130,5 +142,5 @@
   .nav-links a { font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .curator-slot { transition: none; }
+  .curator-slot, .curator-fields input, .curator-fields textarea { transition: none; }
 }

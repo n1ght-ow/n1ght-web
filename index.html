@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>N1GHT CHXN9 - Photography and Archive</title>
-  <meta name="description" content="The personal site of N1GHT CHXN9. Twenty-one frames kept bright, eighteen games, and everything else that shaped the person behind both.">
+  <meta name="description" content="The personal site of N1GHT CHXN9. Forty-six photographs kept bright, eighteen games, and everything else that shaped the person behind both.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="N1GHT CHXN9">
   <meta property="og:title" content="N1GHT CHXN9 - Photography and Archive">
@@ -17,12 +17,7 @@
        refraction: there is no url() inside backdrop-filter any more, so there
        is no engine to test for and nothing to gate. css/glass.css's header
        lists everything that was deleted with it. -->
-  <script>
-    // Scripting is on: the photography chapter's fallback grid is replaced by
-    // the deck, and css/photo-deck.css uses this flag so the grid is never
-    // painted first. Set before <body> parses, so there is no flash.
-    document.documentElement.classList.add("js");
-  </script>
+  <script>document.documentElement.classList.add("js");</script>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <!-- The opening italic is self-hosted and preloaded. -->
   <link rel="preload" href="fonts/InstrumentSerif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -33,15 +28,14 @@
   <link rel="stylesheet" href="css/film-stage.css?v=18">
   <link rel="stylesheet" href="css/series-stage.css?v=19">
   <link rel="stylesheet" href="css/book-shelf.css?v=13">
-  <link rel="stylesheet" href="css/photo-deck.css?v=3">
   <link rel="stylesheet" href="css/games-stage.css?v=8">
   <!-- Atelier is the new gallery layer, after the existing component geometry. -->
   <link rel="stylesheet" href="css/atelier.css?v=9">
   <link rel="stylesheet" href="css/atelier-hero.css?v=7">
-  <link rel="stylesheet" href="css/atelier-photo.css?v=7">
+  <link rel="stylesheet" href="css/atelier-photo.css?v=9">
   <link rel="stylesheet" href="css/atelier-archive.css?v=15">
   <link rel="stylesheet" href="css/atelier-poem.css?v=6">
-  <link rel="stylesheet" href="css/curator-desk.css?v=11">
+  <link rel="stylesheet" href="css/curator-desk.css?v=12">
   <link rel="stylesheet" href="css/atelier-viewer.css?v=6">
 </head>
 <body>
@@ -103,48 +97,18 @@
       <div class="shell">
         <div class="sec-head">
           <div>
-            <p class="label sec-eyebrow">01 / Photography</p>
-            <h2 class="sec-title">The slow side<br>of the year</h2>
+            <p class="label sec-eyebrow">The wandering room</p>
+            <h2 class="sec-title">A little lost.<br><span>A lot found.</span></h2>
           </div>
           <div class="sec-copy">
-            <span class="lead">Twenty-one frames, kept where the light found them.</span>
-            Blossom, birch, water and open country, all made on the same long walk through the year.
+            Forty-six windows into somewhere else. Wander through them.<br>Keep three. Tell a story of your own.
           </div>
         </div>
       </div>
 
-      <!-- THE DECK. The twenty-one photographs are a pile you deal one card at
-           a time, and the first card IS the chapter's opening image. There is
-           no separate plate and no full-screen board: the whole chapter now
-           opens with a drag, and the shared #lightbox is what a photograph
-           opens into - it already shows one frame at a time, as large as the
-           screen allows, with a twenty-one thumbnail rail for jumping.
-
-           The figures below ship as a plain grid, and that is what the chapter
-           shows when scripting is off. js/photo-deck.js MOVES them into the
-           plate as soon as it runs; the same twenty-one are the deck's only
-           tab stops, and nothing about the deck is scroll-driven. Geometry
-           lives in js/photo-deck.js, the box in css/photo-deck.css.
-
-           THE ORDER IS THE SEQUENCE, not a pattern. The old board's content was
-           a pure function of world position - index = |(x + 3y) mod 21| -
-           because an infinite plane has to be filled from something, and that
-           formula is what put the seven BLOOM frames every third position and
-           the grove in the middle slot. A deck is finite and already in order,
-           so the formula retires with the board. The SEQUENCE it produced is
-           authored and is kept, because it is the order the chapter reads in:
-             - the seven close, green frames (BLOOM) sit every third position
-               after the opener and the fourteen horizons fill between them, so
-               the run has a beat instead of two monochrome halves;
-             - green runs stay broken: the pond (13) is followed by the field,
-               the leaf (15) by the white frame, the bloom (16) by the blue
-               pond. Positions 12-14 are the only three greens in a row and
-               that is the chapter's own subject.
-           DOM order is the order of the pile, so re-sequencing means moving
-           the figures AND renumbering data-photo-index, .photo-frame-no and
-           the aria-label, in the same pass. -->
+      <!-- Original frame IDs remain stable for saved curator selections. -->
       <div class="shell">
-          <div class="photo-deck" id="photo-deck" role="group" aria-label="Photography, twenty-one frames">
+          <div class="photo-deck" id="photo-deck" role="group" aria-label="Photography, 46 photographs">
             <div class="photo-fallback" data-photo-fallback>
                 <figure class="photo-frame" data-photo-index="0" data-act="BLOOM">
                   <button class="photo-frame-btn" type="button" aria-label="Open frame 01: bare branches against a pale sky">
@@ -355,10 +319,232 @@
                     <span class="photo-frame-text">The day leaves the frame open.</span>
                   </figcaption>
                 </figure>
-            </div>
-            <div class="photo-deck-foot" id="photo-deck-foot" hidden>
-              <p class="photo-deck-caption" id="photo-deck-caption"></p>
-              <p class="photo-deck-index mono" id="photo-deck-index"></p>
+
+                <figure class="photo-frame" data-photo-index="21" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 22: A red sunset above the river and a distant city skyline">
+                    <img src="photo/wall/1791482278707.webp?v=1" data-full="photo/prints/1791482278707.webp?v=1" data-original="photo/1791482278707.jpg" alt="A red sunset above the river and a distant city skyline" width="4080" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">22</span>
+                    <span class="photo-frame-text">The last red light</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="22" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 23: Golden light breaking through dark clouds above the river">
+                    <img src="photo/wall/1791482278719.webp?v=1" data-full="photo/prints/1791482278719.webp?v=1" data-original="photo/1791482278719.jpg" alt="Golden light breaking through dark clouds above the river" width="4080" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">23</span>
+                    <span class="photo-frame-text">An opening in the clouds</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="23" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 24: The low sun reflected in rippling river water">
+                    <img src="photo/wall/1791482278743.webp?v=1" data-full="photo/prints/1791482278743.webp?v=1" data-original="photo/1791482278743.jpg" alt="The low sun reflected in rippling river water" width="4080" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">24</span>
+                    <span class="photo-frame-text">Sunlight on the river</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="24" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 25: The Oriental Pearl Tower rising into a cloud-filled sky">
+                    <img src="photo/wall/1791482278773.webp?v=1" data-full="photo/prints/1791482278773.webp?v=1" data-original="photo/1791482278773.jpg" alt="The Oriental Pearl Tower rising into a cloud-filled sky" width="4096" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">25</span>
+                    <span class="photo-frame-text">Looking up in Shanghai</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="25" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 26: White arches of a bridge crossing a broad river">
+                    <img src="photo/wall/1791482278781.webp?v=1" data-full="photo/prints/1791482278781.webp?v=1" data-original="photo/1791482278781.jpg" alt="White arches of a bridge crossing a broad river" width="4096" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">26</span>
+                    <span class="photo-frame-text">White arches, still water</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="26" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 27: A sailing ship and towers beside a winding waterway">
+                    <img src="photo/wall/1791482278794.webp?v=1" data-full="photo/prints/1791482278794.webp?v=1" data-original="photo/1791482278794.jpg" alt="A sailing ship and towers beside a winding waterway" width="4080" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">27</span>
+                    <span class="photo-frame-text">A ship beside the city</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="27" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 28: An ornate building with tall towers beside green parkland">
+                    <img src="photo/wall/1791482278808.webp?v=1" data-full="photo/prints/1791482278808.webp?v=1" data-original="photo/1791482278808.jpg" alt="An ornate building with tall towers beside green parkland" width="4080" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">28</span>
+                    <span class="photo-frame-text">Towers across the water</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="28" data-act="NIGHT" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 29: A bridge illuminated in gold against the night sky">
+                    <img src="photo/wall/1791482278824.webp?v=1" data-full="photo/prints/1791482278824.webp?v=1" data-original="photo/1791482278824.jpg" alt="A bridge illuminated in gold against the night sky" width="4096" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">29</span>
+                    <span class="photo-frame-text">A bridge after dark</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="29" data-act="NIGHT" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 30: A golden illuminated church tower against the dark sky">
+                    <img src="photo/wall/1791482278836.webp?v=1" data-full="photo/prints/1791482278836.webp?v=1" data-original="photo/1791482278836.jpg" alt="A golden illuminated church tower against the dark sky" width="3072" height="4096" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">30</span>
+                    <span class="photo-frame-text">Gold against the night</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="30" data-act="NIGHT" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 31: Yellow lanterns above red flowers on a lively night street">
+                    <img src="photo/wall/1791482278844.webp?v=1" data-full="photo/prints/1791482278844.webp?v=1" data-original="photo/1791482278844.jpg" alt="Yellow lanterns above red flowers on a lively night street" width="4096" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">31</span>
+                    <span class="photo-frame-text">Lanterns and red flowers</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="31" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 32: A river bridge framed by apartment buildings and green hills">
+                    <img src="photo/wall/1791482278854.webp?v=1" data-full="photo/prints/1791482278854.webp?v=1" data-original="photo/1791482278854.jpg" alt="A river bridge framed by apartment buildings and green hills" width="4096" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">32</span>
+                    <span class="photo-frame-text">The river below the balcony</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="32" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 33: Sunset seen between tall buildings on a narrow street">
+                    <img src="photo/wall/1791482278864.webp?v=1" data-full="photo/prints/1791482278864.webp?v=1" data-original="photo/1791482278864.jpg" alt="Sunset seen between tall buildings on a narrow street" width="3072" height="4080" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">33</span>
+                    <span class="photo-frame-text">The light between buildings</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="33" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 34: The setting sun seen through a dark canopy of trees">
+                    <img src="photo/wall/1791482278875.webp?v=1" data-full="photo/prints/1791482278875.webp?v=1" data-original="photo/1791482278875.jpg" alt="The setting sun seen through a dark canopy of trees" width="4096" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">34</span>
+                    <span class="photo-frame-text">A small window of sun</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="34" data-act="CITY" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 35: A red arched bridge and city buildings beyond the river">
+                    <img src="photo/wall/1791482278888.webp?v=1" data-full="photo/prints/1791482278888.webp?v=1" data-original="photo/1791482278888.jpg" alt="A red arched bridge and city buildings beyond the river" width="4080" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">35</span>
+                    <span class="photo-frame-text">A red arc across the city</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="35" data-act="NIGHT" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 36: An illuminated red pagoda framed by trees at night">
+                    <img src="photo/wall/1791482278899.webp?v=1" data-full="photo/prints/1791482278899.webp?v=1" data-original="photo/1791482278899.jpg" alt="An illuminated red pagoda framed by trees at night" width="3072" height="4096" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">36</span>
+                    <span class="photo-frame-text">Red among the trees</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="36" data-act="LAND" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 37: A tall layered rock pillar rising above green mountains">
+                    <img src="photo/wall/1791482278910.webp?v=1" data-full="photo/prints/1791482278910.webp?v=1" data-original="photo/1791482278910.jpg" alt="A tall layered rock pillar rising above green mountains" width="3072" height="4080" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">37</span>
+                    <span class="photo-frame-text">Stone above the valley</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="37" data-act="LAND" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 38: Layers of blue mountains beyond a sunlit grassy ridge">
+                    <img src="photo/wall/1791482278923.webp?v=1" data-full="photo/prints/1791482278923.webp?v=1" data-original="photo/1791482278923.jpg" alt="Layers of blue mountains beyond a sunlit grassy ridge" width="4096" height="1844" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">38</span>
+                    <span class="photo-frame-text">Ridges into the distance</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="38" data-act="LAND" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 39: Clear turquoise water beside trees and a riverside path">
+                    <img src="photo/wall/1791482278932.webp?v=1" data-full="photo/prints/1791482278932.webp?v=1" data-original="photo/1791482278932.jpg" alt="Clear turquoise water beside trees and a riverside path" width="4096" height="1844" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">39</span>
+                    <span class="photo-frame-text">Following the blue water</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="39" data-act="LAND" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 40: A branching waterfall flowing through dense green forest">
+                    <img src="photo/wall/1791482278944.webp?v=1" data-full="photo/prints/1791482278944.webp?v=1" data-original="photo/1791482278944.jpg" alt="A branching waterfall flowing through dense green forest" width="4096" height="1844" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">40</span>
+                    <span class="photo-frame-text">Water through the forest</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="40" data-act="LAND" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 41: A white cascade flowing into a turquoise pool">
+                    <img src="photo/wall/1791482278956.webp?v=1" data-full="photo/prints/1791482278956.webp?v=1" data-original="photo/1791482278956.jpg" alt="A white cascade flowing into a turquoise pool" width="4096" height="1844" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">41</span>
+                    <span class="photo-frame-text">A pool below the falls</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="41" data-act="LAND" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 42: A clear turquoise pool reflecting vivid green trees">
+                    <img src="photo/wall/1791482278971.webp?v=1" data-full="photo/prints/1791482278971.webp?v=1" data-original="photo/1791482278971.jpg" alt="A clear turquoise pool reflecting vivid green trees" width="4096" height="3072" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">42</span>
+                    <span class="photo-frame-text">A green reflection</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="42" data-act="LAND" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 43: Buildings beside a river beneath green mountains and clouds">
+                    <img src="photo/wall/1791482278991.webp?v=1" data-full="photo/prints/1791482278991.webp?v=1" data-original="photo/1791482278991.jpg" alt="Buildings beside a river beneath green mountains and clouds" width="4096" height="1844" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">43</span>
+                    <span class="photo-frame-text">A village below the hills</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="43" data-act="LAND" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 44: A broad waterfall falling from a forested cliff">
+                    <img src="photo/wall/1791482278998.webp?v=1" data-full="photo/prints/1791482278998.webp?v=1" data-original="photo/1791482278998.jpg" alt="A broad waterfall falling from a forested cliff" width="4096" height="1844" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">44</span>
+                    <span class="photo-frame-text">The curtain of water</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="44" data-act="LAND" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 45: A distant waterfall and drifting mist among green hills">
+                    <img src="photo/wall/1791482279005.webp?v=1" data-full="photo/prints/1791482279005.webp?v=1" data-original="photo/1791482279005.jpg" alt="A distant waterfall and drifting mist among green hills" width="4096" height="1844" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">45</span>
+                    <span class="photo-frame-text">Mist above the valley</span>
+                  </figcaption>
+                </figure>
+                <figure class="photo-frame" data-photo-index="45" data-act="WINTER" data-new="true">
+                  <button class="photo-frame-btn" type="button" aria-label="Open frame 46: Snow-covered trees beside a pond and a small pavilion">
+                    <img src="photo/wall/mmexport1702262955913.webp?v=1" data-full="photo/prints/mmexport1702262955913.webp?v=1" data-original="photo/mmexport1702262955913.jpg" alt="Snow-covered trees beside a pond and a small pavilion" width="1920" height="1080" loading="lazy" decoding="async">
+                  </button>
+                  <figcaption class="photo-frame-cap">
+                    <span class="photo-frame-no mono">46</span>
+                    <span class="photo-frame-text">A garden in snow</span>
+                  </figcaption>
+                </figure>
             </div>
           </div>
       </div>
@@ -786,16 +972,21 @@
               </div>
               <ol id="curator-slots" class="curator-slots" aria-label="Exhibition order"></ol>
               <p class="curator-hint">Choose a piece for each place. Drag a card by its handle, or use the arrows to arrange your exhibition.</p>
-              <div class="curator-fields">
-                <label class="curator-title-field" for="curator-name">Exhibition title
+              <div class="curator-fields" role="group" aria-labelledby="curator-label-heading">
+                <div class="curator-fields-head">
+                  <h3 id="curator-label-heading">Your exhibition label</h3>
+                  <p>Printed on your poster</p>
+                </div>
+                <label class="curator-title-field" for="curator-name"><span class="curator-field-label">Exhibition title</span>
                   <input id="curator-name" maxlength="48" placeholder="e.g. Somewhere beyond the city" autocomplete="off">
                 </label>
-                <label for="curator-by">Curator
+                <label class="curator-by-field" for="curator-by"><span class="curator-field-label">Curator</span>
                   <input id="curator-by" maxlength="32" placeholder="Your name, or a pen name" autocomplete="off">
                 </label>
-                <label class="curator-note-field" for="curator-note">A few words about your exhibition
-                  <textarea id="curator-note" maxlength="120" rows="2" placeholder="What brings these five pieces together?"></textarea>
+                <label class="curator-note-field" for="curator-note"><span class="curator-field-label">A few words about your exhibition</span>
+                  <textarea id="curator-note" maxlength="120" rows="3" aria-describedby="curator-note-hint" placeholder="What brings these five pieces together?"></textarea>
                 </label>
+                <p class="curator-note-hint" id="curator-note-hint">A thought, a memory, a thread. <span>Up to 120 characters</span></p>
               </div>
               <fieldset class="curator-layouts">
                 <legend>Choose a layout</legend>
@@ -846,13 +1037,13 @@
       <header class="lb-top">
         <div class="lb-context">
           <span id="lb-act" class="lb-act">Photography</span>
-          <span id="lb-count" class="lb-count">Frame 01 / 21</span>
+          <span id="lb-count" class="lb-count">Frame 01 / 46</span>
         </div>
         <button class="lb-close" id="lb-close" type="button" aria-label="Close detail viewer"><span>Close</span><span aria-hidden="true">×</span></button>
       </header>
       <div class="lb-body">
         <figure class="lb-stage" id="lb-stage">
-          <img id="lb-img" alt="" loading="lazy" decoding="async">
+          <img id="lb-img" alt="" loading="eager" decoding="async">
           <div class="lb-music" id="lb-music" hidden>
             <img class="lb-music-cover" id="lb-music-cover" alt="" decoding="async" hidden>
             <span class="lb-music-glyph" aria-hidden="true">♪</span>
@@ -920,12 +1111,12 @@
   <script src="js/book-shelf.js?v=13"></script>
   <script src="js/games-stage.js?v=8"></script>
   <script src="js/glass-pill.js?v=5"></script>
-  <script src="js/main.js?v=97"></script>
+  <script src="js/main.js?v=100"></script>
   <script src="js/atelier.js?v=6"></script>
   <script src="js/atelier-hero.js?v=6"></script>
-  <script src="js/atelier-photo.js?v=6"></script>
+  <script src="js/atelier-photo.js?v=10"></script>
   <script src="js/atelier-archive.js?v=3"></script>
   <script src="js/atelier-poem.js?v=8"></script>
-  <script src="js/curator-desk.js?v=11"></script>
+  <script src="js/curator-desk.js?v=12"></script>
 </body>
 </html>
