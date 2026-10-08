@@ -179,7 +179,8 @@
     thumbs.forEach(function (button, i) { button.setAttribute('aria-pressed', String(i === active)); });
     host.querySelector('.atelier-photo__count').textContent = '/ ' + String(active + 1).padStart(2, '0') + ' of ' + frames.length;
     if (animate) live.textContent = 'Photograph ' + (active + 1) + ', ' + frames[active].querySelector('.photo-frame-text').textContent;
-    refreshLayout();
+    // Desktop print slots reserve their size. On phones, caption wrapping
+    // can change the room height; the observer below handles actual changes.
   }
   catalog.querySelectorAll('[data-step]').forEach(function (button) {
     button.addEventListener('click', function () {
@@ -190,6 +191,16 @@
   /* No PhotoDeck facade: every displayed original button opens the shared
      detail layer directly, including either companion photograph. */
   select(0, false);
+  refreshLayout();
+  if (window.ResizeObserver) {
+    var roomHeight = room.getBoundingClientRect().height;
+    new ResizeObserver(function (entries) {
+      var height = entries[0].contentRect.height;
+      if (Math.abs(height - roomHeight) < .5) return;
+      roomHeight = height;
+      refreshLayout();
+    }).observe(room);
+  }
 
   function setupMotion() {
     stopExchange();

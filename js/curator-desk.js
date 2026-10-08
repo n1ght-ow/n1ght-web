@@ -196,8 +196,7 @@
   });
   slots.addEventListener("pointerdown", (event) => {
     const handle = event.target.closest(".curator-handle");
-    if (!handle || event.button !== 0 || exporting) return;
-    finishDrag(false);
+    if (!handle || event.button !== 0 || event.isPrimary === false || exporting || drag) return;
     const cards = Array.from(slots.children);
     if (window.gsap) cards.forEach((card) => { gsap.killTweensOf(card); gsap.set(card, { clearProps: 'transform,willChange' }); });
     drag = { type: handle.closest('.curator-slot').dataset.type, target: null, x: event.clientX, y: event.clientY, active: false, id: event.pointerId,
@@ -248,9 +247,9 @@
       gsap.to(card, { x: 0, y: index % 2 ? 5 : 0, scale: 1, rotation: 0, duration: reduced.matches ? 0 : .36, ease: 'power3.out', overwrite: true, clearProps: 'transform,willChange' });
     });
   }
-  slots.addEventListener("pointerup", () => finishDrag(true));
-  slots.addEventListener("pointercancel", () => finishDrag(false));
-  slots.addEventListener("lostpointercapture", () => finishDrag(false));
+  slots.addEventListener("pointerup", (event) => { if (drag?.id === event.pointerId) finishDrag(true); });
+  slots.addEventListener("pointercancel", (event) => { if (drag?.id === event.pointerId) finishDrag(false); });
+  slots.addEventListener("lostpointercapture", (event) => { if (drag?.id === event.pointerId) finishDrag(false); });
   window.addEventListener('blur', () => finishDrag(false));
   window.addEventListener('resize', () => finishDrag(false));
   reduced.addEventListener('change', () => {

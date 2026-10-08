@@ -56,6 +56,9 @@ function scheduleRefresh(delay) {
   if (!window.ScrollTrigger || !window.ScrollTrigger.refresh) return;
   window.clearTimeout(refreshTimer);
   refreshTimer = window.setTimeout(() => {
+    // A room exchange temporarily fixes and animates the panel height.
+    // Measure only its settled layout, including requests from image loads.
+    if (document.querySelector('.is-changing-room')) { scheduleRefresh(100); return; }
     if (window.ScrollTrigger) ScrollTrigger.refresh();
   }, delay || 200);
 }

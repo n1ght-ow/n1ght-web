@@ -266,12 +266,15 @@
 
     function endDrag() {
       if (!drag) return;
-      try { root.releasePointerCapture(drag.pointerId); } catch (err) { /* not capturable */ }
+      var pointerId = drag.pointerId;
+      drag = null;
       root.removeEventListener("pointermove", onPointerMove);
       root.removeEventListener("pointerup", onPointerUp);
       root.removeEventListener("pointercancel", onPointerCancel);
+      root.removeEventListener("lostpointercapture", onPointerCancel);
       window.removeEventListener("keydown", onKeyDown);
-      drag = null;
+      window.removeEventListener("blur", cancelDrag);
+      try { root.releasePointerCapture(pointerId); } catch (err) { /* not capturable */ }
       if (rafId) { window.cancelAnimationFrame(rafId); rafId = 0; }
       pill.classList.remove(CLASS_GRABBED, CLASS_DRAGGING);
       root.classList.remove(CLASS_DRAGGING);
@@ -280,6 +283,7 @@
 
     function onPointerDown(event) {
       if (drag) return;
+      if (event.isPrimary === false) return;
       if (!media.matches || !extraGate()) return;
       // primary button only; touch and pen report button 0 too
       if (event.pointerType === "mouse" && event.button !== 0) return;
@@ -299,7 +303,9 @@
       root.addEventListener("pointermove", onPointerMove);
       root.addEventListener("pointerup", onPointerUp);
       root.addEventListener("pointercancel", onPointerCancel);
+      root.addEventListener("lostpointercapture", onPointerCancel);
       window.addEventListener("keydown", onKeyDown);
+      window.addEventListener("blur", cancelDrag);
       pill.classList.add(CLASS_GRABBED);
     }
 
@@ -313,6 +319,9 @@
 
     var rafRefresh = 0;
     function refresh() {
+      // Cached hit areas become stale on resize or a font swap. End the
+      // gesture before measuring, rather than leaving it stuck on old slots.
+      cancelDrag();
       if (rafRefresh) return;
       rafRefresh = window.requestAnimationFrame(function () {
         rafRefresh = 0;
@@ -327,6 +336,7 @@
     }
 
     function syncTouchAction() {
+      cancelDrag();
       // Only claim the horizontal axis while the drag is actually available;
       // below 721px the bars scroll sideways and must keep their own gesture.
       root.style.touchAction = media.matches ? "pan-y" : "";
@@ -362,10 +372,14 @@
       visible: function () { return visible; },
       destroy: function () {
         endDrag();
+        window.cancelAnimationFrame(rafRefresh);
+        window.clearTimeout(suppressTimer);
         root.removeEventListener("pointerdown", onPointerDown);
         root.removeEventListener("click", onClickCapture, true);
         window.removeEventListener("resize", refresh);
         if (observer) observer.disconnect();
+        if (typeof media.removeEventListener === "function") media.removeEventListener("change", syncTouchAction);
+        else if (typeof media.removeListener === "function") media.removeListener(syncTouchAction);
         root.style.touchAction = "";
       },
     };
