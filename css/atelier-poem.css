@@ -181,6 +181,10 @@
   line-height: 1.5;
 }
 #poem .poem-stanza, #poem .poem-verse p + p { margin: 0; padding: 0; border: 0; }
+#poem .poem-stanza { position: relative; }
+#poem .poem-stanza::before { content: ''; position: absolute; inset-inline-start: -14px; inset-block-start: .45em; width: 2px; height: 1.2em; background: var(--ink-600); opacity: 0; transform: scaleY(.3); transform-origin: center; transition: opacity .3s ease, transform .4s ease; }
+#poem .poem-stanza.is-reading::before { opacity: .7; transform: scaleY(1); }
+@media (prefers-reduced-motion: reduce) { #poem .poem-stanza::before { display: none; } }
 .poem-line { display: block; overflow-wrap: break-word; }
 #poem .refrain { color: var(--ink-900); font-style: italic; }
 #poem .poem-foot {

@@ -125,7 +125,7 @@
       id: "condor",
       spine: "The Legend of the Condor Heroes", title: "射雕英雄传", author: "Jin Yong",
       blurb: "Seven masters crossed into the desert to teach one slow learner how to fight.",
-      thickness: 42, height: 246, lean: 9,
+      thickness: 42, height: 246, lean: 0,
       cloth: "#2a2723", ink: "#efece4", band: "#c8a24a",
     },
   ];

@@ -1,4 +1,6 @@
 /* One viewing table: a print or sleeve beside its exhibition label. */
+/* Locking the viewer must not change the width of the page underneath. */
+html { scrollbar-gutter: stable; }
 .lightbox {
   position: fixed;
   inset: 0;
@@ -6,14 +8,22 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgb(28 46 39 / 80%);
+  background: transparent;
   color: var(--ink-900);
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   overscroll-behavior: contain;
-  transition: opacity .22s ease, visibility 0s linear .22s;
+  transition: none;
 }
-.lightbox.is-open { opacity: 1; visibility: visible; transition: opacity .22s ease, visibility 0s; }
+.lightbox.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+.lb-backdrop { position: absolute; inset: 0; background: rgb(28 46 39 / 80%); pointer-events: none; }
+.lb-dialog { position: relative; }
+.lb-stage > img.is-shared-hidden, .lb-music-cover.is-shared-hidden { opacity: 0 !important; transition: none; }
+.idx-cover.is-viewer-source { visibility: hidden; }
+.lb-flight { position: fixed; z-index: 4; pointer-events: none; overflow: hidden; border-radius: var(--radius-frame); corner-shape: var(--corner-frame); transform-origin: 0 0; will-change: transform; }
+.lb-flight img { display: block; width: 100%; height: 100%; object-fit: fill; transform-origin: 0 0; }
+.lb-flight.is-sleeve img { object-fit: cover; }
 .lightbox [hidden] { display: none !important; }
 .lb-dialog {
   width: min(1160px, 100%);
@@ -89,6 +99,11 @@
   transition: opacity .2s ease;
 }
 .lb-stage > img.is-loaded { opacity: 1; }
+.lightbox[data-detail="photo"] .lb-stage {
+  width: min(100%, calc(60dvh * var(--detail-ratio, 1.5)), calc(560px * var(--detail-ratio, 1.5)));
+  justify-self: center;
+}
+.lightbox[data-detail="photo"] .lb-stage > img { max-height: none; transition: none; }
 .lb-music {
   position: relative;
   display: grid;
@@ -244,6 +259,7 @@
   .lb-close { gap: 10px; padding-inline: 10px; }
   .lb-body { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .lb-stage > img { max-height: 46dvh; }
+  .lightbox[data-detail="photo"] .lb-stage { width: min(100%, calc(46dvh * var(--detail-ratio, 1.5))); }
   .lb-music { width: min(100%, 340px); }
   .lb-info { gap: 22px; }
   .lb-info-label { margin-block-end: 10px; }
@@ -258,11 +274,12 @@
   .lb-top { margin-block-end: 16px; padding-block-end: 12px; }
   .lb-bottom { margin-block-start: 16px; padding-block-start: 12px; }
   .lb-stage > img { max-height: calc(100dvh - 190px); }
+  .lightbox[data-detail="photo"] .lb-stage { width: min(100%, calc((100dvh - 190px) * var(--detail-ratio, 1.5))); }
   .lb-music { width: min(100%, calc(100dvh - 190px)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .lightbox, .lb-stage > img, .lb-close, .lb-meta-link, .lb-nav, .lb-thumb { transition: none; }
 }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .lightbox { background: var(--ink-950); }
+  .lb-backdrop { background: var(--ink-950); }
 }

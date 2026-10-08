@@ -128,6 +128,8 @@
 .collection-room-action span { display: inline-block; transition: transform 0.25s ease; }
 .collection-room-action:hover span { transform: translate(3px, -3px); }
 #archive .tab-panels { padding-block-end: clamp(24px, 3vw, 40px); }
+#archive .tab-panels.is-changing-room { overflow: clip; overflow-anchor: none; }
+#archive .tab-panels .tab-panel.is-leaving { display: block; pointer-events: none; }
 #archive [data-panel] {
   background: none;
   padding: 0;

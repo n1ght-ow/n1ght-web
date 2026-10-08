@@ -121,6 +121,128 @@ let detailType = "photo";
 let detailItems = [];
 let openNetEaseSong = null;
 let openNetEasePlaylist = null;
+let detailMotion = null;
+let detailFlight = null;
+let detailArrival = null;
+let detailSource = null;
+let detailFlightState = null;
+let detailClosing = false;
+let detailAfterClose = null;
+const detailBackdrop = document.createElement('div');
+detailBackdrop.className = 'lb-backdrop';
+detailBackdrop.setAttribute('aria-hidden', 'true');
+lightbox?.prepend(detailBackdrop);
+
+function stopDetailMotion() {
+  if (detailMotion) detailMotion.kill();
+  detailMotion = null;
+  detailArrival = null;
+  if (detailFlight) detailFlight.remove();
+  detailFlight = null;
+  detailFlightState = null;
+  detailSource?.classList.remove('is-viewer-source');
+  detailSource = null;
+  lbImg?.classList.remove('is-shared-hidden');
+  lbMusicCover?.classList.remove('is-shared-hidden');
+  if (lightbox) {
+    const layers = [lightbox, detailBackdrop, lightbox.querySelector('.lb-dialog'), lightbox.querySelector('.lb-info')];
+    gsap.killTweensOf(layers);
+    gsap.set(layers, { clearProps: 'transform,opacity,visibility' });
+  }
+}
+
+function makeDetailFlight(image, box) {
+  const flight = document.createElement('div');
+  flight.className = 'lb-flight';
+  if (detailType === 'music') flight.classList.add('is-sleeve');
+  flight.setAttribute('aria-hidden', 'true');
+  const copy = document.createElement('img');
+  copy.src = image.currentSrc || image.src;
+  copy.alt = '';
+  flight.append(copy);
+  Object.assign(flight.style, { left: box.left + 'px', top: box.top + 'px', width: box.width + 'px', height: box.height + 'px' });
+  lightbox.append(flight);
+  detailFlight = flight;
+  detailFlightState = { x: 0, y: 0, sx: 1, sy: 1, zoom: 1, width: box.width, height: box.height, left: box.left, top: box.top };
+  return flight;
+}
+
+// The frame can change aspect ratio; the photograph always scales uniformly.
+// Compensate inside the clipping frame so neither the flight nor its handoff
+// stretches the image or changes from cover to contain in a single frame.
+function paintDetailFlight() {
+  if (!detailFlight || !detailFlightState) return;
+  const s = detailFlightState;
+  // These two layers belong exclusively to this transition. Paint transforms
+  // directly instead of allocating CSS tweens or measuring layout per frame.
+  detailFlight.style.transform = `translate3d(${s.x}px,${s.y}px,0) scale(${s.sx},${s.sy})`;
+  const x = s.width * (s.sx - s.zoom) / (2 * s.sx);
+  const y = s.height * (s.sy - s.zoom) / (2 * s.sy);
+  detailFlight.firstElementChild.style.transform = `translate3d(${x}px,${y}px,0) scale(${s.zoom / s.sx},${s.zoom / s.sy})`;
+}
+
+function photoPrintBox(image) {
+  const button = image?.closest('.photo-frame-btn');
+  if (!button) return image?.getBoundingClientRect();
+  const box = button.getBoundingClientRect();
+  const style = getComputedStyle(button);
+  const px = parseFloat(style.paddingLeft) || 0, py = parseFloat(style.paddingTop) || 0;
+  return { left: box.left + px, top: box.top + py, width: box.width - 2 * px, height: box.height - 2 * py, bottom: box.bottom - py };
+}
+
+function hideDetailSource(image) {
+  detailSource?.classList.remove('is-viewer-source');
+  detailSource = image;
+  image?.classList.add('is-viewer-source');
+}
+
+function detailMedia() {
+  return detailType === 'music' ? lbMusicCover : lbImg;
+}
+
+function musicSourceCard() {
+  const id = detailItems[lbIndex]?.id;
+  return Array.from(document.querySelectorAll('#panel-music .idx-card[data-song-id]'))
+    .find(card => card.dataset.songId === String(id) && card.offsetParent !== null);
+}
+
+function arriveDetailMedia() {
+  const arrival = detailArrival;
+  if (!arrival || detailClosing || !isLbOpen || REDUCED || !arrival.image.naturalWidth) return;
+  detailArrival = null;
+  const media = detailMedia();
+  const music = detailType === 'music';
+  const dialog = lightbox.querySelector('.lb-dialog');
+  const info = lightbox.querySelector('.lb-info');
+  const box = media.getBoundingClientRect();
+  if (!box.width || !box.height) return;
+  const flight = makeDetailFlight(arrival.image, box);
+  media.classList.add('is-shared-hidden');
+  hideDetailSource(arrival.image);
+  Object.assign(detailFlightState, { x: arrival.box.left - box.left, y: arrival.box.top - box.top, sx: arrival.box.width / box.width, sy: arrival.box.height / box.height, zoom: Math.max(arrival.box.width / box.width, arrival.box.height / box.height) });
+  paintDetailFlight();
+  detailMotion = gsap.timeline({ onComplete: () => {
+    detailMotion = null;
+    gsap.set([detailBackdrop, dialog, info], { clearProps: 'opacity,transform' });
+    const handoff = () => {
+      if (detailFlight !== flight || detailClosing) return;
+      flight.remove(); detailFlight = null; detailFlightState = null;
+      media.classList.add('is-loaded');
+      media.classList.remove('is-shared-hidden');
+    };
+    // Keep the already visible print until its full-size replacement is ready.
+    if (media.complete && media.naturalWidth) handoff();
+    else media.decode().then(handoff).catch(() => {
+      if (detailFlight !== flight || detailClosing) return;
+      media.src = flight.firstElementChild.src;
+      media.decode().then(handoff).catch(() => { /* The visible flight remains usable. */ });
+    });
+  } })
+    .to(detailFlightState, { x: 0, y: 0, sx: 1, sy: 1, zoom: 1, duration: music ? .56 : .42, ease: 'power2.inOut', onUpdate: paintDetailFlight }, 0)
+    .fromTo(detailBackdrop, { opacity: 0 }, { opacity: 1, duration: music ? .4 : .3, ease: 'power1.out' }, 0)
+    .fromTo(dialog, { opacity: 0, y: music ? 14 : 0, scale: music ? .985 : 1 }, { opacity: 1, y: 0, scale: 1, duration: music ? .46 : .3, ease: 'power2.out' }, .06);
+  if (music) detailMotion.fromTo(info, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: .34, ease: 'power2.out' }, .18);
+}
 
 function detailText(root, selector) {
   const node = root.querySelector(selector);
@@ -144,6 +266,8 @@ function photoFrameData(frame) {
          alt / caption / number - unchanged. */
     src: img ? (img.getAttribute("data-rail") || img.getAttribute("src")) : "",
     full: img ? img.dataset.full || img.getAttribute("data-rail") || "" : "",
+    width: img?.naturalWidth || 1600,
+    height: img?.naturalHeight || 1067,
     alt: img ? img.alt : "",
     caption: cap ? cap.textContent.trim() : "",
     number: no ? no.textContent.trim() : "",
@@ -286,11 +410,15 @@ function renderDetail() {
   if (detailType === "photo") {
     setDetailVisibility({ image: true, photo: true, music: false, meta: false, rail: true });
     if (lbImg) {
-      lbImg.classList.remove("is-loaded");
+      lbImg.classList.toggle('is-loaded', lbImg.getAttribute('src') === (item.full || item.src) && lbImg.complete);
       lbImg.alt = item.alt;
+      lbImg.width = item.width;
+      lbImg.height = item.height;
+      lightbox.style.setProperty('--detail-ratio', item.width / item.height);
       /* the lightbox reads the original, not the 560px board cell: it is the one
          place a photograph is asked for at full size, and it is a click away */
       lbImg.src = item.full || item.src;
+      if (lbImg.complete && lbImg.naturalWidth) lbImg.classList.add('is-loaded');
     }
     if (lbPhotoTitle) lbPhotoTitle.textContent = item.caption || "Photograph " + String(lbIndex + 1).padStart(2, "0");
     if (lbPhotoDescription) lbPhotoDescription.textContent = item.alt;
@@ -344,6 +472,8 @@ function renderDetail() {
   setDetailVisibility({ image: true, photo: false, music: false, meta: true, rail: false });
   if (lbImg) {
     lbImg.classList.remove("is-loaded");
+    lbImg.removeAttribute('width');
+    lbImg.removeAttribute('height');
     lbImg.alt = item.alt;
     lbImg.src = item.src;
   }
@@ -363,6 +493,8 @@ function renderDetail() {
 
 function lbLoad(i) {
   if (!detailItems.length) return;
+  if (detailClosing) return;
+  stopDetailMotion();
   lbIndex = ((i % detailItems.length) + detailItems.length) % detailItems.length;
   renderDetail();
 }
@@ -373,14 +505,19 @@ function lbFocusables() {
     .filter((el) => el.offsetParent !== null || el === document.activeElement);
 }
 
-function openDetail(type, index) {
+function openDetail(type, index, origin) {
   if (!lightbox) return;
   const items = detailItemsFor(type);
   if (!items.length) return;
+  stopDetailMotion();
+  detailClosing = false;
+  detailAfterClose = null;
   detailType = type;
   detailItems = items;
   lbIndex = Math.max(0, Math.min(Number(index) || 0, items.length - 1));
-  lbTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  lbTrigger = origin || (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+  const sourceImage = type === 'photo' ? photoFrames[lbIndex]?.querySelector('img') : type === 'music' ? musicSourceCard()?.querySelector('img.idx-cover') : null;
+  const sourceBox = photoPrintBox(sourceImage);
   if (type === "photo" && !lbThumbs.length) lbBuildRail();
   renderDetail();
   const viewerDialog = lightbox.querySelector(".lb-dialog");
@@ -395,19 +532,73 @@ function openDetail(type, index) {
      click below and Escape both still close it, so a missing button degrades
      to "one fewer way out" rather than a trap. */
   if (lbCloseBtn) lbCloseBtn.focus();
+  if (!REDUCED) {
+    if (sourceImage?.naturalWidth && sourceBox?.width && sourceBox?.height && sourceBox.bottom > 0 && sourceBox.top < innerHeight) {
+      detailArrival = { image: sourceImage, box: sourceBox };
+      arriveDetailMedia();
+    } else if (type === 'music') {
+      detailMotion = gsap.timeline({ onComplete: () => { detailMotion = null; } })
+        .fromTo(detailBackdrop, { opacity: 0 }, { opacity: 1, duration: .38, ease: 'power1.out', clearProps: 'opacity' }, 0)
+        .fromTo(viewerDialog, { y: 16, scale: .985, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: .5, ease: 'power2.out', clearProps: 'transform,opacity' }, .04);
+    } else gsap.fromTo([detailBackdrop, viewerDialog], { opacity: 0 }, { opacity: 1, duration: .24, ease: 'power1.out', clearProps: 'opacity' });
+  }
 }
 
-function closeDetail() {
-  if (!lightbox) return;
-  lightbox.classList.remove("is-open");
-  lightbox.setAttribute("aria-hidden", "true");
-  isLbOpen = false;
-  syncOverlays();
-  // empty src would re-request the page URL itself; drop the attribute
-  lbImg.removeAttribute("src");
-  // hand focus back to the card that opened the detail layer
-  if (lbTrigger && document.contains(lbTrigger)) lbTrigger.focus({ preventScroll: true });
-  lbTrigger = null;
+function closeDetail(afterClose) {
+  if (typeof afterClose === 'function') detailAfterClose = afterClose;
+  if (!lightbox || !isLbOpen || detailClosing) return;
+  // Reverse from the currently painted flight, including an early Escape.
+  // Clearing its transforms here would snap back to the full-size image.
+  if (detailMotion) detailMotion.kill();
+  detailMotion = null;
+  detailArrival = null;
+  gsap.killTweensOf([detailBackdrop, lightbox.querySelector('.lb-dialog'), lightbox.querySelector('.lb-info')]);
+  detailClosing = true;
+  let destination = null;
+  if (detailType === 'photo') {
+    const frame = photoFrames[lbIndex];
+    if (frame?.hidden) window.AtelierPhoto?.select(lbIndex, false);
+    destination = frame?.querySelector('img');
+    if (frame) lbTrigger = frame.querySelector('button');
+  } else if (detailType === 'music') {
+    const card = musicSourceCard();
+    destination = card?.querySelector('img.idx-cover');
+    if (card) lbTrigger = card;
+  }
+  const finish = () => {
+    stopDetailMotion();
+    detailClosing = false;
+    lightbox.classList.remove("is-open");
+    lightbox.setAttribute("aria-hidden", "true");
+    isLbOpen = false;
+    syncOverlays();
+    // empty src would re-request the page URL itself; drop the attribute
+    lbImg.removeAttribute("src");
+    if (lbTrigger && document.contains(lbTrigger)) lbTrigger.focus({ preventScroll: true });
+    lbTrigger = null;
+    const callback = detailAfterClose;
+    detailAfterClose = null;
+    if (callback) callback();
+  };
+  const media = detailMedia();
+  const from = media?.getBoundingClientRect();
+  const to = photoPrintBox(destination);
+  if (REDUCED) { finish(); return; }
+  if (!from?.width || !to?.width || to.bottom <= 0 || to.top >= innerHeight || (!media.naturalWidth && !detailFlight)) {
+    detailMotion = gsap.timeline({ onComplete: finish })
+      .to(detailBackdrop, { opacity: 0, duration: .28, ease: 'power1.inOut' }, 0)
+      .to(lightbox.querySelector('.lb-dialog'), { opacity: 0, y: detailType === 'music' ? 10 : 0, duration: .24, ease: 'power1.in' }, 0);
+    return;
+  }
+  if (!detailFlight) makeDetailFlight(media, from);
+  hideDetailSource(destination);
+  media.classList.add('is-shared-hidden');
+  const base = detailFlightState;
+  const sx = to.width / base.width, sy = to.height / base.height;
+  detailMotion = gsap.timeline({ onComplete: finish })
+    .to(lightbox.querySelector('.lb-dialog'), { opacity: 0, duration: .22, ease: 'power1.out' }, 0)
+    .to(detailBackdrop, { opacity: 0, duration: .36, ease: 'power1.inOut' }, 0)
+    .to(base, { x: to.left - base.left, y: to.top - base.top, sx, sy, zoom: Math.max(sx, sy), duration: detailType === 'music' ? .42 : .38, ease: 'power2.inOut', onUpdate: paintDetailFlight }, 0);
 }
 
 function initUnifiedDetail() {
@@ -488,7 +679,7 @@ function initUnifiedDetail() {
     const openMusic = (card) => {
       const visible = Array.from(musicPanel.querySelectorAll(".idx-card[data-song-id]")).filter((c) => c.offsetParent !== null);
       const index = visible.indexOf(card);
-      if (index >= 0) openDetail("music", index);
+      if (index >= 0) openDetail("music", index, card);
     };
     musicPanel.addEventListener("click", (e) => {
       const card = e.target.closest(".idx-card[data-song-id]");
@@ -511,7 +702,13 @@ function initUnifiedDetail() {
   if (lbCloseBtn) lbCloseBtn.addEventListener("click", closeDetail);
   if (lbPrevBtn) lbPrevBtn.addEventListener("click", () => lbLoad(lbIndex - 1));
   if (lbNextBtn) lbNextBtn.addEventListener("click", () => lbLoad(lbIndex + 1));
-  if (lbImg) lbImg.addEventListener("load", () => lbImg.classList.add("is-loaded"));
+  if (lbImg) lbImg.addEventListener("load", () => { lbImg.classList.add("is-loaded"); arriveDetailMedia(); });
+  const settleDetailMotion = () => {
+    if (detailClosing && detailMotion) detailMotion.progress(1);
+    stopDetailMotion();
+  };
+  motionPreference.addEventListener('change', settleDetailMotion);
+  window.addEventListener('resize', settleDetailMotion);
   /* Both links funnel into the same opener: #lb-link carries the film / series
      Douban href, #lb-music-link the song deep link. Only the latter ever has a
      songId, so the guard keeps the two from cross-firing. The playlist branch
@@ -581,7 +778,7 @@ function initUnifiedDetail() {
 
 initUnifiedDetail();
 
-/* ---------- The Archive: tab switching (clip-path wipe + row stagger) ---------- */
+/* ---------- The Archive: leave one room, arrive in the next ---------- */
 
 function initArchiveTabs() {
   const tabbar = document.getElementById("archive-tabbar");
@@ -603,6 +800,26 @@ function initArchiveTabs() {
 
   let current = tabs.findIndex((t) => t.classList.contains("is-active"));
   if (current < 0) current = 0;
+  let roomMotion = null;
+  const settleRoom = () => {
+    if (roomMotion) roomMotion.kill();
+    roomMotion = null;
+    panels.forEach((panel, i) => {
+      panel.classList.remove('is-leaving');
+      panel.inert = i !== current;
+      panel.setAttribute('aria-hidden', String(i !== current));
+      gsap.set(panel, { clearProps: 'position,top,left,width,clipPath,opacity,visibility,transform,willChange' });
+    });
+    tabPanels.classList.remove('is-changing-room');
+    tabPanels.style.removeProperty('height');
+    scheduleRefresh(100);
+  };
+  motionPreference.addEventListener('change', settleRoom);
+  window.addEventListener('resize', settleRoom);
+  panels.forEach((panel, i) => {
+    panel.inert = i !== current;
+    panel.setAttribute('aria-hidden', String(i !== current));
+  });
 
   // roving tabindex: only the active tab participates in the Tab order
   tabs.forEach((t, i) => { t.tabIndex = i === current ? 0 : -1; });
@@ -629,7 +846,11 @@ function initArchiveTabs() {
       t.setAttribute("aria-selected", on ? "true" : "false");
       t.tabIndex = on ? 0 : -1;
     });
-    panels.forEach((p, i) => p.classList.toggle("is-active", i === idx));
+    panels.forEach((p, i) => {
+      p.classList.toggle("is-active", i === idx);
+      p.inert = i !== idx;
+      p.setAttribute('aria-hidden', String(i !== idx));
+    });
     if (pill) pill.moveTo(idx);
     tabbar.dispatchEvent(new CustomEvent("night:archive-tab", {
       detail: { token: tabs[idx].getAttribute("data-tab"), index: idx },
@@ -638,19 +859,33 @@ function initArchiveTabs() {
 
   const select = (idx, instant) => {
     if (idx === current && !instant) return;
-    panels.forEach((panel) => {
-      gsap.killTweensOf(panel);
-      gsap.set(panel, { clearProps: "clipPath,opacity,transform" });
-    });
+    settleRoom();
+    const old = panels[current];
+    const direction = idx > current ? 1 : -1;
+    const groupBox = tabPanels.getBoundingClientRect();
+    const oldBox = old.getBoundingClientRect();
+    const moving = !instant && !REDUCED;
+    if (moving) {
+      old.classList.add('is-leaving');
+      Object.assign(old.style, { position: 'absolute', top: (oldBox.top - groupBox.top) + 'px', left: (oldBox.left - groupBox.left) + 'px', width: oldBox.width + 'px' });
+    }
     current = idx;
     showMeta(idx);
     scheduleRefresh(250);
     if (pill) pill.refresh();
-    if (!instant && !REDUCED && panels[idx]) {
-      gsap.fromTo(panels[idx], { opacity: 0, y: 12 }, {
-        opacity: 1, y: 0, duration: 0.55, ease: "power3.out",
-        clearProps: "opacity,transform", overwrite: true,
-      });
+    if (moving) {
+      // Height must follow actual content; animate only during a tab exchange.
+      const targetHeight = tabPanels.getBoundingClientRect().height;
+      tabPanels.style.height = groupBox.height + 'px';
+      tabPanels.classList.add('is-changing-room');
+      const token = tabs[idx].dataset.tab;
+      const horizontal = ['music', 'films', 'series', 'games'].includes(token);
+      gsap.set([old, panels[idx]], { willChange: 'transform,opacity' });
+      roomMotion = gsap.timeline({ onComplete: settleRoom })
+        .to(old, { x: -direction * 26, y: -8, opacity: 0, duration: .24, ease: 'power2.in' }, 0)
+        .fromTo(panels[idx], { x: horizontal ? direction * 38 : 0, y: horizontal ? 8 : 24, opacity: 0, scale: token === 'games' ? .985 : 1 },
+          { x: 0, y: 0, opacity: 1, scale: 1, duration: .52, ease: 'power3.out' }, .09)
+        .to(tabPanels, { height: targetHeight, duration: .5, ease: 'power3.inOut' }, 0);
     }
   };
 

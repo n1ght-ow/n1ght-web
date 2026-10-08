@@ -21,11 +21,50 @@
 
   let selected = 0;
   let tween = null;
+  let readingObserver = null;
+  let readingFrame = 0;
   const stopMotion = () => {
     if (tween) tween.kill();
     tween = null;
     verse.style.removeProperty('opacity');
     verse.style.removeProperty('transform');
+    cancelAnimationFrame(readingFrame);
+    if (readingObserver) readingObserver.disconnect();
+    readingObserver = null;
+    const stanzas = verse.querySelectorAll('.poem-stanza');
+    stanzas.forEach((stanza) => stanza.classList.remove('is-reading'));
+    if (window.gsap) gsap.set([title, credit, standfirst, poem.querySelector('.poem-foot'), ...verse.querySelectorAll('.poem-leaf-label'), ...stanzas], { clearProps: 'transform,opacity,clipPath,willChange' });
+  };
+  const readStanzas = (animate) => {
+    stopMotion();
+    if (reduced.matches || !panel.classList.contains('is-active')) return;
+    const stanzas = Array.from(verse.querySelectorAll('.poem-stanza'));
+    if (animate && window.gsap) {
+      // Reserve the full page before revealing its lines. The mask unfolds
+      // each stanza in reading order without changing layout or scroll speed.
+      gsap.set(stanzas, { willChange: 'transform,opacity' });
+      tween = gsap.timeline({ onComplete: () => { tween = null; } })
+        .fromTo(title, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: .55, ease: 'power2.out', clearProps: 'transform,opacity' }, 0)
+        .fromTo(credit, { y: 6, opacity: 0 }, { y: 0, opacity: 1, duration: .5, ease: 'power2.out', clearProps: 'transform,opacity' }, .08)
+        .fromTo(standfirst, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: .65, ease: 'power2.out', clearProps: 'transform,opacity' }, .14)
+        .fromTo(verse.querySelectorAll('.poem-leaf-label'), { opacity: 0 }, { opacity: 1, duration: .5, clearProps: 'opacity' }, .2)
+        .fromTo(stanzas, { y: 16, opacity: 0, clipPath: 'inset(0 0 100% 0)' }, { y: 0, opacity: 1, clipPath: 'inset(0 0 0% 0)', duration: .85, stagger: .18, ease: 'power2.out', clearProps: 'transform,opacity,clipPath,willChange' }, .18)
+        .fromTo(poem.querySelector('.poem-foot'), { opacity: 0 }, { opacity: 1, duration: .3, clearProps: 'opacity' }, .88 + (stanzas.length - 1) * .18);
+    }
+    // A margin mark follows the stanza in view; the text itself stays still.
+    const updateReading = () => {
+      let nearest = null, distance = Infinity;
+      stanzas.forEach((stanza) => {
+        const box = stanza.getBoundingClientRect();
+        if (box.bottom < innerHeight * .18 || box.top > innerHeight * .78) return;
+        const gap = Math.abs((box.top + box.bottom) / 2 - innerHeight * .46);
+        if (gap < distance) { nearest = stanza; distance = gap; }
+      });
+      stanzas.forEach((stanza) => stanza.classList.toggle('is-reading', stanza === nearest));
+    };
+    readingObserver = new IntersectionObserver(updateReading, { rootMargin: '-18% 0px -22% 0px', threshold: [0, .25, .5, .75, 1] });
+    stanzas.forEach((stanza) => readingObserver.observe(stanza));
+    updateReading();
   };
   const refresh = () => {
     if (typeof scheduleRefresh === 'function') scheduleRefresh();
@@ -105,19 +144,16 @@
     });
     verse.replaceChildren(fragment);
     if (announce && status) status.textContent = `${work.title} by ${work.author}. ${lineCount} lines. Full poem displayed below the contents.`;
-    if (announce && !reduced.matches && window.gsap && panel.classList.contains('is-active')) {
-      tween = window.gsap.fromTo(verse, { opacity: .6, y: 6 }, {
-        opacity: 1, y: 0, duration: .3, ease: 'power1.out', clearProps: 'opacity,transform',
-        onComplete: () => { tween = null; }
-      });
-    }
+    readStanzas(announce);
     refresh();
   };
 
   grid.addEventListener('click', (event) => {
     const button = event.target.closest('.poem-choice');
     const index = choices.indexOf(button);
-    if (index >= 0 && index !== selected) select(index);
+    if (index < 0) return;
+    if (index === selected) readStanzas(true);
+    else select(index);
   });
   grid.addEventListener('keydown', (event) => {
     const index = choices.indexOf(event.target.closest('.poem-choice'));
@@ -131,9 +167,10 @@
   panel.querySelectorAll('[data-poem-step]').forEach((button) => {
     button.addEventListener('click', () => select(selected + Number(button.dataset.poemStep)));
   });
-  reduced.addEventListener('change', () => { stopMotion(); refresh(); });
+  reduced.addEventListener('change', () => { readStanzas(false); refresh(); });
   document.getElementById('archive-tabbar')?.addEventListener('night:archive-tab', (event) => {
     if (event.detail?.token !== 'poems') stopMotion();
+    else readingFrame = requestAnimationFrame(() => readStanzas(true));
   });
   const poemsTab = document.getElementById('tab-poems');
   document.querySelectorAll('a[href="#tab-poems"]').forEach((link) => {

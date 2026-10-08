@@ -93,6 +93,8 @@ body, button, input { -webkit-font-smoothing: antialiased; }
 }
 .sec-title .line { overflow: visible; padding: 0; margin: 0; will-change: auto; }
 .sec-title::after { content: none; }
+.has-motion-stroke { position: relative; }
+.has-motion-stroke::before { content: ''; position: absolute; inset-block-start: -18px; inset-inline-start: 0; width: 44px; height: 1px; background: var(--ink-600); transform: scaleX(var(--stroke-scale, 1)); transform-origin: left; }
 .sec-head {
   grid-template-columns: 1fr;
   align-items: start;

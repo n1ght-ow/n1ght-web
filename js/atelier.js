@@ -30,29 +30,29 @@
   });
   const mm = gsap.matchMedia();
   mm.add('(prefers-reduced-motion: no-preference)', () => {
-    // Titles follow the reader very slightly; running text remains still.
-    document.querySelectorAll('#photo .sec-title, #archive .sec-title').forEach((title) => {
-      gsap.fromTo(title, { y: 18 }, {
-        y: -14,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: title.closest('section'),
-          start: 'top bottom', end: 'bottom top', scrub: 0.6,
-          invalidateOnRefresh: true,
-        },
-      });
+    // Each chapter unfolds once; reading text remains stable afterwards.
+    document.querySelectorAll('#photo .sec-head, #archive .sec-head, .curator-head').forEach((head) => {
+      const title = head.querySelector('.sec-title, h2');
+      const eyebrow = head.querySelector('.sec-eyebrow, .curator-kicker');
+      const copy = head.querySelector('.sec-copy') || head.querySelector('p:last-child');
+      head.classList.add('has-motion-stroke');
+      const entrance = gsap.timeline({ defaults: { ease: 'power3.out' }, scrollTrigger: { trigger: head, start: 'top 88%', once: true } });
+      entrance.fromTo(head, { '--stroke-scale': 0 }, { '--stroke-scale': 1, duration: .8 }, 0);
+      if (eyebrow) entrance.from(eyebrow, { y: 8, opacity: 0, duration: .5, clearProps: 'transform,opacity' }, .04);
+      if (title) entrance.from(title, { y: 30, opacity: .5, duration: .8, clearProps: 'transform,opacity' }, .12);
+      if (copy) entrance.from(copy, { y: 12, opacity: .5, duration: .65, clearProps: 'transform,opacity' }, .24);
     });
     gsap.from('.footer-top, .atelier-colophon', {
-      y: 20, opacity: 0, duration: 0.9, stagger: 0.1,
-      ease: 'power3.out',
+      y: 20, opacity: 0, duration: .9, stagger: .1, ease: 'power3.out',
       scrollTrigger: { trigger: '.footer', start: 'top 94%', once: true },
     });
+    return () => document.querySelectorAll('.has-motion-stroke').forEach((head) => { head.classList.remove('has-motion-stroke'); head.style.removeProperty('--stroke-scale'); });
   });
   const refresh = () => scheduleRefresh(250);
   window.addEventListener('load', refresh, { once: true });
   if (document.fonts) document.fonts.ready.then(refresh);
   document.addEventListener('load', (event) => {
     if (event.target instanceof HTMLImageElement &&
-        !event.target.closest('#lightbox, dialog, [hidden], .tab-panel:not(.is-active)')) refresh();
+        !event.target.closest('#lightbox, dialog, .atelier-photo, [hidden], .tab-panel:not(.is-active)')) refresh();
   }, true);
 })();

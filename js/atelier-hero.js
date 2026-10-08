@@ -26,15 +26,16 @@
     const edition = hero.querySelector(".atelier-edition");
     const bottom = hero.querySelector(".atelier-bottom");
 
-    /* The media is visible without scripting; arrival never hides the subject. */
+    /* The cover opens in reading order: name, photograph, label, invitation. */
     gsap.timeline({ defaults: { ease: "power3.out" } })
-      .from(edition, { y: 10, opacity: 0, duration: .75 }, .08)
-      .from(heading, { y: 18, opacity: 0, duration: .8 }, .14)
-      .from(media, { y: 16, duration: .9 }, .2)
-      .from(bottom, { y: 10, opacity: 0, duration: .65 }, .4);
+      .from(edition, { y: 10, opacity: 0, duration: .55, clearProps: 'transform,opacity' }, .04)
+      .from(heading.querySelectorAll('span'), { yPercent: 70, opacity: 0, duration: .9, stagger: .1, clearProps: 'transform,opacity' }, .1)
+      .from(media.querySelector('.atelier-frame'), { clipPath: 'inset(0 0 20% 0)', y: 22, opacity: .7, duration: 1, clearProps: 'clipPath,transform,opacity' }, .22)
+      .from(media.querySelector('.atelier-caption'), { y: 8, opacity: 0, duration: .5, clearProps: 'transform,opacity' }, .65)
+      .from(bottom.children, { y: 18, opacity: 0, duration: .65, stagger: .08, clearProps: 'transform,opacity' }, .55);
 
     gsap.to(image, {
-      scale: 1.035,
+      scale: 1.055,
       ease: "none",
       scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: .7, invalidateOnRefresh: true }
     });

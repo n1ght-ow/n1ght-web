@@ -24,7 +24,9 @@
   inline-size: 100%;
   aspect-ratio: 1.78;
   isolation: isolate;
+  overflow: clip;
 }
+.atelier-photo .photo-frame.atelier-photo__ghost { position: absolute !important; margin: 0 !important; pointer-events: none; z-index: 3; }
 .atelier-photo__plane { position: absolute; inset: 0; }
 .atelier-photo .photo-frame {
   position: absolute;
@@ -78,13 +80,14 @@
   block-size: 100%;
   object-fit: cover;
   pointer-events: none;
-  transition: transform .85s cubic-bezier(.22,.61,.36,1);
+  /* The print stays registered with the flight's crop; hover uses its label. */
 }
 .atelier-photo .photo-frame:is(.is-companion-a, .is-companion-b) img {
   border-radius: max(0px, calc(var(--radius-frame) - 6px));
   corner-shape: var(--corner-frame);
 }
-.atelier-photo .photo-frame-btn:hover img { transform: scale(1.035); }
+.atelier-photo .photo-frame img.is-viewer-source { visibility: hidden; }
+.atelier-photo .photo-frame-btn:has(img.is-viewer-source) { visibility: hidden; }
 .atelier-photo .photo-frame-btn::after {
   content: 'View photograph ↗';
   position: absolute;

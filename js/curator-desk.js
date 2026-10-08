@@ -38,6 +38,8 @@
   let state = blank(), undo = null, exporting = false, saveTimer = 0;
   let pickerType = "photo", pickerLimit = 40, pickerReturn = null;
   let renderTicket = 0, previewTimer = 0, drag = null;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let slotsReady = false, lastComplete = false, revealPending = false, previewMotion = null, suppressClickUntil = 0;
   const itemFor = (type) => catalog[type].find((item) => String(item.id) === String(state.picks[type]));
   const selected = () => state.order.map((type) => itemFor(type));
   const complete = () => TYPES.every((type) => itemFor(type));
@@ -93,27 +95,68 @@
   }
   function announce(message) { $("curator-status").textContent = message; }
   function renderSlots(focusType, action) {
+    if (drag) finishDrag(false);
     const scrollLeft = slots.scrollLeft;
-    slots.replaceChildren();
+    const cards = new Map(Array.from(slots.children).map((card) => [card.dataset.type, card]));
+    const before = new Map(Array.from(cards, ([type, card]) => [type, card.getBoundingClientRect()]));
+    if (window.gsap) cards.forEach((card) => {
+      gsap.killTweensOf(card);
+      gsap.set(card, { clearProps: 'transform,willChange' });
+    });
+    const changed = [];
     state.order.forEach((type, index) => {
-      const item = itemFor(type), card = el("li", "curator-slot"); card.dataset.type = type;
-      const handle = button("curator-handle", "", "Move " + LABELS[type] + "; use the left and right arrow keys to rearrange");
-      handle.dataset.action = "handle"; handle.append(el("span", "", String(index + 1).padStart(2, "0") + " / " + LABELS[type]), el("span", "", "⠿"));
-      const pick = button("curator-pick", "", item ? "Change " + LABELS[type] + ": " + item.title : INVITES[type]); pick.dataset.action = "pick";
-      pick.append(art(item, true), el("span", "curator-piece-title", item ? item.title : INVITES[type]));
-      if (item) pick.title = item.title + " · " + item.meta;
-      const tools = el("div", "curator-slot-tools");
-      [["left", "←", "Move " + LABELS[type] + " earlier"], ["remove", "×", "Remove " + LABELS[type]], ["right", "→", "Move " + LABELS[type] + " later"]].forEach(([act, value, label]) => {
-        const b = button("", value, label); b.dataset.action = act;
-        b.disabled = act === "left" ? index === 0 : act === "right" ? index === 4 : !item;
-        tools.append(b);
-      });
-      card.append(handle, pick, tools); slots.append(card);
+      const item = itemFor(type);
+      let card = cards.get(type);
+      if (!card) {
+        card = el("li", "curator-slot"); card.dataset.type = type;
+        const handle = button("curator-handle", "", "Move " + LABELS[type] + "; use the left and right arrow keys to rearrange");
+        handle.dataset.action = "handle"; handle.append(el("span", "", String(index + 1).padStart(2, "0") + " / " + LABELS[type]), el("span", "", "⠿"));
+        const pick = button("curator-pick", "", item ? "Change " + LABELS[type] + ": " + item.title : INVITES[type]); pick.dataset.action = "pick";
+        pick.append(art(item, true), el("span", "curator-piece-title", item ? item.title : INVITES[type]));
+        if (item) pick.title = item.title + " · " + item.meta;
+        const tools = el("div", "curator-slot-tools");
+        [["left", "←", "Move " + LABELS[type] + " earlier"], ["remove", "×", "Remove " + LABELS[type]], ["right", "→", "Move " + LABELS[type] + " later"]].forEach(([act, value, label]) => {
+          const b = button("", value, label); b.dataset.action = act;
+          b.disabled = act === "left" ? index === 0 : act === "right" ? index === 4 : !item;
+          tools.append(b);
+        });
+        card.append(handle, pick, tools);
+      } else {
+        card.querySelector('.curator-handle span').textContent = String(index + 1).padStart(2, '0') + ' / ' + LABELS[type];
+        const pick = card.querySelector('.curator-pick');
+        if (card.dataset.pickId !== String(item?.id ?? '')) {
+          if (window.gsap) gsap.killTweensOf(pick.children);
+          pick.replaceChildren(art(item, true), el('span', 'curator-piece-title', item ? item.title : INVITES[type]));
+          changed.push(pick.querySelector('.curator-art'));
+        }
+        pick.setAttribute('aria-label', item ? 'Change ' + LABELS[type] + ': ' + item.title : INVITES[type]);
+        if (item) pick.title = item.title + ' · ' + item.meta;
+        else pick.removeAttribute('title');
+        card.querySelector('[data-action="left"]').disabled = index === 0;
+        card.querySelector('[data-action="right"]').disabled = index === 4;
+        card.querySelector('[data-action="remove"]').disabled = !item;
+      }
+      card.dataset.pickId = String(item?.id ?? '');
+      slots.append(card);
     });
     slots.scrollLeft = scrollLeft;
+    // Reuse the same cards, so focus and decoded artwork survive rearrangement.
+    if (slotsReady && !reduced.matches && window.gsap) {
+      const after = Array.from(slots.children).map((card, i) => ({ card, box: card.getBoundingClientRect(), old: before.get(card.dataset.type), baseY: i % 2 ? 5 : 0 }));
+      after.forEach(({ card, box, old, baseY }) => {
+        if (!old || (Math.abs(old.left - box.left) < .5 && Math.abs(old.top - box.top) < .5)) return;
+        gsap.fromTo(card, { x: old.left - box.left, y: baseY + old.top - box.top, scale: card.dataset.type === focusType ? 1.025 : 1 },
+          { x: 0, y: baseY, scale: 1, rotation: 0, duration: .48, ease: 'power3.out', clearProps: 'transform,willChange' });
+      });
+      if (changed.length) gsap.fromTo(changed, { y: 12, scale: .95, opacity: .6 }, { y: 0, scale: 1, opacity: 1, duration: .48, stagger: .045, ease: 'power3.out', clearProps: 'transform,opacity' });
+    }
     const count = TYPES.filter((type) => itemFor(type)).length;
     $("curator-count").textContent = "Selected " + count + " / 5";
     exportButton.disabled = !complete() || exporting;
+    if (slotsReady && complete() && !lastComplete) revealPending = true;
+    if (!complete()) revealPending = false;
+    lastComplete = !!complete();
+    slotsReady = true;
     $("curator-surprise").textContent = count ? "Find five more ↗" : "Find me five ↗";
     if (focusType) {
       const target = slots.querySelector('[data-type="' + focusType + '"] [data-action="' + (action || "pick") + '"]');
@@ -136,6 +179,7 @@
     renderSlots(type, action || "handle"); announce(LABELS[type] + " moved to position " + (target + 1) + ". Your poster follows the new order.");
   }
   slots.addEventListener("click", (event) => {
+    if (Date.now() < suppressClickUntil) return;
     const b = event.target.closest("button"), card = event.target.closest(".curator-slot");
     if (!b || !card) return;
     const type = card.dataset.type, index = state.order.indexOf(type), act = b.dataset.action;
@@ -153,18 +197,44 @@
   slots.addEventListener("pointerdown", (event) => {
     const handle = event.target.closest(".curator-handle");
     if (!handle || event.button !== 0 || exporting) return;
-    drag = { type: handle.closest(".curator-slot").dataset.type, target: null, x: event.clientX, y: event.clientY, active: false, id: event.pointerId };
+    finishDrag(false);
+    const cards = Array.from(slots.children);
+    if (window.gsap) cards.forEach((card) => { gsap.killTweensOf(card); gsap.set(card, { clearProps: 'transform,willChange' }); });
+    drag = { type: handle.closest('.curator-slot').dataset.type, target: null, x: event.clientX, y: event.clientY, active: false, id: event.pointerId,
+      scrollLeft: slots.scrollLeft, cards, boxes: cards.map((card) => card.getBoundingClientRect()) };
     slots.setPointerCapture(event.pointerId);
   });
   slots.addEventListener("pointermove", (event) => {
     if (!drag || drag.id !== event.pointerId) return;
     if (!drag.active && Math.hypot(event.clientX - drag.x, event.clientY - drag.y) < 6) return;
     drag.active = true;
-    const target = document.elementFromPoint(event.clientX, event.clientY)?.closest(".curator-slot");
-    drag.target = target && slots.contains(target) ? target.dataset.type : null;
-    slots.querySelectorAll(".curator-slot").forEach((card) => {
+    const bounds = slots.getBoundingClientRect();
+    if (slots.scrollWidth > slots.clientWidth) {
+      if (event.clientX < bounds.left + 28) slots.scrollLeft -= 12;
+      else if (event.clientX > bounds.right - 28) slots.scrollLeft += 12;
+    }
+    const shift = slots.scrollLeft - drag.scrollLeft;
+    const inDesk = event.clientY >= bounds.top - 35 && event.clientY <= bounds.bottom + 35 && event.clientX >= bounds.left - 35 && event.clientX <= bounds.right + 35;
+    let targetIndex = state.order.indexOf(drag.type), distance = Infinity;
+    drag.boxes.forEach((box, index) => {
+      const gap = Math.abs(event.clientX - (box.left + box.width / 2 - shift));
+      if (gap < distance) { distance = gap; targetIndex = index; }
+    });
+    const target = inDesk ? state.order[targetIndex] : null;
+    const targetChanged = target !== drag.target;
+    drag.target = target;
+    const projected = state.order.filter((type) => type !== drag.type);
+    projected.splice(inDesk ? targetIndex : state.order.indexOf(drag.type), 0, drag.type);
+    drag.cards.forEach((card, index) => {
       card.classList.toggle("is-dragging", card.dataset.type === drag.type);
       card.classList.toggle("is-drop", card.dataset.type === drag.target && drag.target !== drag.type);
+      if (reduced.matches || !window.gsap) return;
+      if (card.dataset.type === drag.type) {
+        gsap.set(card, { x: event.clientX - drag.x + shift, y: event.clientY - drag.y - 10, rotation: Math.max(-3, Math.min(3, (event.clientX - drag.x) / 70)), scale: 1.035, willChange: 'transform' });
+      } else if (targetChanged) {
+        const destination = projected.indexOf(card.dataset.type);
+        gsap.to(card, { x: drag.boxes[destination].left - drag.boxes[index].left, y: destination % 2 ? 5 : 0, duration: .2, ease: 'power2.out', overwrite: true });
+      }
     });
   });
   function finishDrag(commit) {
@@ -172,11 +242,27 @@
     const current = drag; drag = null;
     if (slots.hasPointerCapture(current.id)) slots.releasePointerCapture(current.id);
     slots.querySelectorAll(".curator-slot").forEach((card) => card.classList.remove("is-dragging", "is-drop"));
-    if (commit && current.active && current.target) move(current.type, state.order.indexOf(current.target));
+    if (current.active) suppressClickUntil = Date.now() + 300;
+    if (commit && current.active && current.target && current.target !== current.type) move(current.type, state.order.indexOf(current.target));
+    else if (window.gsap) current.cards.forEach((card, index) => {
+      gsap.to(card, { x: 0, y: index % 2 ? 5 : 0, scale: 1, rotation: 0, duration: reduced.matches ? 0 : .36, ease: 'power3.out', overwrite: true, clearProps: 'transform,willChange' });
+    });
   }
   slots.addEventListener("pointerup", () => finishDrag(true));
   slots.addEventListener("pointercancel", () => finishDrag(false));
   slots.addEventListener("lostpointercapture", () => finishDrag(false));
+  window.addEventListener('blur', () => finishDrag(false));
+  window.addEventListener('resize', () => finishDrag(false));
+  reduced.addEventListener('change', () => {
+    finishDrag(false);
+    if (previewMotion) previewMotion.kill();
+    previewMotion = null;
+    if (window.gsap) {
+      const targets = [canvas, ...slots.children, ...slots.querySelectorAll('.curator-art')];
+      gsap.killTweensOf(targets);
+      gsap.set(targets, { clearProps: 'transform,opacity,clipPath,willChange' });
+    }
+  });
 
   function renderPicker(append) {
     const query = $("curator-search").value.trim().toLocaleLowerCase();
@@ -366,10 +452,18 @@
     write("FIVE PIECES. ONE STORY.", 822, 1732, 306, 17, 1, secondary);
     canvas.setAttribute("aria-label", (draft.name.trim() || "Untitled exhibition") + ", " + ({ gallery: "Gallery", contact: "Contact sheet", night: "After dark" })[draft.layout] + " layout. " + items.map((item, i) => LABELS[draft.order[i]] + ": " + (item?.title || "Not selected")).join("; "));
     $("curator-preview-caption").textContent = draft.name.trim() ? "“" + draft.name.trim() + "” · " + (draft.by.trim() || "a passing visitor") : "Every choice on the desk becomes part of this poster.";
+    if (!snapshot && revealPending) {
+      revealPending = false;
+      if (!reduced.matches && window.gsap) {
+        if (previewMotion) previewMotion.kill();
+        previewMotion = gsap.fromTo(canvas, { clipPath: 'inset(0 0 100% 0)', y: 12 }, { clipPath: 'inset(0 0 0% 0)', y: 0, duration: .85, ease: 'power3.inOut', clearProps: 'clipPath,transform', onComplete: () => { previewMotion = null; } });
+      }
+    }
     return { draft, missing: items.filter((item, i) => item?.src && !artImages[i]).length };
   }
   exportButton.addEventListener("click", async () => {
     if (!complete() || exporting) return;
+    finishDrag(false);
     exporting = true; exportButton.disabled = true; exportButton.textContent = "Making your poster…";
     // Freeze this export's composition while allowing the saved browser draft to remain intact.
     const snapshot = JSON.parse(JSON.stringify(state));
@@ -408,10 +502,13 @@
     });
     link.addEventListener("click", (event) => {
       event.preventDefault();
-      if (document.querySelector("#lightbox.is-open") && typeof closeDetail === "function") closeDetail();
-      if (typeof lenis !== "undefined" && lenis) lenis.scrollTo(root, { duration: .8 });
-      else root.scrollIntoView({ behavior: "auto", block: "start" });
-      nameInput.focus({ preventScroll: true });
+      const visitDesk = () => {
+        if (typeof lenis !== 'undefined' && lenis) lenis.scrollTo(root, { duration: .8 });
+        else root.scrollIntoView({ behavior: 'auto', block: 'start' });
+        nameInput.focus({ preventScroll: true });
+      };
+      if (document.querySelector('#lightbox.is-open') && typeof closeDetail === 'function') closeDetail(visitDesk);
+      else visitDesk();
     });
     return tray;
   }

@@ -87,6 +87,11 @@
     }
   };
   updateRoom(current, false);
+  reduced.addEventListener('change', () => {
+    if (!window.gsap) return;
+    gsap.killTweensOf([roomNumber, roomTitle, count]);
+    gsap.set([roomNumber, roomTitle, count], { clearProps: 'transform,opacity,visibility' });
+  });
   tabbar.addEventListener("night:archive-tab", (event) => updateRoom(event.detail.index, true));
   explore.addEventListener("click", () => {
     const candidates = tabs.filter((tab, index) => index !== current);

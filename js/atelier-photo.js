@@ -8,6 +8,9 @@
   var active = 0;
   var manual = false;
   var animations = [];
+  var exchange = null;
+  var ghosts = [];
+  var decodedPrints = new Map();
   var refreshLayout = function () { window.scheduleRefresh(250); };
 
   host.classList.add('atelier-photo');
@@ -88,9 +91,42 @@
   host.appendChild(catalog);
   host.appendChild(live);
 
+  function stopExchange() {
+    if (exchange) exchange.kill();
+    exchange = null;
+    ghosts.forEach(function (ghost) { ghost.remove(); });
+    ghosts = [];
+    if (window.gsap) gsap.set(frames.concat(frames.map(function (frame) { return frame.querySelector('.photo-frame-cap'); })), { clearProps: 'transform,transformOrigin,opacity,visibility,willChange' });
+  }
+
   function select(index, animate) {
-    active = (index + frames.length) % frames.length;
-    var visible = [active, (active + 7) % frames.length, (active + 14) % frames.length];
+    var next = (index + frames.length) % frames.length;
+    if (next === active && animate) return;
+    var direction = index < active ? -1 : 1;
+    var moving = animate && !reduced.matches && window.gsap;
+    // Snapshot the current visual positions before cancelling an interrupted exchange.
+    var planeBox = plane.getBoundingClientRect();
+    var before = new Map();
+    var departing = [];
+    var visible = [next, (next + 7) % frames.length, (next + 14) % frames.length];
+    if (moving) frames.forEach(function (frame, i) {
+      if (frame.hidden) return;
+      var box = frame.getBoundingClientRect();
+      before.set(frame, box);
+      if (!visible.includes(i)) {
+        var copy = frame.cloneNode(true);
+        copy.removeAttribute('style');
+        copy.removeAttribute('id');
+        copy.querySelectorAll('[id]').forEach(function (node) { node.removeAttribute('id'); });
+        copy.classList.add('atelier-photo__ghost');
+        copy.setAttribute('aria-hidden', 'true');
+        copy.inert = true;
+        Object.assign(copy.style, { inset: 'auto', left: (box.left - planeBox.left) + 'px', top: (box.top - planeBox.top) + 'px', width: box.width + 'px', height: box.height + 'px' });
+        departing.push(copy);
+      }
+    });
+    stopExchange();
+    active = next;
     var classes = ['is-featured', 'is-companion-a', 'is-companion-b'];
     frames.forEach(function (frame, i) {
       if (window.gsap) gsap.killTweensOf(frame);
@@ -102,13 +138,44 @@
       frame.classList.add(classes[slot]);
       var image = frame.querySelector('img');
       var full = image.getAttribute('data-full');
+      image.loading = 'eager';
       if (full && image.getAttribute('src') !== full) {
-        image.src = full;
-      }
-      if (animate && !reduced.matches && window.gsap) {
-        gsap.fromTo(frame, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .65, delay: slot * .06, ease: 'power2.out', clearProps: 'opacity,transform' });
+        // Keep the small, decoded print on screen while the full image loads.
+        // Swapping src first would leave the shared transition without pixels.
+        if (!decodedPrints.has(full)) {
+          var print = new Image();
+          print.decoding = 'async';
+          print.src = full;
+          decodedPrints.set(full, print.decode().then(function () { return true; }).catch(function () {
+            decodedPrints.delete(full);
+            return false;
+          }));
+        }
+        decodedPrints.get(full).then(function (ready) {
+          if (ready && !frame.hidden) image.src = full;
+        });
       }
     });
+    if (moving) {
+      ghosts = departing;
+      ghosts.forEach(function (ghost) { plane.appendChild(ghost); });
+      var arrivals = visible.map(function (i) {
+        var frame = frames[i];
+        return { frame: frame, box: frame.getBoundingClientRect(), old: before.get(frame) };
+      });
+      exchange = gsap.timeline({ defaults: { ease: 'power3.out' }, onComplete: stopExchange });
+      if (ghosts.length) exchange.to(ghosts, { x: -direction * 58, y: -10, rotation: -direction * 1.2, opacity: 0, duration: .38, stagger: .025 }, 0);
+      arrivals.forEach(function (arrival, slot) {
+        var frame = arrival.frame, box = arrival.box, old = arrival.old;
+        gsap.set(frame, { willChange: 'transform,opacity', transformOrigin: '0 0' });
+        exchange.fromTo(frame, old ? {
+          x: old.left - box.left, y: old.top - box.top,
+          scaleX: old.width / box.width, scaleY: old.height / box.height, opacity: 1,
+        } : { x: direction * (slot ? 38 : 72), y: 16, rotation: direction * 1.2, scale: .975, opacity: 0 },
+        { x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0, opacity: 1, duration: .65 }, slot * .045);
+        if (!old) exchange.fromTo(frame.querySelector('.photo-frame-cap'), { y: 6, opacity: 0 }, { y: 0, opacity: 1, duration: .36 }, .2 + slot * .045);
+      });
+    }
     thumbs.forEach(function (button, i) { button.setAttribute('aria-pressed', String(i === active)); });
     host.querySelector('.atelier-photo__count').textContent = '/ ' + String(active + 1).padStart(2, '0') + ' of ' + frames.length;
     if (animate) live.textContent = 'Photograph ' + (active + 1) + ', ' + frames[active].querySelector('.photo-frame-text').textContent;
@@ -125,6 +192,7 @@
   select(0, false);
 
   function setupMotion() {
+    stopExchange();
     animations.forEach(function (animation) {
       if (animation.scrollTrigger) animation.scrollTrigger.kill();
       if (animation.kill) animation.kill();
@@ -161,5 +229,5 @@
   reduced.addEventListener('change', setupMotion);
   var narrow = window.matchMedia('(max-width: 720px)');
   narrow.addEventListener('change', setupMotion);
-  window.AtelierPhoto = { select: function (index) { manual = true; select(index, true); }, count: function () { return frames.length; } };
+  window.AtelierPhoto = { select: function (index, animate) { manual = true; select(index, animate !== false); }, count: function () { return frames.length; } };
 })();
