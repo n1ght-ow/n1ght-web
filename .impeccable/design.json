@@ -1,0 +1,444 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-09T03:11:06.175Z",
+  "title": "Design System: N1GHT CHXN9",
+  "extensions": {
+    "colorMeta": {
+      "cobalt": {
+        "role": "primary",
+        "displayName": "钴蓝",
+        "tonalRamp": [
+          "oklch(15.00% 0.23140 266.00)",
+          "oklch(26.43% 0.23140 266.00)",
+          "oklch(37.86% 0.23140 266.00)",
+          "oklch(49.29% 0.23140 266.00)",
+          "oklch(60.71% 0.23140 266.00)",
+          "oklch(72.14% 0.23140 266.00)",
+          "oklch(83.57% 0.23140 266.00)",
+          "oklch(95.00% 0.23140 266.00)"
+        ]
+      },
+      "cobalt-link": {
+        "role": "primary",
+        "displayName": "链接钴蓝",
+        "tonalRamp": [
+          "oklch(15.00% 0.19189 266.21)",
+          "oklch(26.43% 0.19189 266.21)",
+          "oklch(37.86% 0.19189 266.21)",
+          "oklch(49.29% 0.19189 266.21)",
+          "oklch(60.71% 0.19189 266.21)",
+          "oklch(72.14% 0.19189 266.21)",
+          "oklch(83.57% 0.19189 266.21)",
+          "oklch(95.00% 0.19189 266.21)"
+        ]
+      },
+      "cold-white": {
+        "role": "neutral",
+        "displayName": "冷白",
+        "tonalRamp": [
+          "oklch(15.00% 0.00697 268.55)",
+          "oklch(26.43% 0.00697 268.55)",
+          "oklch(37.86% 0.00697 268.55)",
+          "oklch(49.29% 0.00697 268.55)",
+          "oklch(60.71% 0.00697 268.55)",
+          "oklch(72.14% 0.00697 268.55)",
+          "oklch(83.57% 0.00697 268.55)",
+          "oklch(95.00% 0.00697 268.55)"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "白色",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 89.88)",
+          "oklch(26.43% 0.00000 89.88)",
+          "oklch(37.86% 0.00000 89.88)",
+          "oklch(49.29% 0.00000 89.88)",
+          "oklch(60.71% 0.00000 89.88)",
+          "oklch(72.14% 0.00000 89.88)",
+          "oklch(83.57% 0.00000 89.88)",
+          "oklch(95.00% 0.00000 89.88)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "深蓝墨色",
+        "tonalRamp": [
+          "oklch(15.00% 0.06860 260.09)",
+          "oklch(26.43% 0.06860 260.09)",
+          "oklch(37.86% 0.06860 260.09)",
+          "oklch(49.29% 0.06860 260.09)",
+          "oklch(60.71% 0.06860 260.09)",
+          "oklch(72.14% 0.06860 260.09)",
+          "oklch(83.57% 0.06860 260.09)",
+          "oklch(95.00% 0.06860 260.09)"
+        ]
+      },
+      "deep-ink": {
+        "role": "neutral",
+        "displayName": "深蓝底",
+        "tonalRamp": [
+          "oklch(15.00% 0.07348 262.15)",
+          "oklch(26.43% 0.07348 262.15)",
+          "oklch(37.86% 0.07348 262.15)",
+          "oklch(49.29% 0.07348 262.15)",
+          "oklch(60.71% 0.07348 262.15)",
+          "oklch(72.14% 0.07348 262.15)",
+          "oklch(83.57% 0.07348 262.15)",
+          "oklch(95.00% 0.07348 262.15)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "次级文字",
+        "tonalRamp": [
+          "oklch(15.00% 0.05217 259.80)",
+          "oklch(26.43% 0.05217 259.80)",
+          "oklch(37.86% 0.05217 259.80)",
+          "oklch(49.29% 0.05217 259.80)",
+          "oklch(60.71% 0.05217 259.80)",
+          "oklch(72.14% 0.05217 259.80)",
+          "oklch(83.57% 0.05217 259.80)",
+          "oklch(95.00% 0.05217 259.80)"
+        ]
+      },
+      "subdued": {
+        "role": "neutral",
+        "displayName": "弱文字",
+        "tonalRamp": [
+          "oklch(15.00% 0.04637 260.02)",
+          "oklch(26.43% 0.04637 260.02)",
+          "oklch(37.86% 0.04637 260.02)",
+          "oklch(49.29% 0.04637 260.02)",
+          "oklch(60.71% 0.04637 260.02)",
+          "oklch(72.14% 0.04637 260.02)",
+          "oklch(83.57% 0.04637 260.02)",
+          "oklch(95.00% 0.04637 260.02)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "细线",
+        "tonalRamp": [
+          "oklch(15.00% 0.02232 263.19)",
+          "oklch(26.43% 0.02232 263.19)",
+          "oklch(37.86% 0.02232 263.19)",
+          "oklch(49.29% 0.02232 263.19)",
+          "oklch(60.71% 0.02232 263.19)",
+          "oklch(72.14% 0.02232 263.19)",
+          "oklch(83.57% 0.02232 263.19)",
+          "oklch(95.00% 0.02232 263.19)"
+        ]
+      },
+      "cobalt-wash": {
+        "role": "primary",
+        "displayName": "钴蓝浅底",
+        "tonalRamp": [
+          "oklch(15.00% 0.03478 273.26)",
+          "oklch(26.43% 0.03478 273.26)",
+          "oklch(37.86% 0.03478 273.26)",
+          "oklch(49.29% 0.03478 273.26)",
+          "oklch(60.71% 0.03478 273.26)",
+          "oklch(72.14% 0.03478 273.26)",
+          "oklch(83.57% 0.03478 273.26)",
+          "oklch(95.00% 0.03478 273.26)"
+        ]
+      },
+      "pale-cobalt": {
+        "role": "primary",
+        "displayName": "淡钴蓝",
+        "tonalRamp": [
+          "oklch(15.00% 0.02036 276.96)",
+          "oklch(26.43% 0.02036 276.96)",
+          "oklch(37.86% 0.02036 276.96)",
+          "oklch(49.29% 0.02036 276.96)",
+          "oklch(60.71% 0.02036 276.96)",
+          "oklch(72.14% 0.02036 276.96)",
+          "oklch(83.57% 0.02036 276.96)",
+          "oklch(95.00% 0.02036 276.96)"
+        ]
+      },
+      "archive": {
+        "role": "secondary",
+        "displayName": "浅紫收藏室",
+        "tonalRamp": [
+          "oklch(15.00% 0.02052 298.18)",
+          "oklch(26.43% 0.02052 298.18)",
+          "oklch(37.86% 0.02052 298.18)",
+          "oklch(49.29% 0.02052 298.18)",
+          "oklch(60.71% 0.02052 298.18)",
+          "oklch(72.14% 0.02052 298.18)",
+          "oklch(83.57% 0.02052 298.18)",
+          "oklch(95.00% 0.02052 298.18)"
+        ]
+      },
+      "archive-inset": {
+        "role": "secondary",
+        "displayName": "浅紫内面",
+        "tonalRamp": [
+          "oklch(15.00% 0.03048 298.24)",
+          "oklch(26.43% 0.03048 298.24)",
+          "oklch(37.86% 0.03048 298.24)",
+          "oklch(49.29% 0.03048 298.24)",
+          "oklch(60.71% 0.03048 298.24)",
+          "oklch(72.14% 0.03048 298.24)",
+          "oklch(83.57% 0.03048 298.24)",
+          "oklch(95.00% 0.03048 298.24)"
+        ]
+      },
+      "archive-tray": {
+        "role": "secondary",
+        "displayName": "浅紫托盘",
+        "tonalRamp": [
+          "oklch(15.00% 0.03342 299.03)",
+          "oklch(26.43% 0.03342 299.03)",
+          "oklch(37.86% 0.03342 299.03)",
+          "oklch(49.29% 0.03342 299.03)",
+          "oklch(60.71% 0.03342 299.03)",
+          "oklch(72.14% 0.03342 299.03)",
+          "oklch(83.57% 0.03342 299.03)",
+          "oklch(95.00% 0.03342 299.03)"
+        ]
+      },
+      "photo-surface": {
+        "role": "secondary",
+        "displayName": "冷蓝摄影面",
+        "tonalRamp": [
+          "oklch(15.00% 0.01956 260.17)",
+          "oklch(26.43% 0.01956 260.17)",
+          "oklch(37.86% 0.01956 260.17)",
+          "oklch(49.29% 0.01956 260.17)",
+          "oklch(60.71% 0.01956 260.17)",
+          "oklch(72.14% 0.01956 260.17)",
+          "oklch(83.57% 0.01956 260.17)",
+          "oklch(95.00% 0.01956 260.17)"
+        ]
+      },
+      "workbench": {
+        "role": "secondary",
+        "displayName": "杏色工作台",
+        "tonalRamp": [
+          "oklch(15.00% 0.07986 83.92)",
+          "oklch(26.43% 0.07986 83.92)",
+          "oklch(37.86% 0.07986 83.92)",
+          "oklch(49.29% 0.07986 83.92)",
+          "oklch(60.71% 0.07986 83.92)",
+          "oklch(72.14% 0.07986 83.92)",
+          "oklch(83.57% 0.07986 83.92)",
+          "oklch(95.00% 0.07986 83.92)"
+        ]
+      },
+      "workbench-inset": {
+        "role": "secondary",
+        "displayName": "工作台内面",
+        "tonalRamp": [
+          "oklch(15.00% 0.08328 83.13)",
+          "oklch(26.43% 0.08328 83.13)",
+          "oklch(37.86% 0.08328 83.13)",
+          "oklch(49.29% 0.08328 83.13)",
+          "oklch(60.71% 0.08328 83.13)",
+          "oklch(72.14% 0.08328 83.13)",
+          "oklch(83.57% 0.08328 83.13)",
+          "oklch(95.00% 0.08328 83.13)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "字标",
+        "purpose": "首屏双段字标；小屏分行。"
+      },
+      "headline": {
+        "displayName": "章节标题",
+        "purpose": "空间入口和主要章节。"
+      },
+      "title": {
+        "displayName": "房间标题",
+        "purpose": "目录、收藏室与选中作品。"
+      },
+      "body": {
+        "displayName": "界面正文",
+        "purpose": "简介、说明与操作相关正文。"
+      },
+      "label": {
+        "displayName": "标签",
+        "purpose": "操作名与短说明。"
+      },
+      "metadata": {
+        "displayName": "元信息",
+        "purpose": "照片编号及导出题签。"
+      },
+      "poetry": {
+        "displayName": "诗文阅读",
+        "purpose": "完整诗节，保留阅读衬线角色。"
+      }
+    },
+    "shadows": [
+      {
+        "name": "lift",
+        "value": "0 14px 36px rgb(16 35 72 / 12%)",
+        "purpose": "共享浮起面。"
+      },
+      {
+        "name": "photo-print",
+        "value": "0 9px 25px rgb(16 35 72 / 13%)",
+        "purpose": "空间印样。"
+      },
+      {
+        "name": "curator-slot",
+        "value": "0 6px 18px rgb(68 43 13 / 7%)",
+        "purpose": "杏色工作台上的白色展具。"
+      },
+      {
+        "name": "picker",
+        "value": "0 24px 80px rgb(16 35 72 / 25%)",
+        "purpose": "策展选择器前景。"
+      }
+    ],
+    "motion": [
+      {
+        "name": "standard-ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "既有共享状态过渡。"
+      },
+      {
+        "name": "button-background",
+        "value": "background .2s",
+        "purpose": "主要入口悬停。"
+      },
+      {
+        "name": "view-reveal",
+        "value": "0.6s / power3.out",
+        "purpose": "首屏图像解码后裁切进入。"
+      },
+      {
+        "name": "opening",
+        "value": "0.9s–1s / power3.out",
+        "purpose": "字标与照片进入；减少动态时跳过。"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide",
+        "value": "1600px"
+      },
+      {
+        "name": "stack-workbench",
+        "value": "1100px"
+      },
+      {
+        "name": "mobile",
+        "value": "720px"
+      },
+      {
+        "name": "compact-mobile",
+        "value": "360px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "主要入口",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "钴蓝胶囊入口，使用与页面相同的线性 SVG。",
+      "html": "<a class=\"ds-primary\" href=\"#photo\"><span>Come on in</span><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M12 4v16m-6-6 6 6 6-6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;gap:32px;min-height:56px;padding:17px 24px;border:0;border-radius:999px;background:var(--sky-400,#244be2);color:var(--paper-000,#fff);font:14px var(--font-sans, 'Space Grotesk', Arial, sans-serif);text-decoration:none;transition:background .2s}.ds-primary svg{width:24px;height:24px}.ds-primary:hover{background:var(--sky-700,#2446be)}.ds-primary:focus-visible{outline:3px solid var(--sky-400,#244be2);outline-offset:5px}.ds-primary:active{background:var(--sky-700,#2446be)}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
+    },
+    {
+      "name": "换图文字按钮",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "轻量的图注操作，等待时提供禁用与忙碌反馈。",
+      "html": "<button class=\"ds-text\" type=\"button\" aria-label=\"Change the opening photograph\">Another view<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M20 7v5h-5M4 17v-5h5M5.2 8a7 7 0 0 1 11.6-2L20 12M4 12l3.2 6A7 7 0 0 0 18.8 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button>",
+      "css": ".ds-text{display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 0 8px 12px;border:0;background:none;color:var(--sky-700,#2446be);font:12px var(--font-sans, 'Space Grotesk', Arial, sans-serif);cursor:pointer;white-space:nowrap}.ds-text svg{width:19px;height:19px}.ds-text:hover{text-decoration:underline}.ds-text:focus-visible{outline:3px solid var(--sky-400,#244be2);outline-offset:5px}.ds-text:disabled{opacity:.6;cursor:wait}"
+    },
+    {
+      "name": "音乐搜索",
+      "kind": "input",
+      "refersTo": "search-field",
+      "description": "浅色胶囊与底线聚焦反馈，标签保持可读。",
+      "html": "<label class=\"ds-search-label\" for=\"ds-search\">Search the music collection</label><input class=\"ds-search\" id=\"ds-search\" type=\"search\" placeholder=\"Search title or artist\">",
+      "css": ".ds-search-label{display:block;margin-bottom:8px;color:var(--ink-900,#1c3154);font:12px/1.5 var(--font-sans, 'Space Grotesk', Arial, sans-serif)}.ds-search{width:min(100%,440px);min-height:52px;padding:12px 18px;border:0;border-bottom:1px solid #cdc5df;border-radius:999px;background:rgb(255 255 255 / 65%);color:var(--ink-900,#1c3154);font:15px var(--font-sans, 'Space Grotesk', Arial, sans-serif);caret-color:var(--sky-400,#244be2)}.ds-search::placeholder{color:var(--ink-600,#4b5d7a);opacity:1}.ds-search:hover{border-bottom-color:var(--ink-900,#1c3154)}.ds-search:focus{border-bottom-color:var(--ink-900,#1c3154)}.ds-search:focus-visible{border-radius:var(--radius-frame,14px);outline:3px solid var(--sky-400,#244be2);outline-offset:5px}@media(max-width:720px){.ds-search{font-size:16px}}"
+    },
+    {
+      "name": "顶部完整导航",
+      "kind": "nav",
+      "description": "品牌与三个完整入口并排，活动项使用链接钴蓝。",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Primary\"><a class=\"ds-brand\" href=\"#hero\">N1GHT CHXN9</a><div class=\"ds-links\"><a href=\"#photo\" aria-current=\"location\">Photography</a><a href=\"#archive\">Archive</a><a href=\"#curate\">Curate</a></div></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:78px;padding:0 20px;background:var(--paper-050,#f8faff);font-family:var(--font-sans, 'Space Grotesk', Arial, sans-serif)}.ds-brand{font-size:14px;font-weight:600;letter-spacing:-.025em;color:var(--sky-400,#244be2);text-decoration:none}.ds-links{display:flex;gap:clamp(1rem,3vw,2.8rem)}.ds-links a{display:flex;align-items:center;min-height:44px;font-size:13px;color:var(--ink-900,#1c3154);text-decoration:none}.ds-links a[aria-current],.ds-links a:hover{color:var(--sky-700,#2446be)}.ds-nav a:focus-visible{outline:3px solid var(--sky-400,#244be2);outline-offset:5px}@media(max-width:720px){.ds-nav{gap:12px;min-height:64px;padding:0 8px}.ds-brand{font-size:11px}.ds-links{gap:14px}.ds-links a{font-size:11px}}@media(max-width:360px){.ds-links{gap:8px}}"
+    },
+    {
+      "name": "收藏标签",
+      "kind": "nav",
+      "refersTo": "archive-tab",
+      "description": "展示字房间名与短说明，钴蓝选中态，移动标签有自己的滚动容器。",
+      "html": "<div class=\"ds-tabbar\" role=\"tablist\" aria-label=\"Archive rooms\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\"><strong>Books</strong><span>On the shelf</span></button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\"><strong>Poems</strong><span>A little poetry</span></button></div>",
+      "css": ".ds-tabbar{display:flex;gap:5px;padding:6px;border-radius:18px;background:#dcd5ed;overflow-x:auto}.ds-tab{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:84px;padding:16px 10px;border:0;border-radius:13px;background:transparent;color:var(--ink-900,#1c3154);cursor:pointer}.ds-tab strong{font:400 clamp(16px,1.5vw,21px)/1.2 var(--font-editorial, 'Calistoga', Georgia, serif)}.ds-tab span{font:11px/1.5 var(--font-sans, 'Space Grotesk', Arial, sans-serif)}.ds-tab:hover{background:rgb(255 255 255 / 32%)}.ds-tab[aria-selected=true]{background:var(--sky-400,#244be2);color:white}.ds-tab[aria-selected=true] span{color:#e4eaff}.ds-tab:focus-visible{outline:2px solid var(--ink-900,#1c3154);outline-offset:-4px}@media(max-width:720px){.ds-tab{flex:0 0 90px;min-height:78px;padding:13px 12px}.ds-tab strong{font-size:18px}}"
+    },
+    {
+      "name": "摄影路线",
+      "kind": "chip",
+      "refersTo": "route-chip",
+      "description": "带真实计数的白色路线胶囊，深蓝选中态。",
+      "html": "<div class=\"ds-routes\"><button class=\"ds-route\" type=\"button\" aria-pressed=\"true\">Everywhere <small>46</small></button><button class=\"ds-route\" type=\"button\" aria-pressed=\"false\">Chase the light</button></div>",
+      "css": ".ds-routes{display:flex;gap:8px 10px;flex-wrap:wrap}.ds-route{display:flex;align-items:baseline;gap:9px;min-height:44px;padding:10px 16px;border:0;border-radius:999px;background:var(--paper-000,#fff);color:var(--ink-600,#4b5d7a);font:12px var(--font-sans, 'Space Grotesk', Arial, sans-serif);cursor:pointer}.ds-route small{font:11px var(--font-mono,'IBM Plex Mono',monospace)}.ds-route:hover{color:var(--ink-950,#102348)}.ds-route[aria-pressed=true]{background:var(--ink-900,#1c3154);color:white}.ds-route:focus-visible{outline:2px solid var(--ink-900,#1c3154);outline-offset:4px}.ds-route:active{background:var(--sky-100,#dfe6ff);color:var(--ink-950,#102348)}"
+    },
+    {
+      "name": "故事白色阅读面",
+      "kind": "card",
+      "refersTo": "story-card",
+      "description": "摄影故事编辑面的标题、正文与动作层级。",
+      "html": "<article class=\"ds-story\"><h3>Pocket story</h3><p>Three photographs. One way of seeing.</p><button class=\"ds-story-action\" type=\"button\">Deal me three</button></article>",
+      "css": ".ds-story{padding:clamp(24px,4vw,56px);border:0;border-radius:28px;background:var(--paper-000,#fff);color:var(--ink-900,#1c3154)}.ds-story h3{margin:0 0 18px;font:400 clamp(28px,3.2vw,46px)/1.15 var(--font-editorial, 'Calistoga', Georgia, serif);letter-spacing:-.025em}.ds-story p{margin:0 0 20px;color:var(--ink-600,#4b5d7a);font:13px/1.75 var(--font-sans, 'Space Grotesk', Arial, sans-serif)}.ds-story-action{min-height:44px;padding:12px 18px;border:1px solid #c3d1e7;border-radius:999px;background:transparent;color:var(--ink-900,#1c3154);font:12px var(--font-sans, 'Space Grotesk', Arial, sans-serif);cursor:pointer}.ds-story-action:hover{background:var(--sky-100,#dfe6ff)}.ds-story-action:focus-visible{outline:2px solid var(--ink-900,#1c3154);outline-offset:4px}@media(max-width:720px){.ds-story{padding:24px 18px;border-radius:20px}.ds-story h3{font-size:30px}}"
+    },
+    {
+      "name": "房间目录入口",
+      "kind": "custom",
+      "description": "一个强标题与一句描述，细上边界给出连续目录节奏。",
+      "html": "<a class=\"ds-directory\" href=\"#archive\"><strong>The archive</strong><span>Books, poems &amp; everything else</span></a>",
+      "css": ".ds-directory{display:flex;flex-direction:column;gap:7px;padding-top:20px;border-top:1px solid var(--paper-200,#d4dceb);color:var(--ink-900,#1c3154);text-decoration:none}.ds-directory strong{font:400 clamp(22px,2.4vw,32px)/1.3 var(--font-editorial, 'Calistoga', Georgia, serif)}.ds-directory span{color:var(--ink-600,#4b5d7a);font:12px/1.5 var(--font-sans, 'Space Grotesk', Arial, sans-serif)}.ds-directory:hover strong{color:var(--sky-700,#2446be)}.ds-directory:focus-visible{outline:3px solid var(--sky-400,#244be2);outline-offset:5px}@media(max-width:720px){.ds-directory{display:grid;grid-template-columns:1fr auto;padding-block:20px;gap:5px 12px}.ds-directory strong{font-size:23px}.ds-directory span{max-width:15ch;text-align:right;font-size:11px}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "开放的记忆雕塑园",
+    "overview": "真实照片与私人馆藏是空间里的作品，界面承担路标和展具的工作。冷白底、钴蓝字标、浅紫收藏室与杏色策展桌形成可辨认的场所；不同颜色帮助访客找到正在浏览或制作的内容。\n\nCalistoga 的圆润字形提供雕塑般的展示轮廓，Space Grotesk 保持操作的准确和清晰。真实媒体保留原色，阅读区域使用安静的浅色面。空间允许尺度差、轻微倾斜和照片之间的关系，也给歌曲、诗节与藏品名称留出完整阅读的位置。\n\n本次替换了旧 Atelier 的墨绿纸面世界。视觉事实以最后加载的 `css/gallery.css`、当前 `index.html` 与章节脚本为准；早先组件和 Atelier 文件继续提供布局与行为兼容。前置文件中的历史色板、印刷错版注释与旧验收表不再定义现行视觉。用户已授权整体改版并委托本次方向；后续新要求仍可改变这一系统。",
+    "keyCharacteristics": [
+      "用连续的色彩空间区分抵达、收藏与制作。",
+      "大型雕塑感展示字与精确的无衬线控件并置。",
+      "真实媒体保留自身色彩和身份。",
+      "操作有明确选中态、键盘焦点与减少动态模式。"
+    ],
+    "rules": [
+      {
+        "name": "The Room Color Rule",
+        "body": "色彩首先说明所在空间和当前操作；照片、封面和书籍内容不被统一套上品牌滤镜。",
+        "section": "colors"
+      },
+      {
+        "name": "The Content Type Rule",
+        "body": "展示字建立空间性格，正文和控件保障阅读；真实书名、歌曲名、作者和诗节不能为了构图被删改。",
+        "section": "typography"
+      },
+      {
+        "name": "The Object Depth Rule",
+        "body": "深度用于说明照片、画纸和弹窗的空间关系；普通文字与房间底色保持稳定。",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** 用房间底色、钴蓝操作和真实媒体共同建立方向感。",
+      "**Do** 按展示、界面、诗文与藏品本体分配字体角色。",
+      "**Do** 保留英语界面与藏品原始名称，使用完整标题测试真实窄屏。",
+      "**Do** 维护七个收藏面板、浏览详情、三张故事和五件策展的完整操作循环。",
+      "**Do** 检查焦点、键盘、减少动态和导出结果；改变背景时重新计算相关文字组合。"
+    ],
+    "donts": [
+      "**Don't** 将前置样式文件中的旧墨绿 token、印刷错版注释或历史审计当作现行视觉事实。",
+      "**Don't** 为导航和目录添加只重复标题的编号、装饰眉题或难辨认的字形图标。",
+      "**Don't** 为统一风格给真实照片套品牌滤镜，或替换藏品的原始名称与身份。",
+      "**Don't** 将诗歌从 Archive 拆成独立章节，或改变 DOM 后遗漏查找、焦点与 ARIA 契约。",
+      "**Don't** 把本轮局部对比度和浏览验证表述为全站性能或完整无障碍审计。"
+    ]
+  }
+}

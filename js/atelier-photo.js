@@ -120,10 +120,10 @@
     ctx.clearRect(0, 0, mini.width, mini.height);
     const sx = mini.width / worldWidth, sy = mini.height / worldHeight;
     positions.forEach((pos, index) => {
-      ctx.fillStyle = index === active ? '#243a33' : '#a5b4a0';
+      ctx.fillStyle = index === active ? '#1c3154' : '#aebbd6';
       ctx.fillRect(pos.x * sx, pos.y * sy, pos.w * sx, pos.h * sy);
     });
-    ctx.strokeStyle = '#243a33'; ctx.lineWidth = 2;
+    ctx.strokeStyle = '#1c3154'; ctx.lineWidth = 2;
     ctx.strokeRect(map.scrollLeft * sx + 1, map.scrollTop * sy + 1, map.clientWidth * sx - 2, map.clientHeight * sy - 2);
   }
   map.addEventListener('scroll', () => {
@@ -355,26 +355,26 @@
   function drawStory(canvas, snapshot, images) {
     const ctx = canvas.getContext('2d'); if (!ctx) return;
     const W = canvas.width, H = canvas.height;
-    ctx.fillStyle = '#fdfdf9'; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = '#344d40'; ctx.font = '22px "IBM Plex Mono", monospace'; ctx.fillText('N1GHT CHXN9 / A POCKET STORY', 80, 90);
-    ctx.fillStyle = '#243a33';
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#244be2'; ctx.font = '22px "IBM Plex Mono", monospace'; ctx.fillText('N1GHT CHXN9 / A POCKET STORY', 80, 90);
+    ctx.fillStyle = '#1c3154';
     const title = snapshot.title.trim() || 'Somewhere I would stay';
     let fontSize = 84;
-    do { ctx.font = '500 ' + fontSize + 'px "Space Grotesk", sans-serif'; if (ctx.measureText(title).width <= W - 160) break; fontSize -= 2; } while (fontSize > 24);
+    do { ctx.font = '400 ' + fontSize + 'px "Calistoga", Georgia, serif'; if (ctx.measureText(title).width <= W - 160) break; fontSize -= 2; } while (fontSize > 24);
     ctx.fillText(title, 80, 206);
     const gap = 28, width = (W - 160 - gap * 2) / 3, top = 280, height = 565;
     for (let slot = 0; slot < 3; slot++) {
       const x = 80 + slot * (width + gap), item = data[snapshot.kept[slot]], img = images[slot];
-      ctx.fillStyle = '#ebefe8'; ctx.fillRect(x, top, width, height);
+      ctx.fillStyle = '#edf0ff'; ctx.fillRect(x, top, width, height);
       if (img) { const scale = Math.min((width - 36) / img.naturalWidth, (height - 36) / img.naturalHeight); const w = img.naturalWidth * scale, h = img.naturalHeight * scale; ctx.drawImage(img, x + (width - w) / 2, top + (height - h) / 2, w, h); }
-      else { ctx.fillStyle = '#56665c'; ctx.font = '40px "IBM Plex Mono", monospace'; ctx.fillText('0' + (slot + 1), x + 32, top + 68); }
-      ctx.fillStyle = '#56665c'; ctx.font = '20px "IBM Plex Mono", monospace'; ctx.fillText(item ? 'FRAME ' + String(item.index + 1).padStart(2, '0') : 'YOUR NEXT FIND', x, 890);
-      ctx.fillStyle = '#243a33'; ctx.font = '26px "Space Grotesk", sans-serif';
+      else { ctx.fillStyle = '#4b5d7a'; ctx.font = '40px "IBM Plex Mono", monospace'; ctx.fillText('0' + (slot + 1), x + 32, top + 68); }
+      ctx.fillStyle = '#4b5d7a'; ctx.font = '20px "IBM Plex Mono", monospace'; ctx.fillText(item ? 'FRAME ' + String(item.index + 1).padStart(2, '0') : 'YOUR NEXT FIND', x, 890);
+      ctx.fillStyle = '#1c3154'; ctx.font = '26px "Space Grotesk", sans-serif';
       const words = (item ? item.title : ['A beginning', 'A detour', 'An ending'][slot]).split(' '); let line = '', y = 934;
       words.forEach(word => { const next = line ? line + ' ' + word : word; if (ctx.measureText(next).width > width && line) { ctx.fillText(line, x, y); line = word; y += 34; } else line = next; }); ctx.fillText(line, x, y);
     }
-    ctx.strokeStyle = '#d9ddd4'; ctx.beginPath(); ctx.moveTo(80, 1012); ctx.lineTo(W - 80, 1012); ctx.stroke();
-    ctx.fillStyle = '#56665c'; ctx.font = '18px "IBM Plex Mono", monospace'; ctx.fillText('THREE FRAMES. ONE WAY OF SEEING.', 80, 1048);
+    ctx.strokeStyle = '#d4dceb'; ctx.beginPath(); ctx.moveTo(80, 1012); ctx.lineTo(W - 80, 1012); ctx.stroke();
+    ctx.fillStyle = '#4b5d7a'; ctx.font = '18px "IBM Plex Mono", monospace'; ctx.fillText('THREE FRAMES. ONE WAY OF SEEING.', 80, 1048);
   }
   async function renderPreview() {
     const ticket = ++previewTicket, snapshot = { kept: kept.slice(), title: storyTitle };

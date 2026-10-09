@@ -1,6 +1,63 @@
 /* Shared gallery gestures. Component animation lives in its own module. */
 (function () {
   'use strict';
+  // One stroke-based icon family. Replace only text nodes, preserving controls,
+  // event listeners, stored IDs, and accessible action names.
+  const iconPaths = {
+    '←': 'M20 12H4m6-6-6 6 6 6',
+    '→': 'M4 12h16m-6-6 6 6-6 6',
+    '↑': 'M12 20V4m-6 6 6-6 6 6',
+    '↓': 'M12 4v16m-6-6 6 6 6-6',
+    '↗': 'M5 19 19 5M7 5h12v12',
+    '↖': 'M19 19 5 5m0 12V5h12',
+    '×': 'm6 6 12 12M18 6 6 18',
+    '+': 'M12 5v14M5 12h14',
+    '⠿': 'M8 5h.01M16 5h.01M8 12h.01M16 12h.01M8 19h.01M16 19h.01'
+  };
+  const glyphPattern = /[←→↑↓↗↖×+⠿]/;
+  function replaceControlIcons(root) {
+    const element = root instanceof Element ? root : root.parentElement;
+    if (!element || element.closest('svg')) return;
+    const controls = element.matches('button,a') ? [element] : [...element.querySelectorAll('button,a')];
+    const enclosing = element.closest('button,a');
+    if (enclosing && !controls.includes(enclosing)) controls.push(enclosing);
+    controls.forEach((control) => {
+      const walker = document.createTreeWalker(control, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        const actionCopy = control.matches('.photo-surprise,.photo-look,.photo-keep,.photo-room-tabs button,.photo-story-actions button,.curator-text-btn,.curator-primary,.curator-collect,.curator-collect-link,.curator-more,.poem-turn,.lb-meta-link,.collection-room-action');
+        if (glyphPattern.test(node.textContent) && (node.textContent.trim().length === 1 || actionCopy) && !node.parentElement.closest('svg')) nodes.push(node);
+      }
+      nodes.forEach((node) => {
+        const fragment = document.createDocumentFragment();
+        node.textContent.split(/([←→↑↓↗↖×+⠿])/).filter(Boolean).forEach((part) => {
+          if (!iconPaths[part]) { fragment.append(document.createTextNode(part)); return; }
+          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          svg.setAttribute('viewBox', '0 0 24 24');
+          svg.setAttribute('class', 'gallery-icon');
+          svg.setAttribute('aria-hidden', 'true');
+          svg.setAttribute('focusable', 'false');
+          const path = document.createElementNS(svg.namespaceURI, 'path');
+          path.setAttribute('d', iconPaths[part]); path.setAttribute('fill', 'none');
+          path.setAttribute('stroke', 'currentColor'); path.setAttribute('stroke-width', part === '⠿' ? '3' : '1.6');
+          path.setAttribute('stroke-linecap', 'round'); path.setAttribute('stroke-linejoin', 'round');
+          svg.append(path); fragment.append(svg);
+        });
+        node.replaceWith(fragment);
+      });
+    });
+  }
+  replaceControlIcons(document.body);
+  const icons = new MutationObserver((records) => {
+    const roots = new Set();
+    records.forEach((record) => {
+      if (record.type === 'characterData') roots.add(record.target.parentElement);
+      else record.addedNodes.forEach((node) => { if (node.nodeType === 1 || node.nodeType === 3) roots.add(node); });
+    });
+    roots.forEach(replaceControlIcons);
+  });
+  icons.observe(document.body, { childList: true, subtree: true, characterData: true });
   const nav = document.getElementById('nav');
   const footerShell = document.querySelector('.footer .shell');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');

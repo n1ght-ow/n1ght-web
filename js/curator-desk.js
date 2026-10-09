@@ -8,7 +8,7 @@
   const LABELS = { photo: "Photo", book: "Book", film: "Film", series: "Series", music: "Song" };
   const INVITES = { photo: "Choose a photograph", book: "Choose a book", film: "Choose a film", series: "Choose a series", music: "Choose a song" };
   const KEY = "night:curator-desk:v1";
-  const paper = "#fdfdf9", ink = "#243a33", muted = "#56665c";
+  const paper = "#ffffff", ink = "#1c3154", muted = "#4b5d7a";
   const canvas = $("curator-poster"), ctx = canvas.getContext("2d");
   if (!ctx) return;
   const slots = $("curator-slots"), picker = $("curator-picker");
@@ -364,7 +364,7 @@
     clearTimeout(previewTimer);
     previewTimer = setTimeout(() => drawPreview(), 100);
   }
-  const font = (size, serif) => size + 'px ' + (serif ? 'Georgia, "Times New Roman", "Songti SC", serif' : '"Space Grotesk", "Microsoft YaHei", sans-serif');
+  const font = (size, serif) => size + 'px ' + (serif ? '"Calistoga", Georgia, "Songti SC", serif' : '"Space Grotesk", "Microsoft YaHei", sans-serif');
   function linesFor(value, width, size, serif) {
     ctx.font = font(size, serif);
     const lines = []; let line = "";
@@ -398,7 +398,7 @@
     write(item.author, bx + bw * .12, by + bh * .78, bw * .76, Math.min(24, bw * .07), 2, item.ink);
   }
   function drawArt(item, img, x, y, w, h, dark, cover) {
-    rect(x, y, w, h, dark ? "#2d443b" : "#ebefe8");
+    rect(x, y, w, h, dark ? "#233b68" : "#edf0ff");
     if (item?.type === "book") { drawBook(item, x, y, w, h); return; }
     if (img) {
       const ratio = cover ? Math.max(w / img.naturalWidth, h / img.naturalHeight) : Math.min(w / img.naturalWidth, h / img.naturalHeight);
@@ -406,11 +406,11 @@
       ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh); ctx.restore();
       return;
     }
-    ctx.strokeStyle = dark ? "#789183" : "#b9c5bb"; ctx.lineWidth = 1; ctx.strokeRect(x + 12, y + 12, w - 24, h - 24);
+    ctx.strokeStyle = dark ? "#91a8d6" : "#bbc9e2"; ctx.lineWidth = 1; ctx.strokeRect(x + 12, y + 12, w - 24, h - 24);
     write(item ? (item.src ? "Artwork unavailable" : "♪") : "+", x + 24, y + h * .35, w - 48, item ? 24 : 48, 2, dark ? paper : muted, true);
   }
   function caption(item, type, index, x, y, width, dark, compact) {
-    const color = dark ? paper : ink, secondary = dark ? "#c2cec3" : muted;
+    const color = dark ? paper : ink, secondary = dark ? "#dbe5ff" : muted;
     write(String(index + 1).padStart(2, "0") + " / " + LABELS[type], x, y, width, compact ? 17 : 19, 1, secondary);
     const used = write(item?.title || INVITES[type], x, y + 32, width, compact ? 27 : 34, compact ? 3 : 2, color, false, 14);
     if (item) write(item.meta, x, y + 44 + used, width, compact ? 19 : 23, compact ? 3 : 2, secondary, false, 12);
@@ -420,21 +420,21 @@
     const items = draft.order.map((type) => catalog[type].find((item) => String(item.id) === String(draft.picks[type])));
     const artImages = await Promise.all(items.map(loadImage));
     if (ticket !== renderTicket) return null;
-    const dark = draft.layout === "night", color = dark ? paper : ink, secondary = dark ? "#c2cec3" : muted;
-    rect(0, 0, 1200, 1800, dark ? "#1c2e27" : paper);
+    const dark = draft.layout === "night", color = dark ? paper : ink, secondary = dark ? "#dbe5ff" : muted;
+    rect(0, 0, 1200, 1800, dark ? "#102348" : paper);
     write("N1GHT CHXN9 / A VISITOR EXHIBITION", 72, 60, 1056, 20, 1, secondary);
     const titleHeight = write(draft.name.trim() || "An untitled exhibition", 72, 123, 1056, 72, 2, color, true, 38);
     const noteY = 139 + titleHeight;
     const noteHeight = draft.note.trim() ? write(draft.note.trim(), 72, noteY, 1056, 27, 4, secondary, false, 23) : 0;
     const top = Math.max(360, noteY + noteHeight + 70);
-    line(72, top - 30, 1056, dark ? "#789183" : "#c6cec4");
+    line(72, top - 30, 1056, dark ? "#91a8d6" : "#d4dceb");
     if (draft.layout === "contact") {
       // Five numbered bands keep the full titles readable, like a contact sheet ledger.
       items.forEach((item, i) => {
         const y = top + i * ((1600 - top) / 5);
         drawArt(item, artImages[i], 72, y, 234, 186, false, item?.type === "photo");
         caption(item, draft.order[i], i, 342, y + 8, 786, false, false);
-        if (i < 4) line(342, y + 201, 786, "#d9ddd4");
+        if (i < 4) line(342, y + 201, 786, "#d4dceb");
       });
     } else {
       // The visitor's first piece leads the exhibition. All remaining pieces follow their order.
@@ -446,7 +446,7 @@
         caption(item, draft.order[j + 1], j + 1, x, y + 250, 246, dark, true);
       });
     }
-    line(72, 1700, 1056, dark ? "#789183" : "#c6cec4");
+    line(72, 1700, 1056, dark ? "#91a8d6" : "#d4dceb");
     write("Curated by / " + (draft.by.trim() || "a passing visitor"), 72, 1725, 740, 23, 2, color);
     write("FIVE PIECES. ONE STORY.", 822, 1732, 306, 17, 1, secondary);
     canvas.setAttribute("aria-label", (draft.name.trim() || "Untitled exhibition") + ", " + ({ gallery: "Gallery", contact: "Contact sheet", night: "After dark" })[draft.layout] + " layout. " + items.map((item, i) => LABELS[draft.order[i]] + ": " + (item?.title || "Not selected")).join("; "));

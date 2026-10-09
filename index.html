@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="atelier">
+<html lang="en" class="atelier open-gallery">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,8 +19,8 @@
        lists everything that was deleted with it. -->
   <script>document.documentElement.classList.add("js");</script>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- The opening italic is self-hosted and preloaded. -->
-  <link rel="preload" href="fonts/InstrumentSerif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- Preload the new self-hosted gallery display face. -->
+  <link rel="preload" href="fonts/Calistoga-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=15">
   <link rel="stylesheet" href="css/style.css?v=109">
   <link rel="stylesheet" href="css/glass.css?v=13">
@@ -31,12 +31,12 @@
   <link rel="stylesheet" href="css/games-stage.css?v=8">
   <!-- Atelier is the new gallery layer, after the existing component geometry. -->
   <link rel="stylesheet" href="css/atelier.css?v=9">
-  <link rel="stylesheet" href="css/atelier-hero.css?v=7">
   <link rel="stylesheet" href="css/atelier-photo.css?v=9">
   <link rel="stylesheet" href="css/atelier-archive.css?v=15">
   <link rel="stylesheet" href="css/atelier-poem.css?v=6">
   <link rel="stylesheet" href="css/curator-desk.css?v=12">
   <link rel="stylesheet" href="css/atelier-viewer.css?v=6">
+  <link rel="stylesheet" href="css/gallery.css?v=2">
 </head>
 <body>
 
@@ -53,7 +53,7 @@
     <div class="glass__edge" aria-hidden="true"></div>
     <span class="glass__press" aria-hidden="true"></span>
     <div class="glass__content">
-      <a class="nav-brand" href="#hero">N1GHT CHXN9</a>
+      <a class="nav-brand" href="#hero"><svg class="gallery-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2v28M2 16h28M6 6l20 20M6 26L26 6" fill="none" stroke="currentColor" stroke-width="3"/></svg><span>N1GHT CHXN9</span></a>
       <!-- No selected indicator: the active link is marked by colour alone.
            See the note in css/style.css. -->
       <nav class="nav-links" aria-label="Primary">
@@ -69,36 +69,49 @@
     <!-- Opening spread: its photograph and typography paint without scripting. -->
     <section class="hero atelier-hero" id="hero">
     <div class="hero-inner shell">
-      <p class="atelier-edition"><span>A PERSONAL COLLECTION</span><span>VOL. 01 / 2026</span></p>
       <div class="atelier-copy">
         <div class="hero-mask"><h1 class="hero-wordmark"><span>N1GHT</span> <span>CHXN9</span></h1></div>
       </div>
+      <div class="gallery-opening">
+      <figure class="gallery-satellite gallery-satellite--left">
+        <a href="#photo" aria-label="Explore the photography room"><img src="photo/wall/1779456446231.webp" alt="A blossom branch reaching into a blue sky" width="1600" height="1067" decoding="async"></a>
+        <figcaption>A reason to look closer.</figcaption>
+      </figure>
       <figure class="atelier-media">
         <div class="atelier-frame">
           <div class="atelier-image-window">
             <picture class="hero-plate">
-              <source type="image/webp" srcset="hero/launch-800.webp?v=1 800w, hero/launch-1600.webp?v=1 1600w, hero/launch-2400.webp?v=1 2400w" sizes="(min-width: 1680px) 1232px, 88vw">
+              <source type="image/webp" srcset="hero/launch-800.webp?v=1 800w, hero/launch-1600.webp?v=1 1600w, hero/launch-2400.webp?v=1 2400w" sizes="(min-width: 900px) 64vw, 92vw">
               <img src="hero/launch-original.jpg?v=1" alt="A rocket lifting off between towering clouds of smoke, with orange light reflected in the water" width="3360" height="1890" decoding="async" fetchpriority="high">
             </picture>
           </div>
         </div>
-        <figcaption class="atelier-caption"><span>001 / LIFTOFF</span><em>A beginning, in motion.</em></figcaption>
+        <figcaption class="atelier-caption"><span id="gallery-view-caption">Liftoff. Keep looking up.</span><button class="gallery-change-view" type="button" aria-label="Change the opening photograph"><span>Another view</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5.2 8a7 7 0 0 1 11.6-2L20 12M4 12l3.2 6A7 7 0 0 0 18.8 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></figcaption>
       </figure>
+      <figure class="gallery-satellite gallery-satellite--right">
+        <a href="#archive" aria-label="Explore the archive"><img src="photo/wall/1789470372631.webp" alt="Cumulus clouds above green hills" width="1600" height="1067" decoding="async"></a>
+        <figcaption>And a little further.</figcaption>
+      </figure>
+      </div>
       <div class="atelier-bottom">
-        <p class="atelier-subtitle">Keep looking up.</p>
+        <p class="atelier-subtitle">Life, collected.</p>
         <p class="atelier-intro" lang="en">Photographs, poems, and things worth coming back to. A personal collection, still growing.</p>
-        <a class="atelier-enter" href="#photo"><span>Explore the collection</span><span aria-hidden="true">↓</span></a>
+        <a class="atelier-enter" href="#photo"><span>Come on in</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </div>
     </section>
+    <nav class="gallery-directory shell" aria-label="Choose your starting point">
+      <a href="#photo"><strong>Photography</strong><span>46 ways of seeing</span></a>
+      <a href="#archive"><strong>The archive</strong><span>Books, poems &amp; everything else</span></a>
+      <a href="#curate"><strong>Your exhibition</strong><span>Five pieces. Your point of view.</span></a>
+    </nav>
 
     <!-- ============ PHOTOGRAPHY ============ -->
     <section class="section" id="photo">
       <div class="shell">
         <div class="sec-head">
           <div>
-            <p class="label sec-eyebrow">The wandering room</p>
-            <h2 class="sec-title">A little lost.<br><span>A lot found.</span></h2>
+            <h2 class="sec-title">Take the<br>scenic route.</h2>
           </div>
           <div class="sec-copy">
             Forty-six windows into somewhere else. Wander through them.<br>Keep three. Tell a story of your own.
@@ -556,8 +569,7 @@
       <div class="shell">
         <div class="sec-head">
           <div>
-            <p class="label sec-eyebrow">02 / The archive</p>
-            <h2 class="sec-title">What shaped me</h2>
+            <h2 class="sec-title">Good company.</h2>
           </div>
           <div class="sec-copy">
             <span class="lead">Read, rewatched, repeated, rooted for.</span>
@@ -598,7 +610,7 @@
                  collection is the argument and the note is the only place the
                  page says why. -->
             <div class="panel-note">
-              <p class="curator curator--books">Four of these are still on the shelf because I read them twice in one winter.</p>
+              <p class="curator curator--books">Sixteen books. Sixteen different ways of seeing the world.</p>
             </div>
             <div class="book-shelf" data-book-shelf="auto" role="group" aria-label="Books on the shelf"></div>
           </div>
@@ -904,7 +916,6 @@
                 <article class="poem" id="poem" aria-labelledby="poem-title">
                   <header class="poem-head">
                     <div class="poem-head-main">
-                      <p class="poem-folio-kicker">A line to return to</p>
                       <h3 class="poem-title" id="poem-title">Do not go gentle into that good night</h3>
                       <p class="poem-credit">Dylan Thomas · A villanelle · 1947</p>
                     </div>
@@ -959,7 +970,6 @@
     <section class="section curator-section" id="curate" lang="en" aria-labelledby="curator-title">
       <div class="shell">
         <header class="curator-head">
-          <p class="curator-kicker mono">03 / A VISITOR EXHIBITION</p>
           <h2 id="curator-title">The curator’s desk<span lang="en">Make it yours.</span></h2>
           <p>One photograph, one book, one film, one series, one song.<br>Bring them together. Make a little exhibition of who you are today.</p>
         </header>
@@ -1112,11 +1122,11 @@
   <script src="js/games-stage.js?v=8"></script>
   <script src="js/glass-pill.js?v=5"></script>
   <script src="js/main.js?v=100"></script>
-  <script src="js/atelier.js?v=6"></script>
-  <script src="js/atelier-hero.js?v=6"></script>
-  <script src="js/atelier-photo.js?v=10"></script>
+  <script src="js/atelier.js?v=7"></script>
+  <script src="js/atelier-hero.js?v=7"></script>
+  <script src="js/atelier-photo.js?v=11"></script>
   <script src="js/atelier-archive.js?v=3"></script>
   <script src="js/atelier-poem.js?v=8"></script>
-  <script src="js/curator-desk.js?v=12"></script>
+  <script src="js/curator-desk.js?v=13"></script>
 </body>
 </html>
