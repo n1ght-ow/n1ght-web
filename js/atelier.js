@@ -15,6 +15,59 @@
     '⠿': 'M8 5h.01M16 5h.01M8 12h.01M16 12h.01M8 19h.01M16 19h.01'
   };
   const glyphPattern = /[←→↑↓↗↖×+⠿]/;
+  const actionPaths = {
+    shuffle: 'M4 7h3c4 0 6 10 10 10h3m-4-4 4 4-4 4M4 17h3c1.5 0 2.8-1.4 4-3m2-4c1.2-1.6 2.5-3 4-3h3m-4-4 4 4-4 4',
+    zoom: 'M15.5 15.5 21 21M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0M10 7v6M7 10h6',
+    collect: 'M4 6h16v14H4ZM9 3h6M12 10v6M9 13h6',
+    desk: 'M4 8h16v5H4ZM6 13v7M18 13v7M9 4h6',
+    center: 'M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0',
+    reset: 'M4 10a8 8 0 1 1 2 8M4 4v6h6',
+    undo: 'M9 4 4 9l5 5M4 9h10a6 6 0 0 1 0 12',
+    close: 'm6 6 12 12M18 6 6 18'
+  };
+  const compactActions = [
+    ['.gallery-change-view', 'shuffle', 'Change the opening photograph'],
+    ['.photo-surprise', 'shuffle', 'Random photograph'],
+    ['[data-recenter]', 'center', 'Center the current photograph'],
+    ['.photo-look', 'zoom', 'Open photograph'],
+    ['[data-deal]', 'shuffle', 'Choose three random photographs'],
+    ['.collection-room-action', 'shuffle', 'Explore a random collection'],
+    ['.curator-collect', 'collect'],
+    ['.curator-collect-link', 'desk', 'Visit the curator’s desk'],
+    ['#curator-surprise', 'shuffle', 'Choose seven random pieces'],
+    ['#curator-reset', 'reset'],
+    ['#curator-picker-close', 'close', 'Close collection picker'],
+    ['.lb-close', 'close', 'Close detail viewer']
+  ];
+  function compactAction(control) {
+    const action = compactActions.find(([selector]) => control.matches(selector));
+    if (!action) return false;
+    // Component state updates replace textContent. Rebuild only then, never
+    // in response to our own SVG mutations or an unrelated state change.
+    if (control.querySelector('.gallery-action-icon')) return true;
+    const copy = control.textContent.trim().replace(/[↗↖→+✓×]/g, '').trim();
+    const label = action[2] || (control.matches('.curator-collect') ? control.getAttribute('aria-label') : copy);
+    let icon = action[1];
+    if (control.matches('#curator-reset') && copy === 'Undo reset') icon = 'undo';
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('class', 'gallery-icon gallery-action-icon');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    const path = document.createElementNS(svg.namespaceURI, 'path');
+    path.setAttribute('d', actionPaths[icon]);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'currentColor');
+    path.setAttribute('stroke-width', '1.6');
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('stroke-linejoin', 'round');
+    svg.append(path);
+    control.classList.add('gallery-icon-action');
+    control.setAttribute('aria-label', label);
+    control.title = label;
+    control.replaceChildren(svg);
+    return true;
+  }
   function replaceControlIcons(root) {
     const element = root instanceof Element ? root : root.parentElement;
     if (!element || element.closest('svg')) return;
@@ -22,6 +75,7 @@
     const enclosing = element.closest('button,a');
     if (enclosing && !controls.includes(enclosing)) controls.push(enclosing);
     controls.forEach((control) => {
+      if (compactAction(control)) return;
       const walker = document.createTreeWalker(control, NodeFilter.SHOW_TEXT);
       const nodes = [];
       while (walker.nextNode()) {
@@ -66,10 +120,7 @@
     note.className = 'atelier-colophon';
     const closing = document.createElement('em');
     closing.textContent = 'Some things are worth keeping.';
-    const description = document.createElement('span');
-    description.lang = 'en';
-    description.textContent = 'A small private collection. Keep collecting. Take your time.';
-    note.append(closing, description);
+    note.append(closing);
     footerShell.appendChild(note);
   }
   if (!window.gsap || !window.ScrollTrigger) return;

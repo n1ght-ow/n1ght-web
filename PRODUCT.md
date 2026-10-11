@@ -8,7 +8,7 @@ web
 
 ## Product Purpose
 
-A personal collection of photographs, books, poems, music, sport, films, series and games. Visitors browse the owner's collection and make a personal exhibition from five collected objects.
+A personal collection of photographs, books, poems, music, sport, films, series and games. Visitors browse the owner's collection and make a personal exhibition from three photographs and four collection pieces.
 
 ## Users
 
@@ -16,7 +16,7 @@ Inferred from the existing site: curious visitors exploring a personal collectio
 
 ## Capabilities and Constraints
 
-46 photographs with stable IDs, spatial exploration and a complete index, a three-photo story with PNG export, seven archive tabs, searchable music, book and media details, and a five-object curator with three poster formats and PNG export. Browser-local drafts. Static HTML, CSS and JavaScript with local GSAP, ScrollTrigger and Lenis. No build dependency.
+46 photographs with stable IDs, spatial exploration and a complete index, three photo slots shared with the exhibition desk, seven archive tabs, searchable music, book and media details, and a unified seven-piece curator with one set of visitor text, three poster layouts and PNG export. Browser-local drafts. Static HTML, CSS and JavaScript with local GSAP, ScrollTrigger and Lenis. No build dependency.
 
 ## Brand Commitments
 

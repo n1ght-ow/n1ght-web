@@ -31,6 +31,12 @@
       const nextIndex = (viewIndex + 1) % views.length;
       const next = views[nextIndex];
       const preload = new Image();
+      // Match the candidate the visible picture will actually choose at this
+      // viewport and DPR, rather than decoding only the 1600px fallback.
+      if (next.srcset) {
+        preload.sizes = source?.sizes || '100vw';
+        preload.srcset = next.srcset;
+      }
       preload.src = next.src;
       let timeout;
       try {

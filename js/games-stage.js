@@ -197,6 +197,22 @@
      style and forces the card's subtree to re-lay-out, so the ones that did not
      change are skipped. */
   var wrote = [];
+  var dragPaintFrame = 0;
+
+  function scheduleDragPaint() {
+    if (dragPaintFrame) return;
+    dragPaintFrame = window.requestAnimationFrame(function () {
+      dragPaintFrame = 0;
+      paint();
+    });
+  }
+
+  function flushDragPaint() {
+    if (!dragPaintFrame) return;
+    window.cancelAnimationFrame(dragPaintFrame);
+    dragPaintFrame = 0;
+    paint();
+  }
 
   function paint() {
     var at = layout(fit, reach);
@@ -389,6 +405,7 @@
   }
 
   function endDrag() {
+    flushDragPaint();
     drag = null;
     trail = [];
     track.classList.remove("is-dragging");
@@ -409,7 +426,7 @@
     mover.pos = drag.pos - dx / span;
     trail.push({ x: e.clientX, t: e.timeStamp });
     while (trail.length > 2 && e.timeStamp - trail[0].t > 110) trail.shift();
-    paint();
+    scheduleDragPaint();
   }
 
   function onUp(e) {
@@ -557,7 +574,13 @@
   }
 
   if (typeof ResizeObserver !== "undefined") {
-    new ResizeObserver(function () {
+    var lastHeight = 0;
+    new ResizeObserver(function (entries) {
+      var height = entries[0].contentRect.height;
+      if (panel.classList.contains('is-active') && height > 0 && Math.abs(height - lastHeight) >= .5) {
+        lastHeight = height;
+        if (typeof window.scheduleRefresh === 'function') window.scheduleRefresh(250);
+      }
       var width = track.clientWidth;
       if (!width || width === lastWidth) return;
       lastWidth = width;
@@ -586,7 +609,11 @@
     mover.pos = Math.round(mover.pos);
     paint();
   });
-  window.addEventListener('blur', function () { endDrag(); stopGlide(); });
+  window.addEventListener('blur', function () {
+    endDrag(); stopGlide();
+    mover.pos = Math.round(mover.pos);
+    paint();
+  });
 
   /* ---------- boot ----------
      .is-live first, so the band is never measured against the fallback grid. */

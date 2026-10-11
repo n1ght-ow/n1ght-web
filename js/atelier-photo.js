@@ -1,4 +1,4 @@
-/* The wandering room: a spatial album and a three-frame souvenir. */
+/* The wandering room shares its three photograph selections with the exhibition desk. */
 (function () {
   'use strict';
   const host = document.getElementById('photo-deck');
@@ -6,7 +6,7 @@
   const frames = Array.from(host.querySelectorAll('.photo-frame'));
   if (!frames.length) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const groups = { CITY: 'Chase the light', LAND: 'Take the long way', NIGHT: 'Stay out late', WINTER: 'Find the quiet' };
+  const groups = { CITY: 'City', LAND: 'Nature', NIGHT: 'Night', WINTER: 'Winter' };
   const category = frame => groups[frame.dataset.act] ? frame.dataset.act : 'LAND';
   const data = frames.map((frame, index) => {
     const image = frame.querySelector('img');
@@ -17,20 +17,14 @@
       thumb: image.getAttribute('src'), src: image.dataset.full || image.getAttribute('src'),
       ratio: Number(image.getAttribute('width')) / Number(image.getAttribute('height')) };
   });
-  const KEY = 'night:wandering-room:v1';
   let active = Math.max(0, data.findIndex(item => item.title === 'The last red light'));
   let filter = 'ALL', mode = 'wander', drag = null, suppressUntil = 0;
-  let kept = [], storyTitle = '', previewTicket = 0, exporting = false, panMotion = null;
-  const thumbnails = new Map();
+  let panMotion = null;
+  const kept = () => window.CuratorDesk?.photoIds() || [];
   let positions = new Map(), worldWidth = 0, worldHeight = 0;
   // Mix near and far, day and night: neighbouring prints suggest unexpected connections.
   const opening = [38, 35, 37, 2, 4, 26, 45, 43, 21, 10, 39, 24, 22, 36].filter(i => data[i]);
   const initialOrder = [...opening, ...frames.map((_, i) => i).filter(i => !opening.includes(i))];
-  try {
-    const saved = JSON.parse(localStorage.getItem(KEY));
-    if (saved && Array.isArray(saved.kept)) kept = [...new Set(saved.kept)].filter(i => Number.isInteger(i) && data[i]).slice(0, 3);
-    if (typeof saved?.title === 'string') storyTitle = saved.title.slice(0, 48);
-  } catch (_) { /* The room works without browser storage. */ }
   host.classList.add('atelier-photo');
   host.dataset.view = mode;
   host.setAttribute('aria-label', 'The wandering room, ' + frames.length + ' photographs');
@@ -48,7 +42,7 @@
         <div class="photo-world"></div>
       </div>
       <div class="photo-map-tools">
-        <p id="photo-map-help">Drag to get lost. Click to look closer.</p>
+        <p id="photo-map-help" class="sr-only">Drag to explore. Click a photograph to open it.</p>
         <button type="button" class="photo-room-map" aria-label="Photo room map. Click a place to travel there; Enter returns to the current frame."><canvas width="240" height="150" aria-hidden="true"></canvas><span>Room map</span></button>
         <button type="button" data-recenter aria-label="Center the current photograph">Back to this frame <span aria-hidden="true">↖</span></button>
       </div>
@@ -61,28 +55,25 @@
         <button type="button" class="photo-keep" data-keep>Keep this frame +</button>
       </div>
     </div>
-    <section class="photo-story" aria-labelledby="photo-story-heading">
-      <div class="photo-story-copy">
-        <p class="photo-story-kicker mono">A souvenir, made by you</p>
-        <h3 id="photo-story-heading">Three frames.<br>Your kind of story.</h3>
-        <p>A beginning, a detour, an ending. Collect three photographs and take a little piece of the room with you.</p>
-        <label class="photo-story-title-label" for="photo-story-title">Give your story a title</label>
-        <input id="photo-story-title" maxlength="48" placeholder="Somewhere I would stay" autocomplete="off">
-        <ol class="photo-story-picks" aria-label="Your three photographs"></ol>
-        <div class="photo-story-actions"><button type="button" data-print disabled>Save my story ↓</button><button type="button" data-deal>Deal me three ↗</button></div>
-        <p class="photo-story-status" role="status" aria-live="polite"></p>
-      </div>
-      <figure class="photo-story-preview"><canvas width="1800" height="1080" role="img" aria-label="Preview of your three-frame story"></canvas><figcaption><span>Your pocket story</span><span class="mono">1800 × 1080 / PNG</span></figcaption></figure>
-    </section>
     <p class="sr-only photo-live" role="status" aria-live="polite"></p>`;
   const world = host.querySelector('.photo-world'), map = host.querySelector('.photo-map');
   const routes = host.querySelector('.photo-routes'), live = host.querySelector('.photo-live');
-  const keepButton = host.querySelector('[data-keep]'), printButton = host.querySelector('[data-print]');
-  const titleInput = host.querySelector('#photo-story-title'), status = host.querySelector('.photo-story-status');
-  const preview = host.querySelector('.photo-story canvas'), picks = host.querySelector('.photo-story-picks');
+  const keepButton = host.querySelector('[data-keep]');
+  const visit = document.createElement('a');
+  visit.className = 'curator-collect-link'; visit.href = '#curate'; visit.textContent = 'Visit the desk →';
+  keepButton.after(visit);
   const roomMap = host.querySelector('.photo-room-map'), mini = roomMap.querySelector('canvas');
+  const detailInfo = document.getElementById('lb-photo-info');
+  const detailKeep = detailInfo ? document.createElement('button') : null;
+  const detailStoryStatus = document.createElement('p');
+  detailStoryStatus.className = 'photo-detail-story-status';
+  detailStoryStatus.setAttribute('role', 'status');
+  if (detailKeep) {
+    detailKeep.type = 'button';
+    detailKeep.className = 'photo-keep photo-detail-keep';
+    detailInfo.append(detailKeep, detailStoryStatus);
+  }
   let mapPaintFrame = 0;
-  titleInput.value = storyTitle;
   initialOrder.forEach(index => world.append(frames[index]));
   // Native image lazy-loading can retain the pre-reparenting geometry after
   // the spatial map becomes a multi-column index. Load the small contact
@@ -105,10 +96,6 @@
     if (cls) node.className = cls;
     return node;
   };
-  function save() {
-    try { localStorage.setItem(KEY, JSON.stringify({ kept, title: storyTitle })); }
-    catch (_) { status.textContent = 'Your story cannot be stored in this browser. You can still save the PNG.'; }
-  }
   function stopPan() {
     panMotion?.kill(); panMotion = null;
     // Cancel a pending native smooth scroll before a gesture or mode change.
@@ -155,16 +142,15 @@
     const indices = matching(), position = indices.indexOf(active);
     frames.forEach((frame, index) => {
       frame.classList.toggle('is-featured', index === active);
-      frame.classList.toggle('is-kept', kept.includes(index));
+      frame.classList.toggle('is-kept', kept().includes(String(index)));
       const b = frame.querySelector('button');
       if (index === active) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
     });
-    host.querySelector('.photo-location').textContent = (filter === 'ALL' ? 'A room with ' + frames.length + ' views' : routes.querySelector('[aria-pressed="true"] span').textContent) + ' / FRAME ' + String(active + 1).padStart(2, '0');
+    host.querySelector('.photo-location').textContent = 'Frame ' + String(active + 1).padStart(2, '0');
     host.querySelector('.photo-current-title').textContent = data[active].title;
     host.querySelector('.photo-position').textContent = String(position + 1).padStart(2, '0') + ' / ' + String(indices.length).padStart(2, '0');
-    const isKept = kept.includes(active);
-    keepButton.textContent = isKept ? 'Kept in your story ✓' : kept.length === 3 ? 'Your story is full' : 'Keep this frame +';
-    keepButton.disabled = exporting || isKept || kept.length === 3;
+    renderKeepButton(keepButton, active);
+    syncDetailKeep();
     paintRoomMap();
     if (announceChange) announce('Frame ' + (active + 1) + ': ' + data[active].title);
   }
@@ -210,7 +196,7 @@
     if (!indices.includes(active)) active = indices[0];
     layout(); renderSelection(true); window.scheduleRefresh?.(100);
   }
-  [['ALL', 'Everywhere'], ...Object.entries(groups), ['NEW', 'Fresh arrivals']].forEach(([key, label]) => {
+  [['ALL', 'All'], ...Object.entries(groups), ['NEW', 'New']].forEach(([key, label]) => {
     const count = initialOrder.filter(index => key === 'ALL' || (key === 'NEW' ? !!frames[index].dataset.new : category(frames[index]) === key)).length;
     if (!count) return;
     const b = button('', null, 'photo-route'); b.dataset.route = key;
@@ -288,128 +274,47 @@
   window.addEventListener('blur', () => cancelDrag());
   map.addEventListener('wheel', stopPan, { passive: true });
   map.addEventListener('touchstart', stopPan, { passive: true });
-  function storyChanged(message) {
-    save(); renderStory(); renderSelection(false);
-    if (message) status.textContent = message;
+  function renderKeepButton(control, index) {
+    if (!control) return;
+    const added = kept().includes(String(index));
+    const label = added ? 'Added' : kept().length === 3 ? 'Photos full' : 'Add photo';
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('class', 'gallery-icon');
+    svg.setAttribute('aria-hidden', 'true');
+    const path = document.createElementNS(svg.namespaceURI, 'path');
+    path.setAttribute('d', added ? 'm5 12 4 4L19 6' : 'M6 4h12v17l-6-4-6 4Z');
+    path.setAttribute('fill', 'none'); path.setAttribute('stroke', 'currentColor');
+    path.setAttribute('stroke-width', '1.6'); path.setAttribute('stroke-linecap', 'round'); path.setAttribute('stroke-linejoin', 'round');
+    svg.append(path);
+    const text = document.createElement('span'); text.textContent = label;
+    const count = document.createElement('small'); count.textContent = kept().length + '/3';
+    control.replaceChildren(svg, text, count);
+    control.disabled = !window.CuratorDesk || window.CuratorDesk.busy() || added || kept().length === 3;
+    control.setAttribute('aria-label', label + ' (' + kept().length + ' of 3 photographs)');
+    control.title = added ? 'This photograph is in your exhibition' : kept().length === 3 ? 'Change a photograph at the desk' : 'Add this photograph to your exhibition';
   }
-  keepButton.addEventListener('click', () => {
-    if (kept.length >= 3 || kept.includes(active) || exporting) return;
-    kept.push(active); storyChanged(kept.length === 3 ? 'Your story is ready. Name it, rearrange it, or save it.' : data[active].title + ' kept. ' + (3 - kept.length) + ' more to find.');
-  });
-  titleInput.addEventListener('input', () => { storyTitle = titleInput.value; save(); renderPreview(); });
-  host.querySelector('[data-deal]').addEventListener('click', () => {
-    if (exporting) return;
-    const bag = matching().slice();
-    // A small journey can borrow from the rest of the room to make three unique frames.
-    initialOrder.forEach(i => { if (!bag.includes(i)) bag.push(i); });
-    for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; }
-    kept = bag.slice(0, 3); storyChanged('Three different views. Swap their order to change the story.');
-  });
-  function renderStory() {
-    const focusName = picks.contains(document.activeElement) ? document.activeElement.getAttribute('aria-label') : null;
-    picks.replaceChildren();
-    for (let slot = 0; slot < 3; slot++) {
-      const li = document.createElement('li'); const index = kept[slot];
-      const number = document.createElement('span'); number.className = 'photo-pick-number mono'; number.textContent = '0' + (slot + 1);
-      li.append(number);
-      if (index === undefined) {
-        li.className = 'is-empty'; const text = document.createElement('span'); text.textContent = ['Find a beginning', 'Leave room for a detour', 'Choose an ending'][slot]; li.append(text);
-      } else {
-        const item = data[index], thumb = document.createElement('img'); thumb.src = item.thumb; thumb.alt = ''; thumb.width = 80; thumb.height = 60;
-        const name = button(item.title, 'Find kept frame ' + (index + 1), 'photo-pick-find');
-        name.addEventListener('click', () => { if (!matching().includes(index)) filterTo('ALL'); select(index); map.scrollIntoView({ behavior: reduced.matches ? 'instant' : 'smooth', block: 'center' }); map.focus({ preventScroll: true }); });
-        const tools = document.createElement('div'); tools.className = 'photo-pick-tools';
-        [-1, 1].forEach(direction => {
-          const b = button(direction < 0 ? '←' : '→', 'Move frame ' + (index + 1) + (direction < 0 ? ' earlier' : ' later'));
-          b.disabled = exporting || slot + direction < 0 || slot + direction >= kept.length;
-          b.addEventListener('click', () => { [kept[slot], kept[slot + direction]] = [kept[slot + direction], kept[slot]]; storyChanged('Story order changed.'); }); tools.append(b);
-        });
-        const remove = button('×', 'Remove frame ' + (index + 1)); remove.disabled = exporting;
-        remove.addEventListener('click', () => { kept.splice(slot, 1); storyChanged('Frame removed. Find another view.'); }); tools.append(remove);
-        li.append(thumb, name, tools);
-      }
-      picks.append(li);
-    }
-    if (focusName) {
-      const target = Array.from(picks.querySelectorAll('button')).find(b => b.getAttribute('aria-label') === focusName && !b.disabled);
-      (target || picks.querySelector('button') || keepButton).focus({ preventScroll: true });
-    }
-    printButton.disabled = kept.length !== 3 || exporting;
-    renderPreview();
+  function syncDetailKeep() {
+    if (!detailKeep) return;
+    renderKeepButton(detailKeep, typeof detailType !== 'undefined' && detailType === 'photo' ? lbIndex : active);
   }
-  function loadImage(src, cache = true) {
-    if (cache && thumbnails.has(src)) return thumbnails.get(src);
-    const request = new Promise((resolve, reject) => {
-      const img = new Image();
-      const timer = setTimeout(() => finish(new Error('A photograph took too long to load. Try saving again.')), 15000);
-      function finish(error) { clearTimeout(timer); img.onload = null; img.onerror = null; if (error) reject(error); else resolve(img); }
-      img.onload = () => finish(); img.onerror = () => finish(new Error('A photograph could not be loaded. Try again.')); img.src = src;
-    });
-    if (cache) {
-      thumbnails.set(src, request);
-      if (thumbnails.size > 12) thumbnails.delete(thumbnails.keys().next().value);
-      request.catch(() => { if (thumbnails.get(src) === request) thumbnails.delete(src); });
-    }
-    return request;
+  function addToExhibition(index) {
+    if (!data[index] || !window.CuratorDesk?.addPhoto(index)) return;
+    const message = 'Photograph added to your exhibition. ' + kept().length + '/3 photographs.';
+    announce(message);
+    if (detailKeep && typeof detailType !== 'undefined' && detailType === 'photo') detailStoryStatus.textContent = message;
   }
-  function drawStory(canvas, snapshot, images) {
-    const ctx = canvas.getContext('2d'); if (!ctx) return;
-    const W = canvas.width, H = canvas.height;
-    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = '#244be2'; ctx.font = '22px "IBM Plex Mono", monospace'; ctx.fillText('N1GHT CHXN9 / A POCKET STORY', 80, 90);
-    ctx.fillStyle = '#1c3154';
-    const title = snapshot.title.trim() || 'Somewhere I would stay';
-    let fontSize = 84;
-    do { ctx.font = '400 ' + fontSize + 'px "Calistoga", Georgia, serif'; if (ctx.measureText(title).width <= W - 160) break; fontSize -= 2; } while (fontSize > 24);
-    ctx.fillText(title, 80, 206);
-    const gap = 28, width = (W - 160 - gap * 2) / 3, top = 280, height = 565;
-    for (let slot = 0; slot < 3; slot++) {
-      const x = 80 + slot * (width + gap), item = data[snapshot.kept[slot]], img = images[slot];
-      ctx.fillStyle = '#edf0ff'; ctx.fillRect(x, top, width, height);
-      if (img) { const scale = Math.min((width - 36) / img.naturalWidth, (height - 36) / img.naturalHeight); const w = img.naturalWidth * scale, h = img.naturalHeight * scale; ctx.drawImage(img, x + (width - w) / 2, top + (height - h) / 2, w, h); }
-      else { ctx.fillStyle = '#4b5d7a'; ctx.font = '40px "IBM Plex Mono", monospace'; ctx.fillText('0' + (slot + 1), x + 32, top + 68); }
-      ctx.fillStyle = '#4b5d7a'; ctx.font = '20px "IBM Plex Mono", monospace'; ctx.fillText(item ? 'FRAME ' + String(item.index + 1).padStart(2, '0') : 'YOUR NEXT FIND', x, 890);
-      ctx.fillStyle = '#1c3154'; ctx.font = '26px "Space Grotesk", sans-serif';
-      const words = (item ? item.title : ['A beginning', 'A detour', 'An ending'][slot]).split(' '); let line = '', y = 934;
-      words.forEach(word => { const next = line ? line + ' ' + word : word; if (ctx.measureText(next).width > width && line) { ctx.fillText(line, x, y); line = word; y += 34; } else line = next; }); ctx.fillText(line, x, y);
-    }
-    ctx.strokeStyle = '#d4dceb'; ctx.beginPath(); ctx.moveTo(80, 1012); ctx.lineTo(W - 80, 1012); ctx.stroke();
-    ctx.fillStyle = '#4b5d7a'; ctx.font = '18px "IBM Plex Mono", monospace'; ctx.fillText('THREE FRAMES. ONE WAY OF SEEING.', 80, 1048);
+  visit.addEventListener('click', event => { event.preventDefault(); window.CuratorDesk?.visit(); });
+  window.addEventListener('night:creation-change', () => renderSelection(false));
+  keepButton.addEventListener('click', () => addToExhibition(active));
+  if (detailKeep) {
+    detailKeep.addEventListener('click', () => { if (detailType === 'photo') addToExhibition(lbIndex); });
+    const detailCount = document.getElementById('lb-count');
+    if (detailCount) new MutationObserver(() => { syncDetailKeep(); detailStoryStatus.textContent = ''; }).observe(detailCount, { childList: true, characterData: true, subtree: true });
   }
-  async function renderPreview() {
-    const ticket = ++previewTicket, snapshot = { kept: kept.slice(), title: storyTitle };
-    drawStory(preview, snapshot, []);
-    preview.setAttribute('aria-label', (storyTitle.trim() || 'Somewhere I would stay') + '. ' + snapshot.kept.map(i => data[i].title).join('; ') + '. ' + snapshot.kept.length + ' of 3 frames kept.');
-    const images = await Promise.all(snapshot.kept.map(i => loadImage(data[i].thumb).catch(() => null)));
-    if (ticket === previewTicket) drawStory(preview, snapshot, images);
-  }
-  printButton.addEventListener('click', async () => {
-    if (kept.length !== 3 || exporting) return;
-    const snapshot = { kept: kept.slice(), title: storyTitle };
-    exporting = true;
-    const controls = host.querySelectorAll('.photo-story button, .photo-story input, [data-keep]');
-    controls.forEach(b => { b.dataset.wasDisabled = String(b.disabled); b.disabled = true; });
-    printButton.textContent = 'Making your story…'; status.textContent = 'Preparing the full-size photographs.';
-    try {
-      if (document.fonts) await document.fonts.ready;
-      const images = await Promise.all(snapshot.kept.map(i => loadImage(data[i].src, false)));
-      const canvas = document.createElement('canvas'); canvas.width = 1800; canvas.height = 1080; drawStory(canvas, snapshot, images);
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-      if (!blob) throw new Error('The story could not be saved. Please try again.');
-      const url = URL.createObjectURL(blob), a = document.createElement('a');
-      a.href = url; a.download = (snapshot.title.trim() || 'My pocket story').replace(/[<>:"/\\|?*\x00-\x1f]/g, '_').slice(0, 48) + '.png';
-      document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
-      status.textContent = 'Your story is ready. The PNG download has started.';
-    } catch (error) { status.textContent = error.message || 'The story could not be saved. Please try again.'; }
-    finally {
-      exporting = false; controls.forEach(b => { b.disabled = b.dataset.wasDisabled === 'true'; delete b.dataset.wasDisabled; });
-      printButton.textContent = 'Save my story ↓'; printButton.disabled = kept.length !== 3; renderSelection(false);
-    }
-  });
   const resize = new ResizeObserver(() => { cancelDrag(); stopPan(); layout(); });
   resize.observe(map);
   reduced.addEventListener('change', () => { cancelDrag(); stopPan(); center(active, false); });
-  document.fonts?.ready.then(() => renderPreview());
   window.AtelierPhoto = {
     select, count: () => frames.length, source: () => null,
     returnTarget(index, origin) {
@@ -419,6 +324,5 @@
       return { image: frames[index].querySelector('img'), button: world.contains(origin) ? frames[index].querySelector('button') : origin || map };
     }
   };
-  layout(); renderSelection(false); renderStory();
-  status.textContent = kept.length === 3 ? 'Your story is ready to save.' : 'Pick any three frames. Your draft stays in this browser.';
+  layout(); renderSelection(false);
 })();

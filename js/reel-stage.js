@@ -945,6 +945,17 @@
       };
       states.set(container, state);
 
+      // Selecting cached posters can change the copy's line count without an
+      // image load. Refresh only when the visible room's layout height changes.
+      let observedHeight = 0;
+      const layoutObserver = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver((entries) => {
+        const height = entries[0].contentRect.height;
+        if (!state.active || state.destroyed || height <= 0 || Math.abs(height - observedHeight) < .5) return;
+        observedHeight = height;
+        refreshScrollTrigger();
+      });
+      layoutObserver?.observe(container);
+
       bindInteractions(container, state);
       selectIndex(container, state, 0, false);
       bindReveal(container, state);
@@ -1016,6 +1027,7 @@
 
       state.cleanup = () => {
         state.destroyed = true;
+        layoutObserver?.disconnect();
         state.cancelDrag();
         motion.removeEventListener('change', onMotion);
         document.removeEventListener('visibilitychange', onVisibility);

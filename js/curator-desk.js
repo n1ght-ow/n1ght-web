@@ -1,24 +1,45 @@
-/* Five existing collections, one visitor exhibition. No uploads or remote assets. */
+/* Three photographs and four collection pieces compose one visitor exhibition. */
 (function () {
   "use strict";
   const root = document.getElementById("curate");
   if (!root) return;
   const $ = (id) => document.getElementById(id);
-  const TYPES = ["photo", "book", "film", "series", "music"];
-  const LABELS = { photo: "Photo", book: "Book", film: "Film", series: "Series", music: "Song" };
-  const INVITES = { photo: "Choose a photograph", book: "Choose a book", film: "Choose a film", series: "Choose a series", music: "Choose a song" };
-  const KEY = "night:curator-desk:v1";
+  const PHOTOS = ["photo", "photo2", "photo3"];
+  const TYPES = [...PHOTOS, "book", "film", "series", "music"];
+  const LABELS = { photo: "Photo 1", photo2: "Photo 2", photo3: "Photo 3", book: "Book", film: "Film", series: "Series", music: "Song" };
+  const INVITES = { photo: "Choose a photograph", photo2: "Choose a photograph", photo3: "Choose a photograph", book: "Choose a book", film: "Choose a film", series: "Choose a series", music: "Choose a song" };
+  const KEY = "night:creation-desk:v1";
   const paper = "#ffffff", ink = "#1c3154", muted = "#4b5d7a";
   const canvas = $("curator-poster"), ctx = canvas.getContext("2d");
   if (!ctx) return;
   const slots = $("curator-slots"), picker = $("curator-picker");
+  const enlargeButton = $("curator-enlarge");
+  const viewer = document.createElement('dialog');
+  viewer.className = 'curator-poster-viewer'; viewer.id = 'curator-poster-viewer';
+  viewer.setAttribute('aria-labelledby', 'curator-poster-viewer-title'); viewer.setAttribute('data-lenis-prevent', '');
+  viewer.innerHTML = '<div class="curator-poster-viewer-head"><h2 id="curator-poster-viewer-title">Poster preview</h2><button type="button" class="curator-poster-close" aria-label="Close poster preview"><svg class="gallery-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div><canvas width="1200" height="1800" role="img"></canvas>';
+  document.body.append(viewer);
+  const enlargedCanvas = viewer.querySelector('canvas');
+  function syncViewer() {
+    if (!viewer.open) return;
+    enlargedCanvas.getContext('2d').drawImage(canvas, 0, 0);
+    enlargedCanvas.setAttribute('aria-label', canvas.getAttribute('aria-label'));
+  }
+  enlargeButton.addEventListener('click', () => { viewer.showModal(); viewer.scrollTop = 0; syncViewer(); syncOverlays(); viewer.querySelector('button').focus(); });
+  viewer.querySelector('button').addEventListener('click', () => viewer.close());
+  viewer.addEventListener('cancel', event => { event.preventDefault(); viewer.close(); });
+  viewer.addEventListener('close', () => { syncOverlays(); enlargeButton.focus({ preventScroll: true }); });
+  viewer.addEventListener('click', event => {
+    const box = viewer.getBoundingClientRect();
+    if (event.target === viewer && (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom)) viewer.close();
+  });
   const nameInput = $("curator-name"), byInput = $("curator-by"), noteInput = $("curator-note");
   const exportButton = $("curator-export"), resetButton = $("curator-reset");
   const images = new Map();
   const catalog = {
     photo: Array.from(document.querySelectorAll(".photo-frame")).map((frame) => {
       const img = frame.querySelector("img");
-      return { id: frame.dataset.photoIndex, type: "photo", title: "Photograph " + String(Number(frame.dataset.photoIndex) + 1).padStart(2, "0"),
+      return { id: frame.dataset.photoIndex, type: "photo", title: frame.querySelector(".photo-frame-text").textContent.trim(),
         meta: frame.querySelector(".photo-frame-text").textContent.trim(), alt: img.alt,
         src: img.dataset.full || img.getAttribute("src"), thumb: img.dataset.rail || img.getAttribute("src"), tag: frame.dataset.act };
     }),
@@ -29,6 +50,7 @@
       src: window.MUSIC_COVERS[t.id] ? "album-covers/" + window.MUSIC_COVERS[t.id] : "",
       thumb: window.MUSIC_COVERS[t.id] ? "album-covers/thumbs/" + window.MUSIC_COVERS[t.id].replace(/\.[^.]+$/, ".webp") : "" })))
   };
+  catalog.photo2 = catalog.photo; catalog.photo3 = catalog.photo;
   const searchIndex = new Map();
   TYPES.forEach((type) => catalog[type].forEach((item) => {
     searchIndex.set(item, [item.title, item.meta, item.alt, item.tag, item.spine].filter(Boolean).join(" ").toLocaleLowerCase());
@@ -44,14 +66,25 @@
   const selected = () => state.order.map((type) => itemFor(type));
   const complete = () => TYPES.every((type) => itemFor(type));
   const text = (value, max) => typeof value === "string" ? value.slice(0, max) : "";
+  const photoIds = () => PHOTOS.map(type => state.picks[type]).filter(id => id != null);
+  const notifyPhotos = () => window.dispatchEvent(new Event("night:creation-change"));
   function restore() {
     try {
-      const stored = JSON.parse(localStorage.getItem(KEY));
+      let stored = JSON.parse(localStorage.getItem(KEY));
+      if (!stored) {
+        const exhibition = JSON.parse(localStorage.getItem('night:curator-desk:v1'));
+        const story = JSON.parse(localStorage.getItem('night:wandering-room:v1'));
+        if (exhibition || story) {
+          const photos = [...new Set([...(Array.isArray(story?.kept) ? story.kept.map(String) : []), exhibition?.picks?.photo].filter(id => catalog.photo.some(item => String(item.id) === String(id))))].slice(0, 3);
+          stored = { ...exhibition, order: TYPES.slice(), picks: { ...exhibition?.picks }, name: exhibition?.name || story?.title || '' };
+          PHOTOS.forEach((type, index) => { delete stored.picks[type]; if (photos[index] != null) stored.picks[type] = photos[index]; });
+        }
+      }
       if (!stored || typeof stored !== "object") return;
-      if (Array.isArray(stored.order) && stored.order.length === 5 && new Set(stored.order).size === 5 && stored.order.every((t) => TYPES.includes(t))) state.order = stored.order;
+      if (Array.isArray(stored.order) && stored.order.length === TYPES.length && new Set(stored.order).size === TYPES.length && stored.order.every((t) => TYPES.includes(t))) state.order = stored.order;
       TYPES.forEach((type) => {
         const id = stored.picks && stored.picks[type];
-        if (catalog[type].some((item) => String(item.id) === String(id))) state.picks[type] = String(id);
+        if (catalog[type].some((item) => String(item.id) === String(id)) && (!PHOTOS.includes(type) || !photoIds().includes(String(id)))) state.picks[type] = String(id);
       });
       state.name = text(stored.name, 48); state.by = text(stored.by, 32); state.note = text(stored.note, 120);
       if (["gallery", "contact", "night"].includes(stored.layout)) state.layout = stored.layout;
@@ -117,7 +150,7 @@
         const tools = el("div", "curator-slot-tools");
         [["left", "←", "Move " + LABELS[type] + " earlier"], ["remove", "×", "Remove " + LABELS[type]], ["right", "→", "Move " + LABELS[type] + " later"]].forEach(([act, value, label]) => {
           const b = button("", value, label); b.dataset.action = act;
-          b.disabled = act === "left" ? index === 0 : act === "right" ? index === 4 : !item;
+          b.disabled = act === "left" ? index === 0 : act === "right" ? index === TYPES.length - 1 : !item;
           tools.append(b);
         });
         card.append(handle, pick, tools);
@@ -133,7 +166,7 @@
         if (item) pick.title = item.title + ' · ' + item.meta;
         else pick.removeAttribute('title');
         card.querySelector('[data-action="left"]').disabled = index === 0;
-        card.querySelector('[data-action="right"]').disabled = index === 4;
+        card.querySelector('[data-action="right"]').disabled = index === TYPES.length - 1;
         card.querySelector('[data-action="remove"]').disabled = !item;
       }
       card.dataset.pickId = String(item?.id ?? '');
@@ -142,7 +175,7 @@
     slots.scrollLeft = scrollLeft;
     // Reuse the same cards, so focus and decoded artwork survive rearrangement.
     if (slotsReady && !reduced.matches && window.gsap) {
-      const after = Array.from(slots.children).map((card, i) => ({ card, box: card.getBoundingClientRect(), old: before.get(card.dataset.type), baseY: i % 2 ? 5 : 0 }));
+      const after = Array.from(slots.children).map((card, i) => ({ card, box: card.getBoundingClientRect(), old: before.get(card.dataset.type), baseY: 0 }));
       after.forEach(({ card, box, old, baseY }) => {
         if (!old || (Math.abs(old.left - box.left) < .5 && Math.abs(old.top - box.top) < .5)) return;
         gsap.fromTo(card, { x: old.left - box.left, y: baseY + old.top - box.top, scale: card.dataset.type === focusType ? 1.025 : 1 },
@@ -151,30 +184,33 @@
       if (changed.length) gsap.fromTo(changed, { y: 12, scale: .95, opacity: .6 }, { y: 0, scale: 1, opacity: 1, duration: .48, stagger: .045, ease: 'power3.out', clearProps: 'transform,opacity' });
     }
     const count = TYPES.filter((type) => itemFor(type)).length;
-    $("curator-count").textContent = "Selected " + count + " / 5";
+    $("curator-count").textContent = "Selected " + count + " / 7";
     exportButton.disabled = !complete() || exporting;
     if (slotsReady && complete() && !lastComplete) revealPending = true;
     if (!complete()) revealPending = false;
     lastComplete = !!complete();
     slotsReady = true;
-    $("curator-surprise").textContent = count ? "Find five more ↗" : "Find me five ↗";
+    $("curator-surprise").textContent = "Shuffle all seven";
     if (focusType) {
       const target = slots.querySelector('[data-type="' + focusType + '"] [data-action="' + (action || "pick") + '"]');
       if (target && !target.disabled) target.focus({ preventScroll: true });
       else slots.querySelector('[data-type="' + focusType + '"] [data-action="handle"]')?.focus({ preventScroll: true });
     }
     schedulePreview();
-    save();
+    save(); notifyPhotos();
   }
   function select(type, item) {
     if (exporting) { announce("Your poster is being saved. You can change pieces when it is ready."); return false; }
+    if (PHOTOS.includes(type) && PHOTOS.some(slot => slot !== type && String(state.picks[slot]) === String(item.id))) {
+      announce('This photograph is already selected. Choose another frame.'); return false;
+    }
     state.picks[type] = String(item.id); undo = null; resetButton.textContent = "Start again";
-    renderSlots(); announce("Added “" + item.title + "”. " + (complete() ? "All five are here. Give your exhibition a name." : "Keep choosing your pieces."));
+    renderSlots(); announce("Added “" + item.title + "”. " + (complete() ? "All seven are here." : "Keep choosing your pieces."));
     return true;
   }
   function move(type, target, action) {
     const from = state.order.indexOf(type);
-    if (from === target || target < 0 || target > 4) return;
+    if (from === target || target < 0 || target >= TYPES.length) return;
     state.order.splice(from, 1); state.order.splice(target, 0, type);
     renderSlots(type, action || "handle"); announce(LABELS[type] + " moved to position " + (target + 1) + ". Your poster follows the new order.");
   }
@@ -216,7 +252,7 @@
     const inDesk = event.clientY >= bounds.top - 35 && event.clientY <= bounds.bottom + 35 && event.clientX >= bounds.left - 35 && event.clientX <= bounds.right + 35;
     let targetIndex = state.order.indexOf(drag.type), distance = Infinity;
     drag.boxes.forEach((box, index) => {
-      const gap = Math.abs(event.clientX - (box.left + box.width / 2 - shift));
+      const gap = Math.hypot(event.clientX - (box.left + box.width / 2 - shift), event.clientY - (box.top + box.height / 2));
       if (gap < distance) { distance = gap; targetIndex = index; }
     });
     const target = inDesk ? state.order[targetIndex] : null;
@@ -232,7 +268,7 @@
         gsap.set(card, { x: event.clientX - drag.x + shift, y: event.clientY - drag.y - 10, rotation: Math.max(-3, Math.min(3, (event.clientX - drag.x) / 70)), scale: 1.035, willChange: 'transform' });
       } else if (targetChanged) {
         const destination = projected.indexOf(card.dataset.type);
-        gsap.to(card, { x: drag.boxes[destination].left - drag.boxes[index].left, y: destination % 2 ? 5 : 0, duration: .2, ease: 'power2.out', overwrite: true });
+        gsap.to(card, { x: drag.boxes[destination].left - drag.boxes[index].left, y: drag.boxes[destination].top - drag.boxes[index].top, duration: .2, ease: 'power2.out', overwrite: true });
       }
     });
   });
@@ -244,7 +280,7 @@
     if (current.active) suppressClickUntil = Date.now() + 300;
     if (commit && current.active && current.target && current.target !== current.type) move(current.type, state.order.indexOf(current.target));
     else if (window.gsap) current.cards.forEach((card, index) => {
-      gsap.to(card, { x: 0, y: index % 2 ? 5 : 0, scale: 1, rotation: 0, duration: reduced.matches ? 0 : .36, ease: 'power3.out', overwrite: true, clearProps: 'transform,willChange' });
+      gsap.to(card, { x: 0, y: 0, scale: 1, rotation: 0, duration: reduced.matches ? 0 : .36, ease: 'power3.out', overwrite: true, clearProps: 'transform,willChange' });
     });
   }
   slots.addEventListener("pointerup", (event) => { if (drag?.id === event.pointerId) finishDrag(true); });
@@ -271,13 +307,16 @@
     const fragment = document.createDocumentFragment();
     list.slice(results.children.length, pickerLimit).forEach((item) => {
       const b = button("curator-result", "", "Choose “" + item.title + "”, " + item.meta);
+      b.disabled = PHOTOS.includes(pickerType) && PHOTOS.some(slot => slot !== pickerType && String(state.picks[slot]) === String(item.id));
+      if (b.disabled) b.title = "Already selected in another photo slot";
       b.dataset.id = item.id; b.setAttribute("aria-pressed", String(String(state.picks[pickerType]) === String(item.id)));
-      b.append(art(item, true), el("p", "curator-result-title", item.title), el("p", "curator-result-meta", item.meta));
+      b.append(art(item, true), el("p", "curator-result-title", item.title));
+      if (item.meta !== item.title) b.append(el("p", "curator-result-meta", item.meta));
       if (item.type === "photo") b.append(el("p", "curator-result-meta", item.alt));
       fragment.append(b);
     });
     results.append(fragment);
-    $("curator-results-count").textContent = list.length ? list.length + " pieces found; showing " + Math.min(pickerLimit, list.length) + ". Choose one piece to replace your current selection." : "No pieces found. Try another title, author or artist.";
+    $("curator-results-count").textContent = list.length ? Math.min(pickerLimit, list.length) + " / " + list.length + " pieces" : "No matches. Try another keyword.";
     $("curator-more").hidden = pickerLimit >= list.length;
   }
   function openPicker(type, trigger) {
@@ -291,7 +330,7 @@
   $("curator-results").addEventListener("click", (event) => {
     const b = event.target.closest(".curator-result"); if (!b) return;
     const item = catalog[pickerType].find((i) => String(i.id) === b.dataset.id);
-    if (item) { select(pickerType, item); picker.close(); }
+    if (item && select(pickerType, item)) picker.close();
   });
   $("curator-more").addEventListener("click", () => {
     const previous = pickerLimit; pickerLimit += 40; renderPicker(true);
@@ -318,8 +357,10 @@
     state.layout = radio.value; schedulePreview(); save();
   }));
   $("curator-surprise").addEventListener("click", () => {
-    TYPES.forEach((type) => { const pool = catalog[type]; if (pool.length) state.picks[type] = String(pool[Math.floor(Math.random() * pool.length)].id); });
-    undo = null; resetButton.textContent = "Start again"; renderSlots(); announce("Five pieces, ready for your story. Choose any piece to change it.");
+    const bag = catalog.photo.slice();
+    PHOTOS.forEach(type => { const index = Math.floor(Math.random() * bag.length); state.picks[type] = String(bag.splice(index, 1)[0].id); });
+    TYPES.filter(type => !PHOTOS.includes(type)).forEach((type) => { const pool = catalog[type]; if (pool.length) state.picks[type] = String(pool[Math.floor(Math.random() * pool.length)].id); });
+    undo = null; resetButton.textContent = "Start again"; renderSlots(); announce("Seven pieces selected.");
   });
   function syncFields() {
     nameInput.value = state.name; byInput.value = state.by; noteInput.value = state.note;
@@ -327,7 +368,7 @@
   }
   resetButton.addEventListener("click", () => {
     if (undo) { state = undo; undo = null; resetButton.textContent = "Start again"; announce("Your previous exhibition is back."); }
-    else { undo = JSON.parse(JSON.stringify(state)); state = blank(); resetButton.textContent = "Undo reset"; announce("A fresh desk. Choose “Undo reset” to bring your exhibition back."); }
+    else { undo = JSON.parse(JSON.stringify(state)); state = blank(); resetButton.textContent = "Undo reset"; announce("Desk cleared. Undo is available."); }
     syncFields(); renderSlots();
   });
 
@@ -397,23 +438,29 @@
     write(item.title, bx + bw * .12, by + bh * .29, bw * .76, Math.min(48, bw * .13), 4, item.ink, true);
     write(item.author, bx + bw * .12, by + bh * .78, bw * .76, Math.min(24, bw * .07), 2, item.ink);
   }
-  function drawArt(item, img, x, y, w, h, dark, cover) {
-    rect(x, y, w, h, dark ? "#233b68" : "#edf0ff");
+  function drawArt(item, img, x, y, w, h, dark) {
     if (item?.type === "book") { drawBook(item, x, y, w, h); return; }
     if (img) {
-      const ratio = cover ? Math.max(w / img.naturalWidth, h / img.naturalHeight) : Math.min(w / img.naturalWidth, h / img.naturalHeight);
+      const ratio = Math.min(w / img.naturalWidth, h / img.naturalHeight);
       const dw = img.naturalWidth * ratio, dh = img.naturalHeight * ratio;
       ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh); ctx.restore();
       return;
     }
-    ctx.strokeStyle = dark ? "#91a8d6" : "#bbc9e2"; ctx.lineWidth = 1; ctx.strokeRect(x + 12, y + 12, w - 24, h - 24);
-    write(item ? (item.src ? "Artwork unavailable" : "♪") : "+", x + 24, y + h * .35, w - 48, item ? 24 : 48, 2, dark ? paper : muted, true);
+    ctx.save();
+    ctx.strokeStyle = dark ? '#7e94bc' : '#c5cddd'; ctx.lineWidth = 1.5;
+    ctx.setLineDash([7, 7]); ctx.strokeRect(x + 1, y + 1, w - 2, h - 2); ctx.setLineDash([]);
+    if (item) write('Artwork unavailable', x + 16, y + h / 2 - 10, w - 32, 20, 2, dark ? paper : muted);
+    else {
+      const cx = x + w / 2, cy = y + h / 2;
+      ctx.beginPath(); ctx.moveTo(cx - 10, cy); ctx.lineTo(cx + 10, cy); ctx.moveTo(cx, cy - 10); ctx.lineTo(cx, cy + 10); ctx.stroke();
+    }
+    ctx.restore();
   }
-  function caption(item, type, index, x, y, width, dark, compact) {
-    const color = dark ? paper : ink, secondary = dark ? "#dbe5ff" : muted;
-    write(String(index + 1).padStart(2, "0") + " / " + LABELS[type], x, y, width, compact ? 17 : 19, 1, secondary);
-    const used = write(item?.title || INVITES[type], x, y + 32, width, compact ? 27 : 34, compact ? 3 : 2, color, false, 14);
-    if (item) write(item.meta, x, y + 44 + used, width, compact ? 19 : 23, compact ? 3 : 2, secondary, false, 12);
+  function caption(item, type, index, x, y, width, dark, showMeta) {
+    const color = dark ? paper : ink, secondary = dark ? '#b9c9e8' : muted;
+    write(String(index + 1).padStart(2, '0'), x, y + 3, 30, 18, 1, secondary);
+    const used = write(item?.title || LABELS[type], x + 36, y, width - 36, 26, 2, color, false, 14);
+    if (showMeta && item?.meta && item.meta !== item.title) write(item.meta, x + 36, y + used + 8, width - 36, 18, 2, secondary, false, 12);
   }
   async function drawPreview(snapshot) {
     const ticket = ++renderTicket, draft = snapshot || JSON.parse(JSON.stringify(state));
@@ -422,35 +469,47 @@
     if (ticket !== renderTicket) return null;
     const dark = draft.layout === "night", color = dark ? paper : ink, secondary = dark ? "#dbe5ff" : muted;
     rect(0, 0, 1200, 1800, dark ? "#102348" : paper);
-    write("N1GHT CHXN9 / A VISITOR EXHIBITION", 72, 60, 1056, 20, 1, secondary);
-    const titleHeight = write(draft.name.trim() || "An untitled exhibition", 72, 123, 1056, 72, 2, color, true, 38);
-    const noteY = 139 + titleHeight;
-    const noteHeight = draft.note.trim() ? write(draft.note.trim(), 72, noteY, 1056, 27, 4, secondary, false, 23) : 0;
-    const top = Math.max(360, noteY + noteHeight + 70);
-    line(72, top - 30, 1056, dark ? "#91a8d6" : "#d4dceb");
-    if (draft.layout === "contact") {
-      // Five numbered bands keep the full titles readable, like a contact sheet ledger.
+    const titleHeight = write(draft.name.trim() || 'Your exhibition', 72, 74, 1056, 84, 2, color, true, 42);
+    const noteY = 74 + titleHeight + 20;
+    const noteHeight = draft.note.trim() ? write(draft.note.trim(), 72, noteY, 1056, 25, 4, secondary, false, 20) : 0;
+    const top = noteY + noteHeight + (noteHeight ? 36 : 20);
+    if (draft.layout === 'contact') {
+      const band = (1630 - top) / TYPES.length;
       items.forEach((item, i) => {
-        const y = top + i * ((1600 - top) / 5);
-        drawArt(item, artImages[i], 72, y, 234, 186, false, item?.type === "photo");
-        caption(item, draft.order[i], i, 342, y + 8, 786, false, false);
-        if (i < 4) line(342, y + 201, 786, "#d4dceb");
+        const y = top + i * band;
+        drawArt(item, artImages[i], 72, y, 222, band - 20, false);
+        caption(item, draft.order[i], i, 330, y + 10, 798, false, true);
+        if (i < TYPES.length - 1) line(330, y + band - 10, 798, '#d4dceb');
       });
     } else {
-      // The visitor's first piece leads the exhibition. All remaining pieces follow their order.
-      drawArt(items[0], artImages[0], 72, top, 1056, 985 - top, dark, items[0]?.type === "photo");
-      caption(items[0], draft.order[0], 0, 72, 1008, 1056, dark, false);
-      items.slice(1).forEach((item, j) => {
-        const x = 72 + j * 270, y = 1220;
-        drawArt(item, artImages[j + 1], x, y, 246, 226, dark, item?.type === "photo");
-        caption(item, draft.order[j + 1], j + 1, x, y + 250, 246, dark, true);
+      // One leading work, a pair of companions, and four collected pieces share a single sheet.
+      const available = 1620 - top - 314;
+      const leadHeight = available * .50, pairHeight = available * .24, collectionHeight = available * .26;
+      drawArt(items[0], artImages[0], 72, top, 1056, leadHeight, dark);
+      caption(items[0], draft.order[0], 0, 72, top + leadHeight + 12, 1056, dark, false);
+      const pairY = top + leadHeight + 88;
+      items.slice(1, 3).forEach((item, j) => {
+        const x = 72 + j * 540;
+        drawArt(item, artImages[j + 1], x, pairY, 516, pairHeight, dark);
+        caption(item, draft.order[j + 1], j + 1, x, pairY + pairHeight + 12, 516, dark, false);
+      });
+      const collectionY = pairY + pairHeight + 96;
+      line(72, collectionY - 18, 1056, dark ? '#617ca9' : '#d4dceb');
+      items.slice(3).forEach((item, j) => {
+        const x = 72 + j * 270;
+        drawArt(item, artImages[j + 3], x, collectionY, 246, collectionHeight, dark);
+        caption(item, draft.order[j + 3], j + 3, x, collectionY + collectionHeight + 16, 246, dark, true);
       });
     }
-    line(72, 1700, 1056, dark ? "#91a8d6" : "#d4dceb");
-    write("Curated by / " + (draft.by.trim() || "a passing visitor"), 72, 1725, 740, 23, 2, color);
-    write("FIVE PIECES. ONE STORY.", 822, 1732, 306, 17, 1, secondary);
+    line(72, 1704, 1056, dark ? '#617ca9' : '#d4dceb');
+    write('N1GHT CHXN9', 72, 1727, 480, 22, 1, color);
+    if (draft.by.trim()) {
+      const signature = 'Curated by ' + draft.by.trim();
+      ctx.textAlign = 'right'; write(signature, 1128, 1727, 520, 21, 2, secondary); ctx.textAlign = 'left';
+    }
     canvas.setAttribute("aria-label", (draft.name.trim() || "Untitled exhibition") + ", " + ({ gallery: "Gallery", contact: "Contact sheet", night: "After dark" })[draft.layout] + " layout. " + items.map((item, i) => LABELS[draft.order[i]] + ": " + (item?.title || "Not selected")).join("; "));
-    $("curator-preview-caption").textContent = draft.name.trim() ? "“" + draft.name.trim() + "” · " + (draft.by.trim() || "a passing visitor") : "Every choice on the desk becomes part of this poster.";
+    $("curator-preview-caption").textContent = "";
+    syncViewer();
     if (!snapshot && revealPending) {
       revealPending = false;
       if (!reduced.matches && window.gsap) {
@@ -463,7 +522,7 @@
   exportButton.addEventListener("click", async () => {
     if (!complete() || exporting) return;
     finishDrag(false);
-    exporting = true; exportButton.disabled = true; exportButton.textContent = "Making your poster…";
+    exporting = true; notifyPhotos(); exportButton.disabled = true; exportButton.textContent = "Making your poster…";
     // Freeze this export's composition while allowing the saved browser draft to remain intact.
     const snapshot = JSON.parse(JSON.stringify(state));
     root.querySelectorAll("button, input, textarea").forEach((node) => { if (node !== exportButton) node.dataset.wasDisabled = String(node.disabled); node.disabled = true; });
@@ -481,9 +540,9 @@
       announce("Your poster is ready and the download has started. Try another layout for a different edition.");
     } catch (error) { announce(error.message || "The poster could not be made. Please try again."); }
     finally {
-      exporting = false;
+      exporting = false; notifyPhotos();
       root.querySelectorAll("[data-was-disabled]").forEach((node) => { node.disabled = node.dataset.wasDisabled === "true"; delete node.dataset.wasDisabled; });
-      exportButton.disabled = !complete(); exportButton.textContent = "Save exhibition poster ↓";
+      exportButton.disabled = !complete(); exportButton.textContent = "Save PNG ↓";
     }
   });
 
@@ -497,7 +556,7 @@
     b.addEventListener("click", () => {
       const item = getItem();
       if (!item) { status.textContent = "Select a piece first."; return; }
-      if (select(item.type, item)) status.textContent = "Selected: " + item.title;
+      if ((item.type === "photo" ? addPhoto(item.id) : select(item.type, item))) status.textContent = "Selected: " + item.title;
     });
     link.addEventListener("click", (event) => {
       event.preventDefault();
@@ -511,10 +570,6 @@
     });
     return tray;
   }
-  collector(document.querySelector(".photo-feature__label"), () => {
-    const frame = document.querySelector(".photo-frame.is-featured");
-    return catalog.photo.find((item) => item.id === frame?.dataset.photoIndex);
-  }, "Add the current photograph to the desk");
   collector(document.querySelector("#panel-books .book-shelf")?.parentElement, () => {
     const id = document.querySelector('.bs-book[data-picked="true"]')?.dataset.book;
     return catalog.book.find((item) => item.id === id);
@@ -540,12 +595,30 @@
     return null;
   }, "Add the current piece to the desk");
   if (lbTray) {
-    const update = () => { lbTray.hidden = typeof detailType === "undefined" || !["photo", "music"].includes(detailType); lbTray.querySelector(".curator-collect-status").textContent = ""; };
+    const update = () => { lbTray.hidden = typeof detailType === "undefined" || detailType !== "music"; lbTray.querySelector(".curator-collect-status").textContent = ""; };
     const observer = new MutationObserver(update); observer.observe($("lb-count"), { childList: true, characterData: true, subtree: true }); update();
   }
+  function addPhoto(id) {
+    if (exporting) return false;
+    if (photoIds().includes(String(id))) { announce('This photograph is already selected.'); return false; }
+    const type = PHOTOS.find(slot => !itemFor(slot));
+    const item = catalog.photo.find(entry => String(entry.id) === String(id));
+    if (!type || !item) { announce('All three photographs are here. Change a photo at the desk.'); return false; }
+    return select(type, item);
+  }
+  function visit() {
+    const scroll = () => {
+      if (typeof lenis !== 'undefined' && lenis) lenis.scrollTo(root, { duration: .8 });
+      else root.scrollIntoView({ behavior: 'auto', block: 'start' });
+      nameInput.focus({ preventScroll: true });
+    };
+    if (document.querySelector('#lightbox.is-open') && typeof closeDetail === 'function') closeDetail(scroll);
+    else scroll();
+  }
+  window.CuratorDesk = { addPhoto, photoIds, busy: () => exporting, visit };
   restore(); syncFields(); renderSlots();
   $("curator-workspace").hidden = false;
-  if (TYPES.some((type) => itemFor(type))) announce("Your draft is back. You can change any piece at any time.");
+  if (TYPES.some((type) => itemFor(type))) announce("Draft restored.");
   document.fonts.ready.then(() => schedulePreview());
   if (typeof scheduleRefresh === "function") scheduleRefresh(250);
   window.addEventListener("pagehide", () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (_) {} });

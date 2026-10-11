@@ -31,12 +31,12 @@
   <link rel="stylesheet" href="css/games-stage.css?v=8">
   <!-- Atelier is the new gallery layer, after the existing component geometry. -->
   <link rel="stylesheet" href="css/atelier.css?v=9">
-  <link rel="stylesheet" href="css/atelier-photo.css?v=9">
+  <link rel="stylesheet" href="css/atelier-photo.css?v=10">
   <link rel="stylesheet" href="css/atelier-archive.css?v=15">
   <link rel="stylesheet" href="css/atelier-poem.css?v=6">
   <link rel="stylesheet" href="css/curator-desk.css?v=12">
   <link rel="stylesheet" href="css/atelier-viewer.css?v=6">
-  <link rel="stylesheet" href="css/gallery.css?v=2">
+  <link rel="stylesheet" href="css/gallery.css?v=8">
 </head>
 <body>
 
@@ -75,7 +75,6 @@
       <div class="gallery-opening">
       <figure class="gallery-satellite gallery-satellite--left">
         <a href="#photo" aria-label="Explore the photography room"><img src="photo/wall/1779456446231.webp" alt="A blossom branch reaching into a blue sky" width="1600" height="1067" decoding="async"></a>
-        <figcaption>A reason to look closer.</figcaption>
       </figure>
       <figure class="atelier-media">
         <div class="atelier-frame">
@@ -90,20 +89,18 @@
       </figure>
       <figure class="gallery-satellite gallery-satellite--right">
         <a href="#archive" aria-label="Explore the archive"><img src="photo/wall/1789470372631.webp" alt="Cumulus clouds above green hills" width="1600" height="1067" decoding="async"></a>
-        <figcaption>And a little further.</figcaption>
       </figure>
       </div>
       <div class="atelier-bottom">
         <p class="atelier-subtitle">Life, collected.</p>
-        <p class="atelier-intro" lang="en">Photographs, poems, and things worth coming back to. A personal collection, still growing.</p>
         <a class="atelier-enter" href="#photo"><span>Come on in</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </div>
     </section>
     <nav class="gallery-directory shell" aria-label="Choose your starting point">
-      <a href="#photo"><strong>Photography</strong><span>46 ways of seeing</span></a>
-      <a href="#archive"><strong>The archive</strong><span>Books, poems &amp; everything else</span></a>
-      <a href="#curate"><strong>Your exhibition</strong><span>Five pieces. Your point of view.</span></a>
+      <a href="#photo"><strong>Photography</strong><svg class="gallery-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="#archive"><strong>The archive</strong><svg class="gallery-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="#curate"><strong>Your exhibition</strong><svg class="gallery-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </nav>
 
     <!-- ============ PHOTOGRAPHY ============ -->
@@ -112,9 +109,6 @@
         <div class="sec-head">
           <div>
             <h2 class="sec-title">Take the<br>scenic route.</h2>
-          </div>
-          <div class="sec-copy">
-            Forty-six windows into somewhere else. Wander through them.<br>Keep three. Tell a story of your own.
           </div>
         </div>
       </div>
@@ -571,10 +565,6 @@
           <div>
             <h2 class="sec-title">Good company.</h2>
           </div>
-          <div class="sec-copy">
-            <span class="lead">Read, rewatched, repeated, rooted for.</span>
-            Seven shelves of things that did not just stay. They built the person who keeps them.
-          </div>
         </div>
 
         <div class="tabbar glass glass--pill glass--spot" role="tablist" aria-label="Archive shelves" id="archive-tabbar">
@@ -602,16 +592,6 @@
 
           <!-- PANEL: BOOKS -->
           <div class="tab-panel is-active" id="panel-books" role="tabpanel" aria-labelledby="tab-books" data-panel="books" tabindex="0">
-            <!-- The panel note. One per shelf, and the seven are one system: the
-                 same element, the same measure, the same relation to whatever
-                 the panel opens with (see .curator in css/style.css, section
-                 11b). Each one names a decision rather than a mood - what was
-                 kept, in what order, and what was left out - because the
-                 collection is the argument and the note is the only place the
-                 page says why. -->
-            <div class="panel-note">
-              <p class="curator curator--books">Sixteen books. Sixteen different ways of seeing the world.</p>
-            </div>
             <div class="book-shelf" data-book-shelf="auto" role="group" aria-label="Books on the shelf"></div>
           </div>
 
@@ -623,26 +603,17 @@
                The inner div also gives the panel's own content a home, which is
                what lets the note be a sibling of the stage in all seven panels. -->
           <div class="tab-panel" id="panel-films" role="tabpanel" aria-labelledby="tab-films" data-panel="films" tabindex="0">
-            <div class="panel-note">
-              <p class="curator curator--films">Half of these I saw once, in a cinema, at the wrong age to understand them.</p>
-            </div>
             <div data-film-stage="auto"></div>
           </div>
 
           <!-- PANEL: SERIES -->
           <div class="tab-panel" id="panel-series" role="tabpanel" aria-labelledby="tab-series" data-panel="series" tabindex="0">
-            <div class="panel-note">
-              <p class="curator curator--series">Long series here are the ones I stopped midway and finished years later.</p>
-            </div>
             <div data-series-stage="auto"></div>
           </div>
 
           <!-- PANEL: MUSIC -->
           <div class="tab-panel" id="panel-music" role="tabpanel" aria-labelledby="tab-music" data-panel="music" tabindex="0">
             <div class="music-drawer" id="music-drawer">
-              <div class="panel-note">
-              <p class="curator curator--music">There are three hundred and forty-one English tracks in here, and Pop opens the index. Most nights I am somewhere in the Mandarin groups.</p>
-            </div>
               <div class="music-bar">
                 <!-- The search row is a printed tray: the same object as the tab
                      strip above it and the genre rail below it (AGENTS.md,
@@ -702,9 +673,6 @@
                Three lines per panel: eyebrow (team and league), honours,
                official site. The honours ARE the Chinese on this band. -->
           <div class="tab-panel" id="panel-sport" role="tabpanel" aria-labelledby="tab-sport" data-panel="sport" tabindex="0">
-            <div class="panel-note">
-              <p class="curator curator--sport">Chosen in primary school, never traded since.</p>
-            </div>
             <section class="sport" id="sport-stage" aria-label="Sport">
               <!-- Each slide is a .sport-card, and inside it the <button> holds ONLY the
                  photograph, the crest and the wash. The caption - including the
@@ -794,9 +762,6 @@
 
           <!-- PANEL: GAMES -->
           <div class="tab-panel" id="panel-games" role="tabpanel" aria-labelledby="tab-games" data-panel="games" tabindex="0">
-            <div class="panel-note">
-              <p class="curator curator--games">Eighteen games, ordered by their original release dates. Some timelines begin before the millennium.</p>
-            </div>
             <!-- One centred cover on a detent dial (js/games-stage.js, a plain-DOM
                  port of Framer's Detent). The eighteen .hof-item elements ARE the
                  deck: each one is a tab stop and a click target for main.js, moved
@@ -970,51 +935,49 @@
     <section class="section curator-section" id="curate" lang="en" aria-labelledby="curator-title">
       <div class="shell">
         <header class="curator-head">
-          <h2 id="curator-title">The curator’s desk<span lang="en">Make it yours.</span></h2>
-          <p>One photograph, one book, one film, one series, one song.<br>Bring them together. Make a little exhibition of who you are today.</p>
+          <h2 id="curator-title">Make it yours.</h2>
         </header>
         <div id="curator-workspace" hidden>
           <div class="curator-workspace">
             <div class="curator-edit">
               <div class="curator-toolbar">
-                <p id="curator-count" class="mono">Selected 0 / 5</p>
-                <button type="button" id="curator-surprise" class="curator-text-btn">Find me five ↗</button>
+                <p id="curator-count" class="mono">Selected 0 / 7</p>
+                <button type="button" id="curator-surprise" class="curator-text-btn">Shuffle all seven</button>
               </div>
               <ol id="curator-slots" class="curator-slots" aria-label="Exhibition order"></ol>
-              <p class="curator-hint">Choose a piece for each place. Drag a card by its handle, or use the arrows to arrange your exhibition.</p>
+              <p class="curator-hint sr-only">Drag by the handle, or use the arrows to arrange your exhibition.</p>
               <div class="curator-fields" role="group" aria-labelledby="curator-label-heading">
                 <div class="curator-fields-head">
-                  <h3 id="curator-label-heading">Your exhibition label</h3>
-                  <p>Printed on your poster</p>
+                  <h3 id="curator-label-heading" class="sr-only">Exhibition label</h3>
                 </div>
-                <label class="curator-title-field" for="curator-name"><span class="curator-field-label">Exhibition title</span>
+                <label class="curator-title-field" for="curator-name"><span class="curator-field-label">Title</span>
                   <input id="curator-name" maxlength="48" placeholder="e.g. Somewhere beyond the city" autocomplete="off">
                 </label>
                 <label class="curator-by-field" for="curator-by"><span class="curator-field-label">Curator</span>
                   <input id="curator-by" maxlength="32" placeholder="Your name, or a pen name" autocomplete="off">
                 </label>
-                <label class="curator-note-field" for="curator-note"><span class="curator-field-label">A few words about your exhibition</span>
-                  <textarea id="curator-note" maxlength="120" rows="3" aria-describedby="curator-note-hint" placeholder="What brings these five pieces together?"></textarea>
+                <label class="curator-note-field" for="curator-note"><span class="curator-field-label">Note</span>
+                  <textarea id="curator-note" maxlength="120" rows="3" aria-describedby="curator-note-hint" placeholder="What brings these pieces together?"></textarea>
                 </label>
-                <p class="curator-note-hint" id="curator-note-hint">A thought, a memory, a thread. <span>Up to 120 characters</span></p>
+                <p class="curator-note-hint" id="curator-note-hint">120 characters max</p>
               </div>
               <fieldset class="curator-layouts">
-                <legend>Choose a layout</legend>
+                <legend>Layout</legend>
                 <label><input type="radio" name="curator-layout" value="gallery" checked><span class="curator-layout-icon" data-layout="gallery" aria-hidden="true"></span><span>Gallery</span></label>
                 <label><input type="radio" name="curator-layout" value="contact"><span class="curator-layout-icon" data-layout="contact" aria-hidden="true"></span><span>Contact sheet</span></label>
                 <label><input type="radio" name="curator-layout" value="night"><span class="curator-layout-icon" data-layout="night" aria-hidden="true"></span><span>After dark</span></label>
               </fieldset>
               <div class="curator-actions">
-                <button type="button" id="curator-export" class="curator-primary" disabled>Save exhibition poster ↓</button>
+                <button type="button" id="curator-export" class="curator-primary" disabled>Save PNG ↓</button>
                 <button type="button" id="curator-reset" class="curator-text-btn">Start again</button>
               </div>
-              <p id="curator-status" class="curator-status" role="status" aria-live="polite">Choose all five pieces to save your poster.</p>
-              <p id="curator-storage" class="curator-hint">Your draft stays in this browser on this device.</p>
+              <p id="curator-status" class="curator-status" role="status" aria-live="polite">Choose seven pieces to save your poster.</p>
+              <p id="curator-storage" class="curator-hint"></p>
             </div>
             <figure class="curator-preview">
-              <div class="curator-preview-head mono"><span>YOUR EXHIBITION</span><span>1200 × 1800 · PNG</span></div>
+              <div class="curator-preview-head"><span>Preview</span><button type="button" id="curator-enlarge" aria-label="Enlarge exhibition poster" aria-haspopup="dialog" title="Enlarge poster"><svg class="gallery-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4M8 8l-4-4m12 4 4-4M8 16l-4 4m12-4 4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
               <canvas id="curator-poster" width="1200" height="1800" role="img" aria-label="Exhibition poster preview"></canvas>
-              <figcaption id="curator-preview-caption">Every choice on the desk becomes part of this poster.</figcaption>
+              <figcaption id="curator-preview-caption"></figcaption>
             </figure>
           </div>
         </div>
@@ -1096,7 +1059,7 @@
 
   <dialog id="curator-picker" class="curator-picker" lang="en" aria-labelledby="curator-picker-title" data-lenis-prevent>
     <div class="curator-picker-head">
-      <div><p class="mono">SELECT A PIECE / FROM THE COLLECTION</p><h2 id="curator-picker-title">Choose a photograph</h2></div>
+      <div><h2 id="curator-picker-title">Choose a photograph</h2></div>
       <button type="button" id="curator-picker-close" class="curator-text-btn" aria-label="Close collection picker">Close ×</button>
     </div>
     <label class="curator-search" for="curator-search">Search the collection<input id="curator-search" type="search" placeholder="Enter a title or keyword" autocomplete="off"></label>
@@ -1114,19 +1077,19 @@
   <script src="js/music-data.js?v=7"></script>
   <script src="js/poems-data.js?v=2"></script>
   <script src="js/music-covers.js?v=6"></script>
-  <script src="js/reel-stage.js?v=32"></script>
+  <script src="js/reel-stage.js?v=33"></script>
   <script src="js/film-stage.js?v=8"></script>
   <script src="js/series-stage.js?v=8"></script>
   <script src="js/music-stage.js?v=12"></script>
   <script src="js/book-shelf.js?v=13"></script>
-  <script src="js/games-stage.js?v=8"></script>
+  <script src="js/games-stage.js?v=9"></script>
   <script src="js/glass-pill.js?v=5"></script>
-  <script src="js/main.js?v=100"></script>
-  <script src="js/atelier.js?v=7"></script>
-  <script src="js/atelier-hero.js?v=7"></script>
-  <script src="js/atelier-photo.js?v=11"></script>
-  <script src="js/atelier-archive.js?v=3"></script>
+  <script src="js/main.js?v=101"></script>
+  <script src="js/atelier.js?v=11"></script>
+  <script src="js/atelier-hero.js?v=8"></script>
+  <script src="js/atelier-photo.js?v=15"></script>
+  <script src="js/atelier-archive.js?v=4"></script>
   <script src="js/atelier-poem.js?v=8"></script>
-  <script src="js/curator-desk.js?v=13"></script>
+  <script src="js/curator-desk.js?v=19"></script>
 </body>
 </html>

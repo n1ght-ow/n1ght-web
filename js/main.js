@@ -138,6 +138,18 @@ detailBackdrop.className = 'lb-backdrop';
 detailBackdrop.setAttribute('aria-hidden', 'true');
 lightbox?.prepend(detailBackdrop);
 
+// Bitmap preparation must never hold the viewer controls or Escape hostage.
+function detailDecodeWithin(decoded, timeout) {
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => resolve(false), timeout);
+    Promise.resolve(decoded).then(() => {
+      clearTimeout(timer); resolve(true);
+    }, () => {
+      clearTimeout(timer); resolve(false);
+    });
+  });
+}
+
 function stopDetailMotion() {
   if (detailMotion) detailMotion.kill();
   detailMotion = null;
@@ -228,7 +240,7 @@ async function arriveDetailMedia() {
   copy.src = arrival.image.currentSrc || arrival.image.src;
   // A new img can be complete before its pixels are decoded. Keep the source
   // visible until the exact bitmap used by the flight is ready to paint.
-  try { await copy.decode(); } catch {
+  if (!await detailDecodeWithin(copy.decode(), 1500)) {
     if (detailArrival === arrival) {
       detailArrival = null;
       fadeDetailPhoto();
@@ -297,9 +309,10 @@ function renderDetailPhoto(item, sourceImage) {
   lbImg.src = preview;
   // Decode both renditions before revealing or swapping them. A request token
   // prevents a slow previous photograph from replacing a newer selection.
-  const ready = detailPhotoReady = lbImg.decode().catch(() => {}).then(() => {
+  const decoded = lbImg.decode().catch(() => {}).then(() => {
     if (request === detailPhotoRequest && lbImg.naturalWidth) lbImg.classList.add('is-loaded');
   });
+  const ready = detailPhotoReady = detailDecodeWithin(decoded, 1500);
   if (preview === full) return;
   const original = new Image();
   original.src = full;
@@ -653,7 +666,7 @@ async function closeDetail(afterClose) {
   if (!REDUCED && !detailFlight && from?.width && to?.width && media?.naturalWidth) {
     copy = new Image();
     copy.src = media.currentSrc || media.src;
-    try { await copy.decode(); } catch { to = null; }
+    if (!await detailDecodeWithin(copy.decode(), 200)) to = null;
     if (request !== detailPhotoRequest || !isLbOpen || !detailClosing) return;
     from = media.getBoundingClientRect();
     if (to) to = photoPrintBox(destination);
