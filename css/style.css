@@ -933,10 +933,7 @@ h1, h2 { text-wrap: balance; }
   background: none;
 }
 
-/* the shelf number, faded against the cobalt it sits on - the same warm white
-   as the label, at 72%. poster.css:146 sets the same value and loads last, so
-   this line exists to keep the base layer readable on its own; the two must
-   not be allowed to drift. */
+/* Fade the shelf number against the selected tab's accent. */
 .tab-btn.is-active .no { color: color-mix(in oklab, var(--color-on-accent) 72%, transparent); }
 
 /* The four .tabbar.is-dragging / .is-drop-target rules that sat here are gone:

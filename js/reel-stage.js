@@ -275,8 +275,7 @@
        the top of frame(), so films and series each ran a callback on every
        frame of the session - while parked, while their panel was display:none,
        forever. Measured: 650 callbacks in two idle seconds, from that one line.
-       js/photo-deck.js already had the right shape (raf = 0 at the top, kick
-       only while busy) and this is that shape. state.last is cleared whenever
+       Only request another frame while busy. state.last is cleared whenever
        the loop parks, so a restart seeds a zero dt instead of integrating the
        idle gap as one 50ms step. */
     function busy(state) {

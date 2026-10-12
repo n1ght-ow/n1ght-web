@@ -35,7 +35,7 @@
   object-fit: cover;
   filter: saturate(0.72);
   transition: filter 0.45s var(--ease-out);
-  /* The load-bearing one of the four anti-drag rules (see js/photo-deck.js):
+  /* Keep the pointer on the dial rather than the cover:
      the pointer never lands on the image, so Chrome never starts its own
      translucent drag copy underneath the dial's 1:1 gesture. */
   pointer-events: none;

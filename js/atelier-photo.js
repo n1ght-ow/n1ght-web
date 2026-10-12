@@ -314,9 +314,18 @@
   }
   const resize = new ResizeObserver(() => { cancelDrag(); stopPan(); layout(); });
   resize.observe(map);
+  // Caption wrapping changes the room height without changing the map itself.
+  // Refresh only after an actual size change, through the shared scheduler.
+  let roomHeight = null;
+  const roomResize = new ResizeObserver(([entry]) => {
+    const height = entry.contentRect.height;
+    if (roomHeight !== null && Math.abs(height - roomHeight) > .5) scheduleRefresh(120);
+    roomHeight = height;
+  });
+  roomResize.observe(host);
   reduced.addEventListener('change', () => { cancelDrag(); stopPan(); center(active, false); });
   window.AtelierPhoto = {
-    select, count: () => frames.length, source: () => null,
+    select, count: () => frames.length,
     returnTarget(index, origin) {
       if (!matching().includes(index)) filterTo('ALL');
       select(index, false, index !== active);

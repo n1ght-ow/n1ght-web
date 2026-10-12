@@ -67,7 +67,13 @@
   const complete = () => TYPES.every((type) => itemFor(type));
   const text = (value, max) => typeof value === "string" ? value.slice(0, max) : "";
   const photoIds = () => PHOTOS.map(type => state.picks[type]).filter(id => id != null);
-  const notifyPhotos = () => window.dispatchEvent(new Event("night:creation-change"));
+  let photoState = '';
+  const notifyPhotos = () => {
+    const next = JSON.stringify([photoIds(), exporting]);
+    if (next === photoState) return;
+    photoState = next;
+    window.dispatchEvent(new Event("night:creation-change"));
+  };
   function restore() {
     try {
       let stored = JSON.parse(localStorage.getItem(KEY));
@@ -239,8 +245,17 @@
       scrollLeft: slots.scrollLeft, cards, boxes: cards.map((card) => card.getBoundingClientRect()) };
     slots.setPointerCapture(event.pointerId);
   });
+  let dragFrame = 0, dragPoint = null;
   slots.addEventListener("pointermove", (event) => {
     if (!drag || drag.id !== event.pointerId) return;
+    dragPoint = { clientX: event.clientX, clientY: event.clientY };
+    if (!dragFrame) dragFrame = requestAnimationFrame(paintDrag);
+  });
+  function paintDrag() {
+    dragFrame = 0;
+    const event = dragPoint;
+    dragPoint = null;
+    if (!drag || !event) return;
     if (!drag.active && Math.hypot(event.clientX - drag.x, event.clientY - drag.y) < 6) return;
     drag.active = true;
     const bounds = slots.getBoundingClientRect();
@@ -271,15 +286,20 @@
         gsap.to(card, { x: drag.boxes[destination].left - drag.boxes[index].left, y: drag.boxes[destination].top - drag.boxes[index].top, duration: .2, ease: 'power2.out', overwrite: true });
       }
     });
-  });
+  }
   function finishDrag(commit) {
     if (!drag) return;
+    if (dragFrame) cancelAnimationFrame(dragFrame);
+    dragFrame = 0;
+    // Commit the latest pointer position even when release precedes the frame.
+    if (commit && dragPoint) paintDrag();
+    dragPoint = null;
     const current = drag; drag = null;
     if (slots.hasPointerCapture(current.id)) slots.releasePointerCapture(current.id);
     slots.querySelectorAll(".curator-slot").forEach((card) => card.classList.remove("is-dragging", "is-drop"));
     if (current.active) suppressClickUntil = Date.now() + 300;
     if (commit && current.active && current.target && current.target !== current.type) move(current.type, state.order.indexOf(current.target));
-    else if (window.gsap) current.cards.forEach((card, index) => {
+    else if (window.gsap) current.cards.forEach((card) => {
       gsap.to(card, { x: 0, y: 0, scale: 1, rotation: 0, duration: reduced.matches ? 0 : .36, ease: 'power3.out', overwrite: true, clearProps: 'transform,willChange' });
     });
   }
@@ -287,6 +307,7 @@
   slots.addEventListener("pointercancel", (event) => { if (drag?.id === event.pointerId) finishDrag(false); });
   slots.addEventListener("lostpointercapture", (event) => { if (drag?.id === event.pointerId) finishDrag(false); });
   window.addEventListener('blur', () => finishDrag(false));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) finishDrag(false); });
   window.addEventListener('resize', () => finishDrag(false));
   reduced.addEventListener('change', () => {
     finishDrag(false);

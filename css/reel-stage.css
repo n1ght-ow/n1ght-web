@@ -183,10 +183,7 @@
    row's baseline and the strip still reads as bottom-flush. The focused poster
    is one line taller, not one card taller. Derived, not typed: change the label
    size and the rise follows. */
-/* The lift only. The focused poster used to also carry a 26px drop shadow here,
-   but css/poster.css loads last and replaces it with the flat plate the rest of
-   the archive uses (`.film-card.is-active { box-shadow: none }`), so that shadow
-   had not painted for some time - it was the last blur shadow on the page. */
+/* Lift the selected poster without changing the rail's layout. */
 .film-card.is-active,
 .series-card.is-active {
   transform: translateY(calc(-1rem - 1.2 * var(--fs-small)));

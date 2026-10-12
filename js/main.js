@@ -4,14 +4,9 @@
    ============================================================ */
 
 gsap.registerPlugin(ScrollTrigger);
-/* SplitText is no longer loaded: its only client was the ABOUT prose, which is
-   retired. css/style.css's text-box-trim already handles the display titles. */
 
 const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
 let REDUCED = motionPreference.matches;
-/* (pointer: coarse) used to be probed here as TOUCH, for the game-card hover
-   stand-in that has since been removed. js/smooth-cursor.js answers the same
-   question on its own with NATIVE_CURSOR, so there is nothing left for it. */
 
 /* ---------- smooth scrolling (Lenis, full-motion only) ----------
    Native scroll under reduced motion. Programmatic jumps (anchors) route
@@ -62,21 +57,6 @@ function scheduleRefresh(delay) {
     if (window.ScrollTrigger) ScrollTrigger.refresh();
   }, delay || 200);
 }
-
-/* ---------- motion tokens ----------
-   One place for the site's reusable motion values. New interactions should
-   pick a category instead of inventing a one-off duration/ease:
-   - feedback: high-frequency hover / press / drag-follow, <=150ms
-   - enter: low-frequency entrances, 0.7-1.1s
-   Every animation still needs a one-line motivation and a reduced-motion
-   static alternative at the call site.
-   There was a third category here, spring (back.out(1.7)), and nothing ever
-   called it: overshoot is retired site-wide, so it is gone rather than left
-   lying around as a curve for the next person to copy. */
-const MOTION = {
-  feedback: { duration: 0.15, press: 0.12, ease: "power2.out" },
-  enter: { duration: 0.85, longDuration: 1.1, ease: "power3.out", heavyEase: "power4.out", stagger: 0.09 },
-};
 
 /* Gallery entrances and scroll gestures live in atelier modules. */
 
@@ -584,7 +564,7 @@ function openDetail(type, index, origin) {
   detailItems = items;
   lbIndex = Math.max(0, Math.min(Number(index) || 0, items.length - 1));
   lbTrigger = origin || (document.activeElement instanceof HTMLElement ? document.activeElement : null);
-  const sourceImage = type === 'photo' ? (origin?.classList.contains('photo-feature__button') ? window.AtelierPhoto?.source(lbIndex) : photoFrames[lbIndex]?.querySelector('img')) : type === 'music' ? musicSourceCard()?.querySelector('img.idx-cover') : null;
+  const sourceImage = type === 'photo' ? photoFrames[lbIndex]?.querySelector('img') : type === 'music' ? musicSourceCard()?.querySelector('img.idx-cover') : null;
   const sourceBox = photoPrintBox(sourceImage);
   if (type === "photo" && !lbThumbs.length) lbBuildRail();
   renderDetail(sourceImage);
@@ -1452,28 +1432,7 @@ initNetEaseLinks();
 
 initMusicSearch();
 
-/* ---------- game cards on touch: tap toggles the hover state ----------
-
-   GONE, and the reason is worth keeping. This used to add a second click
-   listener to every .hof-item that toggled an `is-active` class, on the theory
-   that touch needed a stand-in for hover. Two reasons it could not stay:
-   initUnifiedDetail() already delegates one click on the same panel to
-   openDetail("game"), so a single tap both opened the lightbox and flipped
-   this class; and no stylesheet in the repo styles .hof-item.is-active (the
-   class list is .nav-links a, .tab-btn, .tab-panel, .genre-chip, .film-card,
-   .series-card, [data-panel]). It cost a listener per card to set a class
-   nothing read. Touch gets :hover from js/games-stage.js and the focus ring
-   from the keyboard path at line 505. ---------- */
-
-/* ---------- books/sport rows: hover feedback is CSS-only (immediate
-   background + chip swap, no transform) — high-frequency interactions
-   get instant feedback per the motion rules in AGENTS.md ---------- */
-
-/* ---------- nav active section (always active) ----------
-   Named for what it does. It used to drive a scroll-progress bar too, but
-   that bar is in the retired list (AGENTS.md "已退役" -> 装饰 -> 滚动进度条);
-   the name outlived the feature, so reading "progress" here meant reading
-   code that no longer exists. */
+/* ---------- nav active section ---------- */
 
 const navAnchors = Array.from(document.querySelectorAll(".nav-links a"));
 // Pair each anchor with its section up front so a missing href target can
@@ -1486,17 +1445,13 @@ const navPairs = navAnchors
 // the per-scroll onUpdate only reads these. Reading offsetTop/scrollHeight
 // on every scroll event forces a synchronous layout each time.
 let navOffsets = navPairs.map((p) => p.section.offsetTop);
+let navActiveIndex = null;
 
 function cacheNavMetrics() {
   navOffsets = navPairs.map((p) => p.section.offsetTop);
 }
 
-// The nav carries NO selected indicator. It used to mount the same draggable
-// dark lozenge as the archive tab strip, but on a bar that floats over a
-// photograph that lozenge read as a black blob riding the tray, and the
-// reference navbar this bar follows has no selected state at all. The active
-// link is carried by ink colour instead - see .nav-links a.is-active in
-// css/style.css. js/glass-pill.js is still the tab strip's only pill.
+// Navigation uses the active link colour; the archive has its own pill.
 function updateNavActive(self) {
   const y = self.scroll() + window.innerHeight * 0.45;
   let current = -1;
@@ -1507,6 +1462,8 @@ function updateNavActive(self) {
   // This runs on every scroll frame, so only touch the DOM on a real change.
   // Above the first section nothing is active, which now simply means every
   // label sits at its resting ink.
+  if (current === navActiveIndex) return;
+  navActiveIndex = current;
   navPairs.forEach((pair, i) => pair.anchor.classList.toggle("is-active", i === current));
 }
 
