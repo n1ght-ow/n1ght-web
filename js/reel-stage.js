@@ -130,8 +130,7 @@
        on EVERY call, and it is called on every pointermove - so the old version
        forced a style/layout flush per frame of every drag. */
     function measureMax(state) {
-      /* viewportW and the lap are cached here because the drag writes the
-         transform on every pointermove and must not read layout. */
+      /* viewportW and the lap are cached here so drag painting reads no layout. */
       state.viewportW = state.viewport.clientWidth;
       /* One lap is the distance from the first card of copy 1 to the first card
          of copy 2 - measured from the DOM rather than derived from card width
@@ -169,12 +168,9 @@
       return x;
     }
 
-    /* The rail has ONE writer: the motion loop, through place(). The drag calls
-       place() directly on every pointermove, exactly as js/glass-pill.js writes
-       the pill's transform, and exactly as AGENTS.md requires - the 1:1 rule the
-       old quickTo broke by 131px at 1000px/s. Massing every write behind one
-       function is what keeps the transform and the apex selection from ever
-       disagreeing.
+    /* The rail has ONE writer through place(). Drag events retain the latest
+       1:1 position and paint once per frame, with a final flush on release.
+       The transform and the apex selection always come from that same position.
 
        There is no scrubber. The rail is dragged directly, in either direction,
        and the keyboard arrows step it; a second position control under the rail
@@ -648,7 +644,18 @@
          on pointerdown. Capturing on contact retargets the subsequent click
          to the viewport, which would break "tap a poster to open it". */
       var drag = null;
+      var dragFrame = 0;
       var swiped = false;
+      function paintDrag() {
+        dragFrame = 0;
+        if (drag && drag.moved) place(state, drag.position);
+      }
+      function clearDragPaint(flush) {
+        if (!dragFrame) return;
+        window.cancelAnimationFrame(dragFrame);
+        dragFrame = 0;
+        if (flush) paintDrag();
+      }
 
       /* ---------- velocity, for the release ----------
          Embla's sliding window: keep the sample from ~170ms ago and divide by
@@ -684,6 +691,7 @@
            suppression to the gesture that caused it. */
         swiped = false;
         state.offsets = null;
+        cardOffsets(state);
         state.dragActive = true;
         /* a finger owns the rail while it is down: drop any seek, or the loop
            and the finger would be two writers on the same position */
@@ -716,12 +724,15 @@
         /* 1:1, written straight into the position. Dragging right moves the
            rail right, which on this axis means the logical position decreases.
            No rubber band any more: a lap has no ends to resist against. */
-        place(state, drag.startAt - dx);
-        velSample(state.pos);
+        drag.position = drag.startAt - dx;
+        // Sample input time independently of drawing to preserve release momentum.
+        velSample(drag.position);
+        if (!dragFrame) dragFrame = window.requestAnimationFrame(paintDrag);
       });
 
       function endSwipe(event) {
         if (!drag || (event && event.pointerId !== drag.id)) return;
+        clearDragPaint(event && event.type === 'pointerup');
         const current = drag;
         drag = null;
         window.removeEventListener("pointerup", endSwipe, true);
@@ -1013,6 +1024,7 @@
 
       let resizeTimer = null;
       const onResize = () => {
+        state.cancelDrag();
         window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(() => {
           state.last = 0; // same as boot() and onTabEvent(): the cached frame

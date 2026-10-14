@@ -426,6 +426,18 @@
     clearTimeout(previewTimer);
     previewTimer = setTimeout(() => drawPreview(), 100);
   }
+  async function waitForPosterFonts() {
+    if (!document.fonts?.ready) return;
+    let timer;
+    try {
+      await Promise.race([
+        document.fonts.ready,
+        new Promise((_, reject) => {
+          timer = setTimeout(() => reject(new Error('Fonts are still loading. Try saving again in a moment.')), 8000);
+        })
+      ]);
+    } finally { clearTimeout(timer); }
+  }
   const font = (size, serif) => size + 'px ' + (serif ? '"Calistoga", Georgia, "Songti SC", serif' : '"Space Grotesk", "Microsoft YaHei", sans-serif');
   function linesFor(value, width, size, serif) {
     ctx.font = font(size, serif);
@@ -549,7 +561,7 @@
     root.querySelectorAll("button, input, textarea").forEach((node) => { if (node !== exportButton) node.dataset.wasDisabled = String(node.disabled); node.disabled = true; });
     clearTimeout(previewTimer);
     try {
-      await document.fonts.ready;
+      await waitForPosterFonts();
       const result = await drawPreview(snapshot);
       if (!result) throw new Error("The preview changed. Please save it again.");
       if (result.missing) { images.clear(); throw new Error("Some artwork could not load. Try again or choose another piece before saving."); }

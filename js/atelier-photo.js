@@ -19,7 +19,7 @@
   });
   let active = Math.max(0, data.findIndex(item => item.title === 'The last red light'));
   let filter = 'ALL', mode = 'wander', drag = null, suppressUntil = 0;
-  let panMotion = null;
+  let panMotion = null, dragPaintFrame = 0;
   const kept = () => window.CuratorDesk?.photoIds() || [];
   let positions = new Map(), worldWidth = 0, worldHeight = 0;
   // Mix near and far, day and night: neighbouring prints suggest unexpected connections.
@@ -248,6 +248,11 @@
   });
   function cancelDrag(event) {
     if (!drag || (event?.pointerId !== undefined && event.pointerId !== drag.id)) return;
+    if (dragPaintFrame) {
+      cancelAnimationFrame(dragPaintFrame); dragPaintFrame = 0;
+      // Commit the last queued position on release; cancellation keeps the painted view.
+      if (event?.type === 'pointerup') paintDrag();
+    }
     const previous = drag; drag = null; map.classList.remove('is-dragging');
     if (previous.moved) suppressUntil = performance.now() + 160;
     if (map.hasPointerCapture(previous.id)) map.releasePointerCapture(previous.id);
@@ -255,12 +260,20 @@
     window.removeEventListener('pointerup', cancelDrag);
     window.removeEventListener('pointercancel', cancelDrag);
   }
+  function paintDrag() {
+    dragPaintFrame = 0;
+    if (!drag?.moved) return;
+    map.scrollLeft = drag.targetLeft;
+    map.scrollTop = drag.targetTop;
+  }
   function moveDrag(event) {
     if (!drag || event.pointerId !== drag.id) return;
     const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
     if (!drag.moved && Math.hypot(dx, dy) < 6) return;
     if (!drag.moved) { drag.moved = true; map.setPointerCapture(event.pointerId); map.classList.add('is-dragging'); }
-    event.preventDefault(); map.scrollLeft = drag.left - dx; map.scrollTop = drag.top - dy;
+    event.preventDefault();
+    drag.targetLeft = drag.left - dx; drag.targetTop = drag.top - dy;
+    if (!dragPaintFrame) dragPaintFrame = requestAnimationFrame(paintDrag);
   }
   map.addEventListener('pointerdown', event => {
     // Touch keeps native two-axis scrolling. Vertical scrolling elsewhere stays native.
@@ -272,6 +285,11 @@
   });
   map.addEventListener('lostpointercapture', cancelDrag);
   window.addEventListener('blur', () => cancelDrag());
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) return;
+    cancelDrag(); stopPan();
+    if (mapPaintFrame) { cancelAnimationFrame(mapPaintFrame); mapPaintFrame = 0; }
+  });
   map.addEventListener('wheel', stopPan, { passive: true });
   map.addEventListener('touchstart', stopPan, { passive: true });
   function renderKeepButton(control, index) {
