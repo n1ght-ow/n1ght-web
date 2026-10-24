@@ -1,0 +1,14 @@
+Generated with the built-in image_gen tool on 2026-10-24.
+Master: night-enamel-master.png; transparent PNG.
+PNG and ICO sizes exported with Pillow using Lanczos resampling.
+Apple touch icon exported on the website cold-white background (#f8faff).
+
+Use case: logo-brand.
+Asset type: final premium website/app icon for a personal photography, cinema, poetry and music collection named N1GHT CHXN9.
+Create ONE extraordinarily refined bespoke icon, square 1:1, straight-on front view, icon artwork itself filling the entire image, not a mockup or presentation board.
+Brand context: a playful elegant private art gallery with saturated cobalt blue #244be2, cold white #f8faff, rounded architectural arches, curated photographs and an editorial sensibility.
+Design: a single deep cobalt rounded-square enamel tile, generous corner radius, isolated cleanly against transparent surroundings. Center a bold, custom ivory N monogram, sculpted as one beautifully proportioned architectural ribbon. The N must be unmistakably legible: two vertical stems and one descending diagonal from top left to bottom right, rich gently flared typographic terminals with subtle arch-shaped details reminiscent of a gallery doorway. A small elegant ivory crescent in the upper-right interior corner echoes the name Night, visually secondary, separated from the N with comfortable negative space. Strong silhouette at favicon size. Main N should occupy approximately 65 percent of tile width and 65 percent of tile height, crescent approximately 13 percent of tile width.
+Material and rendering: exquisite porcelain-white slightly raised lettering on satiny cobalt vitreous enamel; restrained bevels, very subtle soft studio reflections along edges, superb optical spacing, quiet dimensionality, polished contemporary museum identity. Avoid bulky extrusion. The blue face is nearly uniform with only slight material depth. Crisp master-quality edges.
+Composition: centered single tile, face-on orthographic, symmetrical optical balance, tile approximately 92 percent of total canvas width with transparent outer corners and narrow transparent margin. No visible floor, no backdrop, no cast shadow beyond the tile, no border framing the image.
+Text: only the single N monogram. No full name, words or numbers.
+Avoid: extra stars, sparkles, camera glyphs, collage, ornate border, gold metal, rainbow gradients, neon, busy details, perspective angle, photoreal environment, sample sheet, watermark. Deliver the actual finished icon.

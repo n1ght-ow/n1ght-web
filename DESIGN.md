@@ -213,6 +213,8 @@ Calistoga 的圆润字形提供雕塑般的展示轮廓，Space Grotesk 保持�
 
 ## Components
 
+浏览器与收藏图标使用 `assets/icons/night-enamel-*`：钴蓝珐琅圆角底、象牙白 N 字母与新月，字母局部呼应拱门。高清透明原图由内置图像生成工具生成，提示词与导出说明保存在 `assets/icons/night-enamel-prompt.txt`；PNG 与多尺寸 ICO 从原图导出，Apple Touch Icon 使用冷白底。旧 `night-mark` 素材保留，页面内的线性操作图标沿用现有实现。
+
 以下组件的可独立渲染 HTML／CSS 规格位于 `.impeccable/design.json` 的 `components`，共八个代表样式；其中的 SVG 路径直接内联，样式含悬停与可见焦点，不依赖框架或外部图片。
 
 ### Buttons
