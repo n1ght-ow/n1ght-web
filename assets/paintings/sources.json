@@ -1,0 +1,276 @@
+{
+  "retrieved": "2026-10-25",
+  "processing": "Original aspect ratio and colour retained. Locally resized WebP image (max 2000px) and 240px thumbnail.",
+  "works": [
+    {
+      "id": "starry-night",
+      "source": "https://commons.wikimedia.org/wiki/File:Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1920px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+      "width": 1920,
+      "height": 1520,
+      "original": {
+        "source": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+        "width": 44567,
+        "height": 35291
+      },
+      "file": "Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/starry-night.webp",
+        "assets/paintings/starry-night-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "mona-lisa",
+      "source": "https://commons.wikimedia.org/wiki/File:Mona_Lisa.jpg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Mona_Lisa.jpg/1920px-Mona_Lisa.jpg",
+      "width": 1322,
+      "height": 2000,
+      "original": {
+        "source": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Mona_Lisa.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+        "width": 2835,
+        "height": 4289
+      },
+      "file": "Mona_Lisa.jpg",
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/mona-lisa.webp",
+        "assets/paintings/mona-lisa-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "pearl-earring",
+      "source": "https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/1665_Girl_with_a_Pearl_Earring.jpg/1280px-1665_Girl_with_a_Pearl_Earring.jpg",
+      "width": 1280,
+      "height": 1516,
+      "file": "1665_Girl_with_a_Pearl_Earring.jpg",
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/pearl-earring.webp",
+        "assets/paintings/pearl-earring-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "birth-of-venus",
+      "source": "https://commons.wikimedia.org/wiki/File:Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg/1280px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg",
+      "width": 1280,
+      "height": 804,
+      "file": "Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project_-_edited.jpg",
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/birth-of-venus.webp",
+        "assets/paintings/birth-of-venus-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "the-kiss",
+      "source": "https://commons.wikimedia.org/wiki/File:The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg/1920px-The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
+      "width": 1920,
+      "height": 1927,
+      "original": {
+        "source": "https://upload.wikimedia.org/wikipedia/commons/4/40/The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+        "width": 7376,
+        "height": 7401
+      },
+      "file": "The_Kiss_-_Gustav_Klimt_-_Google_Cultural_Institute.jpg",
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/the-kiss.webp",
+        "assets/paintings/the-kiss-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "the-scream",
+      "source": "https://commons.wikimedia.org/wiki/File:Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/1280px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
+      "width": 1280,
+      "height": 1589,
+      "file": "Edvard_Munch,_1893,_The_Scream,_oil,_tempera_and_pastel_on_cardboard,_91_x_73_cm,_National_Gallery_of_Norway.jpg",
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/the-scream.webp",
+        "assets/paintings/the-scream-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "night-watch",
+      "source": "https://commons.wikimedia.org/wiki/File:La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg/1920px-La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg",
+      "width": 1920,
+      "height": 1562,
+      "original": {
+        "source": "https://upload.wikimedia.org/wikipedia/commons/3/3a/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+        "width": 14168,
+        "height": 11528
+      },
+      "file": "La_ronda_de_noche,_por_Rembrandt_van_Rijn.jpg",
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/night-watch.webp",
+        "assets/paintings/night-watch-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "impression-sunrise",
+      "source": "https://commons.wikimedia.org/wiki/File:Monet_-_Impression%2C_Sunrise.jpg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Monet_-_Impression%2C_Sunrise.jpg/1920px-Monet_-_Impression%2C_Sunrise.jpg",
+      "width": 1920,
+      "height": 1489,
+      "original": {
+        "source": "https://upload.wikimedia.org/wikipedia/commons/5/59/Monet_-_Impression%2C_Sunrise.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+        "width": 5773,
+        "height": 4478
+      },
+      "file": "Monet_-_Impression,_Sunrise.jpg",
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/impression-sunrise.webp",
+        "assets/paintings/impression-sunrise-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "las-meninas",
+      "source": "https://commons.wikimedia.org/wiki/File:Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg/1280px-Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg",
+      "width": 1280,
+      "height": 1473,
+      "file": "Las_Meninas,_by_Diego_Velázquez,_from_Prado_in_Google_Earth.jpg",
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/las-meninas.webp",
+        "assets/paintings/las-meninas-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "bedroom-arles",
+      "source": "https://commons.wikimedia.org/wiki/File:Vincent_van_Gogh_-_De_slaapkamer_-_Google_Art_Project.jpg",
+      "download": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Vincent_van_Gogh_-_De_slaapkamer_-_Google_Art_Project.jpg/1920px-Vincent_van_Gogh_-_De_slaapkamer_-_Google_Art_Project.jpg",
+      "width": 1920,
+      "height": 1523,
+      "original": {
+        "source": "https://upload.wikimedia.org/wikipedia/commons/7/76/Vincent_van_Gogh_-_De_slaapkamer_-_Google_Art_Project.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=original",
+        "width": 30000,
+        "height": 23803
+      },
+      "file": "Vincent_van_Gogh_-_De_slaapkamer_-_Google_Art_Project.jpg",
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/bedroom-arles.webp",
+        "assets/paintings/bedroom-arles-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "water-lilies",
+      "source": "https://commons.wikimedia.org/wiki/File:Claude_Monet_-_Water_Lilies_-_1933.1157_-_Art_Institute_of_Chicago.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Claude_Monet_-_Water_Lilies_-_1933.1157_-_Art_Institute_of_Chicago.jpg/1280px-Claude_Monet_-_Water_Lilies_-_1933.1157_-_Art_Institute_of_Chicago.jpg",
+      "file": "Claude Monet - Water Lilies - 1933.1157 - Art Institute of Chicago.jpg",
+      "width": 1280,
+      "height": 1232,
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/water-lilies.webp",
+        "assets/paintings/water-lilies-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    },
+    {
+      "id": "la-grande-jatte",
+      "source": "https://commons.wikimedia.org/wiki/File%3AA_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg",
+      "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg/1280px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg",
+      "file": "A_Sunday_on_La_Grande_Jatte,_Georges_Seurat,_1884.jpg",
+      "width": 1280,
+      "height": 852,
+      "rights": "Public domain",
+      "files": [
+        "assets/paintings/la-grande-jatte.webp",
+        "assets/paintings/la-grande-jatte-thumb.webp"
+      ],
+      "rightsEvidence": {
+        "LicenseShortName": "Public domain",
+        "UsageTerms": "Public domain",
+        "Copyrighted": "False",
+        "AttributionRequired": "false",
+        "License": "pd"
+      }
+    }
+  ]
+}

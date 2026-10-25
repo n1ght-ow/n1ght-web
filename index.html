@@ -37,6 +37,7 @@
   <link rel="stylesheet" href="css/curator-desk.css?v=12">
   <link rel="stylesheet" href="css/atelier-viewer.css?v=6">
   <link rel="stylesheet" href="css/gallery.css?v=8">
+  <link rel="stylesheet" href="css/paintings-stage.css?v=1">
 </head>
 <body>
 
@@ -577,6 +578,7 @@
           <span class="glass-pill" id="tab-pill" aria-hidden="true"><span class="glass-pill__body"></span></span>
           <button class="tab-btn is-active" id="tab-books" type="button" role="tab" aria-selected="true" aria-controls="panel-books" data-tab="books"><span class="no" aria-hidden="true">01</span>Books</button>
           <button class="tab-btn" id="tab-poems" type="button" role="tab" aria-selected="false" aria-controls="panel-poems" data-tab="poems" tabindex="-1"><span class="no" aria-hidden="true">02</span>Poems</button>
+          <button class="tab-btn" id="tab-paintings" type="button" role="tab" aria-selected="false" aria-controls="panel-paintings" data-tab="paintings" tabindex="-1">Paintings</button>
           <button class="tab-btn" id="tab-music" type="button" role="tab" aria-selected="false" aria-controls="panel-music" data-tab="music" tabindex="-1"><span class="no" aria-hidden="true">03</span>Music</button>
           <button class="tab-btn" id="tab-sport" type="button" role="tab" aria-selected="false" aria-controls="panel-sport" data-tab="sport" tabindex="-1"><span class="no" aria-hidden="true">04</span>Sport</button>
           <button class="tab-btn" id="tab-series" type="button" role="tab" aria-selected="false" aria-controls="panel-series" data-tab="series" tabindex="-1"><span class="no" aria-hidden="true">05</span>Series</button>
@@ -593,6 +595,13 @@
           <!-- PANEL: BOOKS -->
           <div class="tab-panel is-active" id="panel-books" role="tabpanel" aria-labelledby="tab-books" data-panel="books" tabindex="0">
             <div class="book-shelf" data-book-shelf="auto" role="group" aria-label="Books on the shelf"></div>
+          </div>
+
+          <!-- PANEL: PAINTINGS -->
+          <div class="tab-panel" id="panel-paintings" role="tabpanel" aria-labelledby="tab-paintings" data-panel="paintings" tabindex="0">
+            <div class="painting-gallery" id="painting-gallery">
+              <noscript>Enable JavaScript to browse the paintings.</noscript>
+            </div>
           </div>
 
           <!-- PANEL: FILMS -->
@@ -1076,6 +1085,7 @@
   <script src="js/book-shelf-data.js?v=6"></script>
   <script src="js/music-data.js?v=7"></script>
   <script src="js/poems-data.js?v=2"></script>
+  <script src="js/paintings-data.js?v=1"></script>
   <script src="js/music-covers.js?v=6"></script>
   <script src="js/reel-stage.js?v=35"></script>
   <script src="js/film-stage.js?v=8"></script>
@@ -1085,10 +1095,11 @@
   <script src="js/games-stage.js?v=9"></script>
   <script src="js/glass-pill.js?v=5"></script>
   <script src="js/main.js?v=102"></script>
+  <script src="js/paintings-stage.js?v=1"></script>
   <script src="js/atelier.js?v=11"></script>
   <script src="js/atelier-hero.js?v=8"></script>
   <script src="js/atelier-photo.js?v=17"></script>
-  <script src="js/atelier-archive.js?v=4"></script>
+  <script src="js/atelier-archive.js?v=5"></script>
   <script src="js/atelier-poem.js?v=8"></script>
   <script src="js/curator-desk.js?v=21"></script>
 </body>

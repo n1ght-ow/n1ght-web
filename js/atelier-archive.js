@@ -15,6 +15,7 @@
     sport: { count: archive.querySelectorAll(".sport-card").length, unit: "teams" },
     games: { count: archive.querySelectorAll(".hof-item").length, unit: "games" },
     poems: { count: (window.POEM_DATA || []).length, unit: "poems" },
+    paintings: { count: (window.PAINTING_DATA || []).length, unit: "paintings" },
   };
 
   tabs.forEach((tab) => {

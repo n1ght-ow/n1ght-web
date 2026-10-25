@@ -1,0 +1,91 @@
+/* A viewing wall in the existing lavender archive. Art retains its own colour. */
+.painting-gallery { color: var(--collection-ink); }
+.painting-stage { display: grid; grid-template-columns: minmax(0, 1.85fr) minmax(240px, 1fr); align-items: stretch; gap: clamp(28px, 4vw, 62px); }
+.painting-wall { position: relative; display: flex; align-items: center; justify-content: center; height: clamp(360px, 36vw, 540px); padding: clamp(24px, 3.3vw, 48px); background: #ded8ee; border-radius: 22px; overflow: hidden; }
+.painting-open { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.painting-image { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; border: 9px solid #fff; box-shadow: 0 12px 28px rgb(16 35 72 / 19%); object-fit: contain; }
+.painting-wall-mark { position: absolute; bottom: 13px; right: 15px; display: flex; align-items: center; gap: 7px; color: #4b5d7a; font: 11px/1.4 var(--font-sans); pointer-events: none; }
+.painting-wall-mark svg { width: 16px; height: 16px; }
+.painting-label { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; min-width: 0; padding-block: 24px 8px; }
+.painting-title { margin: 0; font: 400 clamp(28px, 3vw, 43px)/1.35 var(--font-serif); letter-spacing: -.025em; text-wrap: balance; }
+.painting-english { margin: 9px 0 26px; font: 400 clamp(18px, 1.8vw, 25px)/1.35 var(--font-editorial); text-wrap: balance; }
+.painting-artist { margin: 0 0 5px; font: 500 15px/1.6 var(--font-sans); }
+.painting-medium { margin: 0 0 20px; color: var(--collection-muted); font: 12px/1.8 var(--font-sans); }
+.painting-note { max-width: 32em; margin: 0 0 22px; color: var(--collection-muted); font: 14px/1.95 var(--font-sans); }
+.painting-museum { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--sky-700); font: 12px/1.5 var(--font-sans); text-decoration: underline; text-underline-offset: 4px; }
+.painting-museum svg { width: 16px; height: 16px; flex-shrink: 0; }
+.painting-navigation { display: flex; align-items: center; gap: 10px; width: 100%; padding-top: 26px; margin-top: auto; }
+.painting-counter { margin-right: auto; color: var(--collection-muted); font: 12px/1.5 var(--font-mono); font-variant-numeric: tabular-nums; }
+.painting-arrow, .painting-viewer-control { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 44px; height: 44px; padding: 10px; border: 1px solid #bcb3d2; border-radius: 50%; background: transparent; color: var(--collection-ink); cursor: pointer; transition: background-color .2s, color .2s; }
+.painting-arrow svg, .painting-viewer-control svg { width: 20px; height: 20px; }
+.painting-arrow:hover { background: var(--sky-400); border-color: var(--sky-400); color: white; }
+.painting-catalogue { display: grid; grid-template-columns: repeat(12, minmax(74px, 1fr)); gap: clamp(10px, 1.4vw, 22px); margin-top: 30px; padding: 8px 3px 14px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: #a69cbd transparent; }
+.painting-choice { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; min-height: 126px; padding: 8px 0 11px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--collection-muted); cursor: pointer; font: 11px/1.4 var(--font-sans); }
+.painting-thumb { display: flex; align-items: center; justify-content: center; width: 100%; height: 83px; }
+.painting-thumb img { display: block; width: auto; height: auto; max-height: 100%; max-width: 100%; border: 3px solid white; box-shadow: 0 4px 9px rgb(16 35 72 / 12%); transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
+.painting-choice:hover img { transform: translateY(-5px); }
+.painting-choice[aria-pressed="true"] { border-bottom-color: var(--sky-400); color: var(--sky-700); }
+.painting-choice[aria-pressed="true"] img { transform: translateY(-5px); }
+.painting-footnote { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 24px; margin-top: 10px; color: var(--collection-muted); font: 11px/1.7 var(--font-sans); }
+.painting-footnote p { margin: 0; }
+.painting-source { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; color: var(--sky-700); }
+.painting-status { min-height: 24px; color: var(--collection-muted); font: 12px/1.7 var(--font-sans); }
+.painting-status:empty { display: none; }
+.painting-retry { min-height: 44px; margin-left: 10px; border: 0; background: none; color: var(--sky-700); cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+.painting-gallery :focus-visible { outline: 3px solid var(--sky-400); outline-offset: 4px; }
+.painting-open:focus-visible { outline-offset: 10px; }
+.painting-gallery ::selection { background: var(--sky-400); color: white; }
+
+/* Native modal owns focus; the shared overlay manager owns the scroll lock. */
+.painting-viewer { position: fixed; inset: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 22px clamp(18px, 3vw, 46px); border: 0; background: #102348; color: #f8faff; overflow: hidden; }
+.painting-viewer[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 14px; }
+.painting-viewer::backdrop { background: #102348; }
+.painting-viewer-head, .painting-viewer-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.painting-viewer-heading { min-width: 0; }
+.painting-viewer-title { margin: 0 0 3px; font: 400 clamp(19px, 2vw, 29px)/1.4 var(--font-serif); }
+.painting-viewer-credit { margin: 0; color: #c1cce0; font: 12px/1.6 var(--font-sans); }
+.painting-viewer-control { color: #f8faff; border-color: #647390; }
+.painting-viewer-control:hover, .painting-viewer-control[aria-pressed="true"] { background: #f8faff; color: #102348; }
+.painting-viewer :focus-visible { outline: 3px solid #b9c9ff; outline-offset: 4px; }
+.painting-viewer-canvas { position: relative; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #647390 #102348; }
+.painting-viewer-image { display: block; width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; }
+.painting-viewer-canvas.is-zoomed .painting-viewer-image { width: 200%; height: 200%; max-width: none; max-height: none; cursor: grab; }
+.painting-viewer-canvas.is-panning .painting-viewer-image { cursor: grabbing; }
+.painting-viewer-foot { font: 12px/1.6 var(--font-sans); color: #c1cce0; }
+.painting-viewer-tools { display: flex; gap: 10px; }
+.painting-viewer-position { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.painting-viewer-hint { margin: 0 auto 0 12px; }
+
+@media (min-width: 721px) and (max-width: 980px) {
+  #archive .collection-tab-name { font-size: 16px; }
+  #archive .tab-btn { padding-inline: 7px; }
+  .painting-stage { grid-template-columns: minmax(0, 1.5fr) minmax(220px, 1fr); gap: 26px; }
+  .painting-wall { height: 390px; padding: 26px; }
+  .painting-title { font-size: 30px; }
+  .painting-label { padding-top: 8px; }
+  .painting-english { margin-bottom: 18px; }
+  .painting-note { font-size: 13px; margin-bottom: 10px; }
+  .painting-navigation { padding-top: 18px; }
+}
+@media (max-width: 720px) {
+  #archive #tab-paintings { flex-basis: 112px; }
+  .painting-stage { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .painting-wall { height: clamp(280px, 81vw, 430px); padding: 27px; border-radius: 20px; }
+  .painting-image { border-width: 7px; }
+  .painting-label { padding: 0; }
+  .painting-title { font-size: clamp(27px, 7vw, 36px); }
+  .painting-english { margin: 7px 0 18px; font-size: 21px; }
+  .painting-medium { margin-bottom: 14px; }
+  .painting-note { margin-bottom: 10px; font-size: 14px; }
+  .painting-navigation { padding-top: 16px; }
+  .painting-catalogue { margin-top: 24px; grid-template-columns: repeat(12, 78px); gap: 14px; }
+  .painting-footnote { flex-wrap: wrap; gap: 0; margin-top: 4px; }
+  .painting-viewer { padding: 16px; gap: 10px; }
+  .painting-viewer-credit { font-size: 11px; }
+  .painting-viewer-hint { display: none; }
+  .painting-viewer-foot { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .painting-gallery *, .painting-viewer * { scroll-behavior: auto; transition: none; }
+  .painting-choice:hover img, .painting-choice[aria-pressed="true"] img { transform: none; }
+}
