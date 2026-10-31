@@ -28,4 +28,6 @@ The existing index.html, js/*-data.js, photo/, hero/, posters/, covers/ and spor
 
 ## Product Principles
 
+MyScore is a separate Chinese sports surface at `/myscore/`, entered from the global navigation. It preserves the original gallery and uses full-width match programmes, standalone match/team reading views, source-backed statistics and broadcaster links. Browser-direct data is supplemented by an optional bounded Node service for non-CORS sources. It has no subscriptions, calendar reminders or Android installer. See `myscore/README.md` for supported sources, setup and deployment boundaries.
+
 Let the original collection lead. Make browsing and creating enjoyable. Keep original media intact. Preserve keyboard operation and reduced-motion access. Evaluate the built page in a browser.

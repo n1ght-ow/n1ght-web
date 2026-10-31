@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8faff">
+  <meta name="description" content="MyScore · N1GHT CHXN9 的赛程与比分。足球、NBA、NFL、F1、CS2 与英雄联盟全球总决赛。">
+  <title>MyScore · N1GHT CHXN9</title>
+  <link rel="icon" href="../assets/icons/night-enamel.ico?v=1">
+  <link rel="preload" href="../fonts/Calistoga-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=1">
+  <script type="module" src="app.mjs?v=1"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到比赛内容</a>
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="N1GHT CHXN9 首页"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2v28M2 16h28M6 6l20 20M6 26L26 6" fill="none" stroke="currentColor" stroke-width="3"/></svg><span>N1GHT CHXN9</span></a>
+    <nav aria-label="全站导航"><a href="../#photo">Photography</a><a href="../#archive">Archive</a><a href="../#curate">Curate</a><a class="current" href="./" aria-current="page">MyScore</a></nav>
+  </header>
+  <main id="main" class="shell" tabindex="-1">
+    <section id="schedule-view" aria-labelledby="page-title">
+      <div class="opening">
+        <div class="opening-title"><h1 id="page-title">MyScore<span class="title-dot" aria-hidden="true"></span></h1><p>赛程与比分<span class="small-rule"></span>每一场，都值得期待。</p></div>
+        <div class="date-edition"><span id="date-month">北京时间</span><div class="date-display"><button class="date-number" id="open-date" type="button" aria-label="选择比赛日期"><span id="date-large">—</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><input id="date-input" type="date" aria-label="比赛日期"></div><span id="date-weekday"></span></div>
+      </div>
+      <div class="schedule-controls">
+        <div class="date-nav" aria-label="日期切换"><button class="icon-button" id="previous-day" type="button" aria-label="前一天"></button><button class="text-button" id="today" type="button">今天</button><button class="icon-button" id="next-day" type="button" aria-label="后一天"></button></div>
+        <div class="schedule-tools"><label class="team-filter"><span class="sr-only">筛选球队</span><select id="team-filter"><option value="">所有球队</option></select></label><button class="text-button refresh" id="refresh" type="button"></button><button class="icon-button" id="theme" type="button" aria-label="切换深色外观"></button></div>
+      </div>
+      <nav id="sports" class="sport-nav" aria-label="赛事项目"></nav>
+      <div id="league-nav" class="league-nav" aria-label="足球赛事"></div>
+      <div class="schedule-caption"><p id="schedule-caption">正在读取真实赛程</p><span class="reading-note">北京时间 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12"/></svg></span></div>
+      <div id="scores" class="score-groups" aria-label="比赛列表"></div>
+    </section>
+    <section id="reading-view" hidden aria-labelledby="reading-title">
+      <div class="reading-top"><a id="back-link" class="back-link" href="./"></a><button class="text-button" id="reading-refresh" type="button"></button></div>
+      <div id="reading-header"></div>
+      <nav id="detail-tabs" class="detail-tabs" aria-label="比赛详情"></nav>
+      <div id="reading-content"></div>
+      <p id="reading-source" class="source-note"></p>
+    </section>
+    <p id="announcement" class="sr-only" aria-live="polite" role="status"></p>
+  </main>
+  <footer class="site-footer shell"><a href="../" class="footer-name">N1GHT CHXN9</a><p>比赛在继续，热爱也一样。</p><span>MyScore</span></footer>
+  <dialog id="person-dialog" aria-labelledby="person-title"><button class="icon-button dialog-close" id="close-dialog" type="button" aria-label="关闭资料"></button><div id="person-content"></div></dialog>
+  <dialog id="watch-dialog" aria-labelledby="watch-title"><button class="icon-button dialog-close" id="close-watch" type="button" aria-label="关闭播放选项"></button><h2 id="watch-title">观看比赛</h2><div id="watch-content"></div></dialog>
+  <noscript><p class="shell">请启用 JavaScript 读取实时赛程。你也可以访问 <a href="https://www.espn.com/">ESPN</a> 或 <a href="https://www.5eplay.com/">5EPlay</a> 查看来源。</p></noscript>
+</body>
+</html>

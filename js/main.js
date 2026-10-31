@@ -1434,7 +1434,7 @@ initMusicSearch();
 
 /* ---------- nav active section ---------- */
 
-const navAnchors = Array.from(document.querySelectorAll(".nav-links a"));
+const navAnchors = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
 // Pair each anchor with its section up front so a missing href target can
 // never shift the active-highlight index (anchor[i] vs section[i] drift).
 const navPairs = navAnchors

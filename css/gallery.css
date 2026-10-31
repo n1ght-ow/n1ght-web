@@ -73,6 +73,13 @@ a { text-underline-offset: .25em; }
 .nav-links a { color: var(--ink-900); font-size: 13px; min-height: 44px; display: flex; align-items: center; }
 .nav-links a.is-active { color: var(--sky-700); }
 .nav-links a::after { bottom: 5px; height: 2px; }
+/* Four browser destinations remain fully visible on narrow screens. */
+@media (max-width: 540px) {
+  #nav.nav { height: auto; min-height: 82px; padding-block: 8px; }
+  #nav .glass__content { flex-wrap: wrap; row-gap: 2px; }
+  #nav .nav-links { width: 100%; justify-content: space-between; gap: 4px; }
+  #nav .nav-links a { min-height: 32px; padding: 5px 4px; }
+}
 .atelier-reading-line { height: 2px; }
 
 /* The first room is a spatial arrangement of real photographs. */

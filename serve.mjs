@@ -83,6 +83,7 @@ function watchDir(dir, options) {
 watchDir(root, { recursive: false });
 watchDir(join(root, "css"), { recursive: true });
 watchDir(join(root, "js"), { recursive: true });
+watchDir(join(root, "myscore"), { recursive: true });
 
 /* ---------- server ---------- */
 

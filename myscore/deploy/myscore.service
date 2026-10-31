@@ -1,0 +1,35 @@
+# Alternative for a host that runs Node 24 directly. The deployed instance uses
+# Docker instead; see docker-run.sh and README.
+[Unit]
+Description=MyScore public sports data service
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=myscore
+Group=myscore
+WorkingDirectory=/opt/night-web
+Environment=API_HOST=127.0.0.1
+Environment=API_PORT=3101
+Environment=CACHE_DIR=/var/cache/myscore
+EnvironmentFile=/etc/myscore.env
+ExecStart=/usr/bin/node --max-old-space-size=128 /opt/night-web/myscore/server/index.mjs
+Restart=on-failure
+RestartSec=5
+MemoryAccounting=true
+MemoryHigh=224M
+MemoryMax=288M
+CPUQuota=100%
+TasksMax=32
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+CacheDirectory=myscore
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target
