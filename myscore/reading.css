@@ -1,0 +1,253 @@
+/* Match reports: the programme leads, supporting records follow. */
+:root{--comparison-better:#14713f;--comparison-worse:#b42332}
+html[data-theme=dark]{--comparison-better:#70dba0;--comparison-worse:#ff929c}
+.comparison-value[data-tone=better],.series-victor[data-tone=better]{color:var(--comparison-better)}
+.comparison-value[data-tone=worse]{color:var(--comparison-worse)}
+.score-divider{color:var(--ink)}
+.shootout-score .comparison-value{font-weight:600}
+#reading-view{max-width:1440px;margin-inline:auto}
+#reading-view .reading-top{padding-block:20px 10px}
+#reading-view .reading-meta{min-height:32px;margin-bottom:12px}
+#reading-view .reading-meta h1{font-size:17px;font-weight:600}
+#reading-view .match-hero{min-height:166px;padding:18px 32px;margin:0 0 18px;border-radius:16px;grid-template-columns:minmax(0,1fr) 220px minmax(0,1fr);gap:24px}
+#reading-view .hero-team{font-size:24px}
+#reading-view .hero-team a{flex-direction:row;gap:16px}
+#reading-view .hero-team.home{align-items:flex-end}
+#reading-view .hero-team.away{align-items:flex-start}
+#reading-view .hero-team .crest,#reading-view .hero-team .crest-fallback{width:56px;height:56px}
+#reading-view .hero-score .state{margin-bottom:2px;font-size:13px;line-height:1.4}
+#reading-view .hero-score strong{font-size:46px;line-height:1.1}
+#reading-view .hero-score p{margin:4px 0;font-size:12px;line-height:1.4}
+#reading-view .media-row{margin-top:4px}
+#reading-view .media-row .watch-button{width:36px;height:36px;min-height:36px}
+#reading-view .detail-tabs{gap:28px;margin-bottom:28px}
+#reading-view .detail-tabs a{font-size:15px;padding-block:14px}
+#reading-view .section-title,.section-heading h2{font-size:21px;font-weight:500;line-height:1.4;margin:0}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+.section-heading>a{display:inline-flex;align-items:center;gap:6px;font-size:13px;min-height:36px}
+.section-heading>a svg{width:16px;height:16px}
+.series-summary,.performer-section,.match-information,.overview-comparison,.overview-tables{margin-bottom:36px}
+.series-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));border-block:1px solid var(--line)}
+.series-game{display:flex;flex-direction:column;gap:8px;padding:16px 20px;color:var(--ink);border-right:1px solid var(--line);min-width:0;transition:background .15s}
+.series-game:last-child{border-right:0}
+.series-game:hover{background:var(--wash);text-decoration:none}
+.series-game-name{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px;font-weight:600;margin-bottom:5px;overflow-wrap:anywhere}
+.series-team{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:14px;line-height:1.5}
+.series-team>span{overflow-wrap:anywhere}
+.series-team strong{font-size:19px;font-weight:500;font-variant-numeric:tabular-nums}
+.series-winner{color:var(--ink);font-weight:500}
+.series-winner strong{color:var(--link);font-weight:600}
+.series-victor{font-size:18px;font-weight:500;overflow-wrap:anywhere}
+.series-duration,.live-label{font-size:12px;color:var(--muted)}
+.live-label{color:var(--live);white-space:nowrap}
+.performers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+.performer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);min-width:0}
+.performer-person{display:flex;align-items:center;gap:12px;min-width:0;min-height:44px}
+.performer-person>span:last-child{display:flex;flex-direction:column;gap:3px;min-width:0}
+.performer-person strong{font-size:16px;font-weight:500;overflow-wrap:anywhere}
+.performer-person small{font-size:13px;color:var(--muted)}
+.performer .portrait{width:44px;height:44px}
+.performer-value{display:flex;flex-direction:column;gap:2px;align-items:flex-end;flex:none}
+.performer-value>span{font-size:12px;color:var(--muted)}
+.performer-value>strong{font-size:24px;font-weight:500;font-variant-numeric:tabular-nums}
+.match-information>.section-title{margin-bottom:8px}
+.match-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 32px;margin:0}
+.match-facts>div{padding:14px 0;min-width:0;border-bottom:1px solid var(--line)}
+.match-facts dt{font-size:12px;color:var(--muted);margin-bottom:5px}
+.match-facts dd{font-size:15px;line-height:1.6;margin:0;overflow-wrap:anywhere}
+.match-more{margin-top:8px}
+.match-more>summary,.deep-analysis>summary,.profile-group>summary{display:flex;align-items:center;gap:12px;min-height:48px;cursor:pointer;color:var(--link);font-size:14px;list-style:none}
+.match-more>summary::-webkit-details-marker,.deep-analysis>summary::-webkit-details-marker,.profile-group>summary::-webkit-details-marker{display:none}
+.match-more>summary svg,.deep-analysis>summary svg,.profile-group>summary svg{margin-left:auto;width:16px;height:16px;flex:none;transition:transform .15s}
+.match-more[open]>summary svg,.deep-analysis[open]>summary svg,.profile-group[open]>summary svg{transform:rotate(90deg)}
+.team-rankings{max-width:680px;margin-top:20px}
+.team-rankings h3{font-size:16px;font-weight:500;margin:0 0 10px}
+.rankings-row{display:grid;grid-template-columns:minmax(0,1fr) 100px 100px;gap:20px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums}
+.rankings-row>span{text-align:right}
+.rankings-row strong{font-weight:500;overflow-wrap:anywhere}
+.rankings-labels{font-size:12px;color:var(--muted)}
+.rankings-labels>span:first-child{text-align:left}
+#reading-view .tables{gap:28px}
+#reading-view .table-heading{margin-bottom:12px}
+#reading-view .table-heading h2{font-size:17px;font-weight:500;line-height:1.5}
+.data-table{font-size:13px}
+.data-table th,.data-table td{padding:13px 14px}
+.data-table th:first-child,.data-table td:first-child{min-width:170px}
+.data-table thead th{font-size:12px}
+.data-table thead button{min-height:32px;gap:7px}
+.data-table .person-name{gap:10px;font-size:14px}
+.data-table.time-table th:first-child,.data-table.time-table td:first-child{min-width:82px;width:100px}
+.data-table.prose-table td:last-child{font-size:14px;line-height:1.8;min-width:220px}
+.deep-analysis{border-top:1px solid var(--line)}
+.deep-analysis>summary{padding-block:8px}
+.deep-analysis>summary small{font-size:12px;font-weight:400;color:var(--muted)}
+.analysis-tables{display:grid;gap:28px;padding:20px 0}
+.stat-comparison{max-width:940px;margin-inline:auto}
+.stat-team-labels{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:16px;padding-block:12px;color:var(--muted);font-size:13px}
+.stat-team-labels>span:first-child{grid-column:1}
+.stat-team-labels>span:last-child{grid-column:3;text-align:right}
+.stat-comparison .stat-row{padding-block:12px}
+.stat-comparison .stat-row>span{font-size:14px}
+.stat-comparison .stat-row strong{font-size:21px}
+.game-facts{gap:24px;margin-bottom:20px;padding-bottom:16px;align-items:baseline}
+.game-facts>div{display:flex;align-items:baseline;gap:10px}
+.game-facts dd{font-size:16px}
+.resource-order{font-size:13px;color:var(--ink)}
+.resource-order>span{color:var(--muted);margin-inline:8px}
+.objective-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin:0;border-block:1px solid var(--line)}
+.objective-grid>div{padding:16px 12px;min-width:0;border-right:1px solid var(--line)}
+.objective-grid>div:last-child{border-right:0}
+.objective-grid dt{font-size:12px;color:var(--muted);margin-bottom:8px}
+.objective-grid dd{display:flex;align-items:baseline;gap:8px;margin:0;white-space:nowrap;font-variant-numeric:tabular-nums}
+.objective-grid dd strong{font-size:17px;font-weight:500}
+.objective-grid dd>span{font-size:12px;color:var(--muted)}
+.roster-sort{display:flex;align-items:center;gap:3px;flex-wrap:wrap}
+.roster-sort button{display:inline-flex;align-items:center;justify-content:center;gap:5px;border:0;background:none;min-height:36px;padding:6px 11px;color:var(--muted);font-size:12px;border-radius:8px}
+.roster-sort button:hover{background:var(--wash)}
+.roster-sort button[aria-pressed=true]{background:var(--wash);color:var(--link)}
+.roster-sort svg{width:12px;height:12px}
+.lol-roster{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:12px;overflow:hidden}
+.lol-player{display:grid;grid-template-columns:minmax(170px,1.3fr) minmax(110px,.8fr) minmax(90px,.7fr) minmax(170px,1fr) minmax(210px,1.2fr);grid-template-areas:'identity champion kda resources loadout';gap:20px;align-items:center;padding:18px 16px;border-bottom:1px solid var(--line)}
+.lol-player:last-child{border-bottom:0}
+.lol-identity{grid-area:identity;display:flex;align-items:center;gap:12px;min-width:0;min-height:44px}
+.lol-identity>span:last-child{display:flex;flex-direction:column;gap:4px;min-width:0}
+.lol-identity strong{font-size:15px;line-height:1.4;font-weight:500;overflow-wrap:anywhere}
+.lol-identity small{font-size:12px;color:var(--muted)}
+.lol-champion{grid-area:champion;min-width:0;font-size:13px}
+.lol-champion .cell-media{gap:8px;min-width:0}
+.lol-kda{grid-area:kda;display:flex;flex-direction:column;gap:4px}
+.lol-kda>span{font-size:11px;color:var(--muted)}
+.lol-kda>strong{font-size:16px;font-weight:500;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lol-resources{grid-area:resources;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;min-width:0}
+.lol-resources>div{min-width:0}
+.lol-resources dt{font-size:11px;color:var(--muted);margin-bottom:4px}
+.lol-resources dd{font-size:14px;white-space:nowrap;margin:0;font-variant-numeric:tabular-nums}
+.lol-loadout{grid-area:loadout;min-width:0}
+.lol-loadout .equipment{width:auto;max-width:100%;gap:5px}
+.lol-loadout .item-image{width:32px;height:32px}
+.unavailable{font-size:12px;color:var(--muted)}
+#person-dialog{width:min(680px,calc(100vw - 32px));padding:30px}
+.profile-head{display:flex;align-items:center;gap:18px;padding-right:26px;margin-bottom:20px}
+.profile-head>div{min-width:0}
+.profile-head .profile-portrait{width:80px;height:80px;flex:none;border-radius:12px}
+.profile-head h2{font-size:25px;margin:0 0 7px;overflow-wrap:anywhere}
+.profile-head p{margin:0;font-size:14px}
+.profile-game-context{margin-bottom:18px;font-size:14px}
+.profile-bio{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;margin:0 0 20px}
+.profile-bio>div{padding-block:10px;border-bottom:1px solid var(--line);min-width:0}
+.profile-bio dt{font-size:12px;color:var(--muted);margin-bottom:4px}
+.profile-bio dd{margin:0;font-size:14px;overflow-wrap:anywhere}
+.profile-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.profile-badges span{font-size:12px;background:var(--wash);color:var(--link);padding:4px 9px;border-radius:6px}
+.profile-build h3,.profile-statistics h3{margin:22px 0 12px}
+.profile-build .equipment{width:auto;max-width:100%}
+.profile-build .item-image{width:36px;height:36px}
+.profile-build .equipment-names{font-size:12px;margin-bottom:20px}
+.profile-key-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 20px;margin:0 0 20px}
+.profile-key-stats>div{padding:12px 0;border-bottom:1px solid var(--line);min-width:0}
+.profile-key-stats dt{font-size:12px;color:var(--muted);margin-bottom:5px}
+.profile-key-stats dd{font-size:21px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.3;overflow-wrap:anywhere;margin:0}
+.profile-key-stats .metric-long dd{font-size:15px;white-space:nowrap;overflow-wrap:normal}
+.profile-key-stats .metric-wide{grid-column:span 2}
+.profile-group{border-bottom:1px solid var(--line)}
+.profile-group .facts{padding-bottom:14px}
+.profile-group .facts>div{font-size:13px}
+.profile-group .facts>div:last-child{border-bottom:0}
+.profile-source{margin-top:20px;font-size:12px}
+#person-content>p>a{display:inline-flex;align-items:center;gap:6px;min-height:40px;font-size:13px}
+#person-content>p>a svg{width:14px;height:14px}
+@media(max-width:1100px){
+  .lol-player{grid-template-columns:minmax(180px,1.3fr) minmax(110px,.8fr) minmax(165px,1fr);grid-template-areas:'identity champion kda' 'loadout loadout resources';gap:14px 20px}
+  .lol-kda{align-items:flex-end}
+  .lol-loadout .equipment{max-width:100%}
+  #reading-view .hero-team{font-size:20px}
+}
+@media(max-width:767px){
+  #reading-view .reading-meta h1{font-size:15px}
+  #reading-view .reading-top{padding-block:14px 8px}
+  #reading-view .match-hero{min-height:154px;padding:20px 14px;grid-template-columns:minmax(0,1fr) 116px minmax(0,1fr);gap:10px}
+  #reading-view .hero-team{font-size:14px;align-items:center}
+  #reading-view .hero-team a{flex-direction:column;gap:10px}
+  #reading-view .hero-team .crest,#reading-view .hero-team .crest-fallback{width:42px;height:42px}
+  #reading-view .hero-score strong{font-size:34px}
+  #reading-view .hero-score strong.score-long{font-size:26px}
+  #reading-view .hero-score p,#reading-view .hero-score .state{font-size:11px}
+  #reading-view .detail-tabs{gap:24px;margin-bottom:22px}
+  #reading-view .detail-tabs a{font-size:14px;min-height:48px;padding-block:12px}
+  .section-heading{gap:12px;margin-bottom:12px}
+  #reading-view .section-title,.section-heading h2{font-size:19px}
+  .section-heading>a{font-size:12px;white-space:nowrap}
+  .series-summary,.performer-section,.match-information,.overview-comparison,.overview-tables{margin-bottom:28px}
+  .series-game{padding:14px}
+  .series-results{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .series-game{border-bottom:1px solid var(--line)}
+  .series-game:nth-child(even){border-right:0}
+  .series-game:last-child:nth-child(odd){grid-column:1/-1;border-right:0}
+  .series-game:last-child{border-bottom:0}
+  .objective-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .objective-grid>div{border-bottom:1px solid var(--line);padding:12px 10px}
+  .objective-grid>div:nth-child(3n){border-right:0}
+  .objective-grid dd{gap:5px}
+  .objective-grid dd strong{font-size:14px}
+  .series-game-name,.series-team{font-size:13px}
+  .series-team strong{font-size:18px}
+  .performers{grid-template-columns:1fr;gap:0}
+  .performer{padding-block:14px}
+  .performer-value>strong{font-size:22px}
+  .match-facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}
+  .match-facts>div{padding-block:12px}
+  .match-facts dd{font-size:14px}
+  .match-facts dt{font-size:12px}
+  .rankings-row{grid-template-columns:minmax(0,1fr) 65px 65px;gap:14px;font-size:13px}
+  .rankings-labels{font-size:11px}
+  .data-table th,.data-table td{padding:12px}
+  .data-table th:first-child,.data-table td:first-child{min-width:145px;max-width:180px}
+  .data-table .person-name{font-size:13px}
+  .data-table thead button{min-height:36px}
+  .deep-analysis>summary{flex-wrap:wrap;gap:3px 12px;padding-block:12px}
+  .deep-analysis>summary small{order:3;flex-basis:100%;font-size:12px;line-height:1.7}
+  .deep-analysis>summary svg{margin-left:auto}
+  .stat-comparison .stat-row>span{font-size:12px}
+  .stat-comparison .stat-row strong{font-size:18px}
+  .stat-team-labels{font-size:12px}
+}
+@media(max-width:600px){
+  #reading-view .table-heading{gap:10px;align-items:center}
+  #reading-view .table-heading h2{font-size:16px}
+  .lol-team .table-heading{display:block}
+  .roster-sort{margin-top:8px}
+  .roster-sort button{min-height:40px;padding-inline:12px}
+  .lol-player{grid-template-columns:minmax(0,1fr) 138px;grid-template-areas:'identity kda' 'champion resources' 'loadout loadout';padding:16px 12px;gap:12px}
+  .lol-identity{gap:9px}
+  .lol-identity strong{font-size:14px}
+  .lol-identity small{font-size:11px}
+  .lol-identity .portrait{width:32px;height:32px}
+  .lol-kda>strong{font-size:15px}
+  .lol-kda>span{font-size:10px}
+  .lol-champion{font-size:12px}
+  .lol-champion .cell-image{width:28px;height:28px}
+  .lol-champion .cell-media{gap:7px}
+  .lol-resources{gap:6px}
+  .lol-resources dd{font-size:12px}
+  .lol-resources dt{font-size:10px}
+  .lol-loadout .item-image{width:100%;max-width:32px;height:auto;aspect-ratio:1}
+  .lol-loadout .equipment{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));width:100%;max-width:320px;gap:4px}
+  .lol-loadout .equipment-item{min-width:0}
+  #person-dialog{padding:26px 22px}
+  .profile-head{gap:14px;padding-right:14px}
+  .profile-head .profile-portrait{width:64px;height:64px}
+  .profile-head h2{font-size:22px}
+  .profile-head p{font-size:12px}
+  .profile-key-stats{gap:0 16px}
+  .profile-key-stats dd{font-size:19px}
+  .profile-bio{gap:0 18px}
+}
+@media(max-width:360px){
+  .objective-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .objective-grid>div:nth-child(3n){border-right:1px solid var(--line)}
+  .objective-grid>div:nth-child(even){border-right:0}
+  #reading-view .match-hero{grid-template-columns:minmax(0,1fr) 100px minmax(0,1fr);padding-inline:10px;gap:8px}
+  #reading-view .hero-team{font-size:13px}
+  #reading-view .hero-score strong.score-long{font-size:23px}
+  .lol-player{grid-template-columns:minmax(0,1fr) 128px;gap:10px}
+}

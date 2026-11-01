@@ -8,7 +8,7 @@ import { Provider } from '../provider.mjs';
 import { resolveWatch, normalName } from '../media.mjs';
 import { competition, list, text, today, https } from '../shared.mjs';
 
-const fallbackKinds = new Set(['board', 'summary', 'schedule', 'roster', 'f1Core', 'f1Stats', 'fiveTier', 'fiveTeam', 'fiveDetail']);
+const fallbackKinds = new Set(['board', 'summary', 'schedule', 'roster', 'f1Core', 'f1Stats', 'fiveTier', 'fiveTeam', 'fiveDetail', 'lolHeroes']);
 // A failed upstream socket reaches the page as an English TypeError; the
 // interface is Chinese, so network-class failures get one readable sentence.
 const reasonOf = e => e instanceof TypeError || /Failed to fetch|fetch failed|ECONNRESET|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|socket hang up/i.test(String(e?.message || '')) ? '来源暂时无法连接' : String(e?.message || '请求失败');
@@ -24,18 +24,18 @@ export function createService({ store = new SourceStore({ directory: process.env
     if (name === 'profile') {
       const detail = await provider.detail(p.match), person = detail.tables.flatMap(t => t.people).find(a => a.id === p.id);
       if (!person) throw new Error('本场比赛没有此球员');
-      if (detail.match.group !== '足球' || !person.teamId) return { person, source: detail.source };
+      if (!['足球', 'NBA', 'NFL'].includes(detail.match.group) || !person.teamId) return { person, source: detail.source };
       const roster = await store.read('roster', { league: detail.match.league, id: person.teamId });
       if (text(roster.team?.id) !== person.teamId) throw new Error('球员所属球队身份不匹配');
-      const a = list(roster.athletes).find(a => text(a.id) === person.id && normalName(a.displayName) === normalName(person.name));
+      const a = list(roster.athletes).flatMap(a => Array.isArray(a.items) ? a.items : [a]).find(a => text(a.id) === person.id && normalName(a.displayName) === normalName(person.name));
       if (!a) throw new Error('来源暂未提供可核实的球员资料');
-      const enriched = { ...person, birthday: text(a.dateOfBirth).slice(0, 10), age: text(a.age), height: text(a.displayHeight), weight: text(a.displayWeight), nationality: text(a.citizenship), photo: https(a.headshot?.href) || person.photo };
-      let warning = '';
-      if (!enriched.photo && enriched.birthday) try {
+      const enriched = { ...person, birthday: text(a.dateOfBirth).slice(0, 10), age: text(a.age), height: text(a.displayHeight), weight: text(a.displayWeight), nationality: text(a.citizenship), photo: https(a.headshot?.href) || person.photo, college: text(a.college?.name), experience: text(a.experience?.years), draft: text(a.draft?.displayText), birthplace: [a.birthPlace?.city, a.birthPlace?.state, a.birthPlace?.country].filter(Boolean).join(' · '), status: text(a.status?.name) };
+      let warning = '', photoSource = '';
+      if (detail.match.group === '足球' && enriched.birthday) try {
         const fpl = await store.read('fpl'); const candidates = list(fpl.elements).filter(p => p.birth_date === enriched.birthday && [p.known_name, `${p.first_name} ${p.second_name}`].some(n => normalName(n) === normalName(person.name)));
-        if (candidates.length === 1 && /^\d+$/.test(String(candidates[0].code))) enriched.photo = `https://resources.premierleague.com/premierleague/photos/players/110x140/p${candidates[0].code}.png`;
+        if (candidates.length === 1 && /^\d+$/.test(String(candidates[0].code))) { enriched.photo = `https://resources.premierleague.com/premierleague/photos/players/110x140/p${candidates[0].code}.png`; photoSource = ' · 英超官方 FPL'; }
       } catch { warning = '英超补充照片暂未更新'; }
-      return { person: enriched, source: 'ESPN · 英超官方 FPL', warning };
+      return { person: enriched, source: `ESPN${photoSource}`, warning };
     }
     throw new Error('接口不存在');
   }

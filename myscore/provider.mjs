@@ -1,4 +1,4 @@
-import { competition, list, text, https, today, dayOf, shiftDay, matchBase, espn, fiveMatch, fiveHistory, isTierOne, isSpirit, worlds, mergeMatches, espnDetail, fiveDetail, lolDetail, f1Detail } from './shared.mjs';
+import { competition, list, text, https, today, dayOf, shiftDay, matchBase, espn, fiveMatch, fiveHistory, isTierOne, isSpirit, worlds, mergeMatches, espnDetail, fiveDetail, lolDetail, f1Detail } from './shared.mjs?v=2';
 
 export class Provider {
   constructor(read, api = null) { this.read = read; this.api = api; }
@@ -62,7 +62,7 @@ export class Provider {
   async team(league, id, signal) {
     const c = competition(league); if (!c || league === 'f1') throw new Error('该项目没有球队赛程');
     if (league === 'lol' && this.api) return this.api('team', { league, id }, signal);
-    let matches, warning = '';
+    let matches, teamInfo, warning = '';
     if (league === 'cs2') {
       matches = await this.fiveTeam(id, signal);
       try { matches = mergeMatches(await this.tier(today(), shiftDay(today(), 60), signal), matches).filter(m => [m.homeId, m.awayId].includes(id)); } catch (e) { warning = `未来一线赛程补充失败：${e.message}`; }
@@ -71,9 +71,11 @@ export class Provider {
     } else {
       const roots = await Promise.all([this.read('schedule', { league, id }, signal), ...(c.group === '足球' ? [this.read('schedule', { league, id, future: 'true' }, signal)] : [])]);
       for (const root of roots) if (root.team?.id && text(root.team.id) !== id) throw new Error('球队赛程身份不匹配');
+      const team = roots.find(r => text(r.team?.id) === id)?.team;
+      if (team) teamInfo = { name: text(team.displayName), logo: https(team.logo), season: text(team.seasonSummary), record: text(team.recordSummary), standing: text(team.standingSummary), url: https(team.clubhouse) };
       matches = mergeMatches(...roots.map(root => espn(root, league))).filter(m => [m.homeId, m.awayId].includes(id));
     }
-    return { matches, source: c.path ? 'ESPN' : league === 'cs2' ? '5EPlay' : '英雄联盟赛事官网', fetched: Date.now(), warning };
+    return { matches, teamInfo, source: c.path ? 'ESPN' : league === 'cs2' ? '5EPlay' : '英雄联盟赛事官网', fetched: Date.now(), warning };
   }
   async detail(id, signal, onHeader = null) {
     const parts = id.split(':'), league = parts[1], c = competition(league);
@@ -82,7 +84,9 @@ export class Provider {
       if (this.api) return this.api('detail', { match: id }, signal);
       const base = await this.read('lolBase', { id: parts[2] }, signal); let rich = {}, warning = '';
       try { rich = await this.read('lolRich', { id: parts[2] }, signal); } catch (e) { warning = `小局数据暂未更新：${e.message}`; }
-      const d = lolDetail(base, rich, id); d.warning = [d.warning, warning].filter(Boolean).join('；'); return d;
+      let heroes = {};
+      try { heroes = await this.read('lolHeroes', {}, signal); } catch { warning = [warning, '英雄图鉴暂未更新，保留英雄名称'].filter(Boolean).join('；'); }
+      const d = lolDetail(base, rich, id, heroes); d.warning = [d.warning, warning].filter(Boolean).join('；'); return d;
     }
     if (parts[0] === 'five' && league === 'cs2') return fiveDetail(await this.read('fiveDetail', { id: parts[2] }, signal), { id });
     if (parts[0] !== 'espn' || !c.path) throw new Error('比赛来源无效');

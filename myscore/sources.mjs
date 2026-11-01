@@ -1,4 +1,4 @@
-import { competition, shiftDay, parseAssignment } from './shared.mjs';
+import { competition, shiftDay, parseAssignment } from './shared.mjs?v=2';
 
 const five = 'https://esports-data.5eplaycdn.com/v1/api/csgo/';
 function identifier(value, pattern = /^[a-zA-Z0-9_]+$/) {
@@ -26,6 +26,7 @@ export function sourceRequest(kind, p = {}) {
     case 'fiveDetail': url = `${five}matches/${identifier(p.id, /^csgo_mc_\d+$/)}/data`; break;
     case 'lolList': url = 'https://lpl.qq.com/web201612/data/LOL_MATCH2_MATCH_HOMEPAGE_BMATCH_LIST.js'; ttl = 60000; break;
     case 'lolTeams': url = 'https://lpl.qq.com/web201612/data/LOL_MATCH2_TEAM_LIST.js'; ttl = 86400000; break;
+    case 'lolHeroes': url = 'https://game.gtimg.cn/images/lol/act/img/js/heroList/hero_list.js'; ttl = 86400000; break;
     case 'lolBase': url = `https://lpl.qq.com/web201612/data/LOL_MATCH_DETAIL_${number(p.id)}.js`; ttl = 10000; break;
     case 'lolClient': url = 'https://lpl.qq.com/web201612/js/after-data-1.js'; ttl = 3600000; break;
     case 'lolRich': url = `https://open.tjstats.com/match-auth-app/open/v1/compound/matchDetail?matchId=${number(p.id)}`; ttl = 10000; break;

@@ -1,6 +1,6 @@
 import { apiBase } from './config.mjs';
-import { sourceRequest, decodeSource } from './sources.mjs';
-import { Provider } from './provider.mjs';
+import { sourceRequest, decodeSource } from './sources.mjs?v=2';
+import { Provider } from './provider.mjs?v=2';
 
 const cache = new Map(), pending = new Map();
 export class SourceError extends Error {

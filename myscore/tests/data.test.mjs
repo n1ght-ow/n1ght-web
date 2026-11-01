@@ -55,6 +55,59 @@ test('LOL verifies series and team identities, exposes actual game details', asy
   const duplicate = structuredClone(rich); duplicate.data.matchInfos.push(duplicate.data.matchInfos[0]); assert.throws(() => lolDetail(base, duplicate, id), /重复/);
   assert.match(lolDetail(base, {}, id).warning, /暂未提供/);
 });
+
+test('LOL retains equipment images, champion identity, zero values and resource details', async () => {
+  const base = await fixture('lol-base'), rich = await fixture('lol-rich');
+  const p = rich.data.matchInfos[0].teamInfos[0].playerInfos[0];
+  p.playerAvatar = 'https://example.com/canna.png';
+  p.DamageTakenDetail = { damageTaken: 18094.26, highestTakenDamageRate: false };
+  p.visionDetail = { visionScore: 0, wardPlaced: 17 };
+  p.trinketItem = { itemId: 3363, itemName: '远见改造', itemIcon: '' };
+  p.spell1Name = '闪现'; p.perkRunes = [{ runeName: '焦灼' }];
+  const d = lolDetail(base, rich, `qq:lol:${base.bMatchId}`, { hero: [{ heroId: '68', title: '兰博', alias: 'Rumble' }, { heroId: '254', title: '蔚', alias: 'Vi' }] });
+  const t = d.tables.find(t => t.people[0]?.name === p.playerName && t.columns.includes('出装')), person = t.people[0];
+  assert.equal(person.photo, p.playerAvatar); assert.match(person.champion.image, /champion\/Rumble\.png$/);
+  assert.match(t.rows[0].at(-1).images[0].image, /item\/3157\.png$/);
+  assert.ok(person.items.some(i => i.name === '远见改造'));
+  assert.ok(person.metrics.some(([k, v]) => k === '视野得分' && v === '0'));
+  assert.ok(person.metrics.some(([k, v]) => k === '本局最高承伤占比' && v === '否'));
+  assert.ok(person.metrics.some(([k, v]) => k === '符文' && v === '焦灼'));
+  assert.equal(d.games[0].duration, '35:02'); assert.equal(d.games[0].winner, 'C9');
+  assert.ok(d.tables.some(t => t.title.includes('承伤与回复')));
+  assert.ok(d.tables.some(t => t.rows.some(r => r[0] === '禁用英雄' && r[1].images.some(i => /Vi\.png$/.test(i.image)))));
+  const failed = lolDetail(base, { success: false, data: rich.data }, `qq:lol:${base.bMatchId}`);
+  assert.equal(failed.games.length, 0);
+});
+
+test('CS2 uses supplied portrait fields and omits unplayed decider maps', async () => {
+  const raw = await fixture('cs2'), p = raw.data.match.global_state.t1_player_stats[0];
+  p.portrait = 'https://example.com/player.png'; p.first_blood_num = '0';
+  const d = fiveDetail(raw), t = d.tables.find(t => t.category === '全场');
+  assert.equal(t.people[0].photo, p.portrait); assert.ok(!t.columns.includes('portrait'));
+  assert.equal(t.rows[0][t.columns.indexOf('首杀')], '0');
+  assert.ok(!d.games.some(g => g.name === 'Nuke'));
+});
+
+test('ESPN contextual and season data stay separate from match statistics', async () => {
+  const raw = await fixture('nba'), match = espn({ events: [raw.header] }, 'nba')[0];
+  raw.standings = { groups: [{ header: 'Test standings', standings: { entries: [{ team: 'Team', stats: [{ name: 'wins', displayName: 'Wins', displayValue: '12' }] }] } }] };
+  raw.leaders = [{ team: { id: match.homeId, displayName: match.home }, leaders: [{ displayName: 'Points', leaders: [{ athlete: { id: '123', displayName: 'Player' }, displayValue: '23' }] }] }];
+  raw.header.competitions[0].status = { type: { name: 'STATUS_SCHEDULED', state: 'pre' } };
+  const d = espnDetail(raw, match);
+  assert.equal(d.stats.length, 0); assert.ok(d.tables.filter(t => t.tab !== 'context').every(t => t.category === '伤停'));
+  assert.ok(d.tables.some(t => t.tab === 'context' && t.columns.includes('胜')));
+  assert.ok(d.tables.some(t => t.title.includes('赛前来源领跑数据')));
+});
+
+test('football retains extra source metrics and adds ESPN headshot paths', async () => {
+  const raw = await fixture('epl'), p = raw.rosters[0].roster.find(p => p.starter);
+  p.stats = [{ name: 'expectedGoals', displayName: 'Expected Goals', displayValue: '0.36' }];
+  const match = espn({ events: [raw.header] }, 'epl')[0], d = espnDetail(raw, match);
+  const t = d.tables.find(t => t.people.some(a => a.id === p.athlete.id)), a = t.people.find(a => a.id === p.athlete.id);
+  assert.match(a.photo, new RegExp(`/soccer/players/full/${a.id}\\.png$`));
+  assert.equal(t.rows[t.people.indexOf(a)][t.columns.indexOf('预期进球 xG')], '0.36');
+  assert.ok(a.metrics.some(([k, v]) => k === '预期进球 xG' && v === '0.36'));
+});
 test('F1 verifies the exact session and reads driver statistics', async () => {
   const board = await fixture('f1-board'), core = await fixture('f1-core'), stats = await fixture('f1-stats');
   const event = board.events.find(e => e.competitions.some(c => String(c.id) === String(core.id))), session = event.competitions.find(c => String(c.id) === String(core.id));
@@ -119,12 +172,38 @@ test('HTTP service enforces origins, method and allow-listed APIs', async t => {
   assert.equal((await fetch(base + '/api/v1/detail?match=invalid')).status, 400);
   const ok = await fetch(base + '/api/v1/health', { headers: { Origin: 'http://127.0.0.1:3100' } }); assert.equal(ok.status, 200); assert.equal(ok.headers.get('Access-Control-Allow-Origin'), 'http://127.0.0.1:3100');
 });
+
+for (const league of ['nba', 'nfl']) test(`${league}: player biography verifies roster identity and preserves match metrics`, async t => {
+  const p = { id: '123', name: 'Test Player', teamId: '4', metrics: [['得分', '0']] };
+  const athlete = { id: '123', displayName: 'Test Player', dateOfBirth: '2000-01-02T00:00Z', age: 26, displayHeight: '6 ft', experience: { years: 0 }, headshot: { href: 'https://example.com/portrait.png' } };
+  const store = new SourceStore(); store.read = async () => ({ team: { id: '4' }, athletes: league === 'nfl' ? [{ items: [athlete] }] : [athlete] });
+  const provider = { detail: async () => ({ match: { group: league.toUpperCase(), league }, source: 'ESPN', tables: [{ people: [p] }] }) };
+  const server = createService({ store, provider }); server.listen(0, '127.0.0.1'); await new Promise(r => server.once('listening', r)); t.after(() => new Promise(r => server.close(r)));
+  const result = await (await fetch(`http://127.0.0.1:${server.address().port}/api/v1/profile?match=espn:${league}:1:1&id=123`)).json();
+  assert.equal(result.person.photo, athlete.headshot.href); assert.equal(result.person.birthday, '2000-01-02'); assert.equal(result.person.experience, '0');
+  assert.deepEqual(result.person.metrics, p.metrics); assert.equal(result.source, 'ESPN');
+  athlete.displayName = 'Different Player';
+  const mismatch = await fetch(`http://127.0.0.1:${server.address().port}/api/v1/profile?match=espn:${league}:2:2&id=123`);
+  assert.equal(mismatch.status, 502); assert.match((await mismatch.json()).error, /可核实/);
+});
 test('network failures from an upstream source read in Chinese', async t => {
   const provider = { detail: async () => { throw new TypeError('fetch failed'); } };
   const server = createService({ provider }); server.listen(0, '127.0.0.1'); await new Promise(r => server.once('listening', r)); t.after(() => new Promise(r => server.close(r)));
   const response = await fetch(`http://127.0.0.1:${server.address().port}/api/v1/detail?match=espn:nba:1:1`);
   const result = await response.json();
   assert.equal(response.status, 502); assert.equal(result.error, '来源暂时无法连接');
+});
+
+test('FPL portrait fallback requires both the verified name and birthday', async t => {
+  const p = { id: '123', name: 'Test Player', teamId: '4', photo: 'https://example.com/espn.png' };
+  const candidate = { first_name: 'Test', second_name: 'Player', birth_date: '2000-01-02', code: 12345 };
+  const store = new SourceStore(); store.read = async kind => kind === 'fpl' ? { elements: [candidate] } : { team: { id: '4' }, athletes: [{ id: '123', displayName: 'Test Player', dateOfBirth: '2000-01-02T00:00Z' }] };
+  const provider = { detail: async () => ({ match: { group: '足球', league: 'epl' }, source: 'ESPN', tables: [{ people: [p] }] }) };
+  const server = createService({ store, provider }); server.listen(0, '127.0.0.1'); await new Promise(r => server.once('listening', r)); t.after(() => new Promise(r => server.close(r)));
+  const base = `http://127.0.0.1:${server.address().port}/api/v1/profile?id=123&match=espn:epl:`;
+  const verified = await (await fetch(base + '1:1')).json(); assert.match(verified.person.photo, /p12345\.png$/); assert.match(verified.source, /FPL/);
+  candidate.birth_date = '2001-01-02';
+  const rejected = await (await fetch(base + '2:2')).json(); assert.equal(rejected.person.photo, p.photo); assert.equal(rejected.source, 'ESPN');
 });
 test('stale API data stays labelled on subsequent cached reads after an outage', async t => {
   let fail = false, calls = 0;
