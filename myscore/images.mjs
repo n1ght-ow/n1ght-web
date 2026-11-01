@@ -1,3 +1,12 @@
+// 5E merge_ team assets contain two square crests: light then dark.
+export function isMergedCrest(source) {
+  try {
+    const url = new URL(source);
+    return url.protocol === 'https:' && url.hostname === 'oss.5eplay.com'
+      && /^\/cloudx\/p\/sport\/csgo\/team\/merge_[^/]+\.png$/.test(url.pathname);
+  } catch { return false; }
+}
+
 // Keep image identity and source URLs intact; only resize on verified source CDNs.
 export function thumbnail(source, width = 96) {
   let url;

@@ -1,9 +1,10 @@
-import { competitions, competition, today, shiftDay, dayOf, time, score, delayFor, mergeTerminal, show, list, https, formationLines } from './shared.mjs?v=2';
+import { competitions, competition, today, shiftDay, dayOf, time, score, delayFor, show, list, https, formationLines } from './shared.mjs?v=2';
 import { provider, api, readSaved, saveResult } from './browser-data.mjs?v=2';
 import { mediaKind, liveLink } from './media.mjs';
 import { hasValue, readableTable, readableStats, matchFacts, gameResults, matchLeaders, personMetrics, sortedRows } from './presentation.mjs?v=1';
 import { compareNumbers, compareMetric, comparisonBasis, matchComparison, tableComparisons } from './comparison.mjs?v=1';
-import { thumbnail, imageOrigins, retainImages } from './images.mjs?v=1';
+import { thumbnail, imageOrigins, retainImages, isMergedCrest } from './images.mjs?v=2';
+import { scheduleCount, mergeSchedule } from './schedule-state.mjs?v=2';
 
 const $ = id => document.getElementById(id);
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -66,11 +67,11 @@ function selectedBatch(c) { return batches.get(batchKey(c.id)); }
 function crest(src, name, extra = '', critical = false) {
   const initials = (name || '?').split(/\s+/).map(w => w[0]).slice(0, 2).join('');
   const { original, source } = imageSource(src, critical ? 128 : 96), immediate = critical || eagerCrests++ < 12;
-  return source ? `<img class="crest ${extra}" src="${escape(source)}" data-original-src="${escape(original)}" data-fallback="${escape(initials)}" alt="" loading="${immediate ? 'eager' : 'lazy'}" fetchpriority="${critical ? 'high' : 'auto'}" decoding="async" referrerpolicy="no-referrer">` : `<span class="crest-fallback ${extra}" aria-hidden="true">${escape(initials)}</span>`;
+  return source ? `<img class="crest${isMergedCrest(original) ? ' crest-sprite' : ''} ${extra}" src="${escape(source)}" data-original-src="${escape(original)}" data-fallback="${escape(initials)}" alt="" loading="${immediate ? 'eager' : 'lazy'}" fetchpriority="${critical ? 'high' : 'auto'}" decoding="async" referrerpolicy="no-referrer">` : `<span class="crest-fallback ${extra}" aria-hidden="true">${escape(initials)}</span>`;
 }
 function teamHref(m, side) { return url({ match: null, team: m[`${side}Id`], competition: m.league, tab: null, map: null, state: null }); }
 function matchHref(m) { return url({ match: m.id, team: null, tab: null, map: null, year: m.league === 'f1' && m.start ? dayOf(m.start).slice(0, 4) : null }); }
-function playButton(m) { return mediaKind(m) ? `<button type="button" class="watch-button" data-watch="${escape(m.id)}" aria-label="${escape(`${m.home || m.title} ${m.away}：查看${m.state === 'final' ? '回放' : '播放'}入口`)}">${icon('play')}</button>` : '<span></span>'; }
+function playButton(m, labelled = false) { return mediaKind(m) ? `<button type="button" class="watch-button" data-watch="${escape(m.id)}" aria-label="${escape(`${m.home || m.title} ${m.away}：查看${m.state === 'final' ? '回放' : '播放'}入口`)}">${icon('play')}${labelled ? `<span>${m.state === 'final' ? '回放与集锦' : '观看比赛'}</span>` : ''}</button>` : '<span></span>'; }
 function rowHTML(m, withDate = false) {
   const status = `${m.state === 'live' ? '<i class="live-dot" aria-hidden="true"></i>' : ''}${escape(m.status)}`;
   const date = withDate && m.start ? `<span>${escape(time(m.start, { month: 'numeric', day: 'numeric' }))}</span>` : '';
@@ -80,7 +81,7 @@ function rowHTML(m, withDate = false) {
   const hasScores = m.homeScore !== '' && m.awayScore !== '' && m.state !== 'scheduled';
   const outcome = matchComparison(m);
   const rowScore = side => hasScores ? comparisonValue(m[`${side}Score`], outcome.regular[side], true) + (outcome.hasPenalties ? ` <sup>(${comparisonValue(m[`${side}Shootout`], outcome.penalties[side], true)})</sup>` : '') : '—';
-  return `<article class="match-row" data-id="${escape(m.id)}" data-state="${m.state}">${when}${team('home')}<a class="result-link" href="${matchHref(m)}" aria-label="${escape(`${m.home} 对 ${m.away}，${m.status}，${score(m, 'home')} 比 ${score(m, 'away')}，查看比赛详情`)}"><span class="home-score">${rowScore('home')}</span><span class="separator">:</span><span class="away-score">${rowScore('away')}</span><small>${m.state === 'scheduled' ? '赛前' : '比赛详情'}</small></a>${team('away')}${playButton(m)}${m.league === 'cs2' && m.event ? `<div class="row-note">${escape(m.event)}</div>` : ''}</article>`;
+  return `<article class="match-row" data-id="${escape(m.id)}" data-state="${m.state}">${when}${team('home')}<a class="result-link" href="${matchHref(m)}" aria-label="${escape(`${m.home} 对 ${m.away}，${m.status}，${score(m, 'home')} 比 ${score(m, 'away')}，查看比赛详情`)}"><span class="home-score">${rowScore('home')}</span><span class="separator">:</span><span class="away-score">${rowScore('away')}</span></a>${team('away')}${playButton(m)}${withDate && m.event ? `<div class="row-note">${escape(m.event)}</div>` : ''}</article>`;
 }
 function preserveUpdate(el, html) {
   if (el._html === html) return;
@@ -102,33 +103,43 @@ function restorePosition() {
 }
 function updateRows(host, matches, withDate = false) {
   host._html = null;
-  const old = new Map([...host.children].map(el => [el.dataset.id, el]));
-  for (const m of matches) {
-    const html = rowHTML(m, withDate), existing = old.get(m.id); let node = existing;
+  const old = new Map([...host.querySelectorAll(':scope > .match-row')].map(el => [el.dataset.id, el]));
+  const headings = new Map([...host.querySelectorAll(':scope > .programme-event')].map(el => [el.dataset.eventKey, el]));
+  const wanted = [];
+  let previousEvent = '';
+  for (const [index, m] of matches.entries()) {
+    if (!withDate && m.event && m.event !== previousEvent) {
+      const key = `${m.event}:${index}`, heading = headings.get(key) || document.createElement('h3');
+      heading.className = 'programme-event'; heading.dataset.eventKey = key; heading.textContent = m.event; wanted.push(heading);
+    }
+    previousEvent = m.event || '';
+    const html = rowHTML(m, withDate); let node = old.get(m.id);
     if (!node) { const t = document.createElement('template'); t.innerHTML = html; node = t.content.firstElementChild; node._html = html; }
     else if (node._html !== html) {
-      // Live updates preserve the row, links and keyboard focus when its structure is stable.
       const t = document.createElement('template'); t.innerHTML = html; const next = t.content.firstElementChild;
       if (node.children.length === next.children.length) for (let i = 0; i < node.children.length; i++) preserveUpdate(node.children[i], next.children[i].innerHTML);
       else preserveUpdate(node, next.innerHTML);
       node.dataset.state = m.state; node._html = html;
     }
-    old.delete(m.id); const index = matches.indexOf(m); if (host.children[index] !== node) host.insertBefore(node, host.children[index] || null);
+    wanted.push(node);
   }
-  for (const node of old.values()) node.remove();
+  const keep = new Set(wanted);
+  for (const node of [...host.children]) if (!keep.has(node)) node.remove();
+  wanted.forEach((node, index) => { if (host.children[index] !== node) host.insertBefore(node, host.children[index] || null); });
 }
+
 function renderControls() {
   $('date-input').value = route.date;
-  $('date-large').textContent = route.date.slice(5).replace('-', '.');
+  $('date-large').textContent = time(Date.parse(`${route.date}T12:00:00+08:00`), { month: 'long', day: 'numeric' });
   const date = Date.parse(`${route.date}T12:00:00+08:00`);
-  $('date-month').textContent = time(date, { year: 'numeric', month: 'long' });
-  $('date-weekday').textContent = `${time(date, { weekday: 'long' })}${route.date === today() ? ' · 今天' : ''}`;
+  $('date-month').textContent = time(date, { year: 'numeric' });
+  $('date-weekday').textContent = time(date, { weekday: 'long' });
   $('today').disabled = route.date === today();
   const football = route.competition === 'football' || competition(route.competition)?.group === '足球';
   preserveUpdate($('sports'), groups.map(([id, name]) => {
     const own = competitions.filter(c => id === 'all' || id === 'football' && c.group === '足球' || c.id === id), loaded = own.map(c => selectedBatch(c));
-    const count = loaded.every(b => b?.fetched && !b.error && !b.warning) ? loaded.reduce((n, b) => n + b.matches.length, 0) : '—';
-    return `<a href="${url({ competition: id === 'all' ? null : id, teamFilter: null })}"${(id === 'football' ? football : route.competition === id) ? ' aria-current="page"' : ''}>${name}<small>${count}</small></a>`;
+    const count = scheduleCount(loaded);
+    return `<a href="${url({ competition: id === 'all' ? null : id, teamFilter: null })}"${(id === 'football' ? football : route.competition === id) ? ' aria-current="page"' : ''}>${name}<small title="${escape(count.note)}" aria-label="${escape(count.note)}">${count.value}</small></a>`;
   }).join(''));
   preserveUpdate($('league-nav'), football ? [['football', '全部足球'], ...competitions.filter(c => c.group === '足球').map(c => [c.id, c.name])].map(([id, name]) => `<a href="${url({ competition: id, teamFilter: null })}"${route.competition === id ? ' aria-current="page"' : ''}>${name}</a>`).join('') : '');
   const all = selectedCompetitions().flatMap(c => selectedBatch(c)?.matches || []), teams = new Map();
@@ -149,7 +160,7 @@ function renderSchedule() {
     if (b && (!b.loading || b.fetched) && !b.error && !b.warning && !matches.length) continue;
     desired.add(c.id); let section = $(`group-${c.id}`);
     if (!section) { section = document.createElement('section'); section.id = `group-${c.id}`; section.className = 'score-group'; section.innerHTML = '<div class="group-heading"><h2></h2><div class="group-source"></div></div><div class="match-list"></div><div class="group-warning"></div>'; }
-    section.querySelector('h2').innerHTML = `${escape(c.name)}<span>${matches.length ? `${matches.length} 场` : c.group === '足球' ? '足球' : c.group}</span>`;
+    section.querySelector('h2').textContent = c.name; section.classList.toggle('single-group', selectedCompetitions().length === 1); section.classList.toggle('has-events', !!matches[0]?.event);
     preserveUpdate(section.querySelector('.group-source'), `${escape(b?.source || (c.path ? 'ESPN' : c.id === 'cs2' ? '5EPlay' : 'LOL 官网'))}${b?.fetched ? `<span>${time(b.fetched)}</span>` : ''}${b?.error ? `<button type="button" data-retry="${c.id}">重试</button>` : ''}`);
     const host = section.querySelector('.match-list');
     if (matches.length) { if (!host.querySelector('.match-row')) host.innerHTML = ''; updateRows(host, matches); }
@@ -164,7 +175,7 @@ function renderSchedule() {
 }
 function renderTable(t, index, eager = false) {
   const { key, sort } = registerTable(t, index), sortable = sortedRows(t, sort), comparisons = tableComparisons(t, detail.match);
-  const content = `<div class="table-heading"><h2>${escape(t.title)}</h2></div><div class="table-scroll" role="region" aria-label="${escape(t.title)}" tabindex="0"><table class="data-table${t.prose ? ' prose-table' : ''}${t.columns[0] === '时间' ? ' time-table' : ''}"><thead><tr>${t.columns.map((c, i) => `<th scope="col"${sort?.label === c ? ` aria-sort="${sort.direction === 1 ? 'ascending' : 'descending'}"` : ''}><button type="button" data-sort="${key}" data-column="${i}" data-focus="${key}-${i}">${escape(c)}${icon('sort')}</button></th>`).join('')}</tr></thead><tbody>${sortable.map(({ row, person, index: personIndex }) => `<tr>${row.map((cell, j) => `<td>${j === 0 && person?.name ? `<button class="person-button person-name" data-person="${key}" data-index="${personIndex}" data-focus="person-${key}-${escape(person.id || person.name)}" type="button">${imageHTML(person.photo, person.name, 'portrait', person.id, eager)}<span>${escape(show(cell))}</span></button>` : comparisons[personIndex]?.[j] !== 'neutral' ? comparisonValue(cell, comparisons[personIndex][j], false, comparisonBasis(t.columns[j])) : cellHTML(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const content = `<div class="table-heading"><h2>${escape(t.tab === 'maps' ? t.title.replace(/^第 \d+ 局 · /, '') : t.title)}</h2></div><div class="table-scroll" role="region" aria-label="${escape(t.title)}" tabindex="0"><table class="data-table${t.prose ? ' prose-table' : ''}${t.columns[0] === '时间' ? ' time-table' : ''}"><thead><tr>${t.columns.map((c, i) => `<th scope="col"${sort?.label === c ? ` aria-sort="${sort.direction === 1 ? 'ascending' : 'descending'}"` : ''}><button type="button" data-sort="${key}" data-column="${i}" data-focus="${key}-${i}">${escape(c)}${icon('sort')}</button></th>`).join('')}</tr></thead><tbody>${sortable.map(({ row, person, index: personIndex }) => `<tr>${row.map((cell, j) => `<td>${j === 0 && person?.name ? `<button class="person-button person-name" data-person="${key}" data-index="${personIndex}" data-focus="person-${key}-${escape(person.id || person.name)}" type="button">${imageHTML(person.photo, person.name, 'portrait', person.id, eager)}<span>${escape(show(cell))}</span></button>` : comparisons[personIndex]?.[j] !== 'neutral' ? comparisonValue(cell, comparisons[personIndex][j], false, comparisonBasis(t.columns[j])) : cellHTML(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   return `<section class="table-block">${content}</section>`;
 }
 function registerTable(t, index) {
@@ -176,13 +187,15 @@ function registerTable(t, index) {
 function renderLolTeam(t, index) {
   const { key, sort } = registerTable(t, index);
   const rows = sortedRows(t, sort), cell = (row, name) => row[t.columns.indexOf(name)];
-  return `<section class="lol-team"><div class="table-heading"><h2>${escape(t.title.replace(/^第 \d+ 局 · /, ''))}</h2><div class="roster-sort" aria-label="选手排序"><button type="button" data-reset-sort="${key}" aria-pressed="${!sort}">位置</button>${['K / D / A', '伤害', '经济'].map(name => `<button type="button" data-sort="${key}" data-column="${t.columns.indexOf(name)}" data-focus="${key}-${name}" aria-pressed="${sort?.label === name}">${escape(name === 'K / D / A' ? 'KDA' : name)}${sort?.label === name ? icon('sort') : ''}</button>`).join('')}</div></div><ol class="lol-roster">${rows.map(({ row, person, index: personIndex }) => `<li class="lol-player"><button class="lol-identity person-button" data-person="${key}" data-index="${personIndex}" data-focus="person-${key}-${escape(person?.id || person?.name)}" type="button">${imageHTML(person?.photo, person?.name, 'portrait', '', true)}<span><strong>${escape(person?.name || show(row[0]))}</strong><small>${escape(show(cell(row, '位置')))}${hasValue(cell(row, '等级')) ? ` · ${escape(show(cell(row, '等级')))} 级` : ''}</small></span></button><div class="lol-champion">${cellHTML(cell(row, '英雄'))}</div><div class="lol-kda"><span>K / D / A</span><strong>${escape(show(cell(row, 'K / D / A')))}</strong></div><dl class="lol-resources">${['补刀', '伤害', '经济'].filter(name => hasValue(cell(row, name))).map(name => `<div><dt>${name}</dt><dd title="${escape(show(cell(row, name)))}">${escape(name === '伤害' && Number.isFinite(Number(cell(row, name))) ? new Intl.NumberFormat('zh-CN', { maximumFractionDigits: 0 }).format(Number(cell(row, name))) : show(cell(row, name)))}</dd></div>`).join('')}</dl><div class="lol-loadout">${person?.items?.length ? equipmentHTML(person.items) : '<span class="unavailable">出装未发布</span>'}</div></li>`).join('')}</ol></section>`;
+  const title = t.title.replace(/^第 \d+ 局 · /, ''), teamName = title.split(' · ')[0];
+  const playerName = name => name?.startsWith(`${teamName} `) ? name.slice(teamName.length + 1) : name;
+  const compact = value => hasValue(value) && Number.isFinite(Number(value)) ? new Intl.NumberFormat('zh-CN', { maximumFractionDigits: 0 }).format(Number(value)) : show(value);
+  return `<section class="lol-team"><div class="table-heading"><h2>${escape(title)}</h2><div class="roster-sort" aria-label="选手排序"><button type="button" data-reset-sort="${key}" aria-pressed="${!sort}">位置</button>${['K / D / A', '伤害', '经济'].map(name => `<button type="button" data-sort="${key}" data-column="${t.columns.indexOf(name)}" data-focus="${key}-${name}" aria-pressed="${sort?.label === name}">${escape(name === 'K / D / A' ? 'KDA' : name)}${sort?.label === name ? icon('sort') : ''}</button>`).join('')}</div></div><div class="lol-column-labels" aria-hidden="true"><span class="label-identity">选手</span><span class="label-champion">英雄</span><span class="label-kda">K / D / A</span><span class="label-resources"><span>补刀</span><span>伤害</span><span>经济</span></span><span class="label-loadout">出装</span></div><ol class="lol-roster">${rows.map(({ row, person, index: personIndex }) => `<li class="lol-player"><button class="lol-identity person-button" aria-label="查看 ${escape(person?.name || show(row[0]))} 的资料" data-person="${key}" data-index="${personIndex}" data-focus="person-${key}-${escape(person?.id || person?.name)}" type="button">${imageHTML(person?.photo, person?.name, 'portrait', '', true)}<span><strong>${escape(playerName(person?.name || show(row[0])))}</strong><small>${escape(show(cell(row, '位置')))}${hasValue(cell(row, '等级')) ? ` · ${escape(show(cell(row, '等级')))} 级` : ''}</small></span></button><div class="lol-champion">${cellHTML(cell(row, '英雄'))}</div><div class="lol-kda"><span class="sr-only">K / D / A</span><strong>${escape(show(cell(row, 'K / D / A')))}</strong></div><dl class="lol-resources">${['补刀', '伤害', '经济'].map(name => `<div><dt class="sr-only">${name}</dt><dd title="${escape(`${name} ${show(cell(row, name))}`)}">${escape(compact(cell(row, name)))}</dd></div>`).join('')}</dl><div class="lol-loadout">${person?.items?.length ? equipmentHTML(person.items) : '<span class="unavailable">出装未发布</span>'}</div></li>`).join('')}</ol></section>`;
 }
-function renderLolResources(t) {
-  const m = detail.match, home = t.rows.find(r => show(r[0]) === m.home), away = t.rows.find(r => show(r[0]) === m.away);
-  const fields = ['击杀', '经济', '防御塔', '小龙', '大龙', '虚空巢虫'].map(name => ({ name, column: t.columns.indexOf(name) })).filter(f => f.column >= 0);
-  return `<section class="game-resources"><div class="section-heading"><h2>资源对照</h2><span class="resource-order">${escape(m.home)}<span> / </span>${escape(m.away)}</span></div><dl class="objective-grid">${fields.map(f => `<div><dt>${f.name}</dt><dd><strong>${comparisonValue(home?.[f.column], compareMetric(f.name, home?.[f.column], away?.[f.column]).home)}</strong><span>:</span><strong>${comparisonValue(away?.[f.column], compareMetric(f.name, home?.[f.column], away?.[f.column]).away)}</strong></dd></div>`).join('')}</dl></section>`;
+function renderLolResources(t, index) {
+  return `<div class="game-resources">${renderTable({ ...t, title: '资源对照' }, index)}</div>`;
 }
+
 function pitches(d) {
   return `<div class="pitch-grid">${d.formations.map(f => {
     const t = d.tables.find(t => t.teamId === f.teamId && t.category === '首发'); if (!t || !/^\d+(?:-\d+){1,4}$/.test(f.formation)) return '';
@@ -194,8 +207,9 @@ function pitches(d) {
 function renderSeries(d) {
   const games = gameResults(d); if (!games.length) return '';
   const cs = d.match.league === 'cs2';
-  return `<section class="series-summary"><div class="section-heading"><h2>${cs ? '地图结果' : '小局结果'}</h2><a href="${url({ tab: 'maps', map: null })}">查看${cs ? '地图' : '小局'}数据${icon('right')}</a></div><div class="series-results">${games.map(g => `<a class="series-game" href="${url({ tab: 'maps', map: g.id })}"><span class="series-game-name">${escape(g.name)}${g.status === '进行中' ? '<span class="live-label">进行中</span>' : ''}</span>${cs ? ['home', 'away'].map(side => `<span class="series-team${g.hasResult && Number(g[side]) > Number(g[side === 'home' ? 'away' : 'home']) ? ' series-winner' : ''}"><span>${escape(d.match[side])}</span><strong>${comparisonValue(g[side], g.hasResult && g.status === '已结束' ? compareNumbers(g.home, g.away)[side] : 'neutral', true)}</strong></span>`).join('') : `<strong class="series-victor" data-tone="${g.winner && g.status === '已结束' ? 'better' : 'neutral'}">${escape(g.winner ? `${g.winner} 胜` : g.status)}</strong><span class="series-duration">${escape(g.duration || '时长未发布')}</span>`}</a>`).join('')}</div></section>`;
+  return `<section class="series-summary"><div class="section-heading"><h2>${cs ? '地图结果' : '小局结果'}</h2><a href="${url({ tab: 'maps', map: null })}">查看${cs ? '地图' : '小局'}数据${icon('right')}</a></div><div class="series-column-headings"><span>${cs ? '地图' : '小局'}</span><span>${escape(cs ? d.match.home : '胜方')}</span><span>${escape(cs ? d.match.away : '时长')}</span></div><div class="series-results">${games.map(g => `<a class="series-game" href="${url({ tab: 'maps', map: g.id })}"><span class="series-game-name">${escape(g.name)}${g.status === '进行中' ? '<span class="live-label">进行中</span>' : ''}</span>${cs ? ['home', 'away'].map(side => `<strong class="series-game-score" aria-label="${escape(d.match[side])} ${escape(show(g[side]))}">${comparisonValue(g[side], g.hasResult && g.status === '已结束' ? compareNumbers(g.home, g.away)[side] : 'neutral', true)}</strong>`).join('') : `<strong class="series-victor" data-tone="${g.winner && g.status === '已结束' ? 'better' : 'neutral'}">${escape(g.winner || g.status)}</strong><span class="series-duration">${escape(g.duration || '未发布')}</span>`}</a>`).join('')}</div></section>`;
 }
+
 function renderLeaders(d) {
   const leaders = matchLeaders(d); if (!leaders.length) return '';
   return `<section class="performer-section"><div class="section-heading"><h2>选手表现</h2><a href="${url({ tab: 'lineup', map: null })}">查看全部选手${icon('right')}</a></div><div class="performers">${leaders.map(p => {
@@ -225,9 +239,10 @@ function renderDetail() {
   $('reading-view').dataset.sport = m.group === '足球' ? 'football' : m.league;
   const outcome = matchComparison(m);
   const team = side => `<div class="hero-team ${side}">${m[`${side}Id`] ? `<a href="${teamHref(m, side)}">${crest(m[`${side}Logo`], m[side], '', true)}<span>${escape(m[side])}</span></a>` : `${crest(m[`${side}Logo`], m[side], '', true)}<span>${escape(m[side])}</span>`}</div>`;
-  let header = `<div class="reading-meta"><h1 id="reading-title">${escape(m.event || competition(m.league).name)}</h1></div>`;
-  if (m.league === 'f1') header += `<div class="reading-heading"><h1>${escape(m.title)}</h1><p>${escape(m.status)} · ${time(m.start, { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })} 北京时间</p></div>`;
-  else header += `<div class="match-hero">${team('home')}<div class="hero-score"><div class="state">${m.state === 'live' ? '<i class="live-dot" aria-hidden="true"></i>' : ''}${escape(m.status)}</div><strong class="${Math.max(m.homeScore.length, m.awayScore.length) >= 3 ? 'score-long' : ''}">${comparisonValue(m.state === 'scheduled' ? '—' : m.homeScore, outcome.regular.home, true)}<span class="score-divider"> : </span>${comparisonValue(m.state === 'scheduled' ? '—' : m.awayScore, outcome.regular.away, true)}</strong>${outcome.hasPenalties ? `<p class="shootout-score">点球大战 ${comparisonValue(m.homeShootout, outcome.penalties.home, true)} : ${comparisonValue(m.awayShootout, outcome.penalties.away, true)}</p>` : ''}<p>${m.timeConfirmed ? time(m.start, { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }) : '时间待定'} · 北京时间</p>${mediaKind(m) ? `<div class="media-row">${playButton(m)}<span>${m.state === 'final' ? '回放与集锦' : '观看比赛'}</span></div>` : ''}</div>${team('away')}</div>`;
+  const matchTime = m.timeConfirmed ? time(m.start, { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }) : '时间待定';
+  let header = `<div class="reading-meta"><h1 id="reading-title">${escape(m.league === 'f1' ? m.title : m.event || competition(m.league).name)}</h1><div class="report-meta-actions"><p>${escape(matchTime)} · 北京时间</p>${mediaKind(m) ? playButton(m, true) : ''}</div></div>`;
+  if (m.league === 'f1') header += `<p class="race-state">${escape(m.status)}</p>`;
+  else header += `<div class="match-hero">${team('home')}<div class="hero-score"><div class="state">${m.state === 'live' ? '<i class="live-dot" aria-hidden="true"></i>' : ''}${escape(m.status)}</div><strong class="${Math.max(m.homeScore.length, m.awayScore.length) >= 3 ? 'score-long' : ''}">${comparisonValue(m.state === 'scheduled' ? '—' : m.homeScore, outcome.regular.home, true)}<span class="score-divider"> : </span>${comparisonValue(m.state === 'scheduled' ? '—' : m.awayScore, outcome.regular.away, true)}</strong>${outcome.hasPenalties ? `<p class="shootout-score">点球 ${comparisonValue(m.homeShootout, outcome.penalties.home, true)} : ${comparisonValue(m.awayShootout, outcome.penalties.away, true)}</p>` : ''}</div>${team('away')}</div>`;
   preserveUpdate($('reading-header'), header);
   const sport = m.group === '足球' ? 'football' : m.league, stats = readableStats(detail);
   const views = detail.tables.flatMap((source, index) => {
@@ -252,9 +267,9 @@ function renderDetail() {
     const selected = views.filter(v => v.t.tab === tab && (tab !== 'maps' || v.t.category === map));
     const expanded = selected.filter(v => !v.t.collapsible), deeper = selected.filter(v => v.t.collapsible);
     const resource = v => m.league === 'lol' && v.t.columns[0] === '队伍' && v.t.columns.includes('大龙');
-    for (const v of expanded.filter(resource)) deeper.unshift({ t: { ...v.t, title: '完整资源数据' }, index: `${v.index}-resources` });
-    const render = v => resource(v) ? renderLolResources(v.t) : m.league === 'lol' && v.t.columns.includes('出装') ? renderLolTeam(v.t, v.index) : renderTable(v.t, v.index, true);
-    html += `<div class="tables">${expanded.map(render).join('')}${deeper.length ? `<details class="deep-analysis" data-table="analysis-${tab}-${map || ''}"><summary><span>${tab === 'events' ? '完整进程' : '深入数据'}</span><small>${tab === 'events' ? '文字实录与逐档记录' : m.league === 'lol' ? '战斗、伤害、承伤、视野、符文与 BP' : '更多指标与对位明细'}</small>${icon('right')}</summary><div class="analysis-tables">${deeper.map(v => renderTable({ ...v.t, collapsible: false }, v.index)).join('')}</div></details>` : ''}</div>`;
+
+    const render = v => resource(v) ? renderLolResources(v.t, v.index) : m.league === 'lol' && v.t.columns.includes('出装') ? renderLolTeam(v.t, v.index) : renderTable(v.t, v.index, true);
+    html += `<div class="tables${m.league === 'lol' && tab === 'maps' ? ' lol-tables' : ''}">${expanded.map(render).join('')}${deeper.length ? `<details class="deep-analysis" data-table="analysis-${tab}-${map || ''}"><summary><span>${tab === 'events' ? '完整进程' : '深入数据'}</span><small>${tab === 'events' ? '文字实录与逐档记录' : m.league === 'lol' ? '战斗、伤害、承伤、视野、符文与 BP' : '更多指标与对位明细'}</small>${icon('right')}</summary><div class="analysis-tables">${deeper.map(v => renderTable({ ...v.t, collapsible: false }, v.index)).join('')}</div></details>` : ''}</div>`;
   }
   if (!html || html === '<div class="tables"></div>') html = '<div class="empty-state">来源尚未提供此项内容。</div>';
   // Header/timestamps and large table bodies have independent fingerprints.
@@ -286,8 +301,9 @@ async function loadBatch(c, force = false) {
   batches.set(key, { ...old, matches: old?.matches || [], loading: true }); renderSchedule();
   try {
     const result = await provider.scores(c.id, route.date, controller.signal); if (token !== generation) return;
-    const matches = mergeTerminal(old?.matches, result.matches, force || now - (old?.fetched || 0) >= 21600000);
-    const value = { ...result, matches, loading: false, error: '', nextAt: Date.now() + (delayFor(matches, route.date) || 21600000) };
+    const merged = mergeSchedule(old, result, force || now - (old?.fetched || 0) >= 21600000);
+    const delay = delayFor(merged.matches, route.date) || 21600000;
+    const value = { ...merged, loading: false, error: '', nextAt: Date.now() + (merged.warning || merged.stale ? Math.min(delay, 15000) : delay) };
     batches.set(key, value); saveResult(`data:${key}`, value);
   } catch (e) {
     if (token !== generation || controller.signal.aborted) return;
@@ -310,7 +326,7 @@ async function refresh(force = false) {
         }); if (token !== generation) return;
         detail = value; saveResult(`data:detail:${route.match}`, detail); renderDetail();
       } else { const value = await provider.team(route.competition, route.team, controller.signal); if (token !== generation) return; teamResult = value; renderTeam(); }
-    } else await Promise.all(selectedCompetitions().map(c => loadBatch(c, force)));
+    } else await Promise.all(competitions.map(c => loadBatch(c, force)));
   } catch (e) {
     if (token !== generation || controller.signal.aborted) return;
     if (!detail && !teamResult) { preserveUpdate($('reading-header'), '<div class="reading-heading"><h1 id="reading-title">暂时无法读取</h1></div>'); preserveUpdate($('reading-content'), `<div class="empty-state"><p>${escape(e.message)}</p><button class="text-button" type="button" data-refresh>重新读取</button></div>`); }
@@ -327,7 +343,7 @@ function schedule() {
   let delay;
   if (route.match) delay = detail ? ['final', 'cancelled'].includes(detail.match.state) ? 21600000 : detail.match.league === 'f1' ? 15000 : delayFor([detail.match], today()) || 30000 : 15000;
   else if (route.team) delay = teamResult ? Math.min(30000, delayFor(teamResult.matches, today()) || 21600000) : 15000;
-  else delay = Math.max(2000, Math.min(...selectedCompetitions().map(c => Math.max(0, (selectedBatch(c)?.nextAt || 0) - Date.now()))));
+  else delay = Math.max(2000, Math.min(...competitions.map(c => Math.max(0, (selectedBatch(c)?.nextAt || 0) - Date.now()))));
   timer = setTimeout(() => refresh(), delay);
 }
 function scheduleF1Header() {
@@ -345,6 +361,7 @@ function scheduleF1Header() {
   }, 2000);
 }
 function mount({ focus = false } = {}) {
+  const previousDate = route?.date;
   generation++; controller?.abort(); clearTimeout(timer); clearTimeout(headerTimer); activeTasks = 0; lastRefresh = 0; controller = new AbortController();
   route = parseRoute(); const reading = !!(route.match || route.team);
   for (const origin of imageOrigins(selectedCompetitions().map(c => c.id))) {
@@ -359,9 +376,10 @@ function mount({ focus = false } = {}) {
     const saved = route.match ? readSaved(`data:detail:${route.match}`) : null;
     if (saved?.match?.id === route.match) { detail = saved; renderDetail(); }
     else { preserveUpdate($('reading-header'), '<div class="reading-heading"><h1 id="reading-title">正在读取比赛</h1></div>'); preserveUpdate($('reading-content'), '<div class="loading-row" aria-label="读取详情"><span></span><span></span></div>'); }
-  } else { document.title = 'MyScore · N1GHT CHXN9'; for (const c of selectedCompetitions()) { const key = batchKey(c.id); if (!batches.has(key)) { const saved = readSaved(`data:${key}`); if (saved) batches.set(key, saved); } } renderSchedule(); }
+  } else { document.title = 'MyScore · N1GHT CHXN9'; for (const c of competitions) { const key = batchKey(c.id); if (!batches.has(key)) { const saved = readSaved(`data:${key}`); if (saved) batches.set(key, saved); } } renderSchedule(); }
   if (focus) $('main').focus({ preventScroll: true });
-  refresh(true);
+  if (!reading) { const active = $('sports').querySelector('[aria-current]'); if (active) { const box = active.getBoundingClientRect(), nav = $('sports').getBoundingClientRect(); if (box.right > nav.right || box.left < nav.left) $('sports').scrollLeft += box.left - nav.left - 12; } }
+  refresh(reading || previousDate !== route.date);
 }
 function navigate(href) {
   restoreScroll = null;

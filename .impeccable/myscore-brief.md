@@ -1,15 +1,17 @@
 # MyScore
 
-Mode: Operate. Audience: the owner and visitors reading live sports on desktop and mobile browsers. Approved code-led extension of night-web's existing gallery identity.
+Mode: Operate. The user values fixtures and detailed match data equally. Redesign is authorized, preserving source truth, native links, history, all-date refresh, themes, keyboard and dialogs.
 
-THESIS: A wide, readable programme of real matches inside the personal gallery. Visitors can scan the day's fixtures, open a full reading page, and use browser navigation naturally.
+## Direction contract
 
-OWN-WORLD: Inherit the existing cold white, cobalt, deep blue and pale violet. Calistoga names the space; Space Grotesk and Chinese sans-serif carry controls and data. Aligned continuous rows, distinct reading surfaces and source-backed team crests carry hierarchy.
+THESIS: A compact match programme and a precise match report share one alignment system. Context appears once at its nearest common parent; generous blank introductions and repeated per-player labels give way to readable rows.
 
-STORY: Enter from the global navigation; choose date and competition; scan source-backed fixtures; open match, team, person or original broadcaster; return with context intact.
+OWN-WORLD: Existing cobalt and navy identity, cool blue ground, white working surfaces, sans-serif UI and tabular scores. Rounded corners identify controls and the main working surface; nested records use spacing and table rules rather than more boxes.
 
-FIRST VIEWPORT: MyScore title at left and large calendar date at right, compact date/team tools, horizontal competition directory and the beginning of the real match programme. No full-screen introduction. Wide screens retain aligned team/score columns; narrow screens compose two team lines per match.
+STORY: Choose a date without losing the sport, scan all updated counts, open a match, compare players and resources, and return in context. Fixtures and reports have equal priority, as confirmed by the user.
 
-FORM: The user approved the full-width programme and standalone detail views in the implementation plan. Preserve native links, modified clicks, copyable URLs, natural document scrolling, text selection, sortable wide tables and restored history positions. The six-block contract replaces an open concept round because the user supplied the composition.
+FIRST VIEWPORT: A small global header, one calendar/tool row, sport navigation, then fixtures. Reports begin with back navigation, event/date metadata, aligned opposing teams and score, then content tabs. On game pages, a shared resource table and roster column labels lead directly into player rows.
 
-FINISH: Inspect desktop, intermediate, mobile and narrow page states; match details, keyboard/focus, data failures, cache updates and reduced motion. Source, cache time and unknown fields remain explicit. Document actual evidence and keep cloud acceptance separate from local work.
+FORM: Code-led refinement of the existing programme's functional composition, pinned by the user's density, non-repetition and alignment requirements. Surface exploration seed 4b65db81 considered alternatives; the specified shared-context grid governs the build. Signature interaction: stable row and score axes persist through live updates and sorting.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

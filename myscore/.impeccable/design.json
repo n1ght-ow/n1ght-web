@@ -1,0 +1,470 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-01T15:28:50.704058+00:00",
+  "title": "Design System: MyScore",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "primary",
+        "tonalRamp": [
+          "oklch(15.00% 0.23140 266.00)",
+          "oklch(26.43% 0.23140 266.00)",
+          "oklch(37.86% 0.23140 266.00)",
+          "oklch(49.29% 0.23140 266.00)",
+          "oklch(60.71% 0.23140 266.00)",
+          "oklch(72.14% 0.23140 266.00)",
+          "oklch(83.57% 0.23140 266.00)",
+          "oklch(95.00% 0.23140 266.00)"
+        ]
+      },
+      "link": {
+        "role": "primary",
+        "displayName": "link",
+        "tonalRamp": [
+          "oklch(15.00% 0.19189 266.21)",
+          "oklch(26.43% 0.19189 266.21)",
+          "oklch(37.86% 0.19189 266.21)",
+          "oklch(49.29% 0.19189 266.21)",
+          "oklch(60.71% 0.19189 266.21)",
+          "oklch(72.14% 0.19189 266.21)",
+          "oklch(83.57% 0.19189 266.21)",
+          "oklch(95.00% 0.19189 266.21)"
+        ]
+      },
+      "header": {
+        "role": "primary",
+        "displayName": "header",
+        "tonalRamp": [
+          "oklch(15.00% 0.08069 261.97)",
+          "oklch(26.43% 0.08069 261.97)",
+          "oklch(37.86% 0.08069 261.97)",
+          "oklch(49.29% 0.08069 261.97)",
+          "oklch(60.71% 0.08069 261.97)",
+          "oklch(72.14% 0.08069 261.97)",
+          "oklch(83.57% 0.08069 261.97)",
+          "oklch(95.00% 0.08069 261.97)"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "ground",
+        "tonalRamp": [
+          "oklch(15.00% 0.00741 260.73)",
+          "oklch(26.43% 0.00741 260.73)",
+          "oklch(37.86% 0.00741 260.73)",
+          "oklch(49.29% 0.00741 260.73)",
+          "oklch(60.71% 0.00741 260.73)",
+          "oklch(72.14% 0.00741 260.73)",
+          "oklch(83.57% 0.00741 260.73)",
+          "oklch(95.00% 0.00741 260.73)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "surface",
+        "tonalRamp": [
+          "oklch(15.00% 0.00000 89.88)",
+          "oklch(26.43% 0.00000 89.88)",
+          "oklch(37.86% 0.00000 89.88)",
+          "oklch(49.29% 0.00000 89.88)",
+          "oklch(60.71% 0.00000 89.88)",
+          "oklch(72.14% 0.00000 89.88)",
+          "oklch(83.57% 0.00000 89.88)",
+          "oklch(95.00% 0.00000 89.88)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.05363 258.28)",
+          "oklch(26.43% 0.05363 258.28)",
+          "oklch(37.86% 0.05363 258.28)",
+          "oklch(49.29% 0.05363 258.28)",
+          "oklch(60.71% 0.05363 258.28)",
+          "oklch(72.14% 0.05363 258.28)",
+          "oklch(83.57% 0.05363 258.28)",
+          "oklch(95.00% 0.05363 258.28)"
+        ]
+      },
+      "deep": {
+        "role": "neutral",
+        "displayName": "deep",
+        "tonalRamp": [
+          "oklch(15.00% 0.05801 257.99)",
+          "oklch(26.43% 0.05801 257.99)",
+          "oklch(37.86% 0.05801 257.99)",
+          "oklch(49.29% 0.05801 257.99)",
+          "oklch(60.71% 0.05801 257.99)",
+          "oklch(72.14% 0.05801 257.99)",
+          "oklch(83.57% 0.05801 257.99)",
+          "oklch(95.00% 0.05801 257.99)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "muted",
+        "tonalRamp": [
+          "oklch(15.00% 0.04301 258.35)",
+          "oklch(26.43% 0.04301 258.35)",
+          "oklch(37.86% 0.04301 258.35)",
+          "oklch(49.29% 0.04301 258.35)",
+          "oklch(60.71% 0.04301 258.35)",
+          "oklch(72.14% 0.04301 258.35)",
+          "oklch(83.57% 0.04301 258.35)",
+          "oklch(95.00% 0.04301 258.35)"
+        ]
+      },
+      "wash": {
+        "role": "neutral",
+        "displayName": "wash",
+        "tonalRamp": [
+          "oklch(15.00% 0.02248 269.44)",
+          "oklch(26.43% 0.02248 269.44)",
+          "oklch(37.86% 0.02248 269.44)",
+          "oklch(49.29% 0.02248 269.44)",
+          "oklch(60.71% 0.02248 269.44)",
+          "oklch(72.14% 0.02248 269.44)",
+          "oklch(83.57% 0.02248 269.44)",
+          "oklch(95.00% 0.02248 269.44)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "line",
+        "tonalRamp": [
+          "oklch(15.00% 0.02025 257.47)",
+          "oklch(26.43% 0.02025 257.47)",
+          "oklch(37.86% 0.02025 257.47)",
+          "oklch(49.29% 0.02025 257.47)",
+          "oklch(60.71% 0.02025 257.47)",
+          "oklch(72.14% 0.02025 257.47)",
+          "oklch(83.57% 0.02025 257.47)",
+          "oklch(95.00% 0.02025 257.47)"
+        ]
+      },
+      "better": {
+        "role": "secondary",
+        "displayName": "better",
+        "tonalRamp": [
+          "oklch(15.00% 0.11489 153.73)",
+          "oklch(26.43% 0.11489 153.73)",
+          "oklch(37.86% 0.11489 153.73)",
+          "oklch(49.29% 0.11489 153.73)",
+          "oklch(60.71% 0.11489 153.73)",
+          "oklch(72.14% 0.11489 153.73)",
+          "oklch(83.57% 0.11489 153.73)",
+          "oklch(95.00% 0.11489 153.73)"
+        ]
+      },
+      "worse": {
+        "role": "secondary",
+        "displayName": "worse",
+        "tonalRamp": [
+          "oklch(15.00% 0.17935 21.80)",
+          "oklch(26.43% 0.17935 21.80)",
+          "oklch(37.86% 0.17935 21.80)",
+          "oklch(49.29% 0.17935 21.80)",
+          "oklch(60.71% 0.17935 21.80)",
+          "oklch(72.14% 0.17935 21.80)",
+          "oklch(83.57% 0.17935 21.80)",
+          "oklch(95.00% 0.17935 21.80)"
+        ]
+      },
+      "dark-primary": {
+        "role": "primary",
+        "displayName": "dark-primary",
+        "tonalRamp": [
+          "oklch(15.00% 0.09763 268.75)",
+          "oklch(26.43% 0.09763 268.75)",
+          "oklch(37.86% 0.09763 268.75)",
+          "oklch(49.29% 0.09763 268.75)",
+          "oklch(60.71% 0.09763 268.75)",
+          "oklch(72.14% 0.09763 268.75)",
+          "oklch(83.57% 0.09763 268.75)",
+          "oklch(95.00% 0.09763 268.75)"
+        ]
+      },
+      "dark-link": {
+        "role": "primary",
+        "displayName": "dark-link",
+        "tonalRamp": [
+          "oklch(15.00% 0.08414 271.11)",
+          "oklch(26.43% 0.08414 271.11)",
+          "oklch(37.86% 0.08414 271.11)",
+          "oklch(49.29% 0.08414 271.11)",
+          "oklch(60.71% 0.08414 271.11)",
+          "oklch(72.14% 0.08414 271.11)",
+          "oklch(83.57% 0.08414 271.11)",
+          "oklch(95.00% 0.08414 271.11)"
+        ]
+      },
+      "dark-ground": {
+        "role": "neutral",
+        "displayName": "dark-ground",
+        "tonalRamp": [
+          "oklch(15.00% 0.03538 257.68)",
+          "oklch(26.43% 0.03538 257.68)",
+          "oklch(37.86% 0.03538 257.68)",
+          "oklch(49.29% 0.03538 257.68)",
+          "oklch(60.71% 0.03538 257.68)",
+          "oklch(72.14% 0.03538 257.68)",
+          "oklch(83.57% 0.03538 257.68)",
+          "oklch(95.00% 0.03538 257.68)"
+        ]
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "dark-surface",
+        "tonalRamp": [
+          "oklch(15.00% 0.04456 256.93)",
+          "oklch(26.43% 0.04456 256.93)",
+          "oklch(37.86% 0.04456 256.93)",
+          "oklch(49.29% 0.04456 256.93)",
+          "oklch(60.71% 0.04456 256.93)",
+          "oklch(72.14% 0.04456 256.93)",
+          "oklch(83.57% 0.04456 256.93)",
+          "oklch(95.00% 0.04456 256.93)"
+        ]
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "dark-ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.02308 258.36)",
+          "oklch(26.43% 0.02308 258.36)",
+          "oklch(37.86% 0.02308 258.36)",
+          "oklch(49.29% 0.02308 258.36)",
+          "oklch(60.71% 0.02308 258.36)",
+          "oklch(72.14% 0.02308 258.36)",
+          "oklch(83.57% 0.02308 258.36)",
+          "oklch(95.00% 0.02308 258.36)"
+        ]
+      },
+      "dark-deep": {
+        "role": "neutral",
+        "displayName": "dark-deep",
+        "tonalRamp": [
+          "oklch(15.00% 0.01276 266.70)",
+          "oklch(26.43% 0.01276 266.70)",
+          "oklch(37.86% 0.01276 266.70)",
+          "oklch(49.29% 0.01276 266.70)",
+          "oklch(60.71% 0.01276 266.70)",
+          "oklch(72.14% 0.01276 266.70)",
+          "oklch(83.57% 0.01276 266.70)",
+          "oklch(95.00% 0.01276 266.70)"
+        ]
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "dark-muted",
+        "tonalRamp": [
+          "oklch(15.00% 0.03535 253.75)",
+          "oklch(26.43% 0.03535 253.75)",
+          "oklch(37.86% 0.03535 253.75)",
+          "oklch(49.29% 0.03535 253.75)",
+          "oklch(60.71% 0.03535 253.75)",
+          "oklch(72.14% 0.03535 253.75)",
+          "oklch(83.57% 0.03535 253.75)",
+          "oklch(95.00% 0.03535 253.75)"
+        ]
+      },
+      "dark-wash": {
+        "role": "neutral",
+        "displayName": "dark-wash",
+        "tonalRamp": [
+          "oklch(15.00% 0.05795 256.67)",
+          "oklch(26.43% 0.05795 256.67)",
+          "oklch(37.86% 0.05795 256.67)",
+          "oklch(49.29% 0.05795 256.67)",
+          "oklch(60.71% 0.05795 256.67)",
+          "oklch(72.14% 0.05795 256.67)",
+          "oklch(83.57% 0.05795 256.67)",
+          "oklch(95.00% 0.05795 256.67)"
+        ]
+      },
+      "dark-line": {
+        "role": "neutral",
+        "displayName": "dark-line",
+        "tonalRamp": [
+          "oklch(15.00% 0.04747 254.60)",
+          "oklch(26.43% 0.04747 254.60)",
+          "oklch(37.86% 0.04747 254.60)",
+          "oklch(49.29% 0.04747 254.60)",
+          "oklch(60.71% 0.04747 254.60)",
+          "oklch(72.14% 0.04747 254.60)",
+          "oklch(83.57% 0.04747 254.60)",
+          "oklch(95.00% 0.04747 254.60)"
+        ]
+      },
+      "dark-better": {
+        "role": "secondary",
+        "displayName": "dark-better",
+        "tonalRamp": [
+          "oklch(15.00% 0.13122 157.52)",
+          "oklch(26.43% 0.13122 157.52)",
+          "oklch(37.86% 0.13122 157.52)",
+          "oklch(49.29% 0.13122 157.52)",
+          "oklch(60.71% 0.13122 157.52)",
+          "oklch(72.14% 0.13122 157.52)",
+          "oklch(83.57% 0.13122 157.52)",
+          "oklch(95.00% 0.13122 157.52)"
+        ]
+      },
+      "dark-worse": {
+        "role": "secondary",
+        "displayName": "dark-worse",
+        "tonalRamp": [
+          "oklch(15.00% 0.13146 14.72)",
+          "oklch(26.43% 0.13146 14.72)",
+          "oklch(37.86% 0.13146 14.72)",
+          "oklch(49.29% 0.13146 14.72)",
+          "oklch(60.71% 0.13146 14.72)",
+          "oklch(72.14% 0.13146 14.72)",
+          "oklch(83.57% 0.13146 14.72)",
+          "oklch(95.00% 0.13146 14.72)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "赛事日历标题",
+        "purpose": "紧凑工具行的页面标题。"
+      },
+      "score": {
+        "displayName": "报告比分",
+        "purpose": "等宽数字，长比分和手机有局部缩小规则。"
+      }
+    },
+    "shadows": [],
+    "motion": [],
+    "breakpoints": [
+      {
+        "name": "report-compact",
+        "value": "1100px"
+      },
+      {
+        "name": "toolbar-wrap",
+        "value": "1000px"
+      },
+      {
+        "name": "roster-reflow",
+        "value": "800px"
+      },
+      {
+        "name": "mobile",
+        "value": "600px"
+      },
+      {
+        "name": "narrow",
+        "value": "360px"
+      }
+    ],
+    "focus": {
+      "value": "outline: 3px solid var(--blue); outline-offset: 3px",
+      "purpose": "共享键盘可见焦点。"
+    },
+    "backdrop": {
+      "value": "rgba(13,29,55,.55)",
+      "purpose": "原生弹窗遮罩。"
+    },
+    "tonalRampNote": "色带为从当前颜色合成的 OKLCH 展示辅助，不是新增 CSS token 或新增可用配色。",
+    "scope": "仅 /myscore/；不覆盖艺术馆根 .impeccable/design.json。",
+    "sourceFiles": [
+      "myscore/styles.css",
+      "myscore/reading.css",
+      "myscore/index.html",
+      "myscore/app.mjs"
+    ]
+  },
+  "components": [
+    {
+      "name": "播放按钮",
+      "kind": "button",
+      "refersTo": "button-watch",
+      "description": "赛程行中的播放操作；内联线性 SVG。",
+      "html": "<button class=\"ds-watch\" aria-label=\"观看比赛\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m9 5 11 7-11 7z\"/></svg></button>",
+      "css": ".ds-watch{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:40px;min-height:40px;padding:8px;border:1px solid var(--line,#d8e1ee);border-radius:8px;background:var(--surface,#fff);color:var(--link,#2446be);cursor:pointer;font-family:var(--sans,'Score Sans','PingFang SC','Microsoft YaHei',sans-serif);}.ds-watch svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.ds-watch:hover{background:var(--wash,#e9efff);border-color:var(--blue,#244be2)}.ds-watch:focus-visible{outline:3px solid var(--blue,#244be2);outline-offset:3px;}"
+    },
+    {
+      "name": "文字轻按钮",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "工具栏及阅读视图轻操作。",
+      "html": "<button class=\"ds-text\">今天</button>",
+      "css": ".ds-text{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:40px;min-height:40px;border:1px solid transparent;border-radius:8px;background:none;padding:8px 13px;color:var(--link,#2446be);font-size:13px;cursor:pointer;font-family:var(--sans,'Score Sans','PingFang SC','Microsoft YaHei',sans-serif);}.ds-text:hover{background:var(--wash,#e9efff)}.ds-text:focus-visible{outline:3px solid var(--blue,#244be2);outline-offset:3px;}.ds-text:disabled{cursor:default;color:var(--muted,#57677f)}"
+    },
+    {
+      "name": "球队筛选",
+      "kind": "input",
+      "refersTo": "field-team",
+      "description": "原生选择器；手机以弹性宽度使用。",
+      "html": "<label class=\"ds-field\">筛选球队<select aria-label=\"筛选球队\"><option>所有球队</option></select></label>",
+      "css": ".ds-field{display:flex;align-items:center;gap:12px;color:var(--ink,#243651);font-size:13px;font-family:var(--sans,'Score Sans','PingFang SC','Microsoft YaHei',sans-serif);}.ds-field select{border:1px solid var(--line,#d8e1ee);border-radius:8px;background:var(--surface,#fff);color:var(--ink,#243651);min-height:38px;max-width:180px;padding:6px 30px 6px 12px;font:inherit;accent-color:var(--blue,#244be2)}.ds-field select:focus-visible{outline:3px solid var(--blue,#244be2);outline-offset:3px;}"
+    },
+    {
+      "name": "赛事导航",
+      "kind": "nav",
+      "refersTo": "sport-active",
+      "description": "真实赛事导航的默认与当前状态。",
+      "html": "<nav class=\"ds-sports\" aria-label=\"赛事项目\"><a href=\"#football\" aria-current=\"page\">足球</a><a href=\"#nba\">NBA</a></nav>",
+      "css": ".ds-sports{display:flex;gap:5px;overflow:auto;border-bottom:1px solid var(--line,#d8e1ee);padding-bottom:9px;font-family:var(--sans,'Score Sans','PingFang SC','Microsoft YaHei',sans-serif);}.ds-sports a{display:flex;align-items:center;justify-content:center;gap:10px;min-height:40px;padding:8px 16px;border-radius:7px;white-space:nowrap;font-size:14px;color:var(--muted,#57677f);text-decoration:none}.ds-sports a:hover{background:var(--wash,#e9efff)}.ds-sports a[aria-current]{background:var(--blue,#244be2);color:var(--surface,#fff);font-weight:600}.ds-sports a:focus-visible{outline:3px solid var(--blue,#244be2);outline-offset:3px;}"
+    },
+    {
+      "name": "小局选择器",
+      "kind": "chip",
+      "refersTo": "chip-game",
+      "description": "报告内的地图／小局原生链接。",
+      "html": "<nav class=\"ds-games\" aria-label=\"小局\"><a href=\"#game-1\" aria-current=\"page\">第 1 局</a><a href=\"#game-2\">第 2 局</a></nav>",
+      "css": ".ds-games{display:flex;gap:6px;overflow:auto;font-family:var(--sans,'Score Sans','PingFang SC','Microsoft YaHei',sans-serif);}.ds-games a{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:6px 14px;border:1px solid var(--line,#d8e1ee);border-radius:7px;color:var(--muted,#57677f);font-size:13px;white-space:nowrap;text-decoration:none}.ds-games a[aria-current]{color:var(--link,#2446be);background:var(--wash,#e9efff);border-color:var(--blue,#244be2);font-weight:600}.ds-games a:hover{background:var(--wash,#e9efff)}.ds-games a:focus-visible{outline:3px solid var(--blue,#244be2);outline-offset:3px;}"
+    },
+    {
+      "name": "队伍列表容器",
+      "kind": "card",
+      "refersTo": "roster",
+      "description": "连续选手记录共用一个浅边界；示例只展示结构标签。",
+      "html": "<section class=\"ds-roster\"><h2>队伍</h2><div class=\"ds-columns\"><span>选手</span><span>英雄</span><span>K / D / A</span><span>资源</span><span>出装</span></div><div class=\"ds-record\"><button>选手资料</button><span>英雄</span><span>— / — / —</span><span>补刀 · 伤害 · 经济</span><span>出装未发布</span></div></section>",
+      "css": ".ds-roster{min-width:0;background:var(--surface,#fff);color:var(--ink,#243651);border:1px solid var(--line,#d8e1ee);border-radius:10px;overflow:hidden;font-family:var(--sans,'Score Sans','PingFang SC','Microsoft YaHei',sans-serif);}.ds-roster h2{margin:0;background:var(--wash,#e9efff);padding:10px 14px;font-size:14px;font-weight:600;min-height:48px}.ds-columns,.ds-record{display:grid;grid-template-columns:minmax(145px,1.1fr) minmax(95px,.8fr) minmax(80px,.65fr) minmax(180px,1.2fr) 228px;gap:12px;align-items:center;padding:10px 14px}.ds-columns{font-size:11px;color:var(--muted,#57677f);border-bottom:1px solid var(--line,#d8e1ee);padding-block:7px}.ds-record{min-height:64px;font-size:12px;font-variant-numeric:tabular-nums}.ds-record>:nth-child(3),.ds-record>:nth-child(4),.ds-columns>:nth-child(3),.ds-columns>:nth-child(4){text-align:right}.ds-record:hover{background:var(--wash,#e9efff)}.ds-record button{display:inline-flex;align-items:center;min-height:40px;background:none;border:0;padding:0;color:var(--link,#2446be);font:inherit;text-align:left;cursor:pointer}.ds-record button:hover{text-decoration:underline}.ds-record button:focus-visible{outline:3px solid var(--blue,#244be2);outline-offset:3px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "紧凑赛程与精确比赛报告",
+    "overview": "MyScore 是艺术馆内独立的中文赛事操作空间。赛程浏览与详情阅读同样频繁，因此两种视图共享蓝白操作层、深蓝文字、无衬线字体与稳定的数字列轴。它使用自己的局部样式与 token；本文件不改变根目录艺术馆的设计系统。\n\n有效空间用于真实比赛、球队、选手和数据。上下文放在最近的共同父级，避免为每条记录重复标题；媒体身份与数字保持可追踪的对齐关系。桌面以连续行和共享表头比较，手机通过重排保留内容。",
+    "keyCharacteristics": [
+      "蓝白操作层与冷蓝底色形成清晰工作面。",
+      "真实队徽、头像、英雄与装备帮助识别记录。",
+      "共享上下文、稳定列轴与紧凑连续行支持扫描和比较。",
+      "浅色与深色使用同一结构，窄屏重排数据。"
+    ],
+    "rules": [
+      {
+        "name": "The Meaningful Comparison Rule",
+        "body": "比较色由指标方向和比赛状态决定，不因列排序或视觉位置而改变。",
+        "section": "colors"
+      },
+      {
+        "name": "The Shared Context Rule",
+        "body": "同一上下文只在最近的共同父级出现一次，保留记录自身需要的语义名称。",
+        "section": "layout"
+      },
+      {
+        "name": "The Alignment Rule",
+        "body": "每个文本、数字和媒体元素都对应所属记录或共享表头的轴线；空间先用于内容，再用于分组。",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "**Do** 让赛程与详情共享紧凑的操作层和稳定列轴。",
+      "**Do** 将上下文移到最近的共同父级，避免逐条重复。",
+      "**Do** 保留真实媒体、真实零值、未知状态和完整手机数据。",
+      "**Do** 在修改组件后检查窄屏重排、排序对应和焦点返回。"
+    ],
+    "donts": [
+      "**Don't** 将 MyScore 局部色板覆盖到艺术馆根 token。",
+      "**Don't** 重新引入已不属于当前实现的大标题与大日期构图。",
+      "**Don't** 为精简可见标签删除辅助语义或省略选手装备。",
+      "**Don't** 将局部截图或已有走查写成全站无障碍、性能或全浏览器通过。"
+    ]
+  }
+}

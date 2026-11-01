@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { thumbnail, imageOrigins } from '../images.mjs';
+import { thumbnail, imageOrigins, isMergedCrest } from '../images.mjs';
 
 test('ESPN headshots and crests use bounded, proportion-preserving thumbnails', () => {
   for (const path of ['/i/headshots/nba/players/full/4397189.png', '/i/teamlogos/nba/500/dal.png']) {
@@ -42,4 +42,20 @@ test('connection hints cover selected sources once, without unrelated CDNs', () 
   assert.deepEqual(imageOrigins(['cs2']), ['https://oss.5eplay.com']);
   assert.equal(imageOrigins(['nba', 'epl', 'lol', 'cs2', 'lol']).length, 4);
   assert.deepEqual(imageOrigins([]), []);
+});
+
+
+test('only 5E merged team crests select a light/dark sprite variant', () => {
+  const base = 'https://oss.5eplay.com/cloudx/p/sport/csgo/';
+  for (const name of ['merge_d818n3cconkpudhr4jmg', 'merge_clr6upsconkqks63ctn0']) {
+    const source = `${base}team/${name}.png`;
+    assert.equal(isMergedCrest(source), true);
+    assert.equal(isMergedCrest(thumbnail(source)), true);
+  }
+  for (const source of [
+    `${base}team/chae4nf4nfqe2nie4ung.png`,
+    `${base}player/merge_example.png`,
+    'https://oss.5eplay.com.example.org/cloudx/p/sport/csgo/team/merge_example.png',
+    'https://a.espncdn.com/i/teamlogos/nba/500/dal.png', '', 'not-a-url',
+  ]) assert.equal(isMergedCrest(source), false);
 });
