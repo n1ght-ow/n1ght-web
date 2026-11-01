@@ -83,7 +83,7 @@ node --max-old-space-size=128 myscore/server/index.mjs
 ## 验证
 
 ```powershell
-node --test myscore/tests/data.test.mjs myscore/tests/presentation.test.mjs myscore/tests/comparison.test.mjs
+node --test myscore/tests/data.test.mjs myscore/tests/presentation.test.mjs myscore/tests/comparison.test.mjs myscore/tests/images.test.mjs
 node --max-old-space-size=128 myscore/tests/load.mjs --duration=1800
 ```
 

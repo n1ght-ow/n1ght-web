@@ -3,6 +3,7 @@ import { provider, api, readSaved, saveResult } from './browser-data.mjs?v=2';
 import { mediaKind, liveLink } from './media.mjs';
 import { hasValue, readableTable, readableStats, matchFacts, gameResults, matchLeaders, personMetrics, sortedRows } from './presentation.mjs?v=1';
 import { compareNumbers, compareMetric, comparisonBasis, matchComparison, tableComparisons } from './comparison.mjs?v=1';
+import { thumbnail, imageOrigins, retainImages } from './images.mjs?v=1';
 
 const $ = id => document.getElementById(id);
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -23,10 +24,18 @@ const pageURL = new URL('./', location.href);
 const batches = new Map(), tables = new Map(), tableSorts = new Map();
 const failedImages = new Set();
 const imageFallbacks = new Map(), photoRequests = new Map();
-function imageHTML(src, name, className = '', personId = '') {
-  const original = https(src), source = imageFallbacks.get(original) || original, missing = !source || failedImages.has(source);
+let eagerPortraits = 0, eagerCrests = 0;
+function imageSource(src, width) {
+  const original = https(src), resolved = imageFallbacks.get(original) || original;
+  const resized = thumbnail(resolved, width);
+  return { original: resolved, source: imageFallbacks.get(resized) || resized };
+}
+function imageHTML(src, name, className = '', personId = '', eager = false) {
+  const profilePortrait = className === 'profile-portrait';
+  const { original, source } = imageSource(src, profilePortrait ? 192 : 96), missing = !source || failedImages.has(source);
+  const immediate = profilePortrait || eager && eagerPortraits++ < 12;
   const profile = personId && detail?.match.group === '足球' ? ` data-photo-person="${escape(personId)}"` : '';
-  return `<span class="media-image ${className}${missing ? ' image-missing' : ''}" title="${escape(name)}">${missing ? '' : `<img src="${escape(source)}"${profile} alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">`}<span class="media-fallback" aria-hidden="true">${escape((name || '?').slice(0, 2))}</span></span>`;
+  return `<span class="media-image ${className}${missing ? ' image-missing' : ''}" title="${escape(name)}">${missing ? '' : `<img src="${escape(source)}" data-original-src="${escape(original)}"${profile} alt="" loading="${immediate ? 'eager' : 'lazy'}" fetchpriority="${profilePortrait ? 'high' : 'auto'}" decoding="async" referrerpolicy="no-referrer">`}<span class="media-fallback" aria-hidden="true">${escape((name || '?').slice(0, 2))}</span></span>`;
 }
 function equipmentHTML(items) {
   return `<span class="equipment">${items.map(i => `<span class="equipment-item" title="${escape(i.name)}">${imageHTML(i.image, i.name, 'item-image')}<span class="sr-only">${escape(i.name)}</span></span>`).join('')}</span>`;
@@ -54,9 +63,10 @@ function parseRoute() {
 const selectedCompetitions = () => competitions.filter(c => route.competition === 'all' || route.competition === 'football' && c.group === '足球' || route.competition === c.id);
 function batchKey(league) { return `${route.date}:${league}`; }
 function selectedBatch(c) { return batches.get(batchKey(c.id)); }
-function crest(src, name, extra = '') {
+function crest(src, name, extra = '', critical = false) {
   const initials = (name || '?').split(/\s+/).map(w => w[0]).slice(0, 2).join('');
-  return https(src) ? `<img class="crest ${extra}" src="${escape(https(src))}" data-fallback="${escape(initials)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : `<span class="crest-fallback ${extra}" aria-hidden="true">${escape(initials)}</span>`;
+  const { original, source } = imageSource(src, critical ? 128 : 96), immediate = critical || eagerCrests++ < 12;
+  return source ? `<img class="crest ${extra}" src="${escape(source)}" data-original-src="${escape(original)}" data-fallback="${escape(initials)}" alt="" loading="${immediate ? 'eager' : 'lazy'}" fetchpriority="${critical ? 'high' : 'auto'}" decoding="async" referrerpolicy="no-referrer">` : `<span class="crest-fallback ${extra}" aria-hidden="true">${escape(initials)}</span>`;
 }
 function teamHref(m, side) { return url({ match: null, team: m[`${side}Id`], competition: m.league, tab: null, map: null, state: null }); }
 function matchHref(m) { return url({ match: m.id, team: null, tab: null, map: null, year: m.league === 'f1' && m.start ? dayOf(m.start).slice(0, 4) : null }); }
@@ -77,7 +87,9 @@ function preserveUpdate(el, html) {
   const active = el.contains(document.activeElement) ? document.activeElement : null, focusKey = active?.dataset.focus || active?.getAttribute('href') || active?.dataset.watch || (active?.tagName === 'SUMMARY' ? active.parentElement.dataset.table : null);
   const scrolls = [...el.querySelectorAll('.table-scroll')].map(node => ({ label: node.getAttribute('aria-label'), left: node.scrollLeft, top: node.scrollTop }));
   const expanded = new Set([...el.querySelectorAll('details[open][data-table]')].map(node => node.dataset.table));
-  el.innerHTML = html; el._html = html;
+  const template = document.createElement('template'); template.innerHTML = html;
+  retainImages(el, template.content);
+  el.replaceChildren(template.content); el._html = html;
   for (const node of el.querySelectorAll('details[data-table]')) node.open = expanded.has(node.dataset.table);
   for (const saved of scrolls) { const node = [...el.querySelectorAll('.table-scroll')].find(node => node.getAttribute('aria-label') === saved.label); if (node) { node.scrollLeft = saved.left; node.scrollTop = saved.top; } }
   if (focusKey) [...el.querySelectorAll('a,button,summary')].find(e => (e.dataset.focus || e.getAttribute('href') || e.dataset.watch || (e.tagName === 'SUMMARY' ? e.parentElement.dataset.table : null)) === focusKey)?.focus({ preventScroll: true });
@@ -129,6 +141,7 @@ function renderControls() {
 }
 function renderSchedule() {
   if (route.match || route.team) return;
+  eagerCrests = 0;
   renderControls(); const desired = new Set(); $('scores')._html = null;
   for (const c of selectedCompetitions()) {
     const b = selectedBatch(c), matches = list(b?.matches).filter(m => !route.filter || [m.homeId, m.awayId].some(id => `${m.league}:${id}` === route.filter));
@@ -149,9 +162,9 @@ function renderSchedule() {
   if (!desired.size) preserveUpdate($('scores'), '<div class="empty-state"><p>这一天没有已确认的比赛。</p><span>可以切换日期或赛事，继续查看赛程。</span></div>');
   restorePosition();
 }
-function renderTable(t, index) {
+function renderTable(t, index, eager = false) {
   const { key, sort } = registerTable(t, index), sortable = sortedRows(t, sort), comparisons = tableComparisons(t, detail.match);
-  const content = `<div class="table-heading"><h2>${escape(t.title)}</h2></div><div class="table-scroll" role="region" aria-label="${escape(t.title)}" tabindex="0"><table class="data-table${t.prose ? ' prose-table' : ''}${t.columns[0] === '时间' ? ' time-table' : ''}"><thead><tr>${t.columns.map((c, i) => `<th scope="col"${sort?.label === c ? ` aria-sort="${sort.direction === 1 ? 'ascending' : 'descending'}"` : ''}><button type="button" data-sort="${key}" data-column="${i}" data-focus="${key}-${i}">${escape(c)}${icon('sort')}</button></th>`).join('')}</tr></thead><tbody>${sortable.map(({ row, person, index: personIndex }) => `<tr>${row.map((cell, j) => `<td>${j === 0 && person?.name ? `<button class="person-button person-name" data-person="${key}" data-index="${personIndex}" data-focus="person-${key}-${escape(person.id || person.name)}" type="button">${imageHTML(person.photo, person.name, 'portrait', person.id)}<span>${escape(show(cell))}</span></button>` : comparisons[personIndex]?.[j] !== 'neutral' ? comparisonValue(cell, comparisons[personIndex][j], false, comparisonBasis(t.columns[j])) : cellHTML(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const content = `<div class="table-heading"><h2>${escape(t.title)}</h2></div><div class="table-scroll" role="region" aria-label="${escape(t.title)}" tabindex="0"><table class="data-table${t.prose ? ' prose-table' : ''}${t.columns[0] === '时间' ? ' time-table' : ''}"><thead><tr>${t.columns.map((c, i) => `<th scope="col"${sort?.label === c ? ` aria-sort="${sort.direction === 1 ? 'ascending' : 'descending'}"` : ''}><button type="button" data-sort="${key}" data-column="${i}" data-focus="${key}-${i}">${escape(c)}${icon('sort')}</button></th>`).join('')}</tr></thead><tbody>${sortable.map(({ row, person, index: personIndex }) => `<tr>${row.map((cell, j) => `<td>${j === 0 && person?.name ? `<button class="person-button person-name" data-person="${key}" data-index="${personIndex}" data-focus="person-${key}-${escape(person.id || person.name)}" type="button">${imageHTML(person.photo, person.name, 'portrait', person.id, eager)}<span>${escape(show(cell))}</span></button>` : comparisons[personIndex]?.[j] !== 'neutral' ? comparisonValue(cell, comparisons[personIndex][j], false, comparisonBasis(t.columns[j])) : cellHTML(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   return `<section class="table-block">${content}</section>`;
 }
 function registerTable(t, index) {
@@ -163,7 +176,7 @@ function registerTable(t, index) {
 function renderLolTeam(t, index) {
   const { key, sort } = registerTable(t, index);
   const rows = sortedRows(t, sort), cell = (row, name) => row[t.columns.indexOf(name)];
-  return `<section class="lol-team"><div class="table-heading"><h2>${escape(t.title.replace(/^第 \d+ 局 · /, ''))}</h2><div class="roster-sort" aria-label="选手排序"><button type="button" data-reset-sort="${key}" aria-pressed="${!sort}">位置</button>${['K / D / A', '伤害', '经济'].map(name => `<button type="button" data-sort="${key}" data-column="${t.columns.indexOf(name)}" data-focus="${key}-${name}" aria-pressed="${sort?.label === name}">${escape(name === 'K / D / A' ? 'KDA' : name)}${sort?.label === name ? icon('sort') : ''}</button>`).join('')}</div></div><ol class="lol-roster">${rows.map(({ row, person, index: personIndex }) => `<li class="lol-player"><button class="lol-identity person-button" data-person="${key}" data-index="${personIndex}" data-focus="person-${key}-${escape(person?.id || person?.name)}" type="button">${imageHTML(person?.photo, person?.name, 'portrait')}<span><strong>${escape(person?.name || show(row[0]))}</strong><small>${escape(show(cell(row, '位置')))}${hasValue(cell(row, '等级')) ? ` · ${escape(show(cell(row, '等级')))} 级` : ''}</small></span></button><div class="lol-champion">${cellHTML(cell(row, '英雄'))}</div><div class="lol-kda"><span>K / D / A</span><strong>${escape(show(cell(row, 'K / D / A')))}</strong></div><dl class="lol-resources">${['补刀', '伤害', '经济'].filter(name => hasValue(cell(row, name))).map(name => `<div><dt>${name}</dt><dd title="${escape(show(cell(row, name)))}">${escape(name === '伤害' && Number.isFinite(Number(cell(row, name))) ? new Intl.NumberFormat('zh-CN', { maximumFractionDigits: 0 }).format(Number(cell(row, name))) : show(cell(row, name)))}</dd></div>`).join('')}</dl><div class="lol-loadout">${person?.items?.length ? equipmentHTML(person.items) : '<span class="unavailable">出装未发布</span>'}</div></li>`).join('')}</ol></section>`;
+  return `<section class="lol-team"><div class="table-heading"><h2>${escape(t.title.replace(/^第 \d+ 局 · /, ''))}</h2><div class="roster-sort" aria-label="选手排序"><button type="button" data-reset-sort="${key}" aria-pressed="${!sort}">位置</button>${['K / D / A', '伤害', '经济'].map(name => `<button type="button" data-sort="${key}" data-column="${t.columns.indexOf(name)}" data-focus="${key}-${name}" aria-pressed="${sort?.label === name}">${escape(name === 'K / D / A' ? 'KDA' : name)}${sort?.label === name ? icon('sort') : ''}</button>`).join('')}</div></div><ol class="lol-roster">${rows.map(({ row, person, index: personIndex }) => `<li class="lol-player"><button class="lol-identity person-button" data-person="${key}" data-index="${personIndex}" data-focus="person-${key}-${escape(person?.id || person?.name)}" type="button">${imageHTML(person?.photo, person?.name, 'portrait', '', true)}<span><strong>${escape(person?.name || show(row[0]))}</strong><small>${escape(show(cell(row, '位置')))}${hasValue(cell(row, '等级')) ? ` · ${escape(show(cell(row, '等级')))} 级` : ''}</small></span></button><div class="lol-champion">${cellHTML(cell(row, '英雄'))}</div><div class="lol-kda"><span>K / D / A</span><strong>${escape(show(cell(row, 'K / D / A')))}</strong></div><dl class="lol-resources">${['补刀', '伤害', '经济'].filter(name => hasValue(cell(row, name))).map(name => `<div><dt>${name}</dt><dd title="${escape(show(cell(row, name)))}">${escape(name === '伤害' && Number.isFinite(Number(cell(row, name))) ? new Intl.NumberFormat('zh-CN', { maximumFractionDigits: 0 }).format(Number(cell(row, name))) : show(cell(row, name)))}</dd></div>`).join('')}</dl><div class="lol-loadout">${person?.items?.length ? equipmentHTML(person.items) : '<span class="unavailable">出装未发布</span>'}</div></li>`).join('')}</ol></section>`;
 }
 function renderLolResources(t) {
   const m = detail.match, home = t.rows.find(r => show(r[0]) === m.home), away = t.rows.find(r => show(r[0]) === m.away);
@@ -187,7 +200,7 @@ function renderLeaders(d) {
   const leaders = matchLeaders(d); if (!leaders.length) return '';
   return `<section class="performer-section"><div class="section-heading"><h2>选手表现</h2><a href="${url({ tab: 'lineup', map: null })}">查看全部选手${icon('right')}</a></div><div class="performers">${leaders.map(p => {
     const { key } = registerTable(p.source, `${p.tableIndex}-leader`);
-    return `<div class="performer"><button type="button" class="person-button performer-person" data-person="${key}" data-index="${p.index}" data-focus="leader-${escape(p.person.id || p.person.name)}">${imageHTML(p.person.photo, p.person.name, 'portrait', p.person.id)}<span><strong>${escape(p.person.name)}</strong><small>${escape(p.person.team)}</small></span></button><div class="performer-value"><span>本队最高 ${escape(p.metric)}</span><strong>${escape(show(p.value))}</strong></div></div>`;
+    return `<div class="performer"><button type="button" class="person-button performer-person" data-person="${key}" data-index="${p.index}" data-focus="leader-${escape(p.person.id || p.person.name)}">${imageHTML(p.person.photo, p.person.name, 'portrait', p.person.id, true)}<span><strong>${escape(p.person.name)}</strong><small>${escape(p.person.team)}</small></span></button><div class="performer-value"><span>本队最高 ${escape(p.metric)}</span><strong>${escape(show(p.value))}</strong></div></div>`;
   }).join('')}</div></section>`;
 }
 function renderMatchFacts(d) {
@@ -207,10 +220,11 @@ function renderOverview(d, views) {
 }
 function renderDetail() {
   if (!detail) return; const m = detail.match;
+  eagerPortraits = 0;
   document.title = `${m.title || `${m.home} vs ${m.away}`} · MyScore`;
   $('reading-view').dataset.sport = m.group === '足球' ? 'football' : m.league;
   const outcome = matchComparison(m);
-  const team = side => `<div class="hero-team ${side}">${m[`${side}Id`] ? `<a href="${teamHref(m, side)}">${crest(m[`${side}Logo`], m[side])}<span>${escape(m[side])}</span></a>` : `${crest(m[`${side}Logo`], m[side])}<span>${escape(m[side])}</span>`}</div>`;
+  const team = side => `<div class="hero-team ${side}">${m[`${side}Id`] ? `<a href="${teamHref(m, side)}">${crest(m[`${side}Logo`], m[side], '', true)}<span>${escape(m[side])}</span></a>` : `${crest(m[`${side}Logo`], m[side], '', true)}<span>${escape(m[side])}</span>`}</div>`;
   let header = `<div class="reading-meta"><h1 id="reading-title">${escape(m.event || competition(m.league).name)}</h1></div>`;
   if (m.league === 'f1') header += `<div class="reading-heading"><h1>${escape(m.title)}</h1><p>${escape(m.status)} · ${time(m.start, { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })} 北京时间</p></div>`;
   else header += `<div class="match-hero">${team('home')}<div class="hero-score"><div class="state">${m.state === 'live' ? '<i class="live-dot" aria-hidden="true"></i>' : ''}${escape(m.status)}</div><strong class="${Math.max(m.homeScore.length, m.awayScore.length) >= 3 ? 'score-long' : ''}">${comparisonValue(m.state === 'scheduled' ? '—' : m.homeScore, outcome.regular.home, true)}<span class="score-divider"> : </span>${comparisonValue(m.state === 'scheduled' ? '—' : m.awayScore, outcome.regular.away, true)}</strong>${outcome.hasPenalties ? `<p class="shootout-score">点球大战 ${comparisonValue(m.homeShootout, outcome.penalties.home, true)} : ${comparisonValue(m.awayShootout, outcome.penalties.away, true)}</p>` : ''}<p>${m.timeConfirmed ? time(m.start, { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }) : '时间待定'} · 北京时间</p>${mediaKind(m) ? `<div class="media-row">${playButton(m)}<span>${m.state === 'final' ? '回放与集锦' : '观看比赛'}</span></div>` : ''}</div>${team('away')}</div>`;
@@ -239,7 +253,7 @@ function renderDetail() {
     const expanded = selected.filter(v => !v.t.collapsible), deeper = selected.filter(v => v.t.collapsible);
     const resource = v => m.league === 'lol' && v.t.columns[0] === '队伍' && v.t.columns.includes('大龙');
     for (const v of expanded.filter(resource)) deeper.unshift({ t: { ...v.t, title: '完整资源数据' }, index: `${v.index}-resources` });
-    const render = v => resource(v) ? renderLolResources(v.t) : m.league === 'lol' && v.t.columns.includes('出装') ? renderLolTeam(v.t, v.index) : renderTable(v.t, v.index);
+    const render = v => resource(v) ? renderLolResources(v.t) : m.league === 'lol' && v.t.columns.includes('出装') ? renderLolTeam(v.t, v.index) : renderTable(v.t, v.index, true);
     html += `<div class="tables">${expanded.map(render).join('')}${deeper.length ? `<details class="deep-analysis" data-table="analysis-${tab}-${map || ''}"><summary><span>${tab === 'events' ? '完整进程' : '深入数据'}</span><small>${tab === 'events' ? '文字实录与逐档记录' : m.league === 'lol' ? '战斗、伤害、承伤、视野、符文与 BP' : '更多指标与对位明细'}</small>${icon('right')}</summary><div class="analysis-tables">${deeper.map(v => renderTable({ ...v.t, collapsible: false }, v.index)).join('')}</div></details>` : ''}</div>`;
   }
   if (!html || html === '<div class="tables"></div>') html = '<div class="empty-state">来源尚未提供此项内容。</div>';
@@ -251,10 +265,11 @@ function renderDetail() {
 function renderStats(stats) { return stats.length ? `<section class="stat-comparison" aria-label="双方技术统计"><div class="stat-team-labels"><span>${escape(detail.match.home)}</span><span>${escape(detail.match.away)}</span></div>${stats.map(s => `<div class="stat-row"><strong>${comparisonValue(s.home, compareMetric(s.label, s.home, s.away).home, false, comparisonBasis(s.label))}</strong><span>${escape(s.label)}</span><strong>${comparisonValue(s.away, compareMetric(s.label, s.home, s.away).away, false, comparisonBasis(s.label))}</strong></div>`).join('')}</section>` : ''; }
 function renderTeam() {
   if (!teamResult) return;
+  eagerCrests = 0;
   const matches = teamResult.matches, sample = matches.find(m => [m.homeId, m.awayId].includes(route.team));
   const side = sample?.homeId === route.team ? 'home' : 'away', name = teamResult.teamInfo?.name || sample?.[side] || '队伍赛程';
   document.title = `${name} · MyScore`;
-  preserveUpdate($('reading-header'), `<div class="reading-heading team-summary">${crest(teamResult.teamInfo?.logo || sample?.[`${side}Logo`], name)}<div><h1 id="reading-title">${escape(name)}</h1><p>${escape(competition(route.competition)?.name || '')} · ${['cs2', 'lol'].includes(route.competition) ? '队伍赛程' : '球队赛程'}</p>${teamResult.teamInfo ? `<p>${escape([teamResult.teamInfo.season, teamResult.teamInfo.record ? `赛季战绩 ${teamResult.teamInfo.record}` : '', teamResult.teamInfo.standing].filter(Boolean).join(' · '))}</p>` : ''}</div></div>`);
+  preserveUpdate($('reading-header'), `<div class="reading-heading team-summary">${crest(teamResult.teamInfo?.logo || sample?.[`${side}Logo`], name, '', true)}<div><h1 id="reading-title">${escape(name)}</h1><p>${escape(competition(route.competition)?.name || '')} · ${['cs2', 'lol'].includes(route.competition) ? '队伍赛程' : '球队赛程'}</p>${teamResult.teamInfo ? `<p>${escape([teamResult.teamInfo.season, teamResult.teamInfo.record ? `赛季战绩 ${teamResult.teamInfo.record}` : '', teamResult.teamInfo.standing].filter(Boolean).join(' · '))}</p>` : ''}</div></div>`);
   preserveUpdate($('detail-tabs'), [['all', '全部'], ['future', '接下来'], ['past', '已结束']].map(([id, name]) => `<a href="${url({ state: id === 'all' ? null : id })}"${route.teamState === id ? ' aria-current="page"' : ''}>${name}</a>`).join(''));
   const filtered = matches.filter(m => route.teamState === 'all' || (route.teamState === 'past' ? ['final', 'cancelled'].includes(m.state) : !['final', 'cancelled'].includes(m.state)));
   let host = $('reading-content').querySelector('.match-list');
@@ -332,6 +347,10 @@ function scheduleF1Header() {
 function mount({ focus = false } = {}) {
   generation++; controller?.abort(); clearTimeout(timer); clearTimeout(headerTimer); activeTasks = 0; lastRefresh = 0; controller = new AbortController();
   route = parseRoute(); const reading = !!(route.match || route.team);
+  for (const origin of imageOrigins(selectedCompetitions().map(c => c.id))) {
+    if ([...document.querySelectorAll('link[rel="preconnect"]')].some(link => link.href === `${origin}/`)) continue;
+    const link = document.createElement('link'); link.rel = 'preconnect'; link.href = origin; document.head.append(link);
+  }
   $('schedule-view').hidden = reading; $('reading-view').hidden = !reading; detail = null; teamResult = null; tables.clear();
   $('back-link').href = url({ match: null, team: null, tab: null, map: null, state: null, year: null });
   $('back-link').innerHTML = icon('back') + '返回赛程';
@@ -423,6 +442,12 @@ document.addEventListener('visibilitychange', () => { clearTimeout(timer); clear
 window.addEventListener('pagehide', () => { clearTimeout(timer); clearTimeout(headerTimer); controller?.abort(); history.replaceState({ ...history.state, scroll: window.scrollY }, ''); });
 document.addEventListener('error', async e => {
   const img = e.target; if (!(img instanceof HTMLImageElement)) return;
+  const fullSize = https(img.dataset.originalSrc);
+  if (fullSize && fullSize !== img.src && !img.dataset.originalRetried && !failedImages.has(fullSize)) {
+    imageFallbacks.set(img.src, fullSize);
+    if (imageFallbacks.size > 256) imageFallbacks.delete(imageFallbacks.keys().next().value);
+    img.dataset.originalRetried = 'true'; img.src = fullSize; return;
+  }
   const original = img.src; failedImages.add(original); img.hidden = true;
   const media = img.closest('.media-image'); media?.classList.add('image-missing');
   if (img.classList.contains('crest')) { const span = document.createElement('span'); span.className = 'crest-fallback'; span.textContent = img.dataset.fallback || '?'; span.setAttribute('aria-hidden', 'true'); img.replaceWith(span); }
