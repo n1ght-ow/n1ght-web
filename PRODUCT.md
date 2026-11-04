@@ -1,33 +1,58 @@
-# N1GHT CHXN9
-
 <!-- impeccable:product-schema 1 -->
 
-## Platform
+# N1GHT CHXN9 · DEEP ARCHIVE
 
-web
+## 产品定义
 
-## Product Purpose
+N1GHT CHXN9 是一座可探索的私人实时 3D 馆藏。DEEP ARCHIVE 用一条围绕引力核心运行的记忆船，把原网站的真实照片、书籍、诗歌、绘画、音乐、体育、剧集、电影、游戏和策展素材组织成十个独立空间。
 
-A personal collection of photographs, books, poems, paintings, music, sport, films, series and games. Visitors browse the owner's collection and make a personal exhibition from three photographs and four collection pieces.
+访客可以从入口沿螺旋通道连续参观，也可以打开地图直接抵达任一区域。每进入一个空间，书名、歌曲名、剧名、球队和作品图像与原链接都应保持真实，不以虚构内容或通用占位材料替代。
 
-## Users
+## 用户目标
 
-Inferred from the existing site: curious visitors exploring a personal collection, on desktop and phone. The owner has delegated this redesign's visual and implementation decisions.
+- 第一次访问时快速理解这是一个可探索馆藏，并能立即进入或直达熟悉的类别。
+- 在三维空间中发现作品，用鼠标、键盘或触控拾取、聚焦、缩放。
+- 同时通过可靠的文字目录搜索全部内容，每页浏览九件，打开 HTML 详情、精读字段和外部来源。
+- 在十区之间返回、前往下一区或直接切换，且不必等待长镜头完成。
+- 在 WebGL 不可用、资源载入失败或偏好减少动态时，仍能阅读完整馆藏。
+- 在策展区选择照片、书、电影、剧集与音乐共七槽，使用三种版式、预览并导出 PNG 草稿。
 
-## Capabilities and Constraints
+## 内容范围
 
-46 photographs with stable IDs, spatial exploration and a complete index, three photo slots shared with the exhibition desk, eight archive tabs, searchable music, book and media details, and a unified seven-piece curator with one set of visitor text, three poster layouts and PNG export. Paintings, the added archive category after Poems, presents twelve real public-domain masterworks with complete reproductions, bilingual titles, artist/date/medium, museum and image-source links, a thumbnail catalogue and a zoomable full-screen viewer. Browser-local drafts. Static HTML, CSS and JavaScript with local GSAP, ScrollTrigger and Lenis. No build dependency.
+| 区域 | 数量 | 空间与动作 |
+| --- | ---: | --- |
+| 照片 | 46 | 光轨暗房；浏览、聚焦、缩放、来源 |
+| 书籍 | 16 | 重力书库；抽取书脊、阅读笔记 |
+| 诗歌 | 3 | 回声井；阅读完整诗节 |
+| 绘画 | 12 | 恒光穹殿；环绕、检查、缩放 |
+| 音乐 | 534 / 15 组 | 声纹反应堆；选唱片、查看真实外部听源 |
+| 体育 | 5 | 竞技观测场；切换项目、查看球队 |
+| 剧集 | 36 | 连续信号塔；浏览标题与元数据 |
+| 电影 | 24 | 轨道放映厅；滚动胶片、查看投影 |
+| 游戏 | 18 | 交互试验场；选择平台与卡带 |
+| 策展 | 7 槽 | 记忆装配坞；三版式、预览、PNG 导出 |
 
-## Brand Commitments
+数据源是 `assets/world/collection.json`。所有记录从现有项目提取并保留原字段；没有真实音频、图片或来源时显示缺失状态，不补造事实。
 
-N1GHT CHXN9 is the original name. Existing interface language is English; collection titles keep their original language. The user requests a full redesign using Anthropic Skills and Impeccable and explicitly delegates aesthetic decisions without preserving the incumbent visual rules.
+## 体验原则
 
-## Evidence on Hand
+- **空间先说明位置。** 入口、螺旋通道和十区具有可辨认的几何与材质差异，引力核心只属于入口与通道。
+- **真实内容优先。** 原始作品名与 N1GHT CHXN9 品牌用于中文界面；照片、封面和藏品的身份不被品牌滤镜覆盖。
+- **操作闭环。** 每次抵达都有当前位置、返回方式与前后区域；3D 选择应连接到可见的 HTML 详情。
+- **导航可打断。** 地图直达优先于镜头演示；后台、减少动态和上下文异常下保留可用阅读路径。
+- **自主授权。** 用户明确委托整体 3D 重构及常规设计、修复推进；无需逐项方案审批。
 
-The existing index.html, js/*-data.js, photo/, hero/, posters/, covers/ and sport/ contain the real collection. Paintings images live in assets/paintings/; sources.json records their origins, rights and dimensions. Use these assets rather than inventing collection items or personal facts.
+## 技术边界
 
-## Product Principles
+- Three.js 本地固定 `0.187.0`，MIT 许可证随仓库保留。
+- 静态原生 ESM，无 npm 构建；运行入口为 `index.html` 与本地 `serve.mjs`。
+- 单渲染器承载各区域，纹理长边 1024px，LRU 上限 24 张或 48 MiB。
+- 区域切换使用独立 staging；新请求生效后清理旧区域资源，快速切换不会把不同区域状态混在一起。
+- 页面可见性、减少动态偏好和用户暂停控制环境动画；WebGL 上下文丢失时提供回退。
+- `/myscore/` 保持独立，使用自身页面与数据，不冒充 3D 世界的一部分。
 
-MyScore is a separate Chinese sports surface at `/myscore/`, entered from the global navigation. It preserves the original gallery and uses full-width match programmes, standalone match/team reading views, source-backed statistics and broadcaster links. Browser-direct data is supplemented by an optional bounded Node service for non-CORS sources. It has no subscriptions, calendar reminders or Android installer. See `myscore/README.md` for supported sources, setup and deployment boundaries.
+## 维护与证据
 
-Let the original collection lead. Make browsing and creating enjoyable. Keep original media intact. Preserve keyboard operation and reduced-motion access. Evaluate the built page in a browser.
+- `tools/world-source.html` 保留原页面结构快照，原始媒体仍在原资源目录；`tools/world-extract.mjs` 可重新提取 `assets/world/collection.json`。
+- `tools/world-verify.mjs` 是浏览器验收脚本，输出 `.work/world-rebuild/test-report.json`。
+- 验收范围、原始失败与最终回归见 `.impeccable/review/world/verification-summary.md`。桌面验证使用 NVIDIA RTX 3050 的 Chrome 硬件渲染；320/390px 为触控模拟，不代表实体手机性能，不宣称稳定 FPS。

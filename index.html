@@ -1,1107 +1,158 @@
-<!DOCTYPE html>
-<html lang="en" class="atelier open-gallery">
+<!doctype html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>N1GHT CHXN9 - Photography and Archive</title>
-  <meta name="description" content="The personal site of N1GHT CHXN9. Forty-six photographs kept bright, eighteen games, and everything else that shaped the person behind both.">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="N1GHT CHXN9">
-  <meta property="og:title" content="N1GHT CHXN9 - Photography and Archive">
-  <meta property="og:description" content="Frames kept bright, eighteen games, and everything that shaped the person behind both.">
-  <link rel="icon" href="assets/icons/night-enamel.ico?v=1" type="image/x-icon" sizes="16x16 24x24 32x32 48x48 64x64 128x128 256x256">
-  <link rel="icon" href="assets/icons/night-enamel-32.png?v=1" type="image/png" sizes="32x32">
-  <link rel="icon" href="assets/icons/night-enamel-512.png?v=1" type="image/png" sizes="512x512">
-  <link rel="apple-touch-icon" href="assets/icons/night-enamel-apple-180.png?v=1" sizes="180x180">
-  <!-- The refraction gate that used to live here is gone with the
-       refraction: there is no url() inside backdrop-filter any more, so there
-       is no engine to test for and nothing to gate. css/glass.css's header
-       lists everything that was deleted with it. -->
-  <script>document.documentElement.classList.add("js");</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, viewport-fit=cover">
+  <meta name="theme-color" content="#070b0d">
+  <link rel="icon" href="assets/icons/night-enamel-32.png?v=1" type="image/png">
+  <meta name="description" content="N1GHT CHXN9 深档：一座围绕引力井航行的私人记忆档案船。">
+  <title>N1GHT CHXN9 / 深档 · 引力记忆舱</title>
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- Preload the new self-hosted gallery display face. -->
-  <link rel="preload" href="fonts/Calistoga-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/fonts.css?v=15">
-  <link rel="stylesheet" href="css/style.css?v=110">
-  <link rel="stylesheet" href="css/glass.css?v=13">
-  <link rel="stylesheet" href="css/reel-stage.css?v=18">
-  <link rel="stylesheet" href="css/film-stage.css?v=18">
-  <link rel="stylesheet" href="css/series-stage.css?v=19">
-  <link rel="stylesheet" href="css/book-shelf.css?v=13">
-  <link rel="stylesheet" href="css/games-stage.css?v=9">
-  <!-- Atelier is the new gallery layer, after the existing component geometry. -->
-  <link rel="stylesheet" href="css/atelier.css?v=9">
-  <link rel="stylesheet" href="css/atelier-photo.css?v=10">
-  <link rel="stylesheet" href="css/atelier-archive.css?v=15">
-  <link rel="stylesheet" href="css/atelier-poem.css?v=6">
-  <link rel="stylesheet" href="css/curator-desk.css?v=12">
-  <link rel="stylesheet" href="css/atelier-viewer.css?v=6">
-  <link rel="stylesheet" href="css/gallery.css?v=9">
-  <link rel="stylesheet" href="css/paintings-stage.css?v=1">
+  <link rel="preload" href="fonts/InstrumentSerif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/fonts.css?v=1">
+  <link rel="stylesheet" href="css/world.css?v=2">
 </head>
-<body>
-
-
-  <a class="skip-link mono" href="#hero">SKIP TO CONTENT</a>
-
-  <!-- ============ NAV : a printed tray floating over the hero ============
-       The class names are the print-surface contract (AGENTS.md "印刷面"):
-       .glass--spot draws nothing any more - it walked two steps (pointer
-       crosshair, then retired) and its four properties are still here only
-       so the rename can happen once, for every element at the same time. -->
-  <header class="nav glass glass--pill glass--spot" id="nav">
-    <div class="glass__body" aria-hidden="true"></div>
-    <div class="glass__edge" aria-hidden="true"></div>
-    <span class="glass__press" aria-hidden="true"></span>
-    <div class="glass__content">
-      <a class="nav-brand" href="#hero"><svg class="gallery-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2v28M2 16h28M6 6l20 20M6 26L26 6" fill="none" stroke="currentColor" stroke-width="3"/></svg><span>N1GHT CHXN9</span></a>
-      <!-- No selected indicator: the active link is marked by colour alone.
-           See the note in css/style.css. -->
-      <nav class="nav-links" aria-label="Primary">
-        <a href="#photo">Photography</a>
-        <a href="#archive">Archive</a>
-        <a href="#curate">Curate</a>
-        <a href="myscore/">MyScore</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-
-    <!-- Opening spread: its photograph and typography paint without scripting. -->
-    <section class="hero atelier-hero" id="hero">
-    <div class="hero-inner shell">
-      <div class="atelier-copy">
-        <div class="hero-mask"><h1 class="hero-wordmark"><span>N1GHT</span> <span>CHXN9</span></h1></div>
-      </div>
-      <div class="gallery-opening">
-      <figure class="gallery-satellite gallery-satellite--left">
-        <a href="#photo" aria-label="Explore the photography room"><img src="photo/wall/1779456446231.webp" alt="A blossom branch reaching into a blue sky" width="1600" height="1067" decoding="async"></a>
-      </figure>
-      <figure class="atelier-media">
-        <div class="atelier-frame">
-          <div class="atelier-image-window">
-            <picture class="hero-plate">
-              <source type="image/webp" srcset="hero/launch-800.webp?v=1 800w, hero/launch-1600.webp?v=1 1600w, hero/launch-2400.webp?v=1 2400w" sizes="(min-width: 900px) 64vw, 92vw">
-              <img src="hero/launch-original.jpg?v=1" alt="A rocket lifting off between towering clouds of smoke, with orange light reflected in the water" width="3360" height="1890" decoding="async" fetchpriority="high">
-            </picture>
-          </div>
-        </div>
-        <figcaption class="atelier-caption"><span id="gallery-view-caption">Liftoff. Keep looking up.</span><button class="gallery-change-view" type="button" aria-label="Change the opening photograph"><span>Another view</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5.2 8a7 7 0 0 1 11.6-2L20 12M4 12l3.2 6A7 7 0 0 0 18.8 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></figcaption>
-      </figure>
-      <figure class="gallery-satellite gallery-satellite--right">
-        <a href="#archive" aria-label="Explore the archive"><img src="photo/wall/1789470372631.webp" alt="Cumulus clouds above green hills" width="1600" height="1067" decoding="async"></a>
-      </figure>
-      </div>
-      <div class="atelier-bottom">
-        <p class="atelier-subtitle">Life, collected.</p>
-        <a class="atelier-enter" href="#photo"><span>Come on in</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
-    </div>
-    </section>
-    <nav class="gallery-directory shell" aria-label="Choose your starting point">
-      <a href="#photo"><strong>Photography</strong><svg class="gallery-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a href="#archive"><strong>The archive</strong><svg class="gallery-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a href="#curate"><strong>Your exhibition</strong><svg class="gallery-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-    </nav>
-
-    <!-- ============ PHOTOGRAPHY ============ -->
-    <section class="section" id="photo">
-      <div class="shell">
-        <div class="sec-head">
-          <div>
-            <h2 class="sec-title">Take the<br>scenic route.</h2>
-          </div>
-        </div>
-      </div>
-
-      <!-- Original frame IDs remain stable for saved curator selections. -->
-      <div class="shell">
-          <div class="photo-deck" id="photo-deck" role="group" aria-label="Photography, 46 photographs">
-            <div class="photo-fallback" data-photo-fallback>
-                <figure class="photo-frame" data-photo-index="0" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 01: bare branches against a pale sky">
-                    <img src="photo/wall/1779456446198.webp" data-full="photo/1779456446198.jpg" alt="Bare branches in backlight against a pale sky" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">01</span>
-                    <span class="photo-frame-text">Before the leaves, the shape is the story.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="1" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 02: yellow blossom on a dark branch">
-                    <img src="photo/wall/1779456446218.webp" data-full="photo/1779456446218.jpg" alt="Yellow blossom clustered on a dark branch" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">02</span>
-                    <span class="photo-frame-text">Yellow arrives first.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="2" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 03: a reindeer with broad antlers behind birch trunks">
-                    <img src="photo/wall/SAVE_20260618_225416.webp" data-full="photo/SAVE_20260618_225416.jpg" alt="A reindeer with broad antlers standing behind pale birch trunks" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">03</span>
-                    <span class="photo-frame-text">Antlers fill the gap between trunks.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="3" data-act="HORIZON">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 04: a green field under a wide cloud bank">
-                    <img src="photo/wall/SAVE_20260616_234154.webp" data-full="photo/SAVE_20260616_234154.jpg" alt="A green field under a wide bank of clouds" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">04</span>
-                    <span class="photo-frame-text">A field under a sky that keeps opening.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="4" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 05: white blossom against a blue background">
-                    <img src="photo/wall/1779456446227.webp" data-full="photo/1779456446227.jpg" alt="White blossom against a soft blue background" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">05</span>
-                    <span class="photo-frame-text">Blossom against blue.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="5" data-act="HORIZON">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 06: wind turbines on green hills under a wide cloud bank">
-                    <img src="photo/wall/SAVE_20260618_230022_1781795010861edit.webp" data-full="photo/SAVE_20260618_230022_1781795010861edit.jpg" alt="Wind turbines on green hills beneath a wide bank of cloud" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">06</span>
-                    <span class="photo-frame-text">Small blades against a soft grey sky.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="6" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 07: folded buds and leaves against green">
-                    <img src="photo/wall/1779456446240.webp" data-full="photo/1779456446240.jpg" alt="Folded flower buds and leaves against a green blurred background" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">07</span>
-                    <span class="photo-frame-text">Still folded, already reaching.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="7" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 08: a white branch reaching into the sky">
-                    <img src="photo/wall/1779456446231.webp" data-full="photo/1779456446231.jpg" alt="A white blossom branch reaching into the blue sky" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">08</span>
-                    <span class="photo-frame-text">A branch reaches for the sky.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="8" data-act="HORIZON">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 09: cumulus towers above green hills and wind turbines">
-                    <img src="photo/wall/1789470372631.webp" data-full="photo/1789470372631.jpg" alt="White cumulus towers above green hills and a row of wind turbines" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">09</span>
-                    <span class="photo-frame-text">The cloud sits down on the ridge.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="9" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 10: dense white blossom and dark branches">
-                    <img src="photo/wall/1779456446248.webp" data-full="photo/1779456446248.jpg" alt="Dense white blossom on dark branches" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">10</span>
-                    <span class="photo-frame-text">Too much bloom to hold.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="10" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 11: pale birch trunks under green leaves">
-                    <img src="photo/wall/SAVE_20260618_225310.webp" data-full="photo/SAVE_20260618_225310.jpg" alt="A grove of pale birch trunks under bright green leaves" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">11</span>
-                    <span class="photo-frame-text">Every trunk repeats the same line.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="11" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 12: a curved branch with white blossom">
-                    <img src="photo/wall/1779456446245.webp" data-full="photo/1779456446245.jpg" alt="A curved branch with white blossom against the blue sky" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">12</span>
-                    <span class="photo-frame-text">The arc knows where it is going.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="12" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 13: a blue pond ringed by green brush">
-                    <img src="photo/wall/SAVE_20260618_225828.webp" data-full="photo/SAVE_20260618_225828.jpg" alt="A blue pond ringed by vivid green brush and small trees" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">13</span>
-                    <span class="photo-frame-text">Blue water inside a ring of green.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="13" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 14: a black cow with a white face in sunlit grass">
-                    <img src="photo/wall/SAVE_20260616_234458.webp" data-full="photo/SAVE_20260616_234458.jpg" alt="A black cow with a white face standing in sunlit green grass" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">14</span>
-                    <span class="photo-frame-text">One looks up while the other eats.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="14" data-act="HORIZON">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 15: a town of pale rooftops under wide cloud">
-                    <img src="photo/wall/SAVE_20260618_230059.webp" data-full="photo/SAVE_20260618_230059.jpg" alt="A town of pale rooftops beneath a wide bank of cloud" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">15</span>
-                    <span class="photo-frame-text">Roofs, then hills, then cloud.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="15" data-act="BLOOM">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 16: sunlit leaves on a branch against deep shadow">
-                    <img src="photo/wall/SAVE_20260618_225844_1781795146234edit.webp" data-full="photo/SAVE_20260618_225844_1781795146234edit.jpg" alt="Sunlit green leaves on a thin branch against deep shadow" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">16</span>
-                    <span class="photo-frame-text">One branch keeps all the light.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="16" data-act="HORIZON">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 17: a field under low clouds">
-                    <img src="photo/wall/SAVE_20260616_234224.webp" data-full="photo/SAVE_20260616_234224.jpg" alt="A field under low hanging clouds" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">17</span>
-                    <span class="photo-frame-text">Clouds moving slower than the road.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="17" data-act="HORIZON">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 18: a river curving through a green plain">
-                    <img src="photo/wall/SAVE_20260618_225834_1781795044036edit.webp" data-full="photo/SAVE_20260618_225834_1781795044036edit.jpg" alt="A pale river curving through a green plain beneath distant hills" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">18</span>
-                    <span class="photo-frame-text">The water turns back on itself.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="18" data-act="HORIZON">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 19: a river threading through green forest">
-                    <img src="photo/wall/SAVE_20260618_230015_1781795020338edit.webp" data-full="photo/SAVE_20260618_230015_1781795020338edit.jpg" alt="A river threading through wide green forest toward far hills" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">19</span>
-                    <span class="photo-frame-text">Trees crowd the water on both sides.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="19" data-act="HORIZON">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 20: a green slope and a tall cloud">
-                    <img src="photo/wall/SAVE_20260616_234337.webp" data-full="photo/SAVE_20260616_234337.jpg" alt="A green grass slope below a tall cloud" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">20</span>
-                    <span class="photo-frame-text">Green, then a long horizon.</span>
-                  </figcaption>
-                </figure>
-        
-                <figure class="photo-frame" data-photo-index="20" data-act="HORIZON">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 21: open fields and a distant band of cloud">
-                    <img src="photo/wall/SAVE_20260616_234423.webp" data-full="photo/SAVE_20260616_234423.jpg" alt="Open fields with a distant band of cloud" width="1600" height="1067" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap sr-only">
-                    <span class="photo-frame-no mono">21</span>
-                    <span class="photo-frame-text">The day leaves the frame open.</span>
-                  </figcaption>
-                </figure>
-
-                <figure class="photo-frame" data-photo-index="21" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 22: A red sunset above the river and a distant city skyline">
-                    <img src="photo/wall/1791482278707.webp?v=1" data-full="photo/prints/1791482278707.webp?v=1" data-original="photo/1791482278707.jpg" alt="A red sunset above the river and a distant city skyline" width="4080" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">22</span>
-                    <span class="photo-frame-text">The last red light</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="22" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 23: Golden light breaking through dark clouds above the river">
-                    <img src="photo/wall/1791482278719.webp?v=1" data-full="photo/prints/1791482278719.webp?v=1" data-original="photo/1791482278719.jpg" alt="Golden light breaking through dark clouds above the river" width="4080" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">23</span>
-                    <span class="photo-frame-text">An opening in the clouds</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="23" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 24: The low sun reflected in rippling river water">
-                    <img src="photo/wall/1791482278743.webp?v=1" data-full="photo/prints/1791482278743.webp?v=1" data-original="photo/1791482278743.jpg" alt="The low sun reflected in rippling river water" width="4080" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">24</span>
-                    <span class="photo-frame-text">Sunlight on the river</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="24" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 25: The Oriental Pearl Tower rising into a cloud-filled sky">
-                    <img src="photo/wall/1791482278773.webp?v=1" data-full="photo/prints/1791482278773.webp?v=1" data-original="photo/1791482278773.jpg" alt="The Oriental Pearl Tower rising into a cloud-filled sky" width="4096" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">25</span>
-                    <span class="photo-frame-text">Looking up in Shanghai</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="25" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 26: White arches of a bridge crossing a broad river">
-                    <img src="photo/wall/1791482278781.webp?v=1" data-full="photo/prints/1791482278781.webp?v=1" data-original="photo/1791482278781.jpg" alt="White arches of a bridge crossing a broad river" width="4096" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">26</span>
-                    <span class="photo-frame-text">White arches, still water</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="26" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 27: A sailing ship and towers beside a winding waterway">
-                    <img src="photo/wall/1791482278794.webp?v=1" data-full="photo/prints/1791482278794.webp?v=1" data-original="photo/1791482278794.jpg" alt="A sailing ship and towers beside a winding waterway" width="4080" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">27</span>
-                    <span class="photo-frame-text">A ship beside the city</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="27" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 28: An ornate building with tall towers beside green parkland">
-                    <img src="photo/wall/1791482278808.webp?v=1" data-full="photo/prints/1791482278808.webp?v=1" data-original="photo/1791482278808.jpg" alt="An ornate building with tall towers beside green parkland" width="4080" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">28</span>
-                    <span class="photo-frame-text">Towers across the water</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="28" data-act="NIGHT" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 29: A bridge illuminated in gold against the night sky">
-                    <img src="photo/wall/1791482278824.webp?v=1" data-full="photo/prints/1791482278824.webp?v=1" data-original="photo/1791482278824.jpg" alt="A bridge illuminated in gold against the night sky" width="4096" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">29</span>
-                    <span class="photo-frame-text">A bridge after dark</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="29" data-act="NIGHT" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 30: A golden illuminated church tower against the dark sky">
-                    <img src="photo/wall/1791482278836.webp?v=1" data-full="photo/prints/1791482278836.webp?v=1" data-original="photo/1791482278836.jpg" alt="A golden illuminated church tower against the dark sky" width="3072" height="4096" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">30</span>
-                    <span class="photo-frame-text">Gold against the night</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="30" data-act="NIGHT" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 31: Yellow lanterns above red flowers on a lively night street">
-                    <img src="photo/wall/1791482278844.webp?v=1" data-full="photo/prints/1791482278844.webp?v=1" data-original="photo/1791482278844.jpg" alt="Yellow lanterns above red flowers on a lively night street" width="4096" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">31</span>
-                    <span class="photo-frame-text">Lanterns and red flowers</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="31" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 32: A river bridge framed by apartment buildings and green hills">
-                    <img src="photo/wall/1791482278854.webp?v=1" data-full="photo/prints/1791482278854.webp?v=1" data-original="photo/1791482278854.jpg" alt="A river bridge framed by apartment buildings and green hills" width="4096" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">32</span>
-                    <span class="photo-frame-text">The river below the balcony</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="32" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 33: Sunset seen between tall buildings on a narrow street">
-                    <img src="photo/wall/1791482278864.webp?v=1" data-full="photo/prints/1791482278864.webp?v=1" data-original="photo/1791482278864.jpg" alt="Sunset seen between tall buildings on a narrow street" width="3072" height="4080" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">33</span>
-                    <span class="photo-frame-text">The light between buildings</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="33" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 34: The setting sun seen through a dark canopy of trees">
-                    <img src="photo/wall/1791482278875.webp?v=1" data-full="photo/prints/1791482278875.webp?v=1" data-original="photo/1791482278875.jpg" alt="The setting sun seen through a dark canopy of trees" width="4096" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">34</span>
-                    <span class="photo-frame-text">A small window of sun</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="34" data-act="CITY" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 35: A red arched bridge and city buildings beyond the river">
-                    <img src="photo/wall/1791482278888.webp?v=1" data-full="photo/prints/1791482278888.webp?v=1" data-original="photo/1791482278888.jpg" alt="A red arched bridge and city buildings beyond the river" width="4080" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">35</span>
-                    <span class="photo-frame-text">A red arc across the city</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="35" data-act="NIGHT" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 36: An illuminated red pagoda framed by trees at night">
-                    <img src="photo/wall/1791482278899.webp?v=1" data-full="photo/prints/1791482278899.webp?v=1" data-original="photo/1791482278899.jpg" alt="An illuminated red pagoda framed by trees at night" width="3072" height="4096" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">36</span>
-                    <span class="photo-frame-text">Red among the trees</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="36" data-act="LAND" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 37: A tall layered rock pillar rising above green mountains">
-                    <img src="photo/wall/1791482278910.webp?v=1" data-full="photo/prints/1791482278910.webp?v=1" data-original="photo/1791482278910.jpg" alt="A tall layered rock pillar rising above green mountains" width="3072" height="4080" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">37</span>
-                    <span class="photo-frame-text">Stone above the valley</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="37" data-act="LAND" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 38: Layers of blue mountains beyond a sunlit grassy ridge">
-                    <img src="photo/wall/1791482278923.webp?v=1" data-full="photo/prints/1791482278923.webp?v=1" data-original="photo/1791482278923.jpg" alt="Layers of blue mountains beyond a sunlit grassy ridge" width="4096" height="1844" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">38</span>
-                    <span class="photo-frame-text">Ridges into the distance</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="38" data-act="LAND" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 39: Clear turquoise water beside trees and a riverside path">
-                    <img src="photo/wall/1791482278932.webp?v=1" data-full="photo/prints/1791482278932.webp?v=1" data-original="photo/1791482278932.jpg" alt="Clear turquoise water beside trees and a riverside path" width="4096" height="1844" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">39</span>
-                    <span class="photo-frame-text">Following the blue water</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="39" data-act="LAND" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 40: A branching waterfall flowing through dense green forest">
-                    <img src="photo/wall/1791482278944.webp?v=1" data-full="photo/prints/1791482278944.webp?v=1" data-original="photo/1791482278944.jpg" alt="A branching waterfall flowing through dense green forest" width="4096" height="1844" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">40</span>
-                    <span class="photo-frame-text">Water through the forest</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="40" data-act="LAND" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 41: A white cascade flowing into a turquoise pool">
-                    <img src="photo/wall/1791482278956.webp?v=1" data-full="photo/prints/1791482278956.webp?v=1" data-original="photo/1791482278956.jpg" alt="A white cascade flowing into a turquoise pool" width="4096" height="1844" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">41</span>
-                    <span class="photo-frame-text">A pool below the falls</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="41" data-act="LAND" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 42: A clear turquoise pool reflecting vivid green trees">
-                    <img src="photo/wall/1791482278971.webp?v=1" data-full="photo/prints/1791482278971.webp?v=1" data-original="photo/1791482278971.jpg" alt="A clear turquoise pool reflecting vivid green trees" width="4096" height="3072" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">42</span>
-                    <span class="photo-frame-text">A green reflection</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="42" data-act="LAND" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 43: Buildings beside a river beneath green mountains and clouds">
-                    <img src="photo/wall/1791482278991.webp?v=1" data-full="photo/prints/1791482278991.webp?v=1" data-original="photo/1791482278991.jpg" alt="Buildings beside a river beneath green mountains and clouds" width="4096" height="1844" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">43</span>
-                    <span class="photo-frame-text">A village below the hills</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="43" data-act="LAND" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 44: A broad waterfall falling from a forested cliff">
-                    <img src="photo/wall/1791482278998.webp?v=1" data-full="photo/prints/1791482278998.webp?v=1" data-original="photo/1791482278998.jpg" alt="A broad waterfall falling from a forested cliff" width="4096" height="1844" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">44</span>
-                    <span class="photo-frame-text">The curtain of water</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="44" data-act="LAND" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 45: A distant waterfall and drifting mist among green hills">
-                    <img src="photo/wall/1791482279005.webp?v=1" data-full="photo/prints/1791482279005.webp?v=1" data-original="photo/1791482279005.jpg" alt="A distant waterfall and drifting mist among green hills" width="4096" height="1844" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">45</span>
-                    <span class="photo-frame-text">Mist above the valley</span>
-                  </figcaption>
-                </figure>
-                <figure class="photo-frame" data-photo-index="45" data-act="WINTER" data-new="true">
-                  <button class="photo-frame-btn" type="button" aria-label="Open frame 46: Snow-covered trees beside a pond and a small pavilion">
-                    <img src="photo/wall/mmexport1702262955913.webp?v=1" data-full="photo/prints/mmexport1702262955913.webp?v=1" data-original="photo/mmexport1702262955913.jpg" alt="Snow-covered trees beside a pond and a small pavilion" width="1920" height="1080" loading="lazy" decoding="async">
-                  </button>
-                  <figcaption class="photo-frame-cap">
-                    <span class="photo-frame-no mono">46</span>
-                    <span class="photo-frame-text">A garden in snow</span>
-                  </figcaption>
-                </figure>
-            </div>
-          </div>
-      </div>
-
-    </section>
-
-    <!-- ============ THE ARCHIVE ============ -->
-    <section class="section archive" id="archive">
-      <div class="shell">
-        <div class="sec-head">
-          <div>
-            <h2 class="sec-title">Good company.</h2>
-          </div>
-        </div>
-
-        <div class="tabbar glass glass--pill glass--spot" role="tablist" aria-label="Archive shelves" id="archive-tabbar">
-          <div class="glass__body" aria-hidden="true"></div>
-          <div class="glass__edge" aria-hidden="true"></div>
-          <span class="glass__press" aria-hidden="true"></span>
-          <!-- The selected indicator. Draggable: grab it and pull it onto
-               another shelf. Decorative - the buttons below are the control,
-               so keyboard and screen-reader behaviour is untouched. -->
-          <span class="glass-pill" id="tab-pill" aria-hidden="true"><span class="glass-pill__body"></span></span>
-          <button class="tab-btn is-active" id="tab-books" type="button" role="tab" aria-selected="true" aria-controls="panel-books" data-tab="books"><span class="no" aria-hidden="true">01</span>Books</button>
-          <button class="tab-btn" id="tab-poems" type="button" role="tab" aria-selected="false" aria-controls="panel-poems" data-tab="poems" tabindex="-1"><span class="no" aria-hidden="true">02</span>Poems</button>
-          <button class="tab-btn" id="tab-paintings" type="button" role="tab" aria-selected="false" aria-controls="panel-paintings" data-tab="paintings" tabindex="-1">Paintings</button>
-          <button class="tab-btn" id="tab-music" type="button" role="tab" aria-selected="false" aria-controls="panel-music" data-tab="music" tabindex="-1"><span class="no" aria-hidden="true">03</span>Music</button>
-          <button class="tab-btn" id="tab-sport" type="button" role="tab" aria-selected="false" aria-controls="panel-sport" data-tab="sport" tabindex="-1"><span class="no" aria-hidden="true">04</span>Sport</button>
-          <button class="tab-btn" id="tab-series" type="button" role="tab" aria-selected="false" aria-controls="panel-series" data-tab="series" tabindex="-1"><span class="no" aria-hidden="true">05</span>Series</button>
-          <button class="tab-btn" id="tab-films" type="button" role="tab" aria-selected="false" aria-controls="panel-films" data-tab="films" tabindex="-1"><span class="no" aria-hidden="true">06</span>Films</button>
-          <button class="tab-btn" id="tab-games" type="button" role="tab" aria-selected="false" aria-controls="panel-games" data-tab="games" tabindex="-1"><span class="no" aria-hidden="true">07</span>Games</button>
-        </div>
-      </div>
-
-      <!-- .tab-panels must stay a DIRECT child of #archive: initArchiveTabs()
-           resolves it with ":scope > .tab-panels" and bails out entirely if
-           the lookup fails. Its shell constraint lives in CSS instead. -->
-      <div class="tab-panels">
-
-          <!-- PANEL: BOOKS -->
-          <div class="tab-panel is-active" id="panel-books" role="tabpanel" aria-labelledby="tab-books" data-panel="books" tabindex="0">
-            <div class="book-shelf" data-book-shelf="auto" role="group" aria-label="Books on the shelf"></div>
-          </div>
-
-          <!-- PANEL: PAINTINGS -->
-          <div class="tab-panel" id="panel-paintings" role="tabpanel" aria-labelledby="tab-paintings" data-panel="paintings" tabindex="0">
-            <div class="painting-gallery" id="painting-gallery">
-              <noscript>Enable JavaScript to browse the paintings.</noscript>
-            </div>
-          </div>
-
-          <!-- PANEL: FILMS -->
-          <!-- The stage renders into the INNER div, not into the panel. It has
-               to: js/reel-stage.js renders with `stage.innerHTML = ""`, so a
-               stage that IS the panel deletes the shelf note above it (measured
-               - the note was in the DOM and both panels painted without it).
-               The inner div also gives the panel's own content a home, which is
-               what lets the note be a sibling of the stage in all seven panels. -->
-          <div class="tab-panel" id="panel-films" role="tabpanel" aria-labelledby="tab-films" data-panel="films" tabindex="0">
-            <div data-film-stage="auto"></div>
-          </div>
-
-          <!-- PANEL: SERIES -->
-          <div class="tab-panel" id="panel-series" role="tabpanel" aria-labelledby="tab-series" data-panel="series" tabindex="0">
-            <div data-series-stage="auto"></div>
-          </div>
-
-          <!-- PANEL: MUSIC -->
-          <div class="tab-panel" id="panel-music" role="tabpanel" aria-labelledby="tab-music" data-panel="music" tabindex="0">
-            <div class="music-drawer" id="music-drawer">
-              <div class="music-bar">
-                <!-- The search row is a printed tray: the same object as the tab
-                     strip above it and the genre rail below it (AGENTS.md,
-                     "三条 bar"). .glass__body is the paper, .glass__edge is the
-                     cobalt crop line, and .glass__content lifts the live
-                     controls above both of them - statically positioned children
-                     would be painted underneath their own tray. No .glass__press
-                     here on purpose: a text field is not a button, and a rim
-                     flash on every focus-click is noise. -->
-                <div class="music-search glass glass--pill glass--spot" id="music-search">
-                  <div class="glass__body" aria-hidden="true"></div>
-                  <div class="glass__edge" aria-hidden="true"></div>
-                  <div class="glass__content">
-                    <label class="sr-only" for="music-search-input">Search songs by title or artist</label>
-                    <input class="music-search-input" id="music-search-input" type="search" placeholder="Search title or artist" autocomplete="off" spellcheck="false">
-                    <button class="music-search-clear" id="music-search-clear" type="button" aria-label="Clear search" hidden>&times;</button>
-                    <!-- aria-live because main.js rewrites this on every keystroke
-                         and the sibling empty-state below already announces; a
-                         search that returns "39 / 534" was the one half of this
-                         interaction a screen reader never heard. -->
-                    <span class="music-search-count" id="music-search-count" role="status" aria-live="polite" aria-atomic="true" hidden></span>
-                    <!-- The one action pill of this tray sits at its right end,
-                         the way the reference bars park their CTA. It is last in
-                         the DOM as well as on screen, so nothing is reordered
-                         out from under the Tab key. -->
-                    <button class="music-random" id="music-random" type="button" aria-label="Pick a song at random"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h2c5 0 9 12 14 12h2M17 14l4 4-4 4M3 18h2c2 0 4-3 5-5m4-2c2-3 3-5 5-5h2M17 2l4 4-4 4"/></svg><span>Pick a song</span></button>
-                  </div>
-                </div>
-                <p class="music-search-empty" id="music-search-empty" role="status" aria-live="polite" hidden>
-                  <span id="music-search-empty-text">No match</span>
-                </p>
-              </div>
-              <!-- The genre rail is a SIBLING of the search row, not a child:
-                   they are the two bars of one toolbar and BOTH scroll away
-                   with the list (nothing in this panel is pinned - the pinned
-                   rail was retired by request), so the nesting buys layout
-                   only. The chips are appended by js/music-stage.js, which
-                   only ever appends, so the tray layers stay put. -->
-              <div class="genre-filter glass glass--spot" id="genre-filter" role="group" aria-label="Filter by genre">
-                <div class="glass__body" aria-hidden="true"></div>
-                <div class="glass__edge" aria-hidden="true"></div>
-                <span class="glass__press" aria-hidden="true"></span>
-              </div>
-              <div class="playlist" data-music-stage="auto"></div>
-            </div>
-          </div>
-
-          <!-- PANEL: SPORT - five slides, not a ledger.
-               Ported from Framer's "image animation"
-               (framer.com/m/image-animation-HJJB.js@ga1htqyg5UFN9eq91lZh). The
-               upstream component is five children in a row where exactly one is
-               expanded and the rest are slivers; its fifteen variants are that
-               same accordion at fifteen sizes, so this is five buttons and
-               nothing else. Every state hangs off [aria-pressed] and
-               js/main.js only moves that one attribute - no entrance
-               animation, no ScrollTrigger, no per-card reveal.
-               Three lines per panel: eyebrow (team and league), honours,
-               official site. The honours ARE the Chinese on this band. -->
-          <div class="tab-panel" id="panel-sport" role="tabpanel" aria-labelledby="tab-sport" data-panel="sport" tabindex="0">
-            <section class="sport" id="sport-stage" aria-label="Sport">
-              <!-- Each slide is a .sport-card, and inside it the <button> holds ONLY the
-                 photograph, the crest and the wash. The caption - including the
-                 official-site <a> - is a SIBLING of the button, not a descendant:
-                 <button> permits no interactive content inside it, so nesting the
-                 link there left five official sites off the tab order entirely
-                 (they could only be reached by a pointer). The card carries the
-                 flex sizing and the caption's clipping; aria-pressed stays on the
-                 button, where it belongs, and css/style.css reaches the caption
-                 through :has(). -->
-
-              <div class="sport-row">
-                <div class="sport-card">
-                  <button class="sport-item" type="button" aria-pressed="false" data-sport="basketball">
-                    <img class="sport-photo" src="sport/spurs.webp" alt="San Antonio Spurs celebrating with the championship trophy" style="object-position: 50% 34%" loading="lazy" decoding="async" draggable="false">
-                    <img class="sport-crest" src="logos/spurs.svg" alt="" loading="lazy" decoding="async">
-                    <span class="sport-wash" aria-hidden="true"></span>
-                  </button>
-                  <span class="sport-cap">
-                    <span class="sport-body">
-                      <span class="sport-name">San Antonio Spurs · NBA</span>
-                      <span class="sport-hon" lang="en">Five NBA championships, <i>1999–2014</i></span>
-                    </span>
-                    <a class="sport-link" href="https://www.nba.com/spurs" target="_blank" rel="noopener">nba.com/spurs</a>
-                  </span>
-                </div>
-                <div class="sport-card">
-                  <button class="sport-item" type="button" aria-pressed="false" data-sport="football">
-                    <img class="sport-photo" src="sport/mancity.webp" alt="Manchester City supporters raising their arms in the stands" style="object-position: 50% 55%" loading="lazy" decoding="async" draggable="false">
-                    <img class="sport-crest" src="logos/mancity.svg" alt="" loading="lazy" decoding="async">
-                    <span class="sport-wash" aria-hidden="true"></span>
-                  </button>
-                  <span class="sport-cap">
-                    <span class="sport-body">
-                      <span class="sport-name">Manchester City · Premier League</span>
-                      <span class="sport-hon" lang="en">Ten English league titles, <i>the treble in 2023</i></span>
-                    </span>
-                    <a class="sport-link" href="https://www.mancity.com" target="_blank" rel="noopener">mancity.com</a>
-                  </span>
-                </div>
-                <div class="sport-card">
-                  <button class="sport-item" type="button" aria-pressed="false" data-sport="formula-1">
-                    <img class="sport-photo" src="sport/mclaren.webp" alt="McLaren celebrating the 2025 constructors championship in the garage" style="object-position: 50% 50%" loading="lazy" decoding="async" draggable="false">
-                    <img class="sport-crest" src="logos/mclaren.svg" alt="" loading="lazy" decoding="async">
-                    <span class="sport-wash" aria-hidden="true"></span>
-                  </button>
-                  <span class="sport-cap">
-                    <span class="sport-body">
-                      <span class="sport-name">McLaren Racing · Formula 1</span>
-                      <span class="sport-hon" lang="en">Ten constructors titles, <i>back-to-back in 2024–2025</i></span>
-                    </span>
-                    <a class="sport-link" href="https://www.mclaren.com/racing/" target="_blank" rel="noopener">mclaren.com/racing</a>
-                  </span>
-                </div>
-                <div class="sport-card">
-                  <button class="sport-item" type="button" aria-pressed="false" data-sport="american-football">
-                    <img class="sport-photo" src="sport/ravens.webp" alt="Baltimore Ravens players celebrating in the end zone" style="object-position: 62% 45%" loading="lazy" decoding="async" draggable="false">
-                    <img class="sport-crest" src="logos/ravens.svg" alt="" loading="lazy" decoding="async">
-                    <span class="sport-wash" aria-hidden="true"></span>
-                  </button>
-                  <span class="sport-cap">
-                    <span class="sport-body">
-                      <span class="sport-name">Baltimore Ravens · NFL</span>
-                      <span class="sport-hon" lang="en">Two Super Bowl titles, <i>2001 and 2013</i></span>
-                    </span>
-                    <a class="sport-link" href="https://www.baltimoreravens.com" target="_blank" rel="noopener">baltimoreravens.com</a>
-                  </span>
-                </div>
-                <div class="sport-card">
-                  <button class="sport-item" type="button" aria-pressed="false" data-sport="esports">
-                    <img class="sport-photo" src="sport/spirit.webp" alt="Team Spirit player donk watching his screen at the tournament desk" style="object-position: 58% 58%" loading="lazy" decoding="async" draggable="false">
-                    <img class="sport-crest" src="logos/spirit.svg" alt="" loading="lazy" decoding="async">
-                    <span class="sport-wash" aria-hidden="true"></span>
-                  </button>
-                  <span class="sport-cap">
-                    <span class="sport-body">
-                      <span class="sport-name">Team Spirit · CS2</span>
-                      <span class="sport-hon" lang="en">Three premier tournament titles, <i>2024–2025</i></span>
-                    </span>
-                    <a class="sport-link" href="https://teamspirit.gg" target="_blank" rel="noopener">teamspirit.gg</a>
-                  </span>
-                </div>
-              </div>
-            </section>
-          </div>
-
-
-          <!-- PANEL: GAMES -->
-          <div class="tab-panel" id="panel-games" role="tabpanel" aria-labelledby="tab-games" data-panel="games" tabindex="0">
-            <!-- One centred cover on a detent dial (js/games-stage.js, a plain-DOM
-                 port of Framer's Detent). The eighteen .hof-item elements ARE the
-                 deck: each one is a tab stop and a click target for main.js, moved
-                 on a ring by transform alone, and the centred one is the only one
-                 in colour. .hof-name / .hof-release stay inside them as
-                 the data source for gameItemData() and are painted once, under the
-                 centred cover, into .hof-now. Without the stage the .is-live class
-                 is absent and css/games-stage.css falls back to a plain roster. -->
-            <div class="hof" id="hof-grid">
-              <div class="hof-item" data-game="cs" data-release-kind="series">
-                <div class="hof-img-wrap"><img src="covers/counter-strike.webp" alt="Counter-Strike cover" loading="lazy"></div>
-                <span class="hof-name">Counter-Strike</span>
-                <time class="mono hof-release" datetime="1999">1999</time>
-              </div>
-              <div class="hof-item" data-game="nba2k" data-release-kind="series">
-                <div class="hof-img-wrap"><img src="covers/nba-2k.webp" alt="NBA 2K cover" loading="lazy"></div>
-                <span class="hof-name">NBA 2K</span>
-                <time class="mono hof-release" datetime="1999">1999</time>
-              </div>
-              <div class="hof-item" data-game="fm" data-release-kind="series">
-                <div class="hof-img-wrap"><img src="covers/football-manager.webp" alt="Football Manager cover" loading="lazy"></div>
-                <span class="hof-name">Football Manager</span>
-                <time class="mono hof-release" datetime="2004">2004</time>
-              </div>
-              <div class="hof-item" data-game="gta5">
-                <div class="hof-img-wrap"><img src="covers/gta5.webp" alt="Grand Theft Auto V cover" loading="lazy"></div>
-                <span class="hof-name">Grand Theft Auto V</span>
-                <time class="mono hof-release" datetime="2013-09-17">September 17, 2013</time>
-              </div>
-              <div class="hof-item" data-game="human-fall-flat">
-                <div class="hof-img-wrap"><img src="covers/human-fall-flat.webp" alt="Human Fall Flat cover" loading="lazy"></div>
-                <span class="hof-name">Human Fall Flat</span>
-                <time class="mono hof-release" datetime="2016-07-22">July 22, 2016</time>
-              </div>
-              <div class="hof-item" data-game="detroit">
-                <div class="hof-img-wrap"><img src="covers/detroit.webp" alt="Detroit Become Human cover" loading="lazy"></div>
-                <span class="hof-name">Detroit: Become Human</span>
-                <time class="mono hof-release" datetime="2018-05-25">May 25, 2018</time>
-              </div>
-              <div class="hof-item" data-game="forza">
-                <div class="hof-img-wrap"><img src="covers/forza-horizon-4.webp" alt="Forza Horizon 4 cover" loading="lazy"></div>
-                <span class="hof-name">Forza Horizon 4</span>
-                <time class="mono hof-release" datetime="2018-10-02">October 2, 2018</time>
-              </div>
-              <div class="hof-item" data-game="rdr2">
-                <div class="hof-img-wrap"><img src="covers/rdr2.webp" alt="Red Dead Redemption 2 cover" loading="lazy"></div>
-                <span class="hof-name">Red Dead Redemption 2</span>
-                <time class="mono hof-release" datetime="2018-10-26">October 26, 2018</time>
-              </div>
-              <div class="hof-item" data-game="hitman-2">
-                <div class="hof-img-wrap"><img src="covers/hitman.webp" alt="Hitman 2 cover" loading="lazy"></div>
-                <span class="hof-name">Hitman 2</span>
-                <time class="mono hof-release" datetime="2018-11-13">November 13, 2018</time>
-              </div>
-              <div class="hof-item" data-game="bfv">
-                <div class="hof-img-wrap"><img src="covers/battlefield-v.webp" alt="Battlefield V cover" loading="lazy"></div>
-                <span class="hof-name">Battlefield V</span>
-                <time class="mono hof-release" datetime="2018-11-20">November 20, 2018</time>
-              </div>
-              <div class="hof-item" data-game="sekiro">
-                <div class="hof-img-wrap"><img src="covers/sekiro.webp" alt="Sekiro: Shadows Die Twice cover" loading="lazy"></div>
-                <span class="hof-name">Sekiro</span>
-                <time class="mono hof-release" datetime="2019-03-22">March 22, 2019</time>
-              </div>
-              <div class="hof-item" data-game="cyberpunk">
-                <div class="hof-img-wrap"><img src="covers/cyberpunk.webp" alt="Cyberpunk 2077 cover" loading="lazy"></div>
-                <span class="hof-name">Cyberpunk 2077</span>
-                <time class="mono hof-release" datetime="2020-12-10">December 10, 2020</time>
-              </div>
-              <div class="hof-item" data-game="it-takes-two">
-                <div class="hof-img-wrap"><img src="covers/it%20takes%20two.webp" alt="It Takes Two cover" loading="lazy"></div>
-                <span class="hof-name">It Takes Two</span>
-                <time class="mono hof-release" datetime="2021-03-26">March 26, 2021</time>
-              </div>
-              <div class="hof-item" data-game="dying-light-2">
-                <div class="hof-img-wrap"><img src="covers/dying%20light.webp" alt="Dying Light 2 Stay Human cover" loading="lazy"></div>
-                <span class="hof-name">Dying Light 2</span>
-                <time class="mono hof-release" datetime="2022-02-04">February 4, 2022</time>
-              </div>
-              <div class="hof-item" data-game="elden-ring">
-                <div class="hof-img-wrap"><img src="covers/elden-ring.webp" alt="Elden Ring cover" loading="lazy"></div>
-                <span class="hof-name">Elden Ring</span>
-                <time class="mono hof-release" datetime="2022-02-25">February 25, 2022</time>
-              </div>
-              <div class="hof-item" data-game="bg3">
-                <div class="hof-img-wrap"><img src="covers/baldurs-gate-3.webp" alt="Baldur's Gate 3 cover" loading="lazy"></div>
-                <span class="hof-name">Baldur's Gate 3</span>
-                <time class="mono hof-release" datetime="2023-08-03">August 3, 2023</time>
-              </div>
-              <div class="hof-item" data-game="wukong">
-                <div class="hof-img-wrap"><img src="covers/black-myth-wukong.webp" alt="Black Myth: Wukong cover" loading="lazy"></div>
-                <span class="hof-name">Black Myth: Wukong</span>
-                <time class="mono hof-release" datetime="2024-08-20">August 20, 2024</time>
-              </div>
-              <div class="hof-item" data-game="fc26">
-                <div class="hof-img-wrap"><img src="covers/fc26.webp" alt="EA SPORTS FC 26 cover" loading="lazy"></div>
-                <span class="hof-name">EA SPORTS FC 26</span>
-                <time class="mono hof-release" datetime="2025-09-26">September 26, 2025</time>
-              </div>
-              <div class="hof-cue" aria-hidden="true"></div>
-              <div class="hof-labels" aria-live="polite">
-                <p class="hof-rank mono"></p>
-                <div class="hof-now">
-                  <p class="hof-now-name"></p>
-                  <p class="hof-now-release mono"></p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="tab-panel" id="panel-poems" role="tabpanel" aria-labelledby="tab-poems" data-panel="poems" tabindex="0">
-            <!-- Contents and complete text form one anthology inside Archive. -->
-            <div class="poem-library">
-              <div class="poem-library-label"><span>Contents</span><span>Choose a poem to read.</span></div>
-              <div class="poem-selection-grid" id="poem-selection-grid" role="group" aria-label="Choose a poem"></div>
-              <p class="sr-only" id="poem-selection-status" role="status" aria-live="polite" aria-atomic="true"></p>
-              <div class="poem-reading" id="about">
-                <article class="poem" id="poem" aria-labelledby="poem-title">
-                  <header class="poem-head">
-                    <div class="poem-head-main">
-                      <h3 class="poem-title" id="poem-title">Do not go gentle into that good night</h3>
-                      <p class="poem-credit">Dylan Thomas · A villanelle · 1947</p>
-                    </div>
-                    <p class="poem-standfirst">Kept here because the light was never the reward. Catching it, and not letting go, was the whole instruction.</p>
-                  </header>
-
-                  <blockquote class="poem-verse">
-                    <div class="poem-col">
-                      <p><span class="refrain">Do not go gentle into that good night,</span><br>
-                      Old age should burn and rave at close of day;<br>
-                      <span class="refrain">Rage, rage against the dying of the light.</span></p>
-                      <p>Though wise men at their end know dark is right,<br>
-                      Because their words had forked no lightning they<br>
-                      <span class="refrain">Do not go gentle into that good night.</span></p>
-                      <p>Good men, the last wave by, crying how bright<br>
-                      Their frail deeds might have danced in a green bay,<br>
-                      <span class="refrain">Rage, rage against the dying of the light.</span></p>
-                    </div>
-
-                    <div class="poem-col">
-                      <p>Wild men who caught and sang the sun in flight,<br>
-                      And learn, too late, they grieved it on its way,<br>
-                      <span class="refrain">Do not go gentle into that good night.</span></p>
-                      <p>Grave men, near death, who see with blinding sight<br>
-                      Blind eyes could blaze like meteors and be gay,<br>
-                      <span class="refrain">Rage, rage against the dying of the light.</span></p>
-                      <p>And you, my father, there on the sad height,<br>
-                      Curse, bless, me now with your fierce tears, I pray.<br>
-                      <span class="refrain">Do not go gentle into that good night.</span><br>
-                      <span class="refrain">Rage, rage against the dying of the light.</span></p>
-                    </div>
-                  </blockquote>
-
-                  <footer class="poem-foot">
-                    <p class="label poem-source"><a class="poem-source-link" href="https://www.poetryfoundation.org/poems/46569/do-not-go-gentle-into-that-good-night" target="_blank" rel="noopener">Read the poem at Poetry Foundation ↗</a></p>
-                    <p class="poem-sign">19 lines · 6 stanzas</p>
-                  </footer>
-                </article>
-              </div>
-              <nav class="poem-pagination" aria-label="Browse poems">
-                <button class="poem-turn" type="button" data-poem-step="-1" aria-label="Previous poem">← Previous poem</button>
-                <span class="poem-position" aria-hidden="true">01 / 03</span>
-                <button class="poem-turn" type="button" data-poem-step="1" aria-label="Next poem">Next poem →</button>
-              </nav>
-            </div>
-          </div>
-      </div>
-    </div>
-    </section>
-
-    <!-- ============ THE CURATOR'S DESK ============ -->
-    <section class="section curator-section" id="curate" lang="en" aria-labelledby="curator-title">
-      <div class="shell">
-        <header class="curator-head">
-          <h2 id="curator-title">Make it yours.</h2>
-        </header>
-        <div id="curator-workspace" hidden>
-          <div class="curator-workspace">
-            <div class="curator-edit">
-              <div class="curator-toolbar">
-                <p id="curator-count" class="mono">Selected 0 / 7</p>
-                <button type="button" id="curator-surprise" class="curator-text-btn">Shuffle all seven</button>
-              </div>
-              <ol id="curator-slots" class="curator-slots" aria-label="Exhibition order"></ol>
-              <p class="curator-hint sr-only">Drag by the handle, or use the arrows to arrange your exhibition.</p>
-              <div class="curator-fields" role="group" aria-labelledby="curator-label-heading">
-                <div class="curator-fields-head">
-                  <h3 id="curator-label-heading" class="sr-only">Exhibition label</h3>
-                </div>
-                <label class="curator-title-field" for="curator-name"><span class="curator-field-label">Title</span>
-                  <input id="curator-name" maxlength="48" placeholder="e.g. Somewhere beyond the city" autocomplete="off">
-                </label>
-                <label class="curator-by-field" for="curator-by"><span class="curator-field-label">Curator</span>
-                  <input id="curator-by" maxlength="32" placeholder="Your name, or a pen name" autocomplete="off">
-                </label>
-                <label class="curator-note-field" for="curator-note"><span class="curator-field-label">Note</span>
-                  <textarea id="curator-note" maxlength="120" rows="3" aria-describedby="curator-note-hint" placeholder="What brings these pieces together?"></textarea>
-                </label>
-                <p class="curator-note-hint" id="curator-note-hint">120 characters max</p>
-              </div>
-              <fieldset class="curator-layouts">
-                <legend>Layout</legend>
-                <label><input type="radio" name="curator-layout" value="gallery" checked><span class="curator-layout-icon" data-layout="gallery" aria-hidden="true"></span><span>Gallery</span></label>
-                <label><input type="radio" name="curator-layout" value="contact"><span class="curator-layout-icon" data-layout="contact" aria-hidden="true"></span><span>Contact sheet</span></label>
-                <label><input type="radio" name="curator-layout" value="night"><span class="curator-layout-icon" data-layout="night" aria-hidden="true"></span><span>After dark</span></label>
-              </fieldset>
-              <div class="curator-actions">
-                <button type="button" id="curator-export" class="curator-primary" disabled>Save PNG ↓</button>
-                <button type="button" id="curator-reset" class="curator-text-btn">Start again</button>
-              </div>
-              <p id="curator-status" class="curator-status" role="status" aria-live="polite">Choose seven pieces to save your poster.</p>
-              <p id="curator-storage" class="curator-hint"></p>
-            </div>
-            <figure class="curator-preview">
-              <div class="curator-preview-head"><span>Preview</span><button type="button" id="curator-enlarge" aria-label="Enlarge exhibition poster" aria-haspopup="dialog" title="Enlarge poster"><svg class="gallery-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4M8 8l-4-4m12 4 4-4M8 16l-4 4m12-4 4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
-              <canvas id="curator-poster" width="1200" height="1800" role="img" aria-label="Exhibition poster preview"></canvas>
-              <figcaption id="curator-preview-caption"></figcaption>
-            </figure>
-          </div>
-        </div>
-        <noscript><p class="curator-noscript">Enable JavaScript to choose pieces and make an exhibition poster.</p></noscript>
-      </div>
-    </section>
-
-
-
-  </main>
-
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <div class="shell">
-      <div class="footer-top">
-        <div class="footer-name">N1GHT CHXN9</div>
-        <nav class="footer-links" aria-label="Footer">
-          <a href="#photo">Photography</a>
-          <a href="#archive">The Archive</a>
-          <a href="#curate">Curate</a>
-          <a href="#hero">Back to top</a>
-        </nav>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ============ UNIFIED DETAIL LAYER ============ -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Archive detail viewer" aria-hidden="true">
-    <div class="lb-dialog" data-lenis-prevent>
-      <header class="lb-top">
-        <div class="lb-context">
-          <span id="lb-act" class="lb-act">Photography</span>
-          <span id="lb-count" class="lb-count">Frame 01 / 46</span>
-        </div>
-        <button class="lb-close" id="lb-close" type="button" aria-label="Close detail viewer"><span>Close</span><span aria-hidden="true">×</span></button>
-      </header>
-      <div class="lb-body">
-        <figure class="lb-stage" id="lb-stage">
-          <img id="lb-img" alt="" loading="eager" decoding="async">
-          <div class="lb-music" id="lb-music" hidden>
-            <img class="lb-music-cover" id="lb-music-cover" alt="" decoding="async" hidden>
-            <span class="lb-music-glyph" aria-hidden="true">♪</span>
-          </div>
-        </figure>
-        <div class="lb-info">
-          <div class="lb-photo-info" id="lb-photo-info" hidden>
-            <p class="lb-info-label">From the contact sheet</p>
-            <h3 class="lb-meta-title" id="lb-photo-title"></h3>
-            <p class="lb-photo-description" id="lb-photo-description"></p>
-          </div>
-          <div class="lb-music-head" id="lb-music-head" hidden>
-            <p class="lb-info-label">On repeat</p>
-            <h3 class="lb-meta-title" id="lb-music-title"></h3>
-            <p class="lb-meta-lines" id="lb-music-lines"></p>
-          </div>
-          <div class="lb-meta" id="lb-meta" hidden>
-            <p class="lb-meta-kicker" id="lb-kicker"></p>
-            <h3 class="lb-meta-title" id="lb-title"></h3>
-            <p class="lb-meta-lines" id="lb-lines"></p>
-            <p class="lb-meta-quote" id="lb-quote"></p>
-            <a class="lb-meta-link" id="lb-link" href="#" target="_blank" rel="noopener" hidden>Open</a>
-          </div>
-          <div class="lb-actions" id="lb-actions">
-            <a class="lb-meta-link lb-music-link" id="lb-music-link" href="#" target="_blank" rel="noopener" hidden>Open in NetEase ↗</a>
-          </div>
-        </div>
-      </div>
-      <footer class="lb-bottom">
-        <div class="lb-pagination">
-          <button class="lb-nav lb-prev" id="lb-prev" type="button" aria-label="Previous item">←</button>
-          <button class="lb-nav lb-next" id="lb-next" type="button" aria-label="Next item">→</button>
-          <span class="lb-key-hint">Browse with ← →</span>
-        </div>
-        <div class="lb-rail" id="lb-rail" role="group" aria-label="Choose a frame"></div>
-      </footer>
-    </div>
-    <p class="sr-only" id="lb-live" role="status" aria-live="polite"></p>
+<body data-route="entry" data-scene="entry">
+  <a class="skip-link" href="#route-title">跳到当前展区</a>
+  <div class="world-shell" id="world-shell">
+    <canvas id="world-canvas" aria-label="可交互的三维记忆档案船"></canvas>
+    <div class="scene-grade" aria-hidden="true"></div>
+    <div class="scene-scan" aria-hidden="true"></div>
+    <p class="webgl-fallback-note" id="webgl-fallback-note" hidden>实时场景不可用。目录与全部记录仍可阅读。<button type="button" data-open-reading>打开阅读目录</button></p>
   </div>
 
-  <dialog id="curator-picker" class="curator-picker" lang="en" aria-labelledby="curator-picker-title" data-lenis-prevent>
-    <div class="curator-picker-head">
-      <div><h2 id="curator-picker-title">Choose a photograph</h2></div>
-      <button type="button" id="curator-picker-close" class="curator-text-btn" aria-label="Close collection picker">Close ×</button>
+  <section class="entry" id="entry-screen" aria-labelledby="entry-title">
+    <div class="entry__orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="entry__signal"><span>ORBITAL ARCHIVE</span><b>GRAVITY WELL / 01</b></div>
+    <div class="entry__copy">
+      <p class="eyebrow">N1GHT CHXN9 · PRIVATE ORBITAL ARCHIVE</p>
+      <h1 id="entry-title"><span>引力</span><span>记忆舱</span></h1>
+      <p class="entry__lede">十座展区沿着一条记忆螺旋停泊。照片、书页、旋律与影像被保存在同一艘档案船里，等待重新被看见。</p>
+      <div class="entry__actions">
+        <button class="action action--ice action--large" type="button" data-enter-world>进入档案船 <span aria-hidden="true">↗</span></button>
+        <button class="action action--quiet action--large" type="button" data-skip-intro>跳过开场</button>
+      </div>
+      <p class="entry__hint">键盘 <kbd>Enter</kbd> 进入 · <kbd>M</kbd> 随时打开地图</p>
     </div>
-    <label class="curator-search" for="curator-search">Search the collection<input id="curator-search" type="search" placeholder="Enter a title or keyword" autocomplete="off"></label>
-    <p id="curator-results-count" class="curator-hint" role="status" aria-live="polite"></p>
-    <div id="curator-results" class="curator-results"></div>
-    <button id="curator-more" class="curator-more curator-text-btn" type="button" hidden>Show more ↓</button>
+    <p class="entry__coordinates">ORBITAL VESSEL<br>GRAVITY FIELD / MEMORY ARCHIVE</p>
+  </section>
+
+  <header class="top-hud" id="top-hud">
+    <button class="brand" type="button" data-enter-world aria-label="返回档案船入口">
+      <span class="brand__mark" aria-hidden="true">N</span>
+      <span class="brand__text"><b>N1GHT CHXN9</b><small>深档 / DEEP ARCHIVE</small></span>
+    </button>
+    <div class="route-readout" aria-live="polite"><span id="route-index">00</span><span class="route-readout__line"></span><span id="route-name">引航通道</span></div>
+    <nav class="top-actions" aria-label="全局控制">
+      <button type="button" class="icon-action" data-toggle-panel aria-label="收起展区控件" aria-expanded="true" aria-controls="route-panel"><span aria-hidden="true">◫</span><span class="icon-action__label">控件</span></button>
+      <button type="button" class="icon-action" data-open-map aria-label="打开十区地图" title="十区地图 (M)"><span aria-hidden="true">◎</span><span class="icon-action__label">地图</span></button>
+      <button type="button" class="icon-action" data-open-reading aria-label="打开阅读模式" title="阅读模式"><span aria-hidden="true">≡</span><span class="icon-action__label">阅读</span></button>
+      <button type="button" class="icon-action" data-toggle-motion aria-pressed="false" aria-label="关闭环境动效" title="环境动效"><span aria-hidden="true">◌</span><span class="icon-action__label">动效</span></button>
+    </nav>
+  </header>
+
+  <aside class="route-panel" id="route-panel" aria-labelledby="route-title">
+    <div class="route-panel__head"><p class="eyebrow" id="route-kicker">NAVIGATION SPINE</p><p class="route-panel__position"><span id="route-count">00</span> / 10</p></div>
+    <h2 id="route-title">引力引航</h2>
+    <p class="route-panel__english" id="route-english">THE GRAVITY SPINE</p>
+    <p class="route-panel__description" id="route-description">沿连续通道穿过十座独立展区。选择一站，或继续前行。</p>
+    <div class="route-panel__rule" aria-hidden="true"></div>
+    <div class="operation-bar" id="operation-bar" aria-label="当前展区操作">
+      <button type="button" class="action action--ice" data-focus-current>聚焦当前</button>
+      <button type="button" class="action" data-open-detail>读详情</button>
+      <button type="button" class="action" data-open-curator hidden>装配展览</button>
+      <button type="button" class="action" data-next-route>下一站 →</button>
+      <a class="action" id="primary-source-link" href="#" target="_blank" rel="noopener" hidden>原始来源 ↗</a>
+    </div>
+    <div class="browse-tools" id="browse-tools">
+      <label class="search-field" for="collection-search"><span>在展区中查找</span><input id="collection-search" type="search" inputmode="search" autocomplete="off" placeholder="标题、署名或关键词"><kbd>/</kbd></label>
+      <div class="filter-row" id="filter-row" hidden><label for="group-filter">分组</label><select id="group-filter"><option value="">全部声纹</option></select></div>
+      <div class="result-row"><p id="result-summary" role="status" aria-live="polite">索引载入中</p><div class="pager"><button type="button" data-page-prev aria-label="上一页">←</button><span id="page-label">1 / 1</span><button type="button" data-page-next aria-label="下一页">→</button></div></div>
+      <div class="item-index" id="item-index" aria-label="当前页记录"></div>
+    </div>
+    <div class="selection-card" id="selection-card" hidden><p class="selection-card__no" id="selection-number">01</p><div><p class="eyebrow" id="selection-meta">RECORD</p><h3 id="selection-title">未选择</h3><p id="selection-subtitle"></p></div></div>
+  </aside>
+
+  <div class="route-state" id="route-state" aria-live="polite"><span class="route-state__pulse"></span><span id="route-state-text">世界引擎待命</span></div>
+  <nav class="bottom-dock" aria-label="章节导航">
+    <button type="button" class="dock-button" id="history-back" aria-label="返回上一页"><span aria-hidden="true">↶</span><small>返回</small></button>
+    <button type="button" class="dock-button" data-go-corridor><span aria-hidden="true">⌁</span><small>通道</small></button>
+    <div class="dock-track" aria-hidden="true"><i id="dock-track-fill"></i></div>
+    <button type="button" class="dock-button" data-prev-item aria-label="上一件记录"><span aria-hidden="true">←</span><small>上一件</small></button>
+    <button type="button" class="dock-button dock-button--primary" data-next-item aria-label="下一件记录"><span aria-hidden="true">→</span><small>下一件</small></button>
+  </nav>
+
+  <dialog class="map-dialog world-dialog" id="map-dialog" aria-labelledby="map-title">
+    <div class="dialog-head"><div><p class="eyebrow">DECK SELECTION / 10 SECTORS</p><h2 id="map-title">十区记忆地图</h2></div><button class="dialog-close" type="button" data-close-dialog aria-label="关闭地图">×</button></div>
+    <div class="gravity-map" id="gravity-map">
+      <div class="gravity-map__core" aria-hidden="true"><span>G</span><small>引力井</small></div>
+      <button type="button" class="map-stop map-stop--1" data-route="photo"><b>01</b><span>光轨暗房</span><small data-map-count="photo">46 张照片</small></button>
+      <button type="button" class="map-stop map-stop--2" data-route="books"><b>02</b><span>重力书库</span><small data-map-count="books">16 本书</small></button>
+      <button type="button" class="map-stop map-stop--3" data-route="poems"><b>03</b><span>回声井</span><small data-map-count="poems">3 首诗</small></button>
+      <button type="button" class="map-stop map-stop--4" data-route="paintings"><b>04</b><span>恒光穹殿</span><small data-map-count="paintings">12 幅画</small></button>
+      <button type="button" class="map-stop map-stop--5" data-route="music"><b>05</b><span>声纹反应堆</span><small data-map-count="music">534 首歌</small></button>
+      <button type="button" class="map-stop map-stop--6" data-route="sport"><b>06</b><span>竞技观测场</span><small data-map-count="sport">5 支主队</small></button>
+      <button type="button" class="map-stop map-stop--7" data-route="series"><b>07</b><span>连续信号塔</span><small data-map-count="series">36 部剧集</small></button>
+      <button type="button" class="map-stop map-stop--8" data-route="films"><b>08</b><span>轨道放映厅</span><small data-map-count="films">24 部电影</small></button>
+      <button type="button" class="map-stop map-stop--9" data-route="games"><b>09</b><span>交互试验场</span><small data-map-count="games">18 款游戏</small></button>
+      <button type="button" class="map-stop map-stop--10" data-route="curate"><b>10</b><span>记忆装配坞</span><small>七槽策展</small></button>
+    </div>
+    <footer class="dialog-foot"><span>选择停泊口将中断当前航行</span><button type="button" data-go-corridor>返回连续通道</button></footer>
   </dialog>
 
-  <script src="js/vendor/gsap.min.js?v=2"></script>
-  <script src="js/vendor/ScrollTrigger.min.js?v=2"></script>
-  <script src="js/vendor/lenis.min.js?v=2"></script>
-  <script src="js/film-data.js?v=4"></script>
-  <script src="js/series-data.js?v=4"></script>
-  <script src="js/book-shelf-data.js?v=6"></script>
-  <script src="js/music-data.js?v=7"></script>
-  <script src="js/poems-data.js?v=2"></script>
-  <script src="js/paintings-data.js?v=1"></script>
-  <script src="js/music-covers.js?v=6"></script>
-  <script src="js/reel-stage.js?v=35"></script>
-  <script src="js/film-stage.js?v=8"></script>
-  <script src="js/series-stage.js?v=8"></script>
-  <script src="js/music-stage.js?v=12"></script>
-  <script src="js/book-shelf.js?v=13"></script>
-  <script src="js/games-stage.js?v=9"></script>
-  <script src="js/glass-pill.js?v=5"></script>
-  <script src="js/main.js?v=103"></script>
-  <script src="js/paintings-stage.js?v=1"></script>
-  <script src="js/atelier.js?v=11"></script>
-  <script src="js/atelier-hero.js?v=8"></script>
-  <script src="js/atelier-photo.js?v=17"></script>
-  <script src="js/atelier-archive.js?v=5"></script>
-  <script src="js/atelier-poem.js?v=8"></script>
-  <script src="js/curator-desk.js?v=21"></script>
+  <dialog class="reading-dialog world-dialog" id="reading-dialog" aria-labelledby="reading-title">
+    <div class="dialog-head reading-head"><div><p class="eyebrow">CONTENT FALLBACK / FULL INDEX</p><h2 id="reading-title">阅读目录</h2></div><button class="dialog-close" type="button" data-close-dialog aria-label="关闭阅读目录">×</button></div>
+    <div class="reading-layout">
+      <nav class="reading-tabs" id="reading-tabs" aria-label="目录分类"></nav>
+      <section class="reading-copy" aria-labelledby="reading-category-title">
+        <div class="reading-copy__head"><div><p class="eyebrow" id="reading-count">0 RECORDS</p><h3 id="reading-category-title">选择一个展区</h3></div><label class="search-field search-field--compact" for="reading-search"><span class="sr-only">搜索全部记录</span><input id="reading-search" type="search" placeholder="搜索当前目录"></label></div>
+        <div class="reading-list" id="reading-list"></div><div class="reading-pager" id="reading-pager"></div>
+      </section>
+    </div>
+  </dialog>
+
+  <dialog class="detail-dialog" id="detail-dialog" aria-labelledby="detail-title">
+    <button class="detail-close" type="button" data-close-dialog aria-label="关闭详情">×</button>
+    <div class="detail-layout">
+      <section class="detail-media" aria-label="作品图像">
+        <div class="media-stage" id="media-stage" tabindex="0" aria-label="图像查看区，可滚轮缩放并拖动平移"><img id="detail-image" alt="" draggable="false" hidden><div class="media-placeholder" id="media-placeholder"><span id="media-glyph">N</span><small>ARCHIVE OBJECT</small></div><p class="media-error" id="media-error" role="status" hidden>图像资源加载失败，文字记录仍可阅读。</p></div>
+        <div class="media-tools" id="media-tools" hidden><button type="button" data-image-zoom="out" aria-label="缩小图像">−</button><button type="button" data-image-reset>适合窗口</button><button type="button" data-image-zoom="in" aria-label="放大图像">＋</button><span id="image-scale" aria-live="polite">100%</span></div>
+      </section>
+      <article class="detail-copy">
+        <div class="detail-chrome"><p class="eyebrow" id="detail-meta">ARCHIVE RECORD</p><p class="detail-position"><span id="detail-number">01</span> / <span id="detail-total">01</span></p></div>
+        <h2 id="detail-title">记录标题</h2><p class="detail-subtitle" id="detail-subtitle"></p><div class="detail-text" id="detail-text"></div><dl class="detail-fields" id="detail-fields"></dl><div class="detail-links" id="detail-links"></div>
+        <footer class="detail-nav"><button type="button" data-detail-prev>← 上一件</button><button type="button" data-detail-next>下一件 →</button></footer>
+      </article>
+    </div>
+  </dialog>
+
+  <dialog class="curator-dialog world-dialog" id="curator-dialog" aria-labelledby="curator-title">
+    <div class="dialog-head curator-head"><div><p class="eyebrow">MEMORY FABRICATION BAY / 7 SLOTS</p><h2 id="curator-title">记忆装配台</h2></div><button class="dialog-close" type="button" data-close-dialog aria-label="关闭装配台">×</button></div>
+    <div class="curator-layout">
+      <section class="curator-form" aria-label="展览编辑">
+        <div class="curator-toolbar"><p id="curator-count">0 / 7 已装配</p><button type="button" data-curator-shuffle>随机装配</button><button type="button" data-curator-reset>清空</button></div>
+        <ol class="curator-slots" id="curator-slots"></ol>
+        <div class="curator-fields">
+          <label for="curator-name"><span>展览标题</span><input id="curator-name" maxlength="48" placeholder="为这段记忆命名"></label>
+          <label for="curator-by"><span>策展署名</span><input id="curator-by" maxlength="32" placeholder="你的名字"></label>
+          <label for="curator-note"><span>策展笔记</span><textarea id="curator-note" maxlength="160" rows="3" placeholder="这些记录为什么被放在一起？"></textarea></label>
+        </div>
+        <fieldset class="curator-layout-picker"><legend>版面</legend><label><input type="radio" name="curator-layout" value="light-rail" checked><span>三联光廊</span></label><label><input type="radio" name="curator-layout" value="contact-sheet"><span>接触印相</span></label><label><input type="radio" name="curator-layout" value="deep-index"><span>深夜索引</span></label></fieldset>
+        <div class="curator-actions"><button class="action action--ice" type="button" id="curator-export" disabled>保存海报 PNG</button><p id="curator-status" role="status" aria-live="polite">选择三张照片和书、电影、剧集、音乐各一件。</p></div>
+        <p class="curator-storage" id="curator-storage">草稿保存在这台设备</p>
+      </section>
+      <figure class="curator-preview"><figcaption><span>LIVE FABRICATION PREVIEW</span><b>1200 × 1800</b></figcaption><canvas id="curator-poster" width="1200" height="1800" role="img" aria-label="策展海报预览"></canvas></figure>
+    </div>
+  </dialog>
+
+  <dialog class="picker-dialog world-dialog" id="picker-dialog" aria-labelledby="picker-title">
+    <div class="dialog-head"><div><p class="eyebrow">INVENTORY LINK</p><h2 id="picker-title">选择一件记录</h2></div><button class="dialog-close" type="button" data-close-dialog aria-label="关闭选择器">×</button></div>
+    <label class="search-field picker-search" for="picker-search"><span>搜索全部记录</span><input id="picker-search" type="search" autocomplete="off" placeholder="标题、作者或关键词"></label>
+    <p id="picker-count" class="picker-count" role="status" aria-live="polite"></p><div class="picker-results" id="picker-results"></div><button class="picker-more" type="button" id="picker-more">继续加载</button>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+  <noscript><section class="noscript-panel"><h1>N1GHT CHXN9 深档</h1><p>启用 JavaScript 才能进入三维档案船与完整目录。</p><a href="/myscore/">打开 MyScore</a></section></noscript>
+  <script type="module" src="js/world/app.js?v=2"></script>
 </body>
 </html>

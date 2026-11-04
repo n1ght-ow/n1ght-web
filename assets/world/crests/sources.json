@@ -1,0 +1,14 @@
+[
+  {
+    "source": "logos/spurs.svg",
+    "output": "assets/world/crests/spurs.png",
+    "sourceSha256": "c4df842e0d660dbc6dd1f8e523b1ca03dd2cfee314624071a6ab8425ab885271",
+    "method": "Local Sharp SVG rasterization at 512x512; original artwork and SVG retained. Avoids empty WebGL uploads from viewBox-only SVGs."
+  },
+  {
+    "source": "logos/mancity.svg",
+    "output": "assets/world/crests/mancity.png",
+    "sourceSha256": "8d0711d5faa236c0389a27e107ff8b560c274dc5c302d4210ca2109fee6cc3d4",
+    "method": "Local Sharp SVG rasterization at 512x512; original artwork and SVG retained. Avoids empty WebGL uploads from viewBox-only SVGs."
+  }
+]
