@@ -7,8 +7,8 @@ const ROUTE_META = {
   entry: { title: "引力记忆舱", english: "ORBITAL MEMORY VESSEL", description: "一座围绕引力井航行的私人档案船。" },
   corridor: { title: "连续引航通道", english: "THE TRANSIT SPINE", description: "沿螺旋通道穿过十个停泊口。任何时刻都可返回通道或直接跃迁到另一展区。" },
   photo: { title: "光轨暗房", english: "PHOTOGRAPHY / LIGHT RAIL", description: "照片悬在分岔的光轨之间。横向拖动轨道，选择一张放大，再自由平移与缩放。", operation: "拖动光轨 · 选择 · 放大" },
-  books: { title: "重力书库", english: "BOOKS / GRAVITY SHELVES", description: "书脊沿环形重力架排列。抽取一卷，选择索引，然后阅读完整笔记。", operation: "抽取书脊 · 翻阅 · 选择" },
-  poems: { title: "回声井", english: "POEMS / VERTICAL WELL", description: "诗句沿井壁向下回响。推进诗行，选择作品，或以阅读模式查看完整原文。", operation: "垂读诗带 · 推进 · 全文" },
+  books: { title: "悬挑阅览架", english: "BOOKS / OPEN LIBRARY", description: "布面书册安放在开放的悬挑层架上。选取一卷，抽出看书名，再读收藏笔记。", operation: "选书 · 抽取 · 阅读笔记" },
+  poems: { title: "诗页庭", english: "POEMS / COURT OF LEAVES", description: "三首原诗，三张静止的诗页。选一首近读诗节，或打开全文，依原来的断行慢慢读。", operation: "选诗 · 近读 · 全文" },
   paintings: { title: "恒光穹殿", english: "PAINTINGS / ETERNAL LIGHT", description: "名作安放在弧形穹龛中。旋转视角，选择画面，查看比例、图像来源与馆藏链接。", operation: "环绕穹龛 · 检查 · 缩放" },
   music: { title: "声纹反应堆", english: "MUSIC / VOICE REACTOR", description: "唱片与声纹光柱围绕核心转动。按十五组声纹筛选，选择曲目，再前往网易云收听。", operation: "旋转唱片 · 分组 · 选择" },
   sport: { title: "竞技观测场", english: "SPORT / OBSERVATION FIELD", description: "队徽悬在看台上方，赛场记录围绕中圈展开。切换主队，查看来源，或进入 MyScore 继续追踪。", operation: "切换队伍 · 检查 · MyScore" },
@@ -48,7 +48,6 @@ const app = {
   toastTimer: 0,
   curator: null,
   fallback: false,
-  focusGuard: false,
 };
 
 function categoryItems(id) {
@@ -161,9 +160,11 @@ function updatePanel() {
   updateRouteChrome();
   const isCorridor = app.route === "corridor" || app.route === "entry";
   const isCurate = app.route === "curate";
+  $("poem-choices").hidden = app.route !== "poems";
   $("browse-tools").hidden = isCorridor || isCurate;
   $("selection-card").hidden = isCorridor || !app.selected;
   $("operation-bar").querySelector("[data-focus-current]").hidden = isCorridor || isCurate;
+  $("operation-bar").querySelector("[data-overview]").hidden = isCorridor || isCurate;
   $("operation-bar").querySelector("[data-open-detail]").hidden = isCorridor || isCurate || !app.selected;
   $("operation-bar").querySelector("[data-open-curator]").hidden = !isCurate;
   const currentRouteIndex = ROUTE_ORDER.indexOf(app.route);
@@ -207,6 +208,9 @@ function updateSelectionCard() {
   $("selection-meta").textContent = item.meta || item.type || "ARCHIVE RECORD";
   $("selection-title").textContent = item.title || "未命名记录";
   $("selection-subtitle").textContent = item.subtitle || "";
+  $("poem-choices").querySelectorAll("button").forEach(button => {
+    button.setAttribute("aria-pressed", String(Number(button.dataset.poemIndex) === app.selected?.index));
+  });
 }
 
 function renderPage({ focusEngine = true } = {}) {
@@ -239,6 +243,15 @@ function renderPage({ focusEngine = true } = {}) {
     index.append(button);
   });
   $("item-index").replaceChildren(index);
+  const poems = document.createDocumentFragment();
+  if (app.route === "poems") app.visible.forEach((item, localIndex) => {
+    const button = make("button");
+    button.type = "button";
+    button.dataset.poemIndex = start + localIndex;
+    button.append(make("span", "poem-choice__title", item.title), make("small", "", item.author));
+    poems.append(button);
+  });
+  $("poem-choices").replaceChildren(poems);
   updateSelectionCard();
   updatePanel();
   if (focusEngine) syncEngineRoute();
@@ -290,16 +303,14 @@ async function syncEngineRoute({ focus = false } = {}) {
 
 async function focusEngineCurrent() {
   const index = localIndex();
-  if (!app.engineReady || !app.engine || index < 0 || app.focusGuard) return;
+  if (!app.engineReady || !app.engine || index < 0) return;
   await invokeEngineFocus(index);
 }
 
 async function invokeEngineFocus(index) {
-  if (!app.engineReady || !app.engine || app.focusGuard) return;
-  app.focusGuard = true;
+  if (!app.engineReady || !app.engine) return;
   try { await Promise.resolve(app.engine.focusItem?.(index)); }
   catch (error) { engineProblem(error); }
-  finally { app.focusGuard = false; }
 }
 
 function engineProblem(error) {
@@ -400,7 +411,7 @@ function enterWorld() {
 
 async function startEngine() {
   try {
-    const module = await import(new URL("./engine.js", import.meta.url) + "?v=2");
+    const module = await import(new URL("./engine.js", import.meta.url) + "?v=4");
     if (typeof module.createWorld !== "function") throw new Error("engine.createWorld 不存在");
     app.engine = await module.createWorld({
       canvas: $("world-canvas"),
@@ -489,7 +500,7 @@ function buildReadingTabs() {
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.readingRoute = category.id;
-    button.append(make("span", "", category.title), make("small", "", String(category.items.length)));
+    button.append(make("span", "", ROUTE_META[category.id]?.title || category.title), make("small", "", String(category.items.length)));
     fragment.append(button);
   });
   $("reading-tabs").replaceChildren(fragment);
@@ -510,7 +521,7 @@ function renderReading() {
   const start = app.readingPage * READING_PAGE_SIZE;
   const visible = app.readingFiltered.slice(start, start + READING_PAGE_SIZE);
   $("reading-count").textContent = app.readingFiltered.length + " RECORDS";
-  $("reading-category-title").textContent = category.title;
+  $("reading-category-title").textContent = ROUTE_META[category.id]?.title || category.title;
   document.querySelectorAll("[data-reading-route]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.readingRoute === app.readingRoutes);
   });
@@ -638,6 +649,9 @@ function renderDetailItem() {
   const source = item.image || item.thumb;
   const placeholder = $("media-placeholder");
   const tools = $("media-tools");
+  const media = document.querySelector(".detail-media");
+  media.querySelector(".poem-reading")?.remove();
+  media.classList.toggle("detail-media--poem", context.route === "poems");
   $("media-glyph").textContent = GLYPHS[item.type] || "N";
   $("media-error").hidden = true;
   image.onload = () => {
@@ -662,6 +676,17 @@ function renderDetailItem() {
     image.removeAttribute("src");
     placeholder.hidden = false;
     tools.hidden = true;
+  }
+  if (context.route === "poems") {
+    placeholder.hidden = true;
+    $("detail-text").hidden = true;
+    const reading = make("article", "poem-reading");
+    reading.lang = "en";
+    reading.append(make("h3", "", item.title), make("p", "poem-reading__author", [item.author, item.year].filter(Boolean).join(" · ")));
+    const stanzas = item.stanzas || item.originalFields?.stanzas;
+    if (Array.isArray(stanzas)) stanzas.forEach(lines => reading.append(make("p", "poem-reading__stanza", lines.join("\n"))));
+    else reading.append(make("p", "poem-reading__stanza", item.text));
+    media.append(reading);
   }
 }
 
@@ -729,6 +754,10 @@ function bindEvents() {
     } else if (target.matches("[data-focus-current]")) {
       focusEngineCurrent();
       toast(currentSelectedItem() ? "已聚焦：" + currentSelectedItem().title : "当前没有可聚焦记录。", !currentSelectedItem());
+    } else if (target.matches("[data-overview]")) {
+      app.engine?.overview?.();
+    } else if (target.matches("[data-poem-index]")) {
+      selectIndex(Number(target.dataset.poemIndex));
     } else if (target.matches("[data-open-detail]")) {
       if (app.selected) openDetail(app.filtered, app.selected.index, target);
     } else if (target.matches("[data-open-curator]")) {
@@ -745,6 +774,7 @@ function bindEvents() {
       panel.hidden = !panel.hidden;
       target.setAttribute("aria-expanded", String(!panel.hidden));
       target.setAttribute("aria-label", panel.hidden ? "展开展区控件" : "收起展区控件");
+      app.engine?.resize?.();
     } else if (target.matches("[data-page-prev]")) {
       if (app.page > 0) { app.page -= 1; app.selected = app.filtered.length ? { item: app.filtered[app.page * PAGE_SIZE], index: app.page * PAGE_SIZE } : null; renderPage(); }
     } else if (target.matches("[data-page-next]")) {

@@ -57,7 +57,12 @@ function clampIndex(index, length) {
   if (!length) return -1;
   const parsed = Math.trunc(Number(index));
   if (!Number.isFinite(parsed)) return 0;
+  if (parsed < 0) return -1;
   return Math.max(0, Math.min(length - 1, parsed));
+}
+
+function selectedIndex(index, length) {
+  return Number(index) < 0 ? -1 : clampIndex(index, length);
 }
 
 function markMesh(mesh, cast = true, receive = false) {
@@ -190,6 +195,7 @@ function buildMusic(ctx) {
   const { THREE, group } = scope;
   const items = visibleItems(ctx.items);
   const reduced = Boolean(ctx.reducedMotion);
+  const compact = window.innerWidth <= 700;
 
   const ceramic = scope.material({ color: C.ceramic, roughness: 0.34, metalness: 0.52 });
   const dark = scope.material({ color: C.ink, roughness: 0.58, metalness: 0.3 });
@@ -247,23 +253,25 @@ function buildMusic(ctx) {
   needleTip.rotation.x = Math.PI / 2;
 
   const records = [];
+  const recordRadius = compact ? 8.05 : 9.45;
+  const recordY = 2.72;
   const count = Math.max(1, items.length);
   for (let i = 0; i < items.length; i += 1) {
     const angle = (i / count) * Math.PI * 2;
     const root = new THREE.Group();
     root.rotation.y = angle;
-    root.position.set(Math.sin(angle) * 8.45, 1.3, Math.cos(angle) * 8.45);
+    root.position.set(Math.sin(angle) * recordRadius, 1.05, Math.cos(angle) * recordRadius);
     scope.add(root);
-    const stand = scope.mesh(new THREE.CylinderGeometry(1.7, 1.95, 0.32, 48), ceramic, root);
+    const stand = scope.mesh(new THREE.CylinderGeometry(1.95, 2.2, 0.38, 48), ceramic, root);
     stand.position.y = 0.16;
-    const record = scope.mesh(new THREE.CylinderGeometry(1.42, 1.42, 0.1, 96), groove, root);
+    const record = scope.mesh(new THREE.CylinderGeometry(1.92, 1.92, 0.1, 96), groove, root);
     record.rotation.x = Math.PI / 2;
-    record.position.y = 2.05;
+    record.position.y = recordY;
     const ringMaterial = (i === 0 ? amber : cyan).clone();
-    const selectionRing = scope.mesh(new THREE.TorusGeometry(1.57, 0.045, 8, 72), ringMaterial, root);
-    selectionRing.position.set(0, 2.05, -0.02);
-    scope.plane(items[i], 2.17, 2.17, [0, 2.05, 0.075], root);
-    scope.pickBox(3.25, 3.25, i, [0, 2.05, 0.1], root);
+    const selectionRing = scope.mesh(new THREE.TorusGeometry(2.15, 0.052, 8, 72), ringMaterial, root);
+    selectionRing.position.set(0, recordY, -0.02);
+    scope.plane(items[i], 3.08, 3.08, [0, recordY, 0.075], root);
+    scope.pickBox(3.7, 3.7, i, [0, recordY, 0.1], root);
     records.push({ root, record, selectionRing, baseY: root.position.y, focus: 0 });
   }
 
@@ -280,23 +288,38 @@ function buildMusic(ctx) {
   scope.label("声纹反应堆 · MECHANICAL RECORD INDEX", 0.26, "#f0b45e", [0, 5.3, 0]);
 
   let selected = -1;
-  let selectedY = 3;
-  let focusPulse = 0;
+  const overviewView = {
+    position: [0, 7.2, 25],
+    target: [0, 3.05, 0],
+    frame: { width: compact ? 19.2 : 23.5, height: 8.8 },
+  };
   function focus(index) {
-    selected = clampIndex(index, records.length);
-    focusPulse = 0;
-    for (let i = 0; i < records.length; i += 1) scope.setMaterial(records[i].selectionRing, (material) => {
-      material.color.setHex(i === selected ? C.amber : C.cyan);
-      if ("emissive" in material) material.emissive.setHex(i === selected ? C.amber : C.cyan);
-      if ("emissiveIntensity" in material) material.emissiveIntensity = i === selected ? 2.1 : 0.7;
-    });
-    if (selected < 0 || !records[selected]) return { position: [0, 7.4, 19.8], target: [0, 3.2, 0] };
+    selected = selectedIndex(index, records.length);
+    for (let i = 0; i < records.length; i += 1) {
+      const entry = records[i];
+      const active = i === selected;
+      scope.setMaterial(entry.selectionRing, (material) => {
+        material.color.setHex(active ? C.amber : C.cyan);
+        if ("emissive" in material) material.emissive.setHex(active ? C.amber : C.cyan);
+        if ("emissiveIntensity" in material) material.emissiveIntensity = active ? 2.1 : 0.7;
+      });
+      entry.focus = active ? 1 : 0;
+      entry.root.position.y = entry.baseY + (active ? 0.18 : 0);
+      entry.root.scale.setScalar(active ? 1.08 : 1);
+      entry.selectionRing.scale.setScalar(active ? 1.045 : 1);
+    }
+    if (selected < 0 || !records[selected]) return overviewView;
     const angle = (selected / records.length) * Math.PI * 2;
-    selectedY = records[selected].baseY + 2.05;
+    const normalX = Math.sin(angle);
+    const normalZ = Math.cos(angle);
+    const coverX = normalX * recordRadius;
+    const coverZ = normalZ * recordRadius;
+    const coverY = records[selected].baseY + recordY + 0.18;
     needle.rotation.y = angle;
     return {
-      position: [Math.sin(angle) * 20.2, 7.4, Math.cos(angle) * 20.2],
-      target: [Math.sin(angle) * 8.45, selectedY, Math.cos(angle) * 8.45],
+      position: [coverX + normalX * 7, coverY + 0.35, coverZ + normalZ * 7],
+      target: [coverX, coverY, coverZ],
+      frame: { width: 3.55, height: 3.7 },
     };
   }
 
@@ -308,19 +331,17 @@ function buildMusic(ctx) {
     core.rotation.x += dt * 0.35 * motion;
     core.rotation.z -= dt * 0.2 * motion;
     halo.rotation.z += dt * 0.38 * motion;
-    focusPulse = Math.min(1, focusPulse + dt * 4);
     for (let i = 0; i < records.length; i += 1) {
       const entry = records[i];
       const isSelected = i === selected;
       entry.focus += ((isSelected ? 1 : 0) - entry.focus) * (reduced ? 1 : Math.min(1, dt * 7));
-      entry.root.position.y = entry.baseY + entry.focus * 0.28;
-      const lift = isSelected && !reduced ? Math.sin(time * 2.4) * 0.025 : 0;
-      entry.root.scale.setScalar(1 + entry.focus * 0.065 + lift);
-      entry.record.rotation.y += dt * (isSelected ? 0.8 : 0.08) * motion;
+      entry.root.position.y = entry.baseY + entry.focus * 0.18;
+      entry.root.scale.setScalar(1 + entry.focus * 0.08);
+      entry.record.rotation.y += dt * (isSelected ? 0 : 0.08) * motion;
     }
     for (const entry of rodPivots) {
       const wave = reduced ? 0.22 : 0.22 + Math.sin(time * 2.2 + entry.phase) * 0.18;
-      entry.rod.scale.y = 0.55 + wave + focusPulse * 0.35;
+      entry.rod.scale.y = 0.55 + wave;
       entry.pivot.rotation.z = reduced ? 0 : Math.sin(time * 0.9 + entry.phase) * 0.08;
     }
   }
@@ -328,9 +349,13 @@ function buildMusic(ctx) {
   focus(0);
   return {
     group,
-    camera: { position: [0, 7.4, 19.8], target: [0, 3.2, 0] },
+    camera: overviewView,
     update,
     focus,
+    overview: () => {
+      focus(-1);
+      return overviewView;
+    },
     dispose: () => scope.dispose(),
   };
 }
@@ -340,6 +365,7 @@ function buildSport(ctx) {
   const { THREE, group } = scope;
   const items = visibleItems(ctx.items);
   const reduced = Boolean(ctx.reducedMotion);
+  const compact = window.innerWidth <= 700;
 
   const pitchMat = scope.material({ color: 0x17372c, roughness: 0.9, metalness: 0 });
   const stripeMat = scope.material({ color: 0x204a3a, roughness: 0.92 });
@@ -389,14 +415,12 @@ function buildSport(ctx) {
   bowlShell.position.y = 2.4;
 
   const masts = [];
-  const count = Math.max(1, items.length);
+  const spacing = items.length > 1 ? Math.min(compact ? 3.3 : 5.1, (compact ? 13.2 : 17) / (items.length - 1)) : 0;
   for (let i = 0; i < items.length; i += 1) {
-    const angle = -0.8 + (i / Math.max(1, count - 1)) * 1.6;
-    const x = Math.sin(angle) * 14.7;
-    const z = Math.cos(angle) * 14.7 - 1.3;
+    const x = (i - (items.length - 1) / 2) * spacing;
+    const z = -2.8 + Math.abs(x) * 0.035;
     const root = new THREE.Group();
     root.position.set(x, 0, z);
-    root.rotation.y = angle;
     scope.add(root);
     const mast = scope.mesh(new THREE.CylinderGeometry(0.11, 0.18, 4.7, 12), steel, root);
     mast.position.y = 2.35;
@@ -412,12 +436,12 @@ function buildSport(ctx) {
     const crestFace = scope.plane({ ...items[i], image: crestTexture, thumb: crestTexture }, 2.7, 2.7, [0, 5.15, 0.18], root);
     if (crestFace?.material) { crestFace.material.transparent = true; crestFace.material.alphaTest = 0.01; }
     scope.pickBox(3.55, 3.55, i, [0, 5.15, 0.15], root);
-    masts.push({ root, rim, world: new THREE.Vector3(x, 0, z), angle });
+    masts.push({ root, rim, world: new THREE.Vector3(x, 0, z) });
   }
 
   const scoreboard = scope.mesh(new THREE.BoxGeometry(10.4, 4.5, 0.35), crestBacking);
   scoreboard.position.set(0, 7.3, -15.3);
-  const heroMaterial = scope.material({ color: 0x172125, roughness: 0.48, metalness: 0.16 });
+  const heroMaterial = scope.material({ color: 0xffffff, toneMapped: false }, "MeshBasicMaterial");
   const hero = scope.mesh(new THREE.PlaneGeometry(8.2, 3.05), heroMaterial);
   hero.position.set(0, 7.3, -15.08);
   const heroRim = scope.mesh(new THREE.BoxGeometry(9.1, 3.95, 0.12), gold);
@@ -436,21 +460,30 @@ function buildSport(ctx) {
     const spot = new THREE.SpotLight(C.ice, 45, 42, Math.PI / 5, 0.58, 1.3);
     spot.position.set(x, 13.1, -10.2);
     spot.target.position.set(x * 0.35, 0, 2);
-    scope.add(spot, spot.target);
+    scope.add(spot);
+    scope.add(spot.target);
   }
   addSoftGlow(scope, C.amber, 8, [0, 8.5, -14], 15);
   scope.label("竞技观测场 · REAL CRESTS / LIVE CLUB INDEX", 0.25, "#f0b45e", [0, 10.6, -14.75]);
 
   let selected = -1;
-  let focusPulse = 0;
+  const overviewView = {
+    position: [0, 10.8, 27],
+    target: [0, 4.65, -1.6],
+    frame: { width: compact ? 20.5 : 27, height: 13.5 },
+  };
   function focus(index) {
-    selected = clampIndex(index, masts.length);
-    focusPulse = 0;
-    for (let i = 0; i < masts.length; i += 1) scope.setMaterial(masts[i].rim, (material) => {
-      material.color.setHex(i === selected ? C.amber : C.titanium);
-      if ("emissive" in material) material.emissive.setHex(i === selected ? C.amber : 0x000000);
-      if ("emissiveIntensity" in material) material.emissiveIntensity = i === selected ? 2.2 : 0;
-    });
+    selected = selectedIndex(index, masts.length);
+    for (let i = 0; i < masts.length; i += 1) {
+      const active = i === selected;
+      scope.setMaterial(masts[i].rim, (material) => {
+        material.color.setHex(active ? C.amber : C.titanium);
+        if ("emissive" in material) material.emissive.setHex(active ? C.amber : 0x000000);
+        if ("emissiveIntensity" in material) material.emissiveIntensity = active ? 2.2 : 0;
+      });
+      masts[i].rim.scale.setScalar(active ? 1.045 : 1);
+      masts[i].root.scale.setScalar(active ? 1.04 : 1);
+    }
     if (selected >= 0 && items[selected]) {
       const value = detailUrl(items[selected]);
       if (value && value !== heroUrl) {
@@ -459,31 +492,33 @@ function buildSport(ctx) {
       }
       selectionLight.target.position.set(masts[selected].world.x, 5.15, masts[selected].world.z);
     }
-    const target = selected >= 0 ? masts[selected].world : new THREE.Vector3(0, 2, 0);
-    return { position: [target.x * 0.46, 10.6, 22.8], target: [target.x, selected >= 0 ? 5.15 : 2, target.z] };
+    if (selected < 0) return overviewView;
+    const target = masts[selected].world;
+    return {
+      position: [target.x, 5.55, target.z + 8],
+      target: [target.x, 5.15, target.z],
+      frame: { width: 4.25, height: 4.55 },
+    };
   }
 
   function update(time, delta) {
     if (scope.disposed) return;
     const dt = Math.min(0.05, Math.max(0, Number(delta) || 0));
-    focusPulse = Math.min(1, focusPulse + dt * 3.8);
-    for (let i = 0; i < masts.length; i += 1) {
-      const active = i === selected;
-      const pulse = reduced || !active ? 1 : 1 + Math.sin(time * 2.8) * 0.025;
-      masts[i].rim.scale.setScalar(pulse + (active ? focusPulse * 0.035 : 0));
-    }
-    if (!reduced) {
-      hero.position.y = 7.3 + Math.sin(time * 0.8) * 0.025;
-      heroRim.position.y = hero.position.y;
-    }
+    if (reduced) return;
+    hero.position.y = 7.3;
+    heroRim.position.y = hero.position.y;
   }
 
   focus(0);
   return {
     group,
-    camera: { position: [0, 10.6, 22.8], target: [0, 4.7, 0] },
+    camera: overviewView,
     update,
     focus,
+    overview: () => {
+      focus(-1);
+      return overviewView;
+    },
     dispose: () => scope.dispose(),
   };
 }
@@ -502,105 +537,115 @@ function buildSeries(ctx) {
   const podMat = scope.material({ color: 0x18242a, roughness: 0.38, metalness: 0.45 });
 
   scope.mesh(new THREE.CylinderGeometry(8.8, 9.7, 0.42, 64), blackMetal).position.y = -0.08;
-  const mast = scope.mesh(new THREE.CylinderGeometry(0.65, 1.15, 23.5, 20), shell);
-  mast.position.y = 11.75;
-  for (let level = 0; level < 12; level += 1) {
+  const mast = scope.mesh(new THREE.CylinderGeometry(0.56, 0.98, 14.8, 20), shell);
+  mast.position.y = 7.4;
+  for (let level = 0; level < 8; level += 1) {
     const ring = scope.mesh(new THREE.TorusGeometry(1.55 + (level % 3) * 0.18, 0.045, 7, 56), level % 2 ? cyan : magenta);
-    ring.position.y = 1 + level * 1.85;
+    ring.position.y = 1.35 + level * 1.58;
     ring.rotation.x = Math.PI / 2;
   }
   const spinePath = new THREE.CatmullRomCurve3([
     new THREE.Vector3(0, 0.4, 0),
-    new THREE.Vector3(0.34, 5, 0.24),
-    new THREE.Vector3(-0.3, 10, -0.24),
-    new THREE.Vector3(0.2, 16, 0.18),
-    new THREE.Vector3(0, 23.6, 0),
+    new THREE.Vector3(0.28, 3.5, 0.2),
+    new THREE.Vector3(-0.25, 7, -0.2),
+    new THREE.Vector3(0.18, 11, 0.15),
+    new THREE.Vector3(0, 14.9, 0),
   ]);
   scope.mesh(new THREE.TubeGeometry(spinePath, 96, 0.07, 8, false), cyan);
   for (let side = 0; side < 3; side += 1) {
     const angle = side / 3 * Math.PI * 2;
-    const cable = scope.mesh(new THREE.CylinderGeometry(0.028, 0.028, 22.5, 6), side === 0 ? magenta : silver);
-    cable.position.set(Math.sin(angle) * 1.25, 11.5, Math.cos(angle) * 1.25);
+    const cable = scope.mesh(new THREE.CylinderGeometry(0.028, 0.028, 14, 6), side === 0 ? magenta : silver);
+    cable.position.set(Math.sin(angle) * 1.18, 7.4, Math.cos(angle) * 1.18);
   }
 
   const pods = [];
-  const count = Math.max(1, items.length);
+  const broadcastRadius = 4.15;
   for (let i = 0; i < items.length; i += 1) {
-    const angle = i * 2.36;
-    const radius = 3.5 + (i % 3) * 0.38;
-    const y = 2.1 + i * 1.38;
+    const side = (i % 3) - 1;
+    const band = Math.floor(i / 3);
+    const angle = side * 0.08;
+    const y = 2.65 + band * 4.6;
     const root = new THREE.Group();
-    root.position.set(Math.sin(angle) * radius, y, Math.cos(angle) * radius);
+    root.position.set(side * 4.05, y, 4.4 - Math.abs(side) * 0.3);
     root.rotation.y = angle;
     scope.add(root);
-    const pod = scope.mesh(new THREE.BoxGeometry(2.45, 3.1, 0.45), podMat, root);
+    const pod = scope.mesh(new THREE.BoxGeometry(3.0, 3.95, 0.48), podMat, root);
     const frameMaterial = (i === 0 ? magenta : silver).clone();
-    const frame = scope.mesh(new THREE.BoxGeometry(2.7, 3.35, 0.22), frameMaterial, root);
+    const frame = scope.mesh(new THREE.BoxGeometry(3.3, 4.25, 0.22), frameMaterial, root);
     frame.position.z = -0.15;
-    scope.plane(items[i], 2.3, 2.95, [0, 0, 0.62], root);
-    scope.pickBox(2.88, 3.55, i, [0, 0, 0.68], root);
-    const strut = scope.mesh(new THREE.BoxGeometry(0.13, 0.13, radius - 1.1), silver, root);
-    strut.position.z = -(radius - 1.1) / 2 - 0.25;
+    scope.plane(items[i], 3.02, 3.95, [0, 0, 0.62], root);
+    scope.pickBox(3.48, 4.42, i, [0, 0, 0.68], root);
+    const strut = scope.mesh(new THREE.BoxGeometry(0.13, 0.13, broadcastRadius - 1.1), silver, root);
+    strut.position.z = -(broadcastRadius - 1.1) / 2 - 0.25;
     pod.position.z = 0.05;
     frame.position.y = 0;
-    pods.push({ root, frame, pod, pivotAngle: angle, baseY: y, focus: 0 });
+    scope.label(items[i].title, 0.11, "#e7eeec", [0, -2.31, 0.7], root);
+    pods.push({ root, frame, pod, pivotAngle: angle, baseY: y, basePosition: root.position.clone(), focus: 0 });
   }
 
   const signal = new THREE.PointLight(C.magenta, 18, 13, 2);
   signal.position.set(0, 3, 0);
   scope.add(signal);
   const topLight = new THREE.PointLight(C.cyan, 22, 16, 2);
-  topLight.position.set(0, 22.7, 0);
+  topLight.position.set(0, 14.2, 0);
   scope.add(topLight);
   const beaconPivot = new THREE.Group();
-  beaconPivot.position.y = 23.1;
+  beaconPivot.position.y = 14.35;
   scope.add(beaconPivot);
   const beacon = scope.mesh(new THREE.OctahedronGeometry(0.62, 0), cyan, beaconPivot);
   const beaconRing = scope.mesh(new THREE.TorusGeometry(1.12, 0.04, 8, 48), magenta, beaconPivot);
   beaconRing.rotation.x = Math.PI / 2;
-  scope.label("连续信号塔 · SEASON CARRIER", 0.25, "#e174ab", [0, 24.15, 0]);
+  scope.label("连续信号塔 · SEASON CARRIER", 0.25, "#e174ab", [0, 15.2, 0]);
 
   let selected = -1;
-  let focusPulse = 0;
+  const overviewView = {
+    position: [0, 8.4, 24],
+    target: [0, 7.4, 2.6],
+    frame: { width: 13.2, height: 16.4 },
+  };
   function focus(index) {
-    selected = clampIndex(index, pods.length);
-    focusPulse = 0;
-    for (let i = 0; i < pods.length; i += 1) scope.setMaterial(pods[i].frame, (material) => {
-      material.color.setHex(i === selected ? C.magenta : C.titanium);
-      if ("emissive" in material) material.emissive.setHex(i === selected ? C.magenta : 0x000000);
-      if ("emissiveIntensity" in material) material.emissiveIntensity = i === selected ? 2 : 0;
-    });
+    selected = selectedIndex(index, pods.length);
+    for (let i = 0; i < pods.length; i += 1) {
+      const active = i === selected;
+      scope.setMaterial(pods[i].frame, (material) => {
+        material.color.setHex(active ? C.magenta : C.titanium);
+        if ("emissive" in material) material.emissive.setHex(active ? C.magenta : 0x000000);
+        if ("emissiveIntensity" in material) material.emissiveIntensity = active ? 2 : 0;
+      });
+      pods[i].focus = active ? 1 : 0;
+      pods[i].root.position.copy(pods[i].basePosition);
+      if (active) pods[i].root.position.set(0, 5.4, 10.5);
+      pods[i].root.rotation.y = active ? 0 : pods[i].pivotAngle;
+      pods[i].frame.scale.setScalar(active ? 1.025 : 1);
+      pods[i].pod.position.z = active ? 0.27 : 0.05;
+    }
     if (selected >= 0) {
       const item = pods[selected];
-      const normalX = Math.sin(item.pivotAngle);
-      const normalZ = Math.cos(item.pivotAngle);
       const pod = item.root.position;
       signal.position.y = item.baseY;
       return {
-        position: [pod.x + normalX * 7.2, item.baseY + 2.2, pod.z + normalZ * 7.2],
-        target: [pod.x, item.baseY, pod.z],
+        position: [0, 5.4, pod.z + 7],
+        target: [0, 5.4, pod.z + 0.62],
+        frame: { width: 3.8, height: 5.2 },
       };
     }
-    return { position: [13.4, 11.6, 22.8], target: [0, 10.8, 0] };
+    return overviewView;
   }
 
   function update(time, delta) {
     if (scope.disposed) return;
     const dt = Math.min(0.05, Math.max(0, Number(delta) || 0));
-    focusPulse = Math.min(1, focusPulse + dt * 3.6);
     if (!reduced) {
       beaconPivot.rotation.y += dt * 0.42;
       beacon.rotation.x += dt * 0.36;
       beaconRing.rotation.z -= dt * 0.2;
-      for (const entry of pods) {
-        entry.root.rotation.y = entry.pivotAngle + Math.sin(time * 0.25 + entry.pivotAngle) * 0.028;
-      }
     }
     for (let i = 0; i < pods.length; i += 1) {
       const entry = pods[i];
       const active = i === selected;
       entry.focus += ((active ? 1 : 0) - entry.focus) * (reduced ? 1 : Math.min(1, dt * 6));
-      entry.root.position.y = entry.baseY + entry.focus * (0.3 + focusPulse * 0.15);
+      entry.root.rotation.y = active ? 0 : entry.pivotAngle;
+      entry.root.position.y = active ? 5.4 : entry.baseY;
       entry.pod.position.z = 0.05 + entry.focus * 0.22;
     }
     topLight.intensity = reduced ? 21 : 20 + Math.sin(time * 2.1) * 4;
@@ -609,9 +654,13 @@ function buildSeries(ctx) {
   focus(0);
   return {
     group,
-    camera: { position: [13.4, 11.6, 22.8], target: [0, 10.8, 0] },
+    camera: overviewView,
     update,
     focus,
+    overview: () => {
+      focus(-1);
+      return overviewView;
+    },
     dispose: () => scope.dispose(),
   };
 }
@@ -644,6 +693,7 @@ function buildFilms(ctx) {
   const { THREE, group } = scope;
   const items = visibleItems(ctx.items);
   const reduced = Boolean(ctx.reducedMotion);
+  const compact = window.innerWidth <= 700;
 
   const floor = scope.material({ color: 0x09090d, roughness: 0.55, metalness: 0.35 });
   const shell = scope.material({ color: 0x151418, roughness: 0.42, metalness: 0.48 });
@@ -651,16 +701,18 @@ function buildFilms(ctx) {
   const brass = scope.material({ color: 0xa7834f, roughness: 0.28, metalness: 0.88 });
   const silver = scope.material({ color: 0x8d9497, roughness: 0.24, metalness: 0.95 });
   const red = scope.material({ color: C.orange, emissive: C.orange, emissiveIntensity: 0.85, roughness: 0.36 });
-  const screenMat = scope.material({ color: 0x11161a, side: THREE.DoubleSide }, "MeshBasicMaterial");
+  const screenMat = scope.material({ color: 0x1b2228, side: THREE.DoubleSide, toneMapped: false }, "MeshBasicMaterial");
 
   scope.mesh(new THREE.CylinderGeometry(19.5, 20.2, 0.35, 72), floor).position.y = -0.1;
   const screen = scope.mesh(curvedScreenGeometry(THREE, 13, 8.8, 1.3, 36), screenMat);
   screen.position.set(0, 5.4, 0);
   const screenBezel = scope.mesh(new THREE.BoxGeometry(13.9, 9.5, 0.22), shell);
   screenBezel.position.set(0, 5.4, -13.18);
-  const focusPosterMat = scope.material({ color: 0x171218, roughness: 0.62 });
-  const focusPoster = scope.mesh(new THREE.PlaneGeometry(4.6, 6.9), focusPosterMat);
-  focusPoster.position.set(0, 5.35, -0.65);
+  const focusPoster = scope.plane(items[0], 6.2, 8.15, [0, 5.4, 0.16]);
+  if (focusPoster) {
+    focusPoster.material.toneMapped = false;
+    focusPoster.renderOrder = 2;
+  }
   let focusUrl = "";
 
   const ceiling = scope.mesh(new THREE.BoxGeometry(28, 0.35, 19), shell);
@@ -689,9 +741,10 @@ function buildFilms(ctx) {
   }
 
   const frames = [];
-  const count = Math.max(1, items.length);
   for (let i = 0; i < items.length; i += 1) {
-    const a = -0.86 + (i / Math.max(1, count - 1)) * 1.72;
+    const side = i % 2 ? 1 : -1;
+    const rank = Math.floor(i / 2);
+    const a = side * ((compact ? 0.32 : 0.42) + rank * (compact ? 0.08 : 0.115));
     const radius = 15.5;
     const x = Math.sin(a) * radius;
     const z = -13 + Math.cos(a) * radius;
@@ -723,22 +776,31 @@ function buildFilms(ctx) {
   lens.position.set(0, 0.7, -1.3);
   const projectorLight = new THREE.SpotLight(0xffd8a7, 34, 34, 0.22, 0.62, 1.15);
   projectorLight.position.set(0, 2.1, 14.9);
-  projectorLight.target.position.set(0, 5.3, -10);
-  scope.add(projectorLight, projectorLight.target);
-  addSoftGlow(scope, 0xff9b68, 9, [0, 7, -8], 14);
+  projectorLight.target.position.set(0, 5.4, -3.4);
+  scope.add(projectorLight);
+  scope.add(projectorLight.target);
+  addSoftGlow(scope, 0xffa06b, 17, [0, 7.2, -4.2], 15);
   scope.label("轨道放映厅 · PROJECTION DOLLY", 0.25, "#f0b45e", [0, 11.4, -2]);
 
   let selected = -1;
-  let focusPulse = 0;
   const dollyTarget = new THREE.Vector3(0, 1.35, 15.5);
+  const overviewView = {
+    position: [0, 7.2, 22],
+    target: [0, 4.9, -5.2],
+    frame: { width: compact ? 21 : 29, height: 15.8 },
+  };
   function focus(index) {
-    selected = clampIndex(index, frames.length);
-    focusPulse = 0;
-    for (let i = 0; i < frames.length; i += 1) scope.setMaterial(frames[i].rim, (material) => {
-      material.color.setHex(i === selected ? 0xc79152 : C.titanium);
-      if ("emissive" in material) material.emissive.setHex(i === selected ? C.orange : 0x000000);
-      if ("emissiveIntensity" in material) material.emissiveIntensity = i === selected ? 1.45 : 0;
-    });
+    selected = selectedIndex(index, frames.length);
+    for (let i = 0; i < frames.length; i += 1) {
+      const active = i === selected;
+      scope.setMaterial(frames[i].rim, (material) => {
+        material.color.setHex(active ? 0xc79152 : C.titanium);
+        if ("emissive" in material) material.emissive.setHex(active ? C.orange : 0x000000);
+        if ("emissiveIntensity" in material) material.emissiveIntensity = active ? 1.45 : 0;
+      });
+      frames[i].rim.scale.setScalar(active ? 1.025 : 1);
+      frames[i].root.position.y = frames[i].baseY;
+    }
     if (selected >= 0) {
       const entry = frames[selected];
       dollyTarget.set(entry.root.position.x * 0.74, 1.35, entry.root.position.z + 0.5);
@@ -748,17 +810,18 @@ function buildFilms(ctx) {
         scope.texture(focusPoster, value);
       }
       return {
-        position: [entry.root.position.x * 1.15, 5.3, entry.root.position.z + 8.2],
-        target: [entry.root.position.x, entry.baseY, entry.root.position.z],
+        position: [0, 5.72, 5.5],
+        target: [0, 5.4, 0.16],
+        frame: { width: 6.55, height: 9.0 },
       };
     }
-    return { position: [0, 7.1, 20.5], target: [0, 5.3, -7.4] };
+    dollyTarget.set(0, 1.35, 15.5);
+    return overviewView;
   }
 
   function update(time, delta) {
     if (scope.disposed) return;
     const dt = Math.min(0.05, Math.max(0, Number(delta) || 0));
-    focusPulse = Math.min(1, focusPulse + dt * 3.2);
     if (!reduced) {
       dolly.position.lerp(dollyTarget, Math.min(1, dt * 1.9));
       projector.rotation.z += dt * 0.12;
@@ -766,22 +829,19 @@ function buildFilms(ctx) {
     } else {
       dolly.position.copy(dollyTarget);
     }
-    for (let i = 0; i < frames.length; i += 1) {
-      const entry = frames[i];
-      const active = i === selected;
-      entry.focus += ((active ? 1 : 0) - entry.focus) * (reduced ? 1 : Math.min(1, dt * 5));
-      entry.root.position.y = entry.baseY + entry.focus * 0.24;
-      entry.back.position.z = -0.12 - entry.focus * 0.18;
-    }
-    focusPoster.material.opacity = reduced ? 1 : 0.94 + Math.sin(time * 0.8) * 0.05;
+    if (focusPoster?.material) focusPoster.material.opacity = 1;
   }
 
   focus(0);
   return {
     group,
-    camera: { position: [0, 7.1, 20.5], target: [0, 5.3, -7.4] },
+    camera: overviewView,
     update,
     focus,
+    overview: () => {
+      focus(-1);
+      return overviewView;
+    },
     dispose: () => scope.dispose(),
   };
 }
@@ -791,6 +851,7 @@ function buildGames(ctx) {
   const { THREE, group } = scope;
   const items = visibleItems(ctx.items);
   const reduced = Boolean(ctx.reducedMotion);
+  const compact = window.innerWidth <= 700;
 
   const voidMat = scope.material({ color: 0x090812, roughness: 0.72, metalness: 0.18 });
   const plate = scope.material({ color: 0x191b27, roughness: 0.36, metalness: 0.62 });
@@ -805,54 +866,52 @@ function buildGames(ctx) {
   scope.add(grid);
 
   const coreRoot = new THREE.Group();
-  coreRoot.position.set(0, 8.2, -8);
+  coreRoot.position.set(0, 6.1, -8.5);
   scope.add(coreRoot);
-  const core = scope.mesh(new THREE.IcosahedronGeometry(1.6, 1), violet, coreRoot);
-  const coreCage = scope.mesh(new THREE.IcosahedronGeometry(2.15, 0), edge, coreRoot);
+  const core = scope.mesh(new THREE.IcosahedronGeometry(1.02, 1), violet, coreRoot);
+  const coreCage = scope.mesh(new THREE.IcosahedronGeometry(1.42, 0), edge, coreRoot);
   scope.setMaterial(coreCage, (material) => {
     material.transparent = true;
     material.opacity = 0.42;
     material.wireframe = true;
   });
   const rings = [];
-  for (let i = 0; i < 4; i += 1) {
-    const ring = scope.mesh(new THREE.TorusGeometry(2.5 + i * 0.38, 0.045, 8, 72), i % 2 ? lime : violet, coreRoot);
+  for (let i = 0; i < 3; i += 1) {
+    const ring = scope.mesh(new THREE.TorusGeometry(1.75 + i * 0.29, 0.045, 8, 72), i % 2 ? lime : violet, coreRoot);
     ring.rotation.set(i * 0.42, i * 0.58, i * 0.27);
     rings.push(ring);
   }
   for (let arm = 0; arm < 6; arm += 1) {
     const angle = arm / 6 * Math.PI * 2;
-    const beam = scope.mesh(new THREE.BoxGeometry(0.12, 0.12, 5.4), edge, coreRoot);
-    beam.position.set(Math.sin(angle) * 2.7, 0, Math.cos(angle) * 2.7);
+    const beam = scope.mesh(new THREE.BoxGeometry(0.1, 0.1, 3.4), edge, coreRoot);
+    beam.position.set(Math.sin(angle) * 1.9, 0, Math.cos(angle) * 1.9);
     beam.rotation.y = angle;
     beam.rotation.x = 0.18;
   }
 
   const platforms = [];
-  const columns = Math.min(8, Math.max(1, items.length));
+  const columns = Math.min(compact ? 4 : 6, Math.max(1, items.length));
   const rows = items.length > columns ? 2 : 1;
   for (let i = 0; i < items.length; i += 1) {
     const col = i % columns;
     const row = Math.floor(i / columns);
-    const x = (col - (columns - 1) / 2) * 2.75;
-    const z = row === 0 ? 3.7 : 7.9;
-    const y = 1.7 + ((col * 2 + row * 3) % 4) * 0.78;
+    const x = (col - (columns - 1) / 2) * 2.62;
+    const z = 3.25 + row * 4.05;
+    const y = 1.62 + ((col + row * 3) % 3) * 0.42;
     const root = new THREE.Group();
     root.position.set(x, y, z);
-    root.rotation.y = (col % 2 ? -1 : 1) * 0.04;
     scope.add(root);
-    const disc = scope.mesh(new THREE.CylinderGeometry(1.18, 0.78, 0.34, 8), plate, root);
+    const disc = scope.mesh(new THREE.CylinderGeometry(1.12, 0.74, 0.32, 8), plate, root);
     disc.position.y = -0.62;
     const strut = scope.mesh(new THREE.CylinderGeometry(0.055, 0.075, y - 0.4, 8), edge, root);
     strut.position.y = -(y - 0.4) / 2 - 0.75;
-    const holder = scope.mesh(new THREE.BoxGeometry(2.48, 1.72, 0.58), cartridgeMat, root);
-    holder.rotation.x = -0.08;
-    scope.plane(items[i], 2.16, 1.215, [0, 0.02, 0.32], root);
-    scope.pickBox(2.62, 1.82, i, [0, 0.02, 0.38], root);
+    const holder = scope.mesh(new THREE.BoxGeometry(2.55, 1.65, 0.58), cartridgeMat, root);
+    const face = scope.plane(items[i], 2.26, 1.3, [0, 0.02, 0.32], root);
+    scope.pickBox(2.72, 1.78, i, [0, 0.02, 0.38], root);
     const accentMaterial = (i === 0 ? lime : edge).clone();
-    const accent = scope.mesh(new THREE.BoxGeometry(2.56, 0.055, 0.08), accentMaterial, root);
-    accent.position.set(0, -0.88, 0.34);
-    platforms.push({ root, disc, holder, accent, baseY: y, phase: i * 0.7, focus: 0 });
+    const accent = scope.mesh(new THREE.BoxGeometry(2.62, 0.055, 0.08), accentMaterial, root);
+    accent.position.set(0, -0.84, 0.34);
+    platforms.push({ root, disc, holder, face, accent, baseY: y, basePosition: root.position.clone(), phase: i * 0.7, focus: 0 });
   }
 
   const coreLight = new THREE.PointLight(C.violet, 18, 21, 2);
@@ -861,34 +920,49 @@ function buildGames(ctx) {
   const rimLight = new THREE.PointLight(C.lime, 11, 18, 2);
   rimLight.position.set(-7, 3, 12);
   scope.add(rimLight);
-  scope.label("交互试验场 · STAGGERED CARTRIDGE ARRAY", 0.25, "#b9e86d", [0, 12.3, -7.3]);
+  scope.label("交互试验场 · STAGGERED CARTRIDGE ARRAY", 0.25, "#b9e86d", [0, 8.7, -8]);
 
   let selected = -1;
-  let focusPulse = 0;
+  const overviewView = {
+    position: [0, 8.1, 25],
+    target: [0, compact ? 3.35 : 3.15, compact ? 5.7 : 4.7],
+    frame: { width: compact ? 12.5 : 18.5, height: compact ? 13.4 : 10.2 },
+  };
   function focus(index) {
-    selected = clampIndex(index, platforms.length);
-    focusPulse = 0;
-    for (let i = 0; i < platforms.length; i += 1) scope.setMaterial(platforms[i].accent, (material) => {
-      material.color.setHex(i === selected ? C.lime : C.titanium);
-      if ("emissive" in material) material.emissive.setHex(i === selected ? C.lime : 0x000000);
-      if ("emissiveIntensity" in material) material.emissiveIntensity = i === selected ? 2 : 0;
-    });
+    selected = selectedIndex(index, platforms.length);
+    for (let i = 0; i < platforms.length; i += 1) {
+      const active = i === selected;
+      const platform = platforms[i];
+      scope.setMaterial(platform.accent, (material) => {
+        material.color.setHex(active ? C.lime : C.titanium);
+        if ("emissive" in material) material.emissive.setHex(active ? C.lime : 0x000000);
+        if ("emissiveIntensity" in material) material.emissiveIntensity = active ? 2 : 0;
+      });
+      platform.focus = active ? 1 : 0;
+      platform.root.position.copy(platform.basePosition);
+      if (active) platform.root.position.set(0, 2.7, 12.5);
+      platform.root.rotation.y = 0;
+      platform.holder.rotation.z = 0;
+      platform.accent.scale.setScalar(active ? 1.035 : 1);
+    }
+    coreLight.intensity = selected >= 0 ? 8 : 17;
     if (selected >= 0) {
       const platform = platforms[selected];
       const p = platform.root.position;
-      rimLight.position.set(p.x, platform.baseY + 1.5, p.z + 2.5);
+      rimLight.position.set(p.x, p.y + 1.5, p.z + 2.5);
       return {
-        position: [p.x + Math.sign(p.x || 1) * 3.2, platform.baseY + 3.1, p.z + 8.2],
-        target: [p.x, platform.baseY, p.z],
+        position: [p.x, p.y + 0.36, p.z + 6.2],
+        target: [p.x, p.y + 0.02, p.z + 0.34],
+        frame: { width: 3.05, height: 2.35 },
       };
     }
-    return { position: [0, 10.6, 23.5], target: [0, 5.2, 1.8] };
+    rimLight.position.set(-7, 3, 12);
+    return overviewView;
   }
 
   function update(time, delta) {
     if (scope.disposed) return;
     const dt = Math.min(0.05, Math.max(0, Number(delta) || 0));
-    focusPulse = Math.min(1, focusPulse + dt * 3.8);
     if (!reduced) {
       core.rotation.x += dt * 0.28;
       core.rotation.z -= dt * 0.19;
@@ -897,26 +971,31 @@ function buildGames(ctx) {
         ring.rotation.x += dt * (0.09 + index * 0.015) * (index % 2 ? -1 : 1);
         ring.rotation.y += dt * 0.055;
       });
-      coreRoot.position.y = 8.2 + Math.sin(time * 0.75) * 0.14;
+      coreRoot.position.y = 6.1 + Math.sin(time * 0.75) * 0.08;
       coreLight.position.copy(coreRoot.position);
     }
     for (let i = 0; i < platforms.length; i += 1) {
       const platform = platforms[i];
       const active = i === selected;
       platform.focus += ((active ? 1 : 0) - platform.focus) * (reduced ? 1 : Math.min(1, dt * 6.5));
-      const floatY = reduced ? 0 : Math.sin(time * 1.15 + platform.phase) * 0.07;
-      platform.root.position.y = platform.baseY + floatY + platform.focus * (0.38 + focusPulse * 0.12);
-      platform.disc.rotation.y += dt * (active ? 0.8 : 0.08) * (reduced ? 0 : 1);
-      platform.holder.rotation.z = reduced ? 0 : Math.sin(time * 0.65 + platform.phase) * 0.015;
+      const floatY = active || reduced ? 0 : Math.sin(time * 1.15 + platform.phase) * 0.045;
+      platform.root.position.y = active ? 2.7 : platform.baseY + floatY;
+      platform.root.rotation.y = 0;
+      platform.disc.rotation.y += dt * (active ? 0 : 0.08) * (reduced ? 0 : 1);
+      platform.holder.rotation.z = active || reduced ? 0 : Math.sin(time * 0.65 + platform.phase) * 0.012;
     }
   }
 
   focus(0);
   return {
     group,
-    camera: { position: [0, 10.6, 23.5], target: [0, 5.2, 1.8] },
+    camera: overviewView,
     update,
     focus,
+    overview: () => {
+      focus(-1);
+      return overviewView;
+    },
     dispose: () => scope.dispose(),
   };
 }

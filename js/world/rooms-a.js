@@ -27,7 +27,7 @@ function buildPhotoRoom(ctx) {
   const items = safeItems(ctx.items).slice(0, 12);
   const narrow = isNarrowViewport();
   const reduced = Boolean(ctx.reducedMotion);
-  const initial = view(narrow ? [0, 3.2, 13.8] : [0, 3.35, 10.4], [0, 2.35, -1.1]);
+  const initial = { ...view([0, 3.6, 12], [0, 3.2, -1.6]), frame: narrow ? { width: 7, height: 7.3 } : { width: 12, height: 6.7 } };
   const printEntries = [];
   const lightNodes = [];
 
@@ -50,7 +50,7 @@ function buildPhotoRoom(ctx) {
     emissiveIntensity: 1.1,
   });
   const lightMat = emissive(THREE, 0xffd7a0, 4.4);
-  const coolLightMat = emissive(THREE, 0x8bdcff, 3.6);
+  const coolLightMat = standard(THREE, 0x617679, { roughness: 0.7, metalness: 0.35 });
   const paperMat = standard(THREE, 0xb7aea3, { roughness: 0.72, metalness: 0.05 });
   const hitMaterial = invisibleMaterial(THREE);
 
@@ -109,19 +109,7 @@ function buildPhotoRoom(ctx) {
     }
   });
 
-  const anchorPositions = narrow
-    ? [
-        [-2.25, 2.5, -1.5, -0.13],
-        [0, 2.85, -0.75, 0],
-        [2.25, 2.5, -1.5, 0.13],
-        [-2.05, 4.1, -4.15, 0.1],
-        [0, 4.45, -3.55, 0],
-        [2.05, 4.1, -4.15, -0.1],
-        [-1.35, 1.15, -3.6, 0.08],
-        [0, 1.15, -3.15, 0],
-        [1.35, 1.15, -3.6, -0.08],
-      ]
-    : [
+  const anchorPositions = [
         [-4.2, 2.45, -1.55, -0.24],
         [-2.1, 3.05, -0.65, -0.1],
         [0, 2.35, -1.2, 0],
@@ -137,7 +125,11 @@ function buildPhotoRoom(ctx) {
       ];
 
   items.forEach((item, index) => {
-    const placement = anchorPositions[index];
+    const placement = narrow
+      ? (index === 0 ? [0, 3.65, 0.8, 0]
+        : index < 3 ? [(index === 1 ? -1 : 1) * 1.85, 5.45, -1.4, 0]
+        : [((index - 3) % 3 - 1) * 2, 1.9 - Math.floor((index - 3) / 3) * 1.5, -1.5, 0])
+      : anchorPositions[index];
     const holder = new THREE.Group();
     holder.position.set(placement[0], placement[1], placement[2]);
     holder.rotation.y = placement[3];
@@ -145,8 +137,8 @@ function buildPhotoRoom(ctx) {
     holder.userData.baseZ = placement[2];
     group.add(holder);
 
-    const hero = index === 0 || index === 1;
-    const maxWidth = hero ? (narrow ? 2.35 : 2.7) : narrow ? 1.75 : 2.05;
+    const hero = narrow ? index === 0 : index === 0 || index === 1;
+    const maxWidth = hero ? (narrow ? 3 : 2.7) : narrow ? 1.7 : 2.05;
     const maxHeight = hero ? 1.95 : 1.42;
     const image = artworkPlane(ctx, item, maxWidth, maxHeight);
     if (image) {
@@ -162,8 +154,8 @@ function buildPhotoRoom(ctx) {
 
     const lower = holder.localToWorld(new THREE.Vector3(0, -height / 2 - 0.38, 0));
     const upper = holder.localToWorld(new THREE.Vector3(0, height / 2 + 0.42, 0));
-    addCable(THREE, group, upper, [upper.x, 6.2, upper.z - 0.6], coolLightMat);
-    addCable(THREE, group, lower, [lower.x, 0.06, lower.z + 0.4], railMat);
+    const upperCable = addCable(THREE, group, upper, [upper.x, 6.2, upper.z - 0.6], coolLightMat);
+    const lowerCable = addCable(THREE, group, lower, [lower.x, 0.06, lower.z + 0.4], frameMat);
 
     const hit = addPickBox(
       THREE,
@@ -196,7 +188,7 @@ function buildPhotoRoom(ctx) {
       height,
       theta: placement[3],
       position: new THREE.Vector3(placement[0], placement[1], placement[2]),
-      phase: index * 0.68,
+      cables: [upperCable, lowerCable],
     });
   });
 
@@ -212,460 +204,1301 @@ function buildPhotoRoom(ctx) {
   return {
     group,
     camera: initial,
+    overview() {
+      selected = -1;
+      printEntries.forEach(entry => {
+        entry.holder.position.copy(entry.position);
+        entry.holder.rotation.set(0, entry.theta, 0);
+        entry.cables.forEach(cable => { if (cable) cable.visible = true; });
+      });
+      return initial;
+    },
     update(time, dt) {
       const step = Math.max(0, Math.min(dt || 0, 0.05));
       if (reduced) return;
       const pulse = 3.2 + Math.sin(time * 1.45) * 0.75;
       lightMat.emissiveIntensity = pulse;
-      coolLightMat.emissiveIntensity = 2.55 + Math.sin(time * 1.1 + 1.2) * 0.55;
       lightNodes.forEach(({ node, phase }, index) => {
         const scale = 0.78 + Math.sin(time * 1.7 + phase) * 0.2;
         node.scale.setScalar(scale);
         node.position.y += Math.sin(time * 0.7 + phase) * 0.0007 * (index % 2 ? 1 : -1);
       });
-      printEntries.forEach((entry) => {
-        const chosen = entry.index === selected;
-        const targetY = entry.holder.userData.baseY + (chosen ? 0.13 : 0) + Math.sin(time * 0.55 + entry.phase) * 0.018;
-        const targetZ = entry.holder.userData.baseZ + (chosen ? 0.28 : 0);
-        entry.holder.position.y += (targetY - entry.holder.position.y) * Math.min(1, step * 4.5);
-        entry.holder.position.z += (targetZ - entry.holder.position.z) * Math.min(1, step * 4);
-        entry.holder.rotation.z = chosen ? Math.sin(time * 0.4) * 0.006 : 0;
-      });
+
     },
     focus(index) {
       const entry = printEntries.find((candidate) => candidate.index === index);
       if (!entry) return initial;
       selected = index;
-      const normal = new THREE.Vector3(Math.sin(entry.theta), 0, Math.cos(entry.theta));
-      const distance = (narrow ? 4.65 : 3.25) + entry.width * 0.2;
-      const target = new THREE.Vector3(entry.position.x, entry.position.y, entry.position.z);
-      target.addScaledVector(normal, 0.2);
-      const position = target.clone().addScaledVector(normal, distance);
-      position.y += entry.height * 0.12;
-      return view(position.toArray(), target.toArray());
+      printEntries.forEach(candidate => {
+        candidate.holder.position.copy(candidate.position);
+        candidate.holder.rotation.set(0, candidate.theta, 0);
+        candidate.cables.forEach(cable => { if (cable) cable.visible = candidate !== entry; });
+      });
+      entry.holder.position.set(0, 3.1, 2.2);
+      entry.holder.rotation.set(0, 0, 0);
+      return { ...view([0, 3.1, 8], [0, 3.1, 2.2]), frame: { width: entry.width + 0.6, height: entry.height + 0.7 } };
     },
   };
 }
+
+const BOOKS_ROOM_FALLBACK_CLOTHES = [
+  "#2f4858",
+  "#8a3b34",
+  "#c7a233",
+  "#1f4b52",
+  "#7d2f2a",
+  "#5f6b4a",
+  "#22304a",
+  "#8c4a1f",
+  "#3b3550",
+];
 
 function buildBooksRoom(ctx) {
   const THREE = ctx.THREE;
   const group = new THREE.Group();
-  group.name = "重力书库";
-  const items = safeItems(ctx.items).slice(0, 12);
+  group.name = "悬挑阅览架";
+  const items = safeItems(ctx.items).slice(0, 9);
   const narrow = isNarrowViewport();
-  const reduced = Boolean(ctx.reducedMotion);
-  const initial = view(narrow ? [0, 3.1, 13.5] : [0, 3.2, 10.2], [0, 2.3, -2.05]);
-  const books = [];
-  const coreRings = [];
+  const initial = {
+    ...view(
+      narrow ? [0.55, 5.05, 12.4] : [0.7, 4.9, 10.7],
+      [0, 4.38, -3.7]
+    ),
+    frame: narrow
+      ? { width: 9.65, height: 8.5 }
+      : { width: 10.15, height: 8.35 },
+  };
+  const entries = [];
+  const shelfLightMaterials = [];
+  const shelfLevels = [0.86, 3.36, 5.86];
+  const shelfXs = [-2.42, 0, 2.42];
+  const shelfSpan = 4.72;
+  const shelfBaseZ = -4.28;
+  const tableTopY = 0.58;
+  const readingPosition = new THREE.Vector3(0, 2.42, 2.22);
 
   addRoomLights(THREE, group, {
-    hemi: 0x121c1e,
-    ground: 0x050606,
-    intensity: 0.78,
+    hemi: 0x1b2525,
+    ground: 0x050707,
+    intensity: 0.9,
     points: [
-      [0, 4.6, 1.8, 0xd4e4c3, 34, 12],
-      [-4.1, 2.1, -2.3, 0x7da8a1, 20, 9],
-      [4.1, 2.1, -2.3, 0xc89557, 16, 9],
+      [-3.4, 5.9, 1.4, 0xdde8ce, 24, 13],
+      [3.6, 4.3, 0.6, 0xd9b16f, 19, 12],
+      [0, 2.8, 3.7, 0xbfd9d0, 10, 8],
     ],
   });
 
-  const shelfMat = standard(THREE, 0x1a2421, { roughness: 0.72, metalness: 0.38 });
-  const edgeMat = standard(THREE, 0x94764f, { roughness: 0.35, metalness: 0.75 });
-  const pageMat = standard(THREE, 0xbfb49d, { roughness: 0.92, metalness: 0 });
-  const coreMat = standard(THREE, 0x050708, {
-    roughness: 0.34,
-    metalness: 0.74,
-    emissive: 0x0c2020,
-    emissiveIntensity: 1.1,
+  const floorMaterial = standard(THREE, 0x080c0c, {
+    roughness: 0.83,
+    metalness: 0.34,
   });
-  const coreGlow = emissive(THREE, 0x93f3d5, 4.2);
-  const warmGlow = emissive(THREE, 0xd9ab6c, 2.2);
+  const graphiteMaterial = standard(THREE, 0x111919, {
+    roughness: 0.62,
+    metalness: 0.54,
+  });
+  const titaniumMaterial = standard(THREE, 0x354144, {
+    roughness: 0.3,
+    metalness: 0.86,
+  });
+  const brassMaterial = standard(THREE, 0x9b7548, {
+    roughness: 0.28,
+    metalness: 0.88,
+    emissive: 0x2a1608,
+    emissiveIntensity: 0.55,
+  });
+  const tableMaterial = standard(THREE, 0x202827, {
+    roughness: 0.55,
+    metalness: 0.48,
+  });
   const hitMaterial = invisibleMaterial(THREE);
+  const pageTexture = booksRoomPageTexture(THREE);
+  const pageMaterial = new THREE.MeshStandardMaterial({
+    map: pageTexture,
+    color: 0xf2ead9,
+    roughness: 0.94,
+    metalness: 0,
+  });
 
   const floor = mesh(
     THREE,
-    new THREE.CircleGeometry(9.5, 72),
-    standard(THREE, 0x070b0b, { roughness: 0.78, metalness: 0.42 }),
+    new THREE.CircleGeometry(10.8, 72),
+    floorMaterial,
     group,
-    [0, -0.06, -1.1],
+    [0, -0.07, -1.3],
     [-Math.PI / 2, 0, 0]
   );
-  floor.name = "library-floor";
+  floor.name = "cantilever-library-floor";
 
-  const well = mesh(THREE, new THREE.CylinderGeometry(0.58, 0.86, 5.7, 32), coreMat, group, [0, 2.65, -1.35]);
-  well.name = "gravity-well";
-  for (let level = 0; level < 6; level += 1) {
-    const ring = mesh(
+  for (const side of [-1, 1]) {
+    const fin = addBox(
       THREE,
-      new THREE.TorusGeometry(1.08 + level * 0.09, 0.032, 8, 64),
-      level % 2 ? warmGlow : coreGlow,
       group,
-      [0, 0.75 + level * 0.82, -1.35],
-      [Math.PI / 2, 0, level * 0.16]
+      [0.16, 8.28, 0.9],
+      titaniumMaterial,
+      [side * (shelfSpan + 0.3), 4.1, shelfBaseZ + 0.1]
     );
-    coreRings.push({ ring, speed: (level % 2 ? -1 : 1) * (0.08 + level * 0.012), baseY: ring.position.y });
+    fin.name = side < 0 ? "library-left-fin" : "library-right-fin";
+
+    addBox(
+      THREE,
+      group,
+      [0.055, 7.4, 0.055],
+      brassMaterial,
+      [side * (shelfSpan + 0.19), 4.12, shelfBaseZ + 0.55]
+    );
+    addBox(
+      THREE,
+      group,
+      [0.82, 0.14, 0.92],
+      graphiteMaterial,
+      [side * 4.35, 0.07, shelfBaseZ + 0.1]
+    );
   }
 
-  const shelfLevels = [0.72, 2.22, 3.72];
-  const shelfAngles = [-0.8, -0.27, 0.27, 0.8];
-  const radius = narrow ? 2.75 : 3.45;
+  const shelving = new THREE.Group();
+  shelving.name = "three-tier-cantilever-shelves";
+  group.add(shelving);
 
-  shelfLevels.forEach((shelfY, shelfIndex) => {
-    const shelfCurve = curve(
-      THREE,
-      [-1.22, -0.8, -0.4, 0, 0.4, 0.8, 1.22].map((angle) => [
-        Math.sin(angle) * radius,
-        shelfY,
-        -Math.cos(angle) * radius - 1.35,
-      ])
-    );
-    group.add(new THREE.Mesh(new THREE.TubeGeometry(shelfCurve, 64, 0.075, 8, false), edgeMat));
-
-    const lipCurve = curve(
-      THREE,
-      [-1.22, -0.8, -0.4, 0, 0.4, 0.8, 1.22].map((angle) => [
-        Math.sin(angle) * (radius - 0.24),
-        shelfY - 0.11,
-        -Math.cos(angle) * (radius - 0.24) - 1.35,
-      ])
-    );
-    group.add(new THREE.Mesh(new THREE.TubeGeometry(lipCurve, 64, 0.045, 6, false), coreGlow));
-
-    shelfAngles.forEach((angle, slotIndex) => {
-      const supportAngle = angle + 0.12;
-      const support = addBox(
-        THREE,
-        group,
-        [0.06, 0.82, 1.12],
-        shelfMat,
-        [
-          Math.sin(supportAngle) * (radius - 0.56),
-          shelfY - 0.34,
-          -Math.cos(supportAngle) * (radius - 0.56) - 1.35,
-        ],
-        [0, -supportAngle, 0]
+  shelfLevels.forEach((shelfY, tier) => {
+    const segmentCount = 18;
+    const segmentWidth = (shelfSpan * 2) / segmentCount;
+    for (let segment = 0; segment < segmentCount; segment += 1) {
+      const x = -shelfSpan + segmentWidth * (segment + 0.5);
+      const z = booksRoomShelfZ(x, shelfBaseZ, shelfSpan);
+      const nextZ = booksRoomShelfZ(
+        x + segmentWidth * 0.5,
+        shelfBaseZ,
+        shelfSpan
       );
-      support.name = `library-support-${shelfIndex}-${slotIndex}`;
-    });
-  });
-
-  items.forEach((item, index) => {
-    const tier = index % 3;
-    const angle = shelfAngles[Math.floor(index / 3)] || 0;
-    const bodyHeight = 0.92 + hashNumber(`${itemTitle(item)}-${index}`) * 0.38;
-    const bodyWidth = 0.26 + hashNumber(`width-${index}`) * 0.18;
-    const bodyDepth = 0.68 + hashNumber(`depth-${index}`) * 0.18;
-    const book = new THREE.Group();
-    book.position.set(Math.sin(angle) * radius, shelfLevels[tier] + bodyHeight / 2 + 0.07, -Math.cos(angle) * radius - 1.35);
-    book.rotation.y = -angle;
-    book.userData.baseY = book.position.y;
-    group.add(book);
-
-    const fieldSource = originalFields(item);
-    const cloth = String(fieldSource.cloth || fieldSource.cover || fieldSource.color || "");
-    const ink = String(fieldSource.ink || fieldSource.textColor || "");
-    const coverColor = colorFromText(cloth, BOOK_COLORS[index % BOOK_COLORS.length]);
-    const inkColor = colorFromText(ink, "#e8dfcf");
-    const cover = standard(THREE, coverColor, { roughness: 0.74, metalness: 0.08 });
-    const body = mesh(
-      THREE,
-      extrudedBookGeometry(THREE, bodyWidth, bodyHeight, bodyDepth),
-      cover,
-      book,
-      [0, 0, 0]
-    );
-    body.name = `book-${index}`;
-    ctx.pick(body, index);
-
-    addBox(THREE, book, [bodyWidth + 0.028, 0.055, bodyDepth + 0.018], pageMat, [0, bodyHeight * 0.43, 0]);
-    addBox(THREE, book, [bodyWidth + 0.028, 0.055, bodyDepth + 0.018], pageMat, [0, -bodyHeight * 0.43, 0]);
-    addBox(THREE, book, [bodyWidth * 0.42, bodyHeight * 0.84, 0.035], edgeMat, [0, 0, bodyDepth / 2 + 0.02]);
-
-    for (let groove = -1; groove <= 1; groove += 1) {
+      const previousZ = booksRoomShelfZ(
+        x - segmentWidth * 0.5,
+        shelfBaseZ,
+        shelfSpan
+      );
+      const yaw = Math.atan2(-(nextZ - previousZ), segmentWidth);
       addBox(
         THREE,
-        book,
-        [bodyWidth + 0.03, 0.014, 0.018],
-        coreGlow,
-        [0, groove * bodyHeight * 0.22, bodyDepth / 2 + 0.04]
+        shelving,
+        [segmentWidth + 0.018, 0.11, 1.08],
+        graphiteMaterial,
+        [x, shelfY, z],
+        [0, yaw, 0]
       );
     }
 
-    addLabel(
+    const shelfCurve = curve(
       THREE,
-      book,
-      ctx,
-      `${clipText(itemTitle(item), narrow ? 15 : 19)}\n${clipText(fieldText(item, "author", "creator", "subtitle"), 20)}`,
-      0.095,
-      inkColor,
-      [0, 0, bodyDepth / 2 + 0.055]
+      Array.from({ length: 11 }, (_, index) => {
+        const x = -shelfSpan + (index / 10) * shelfSpan * 2;
+        return [
+          x,
+          shelfY - 0.075,
+          booksRoomShelfZ(x, shelfBaseZ, shelfSpan) + 0.51,
+        ];
+      })
+    );
+    shelving.add(
+      new THREE.Mesh(
+        new THREE.TubeGeometry(shelfCurve, 72, 0.025, 7, false),
+        brassMaterial
+      )
     );
 
-    const shelfTitle = fieldText(item, "collection", "shelf", "form");
-    if (shelfTitle) {
-      addLabel(
+    const lightMaterial = emissive(THREE, 0xd9b574, 1.65);
+    shelfLightMaterials.push(lightMaterial);
+    const lightCurve = curve(
+      THREE,
+      Array.from({ length: 11 }, (_, index) => {
+        const x = -shelfSpan + (index / 10) * shelfSpan * 2;
+        return [
+          x,
+          shelfY - 0.135,
+          booksRoomShelfZ(x, shelfBaseZ, shelfSpan) + 0.49,
+        ];
+      })
+    );
+    shelving.add(
+      new THREE.Mesh(
+        new THREE.TubeGeometry(lightCurve, 72, 0.012, 6, false),
+        lightMaterial
+      )
+    );
+
+    for (const side of [-1, 1]) {
+      addBox(
         THREE,
-        book,
-        ctx,
-        clipText(shelfTitle, 14),
-        0.06,
-        "#a9c8c0",
-        [0, -bodyHeight / 2 - 0.12, bodyDepth / 2 + 0.04]
+        shelving,
+        [0.74, 0.075, 0.68],
+        titaniumMaterial,
+        [side * 4.35, shelfY - 0.03, booksRoomShelfZ(side * 4.35, shelfBaseZ, shelfSpan) + 0.04]
       );
     }
+  });
 
-    const hit = addPickBox(
-      THREE,
-      book,
-      ctx,
-      hitMaterial,
-      bodyWidth + 0.22,
-      bodyHeight + 0.16,
-      bodyDepth + 0.18,
-      [0, 0, 0],
-      index
+  const table = new THREE.Group();
+  table.name = "books-reading-desk";
+  table.position.set(0, 0, 1.92);
+  group.add(table);
+  addBox(THREE, table, [3.45, 0.17, 1.22], tableMaterial, [0, 0.5, 0]);
+  addBox(THREE, table, [3.06, 0.025, 0.022], brassMaterial, [0, 0.6, 0.57]);
+  for (const x of [-1.28, 1.28]) {
+    addBox(THREE, table, [0.09, 0.46, 0.09], titaniumMaterial, [x, 0.23, -0.36]);
+    addBox(THREE, table, [0.09, 0.46, 0.09], titaniumMaterial, [x, 0.23, 0.36]);
+  }
+  const tableGlowMaterial = emissive(THREE, 0xb8d8cb, 0.16);
+  addBox(
+    THREE,
+    table,
+    [2.7, 0.012, 0.03],
+    tableGlowMaterial,
+    [0, 0.606, -0.47]
+  );
+
+  const selectionLight = new THREE.PointLight(0xd7eee4, 1.2, 8.5, 1.8);
+  selectionLight.position.set(0, 4.4, 2.7);
+  group.add(selectionLight);
+
+  items.forEach((item, index) => {
+    const tier = Math.floor(index / 3);
+    const column = index % 3;
+    const shelfY = shelfLevels[tier] ?? shelfLevels[shelfLevels.length - 1];
+    const x = shelfXs[column] ?? 0;
+    const data = booksRoomBookData(item, index);
+    const shelfZ = booksRoomShelfZ(x, shelfBaseZ, shelfSpan);
+    const shelfYaw = booksRoomShelfTangent(x, shelfBaseZ, shelfSpan);
+    const displayYaw = shelfYaw + (column - 1) * 0.12;
+    const shelfPosition = new THREE.Vector3(
+      x,
+      shelfY + 0.065 + data.height / 2,
+      shelfZ + 0.05
     );
-    hit.userData.kind = "book";
-    books.push({
+    const shelfRotation = [0, displayYaw, data.lean];
+    const book = booksRoomCreateBook(
+      THREE,
+      ctx,
+      item,
       index,
-      book,
-      body,
-      angle,
-      radius,
-      height: bodyHeight,
-      basePosition: book.position.clone(),
-      phase: index * 0.63,
-      inward: new THREE.Vector3(-Math.sin(angle), 0, Math.cos(angle)),
+      data,
+      pageMaterial,
+      hitMaterial
+    );
+    book.group.position.copy(shelfPosition);
+    book.group.rotation.set(...shelfRotation);
+    group.add(book.group);
+
+    entries.push({
+      index,
+      item,
+      data,
+      ...book,
+      shelfPosition,
+      shelfRotation,
+      readingPosition: new THREE.Vector3(
+        readingPosition.x,
+        tableTopY + data.height / 2 + 0.04,
+        readingPosition.z
+      ),
+      targetPosition: shelfPosition.clone(),
+      targetRotation: shelfRotation.slice(),
+      targetScale: 1,
+      mute: 0,
+      targetMute: 0,
     });
   });
 
   if (!items.length) {
-    addLabel(THREE, group, ctx, "重力书库\n等待第一本书", 0.25, "#c9d7cf", [0, 2.7, 1.85]);
+    addLabel(
+      THREE,
+      group,
+      ctx,
+      "悬挑阅览架\n等待本页书目",
+      0.22,
+      "#d7ded7",
+      [0, 3.8, shelfBaseZ + 1.15]
+    );
   }
 
-  const floorArc = curve(
+  addLabel(
     THREE,
-    [-1.18, -0.7, 0, 0.7, 1.18].map((angle) => [
-      Math.sin(angle) * 6.8,
-      0.012,
-      -Math.cos(angle) * 6.8 - 1.35,
-    ])
+    group,
+    ctx,
+    "READING STACK\n悬挑阅览架",
+    0.14,
+    "#b7c4bd",
+    [0, 8.92, shelfBaseZ + 0.48]
   );
-  group.add(new THREE.Mesh(new THREE.TubeGeometry(floorArc, 48, 0.012, 5, false), coreGlow));
 
   let selected = -1;
+
+  function syncVisuals() {
+    entries.forEach((entry) => {
+      entry.group.position.copy(entry.targetPosition);
+      entry.group.rotation.set(...entry.targetRotation);
+      entry.group.scale.setScalar(entry.targetScale);
+      entry.mute = entry.targetMute;
+      booksRoomTintBook(entry);
+    });
+    selectionLight.intensity = selected >= 0 ? 21 : 1.2;
+    tableGlowMaterial.emissiveIntensity = selected >= 0 ? 2.1 : 0.16;
+  }
+
+  function setSelection(index) {
+    selected = entries.some((entry) => entry.index === index) ? index : -1;
+    entries.forEach((entry) => {
+      const active = entry.index === selected;
+      entry.targetPosition.copy(active ? entry.readingPosition : entry.shelfPosition);
+      entry.targetRotation = active ? [0, 0, 0] : entry.shelfRotation.slice();
+      entry.targetScale = active ? 1.045 : 1;
+      entry.targetMute = selected >= 0 && !active ? 0.58 : 0;
+    });
+    selectionLight.intensity = selected >= 0 ? 21 : 1.2;
+    tableGlowMaterial.emissiveIntensity = selected >= 0 ? 2.1 : 0.16;
+    if (booksRoomMotionPaused(ctx)) syncVisuals();
+  }
 
   return {
     group,
     camera: initial,
-    update(time, dt) {
-      const step = Math.max(0, Math.min(dt || 0, 0.05));
-      if (reduced) return;
-      coreGlow.emissiveIntensity = 3.35 + Math.sin(time * 1.15) * 0.55;
-      warmGlow.emissiveIntensity = 1.9 + Math.sin(time * 0.82 + 0.8) * 0.35;
-      coreRings.forEach(({ ring, speed, baseY }) => {
-        ring.rotation.z += speed * step;
-        ring.position.y = baseY + Math.sin(time * 0.46 + baseY) * 0.025;
-      });
-      books.forEach((entry) => {
-        const chosen = entry.index === selected;
-        const drift = chosen ? 0.12 : 0;
-        const target = entry.basePosition.clone().addScaledVector(entry.inward, drift);
-        target.y += Math.sin(time * 0.62 + entry.phase) * 0.018;
-        entry.book.position.lerp(target, Math.min(1, step * (chosen ? 6 : 2.4)));
-        entry.book.rotation.z = chosen ? Math.sin(time * 0.42) * 0.008 : 0;
+    update(_time, dt) {
+      if (booksRoomMotionPaused(ctx)) {
+        syncVisuals();
+        return;
+      }
+      const step = Math.max(0, Math.min(Number(dt) || 0, 0.05));
+      const positionEase = booksRoomDamp(step * 8.5);
+      const rotationEase = booksRoomDamp(step * 9.5);
+      entries.forEach((entry) => {
+        entry.group.position.lerp(entry.targetPosition, positionEase);
+        entry.group.rotation.x +=
+          (entry.targetRotation[0] - entry.group.rotation.x) * rotationEase;
+        entry.group.rotation.y +=
+          (entry.targetRotation[1] - entry.group.rotation.y) * rotationEase;
+        entry.group.rotation.z +=
+          (entry.targetRotation[2] - entry.group.rotation.z) * rotationEase;
+        const nextScale =
+          entry.group.scale.x +
+          (entry.targetScale - entry.group.scale.x) * positionEase;
+        entry.group.scale.setScalar(nextScale);
+        entry.mute += (entry.targetMute - entry.mute) * positionEase;
+        booksRoomTintBook(entry);
       });
     },
     focus(index) {
-      const entry = books.find((candidate) => candidate.index === index);
+      const entry = entries.find((candidate) => candidate.index === index);
       if (!entry) return initial;
-      selected = index;
-      const target = entry.basePosition.clone();
-      target.y += entry.height * 0.1;
-      const position = target.clone().addScaledVector(entry.inward, narrow ? 3.25 : 2.35);
-      position.y += 0.12;
-      return view(position.toArray(), target.toArray());
+      setSelection(index);
+      const target = entry.readingPosition.clone();
+      target.y += entry.data.height * 0.02;
+      const position = target.clone();
+      position.x += narrow ? 0.32 : 0.58;
+      position.y += entry.data.height * 0.1;
+      position.z += narrow ? 7.4 : 6.1;
+      return {
+        ...view(position.toArray(), target.toArray()),
+        frame: {
+          width: entry.data.coverWidth + (narrow ? 0.78 : 0.88),
+          height: entry.data.height + 0.58,
+        },
+      };
+    },
+    overview() {
+      setSelection(-1);
+      return initial;
     },
   };
 }
 
+function booksRoomBookData(item, index) {
+  const heightValue = booksRoomPositiveNumber(field(item, "height"), 264);
+  const thicknessValue = booksRoomPositiveNumber(
+    field(item, "thickness", "width"),
+    32
+  );
+  const leanValue = booksRoomNumber(field(item, "lean"), 0);
+  const rawCloth = String(field(item, "cloth", "cover", "color") || "");
+  const rawInk = String(field(item, "ink", "textColor") || "");
+  const rawBand = String(field(item, "band", "accent") || "");
+  return {
+    height: booksRoomClamp(heightValue / 120, 1.92, 2.46),
+    coverWidth: booksRoomClamp(heightValue / 120, 1.92, 2.46) * 0.64,
+    thickness: booksRoomClamp(thicknessValue / 60, 0.34, 0.78),
+    lean: booksRoomClamp(
+      Math.abs(leanValue) > 1 ? leanValue * (Math.PI / 180) : leanValue,
+      -0.16,
+      0.16
+    ),
+    cloth: colorFromText(
+      rawCloth,
+      BOOKS_ROOM_FALLBACK_CLOTHES[index % BOOKS_ROOM_FALLBACK_CLOTHES.length]
+    ),
+    ink: colorFromText(rawInk, "#f2ece0"),
+    band: colorFromText(rawBand, "#c8a24a"),
+    title: itemTitle(item),
+    spine: fieldText(item, "spine", "meta") || itemTitle(item),
+    author: fieldText(item, "author", "creator", "subtitle") || "作者未记录",
+  };
+}
+
+function booksRoomCreateBook(
+  THREE,
+  ctx,
+  item,
+  index,
+  data,
+  pageMaterial,
+  hitMaterial
+) {
+  const group = new THREE.Group();
+  group.name = `archive-book-${index}-${String(item?.id || "untitled")}`;
+  const bookPageMaterial = pageMaterial.clone();
+
+  const clothMaterial = standard(THREE, data.cloth, {
+    roughness: 0.79,
+    metalness: 0.035,
+  });
+  const bandMaterial = standard(THREE, data.band, {
+    roughness: 0.42,
+    metalness: 0.15,
+    emissive: data.band,
+    emissiveIntensity: 0.08,
+  });
+  const coverTexture = booksRoomCoverTexture(
+    THREE,
+    data,
+    index,
+    data.coverWidth / data.height
+  );
+  const coverMaterial = new THREE.MeshStandardMaterial({
+    map: coverTexture,
+    color: 0xffffff,
+    roughness: 0.68,
+    metalness: 0.025,
+  });
+  const spineTexture = booksRoomSpineTexture(
+    THREE,
+    data,
+    index,
+    data.thickness / data.height
+  );
+  const spineMaterial = new THREE.MeshStandardMaterial({
+    map: spineTexture,
+    color: 0xffffff,
+    roughness: 0.7,
+    metalness: 0.03,
+  });
+
+  addBox(
+    THREE,
+    group,
+    [data.coverWidth - 0.09, data.height - 0.07, data.thickness * 0.82],
+    bookPageMaterial,
+    [0.025, 0, 0]
+  );
+  addBox(
+    THREE,
+    group,
+    [data.coverWidth, data.height, data.thickness * 0.12],
+    clothMaterial,
+    [0, 0, -data.thickness * 0.45]
+  );
+  addBox(
+    THREE,
+    group,
+    [data.coverWidth, data.height, data.thickness * 0.12],
+    clothMaterial,
+    [0, 0, data.thickness * 0.45]
+  );
+  addBox(
+    THREE,
+    group,
+    [0.085, data.height, data.thickness * 0.98],
+    clothMaterial,
+    [-data.coverWidth / 2 + 0.035, 0, 0]
+  );
+  addBox(
+    THREE,
+    group,
+    [data.coverWidth * 0.92, 0.035, 0.016],
+    bandMaterial,
+    [0, data.height * 0.355, data.thickness / 2 + 0.008]
+  );
+  addBox(
+    THREE,
+    group,
+    [data.coverWidth * 0.92, 0.022, 0.016],
+    bandMaterial,
+    [0, -data.height * 0.365, data.thickness / 2 + 0.008]
+  );
+  addBox(
+    THREE,
+    group,
+    [0.09, 0.035, data.thickness * 1.01],
+    bandMaterial,
+    [-data.coverWidth / 2 + 0.035, data.height * 0.355, 0]
+  );
+  addBox(
+    THREE,
+    group,
+    [0.09, 0.022, data.thickness * 1.01],
+    bandMaterial,
+    [-data.coverWidth / 2 + 0.035, -data.height * 0.365, 0]
+  );
+
+  const coverFace = mesh(
+    THREE,
+    new THREE.PlaneGeometry(data.coverWidth * 0.965, data.height * 0.965),
+    coverMaterial,
+    group,
+    [0, 0, data.thickness / 2 + 0.012]
+  );
+  coverFace.name = "front-cover";
+
+  const spineFace = mesh(
+    THREE,
+    new THREE.PlaneGeometry(
+      data.thickness * 0.87,
+      data.height * 0.9
+    ),
+    spineMaterial,
+    group,
+    [-data.coverWidth / 2 - 0.008, 0, 0],
+    [0, -Math.PI / 2, 0]
+  );
+  spineFace.name = "spine-label";
+
+  const hit = addBox(
+    THREE,
+    group,
+    [data.coverWidth + 0.16, data.height + 0.15, data.thickness + 0.18],
+    hitMaterial,
+    [0, 0, 0]
+  );
+  hit.userData.kind = "book";
+  hit.userData.bookIndex = index;
+  ctx.pick(hit, index);
+
+  const materials = [
+    clothMaterial,
+    bandMaterial,
+    coverMaterial,
+    spineMaterial,
+    bookPageMaterial,
+  ];
+  materials.forEach((material) => {
+    material.userData.booksRoomBaseColor = material.color.clone();
+    material.userData.booksRoomBaseEmissive = material.emissive
+      ? material.emissive.clone()
+      : null;
+    material.userData.booksRoomBaseEmissiveIntensity =
+      material.emissiveIntensity || 0;
+  });
+
+  return {
+    group,
+    coverFace,
+    spineFace,
+    hit,
+    materials,
+    clothMaterial,
+    bandMaterial,
+    coverMaterial,
+    spineMaterial,
+    bookPageMaterial,
+  };
+}
+
+function booksRoomTintBook(entry) {
+  const light = 1 - entry.mute * 0.54;
+  entry.materials.forEach((material) => {
+    const baseColor = material.userData.booksRoomBaseColor;
+    if (baseColor) material.color.copy(baseColor).multiplyScalar(light);
+    if (material.emissive && material.userData.booksRoomBaseEmissive) {
+      material.emissive
+        .copy(material.userData.booksRoomBaseEmissive)
+        .multiplyScalar(light);
+      material.emissiveIntensity =
+        material.userData.booksRoomBaseEmissiveIntensity * light;
+    }
+  });
+}
+
+function booksRoomCoverTexture(THREE, data, index, ratio) {
+  const size = booksRoomTextureSize(ratio);
+  const canvas = document.createElement("canvas");
+  canvas.width = size.width;
+  canvas.height = size.height;
+  const paint = canvas.getContext("2d");
+  const { width, height } = canvas;
+  paint.fillStyle = data.cloth;
+  paint.fillRect(0, 0, width, height);
+
+  const wash = paint.createLinearGradient(0, 0, width, height);
+  wash.addColorStop(0, "rgba(255,255,255,.085)");
+  wash.addColorStop(0.46, "rgba(255,255,255,0)");
+  wash.addColorStop(1, "rgba(0,0,0,.16)");
+  paint.fillStyle = wash;
+  paint.fillRect(0, 0, width, height);
+
+  paint.strokeStyle = booksRoomCanvasAlpha(data.ink, 0.5);
+  paint.lineWidth = 3;
+  paint.strokeRect(34, 34, width - 68, height - 68);
+
+  paint.fillStyle = data.band;
+  paint.fillRect(34, height * 0.12, width - 68, Math.max(13, height * 0.017));
+  paint.fillRect(34, height * 0.84, width - 68, Math.max(9, height * 0.012));
+
+  paint.fillStyle = data.ink;
+  paint.textAlign = "left";
+  paint.textBaseline = "top";
+  paint.font =
+    '600 23px "Space Grotesk", "PingFang SC", "Microsoft YaHei", sans-serif';
+  paint.fillText("DEEP ARCHIVE · TYPESET COVER", 72, height * 0.17);
+  paint.fillText(String(index + 1).padStart(2, "0"), 72, height * 0.2);
+
+  const titleSize = booksRoomTitleSize(data.title, width);
+  paint.font = `${booksRoomTitleWeight(data.title)} ${titleSize}px Georgia, "Songti SC", STSong, serif`;
+  const titleLines = booksRoomCanvasLines(paint, data.title, width - 144);
+  const titleHeight = titleSize * 1.06;
+  let titleY = Math.max(height * 0.28, height * 0.42 - (titleLines.length * titleHeight) / 2);
+  titleLines.forEach((line) => {
+    paint.fillText(line, 72, titleY);
+    titleY += titleHeight;
+  });
+
+  paint.font =
+    '600 38px "Space Grotesk", Georgia, "Times New Roman", serif';
+  const spineLines = booksRoomCanvasLines(paint, data.spine, width - 144).slice(0, 3);
+  let spineY = height * 0.68;
+  spineLines.forEach((line) => {
+    paint.fillText(line, 72, spineY);
+    spineY += 45;
+  });
+
+  paint.font =
+    '500 30px "Space Grotesk", "PingFang SC", "Microsoft YaHei", sans-serif';
+  const author = booksRoomEllipsis(paint, data.author, width - 144);
+  paint.fillText(author, 72, height - 118);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.name = `archive-cover-${index}`;
+  if ("colorSpace" in texture) texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  return texture;
+}
+
+function booksRoomSpineTexture(THREE, data, index, ratio) {
+  const size = booksRoomTextureSize(ratio);
+  const canvas = document.createElement("canvas");
+  canvas.width = size.width;
+  canvas.height = size.height;
+  const paint = canvas.getContext("2d");
+  const { width, height } = canvas;
+  paint.fillStyle = data.cloth;
+  paint.fillRect(0, 0, width, height);
+  paint.fillStyle = booksRoomCanvasAlpha(data.ink, 0.28);
+  paint.fillRect(18, 0, 2, height);
+  paint.fillStyle = data.band;
+  paint.fillRect(0, height * 0.1, width, 34);
+  paint.fillRect(0, height * 0.88, width, 22);
+
+  paint.save();
+  paint.translate(width / 2, height / 2);
+  paint.rotate(-Math.PI / 2);
+  paint.textAlign = "center";
+  paint.textBaseline = "middle";
+  paint.fillStyle = data.ink;
+  paint.font =
+    '600 48px "Space Grotesk", Georgia, "Times New Roman", serif';
+  const title = booksRoomEllipsis(paint, data.spine, height - 190);
+  paint.fillText(title, 0, -8);
+  paint.font =
+    '500 23px "Space Grotesk", "PingFang SC", "Microsoft YaHei", sans-serif';
+  paint.fillText(String(index + 1).padStart(2, "0"), 0, 40);
+  paint.restore();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.name = `archive-spine-${index}`;
+  if ("colorSpace" in texture) texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  return texture;
+}
+
+function booksRoomPageTexture(THREE) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 256;
+  canvas.height = 512;
+  const paint = canvas.getContext("2d");
+  paint.fillStyle = "#e8deca";
+  paint.fillRect(0, 0, canvas.width, canvas.height);
+  for (let y = 8; y < canvas.height; y += 5) {
+    paint.strokeStyle = y % 2 ? "rgba(86,72,52,.18)" : "rgba(255,255,255,.28)";
+    paint.lineWidth = 1;
+    paint.beginPath();
+    paint.moveTo(0, y + 0.5);
+    paint.lineTo(canvas.width, y + 0.5);
+    paint.stroke();
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.name = "books-page-edges";
+  if ("colorSpace" in texture) texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  return texture;
+}
+
+function booksRoomTextureSize(ratio) {
+  const aspect = booksRoomClamp(Number(ratio) || 1, 0.04, 4);
+  if (aspect <= 1) {
+    return {
+      width: Math.max(64, Math.round(1024 * aspect)),
+      height: 1024,
+    };
+  }
+  return {
+    width: 1024,
+    height: Math.max(64, Math.round(1024 / aspect)),
+  };
+}
+
+function booksRoomShelfZ(x, baseZ, span) {
+  const normalized = booksRoomClamp(Math.abs(x) / span, 0, 1);
+  return baseZ + 0.3 * Math.cos((normalized * Math.PI) / 2);
+}
+
+function booksRoomShelfTangent(x, baseZ, span) {
+  const step = 0.04;
+  const left = booksRoomShelfZ(x - step, baseZ, span);
+  const right = booksRoomShelfZ(x + step, baseZ, span);
+  return Math.atan2(-(right - left), step * 2);
+}
+
+function booksRoomMotionPaused(ctx) {
+  if (typeof document !== "undefined") {
+    const toggle = document.querySelector("[data-toggle-motion]");
+    if (toggle?.hasAttribute("aria-pressed")) {
+      return toggle.getAttribute("aria-pressed") === "true";
+    }
+  }
+  return Boolean(ctx.reducedMotion);
+}
+
+function booksRoomDamp(value) {
+  return 1 - Math.exp(-Math.max(0, Number(value) || 0));
+}
+
+function booksRoomTitleSize(title, width) {
+  const length = Array.from(String(title || "")).length;
+  if (length <= 3) return Math.round(width * 0.18);
+  if (length <= 6) return Math.round(width * 0.15);
+  return Math.round(width * 0.12);
+}
+
+function booksRoomTitleWeight(title) {
+  return /[\u3400-\u9fff]/u.test(String(title || "")) ? 700 : 600;
+}
+
+function booksRoomCanvasLines(paint, text, maxWidth) {
+  const values = String(text || "").trim().split(/\s+/).filter(Boolean);
+  if (!values.length) return [""];
+  const lines = [];
+  let line = "";
+  values.forEach((word) => {
+    const candidate = line ? `${line} ${word}` : word;
+    if (paint.measureText(candidate).width <= maxWidth) {
+      line = candidate;
+      return;
+    }
+    if (line) lines.push(line);
+    if (paint.measureText(word).width <= maxWidth) {
+      line = word;
+      return;
+    }
+    line = "";
+    Array.from(word).forEach((character) => {
+      const next = line + character;
+      if (line && paint.measureText(next).width > maxWidth) {
+        lines.push(line);
+        line = character;
+      } else {
+        line = next;
+      }
+    });
+  });
+  if (line) lines.push(line);
+  return lines;
+}
+
+function booksRoomEllipsis(paint, text, maxWidth) {
+  const value = String(text || "").trim();
+  if (paint.measureText(value).width <= maxWidth) return value;
+  const characters = Array.from(value);
+  while (characters.length && paint.measureText(`${characters.join("")}…`).width > maxWidth) {
+    characters.pop();
+  }
+  return `${characters.join("").trimEnd()}…`;
+}
+
+function booksRoomCanvasAlpha(color, alpha) {
+  const value = String(color || "").trim();
+  if (/^#[0-9a-f]{6}$/i.test(value)) {
+    const red = Number.parseInt(value.slice(1, 3), 16);
+    const green = Number.parseInt(value.slice(3, 5), 16);
+    const blue = Number.parseInt(value.slice(5, 7), 16);
+    return `rgba(${red},${green},${blue},${alpha})`;
+  }
+  return `rgba(255,255,255,${alpha})`;
+}
+
+function booksRoomPositiveNumber(value, fallback) {
+  const numericValue = booksRoomNumber(value, fallback);
+  return numericValue > 0 ? numericValue : fallback;
+}
+
+function booksRoomNumber(value, fallback) {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? numericValue : fallback;
+}
+
+function booksRoomClamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+
 function buildPoemsRoom(ctx) {
   const THREE = ctx.THREE;
   const group = new THREE.Group();
-  group.name = "回声井";
-  const items = safeItems(ctx.items).slice(0, 9);
+  group.name = "诗页庭";
+  const items = safeItems(ctx.items).slice(0, 3);
   const narrow = isNarrowViewport();
-  const reduced = Boolean(ctx.reducedMotion);
-  const initial = view(narrow ? [0, 3.7, 13.8] : [0, 3.75, 10.4], [0, 3.15, -0.8]);
-  const rings = [];
-  const verseEntries = [];
+  const initial = poemCameraPose(narrow, false);
+  const pageWidth = 4.8;
+  const pageHeight = 5;
+  const pages = [];
 
   addRoomLights(THREE, group, {
-    hemi: 0x141a1d,
-    ground: 0x030404,
-    intensity: 0.64,
+    hemi: 0x252521,
+    ground: 0x080807,
+    intensity: 0.86,
     points: [
-      [0, 7.1, 0.4, 0xb9e7ff, 31, 12],
-      [-3.4, 2.8, 1.8, 0xffc78b, 14, 8],
+      [-3.8, 6.8, 6.5, 0xffefd1, 34, 15],
+      [4.4, 4.2, 3.1, 0xc9d8d3, 18, 11],
     ],
   });
+  const keyLight = new THREE.DirectionalLight(0xfff1d7, 2.1);
+  keyLight.position.set(-4.5, 8, 8);
+  group.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0xb8d0cb, 0.66);
+  fillLight.position.set(5, 3.5, 6);
+  group.add(fillLight);
 
-  const shaftMat = standard(THREE, 0x0b1113, {
-    roughness: 0.69,
-    metalness: 0.54,
-    side: THREE.BackSide,
-    transparent: true,
-    opacity: 0.84,
+  const floorMat = standard(THREE, 0x111311, {
+    roughness: 0.94,
+    metalness: 0.04,
   });
-  const ceramicMat = standard(THREE, 0x202a2d, { roughness: 0.48, metalness: 0.58 });
-  const ringMat = standard(THREE, 0x3b4749, {
-    roughness: 0.27,
-    metalness: 0.86,
-    emissive: 0x17333a,
-    emissiveIntensity: 1.6,
+  const stoneMat = standard(THREE, 0x68665e, {
+    roughness: 0.91,
+    metalness: 0.02,
   });
-  const blueGlow = emissive(THREE, 0xa4e8ff, 3.5);
-  const warmGlow = emissive(THREE, 0xf2c083, 2.3);
-  const plateMat = standard(THREE, 0x11191b, {
-    roughness: 0.3,
-    metalness: 0.74,
-    transparent: true,
-    opacity: 0.86,
+  const stoneInsetMat = standard(THREE, 0x7b786f, {
+    roughness: 0.96,
+    metalness: 0.01,
+  });
+  const paperEdgeMat = standard(THREE, 0xb8ad97, {
+    roughness: 0.88,
+    metalness: 0,
+  });
+  const pageBackMat = standard(THREE, 0x8e8472, {
+    roughness: 0.94,
+    metalness: 0,
   });
   const hitMaterial = invisibleMaterial(THREE);
 
-  const well = mesh(
+  const floor = mesh(
     THREE,
-    new THREE.CylinderGeometry(1.56, 2.12, 7.8, 48, 1, true),
-    shaftMat,
+    new THREE.CircleGeometry(narrow ? 7.2 : 9.4, 80),
+    floorMat,
     group,
-    [0, 3.8, -0.8]
+    [0, -0.24, -1.1],
+    [-Math.PI / 2, 0, 0]
   );
-  well.name = "echo-well";
+  floor.name = "poem-court-floor";
 
-  for (let level = 0; level < 11; level += 1) {
-    const radius = 2.15 - level * 0.095;
-    const ring = mesh(
-      THREE,
-      new THREE.TorusGeometry(radius, level % 3 === 0 ? 0.05 : 0.025, 8, 96),
-      level % 3 === 0 ? warmGlow : ringMat,
-      group,
-      [0, 0.25 + level * 0.68, -0.8],
-      [Math.PI / 2, 0, level * 0.08]
-    );
-    rings.push({ ring, baseY: ring.position.y, phase: level * 0.31, speed: (level % 2 ? -1 : 1) * 0.07 });
-  }
+  const lowerStone = mesh(
+    THREE,
+    new THREE.CylinderGeometry(5.75, 6.1, 0.32, 64),
+    stoneMat,
+    group,
+    [0, -0.08, -0.7]
+  );
+  lowerStone.scale.z = 0.54;
+  lowerStone.name = "poem-stone-base";
 
-  const bracketAngles = [-1.22, -0.86, -0.4, 0.4, 0.86, 1.22];
-  bracketAngles.forEach((angle, index) => {
-    const start = new THREE.Vector3(Math.sin(angle) * 2.18, 0.1, Math.cos(angle) * 2.18 - 0.8);
-    const end = new THREE.Vector3(Math.sin(angle) * 1.54, 7.85, Math.cos(angle) * 1.54 - 0.8);
-    const ribbon = curve(THREE, [start, start.clone().lerp(end, 0.34), start.clone().lerp(end, 0.7), end]);
-    group.add(new THREE.Mesh(new THREE.TubeGeometry(ribbon, 40, index % 2 ? 0.018 : 0.026, 6, false), index % 2 ? ringMat : blueGlow));
-  });
+  const upperStone = mesh(
+    THREE,
+    new THREE.CylinderGeometry(5.02, 5.2, 0.16, 64),
+    stoneInsetMat,
+    group,
+    [0, 0.15, -0.7]
+  );
+  upperStone.scale.z = 0.54;
+  upperStone.name = "poem-stone-inset";
 
   items.forEach((item, index) => {
-    const side = index % 2 ? 1 : -1;
-    const row = Math.floor(index / 2);
-    const y = 1.15 + row * 1.22 + (side > 0 ? 0.28 : 0);
-    const angle = side * (0.46 + row * 0.09);
-    const radius = narrow ? 1.46 : 1.72;
-    const position = new THREE.Vector3(Math.sin(angle) * radius, y, Math.cos(angle) * radius - 0.8);
-    const holder = new THREE.Group();
-    holder.position.copy(position);
-    holder.userData.baseY = y;
-    group.add(holder);
-
-    const plateWidth = narrow ? 1.45 : 1.72;
-    const plateHeight = 0.78;
-    addBox(THREE, holder, [plateWidth, plateHeight, 0.035], plateMat, [0, 0, 0]);
-    addBox(THREE, holder, [0.024, plateHeight + 0.08, 0.08], index % 2 ? warmGlow : blueGlow, [-plateWidth / 2 - 0.02, 0, 0.035]);
-    addBox(THREE, holder, [plateWidth + 0.08, 0.025, 0.08], index % 2 ? warmGlow : blueGlow, [0, -plateHeight / 2 - 0.03, 0.035]);
-
-    const verse = firstVerse(itemText(item));
-    const title = clipText(itemTitle(item), narrow ? 18 : 24);
-    const body = verse ? clipText(verse, narrow ? 42 : 58) : clipText(fieldText(item, "author", "subtitle"), 32);
-    addLabel(THREE, holder, ctx, `${title}\n${body}`, 0.084, "#dfe8e5", [0, 0.08, 0.048]);
-    addLabel(THREE, holder, ctx, String(index + 1).padStart(2, "0"), 0.055, "#f2c88f", [-plateWidth / 2 + 0.12, -plateHeight / 2 + 0.11, 0.05]);
-
-    const hit = addPickBox(
-      THREE,
-      holder,
-      ctx,
-      hitMaterial,
-      plateWidth + 0.14,
-      plateHeight + 0.14,
-      0.18,
-      [0, 0, 0.06],
-      index
-    );
+    const page = poemPaper(THREE, ctx, item, index, pageWidth, pageHeight, paperEdgeMat, pageBackMat, hitMaterial, group, narrow);
+    if (!page) return;
+    const hit = page.hit;
     hit.userData.kind = "poem";
-
-    const tether = curve(THREE, [
-      [Math.sin(angle) * 1.58, y, Math.cos(angle) * 1.58 - 0.8],
-      [Math.sin(angle) * 1.9, y + 0.25, Math.cos(angle) * 1.9 - 0.8],
-      position.toArray(),
-    ]);
-    group.add(new THREE.Mesh(new THREE.TubeGeometry(tether, 20, 0.012, 5, false), index % 2 ? warmGlow : blueGlow));
-
-    verseEntries.push({
+    pages.push({
       index,
-      holder,
+      group: page.group,
       hit,
-      position,
-      phase: index * 0.74,
-      width: plateWidth,
+      item,
     });
   });
 
   if (!items.length) {
-    addLabel(THREE, group, ctx, "回声井\n暂无诗篇", 0.28, "#c6dce0", [0, 3.5, 1.35]);
+    addLabel(THREE, group, ctx, "诗页庭\n暂无诗篇", 0.28, "#d9ddcf", [0, 3.2, 1.2]);
   }
 
-  const floor = mesh(
-    THREE,
-    new THREE.RingGeometry(2.2, 6.4, 64),
-    ceramicMat,
-    group,
-    [0, -0.04, -0.8],
-    [-Math.PI / 2, 0, 0]
-  );
-  floor.name = "echo-floor";
+  let selected = items.length ? 0 : -1;
 
-  let selected = -1;
+  function layout(nextIndex, overview = false) {
+    selected = Number.isInteger(nextIndex) && nextIndex >= 0 && nextIndex < pages.length ? nextIndex : selected;
+    pages.forEach((page) => {
+      const pose = poemPagePose(page.index, selected, pages.length, narrow, overview);
+      poemApplyPagePose(page.group, pose);
+    });
+    group.userData.selectedPoem = selected;
+  }
+
+  layout(selected, true);
 
   return {
     group,
     camera: initial,
-    update(time, dt) {
-      const step = Math.max(0, Math.min(dt || 0, 0.05));
-      if (reduced) return;
-      ringMat.emissiveIntensity = 1.35 + Math.sin(time * 1.2) * 0.35;
-      blueGlow.emissiveIntensity = 3.05 + Math.sin(time * 0.9 + 0.5) * 0.65;
-      warmGlow.emissiveIntensity = 2.0 + Math.sin(time * 0.73 + 1.8) * 0.35;
-      rings.forEach(({ ring, baseY, phase, speed }) => {
-        ring.rotation.z += speed * step;
-        ring.position.y = baseY + Math.sin(time * 0.52 + phase) * 0.032;
-      });
-      verseEntries.forEach((entry) => {
-        const chosen = entry.index === selected;
-        const targetY = entry.holder.userData.baseY + (chosen ? 0.11 : 0) + Math.sin(time * 0.47 + entry.phase) * 0.012;
-        entry.holder.position.y += (targetY - entry.holder.position.y) * Math.min(1, step * 4.5);
-        const targetScale = chosen ? 1.045 : 1;
-        const scale = entry.holder.scale.x + (targetScale - entry.holder.scale.x) * Math.min(1, step * 5);
-        entry.holder.scale.setScalar(scale);
-      });
-    },
     focus(index) {
-      const entry = verseEntries.find((candidate) => candidate.index === index);
-      if (!entry) return initial;
-      selected = index;
-      const target = entry.position.clone();
-      target.y += 0.04;
-      const position = target.clone().add(new THREE.Vector3(entry.position.x * 0.36, 0.34, narrow ? 4.3 : 3.15));
-      return view(position.toArray(), target.toArray());
+      if (!pages.some((page) => page.index === index)) return initial;
+      layout(index, false);
+      return poemCameraPose(narrow, true);
+    },
+    overview() {
+      layout(selected, true);
+      return initial;
     },
   };
+}
+
+function poemPaper(THREE, ctx, item, index, width, height, edgeMaterial, backMaterial, hitMaterial, parent, narrow) {
+  const page = new THREE.Group();
+  page.name = `poem-page-${item.id || index}`;
+  page.userData.poemIndex = index;
+  parent.add(page);
+
+  const back = addBox(
+    THREE,
+    page,
+    [width + 0.08, height + 0.08, 0.12],
+    backMaterial,
+    [0, 0, -0.055]
+  );
+  back.name = "poem-page-thickness";
+  addBox(
+    THREE,
+    page,
+    [width + 0.16, 0.055, 0.16],
+    edgeMaterial,
+    [0, -height / 2 - 0.025, -0.015]
+  );
+
+  const texture = poemPaperTexture(THREE, item, index, width / height, narrow);
+  const paperMaterial = texture
+    ? new THREE.MeshStandardMaterial({
+        map: texture,
+        color: 0xffffff,
+        roughness: 0.92,
+        metalness: 0,
+        emissive: 0x2a2118,
+        emissiveIntensity: 0.08,
+        side: THREE.DoubleSide,
+      })
+    : standard(THREE, 0xd8cfbc, { roughness: 0.96, metalness: 0, side: THREE.DoubleSide });
+  const sheet = mesh(
+    THREE,
+    poemCurvedPlane(THREE, width * 0.965, height * 0.965),
+    paperMaterial,
+    page,
+    [0, 0, 0.018]
+  );
+  sheet.name = "poem-printed-sheet";
+
+  const hit = addPickBox(
+    THREE,
+    page,
+    ctx,
+    hitMaterial,
+    width + 0.18,
+    height + 0.18,
+    0.34,
+    [0, 0, 0.1],
+    index
+  );
+  return { group: page, hit };
+}
+
+function poemPaperTexture(THREE, item, index, aspect, narrow) {
+  if (typeof document === "undefined" || typeof document.createElement !== "function") return null;
+  const canvas = document.createElement("canvas");
+  canvas.width = 960;
+  canvas.height = Math.round(canvas.width / aspect);
+  const context = canvas.getContext("2d");
+  if (!context) return null;
+
+  const paper = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+  paper.addColorStop(0, "#eee7d8");
+  paper.addColorStop(0.52, "#f7f1e4");
+  paper.addColorStop(1, "#ddd4c2");
+  context.fillStyle = paper;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  const seed = 17 + index * 29;
+  for (let fiber = 0; fiber < 180; fiber += 1) {
+    const x = poemRandom(seed + fiber * 13) * canvas.width;
+    const y = poemRandom(seed + fiber * 31) * canvas.height;
+    const length = 10 + poemRandom(seed + fiber * 47) * 56;
+    context.strokeStyle = fiber % 4 === 0 ? "rgba(109, 88, 61, 0.055)" : "rgba(255, 255, 255, 0.08)";
+    context.lineWidth = 0.6 + poemRandom(seed + fiber * 19) * 0.8;
+    context.beginPath();
+    context.moveTo(x, y);
+    context.lineTo(x + length, y + (poemRandom(seed + fiber * 11) - 0.5) * 3);
+    context.stroke();
+  }
+
+  const fold = context.createLinearGradient(canvas.width * 0.43, 0, canvas.width * 0.57, 0);
+  fold.addColorStop(0, "rgba(67, 54, 36, 0)");
+  fold.addColorStop(0.48, "rgba(67, 54, 36, 0.06)");
+  fold.addColorStop(0.52, "rgba(255, 255, 255, 0.11)");
+  fold.addColorStop(1, "rgba(67, 54, 36, 0)");
+  context.fillStyle = fold;
+  context.fillRect(canvas.width * 0.43, 0, canvas.width * 0.14, canvas.height);
+
+  context.strokeStyle = "rgba(65, 58, 47, 0.2)";
+  context.lineWidth = 2;
+  context.strokeRect(40, 38, canvas.width - 80, canvas.height - 76);
+
+  const left = narrow ? 62 : 74;
+  const gutter = left;
+  const contentWidth = canvas.width - left - gutter;
+  const title = fieldText(item, "title", "name") || itemTitle(item);
+  const author = fieldText(item, "author") || "Unknown author";
+  const year = fieldText(item, "year");
+  const lines = poemFirstStanza(item);
+
+  const titleSize = poemFitFontSize(
+    context,
+    title,
+    contentWidth,
+    narrow ? 58 : 68,
+    narrow ? 38 : 48,
+    narrow ? 2 : 3,
+    "italic",
+    700,
+    '"Instrument Serif", Georgia, serif'
+  );
+  context.fillStyle = "#202523";
+  context.font = `italic 700 ${titleSize}px "Instrument Serif", Georgia, serif`;
+  context.textBaseline = "alphabetic";
+  const titleLines = poemWrapCanvasText(context, title, contentWidth, narrow ? 2 : 3);
+  const titleTop = narrow ? 82 : 104;
+  const titleLineHeight = titleSize * 0.96;
+  titleLines.forEach((line, lineIndex) => {
+    context.fillText(line, left, titleTop + lineIndex * titleLineHeight);
+  });
+
+  const metaY = titleTop + (titleLines.length - 1) * titleLineHeight + (narrow ? 48 : 52);
+  context.font = `500 ${narrow ? 34 : 28}px "Space Grotesk", sans-serif`;
+  context.fillStyle = "#414944";
+  context.fillText(author, left, metaY);
+  if (year) {
+    context.textAlign = "right";
+    context.fillText(year, canvas.width - gutter, metaY);
+    context.textAlign = "left";
+  }
+
+  const ruleY = metaY + (narrow ? 38 : 46);
+  context.strokeStyle = "rgba(51, 55, 49, 0.28)";
+  context.lineWidth = 1.5;
+  context.beginPath();
+  context.moveTo(left, ruleY);
+  context.lineTo(canvas.width - gutter, ruleY);
+  context.stroke();
+
+  const bodyTop = ruleY + (narrow ? 48 : 52);
+  const body = poemStanzaLayout(
+    context,
+    lines,
+    contentWidth,
+    narrow ? 64 : 50,
+    narrow ? 46 : 38,
+    narrow,
+    bodyTop,
+    canvas.height - 58
+  );
+  context.fillStyle = "#1d2522";
+  context.font = `400 ${body.size}px "Instrument Serif", Georgia, serif`;
+  body.rows.forEach((line, lineIndex) => {
+    context.fillText(line.text, left + line.indent, bodyTop + lineIndex * body.lineHeight);
+  });
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 4;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function poemFirstStanza(item) {
+  const stanza = Array.isArray(item?.stanzas) ? item.stanzas.find((entry) => Array.isArray(entry) && entry.length) : null;
+  if (stanza) return stanza.map((line) => String(line).trim()).filter(Boolean);
+  const fallback = String(item?.text || "")
+    .replace(/\r/g, "")
+    .split(/\n\s*\n/)[0]
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  return fallback.length ? fallback : ["Text unavailable in the spatial record."];
+}
+
+function poemCameraPose(narrow, focused) {
+  const pose = focused
+    ? view(narrow ? [0, 2.72, 7.0] : [0, 2.68, 10.35], [0, 2.56, 0.2])
+    : view(narrow ? [0, 3.05, 8.3] : [0, 3.08, 13.0], [0, narrow ? 2.9 : 2.58, -0.15]);
+  pose.frame = focused
+    ? { width: narrow ? 5.2 : 5.5, height: narrow ? 5.35 : 5.9 }
+    : { width: narrow ? 5.8 : 10.2, height: narrow ? 6.6 : 6.8 };
+  return pose;
+}
+
+function poemPagePose(index, selected, total, narrow, overview) {
+  if (narrow && overview) {
+    if (index === selected) return { position: [0, 4.05, 0.34], rotation: [0, 0, 0], scale: 0.64 };
+    const side = poeticPageSide(index, selected, total);
+    return { position: [side * 1.3, 1.22, 0.1], rotation: [0, -side * 0.08, side * 0.025], scale: 0.43 };
+  }
+  if (index === selected) {
+    return {
+      position: [0, 2.72, 0.34],
+      rotation: [0, 0, 0],
+      scale: 1,
+    };
+  }
+  const side = poeticPageSide(index, selected, total);
+  return {
+    position: [side * (narrow ? 2.72 : 3.38), 2.27, -1.38],
+    rotation: [0.015, -side * (overview ? 0.38 : 0.31), side * 0.045],
+    scale: 0.63,
+  };
+}
+
+function poeticPageSide(index, selected, total) {
+  const others = Array.from({ length: total }, (_, candidate) => candidate).filter(candidate => candidate !== selected);
+  return others.indexOf(index) === 0 ? -1 : 1;
+}
+
+function poemApplyPagePose(page, pose) {
+  page.position.set(pose.position[0], pose.position[1], pose.position[2]);
+  page.rotation.set(pose.rotation[0], pose.rotation[1], pose.rotation[2]);
+  page.scale.setScalar(pose.scale);
+}
+
+function poemCurvedPlane(THREE, width, height) {
+  const geometry = new THREE.PlaneGeometry(width, height, 24, 18);
+  const positions = geometry.attributes.position;
+  const halfWidth = width / 2;
+  for (let index = 0; index < positions.count; index += 1) {
+    const x = positions.getX(index) / halfWidth;
+    const y = positions.getY(index) / (height / 2);
+    const curve = Math.abs(x) ** 2.8 * 0.085;
+    const paperWave = Math.sin((y + 1) * Math.PI) * 0.008;
+    positions.setZ(index, curve + paperWave);
+  }
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+function poemFitFontSize(context, text, maxWidth, preferred, minimum, maxLines, style, weight, family) {
+  let size = preferred;
+  while (size > minimum) {
+    context.font = `${style} ${weight} ${size}px ${family}`;
+    if (poemWrapCanvasText(context, text, maxWidth, maxLines + 1).length <= maxLines) return size;
+    size -= 2;
+  }
+  return minimum;
+}
+
+function poemStanzaLayout(context, lines, maxWidth, preferred, minimum, wrap, bodyTop, maxBottom) {
+  let size = preferred;
+  let result = null;
+  while (size >= minimum) {
+    context.font = `400 ${size}px "Instrument Serif", Georgia, serif`;
+    const rows = poemStanzaRows(context, lines, maxWidth, size, wrap);
+    const lineHeight = size * (wrap ? 1.2 : 1.34);
+    result = { size, rows, lineHeight };
+    const widest = Math.max(0, ...rows.map((row) => context.measureText(row.text).width + row.indent));
+    if (widest <= maxWidth && bodyTop + Math.max(0, rows.length - 1) * lineHeight <= maxBottom) return result;
+    size -= 1;
+  }
+  return result;
+}
+
+function poemStanzaRows(context, lines, maxWidth, size, wrap) {
+  if (!wrap) return lines.map((line) => ({ text: line, indent: 0 }));
+  const rows = [];
+  const continuationIndent = size * 0.62;
+  lines.forEach((line) => {
+    const words = line.split(/\s+/).filter(Boolean);
+    let row = "";
+    words.forEach((word) => {
+      const indent = rows.length && rows[rows.length - 1]?.continuation ? continuationIndent : 0;
+      const limit = maxWidth - (row ? 0 : indent);
+      const next = row ? `${row} ${word}` : word;
+      if (!row || context.measureText(next).width <= limit) {
+        row = next;
+      } else {
+        rows.push({ text: row, indent, continuation: false });
+        row = word;
+        rows[rows.length - 1].continuation = true;
+      }
+    });
+    if (row) rows.push({ text: row, indent: 0, continuation: false });
+  });
+  for (let index = 1; index < rows.length; index += 1) {
+    const previous = rows[index - 1];
+    if (previous.continuation) rows[index].indent = continuationIndent;
+  }
+  return rows;
+}
+
+function poemWrapCanvasText(context, text, maxWidth, maxLines = Infinity) {
+  const words = String(text || "").split(/\s+/).filter(Boolean);
+  if (!words.length) return [""];
+  const lines = [];
+  let line = words[0];
+  for (const word of words.slice(1)) {
+    const next = `${line} ${word}`;
+    if (context.measureText(next).width <= maxWidth || !line) {
+      line = next;
+    } else {
+      lines.push(line);
+      line = word;
+      if (lines.length >= maxLines) break;
+    }
+  }
+  if (lines.length < maxLines && line) lines.push(line);
+  return lines;
+}
+
+function poemRandom(seed) {
+  const value = Math.sin(seed * 12.9898) * 43758.5453;
+  return value - Math.floor(value);
 }
 
 function buildPaintingsRoom(ctx) {
@@ -675,7 +1508,7 @@ function buildPaintingsRoom(ctx) {
   const items = safeItems(ctx.items).slice(0, 9);
   const narrow = isNarrowViewport();
   const reduced = Boolean(ctx.reducedMotion);
-  const initial = view(narrow ? [0, 3.45, 14.2] : [0, 3.35, 10.8], [0, 2.85, -3.5]);
+  const initial = { ...view([0, 3.6, 11], [0, 3.3, -3.4]), frame: { width: 12.2, height: 7 } };
   const paintingEntries = [];
   const haloMaterials = [];
   const floorLamps = [];
@@ -772,7 +1605,7 @@ function buildPaintingsRoom(ctx) {
 
     const archRadius = nicheWidth / 2;
     const arch = new THREE.Mesh(
-      new THREE.TorusGeometry(archRadius, 0.055, 8, 48, Math.PI),
+      new THREE.TorusGeometry(archRadius, 0.026, 8, 48, Math.PI),
       goldMat
     );
     arch.position.set(0, nicheHeight / 2, -0.02);
@@ -865,14 +1698,13 @@ function buildPaintingsRoom(ctx) {
     addLabel(THREE, group, ctx, "恒光穹殿\n暂无画作记录", 0.3, "#e4d4b9", [0, 3.35, -2.65]);
   }
 
-  for (let pillar = -1; pillar <= 1; pillar += 1) {
-    const angle = pillar * 0.7;
+  for (const angle of [-1.46, 1.46]) {
     addBox(
       THREE,
       group,
       [0.12, 6.5, 0.16],
       goldMat,
-      [Math.sin(angle) * (radius - 0.12), 3.25, -Math.cos(angle) * (radius - 0.12) - 0.8],
+      [Math.sin(angle) * (radius + 0.3), 3.25, -Math.cos(angle) * (radius + 0.3) - 0.8],
       [0, -angle, 0]
     );
   }
@@ -882,6 +1714,11 @@ function buildPaintingsRoom(ctx) {
   return {
     group,
     camera: initial,
+    overview() {
+      selected = -1;
+      paintingEntries.forEach(entry => { entry.holder.position.copy(entry.position); entry.holder.rotation.set(0, -entry.angle, 0); });
+      return initial;
+    },
     update(time, dt) {
       const step = Math.max(0, Math.min(dt || 0, 0.05));
       if (reduced) return;
@@ -894,25 +1731,19 @@ function buildPaintingsRoom(ctx) {
         const scale = 0.9 + Math.sin(time * 0.8 + phase) * 0.09;
         lamp.scale.setScalar(scale);
       });
-      paintingEntries.forEach((entry) => {
-        const chosen = entry.index === selected;
-        const targetScale = chosen ? 1.025 : 1;
-        const next = entry.holder.scale.x + (targetScale - entry.holder.scale.x) * Math.min(1, step * 4);
-        entry.holder.scale.setScalar(next);
-        entry.holder.position.z = entry.position.z + (chosen ? 0.08 : 0);
-      });
+
     },
     focus(index) {
       const entry = paintingEntries.find((candidate) => candidate.index === index);
       if (!entry) return initial;
       selected = index;
-      const target = entry.position.clone();
-      target.addScaledVector(entry.inward, 0.12);
-      target.y += 0.04;
-      const distance = (narrow ? 4.3 : 3.45) + entry.width * 0.22;
-      const position = target.clone().addScaledVector(entry.inward, distance);
-      position.y += 0.1;
-      return view(position.toArray(), target.toArray());
+      paintingEntries.forEach(candidate => {
+        candidate.holder.position.copy(candidate.position);
+        candidate.holder.rotation.set(0, -candidate.angle, 0);
+      });
+      entry.holder.position.set(0, 3.1, 1);
+      entry.holder.rotation.set(0, 0, 0);
+      return { ...view([0, 3.1, 8], [0, 3.1, 1]), frame: { width: entry.width + 0.9, height: entry.height + 1.3 } };
     },
   };
 }
@@ -924,7 +1755,7 @@ function buildCurateRoom(ctx) {
   const items = safeItems(ctx.items);
   const narrow = isNarrowViewport();
   const reduced = Boolean(ctx.reducedMotion);
-  const initial = view(narrow ? [7.6, 6.5, 13.6] : [7.2, 5.7, 8.9], [0, 1.75, 0.05]);
+  const initial = { ...view([5.5, 5.2, 10.5], [0, 2.1, 0.05]), frame: { width: 8.4, height: 7 } };
   const slots = [];
   const statusRings = [];
 
@@ -1200,7 +2031,6 @@ function buildCurateRoom(ctx) {
   };
 }
 
-const BOOK_COLORS = ["#314441", "#4a3530", "#253648", "#4b4932", "#263f3a", "#4a3d2a", "#293f4f", "#3a3234"];
 
 function safeItems(items) {
   return Array.isArray(items) ? items.filter((item) => item && typeof item === "object") : [];
@@ -1213,16 +2043,6 @@ function view(position, target) {
 function isNarrowViewport() {
   if (typeof window === "undefined") return false;
   return Number(window.innerWidth) <= 680;
-}
-
-function hashNumber(value) {
-  let hash = 2166136261;
-  const text = String(value);
-  for (let index = 0; index < text.length; index += 1) {
-    hash ^= text.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return (hash >>> 0) / 4294967295;
 }
 
 function originalFields(item) {
@@ -1244,20 +2064,6 @@ function fieldText(item, ...keys) {
 
 function itemTitle(item) {
   return fieldText(item, "title", "name") || "未命名记录";
-}
-
-function itemText(item) {
-  const value = field(item, "text", "note", "description");
-  return typeof value === "string" ? value : "";
-}
-
-function firstVerse(text) {
-  const lines = String(text || "")
-    .replace(/\r/g, "")
-    .split("\n")
-    .map((line) => line.replace(/\s+/g, " ").trim())
-    .filter(Boolean);
-  return lines.slice(0, 2).join(" / ");
 }
 
 function clipText(value, limit) {
@@ -1367,35 +2173,6 @@ function addBox(THREE, parent, size, material, position, rotation) {
   );
 }
 
-function extrudedBookGeometry(THREE, width, height, depth) {
-  const shape = new THREE.Shape();
-  const halfWidth = width / 2;
-  const halfHeight = height / 2;
-  const shoulder = Math.min(0.035, width * 0.16);
-  shape.moveTo(-halfWidth + shoulder, -halfHeight);
-  shape.lineTo(halfWidth - shoulder, -halfHeight);
-  shape.quadraticCurveTo(halfWidth, -halfHeight, halfWidth, -halfHeight + shoulder);
-  shape.lineTo(halfWidth, halfHeight - shoulder);
-  shape.quadraticCurveTo(halfWidth, halfHeight, halfWidth - shoulder, halfHeight);
-  shape.lineTo(-halfWidth + shoulder, halfHeight);
-  shape.quadraticCurveTo(-halfWidth, halfHeight, -halfWidth, halfHeight - shoulder);
-  shape.lineTo(-halfWidth, -halfHeight + shoulder);
-  shape.quadraticCurveTo(-halfWidth, -halfHeight, -halfWidth + shoulder, -halfHeight);
-
-  const geometry = new THREE.ExtrudeGeometry(shape, {
-    depth,
-    steps: 1,
-    curveSegments: 3,
-    bevelEnabled: true,
-    bevelSegments: 2,
-    bevelSize: Math.min(0.018, width * 0.08),
-    bevelThickness: Math.min(0.018, depth * 0.04),
-  });
-  geometry.translate(0, 0, -depth / 2);
-  geometry.computeVertexNormals();
-  return geometry;
-}
-
 function place(object, position, rotation) {
   if (position) object.position.set(position[0] || 0, position[1] || 0, position[2] || 0);
   if (rotation) object.rotation.set(rotation[0] || 0, rotation[1] || 0, rotation[2] || 0);
@@ -1412,8 +2189,8 @@ function curve(THREE, points) {
 }
 
 function addCable(THREE, parent, from, to, material) {
-  const start = new THREE.Vector3(from[0], from[1], from[2]);
-  const end = new THREE.Vector3(to[0], to[1], to[2]);
+  const start = from.isVector3 ? from.clone() : new THREE.Vector3(...from);
+  const end = to.isVector3 ? to.clone() : new THREE.Vector3(...to);
   const direction = end.clone().sub(start);
   const length = direction.length();
   if (!Number.isFinite(length) || length <= 0) return null;

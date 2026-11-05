@@ -1,7 +1,7 @@
 import * as THREE from "../vendor/three/three.module.js";
 
 const ROUTES = [
-  ["photo", "光轨暗房"], ["books", "重力书库"], ["poems", "回声井"],
+  ["photo", "光轨暗房"], ["books", "悬挑阅览架"], ["poems", "诗页庭"],
   ["paintings", "恒光穹殿"], ["music", "声纹反应堆"], ["sport", "竞技观测场"],
   ["series", "连续信号塔"], ["films", "轨道放映厅"], ["games", "交互试验场"],
   ["curate", "记忆装配坞"],
@@ -593,7 +593,7 @@ export async function createWorld({
   let roomModulesPromise = null;
   async function roomModules() {
     if (!roomModulesPromise) {
-      roomModulesPromise = Promise.all([import("./rooms-a.js?v=2"), import("./rooms-b.js?v=2")]).then(([a, b]) => ({ a, b }));
+      roomModulesPromise = Promise.all([import("./rooms-a.js?v=4"), import("./rooms-b.js?v=4")]).then(([a, b]) => ({ a, b }));
     }
     return roomModulesPromise;
   }
@@ -607,6 +607,49 @@ export async function createWorld({
     if (!built) throw failure("room-unsupported", "房间模块未声明 " + id);
     if (!built.group?.isObject3D) throw failure("room-group", id + " buildRoom 未返回 THREE.Group");
     return built;
+  }
+
+  let requestedView = null;
+  let focusRequest = 0;
+
+  function viewingArea() {
+    const width = canvas.clientWidth || window.innerWidth;
+    const height = canvas.clientHeight || window.innerHeight;
+    const visibleRect = (selector) => {
+      const element = document.querySelector(selector);
+      return element && !element.hidden && getComputedStyle(element).visibility !== "hidden" ? element.getBoundingClientRect() : null;
+    };
+    const hud = visibleRect("#top-hud");
+    const panel = visibleRect("#route-panel");
+    const dock = visibleRect(".bottom-dock");
+    const narrow = width <= 700;
+    const left = !narrow && panel ? panel.right + 24 : 20;
+    const right = width - 20;
+    const top = (hud?.bottom || 60) + (narrow ? 58 : 28);
+    const bottom = narrow && panel ? panel.top - 14 : (dock?.top || height - 60) - 22;
+    return { width, height, left, top, right, bottom: Math.max(top + 120, bottom) };
+  }
+
+  function composeView(view, animate = true) {
+    requestedView = view;
+    const area = viewingArea();
+    const inRoom = routeId !== "entry" && routeId !== "corridor";
+    if (inRoom) {
+      camera.setViewOffset(area.width, area.height,
+        area.width / 2 - (area.left + area.right) / 2,
+        area.height / 2 - (area.top + area.bottom) / 2, area.width, area.height);
+    } else camera.clearViewOffset();
+    const position = new THREE.Vector3(...view.position);
+    const target = new THREE.Vector3(...view.target);
+    if (inRoom && view.frame) {
+      const tangent = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+      const distance = Math.max(
+        view.frame.height / (2 * tangent) * area.height / (area.bottom - area.top),
+        view.frame.width / (2 * tangent * camera.aspect) * area.width / (area.right - area.left)
+      ) * 1.1;
+      position.sub(target).normalize().multiplyScalar(distance).add(target);
+    }
+    setPose(position.toArray(), target.toArray(), animate);
   }
 
   function setPose(position, target, animate = true) {
@@ -659,10 +702,10 @@ export async function createWorld({
   }
 
   function routeCamera(group) {
-    if (routeId === "entry") setPose([0, 2.8, 15], [0, 0.45, 1.8], false);
-    else if (routeId === "corridor") setPose([23, 16, 26], [0, 1.5, 0], true);
-    else if (room?.camera) setPose(room.camera.position, room.camera.target, true);
-    else setPose([0, 2.2, 12], [group.position.x, 0, group.position.z], true);
+    if (routeId === "entry") composeView({ position: [0, 2.8, 15], target: [0, 0.45, 1.8] }, false);
+    else if (routeId === "corridor") composeView({ position: [23, 16, 26], target: [0, 1.5, 0] });
+    else if (room?.camera) composeView(room.camera);
+    else composeView({ position: [0, 2.2, 12], target: [group.position.x, 0, group.position.z] });
   }
 
   async function setRoute(id = "entry", items = []) {
@@ -736,11 +779,12 @@ export async function createWorld({
     if (!room || !Number.isInteger(numeric) || numeric < 0 || numeric >= routeItems.length) return false;
     try {
       const focusGeneration = generation;
+      const request = ++focusRequest;
       const result = await room.focus?.(numeric);
-      if (focusGeneration !== generation || disposed) return false;
+      if (focusGeneration !== generation || request !== focusRequest || disposed) return false;
       focusedIndex = numeric;
       if (Array.isArray(result?.position) && Array.isArray(result?.target)) {
-        setPose(result.position, result.target, true);
+        composeView(result);
       }
       if (fromUser && !disposed) onFocus(numeric);
       return true;
@@ -769,6 +813,7 @@ export async function createWorld({
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    if (requestedView) composeView(requestedView, false);
     requestRender();
   }
 
@@ -1014,6 +1059,7 @@ export async function createWorld({
     });
     return {
       route: routeId, routeLoading, items: routeItems.length, corridorStep,
+      focusedIndex, view: requestedView, viewingArea: viewingArea(),
       motion: motionEnabled, paused, contextLost, disposed, fps, renderedFrames,
       portals: projectPortals(), picks: projectPickObjects(), lastPick, lastError,
       textures: { cached: [...textureCache.values()].filter((entry) => entry.texture).length, limit: MAX_TEXTURES, bytes: [...textureCache.values()].reduce((sum, entry) => sum + entry.bytes, 0), byteLimit: MAX_TEXTURE_BYTES },
@@ -1060,6 +1106,12 @@ export async function createWorld({
   return Object.freeze({
     setRoute,
     focusItem,
+    overview: () => {
+      focusRequest += 1;
+      const view = room?.overview?.() || room?.camera;
+      if (view) composeView(view);
+      requestRender();
+    },
     setMotion,
     resize,
     dispose,

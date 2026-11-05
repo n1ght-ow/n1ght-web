@@ -10,7 +10,7 @@
   <link rel="preload" href="fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/InstrumentSerif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=1">
-  <link rel="stylesheet" href="css/world.css?v=2">
+  <link rel="stylesheet" href="css/world.css?v=5">
 </head>
 <body data-route="entry" data-scene="entry">
   <a class="skip-link" href="#route-title">跳到当前展区</a>
@@ -55,10 +55,12 @@
     <div class="route-panel__head"><p class="eyebrow" id="route-kicker">NAVIGATION SPINE</p><p class="route-panel__position"><span id="route-count">00</span> / 10</p></div>
     <h2 id="route-title">引力引航</h2>
     <p class="route-panel__english" id="route-english">THE GRAVITY SPINE</p>
+    <nav class="poem-choices" id="poem-choices" aria-label="选择一首诗" hidden></nav>
     <p class="route-panel__description" id="route-description">沿连续通道穿过十座独立展区。选择一站，或继续前行。</p>
     <div class="route-panel__rule" aria-hidden="true"></div>
     <div class="operation-bar" id="operation-bar" aria-label="当前展区操作">
       <button type="button" class="action action--ice" data-focus-current>聚焦当前</button>
+      <button type="button" class="action" data-overview>返回概览</button>
       <button type="button" class="action" data-open-detail>读详情</button>
       <button type="button" class="action" data-open-curator hidden>装配展览</button>
       <button type="button" class="action" data-next-route>下一站 →</button>
@@ -87,8 +89,8 @@
     <div class="gravity-map" id="gravity-map">
       <div class="gravity-map__core" aria-hidden="true"><span>G</span><small>引力井</small></div>
       <button type="button" class="map-stop map-stop--1" data-route="photo"><b>01</b><span>光轨暗房</span><small data-map-count="photo">46 张照片</small></button>
-      <button type="button" class="map-stop map-stop--2" data-route="books"><b>02</b><span>重力书库</span><small data-map-count="books">16 本书</small></button>
-      <button type="button" class="map-stop map-stop--3" data-route="poems"><b>03</b><span>回声井</span><small data-map-count="poems">3 首诗</small></button>
+      <button type="button" class="map-stop map-stop--2" data-route="books"><b>02</b><span>悬挑阅览架</span><small data-map-count="books">16 本书</small></button>
+      <button type="button" class="map-stop map-stop--3" data-route="poems"><b>03</b><span>诗页庭</span><small data-map-count="poems">3 首诗</small></button>
       <button type="button" class="map-stop map-stop--4" data-route="paintings"><b>04</b><span>恒光穹殿</span><small data-map-count="paintings">12 幅画</small></button>
       <button type="button" class="map-stop map-stop--5" data-route="music"><b>05</b><span>声纹反应堆</span><small data-map-count="music">534 首歌</small></button>
       <button type="button" class="map-stop map-stop--6" data-route="sport"><b>06</b><span>竞技观测场</span><small data-map-count="sport">5 支主队</small></button>
@@ -153,6 +155,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
   <noscript><section class="noscript-panel"><h1>N1GHT CHXN9 深档</h1><p>启用 JavaScript 才能进入三维档案船与完整目录。</p><a href="/myscore/">打开 MyScore</a></section></noscript>
-  <script type="module" src="js/world/app.js?v=2"></script>
+  <script type="module" src="js/world/app.js?v=6"></script>
 </body>
 </html>

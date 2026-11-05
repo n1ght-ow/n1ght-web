@@ -69,8 +69,10 @@
     },
     "evidence": {
       "script": "tools/world-verify.mjs",
-      "report": ".work/world-rebuild/test-report.json",
-      "status": "final-tests-running"
+      "report": ".impeccable/review/round2/verification-summary.md",
+      "status": "round2-verified",
+      "visualReviewScope": "series-games-poems-photo-fixes",
+      "checks": { "fullBeforeTitleIndex": 201, "targeted": 64, "finalPoemTitles": 28 }
     }
   }
 }

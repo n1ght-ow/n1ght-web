@@ -22,8 +22,8 @@ N1GHT CHXN9 是一座可探索的私人实时 3D 馆藏。DEEP ARCHIVE 用一条
 | 区域 | 数量 | 空间与动作 |
 | --- | ---: | --- |
 | 照片 | 46 | 光轨暗房；浏览、聚焦、缩放、来源 |
-| 书籍 | 16 | 重力书库；抽取书脊、阅读笔记 |
-| 诗歌 | 3 | 回声井；阅读完整诗节 |
+| 书籍 | 16 | 悬挑阅览架；选书、抽取至阅读台、阅读笔记 |
+| 诗歌 | 3 | 诗页庭；三页主次构图、完整原诗首节与全文阅读 |
 | 绘画 | 12 | 恒光穹殿；环绕、检查、缩放 |
 | 音乐 | 534 / 15 组 | 声纹反应堆；选唱片、查看真实外部听源 |
 | 体育 | 5 | 竞技观测场；切换项目、查看球队 |
@@ -49,10 +49,12 @@ N1GHT CHXN9 是一座可探索的私人实时 3D 馆藏。DEEP ARCHIVE 用一条
 - 单渲染器承载各区域，纹理长边 1024px，LRU 上限 24 张或 48 MiB。
 - 区域切换使用独立 staging；新请求生效后清理旧区域资源，快速切换不会把不同区域状态混在一起。
 - 页面可见性、减少动态偏好和用户暂停控制环境动画；WebGL 上下文丢失时提供回退。
+- 相机按顶部 HUD、左侧/底部控件与底部导航的实际边界取景；聚焦与返回概览使用各展区的作品尺寸。
 - `/myscore/` 保持独立，使用自身页面与数据，不冒充 3D 世界的一部分。
 
 ## 维护与证据
 
 - `tools/world-source.html` 保留原页面结构快照，原始媒体仍在原资源目录；`tools/world-extract.mjs` 可重新提取 `assets/world/collection.json`。
 - `tools/world-verify.mjs` 是浏览器验收脚本，输出 `.work/world-rebuild/test-report.json`。
+- 第二轮精进的改造对照、子代理职责、真实检查与限制见 `.impeccable/review/round2/verification-summary.md`；`tools/world-round2-verify.mjs` 覆盖本轮快选、遮挡与诗歌具名索引风险。
 - 验收范围、原始失败与最终回归见 `.impeccable/review/world/verification-summary.md`。桌面验证使用 NVIDIA RTX 3050 的 Chrome 硬件渲染；320/390px 为触控模拟，不代表实体手机性能，不宣称稳定 FPS。

@@ -384,8 +384,9 @@ async function waitForApp(page) {
 }
 
 async function enterWorld(page) {
+  await page.waitForFunction(() => window.NightWorld?.ready, null, { timeout: 15000 });
   const enter = page.locator('[data-enter-world]').first();
-  if (await enter.isVisible().catch(() => false)) await enter.click();
+  if (await page.evaluate(() => window.NightWorld.route === 'entry')) await enter.click();
   await page.waitForSelector('#top-hud', { state: 'visible', timeout: 15000 });
   await page.waitForFunction(() => document.body.dataset.scene !== 'entry', null, { timeout: 15000 });
   await page.waitForTimeout(700);
@@ -508,6 +509,11 @@ async function clickProjectedPick(page) {
 }
 
 async function openMap(page) {
+  await page.waitForFunction(() => {
+    const world = window.NightWorld;
+    const metrics = world?.metrics();
+    return world?.ready && metrics && metrics.route === world.route && !metrics.routeLoading;
+  }, null, { timeout: 15000 });
   const mapButton = page.locator('[data-open-map]').first();
   await mapButton.waitFor({ state: 'visible', timeout: 10000 });
   await mapButton.click();
@@ -905,7 +911,7 @@ async function runCorridorHistoryAndRapid(page, report) {
   await page.waitForTimeout(700);
   const nextCorridorStep = await page.evaluate(() => window.NightWorld?.metrics?.()?.corridorStep ?? null);
   const nextDockLabel = await visibleText(page, '[data-next-route]');
-  check(report, 'navigation', 'corridor next control advances the visible docking step', initialCorridorStep != null && nextCorridorStep === (initialCorridorStep + 1) % 10 && nextDockLabel.includes('重力书库'), {
+  check(report, 'navigation', 'corridor next control advances the visible docking step', initialCorridorStep != null && nextCorridorStep === (initialCorridorStep + 1) % 10 && nextDockLabel.includes('悬挑阅览架'), {
     initialCorridorStep,
     nextCorridorStep,
     nextDockLabel,
