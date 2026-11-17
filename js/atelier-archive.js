@@ -20,32 +20,35 @@
 
   tabs.forEach((tab) => {
     const token = tab.dataset.tab;
-    const room = rooms[token];
-    if (!room || tab.querySelector(".collection-tab-name")) return;
-    const title = document.createElement("span");
-    title.className = "collection-tab-name";
-    const textNodes = Array.from(tab.childNodes).filter((node) => node.nodeType === Node.TEXT_NODE);
-    title.textContent = textNodes.map((node) => node.textContent).join("").trim();
-    textNodes.forEach((node) => node.remove());
-    tab.append(title);
+    if (!rooms[token]) return;
+    tab.querySelector(".no")?.remove();
+
+    let title = tab.querySelector(".collection-tab-name");
+    if (!title) {
+      title = document.createElement("span");
+      title.className = "collection-tab-name";
+      const textNodes = Array.from(tab.childNodes).filter((node) => node.nodeType === Node.TEXT_NODE);
+      title.textContent = textNodes.map((node) => node.textContent).join("").trim();
+      textNodes.forEach((node) => node.remove());
+      tab.append(title);
+    }
   });
 
   const roomHeader = document.createElement("div");
   roomHeader.className = "collection-room";
-  const roomName = document.createElement("p");
-  roomName.className = "collection-room-name";
-  const roomTitle = document.createElement("span");
-  roomName.append(roomTitle);
+  const roomCount = document.createElement("p");
+  roomCount.className = "collection-room-count";
+  roomCount.setAttribute("aria-live", "polite");
   const explore = document.createElement("button");
   explore.type = "button";
   explore.className = "collection-room-action";
-  explore.append(document.createTextNode("Surprise me"));
+  explore.append(document.createTextNode("Random room"));
   const arrow = document.createElement("span");
   arrow.setAttribute("aria-hidden", "true");
   arrow.textContent = "↗";
   explore.append(arrow);
-  explore.setAttribute("aria-label", "Explore a randomly chosen collection room");
-  roomHeader.append(roomName, explore);
+  explore.setAttribute("aria-label", "Open a random archive room");
+  roomHeader.append(roomCount, explore);
   panelGroup.prepend(roomHeader);
 
   let current = tabs.findIndex((tab) => tab.getAttribute("aria-selected") === "true");
@@ -56,12 +59,12 @@
     const tab = tabs[index];
     const room = tab && rooms[tab.dataset.tab];
     if (!room) return;
-    roomTitle.textContent = room.count + " " + room.unit;
+    roomCount.textContent = room.count + " " + room.unit;
     archive.dataset.collectionRoom = tab.dataset.tab;
     if (animate && window.gsap && !reduced.matches) {
-      gsap.fromTo(roomTitle,
-        { y: 9, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, duration: 0.5, stagger: 0.045, ease: "power3.out", overwrite: true, clearProps: "transform,opacity,visibility" });
+      gsap.fromTo(roomCount,
+        { y: 6, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.24, ease: "power2.out", overwrite: true, clearProps: "transform,opacity,visibility" });
     }
     // This scrolls only the horizontal catalogue on phones. Page position stays put.
     if (window.innerWidth <= 720) {
@@ -72,8 +75,8 @@
   updateRoom(current, false);
   reduced.addEventListener('change', () => {
     if (!window.gsap) return;
-    gsap.killTweensOf(roomTitle);
-    gsap.set(roomTitle, { clearProps: 'transform,opacity,visibility' });
+    gsap.killTweensOf(roomCount);
+    gsap.set(roomCount, { clearProps: 'transform,opacity,visibility' });
   });
   tabbar.addEventListener("night:archive-tab", (event) => updateRoom(event.detail.index, true));
   explore.addEventListener("click", () => {
@@ -82,23 +85,5 @@
     if (chosen) chosen.click();
   });
 
-  if (window.gsap && window.ScrollTrigger) {
-    gsap.registerPlugin(ScrollTrigger);
-    const media = gsap.matchMedia();
-    media.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.fromTo(roomHeader,
-        { y: 17 },
-        { y: 0, ease: "none", scrollTrigger: {
-          trigger: roomHeader, start: "top 92%", end: "top 62%", scrub: 0.7,
-          invalidateOnRefresh: true,
-        } });
-      return () => {
-        gsap.set(roomHeader, { clearProps: "transform,opacity,visibility" });
-      };
-    });
-    // Tab sizing has a ResizeObserver in glass-pill.js; refresh after adding
-    // the compact collection count and random-room control.
-    if (typeof scheduleRefresh === "function") scheduleRefresh();
-    else requestAnimationFrame(() => ScrollTrigger.refresh());
-  }
+  if (typeof scheduleRefresh === "function") scheduleRefresh();
 })();

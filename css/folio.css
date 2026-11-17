@@ -1,0 +1,167 @@
+/* Hallmark custom: personal photographic folio; sage, wine, Bricolage; original media. */
+/* Critique: the photograph pair carries the cover; typography and controls stay direct. */
+:root {
+  --folio-bg: #dce5d5;
+  --folio-ink: #263b32;
+  --folio-accent: #5d2638;
+  --folio-paper: #f9faf6;
+  --folio-muted: #56645b;
+  --folio-line: rgb(38 59 50 / 20%);
+  --folio-soft: #edf0e7;
+  --folio-accent-soft: #eadfe2;
+  --folio-accent-hover: #743348;
+  --folio-backdrop: rgb(26 36 31 / 84%);
+  --folio-shadow: 0 20px 65px rgb(26 36 31 / 16%);
+  --paper-000: var(--folio-paper);
+  --paper-050: var(--folio-bg);
+  --paper-200: var(--folio-line);
+  --ink-950: var(--folio-ink);
+  --ink-900: var(--folio-ink);
+  --ink-600: var(--folio-muted);
+  --ink-500: var(--folio-muted);
+  --on-dark: var(--folio-paper);
+  --sky-050: var(--folio-soft);
+  --sky-100: var(--folio-accent-soft);
+  --sky-400: var(--folio-accent);
+  --sky-700: var(--folio-accent);
+  --sky-900: var(--folio-ink);
+  --accent-2: var(--folio-bg);
+  --accent-3: var(--folio-soft);
+  --accent-4: var(--folio-accent-soft);
+  --accent-2-ink: var(--folio-ink);
+  --accent-3-ink: var(--folio-ink);
+  --accent-4-ink: var(--folio-accent);
+  --color-on-accent: var(--folio-paper);
+  --color-line: var(--folio-line);
+  --font-sans: 'Bricolage Grotesque', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-editorial: var(--font-sans);
+  --font-masthead: var(--font-sans);
+  --font-mono: var(--font-sans);
+  --font-serif: Georgia, 'Songti SC', 'SimSun', serif;
+  --radius-frame: 2px;
+  --radius-sm: 6px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-pill: 6px;
+  --corner-frame: round;
+  --gutter: clamp(20px, 4.5vw, 76px);
+  --shell: 1600px;
+  --section-y: clamp(64px, 7.2vw, 108px);
+  --glass-panel: var(--folio-paper);
+  --glass-nav: var(--folio-bg);
+  --glass-pill: var(--folio-accent);
+  --shadow-lift: var(--folio-shadow);
+  --ground-books: var(--folio-paper);
+  --ground-films: var(--folio-paper);
+  --ground-series: var(--folio-paper);
+  --ground-music: var(--folio-paper);
+  --ground-games: var(--folio-paper);
+  --ground-poem: var(--folio-paper);
+}
+
+html, body { overflow-x: clip; }
+html { scroll-padding-top: 88px; scrollbar-color: var(--folio-muted) var(--folio-bg); }
+body { background: var(--folio-bg); color: var(--folio-ink); font-family: var(--font-sans); font-size: 16px; }
+::selection { color: var(--folio-paper); background: var(--folio-accent); }
+button, input, textarea, select { font-family: var(--font-sans); }
+input, textarea { caret-color: var(--folio-accent); }
+input::placeholder, textarea::placeholder { color: var(--folio-muted); }
+:focus-visible { outline: 2px solid var(--folio-accent); outline-offset: 4px; }
+button { touch-action: manipulation; }
+button:disabled { cursor: default; }
+a { text-underline-offset: .22em; }
+.mono { font-family: var(--font-sans); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+.glass > :is(.glass__body, .glass__edge, .glass__press) { display: none; }
+
+#nav.nav, #nav.nav.is-scrolled {
+  position: fixed; inset: 0 0 auto; width: 100%; max-width: none;
+  height: 72px; min-height: 72px; margin: 0; padding: 0;
+  border-radius: 0; border: 0; background: var(--folio-bg);
+  box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none;
+  transition: background-color .2s;
+}
+#nav.nav.is-scrolled { background: var(--folio-paper); border-bottom: 1px solid var(--folio-line); }
+#nav .glass__content {
+  width: 100%; max-width: var(--shell); padding-inline: var(--gutter);
+  margin-inline: auto; display: flex; flex-wrap: nowrap; align-items: center; gap: 24px;
+}
+#nav .nav-brand {
+  color: var(--folio-accent); gap: 24px; flex: 1 1 auto; min-width: 0;
+  font: 650 15px/1.2 var(--font-sans); letter-spacing: -.02em;
+  min-height: 44px; text-decoration: none; white-space: nowrap;
+}
+.nav-description { color: var(--folio-muted); font-size: 13px; font-weight: 400; letter-spacing: 0; }
+#nav .nav-links { display: flex; width: auto; gap: 20px; flex-shrink: 0; overflow: visible; }
+#nav .nav-links::after { display: none; }
+#nav .nav-links a { font: 450 14px/1.2 var(--font-sans); padding: 12px 0; min-height: 44px; border-radius: 0; color: var(--folio-ink); }
+#nav .nav-links a:hover { background: none; color: var(--folio-accent); }
+#nav .nav-links a.is-active { color: var(--folio-accent); }
+#nav .nav-links a::after { background: var(--folio-accent); height: 1px; bottom: 6px; }
+
+button:not(:disabled):active { transform: translateY(1px); }
+
+#photo { background: var(--folio-bg); padding-block: var(--section-y); }
+:is(#photo, #archive) .sec-head, #curate .curator-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; padding-bottom: 32px; margin: 0; }
+:is(#photo, #archive) .sec-title, #curate .curator-head h2 {
+  margin: 0; color: var(--folio-accent); font: 550 clamp(36px, 4.9vw, 74px)/1.04 var(--font-sans);
+  letter-spacing: -.035em; text-shadow: none; min-width: 0; overflow-wrap: break-word;
+}
+.folio-section-note { color: var(--folio-muted); font-size: 15px; line-height: 1.55; margin: 0; max-width: 38ch; }
+#archive { background: var(--folio-paper); }
+.gallery-icon-action, #photo .gallery-icon-action { border-radius: 6px; color: var(--folio-accent); }
+.gallery-icon-action:hover:not(:disabled) { background: var(--folio-accent-soft); }
+
+.footer { background: var(--folio-accent); color: var(--folio-paper); padding-block: 56px 44px; }
+.footer .footer-links { display: flex; flex-wrap: wrap; gap: 8px 24px; max-width: 460px; justify-content: flex-end; }
+.footer .footer-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--folio-paper); font: 400 14px var(--font-sans); }
+.footer .footer-links a:hover { text-decoration: underline; }
+.footer :focus-visible { outline-color: var(--folio-paper); }
+
+.lightbox .lb-dialog { background: var(--folio-paper); color: var(--folio-ink); border: 0; border-radius: 6px; box-shadow: var(--folio-shadow); }
+.lightbox .lb-backdrop { background: var(--folio-backdrop); }
+.lightbox .lb-top { background: var(--folio-paper); }
+.lightbox :is(.lb-act, .lb-title, .lb-music-title) { font-family: var(--font-sans); color: var(--folio-ink); }
+.lightbox :is(.lb-act, .lb-title) { font-weight: 550; }
+.lightbox :is(.lb-count, .lb-kicker) { font: 400 13px/1.5 var(--font-sans); letter-spacing: 0; text-transform: none; }
+.lightbox :is(.lb-meta-link, .lb-close, .lb-nav) { color: var(--folio-accent); border-color: var(--folio-line); border-radius: 6px; font-size: 14px; }
+.lightbox .lb-meta-link { background: var(--folio-accent); color: var(--folio-paper); }
+.lightbox :is(.lb-photo-title, .lb-music-head) { font-family: var(--font-sans); font-weight: 500; }
+.lightbox .lb-stage { border-radius: 2px; background: var(--folio-soft); }
+.lb-music-glyph { color: var(--folio-accent); }
+.music-drawer { background: var(--folio-paper); color: var(--folio-ink); border-radius: 6px; }
+@media (max-width: 1050px) {
+  #nav .nav-description { display: none; }
+  #nav .nav-links { gap: 22px; }
+  :is(#photo, #archive) .sec-head, #curate .curator-head { align-items: flex-start; }
+  .folio-section-note { max-width: 30ch; font-size: 14px; }
+}
+@media (max-width: 720px) {
+  #nav.nav, #nav.nav.is-scrolled { height: 62px; min-height: 62px; }
+  #nav .glass__content { gap: 12px; }
+  #nav .nav-brand { font-size: 12px; flex: 0 0 auto; }
+  #nav .nav-links { gap: 12px; flex: 1 1 auto; justify-content: flex-end; }
+  #nav .nav-links a { font-size: 12px; }
+  #photo { padding-top: 58px; }
+  :is(#photo, #archive) .sec-head, #curate .curator-head { flex-direction: column; gap: 16px; padding-bottom: 26px; }
+  .folio-section-note { max-width: 42ch; }
+  .footer { padding-block: 42px 28px; }
+  .footer .footer-links { flex-direction: column; gap: 0; }
+  .footer .footer-links a { font-size: 13px; }
+}
+@media (max-width: 540px) {
+  #nav.nav, #nav.nav.is-scrolled { height: 96px; padding-block: 6px; }
+  #nav .glass__content { flex-wrap: wrap; gap: 0; }
+  #nav .nav-brand { font-size: 13px; width: 100%; min-height: 38px; justify-content: space-between; }
+  #nav .nav-description { display: inline; font-size: 12px; }
+  #nav .nav-links { width: 100%; justify-content: space-between; gap: 8px; }
+  #nav .nav-links a { min-height: 44px; padding: 10px 0; font-size: 13px; }
+  html { scroll-padding-top: 112px; }
+  .lightbox { padding: 12px; }
+  .lightbox .lb-dialog { padding: 16px; max-height: calc(100dvh - 24px); }
+}
+@media (max-width: 359px) {
+  #nav .nav-description { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .folio :is(*, *::before, *::after) { scroll-behavior: auto !important; }
+}

@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { watch } from "node:fs";
-import { extname, join, normalize } from "node:path";
+import { extname, join, normalize, relative, isAbsolute } from "node:path";
 
 /* Dev-only static preview for N1GHT CHXN9.
    Adds live reload: every connected page holds an SSE connection to /__live
@@ -10,10 +10,13 @@ import { extname, join, normalize } from "node:path";
    still works exactly as before.
 
    Zero dependencies on purpose: node:http + node:fs only.
-   Usage: node serve.mjs   (PORT env overrides 3100) */
+   Usage: node serve.mjs   (PORT env overrides 3100;
+   BASE_PATH=/n1ght-web/ previews a project-path deployment) */
 
 const root = process.cwd();
 const port = Number(process.env.PORT || 3100);
+const basePath = "/" + (process.env.BASE_PATH || "").split("/").filter(Boolean).join("/");
+const basePrefix = basePath === "/" ? "/" : basePath + "/";
 const types = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -39,7 +42,7 @@ const LIVE_SNIPPET = [
   "<script>",
   "(function () {",
   "  if (!window.EventSource) return;",
-  '  var source = new EventSource("/__live");',
+  "  var source = new EventSource(" + JSON.stringify(basePrefix + "__live") + ");",
   "  source.onmessage = function () { location.reload(); };",
   "  // the endpoint only exists under this dev server; if it goes away, stop",
   "  // retrying instead of hammering the console",
@@ -84,6 +87,7 @@ watchDir(root, { recursive: false });
 watchDir(join(root, "css"), { recursive: true });
 watchDir(join(root, "js"), { recursive: true });
 watchDir(join(root, "myscore"), { recursive: true });
+watchDir(join(root, "3d"), { recursive: true });
 
 /* ---------- server ---------- */
 
@@ -91,6 +95,18 @@ const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, "http://localhost");
     let pathname = decodeURIComponent(url.pathname);
+
+    if (basePath !== "/") {
+      if (pathname === basePath) {
+        res.writeHead(308, { Location: basePrefix + url.search }).end();
+        return;
+      }
+      if (!pathname.startsWith(basePrefix)) {
+        res.writeHead(404).end("Not found");
+        return;
+      }
+      pathname = "/" + pathname.slice(basePrefix.length);
+    }
 
     if (pathname === "/__live") {
       res.writeHead(200, {
@@ -105,11 +121,18 @@ const server = createServer(async (req, res) => {
       return;
     }
 
-    if (pathname.endsWith("/")) pathname += "index.html";
-    const target = normalize(join(root, pathname));
-    if (!target.startsWith(root)) {
+    let target = normalize(join(root, pathname));
+    const withinRoot = relative(root, target);
+    if (withinRoot.startsWith("..") || isAbsolute(withinRoot)) {
       res.writeHead(403).end("Forbidden");
       return;
+    }
+    if ((await stat(target)).isDirectory()) {
+      if (!pathname.endsWith("/")) {
+        res.writeHead(308, { Location: url.pathname + "/" + url.search }).end();
+        return;
+      }
+      target = join(target, "index.html");
     }
 
     let body = await readFile(target);
@@ -130,6 +153,6 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, "127.0.0.1", () => {
-  console.log("N1GHT CHXN9 preview  ->  http://127.0.0.1:" + port);
-  console.log("live reload: on (watching index.html, css/, js/)");
+  console.log("N1GHT CHXN9 preview  ->  http://127.0.0.1:" + port + basePrefix);
+  console.log("live reload: on (watching index.html, 3d/, css/, js/, myscore/)");
 });

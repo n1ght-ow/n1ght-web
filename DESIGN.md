@@ -1,290 +1,274 @@
 ---
 name: N1GHT CHXN9
-description: 以真实私人馆藏构成的开放记忆雕塑园。
+description: "私人影像志采用独立动画首尾：日光金属环开场，饱和蓝蓝时环景收束。"
 colors:
-  cobalt: "#244be2"
-  cobalt-link: "#2446be"
-  cold-white: "#f8faff"
-  white: "#ffffff"
-  ink: "#1c3154"
-  deep-ink: "#102348"
-  muted: "#4b5d7a"
-  subdued: "#51617b"
-  line: "#d4dceb"
-  cobalt-wash: "#dfe6ff"
-  pale-cobalt: "#edf0ff"
-  archive: "#eae6f5"
-  archive-inset: "#ded8ee"
-  archive-tray: "#dcd5ed"
-  photo-surface: "#e4ecf9"
-  workbench: "#f6d9a0"
-  workbench-inset: "#efd095"
+  folio-sage: "#dce5d5"
+  folio-ink: "#263b32"
+  folio-wine: "#5d2638"
+  folio-paper: "#f9faf6"
+  folio-muted: "#56645b"
+  folio-line: "rgb(38 59 50 / 20%)"
+  folio-soft: "#edf0e7"
+  liminal-day-paper: "#f5f4f0"
+  liminal-day-ink: "#24262b"
+  liminal-day-muted: "#5f6267"
+  liminal-day-line: "rgb(36 38 43 / 18%)"
+  liminal-day-edge: "rgb(36 38 43 / 26%)"
+  liminal-day-print: "#e7e4dd"
+  liminal-blue: "#173be5"
+  liminal-pearl: "#f5f4f0"
+  liminal-rule: "rgb(245 244 240 / 26%)"
 typography:
-  display:
-    fontFamily: "Calistoga, Georgia, Songti SC, serif"
-    fontSize: "clamp(58px, 11.7vw, 174px)"
-    fontWeight: 400
-    lineHeight: 1.04
-    letterSpacing: "-0.035em"
-  headline:
-    fontFamily: "Calistoga, Georgia, Songti SC, serif"
-    fontSize: "clamp(42px, 5.5vw, 80px)"
-    fontWeight: 400
-    lineHeight: 1.12
-    letterSpacing: "-0.025em"
-  title:
-    fontFamily: "Calistoga, Georgia, Songti SC, serif"
-    fontSize: "clamp(23px, 2.4vw, 34px)"
-    fontWeight: 400
-    lineHeight: 1.3
+  hero:
+    fontFamily: "Bricolage Grotesque, PingFang SC, Microsoft YaHei, sans-serif"
+    fontSize: "clamp(88px, 11.8vw, 184px)"
+    fontWeight: 550
+    lineHeight: 0.82
+    letterSpacing: "-0.04em"
+  footer:
+    fontFamily: "Bricolage Grotesque, PingFang SC, Microsoft YaHei, sans-serif"
+    fontSize: "clamp(56px, 6.6vw, 104px)"
+    fontWeight: 500
+    lineHeight: 0.92
+    letterSpacing: "-0.04em"
   body:
-    fontFamily: "Space Grotesk, Helvetica Neue, Arial, sans-serif"
-    fontSize: "15px"
-    lineHeight: 1.8
-  label:
-    fontFamily: "Space Grotesk, Helvetica Neue, Arial, sans-serif"
-    fontSize: "12px"
-    lineHeight: 1.5
-  metadata:
-    fontFamily: "IBM Plex Mono, SFMono-Regular, Consolas, monospace"
-    fontSize: "11px"
+    fontFamily: "Bricolage Grotesque, PingFang SC, Microsoft YaHei, sans-serif"
+    fontSize: "14px–23px"
   poetry:
-    fontFamily: "Georgia, Songti SC, serif"
-    fontSize: "clamp(17px, 1.6vw, 22px)"
-    fontWeight: 400
-    lineHeight: 1.85
-    letterSpacing: "-0.012em"
+    fontFamily: "Georgia, Songti SC, SimSun, serif"
+    fontSize: "18px–52px"
 rounded:
-  sm: "8px"
-  frame: "14px"
-  lg: "24px"
-  pill: "999px"
-  reading: "20px"
-  collection: "22px"
-  map: "28px"
-spacing:
-  compact: "8px"
-  control: "16px"
-  inset: "20px"
-  content: "24px"
-  group: "32px"
-  room: "48px"
-components:
-  button-primary:
-    backgroundColor: "{colors.cobalt}"
-    textColor: "{colors.white}"
-    rounded: "{rounded.pill}"
-    padding: "17px 24px"
-    height: "56px"
-  button-primary-hover:
-    backgroundColor: "{colors.cobalt-link}"
-  button-text:
-    textColor: "{colors.cobalt-link}"
-    padding: "8px 0 8px 12px"
-    height: "44px"
-  route-chip:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.muted}"
-    rounded: "{rounded.pill}"
-    padding: "10px 16px"
-    height: "44px"
-  route-chip-selected:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.white}"
-  archive-tab:
-    textColor: "{colors.ink}"
-    padding: "16px 10px"
-    height: "84px"
-  archive-tab-selected:
-    backgroundColor: "{colors.cobalt}"
-    textColor: "{colors.white}"
-  story-card:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.map}"
-    padding: "clamp(24px, 4vw, 56px)"
-  search-field:
-    textColor: "{colors.ink}"
-    rounded: "{rounded.pill}"
-    padding: "12px 18px"
-    height: "52px"
+  media: "2px"
+  control: "6px"
+  return-arrow: "50%"
+layout:
+  shell: "1600px"
+  gutter: "clamp(20px, 4.5vw, 76px)"
+  hero-height: "clamp(850px, 100svh, 1000px)"
+  footer-height: "clamp(650px, 100svh, 850px)"
+  hero-stage-desktop: "70% × 84%"
+  footer-stage-desktop: "43% wide"
+  mobile-stack: "720px"
+  footer-four-columns: "≤900px"
+  footer-two-columns: "≤340px"
+engine:
+  target-fps: 30
+  desktop-dpr-limit: 1.5
+  desktop-pixel-budget: 1250000
+  mobile-dpr-limit: 1.35
+  mobile-pixel-budget: 650000
+  pointer-turn-limit: 0.1
 ---
 
 # Design System: N1GHT CHXN9
 
-## Overview
+本站同时提供两种浏览模式。本文描述根首页的 Folio／Liminal 普通版；`3d/index.html` 保留独立的万象游乐场，视觉与玩法沿用 [3d/DESIGN.md](3d/DESIGN.md)、[WORLD_INTERACTION_PLAN.md](WORLD_INTERACTION_PLAN.md)。普通版导航中的「进入 3D 世界」与 3D 顶部的「返回普通版」使用真实页面链接。普通版的本地银色 WebGL 雕塑继续保留；Three.js、十件装置和相应纹理仅在 3D 文档加载。路由、来源与验证见 [BROWSING_MODES.md](BROWSING_MODES.md)。
 
-**Creative North Star: "开放的记忆雕塑园"**
+## 01 · Current World
 
-真实照片与私人馆藏是空间里的作品，界面承担路标和展具的工作。冷白底、钴蓝字标、浅紫收藏室与杏色策展桌形成可辨认的场所；不同颜色帮助访客找到正在浏览或制作的内容。
+站点有两条明确边界。中段仍是私人影像志：真实照片、书、诗、画、音乐、影视、体育和游戏决定内容结构。进入页面与离开页面时，视觉暂时离开鼠尾草绿／酒红的 folio 世界，进入独立制作的 liminal 动画空间。
 
-Calistoga 的圆润字形提供雕塑般的展示轮廓，Space Grotesk 保持操作的准确和清晰。真实媒体保留原色，阅读区域使用安静的浅色面。空间允许尺度差、轻微倾斜和照片之间的关系，也给歌曲、诗节与藏品名称留出完整阅读的位置。
+- **开场**：日光珍珠纸上，`N1GHT`／`CHXN9` 分两行，右侧大型扭转银色闭环由原生 WebGL1 SDF/shader 现场生成。
+- **中段**：摄影、收藏和策展继续使用既有 folio 系统与真实内容。
+- **页尾**：同一闭环在饱和蓝 `#173be5` 的蓝时环境中返回，右侧两行大字 `Once more, from the top.` 链接回 `#hero`。
 
-本次替换了旧 Atelier 的墨绿纸面世界。视觉事实以最后加载的 `css/gallery.css`、当前 `index.html` 与章节脚本为准；早先组件和 Atelier 文件继续提供布局与行为兼容。前置文件中的历史色板、印刷错版注释与旧验收表不再定义现行视觉。用户已授权整体改版并委托本次方向；后续新要求仍可改变这一系统。
+首尾是世界边界的例外，不是全站换色。`css/folio.css` 继续提供全局 folio token、导航和中段共享几何；`css/liminal-hero.css` 与 `css/liminal-footer.css` 最后加载，只在 `#hero.liminal-hero` 和 `.footer.liminal-footer` 内覆盖。
 
-**Key Characteristics:**
+前一版的“双照片封面／Another pair”和酒红大 footer 已过期，不再定义当前首尾。旧规则若仍作为组件兼容层存在，也被后加载的 liminal 样式覆盖，不能写进现行视觉说明。
 
-- 用连续的色彩空间区分抵达、收藏与制作。
-- 大型雕塑感展示字与精确的无衬线控件并置。
-- 真实媒体保留自身色彩和身份。
-- 操作有明确选中态、键盘焦点与减少动态模式。
+当前辅助色 `#f5f4f0` 也是浏览器 `theme-color`。原始照片、字体现有文件和中段收藏系统保持原路径。
 
-## Colors
+## 02 · Liminal Color Tokens
 
-颜色由冷白建筑底、深蓝可读文字和明确的钴蓝操作组成；浅紫与杏色是空间定位，不是藏品染色。
+| Token | Value | Current role |
+| --- | --- | --- |
+| `--liminal-day-paper` | `#f5f4f0` | 开场底色、封面导航底色、WebGL day background |
+| `--liminal-day-ink` | `#24262b` | 开场字标、说明、操作和焦点 |
+| `--liminal-day-muted` | `#5f6267` | 开场注释、禁用／减动状态 |
+| `--liminal-day-line` | `rgb(36 38 43 / 18%)` | 开场细规则 |
+| `--liminal-day-edge` | `rgb(36 38 43 / 26%)` | 三张照片纸边 |
+| `--liminal-day-print` | `#e7e4dd` | 照片按钮底色 |
+| `--liminal-blue` | `#173be5` | 页尾整面饱和蓝与 night WebGL background |
+| `--liminal-pearl` | `#f5f4f0` | 页尾大字、导航和环上的纸白高光 |
+| `--liminal-rule` | `rgb(245 244 240 / 26%)` | 页尾边线、圆形返回按钮边框 |
 
-### Primary
+Shader 在银色金属主调上加入冰蓝环境反射和少量 restrained peach／coral 反光。反光属于现场光照与材质，不是可导出的品牌渐变，也不是对中段照片统一套色。
 
-- **钴蓝**：字标、主要入口、选中标签、下载操作与页脚使用 `cobalt`。
-- **链接钴蓝**：文字操作和主要按钮悬停使用 `cobalt-link`，区分可点文字与背景色块。
-- **钴蓝浅底**：摄影模式切换和部分选择反馈使用 `cobalt-wash`、`pale-cobalt`。
+## 03 · Typography
 
-### Secondary
+首尾仍使用自托管 Bricolage Grotesque，但字号和密度脱离中段章节标题。
 
-- **浅紫收藏室**：`archive` 是八个房间共享的背景；`archive-inset` 与 `archive-tray` 表达书架、诗歌目录和标签托盘的层次。
-- **杏色工作台**：`workbench` 识别制作区域，`workbench-inset` 承托导出预览。
-- **冷蓝摄影面**：`photo-surface` 承托空间印样，画面保持原片颜色。
+- **Hero wordmark**：两个独立行 mask；桌面 `clamp(88px, 11.8vw, 184px)`、字重 `550`、行高 `.82`、字距 `-.04em`。手机 `clamp(62px, 18.6vw, 84px)`、行高 `.84`。
+- **Hero description**：桌面 `clamp(18px, 1.5vw, 23px)/1.32`，手机 `18px/1.28`。
+- **Footer return**：两行 `Once more,`／`from the top.`；桌面 `clamp(56px, 6.6vw, 104px)`、字重 `500`、行高 `.92`；`≤900px` 使用 `clamp(44px, 12.3vw, 72px)/.96`。
+- **Interface labels**：入场、motion、footer nav 和辅助说明使用 `11px–15px`，保持 Bricolage Grotesque 的直接字形。
+- **Middle-site poetry**：继续使用 Georgia／Songti SC，不因首尾动画改成展示无衬线。
 
-### Neutral
+`N1GHT` 与 `CHXN9` 位于一个 `h1` 内，并通过两个 `.liminal-word > span` 做 mask 入场；原 `h1` 保留可读名称 `N1GHT CHXN9`。
 
-- **冷白与白色**：`cold-white` 是页面和详情面，`white` 是照片纸边、故事编辑面与浅色导出画纸。
-- **深蓝墨色**：`ink` 用于正文，`deep-ink` 用于深色海报与遮罩基色。
-- **次级文字**：`muted` 用于说明和元信息；`subdued` 保留基础组件中较弱的语义文字角色。
-- **细线**：`line` 供题签、目录和表单边界使用，不能替代可见焦点。
+## 04 · Hero Layout
 
-**The Room Color Rule.** 色彩首先说明所在空间和当前操作；照片、封面和书籍内容不被统一套上品牌滤镜。
+`#hero.liminal-hero` 是全宽、无框架的日光场景：
 
-本轮计算核对了白色文字与钴蓝、次级文字与收藏室、次级文字与工作台、正文与冷白的组合，分别约为 6.60、5.45、4.88、12.44。它们只说明这些组合的文字对比度，不构成所有内容、状态或像素的完整审计。
+- 高度：桌面 `clamp(850px, 100svh, 1000px)`；手机 `clamp(820px, 100svh, 900px)`。
+- 导航高 `72px`；`≤540px` 时沿用两行导航的 `96px` header token。
+- WebGL stage：桌面 `right: -3%`、`width: 70%`、`height: 84%`；不套外框，占据右侧主要空间。
+- 文字 lead：占 `min(64%, 900px)`，左对齐并以 `Step inside` 进入 `#photo`。
+- 底部控制行：三张照片按钮在左、46 张照片说明在中、共享 motion 按钮在右。
+- 三张照片按钮使用 `58–74px × 72–92px`，保留轻微错角；hover／focus 时回到正面并抬升。
 
-## Typography
+`721px–900px` 单独修正 stage 到 `right: -1%`、`width: 76%`，让桌面式左右构图在平板宽度完整保留，避免右侧闭环裁切。
 
-**Display Font:** 本地 Calistoga，回退 Georgia、Songti SC、serif。
+`≤720px` 时改为上下 stack：文字在上，stage 位于约 `330–340px` 后并占 `360px` 高，照片和 motion 控制落到最下方。`≤390px` 保持同样的 stack，仅收紧照片按钮和间距。
 
-**Body Font:** 本地 Space Grotesk，回退 Helvetica Neue、Arial、sans-serif。
+开场导航未滚动时使用珍珠纸与 charcoal；这是 liminal hero 的局部特例。离开首屏后的导航仍回到 folio 既有表面。
 
-**Label/Mono Font:** 本地 IBM Plex Mono，用于照片编号、部分阅读元信息和导出题签。
+## 05 · Closing Layout
 
-**Character:** 展示文字圆润而有体积，界面文字紧凑而直接。中文由适合该角色的回退字体呈现；藏品保持原始中文或其他语言，界面操作继续使用英语。
+`footer#closing` 以 `#173be5` 覆盖整面：
 
-### Hierarchy
+- 桌面高度 `clamp(650px, 100svh, 850px)`。
+- 左侧 stage 占 `43%`、最小 `360px`，展示蓝时银环。
+- 右侧返回链接宽 `min(61%, 900px)`，两行大字与一个 84px 圆形箭头组成；整个链接返回 `#hero`。
+- 底部规则线上方是 `N1GHT CHXN9` 品牌、四个导航链接和共享 motion 按钮。
+- 四个 navigation 为 Photography、Collection、Curate、MyScore，常用控件保持至少 44px 高。
 
-- **Display**：首屏两段字标，参数见 frontmatter；桌面横排，窄屏分成两行。
-- **Headline**：摄影、收藏与策展的章节标题。策展标题另有适应自身宽度的局部尺寸，不把标题压进一个统一字号。
-- **Title**：房间名称、目录入口及选中照片的标题；诗名也使用展示字角色。
-- **Body**：必要的说明、错误与操作反馈使用无衬线正文；手机按真实宽度换行。
-- **Label / Metadata**：操作名与元信息由字重、位置和字体角色区分。小编号不是独立装饰段落。
-- **Poetry**：正文保留 Georgia／Songti SC 的阅读衬线角色及完整诗节；诗歌标题与正文分别承担展示和阅读。
+`≤900px` 时页尾也改为纵向：环景先占满宽度的 `280–320px`，文字与返回按钮随后排列，品牌和 motion 同排，footer links 变成四等分列。
 
-书脊、原有封面和数据中的装订字体继续服务作品本身，不把展示字体强行覆盖到每一本书。Instrument Serif 的历史文件不代表它仍是首屏标题或全站展示字。
+`≤340px` 时 footer links 变成两列；因此在 `320px` 视口中四项导航以 2×2 排列。
 
-**The Content Type Rule.** 展示字建立空间性格，正文和控件保障阅读；真实书名、歌曲名、作者和诗节不能为了构图被删改。
+## 06 · Middle-Site Continuity
 
-## Layout
+本轮不改中段摄影、收藏和策展，也不改 `/myscore/`：
 
-共享版心上限为 1600px，页边距采用 `clamp(20px, 4.5vw, 72px)`；章节间距按内容调整。标题与说明在桌面并排，较窄屏幕单栏。不要把标题、父容器与组件的间距重复相加。
+- 46 个原始 `.photo-frame` 及 `data-photo-index=0–45` 继续服务摄影区和策展。
+- 摄影仍有 Contact sheet／All frames、路线筛选、键盘切换和共享详情。
+- Archive 仍有 Books、Poems、Paintings、Music、Sport、Series、Films、Games 八室，`.tab-panels` 保持 `#archive` 直属子元素。
+- Curator 仍是三张不同照片加 Book／Film／Series／Song 四件收藏，三种布局导出 `1200 × 1800` PNG。
+- `/myscore/` 仍是独立中文赛事操作面与深浅主题。
 
-首屏为两段钴蓝字标、中央拱形照片及两张偏轴小照片；中央照片高度采用 `clamp(310px, 32vw, 460px)`。底部只保留主题句与入口，侧照片不再配说明。三个目录入口使用标题与箭头；章节标题独立呈现，不再重复介绍。
+hero 的三张小照片是同一批 46 张收藏的前三个入口，不制造新的封面图片集；它们分别使用稳定 frame 索引 `8`、`32`、`35`。
 
-摄影沿用空间地图和完整索引两种模式。地图桌面高度采用 `clamp(430px, 42vw, 620px)`，小屏为 420px；索引根据宽度减少列数。照片选择与 Curate 共用同一份七件作品草稿和预览。收藏的八个标签与 `.tab-panels` 保持既有结构：后者是 `#archive` 的直接子元素。Poems 始终在 Archive 的面板内阅读；新增的第八类 Paintings 入口位于 Poems 之后。
+## 07 · Shared Liminal Engine
 
-策展区域桌面使用编辑区与预览区两列，三张照片与书、电影、剧集、歌曲共用一个工作台；七件作品按一条序列排序，桌面以前三件和后四件排成两行。宽度不超过 1100px 时预览落到编辑区下方；不超过 720px 时章节头、首屏与目录调整为手机构图，侧边首屏照片隐藏，藏品槽和标签在各自容器内横向浏览。不超过 360px 时导航间距和局部标题进一步收紧，导航文字仍保留完整名称。
+`js/liminal-light.js` 是首尾共用的 `window.LiminalLight`：
 
-此前整站改版曾在 1440×1000、390px 和 320px 对相关页面与当时的七个标签走查。2026-10-25 的 Paintings 局部扩展另以 Edge 无头浏览器在 1440、887、390、320px 宽验证：十二幅画、八个分类、目录键盘操作、快速切换、揭幕与减少动态、查看器缩放拖动、Escape 与焦点返回，以及模拟加载失败后的 Retry 均通过；未出现新增控制台异常或本地资源加载失败。记录见 `.impeccable/review/paintings/checks.json`、`edge-checks.json` 及同目录的 `desktop`、`user-887`、`mobile`、`narrow` 页面与查看器截图。此次范围仅为 Archive 扩展，未覆盖真机、性能或全面无障碍验收；后续改变布局仍需重测。
+- 原生 WebGL1 fragment shader 以 SDF 和 ray-march 绘制扭转闭环；形状随时间轻摆、扭转并保留中心孔。
+- day／night 两个 `data-light-scene` 使用同一程序，由 `uScene` 切换日光珍珠与蓝时环境。
+- 一个共享 RAF 服务所有可见 WebGL 场景，目标间隔为 `1000 / 30ms`，不叠加每个场景自己的 timer。
+- IntersectionObserver 只让进入视口的场景绘制；场景离开后若没有其他可见 WebGL 场景，循环立即停止。
+- `document.hidden` 时停止；恢复可见且未暂停时再启动。
+- 桌面 DPR 上限 `1.5`、像素预算 `1,250,000`；手机／粗指针 DPR 上限 `1.35`、预算 `650,000`。
+- pointer 让闭环朝指针轻微转向，水平与垂直最大偏移各为 `±0.1`；触摸不触发该效果。
+- `LiminalLight.getState()` 暴露 `running`、`paused`、`reduced`、可见场景以及各场景 `frames`，供实际 QA 判断循环是否停、帧是否增长。
 
-## Elevation & Depth
+### Shared motion controls
 
-以色面分区、作品尺寸、拱形裁切与少量柔影建立深度。首屏和收藏托盘本身不靠硬错位阴影，空间照片的纸边、故事画纸、策展预览和弹窗允许柔影表达物件与背景的关系。阴影和运动的精确参数在 sidecar 扩展中记录。
+hero 与 footer 共用 `LiminalLight.toggle()`。`js/atelier-hero.js` 监听 `liminal:motion-state`，同步全部 `[data-motion-toggle]` 的文案、`aria-pressed` 与 disabled 状态：
 
-### Shadow Vocabulary
+- running：`Pause motion`；
+- paused：`Resume motion`；
+- reduced：`Motion reduced`，按钮 disabled。
 
-- **共享浮起面**：`0 14px 36px rgb(16 35 72 / 12%)`，来自现行共享浮起 token。
-- **空间印样**：`0 9px 25px rgb(16 35 72 / 13%)`，帮助分辨地图上重叠照片。
-- **策展选择器**：`0 24px 80px rgb(16 35 72 / 25%)`，配合深蓝遮罩建立前景层。
+`prefers-reduced-motion: reduce` 下引擎不启动连续 RAF，只在场景可见时绘制静帧；GSAP 入场和首尾视差也改为无动画状态。正常与 reduced preference 切换时会同步停止或恢复。
 
-**The Object Depth Rule.** 深度用于说明照片、画纸和弹窗的空间关系；普通文字与房间底色保持稳定。
+### Failure behavior
 
-首屏按字标、画框、图注与入口依次出现；换图先解码，再以约 0.6 秒的裁切进入。章节标题只进入一次。持续变化由各组件负责，布局刷新沿用共享机制。减少动态偏好下保留完整内容与全部操作，不要求访客等待动画才能阅读。
+WebGL context 创建失败、shader／program 失败或人为 `WEBGL_lose_context` 时，当前 canvas 立即替换为 Canvas2D 静态银色闭环 fallback。fallback 使用同一日光／蓝时背景和银色、冰蓝、少量 peach／coral 反光。重新加载页面会重新尝试 WebGL，恢复正常绘制。
 
-## Shapes
+## 08 · Hero Motion
 
-圆润的建筑开口与圆角展具共存。共享框体、较大的弹窗、阅读面与地图的常用圆角见 frontmatter；按钮、路线和流派标签使用胶囊。收藏区域的大上圆角将房间连成连续空间，而不是一排独立卡片。
+- 每次加载只执行一次入场：stage 从 `scale(.965)`、`alpha(.84)` 进入；两行字标从 mask 下方错峰显现；说明、入口、底部和照片随后进入。
+- 正常动效下使用 ScrollTrigger：字标轻微上移 `-3.5%`，stage 向下位移 `6%`，均使用 scrub 视差。
+- 暂停时入场直接到最终帧，视差 tween 与 trigger 暂停；恢复时继续。
+- reduced 时清除首屏 transform／opacity 并静态呈现，不等待动画才能阅读或操作。
 
-首屏中央框采用顶部大拱、底部小圆角，桌面为 `160px 160px 16px 16px`，手机为 `90px 90px 14px 14px`。侧照片采用 `80px 80px 10px 10px`。照片和外框只在一个可见边界上裁切；书本保留装订需要的小圆角，圆形按钮保持圆形。现行共享 `corner-shape` 为 `round`。
+## 09 · Closing Motion
 
-## Components
+`js/liminal-footer.js` 只拥有章法，不拥有 WebGL：
 
-### MyScore 网页赛事空间
+- footer 接近视口时触发一次：stage 由 `scale(1.08)` 收进，标题两行从 mask 下方错峰出现，圆形箭头淡入，底部导航上移。
+- footer 与 hero 共用 motion state；暂停时已完成或正在执行的 reveal 直接落到最终帧。
+- reduced 时以静态顺序显示完整文字与导航。
 
-`/myscore/` 是与馆藏并列的中文操作页面，使用独立的局部样式和脚本，以蓝白操作层、冷蓝底色与深蓝文字组织内容。局部字体名 Score Sans 实际复用仓库的 Space Grotesk，中文回退至平台无衬线；不使用艺术馆的展示字体系。首屏由小型全站导航、紧凑的日历／工具行、赛事目录和真实赛程直接衔接，日期是可操作控件，不再采用大标题与大日期的展示构图。赛程与详情同样重要，共享上下文只在最近的共同父级出现一次，每个元素沿明确的文字、数字或媒体列轴对齐。局部 token 与组件规格见 `myscore/DESIGN.md` 和 `myscore/.impeccable/design.json`，不替换艺术馆的根 token。
+## 10 · Components And Interaction
 
-赛程按来源与赛事组织；同一来源中的连续同名赛事使用一次分组标题。桌面比赛行最小高度为 72px，时间、两队、比分与播放各占稳定列轴；手机改为最小 92px 的两队上下行，保留时间、状态、真实队徽、比分和播放入口。详情以 1280px 阅读宽度组织，比赛／日期元信息、对阵和正文导航直接连接；移动端重排内容而不省略数据。
+### Hero prints
 
-比赛和球队使用可分享地址的独立阅读视图。比赛详情按来源已提供的内容显示比分、横向内容导航、比赛信息、球场阵容、对照统计和横向表格；未提供的字段保持未知，表格首列固定，列名支持排序。球员资料和播放选项使用原生弹窗，关闭后恢复焦点。页面保持浏览器原生链接、历史记录与文档滚动。默认浅色，深色使用同样的构图。具体方向记录在 `.impeccable/myscore-brief.md`；实际验证范围见 `myscore/VERIFICATION.md`。
+三张照片都是真实 `<button>`，点击后调用共享 `openDetail('photo', frame, trigger)`。Escape 或正常关闭后，焦点回到对应的 hero 照片按钮。
 
-详情以比赛报告组织内容，由 `myscore/presentation.mjs` 和后置的 `myscore/reading.css` 负责字段取舍与阅读布局。总览优先显示实际地图／小局结果、关键统计和选手表现，有数据才生成对应区域；比赛资料按三列排列，手机改为两列，赛事奖金、战队排名和场馆照片在「更多赛事资料」中阅读。来源排名与 VRS 排名按队伍成行，避免长标签挤占窄列。独立的「赛季与交锋」区分赛季资料与本场表现。
+### Step inside
 
-核心选手表隐藏全空、重复与内部字段，保留真实零值；更多技术指标集中在「深入数据」，长文字实录在「完整进程」展开。LoL 先给出双方共享的资源对照，每队使用一次列标题，选手身份、真实头像、英雄、KDA、资源与装备沿相同网格排列；桌面选手行最小 64px，不在每位选手旁重复可见的资源标签。手机改为最小 108px 的三层记录，整套装备仍直接可见；最小可见字号为 11px。人物资料先展示身份、出装与关键数据，其余按统计类型分组，未发生的布尔标志不占用界面。排序按列名保存，刷新继续保持选手对应关系、排序与展开状态。图片失败显示文字标识，足球照片可回退到严格核验的 FPL 图像。
+`Step inside` 是普通锚点，指向 `#photo`，不借用 WebGL canvas 作为点击区域。canvas stage 对辅助技术隐藏，主内容完全由 HTML 提供。
 
-图片由 `myscore/images.mjs` 选择已验证的 CDN 缩略图：ESPN 队徽与头像、5E OSS 图像按展示尺寸缩小，弹窗保留较高清晰度，缩略图失败自动退回原地址。详情队徽与弹窗头像优先请求，每次渲染最多提前读取十二张主要头像和十二张列表队徽，其余及折叠明细继续懒加载。按赛事预连接图片来源；排序和数据刷新复用同地址图片节点，保留已完成或正在进行的加载。未知来源、带查询参数的地址和 LOL 原图不做未经验证的变换。
+### Motion toggle
 
-双队比较由 `myscore/comparison.mjs` 定义指标方向：优势数字用绿 `#14713f`，劣势数字用红 `#b42332`，深色模式分别使用 `#70dba0`、`#ff929c`。犯规、红黄牌、失误等越少越优，命中／出手组合按命中率比较，悬停及辅助标签说明判断依据；相同、缺失和无明确优劣含义的数据保持中性。终场比分按胜负着色，进行中的比分保持中性；足球普通平局不着色，点球决胜保留主比分的平局颜色，仅单独的点球比分标出胜负。分节、地图和资源对照使用同一套颜色，排序不会改变队伍与颜色的对应。
+首尾两个按钮共享状态，不能各自启动或停止一套私有循环。任一按钮切换后，两处文案同时变为 Resume／Pause；reduced 下两处同时 disabled。
 
-浏览器与收藏图标使用 `assets/icons/night-enamel-*`：钴蓝珐琅圆角底、象牙白 N 字母与新月，字母局部呼应拱门。高清透明原图由内置图像生成工具生成，提示词与导出说明保存在 `assets/icons/night-enamel-prompt.txt`；PNG 与多尺寸 ICO 从原图导出，Apple Touch Icon 使用冷白底。旧 `night-mark` 素材保留，页面内的线性操作图标沿用现有实现。
+### Return link
 
-以下组件的可独立渲染 HTML／CSS 规格位于 `.impeccable/design.json` 的 `components`，共八个代表样式；其中的 SVG 路径直接内联，样式含悬停与可见焦点，不依赖框架或外部图片。
+页尾大标题和圆形箭头共同组成一个链接，可读名称为 `Back to the beginning`，目标为 `#hero`。视觉上的大字不适合作为唯一小点击面，箭头、整行链接和键盘焦点共同保证操作明确。
 
-### Buttons
+### Context fallback
 
-主要入口是一枚明确的钴蓝胶囊，文字和线性 SVG 同行；悬停进入链接钴蓝。轻操作使用文字与同族线性 SVG，不人为增加一个厚重面。等待换图时按钮禁用并提供忙碌信息；下载不可用时沿用组件的禁用反馈。摄影和策展控件的局部焦点样式仍由组件定义，不假定所有控件都只有一个全局焦点环。
+fallback 是同一构图与同一语义的降级，不是空白占位；它阻止 context-loss 默认行为并立即绘制静态环。fallback 和 WebGL canvas 都保持 `aria-hidden`，不增加重复朗读。
 
-### Chips
+## 11 · Source Map
 
-摄影路线默认白底、次级文字，选中使用深蓝墨色与白字；模式切换和音乐流派的选中态使用钴蓝。状态继续通过 `aria-pressed`、既有选中 class 和控件名称表达。路线计数来自真实照片数据。
+| Surface | Source |
+| --- | --- |
+| Hero HTML | `index.html` → `#hero.liminal-hero` |
+| Footer HTML | `index.html` → `footer#closing.liminal-footer` |
+| Hero visual | `css/liminal-hero.css` |
+| Footer visual | `css/liminal-footer.css` |
+| Engine and shader | `js/liminal-light.js` |
+| Hero behavior | `js/atelier-hero.js` |
+| Closing reveal | `js/liminal-footer.js` |
+| Shared middle tokens | `css/folio.css` |
+| Middle photography | `css/folio-photo.css`、`js/atelier-photo.js` |
+| Middle archive | `css/folio-archive.css`、archive scripts |
+| Curator | `css/folio-curate.css`、`js/curator-desk.js` |
+| MyScore | `myscore/folio.css`、`myscore/app.mjs` |
 
-### Cards / Containers
+加载顺序以 `index.html` 为准：GSAP、ScrollTrigger 和既有组件先加载，`liminal-light.js` 在 `atelier-hero.js` 之前建立共享引擎，`liminal-footer.js` 最后初始化页尾章法。
 
-空间印样使用白纸边与柔影；Curate 以白色展具统一呈现三张照片与四件藏品，不再单独显示 Story 编辑区。图片按组件需要选择完整呈现或浏览裁切，导出保持作品身份和标题。
+## 12 · Asset And Dependency Policy
 
-### Inputs / Fields
+- 没有新增生产依赖。
+- 没有新增或修改 raster、照片或字体文件。
+- 首尾新艺术由 `js/liminal-light.js` 中的 GLSL 和 Canvas2D fallback 现场生成。
+- 三张 hero 小照片复用既有所有者收藏文件，没有生成、裁切或重制新照片。
+- 当前 favicon 仍为 `assets/icons/folio-mark.svg`；Apple Touch Icon 仍单独使用既有 `assets/icons/night-enamel-apple-180.png`。
+- 逐项来源见 `.impeccable/asset-provenance.json`。
 
-音乐搜索是浅色胶囊输入，保持独立可读名称、占位文字与聚焦反馈。策展表单沿用明确标签与底线输入：标题具有展示字角色，说明采用有内边距的正文区域；焦点加深底线或左边界。编辑框与选择器继续保留移动端输入大小和可读反馈。
+## 13 · Verification Status
 
-### Navigation
+本轮 liminal 首尾已按 `checked_at_scope` 验证；状态为本轮指定范围，不是最终 finish review。
 
-顶部完整显示 Photography、Archive、Curate；品牌与链接共同使用清晰的无衬线字号。顶部导航有冷白底，在滚动时收紧并出现轻柔阴影。目录使用展示字标题与箭头。收藏标签只保留类别名称，选中为钴蓝面；标签下显示实际藏品数量与随机图标，去掉房间副标题和介绍。手机在标签容器内浏览，不让整页横向溢出。
+### Browser and engine checks
 
-### Reading & Making
+- `1440`、`1024`、`768`、`390`、`320px` 五档均无 document 横向溢出。
+- 五档两个场景都进入 `webgl` 状态；对应结果见 `.impeccable/review/liminal/responsive.json`。
+- Pause 后 day scene `frames` 从 `403` 到 `403` 保持不变，`running:false`；两个按钮同步显示 Resume。
+- Archive 可见时 `visible:[]`、`running:false`；Night footer 独立进入后 `frames:3`，说明离屏 scene 不继续贡献 RAF。
+- `Step inside` 可进入摄影；hero 照片打开 lightbox 后，Escape 关闭并回到原按钮。
+- 从 footer 返回 `#hero` 后最终 `scrollY=0`。
+- 通过 `WEBGL_lose_context` 实际触发 day fallback；截图 `hero-fallback.jpg` 已打开核对。Reload 后 WebGL 正常恢复。
+- 正常与 reduced preference 切换时，引擎、按钮和静态帧状态同步。
+- 三个变更脚本 `js/liminal-light.js`、`js/atelier-hero.js`、`js/liminal-footer.js` 通过 `node --check`。
+- 正常流程暂未记录 JavaScript error；context-loss 属于人工故障注入测试。
 
-诗歌目录与阅读区位于同一浅紫内面，选中行有浅底与短竖线；阅读区保持原位切换、完整诗节、前后篇和键盘导航，窄屏按诗节原序单栏。
+### Visual evidence
 
-Paintings 在原有浅紫收藏室内呈现十二幅真实公版世界名画。桌面以左侧完整画幅展墙、右侧中英画名、作者、年代、媒材、馆藏链接与原创观画短文组成主视图，下方为缩略目录及图像来源链接；窄屏将画面和题签依次堆叠，目录在自己的容器内横向滚动。画作保留原比例和色彩，白色画边与柔影建立作品和展墙的层次；此为本栏目布局，不新增全站 token 或视觉规则。
+`.impeccable/review/liminal/` 含：
 
-切换作品等待图片加载与解码，再用现有 GSAP 完成按方向展开的揭幕和题签错峰进入；减少动态模式即时切换。独立原生 `dialog` 提供全屏查看、适屏与两倍缩放、鼠标拖动和触摸滚动；适屏时方向键切换作品，Escape 关闭并将焦点返回画作入口，滚动锁定沿用共享 overlay 机制。加载失败显示 Retry。主图在首次进入栏目及选择作品时准备，并预加载下一幅；缩略图使用懒加载，不在首页立即载入全部主图。
+- `hero-1440.jpg`、`hero-1024.jpg`、`hero-768.jpg`、`hero-390.jpg`、`hero-320.jpg`
+- `footer-1440.jpg`、`footer-1024.jpg`、`footer-768.jpg`、`footer-390.jpg`、`footer-320.jpg`
+- `hero-fallback.jpg`
+- `responsive.json`
 
-Curate 统一三张不同照片与书、电影、剧集、歌曲，共七个槽位。它们共用标题、署名、说明、排序、删除、重置撤销、浏览器草稿与 1200×1800 PNG 导出；支持中文搜索、键盘和拖拽排序、三种海报布局。默认海报以第一件为主图，随后两件为副图，后四件在同一画纸下方；图像保留原比例完整显示，标题和编号直接印在画纸上，不使用大块衬底。排序改变后预览与导出保持一致。右侧预览去掉外层黄框，通过图标按钮放大同一张海报；弹窗支持 Escape、背景点击和关闭后焦点返回。旧 Story 照片与旧策展草稿首次迁入统一草稿，照片去重，上限三张。浅色海报使用白底与深蓝文字，After dark 使用深蓝底与浅色文字；两者都使用当前展示字与界面字体。预览和下载等待字体与图像，失败允许重试。
+本轮验证报告已写入同目录的 `VERIFICATION.md`；`motion-checks.json` 记录正常运动、暂停及离屏状态。`hero-motion.jpg` 与 `footer-motion.jpg` 是普通动画运行时刻的成稿截图。关键文字组合已计算：炭黑／珍珠白 `13.76:1`、次级文字／珍珠白 `5.56:1`、珍珠白／蓝 `6.83:1`；只代表这些组合。
 
-共享照片／音乐详情使用冷白面与深蓝遮罩；打开后的 Escape、方向键和关闭后的焦点返回继续服务浏览。控件图标由 `js/atelier.js` 统一为线性 SVG。换图、随机、居中、查看、加入策展、前往策展、重置与关闭使用 44px 图标按钮；保留可访问名称、悬停提示与焦点。撤销状态同步更新图标及名称。照片添加使用书签图标、Add photo 短标签与 0/3 计数；照片区、照片详情与 Curate 共用状态，满三张后禁用新增，可在策展桌替换或删除。照片区另有前往策展桌的图标入口。导航、分类、表单标签和作品名称保留文字；下载按钮简化为 Save PNG。空策展槽以加号表示选择，存储错误与操作结果仍提供文字反馈。
+此前 folio／MyScore 的 QA 不构成本轮新动画的证明。本轮未测真机、`200%` 放大、实际屏幕阅读器、WebGL 性能基准、所有 GPU／浏览器组合或无动画环境的无障碍穷举。
 
-详情打开的解码准备最多等待 1.5 秒；关闭时最多等待 200 毫秒，超时采用淡出并恢复焦点。首屏换图使用与展示图一致的 `srcset` 和 `sizes` 预加载。摄影、影视与游戏拖拽按帧合并绘制，正常释放保留最后一次指针位置；摄影在页面隐藏时结束拖拽，影视在窗口尺寸变化时取消旧手势，游戏失去窗口焦点后停靠到最近藏品。影视与游戏面板仅在实际高度变化时请求共享布局刷新，隐藏面板不触发这类刷新。策展导出等待字体最多 8 秒，超时恢复编辑控件并提示重试。
-
-策展拖拽每帧合并指针更新，释放时先处理最后一次移动；取消、失焦或页面隐藏时清理待绘制帧。照片状态通知仅在照片选择或导出忙碌状态变化时发送，排序与其他藏品替换不重绘摄影区域。摄影章节按实际高度变化请求共享刷新，涵盖窄屏照片标题换行；顶部导航仅在活动章节变化时更新选中状态。旧照片扇形牌组、平滑自定义光标、签名字形数据及其独立样式已移除，当前入口与章节脚本继续负责对应功能。
-
-原始照片和现有封面是改版前的所有者提供素材，保留原文件。首屏火箭图继续使用既有原图与响应式 WebP，切换视图从真实照片集中取图。Paintings 新增来自 Wikimedia Commons 的公版画作复现：`assets/paintings/` 内含十二张主图与十二张 240px 缩略图，主图长边约 1280–2000px，二十四张 WebP 共 9,507,050 字节。逐画来源、权限与尺寸记录见 `assets/paintings/sources.json`，每张 WebP 也嵌入 XMP 来源和权限信息；全站素材索引见 `.impeccable/asset-provenance.json`。
-
-## Do's and Don'ts
-
-### Do:
-
-- **Do** 用房间底色、钴蓝操作和真实媒体共同建立方向感。
-- **Do** 按展示、界面、诗文与藏品本体分配字体角色。
-- **Do** 保留英语界面与藏品原始名称，使用完整标题测试真实窄屏。
-- **Do** 维护八个收藏面板、浏览详情、七件统一策展的完整操作循环。
-- **Do** 检查焦点、键盘、减少动态和导出结果；改变背景时重新计算相关文字组合。
-
-### Don't:
-
-- **Don't** 将前置样式文件中的旧墨绿 token、印刷错版注释或历史审计当作现行视觉事实。
-- **Don't** 为导航和目录添加只重复标题的编号、装饰眉题或难辨认的字形图标。
-- **Don't** 为统一风格给真实照片套品牌滤镜，或替换藏品的原始名称与身份。
-- **Don't** 将诗歌从 Archive 拆成独立章节，或改变 DOM 后遗漏查找、焦点与 ARIA 契约。
-- **Don't** 把本轮局部对比度和浏览验证表述为全站性能或完整无障碍审计。
+主模型最后复测与独立 finish review 已完成；终审结论为 `ship`，本轮首尾没有必须修复项。该结论仅覆盖上述证据范围，短屏底部内容允许少量纵向滚动。

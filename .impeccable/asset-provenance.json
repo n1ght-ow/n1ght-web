@@ -1,31 +1,198 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-09",
-  "policy": "No owner photography was generated, sourced externally, or modified during the original gallery redesign; existing owner photographs and collection media retain their original files and content IDs. The later generated brand icon and public-domain Paintings extension are recorded separately below.",
-  "opening": [
-    {"path": "hero/launch-original.jpg", "origin": "Pre-existing owner-provided opening photograph; responsive variants hero/launch-800.webp, hero/launch-1600.webp, hero/launch-2400.webp already existed."},
-    {"path": "photo/wall/1779456446231.webp", "origin": "Pre-existing photograph 08 in the owner collection; used as a satellite and opening-view alternative."},
-    {"path": "photo/wall/1789470372631.webp", "origin": "Pre-existing photograph 09 in the owner collection; used as a satellite and opening-view alternative."}
+  "updatedAt": "2026-11-18",
+  "scope": "Liminal animated hero and closing",
+  "policy": {
+    "newProductionDependencies": false,
+    "newRasterAssets": false,
+    "photographFilesGenerated": false,
+    "photographFilesModified": false,
+    "fontFilesChanged": false,
+    "imageGenerationToolUsed": false,
+    "artworkOrigin": "All opening and closing artwork is authored in GLSL by js/liminal-light.js and rendered at runtime. The fallback ring is authored in Canvas2D in the same source file.",
+    "middleCollection": "The photography, archive, curator, and MyScore media paths were not changed by this pass."
+  },
+  "liminalHero": {
+    "scene": "day",
+    "background": "#f5f4f0",
+    "artwork": "Native WebGL1 SDF/ray-marched silver loop with icy-blue and restrained peach/coral reflections",
+    "temporaryCanvas": "canvas.liminal-canvas",
+    "fallback": "Canvas2D static silver loop",
+    "wordmark": "N1GHT and CHXN9 use the existing self-hosted Bricolage Grotesque",
+    "prints": [
+      {
+        "path": "photo/wall/1789470372631.webp",
+        "stableFrameIndex": 8,
+        "origin": "Pre-existing owner photograph; reused without editing"
+      },
+      {
+        "path": "photo/wall/1791482278864.webp",
+        "stableFrameIndex": 32,
+        "origin": "Pre-existing owner photograph; reused without editing"
+      },
+      {
+        "path": "photo/wall/1791482278899.webp",
+        "stableFrameIndex": 35,
+        "origin": "Pre-existing owner photograph; reused without editing"
+      }
+    ],
+    "printBehavior": "Each print is a button that opens the existing shared photo detail by stable frame index."
+  },
+  "liminalFooter": {
+    "scene": "night",
+    "background": "#173be5",
+    "artwork": "The same native WebGL1 SDF sculpture under a blue-hour studio environment",
+    "fallback": "Canvas2D static silver loop on #173be5",
+    "copy": [
+      "Once more,",
+      "from the top."
+    ],
+    "returnTarget": "#hero",
+    "navigation": [
+      "Photography",
+      "Collection",
+      "Curate",
+      "MyScore"
+    ]
+  },
+  "artworkSources": [
+    {
+      "path": "js/liminal-light.js",
+      "origin": "Code-authored WebGL1 vertex/fragment shaders, SDF scene, shared RAF, visibility controls, pointer turn, reduced-motion behavior, and Canvas2D fallback",
+      "externalAsset": false
+    },
+    {
+      "path": "js/atelier-hero.js",
+      "origin": "Hero one-time entrance, scroll parallax, photo button wiring, and shared motion-control synchronization",
+      "externalAsset": false
+    },
+    {
+      "path": "js/liminal-footer.js",
+      "origin": "Closing one-time reveal and shared motion-state handling",
+      "externalAsset": false
+    },
+    {
+      "path": "css/liminal-hero.css",
+      "origin": "Hero-local pearl, charcoal, print, stack, motion-control, and focus rules",
+      "externalAsset": false
+    },
+    {
+      "path": "css/liminal-footer.css",
+      "origin": "Footer-local saturated blue, pearl type, ring stage, and responsive navigation rules",
+      "externalAsset": false
+    }
   ],
+  "engine": {
+    "global": "window.LiminalLight",
+    "renderer": "WebGL1",
+    "targetFramesPerSecond": 30,
+    "sharedRaf": true,
+    "visibleScenesOnly": true,
+    "stopsWhenDocumentHidden": true,
+    "desktop": {
+      "dprLimit": 1.5,
+      "pixelBudget": 1250000
+    },
+    "mobile": {
+      "dprLimit": 1.35,
+      "pixelBudget": 650000
+    },
+    "pointerTurnLimit": 0.1,
+    "diagnostics": "LiminalLight.getState() reports running, paused, reduced, visible scenes, and per-scene frames",
+    "control": "LiminalLight.toggle() is shared by both data-motion-toggle buttons",
+    "contextLoss": "Immediate Canvas2D static ring fallback; reload retries WebGL",
+    "reducedMotion": "Static visible frame; shared motion buttons are disabled with Motion reduced"
+  },
   "fonts": [
-    {"path": "fonts/Calistoga-latin.woff2", "origin": "Pre-existing self-hosted Calistoga font in the repository; newly enabled for gallery display typography."}
+    {
+      "path": "fonts/BricolageGrotesque-latin.woff2",
+      "family": "Bricolage Grotesque",
+      "status": "existing file reused unchanged",
+      "source": "Google Fonts",
+      "sourceUrl": "https://fonts.gstatic.com/s/bricolagegrotesque/v9/3y9K6as8bTXq_nANBjzKo3IeZx8z6up5BeSl9D4dj_x9PpZBMlGIInE.woff2",
+      "license": "SIL Open Font License 1.1",
+      "licenseFile": "fonts/BricolageGrotesque-OFL.txt"
+    }
   ],
-  "icons": "Interface controls use original authored SVG line geometry in index.html and js/atelier.js; no third-party icon library. Website favicon and Apple Touch Icon use the generated brand icon recorded below.",
-  "brandIcon": {
-    "generatedAt": "2026-10-24",
-    "master": "assets/icons/night-enamel-master.png",
-    "origin": "Generated with the built-in image_gen tool for N1GHT CHXN9: cobalt enamel tile, ivory N monogram and crescent. No source photographs used.",
-    "prompt": "assets/icons/night-enamel-prompt.txt",
-    "derivatives": ["assets/icons/night-enamel-512.png", "assets/icons/night-enamel-32.png", "assets/icons/night-enamel-apple-180.png", "assets/icons/night-enamel.ico"],
-    "processing": "Pillow Lanczos downsampling; ICO includes 16, 24, 32, 48, 64, 128 and 256 pixel frames. Apple Touch Icon is flattened on #f8faff; other PNGs retain transparency. Existing night-mark assets preserved."
+  "icons": {
+    "currentBrowserFavicon": {
+      "path": "assets/icons/folio-mark.svg",
+      "status": "unchanged",
+      "origin": "Code-native SVG wine tile with sage N"
+    },
+    "currentAppleTouchIcon": {
+      "path": "assets/icons/night-enamel-apple-180.png",
+      "status": "unchanged retained raster asset referenced by the root head"
+    },
+    "legacyNightEnamelAssets": "Other night-enamel files remain on disk as retained historical assets and are not the current browser favicon."
   },
-  "paintings": {
-    "addedAt": "2026-10-25",
-    "manifest": "assets/paintings/sources.json",
-    "origin": "Twelve real world-famous paintings reproduced from Wikimedia Commons; each work's source page, download URL, public-domain rights and dimensions are recorded in the manifest.",
-    "processing": "Original aspect ratio and colour retained. Twelve locally resized WebP main images with a longest edge of approximately 1280–2000px, plus twelve 240px thumbnails; 24 files total 9,507,050 bytes.",
-    "embeddedProvenance": "Every shipping WebP embeds its source and public-domain rights in XMP metadata.",
-    "loading": "Main images are prepared on first entry and selection, with the next work preloaded; catalogue thumbnails are lazy-loaded. The homepage does not immediately load all main images."
+  "unchangedSystems": {
+    "photography": "46 stable owner photographs and existing responsive/print variants",
+    "archive": "Existing books, poems, paintings, music, sport, series, films, and games media",
+    "curator": "Existing three-photo plus four-piece local Canvas export",
+    "myscore": "Existing independent zh-CN sports surface and its local assets"
   },
-  "exports": "PNG files are generated by the existing local Canvas workflows from the visitor's selected collection items."
+  "verification": {
+    "browserStatus": "checked_at_scope",
+    "checkedAt": "2026-11-18",
+    "report": ".impeccable/review/liminal/VERIFICATION.md",
+    "reportStatus": "present",
+    "responsive": {
+      "widths": [
+        1440,
+        1024,
+        768,
+        390,
+        320
+      ],
+      "documentOverflow": false,
+      "dayAndNightScenes": "webgl at all five widths"
+    },
+    "engineChecks": [
+      "Pause held the day scene at 403 frames with running=false and synchronized both buttons to Resume.",
+      "With Archive visible, visible was empty and running=false.",
+      "Entering the night footer independently advanced its frames to 3.",
+      "Normal and reduced-motion preference transitions synchronized engine and controls.",
+      "WEBGL_lose_context produced the Canvas2D fallback; reload restored WebGL."
+    ],
+    "interactionChecks": [
+      "Step inside reached Photography.",
+      "A hero print opened the existing lightbox; Escape returned focus to the opening button.",
+      "The footer return reached #hero with scrollY=0."
+    ],
+    "staticChecks": [
+      "node --check passed for js/liminal-light.js",
+      "node --check passed for js/atelier-hero.js",
+      "node --check passed for js/liminal-footer.js"
+    ],
+    "console": "No normal-flow JavaScript error recorded. The context-loss event was intentionally injected for fallback testing.",
+    "evidenceDirectory": ".impeccable/review/liminal/",
+    "evidence": [
+      "hero-1440.jpg",
+      "hero-1024.jpg",
+      "hero-768.jpg",
+      "hero-390.jpg",
+      "hero-320.jpg",
+      "footer-1440.jpg",
+      "footer-1024.jpg",
+      "footer-768.jpg",
+      "footer-390.jpg",
+      "footer-320.jpg",
+      "hero-fallback.jpg",
+      "responsive.json"
+    ],
+    "notCovered": [
+      "physical devices",
+      "200% browser zoom",
+      "actual screen-reader testing",
+      "WebGL performance benchmark",
+      "all GPU and browser combinations",
+      "exhaustive no-animation accessibility audit"
+    ],
+    "independentFinishReview": {
+      "status": "ship_at_documented_scope",
+      "passClaimed": true
+    },
+    "historicalQa": "Earlier folio and MyScore browser checks are not evidence for the new liminal hero/footer motion."
+  }
 }

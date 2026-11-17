@@ -1,97 +1,214 @@
-/* A photographic cover. Reveal once, then let the image follow the page. */
+/* Liminal opening: the engine owns motion state; this file mirrors it. */
 (() => {
-  const hero = document.getElementById("hero");
-  if (!hero || hero.dataset.atelierHero) return;
-  hero.dataset.atelierHero = "true";
-  const oldMark = hero.querySelector(".hero-wordmark");
-  if (window.gsap && oldMark) gsap.killTweensOf(oldMark);
-  hero.classList.add("atelier-hero");
+  'use strict';
 
-  // Decode the next view before replacing the visible photograph.
-  const picture = hero.querySelector('.hero-plate');
-  const mainImage = picture?.querySelector('img');
-  const source = picture?.querySelector('source');
-  const caption = document.getElementById('gallery-view-caption');
-  const changeView = hero.querySelector('.gallery-change-view');
-  const views = [
-    { src: 'hero/launch-1600.webp?v=1', srcset: 'hero/launch-800.webp?v=1 800w, hero/launch-1600.webp?v=1 1600w, hero/launch-2400.webp?v=1 2400w', caption: 'Liftoff. Keep looking up.', alt: 'A rocket lifting off between towering clouds of smoke, with orange light reflected in the water', width: 3360, height: 1890 },
-    { src: 'photo/wall/1789470372631.webp', caption: 'Somewhere beyond the everyday.', alt: 'White cumulus towers above green hills and wind turbines', width: 1600, height: 1067 },
-    { src: 'photo/wall/1779456446231.webp', caption: 'Small things. A wider world.', alt: 'A white blossom branch reaching into the blue sky', width: 1600, height: 1067 }
-  ];
-  let viewIndex = 0;
-  if (changeView && mainImage && caption) {
-    const feedback = document.createElement('span');
-    feedback.className = 'sr-only';
-    feedback.setAttribute('role', 'status');
-    changeView.after(feedback);
-    changeView.addEventListener('click', async () => {
-      if (changeView.disabled) return;
-      changeView.disabled = true;
-      changeView.setAttribute('aria-busy', 'true');
-      const nextIndex = (viewIndex + 1) % views.length;
-      const next = views[nextIndex];
-      const preload = new Image();
-      // Match the candidate the visible picture will actually choose at this
-      // viewport and DPR, rather than decoding only the 1600px fallback.
-      if (next.srcset) {
-        preload.sizes = source?.sizes || '100vw';
-        preload.srcset = next.srcset;
-      }
-      preload.src = next.src;
-      let timeout;
-      try {
-        await Promise.race([preload.decode(), new Promise((_, reject) => { timeout = setTimeout(() => reject(new Error('Image loading timed out')), 12000); })]);
-        if (source) {
-          if (next.srcset) source.setAttribute('srcset', next.srcset);
-          else source.removeAttribute('srcset');
-        }
-        mainImage.src = next.src;
-        mainImage.alt = next.alt;
-        mainImage.width = next.width;
-        mainImage.height = next.height;
-        caption.textContent = next.caption;
-        feedback.textContent = next.caption;
-        viewIndex = nextIndex;
-        if (window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          gsap.fromTo(mainImage, { clipPath: 'inset(0 0 0 100%)' }, { clipPath: 'inset(0 0 0 0%)', duration: .6, ease: 'power3.out', clearProps: 'clipPath', overwrite: 'auto' });
-        }
-      } catch {
-        feedback.textContent = 'This view could not load. Try another view again.';
-      } finally {
-        clearTimeout(timeout);
-        changeView.disabled = false;
-        changeView.removeAttribute('aria-busy');
+  const hero = document.getElementById('hero');
+  const light = window.LiminalLight;
+  if (!hero || !hero.classList.contains('liminal-hero') || !light) return;
+
+  const title = hero.querySelector('.hero-wordmark');
+  const stage = hero.querySelector('.liminal-hero__stage');
+  const description = hero.querySelector('.liminal-hero__description');
+  const enter = hero.querySelector('.liminal-enter');
+  const bottom = hero.querySelector('.liminal-hero__bottom');
+  const prints = Array.from(hero.querySelectorAll('.liminal-hero__prints [data-cover-frame]'));
+  const titleLines = Array.from(hero.querySelectorAll('.hero-wordmark .liminal-word > span'));
+  const toggles = Array.from(document.querySelectorAll('[data-motion-toggle]'));
+
+  let motionPaused = false;
+  let intro = null;
+  let parallax = [];
+
+  if (title && !title.hasAttribute('aria-label')) title.setAttribute('aria-label', 'N1GHT CHXN9');
+
+  prints.forEach((button) => {
+    button.addEventListener('click', () => {
+      const frame = Number(button.dataset.coverFrame);
+      if (Number.isFinite(frame) && typeof openDetail === 'function') {
+        openDetail('photo', frame, button);
       }
     });
-  }
-
-
-  hero.querySelector(".atelier-enter")?.addEventListener("click", (event) => {
-    const photo = document.getElementById("photo");
-    if (!photo) return;
-    event.preventDefault();
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (typeof lenis !== "undefined" && lenis) lenis.scrollTo(photo, { duration: 1.1, immediate: reduce });
-    else photo.scrollIntoView({ behavior: reduce ? "instant" : "smooth" });
-  }, { capture: true });
-
-  if (!window.gsap || !window.ScrollTrigger) return;
-  const mm = gsap.matchMedia();
-  mm.add("(prefers-reduced-motion: no-preference)", () => {
-    const media = hero.querySelector(".atelier-media");
-    const heading = hero.querySelector(".hero-wordmark");
-    const bottom = hero.querySelector(".atelier-bottom");
-
-    /* One opening gesture establishes the gallery; the collection stays calm. */
-    gsap.timeline({ defaults: { ease: "power3.out" } })
-      .from(heading.querySelectorAll('span'), { yPercent: 70, opacity: 0, duration: .9, stagger: .1, clearProps: 'transform,opacity' }, .1)
-      .from(media.querySelector('.atelier-frame'), { clipPath: 'inset(0 0 20% 0)', y: 22, opacity: .7, duration: 1, clearProps: 'clipPath,transform,opacity' }, .22)
-      .from(media.querySelector('.atelier-caption'), { y: 8, opacity: 0, duration: .5, clearProps: 'transform,opacity' }, .65)
-      .from(bottom.children, { y: 18, opacity: 0, duration: .65, stagger: .08, clearProps: 'transform,opacity' }, .55);
-    gsap.from('.gallery-satellite', { y: 35, opacity: 0, duration: .9, stagger: .12, ease: 'power3.out', clearProps: 'transform,opacity' });
   });
-  const image = hero.querySelector("img");
-  const refresh = () => { if (typeof scheduleRefresh === "function") scheduleRefresh(250); else ScrollTrigger.refresh(); };
-  if (!image.complete) image.addEventListener("load", refresh, { once: true });
-  refresh();
+
+  const applyMotionState = () => {
+    if (!intro) return;
+    if (motionPaused) {
+      intro.progress(1).pause();
+      parallax.forEach(({ tween, trigger }) => {
+        tween.pause();
+        trigger.disable(false);
+      });
+      return;
+    }
+    parallax.forEach(({ tween, trigger }) => {
+      trigger.enable();
+      tween.resume();
+    });
+  };
+
+  const syncControls = (state) => {
+    if (!state) return;
+    motionPaused = Boolean(state.paused);
+    const reduced = Boolean(state.reduced);
+    hero.dataset.motionState = reduced ? 'reduced' : motionPaused ? 'paused' : 'running';
+    toggles.forEach((button) => {
+      const label = button.querySelector('span');
+      const text = reduced ? 'Motion reduced' : motionPaused ? 'Resume motion' : 'Pause motion';
+      button.disabled = reduced;
+      button.setAttribute('aria-pressed', String(motionPaused));
+      button.setAttribute('aria-label', text);
+      if (label) label.textContent = text;
+    });
+    applyMotionState();
+  };
+
+  const toggleMotion = () => {
+    light.toggle();
+  };
+
+  toggles.forEach((button) => button.addEventListener('click', toggleMotion));
+
+  const onEngineState = (event) => {
+    syncControls(event.detail);
+  };
+  window.addEventListener('liminal:motion-state', onEngineState);
+
+  const initMotion = () => {
+    syncControls(light.getState());
+    if (!window.gsap) return;
+
+    const motionMedia = window.gsap.matchMedia();
+    motionMedia.add('(prefers-reduced-motion: no-preference)', () => {
+      const gsap = window.gsap;
+      const revealTargets = [description, enter, bottom].filter(Boolean);
+      const printTargets = prints;
+      const titleTargets = titleLines.length ? titleLines : (title ? [title] : []);
+      const currentIntro = gsap.timeline({
+        defaults: { ease: 'power3.out' },
+        onComplete: () => {
+          gsap.set([...revealTargets, ...titleTargets, ...printTargets].filter(Boolean), {
+            clearProps: 'transform,opacity,visibility'
+          });
+          if (stage) gsap.set(stage, { clearProps: 'opacity,visibility' });
+        }
+      });
+      intro = currentIntro;
+      parallax = [];
+
+      if (stage) {
+        currentIntro.fromTo(stage, {
+          scale: 0.965,
+          autoAlpha: 0.84
+        }, {
+          scale: 1,
+          autoAlpha: 1,
+          duration: 0.92
+        }, 0);
+      }
+
+      if (titleTargets.length) {
+        currentIntro.fromTo(titleTargets, {
+          yPercent: 112,
+          autoAlpha: 0
+        }, {
+          yPercent: 0,
+          autoAlpha: 1,
+          duration: 0.78,
+          stagger: 0.1
+        }, 0.04);
+      }
+
+      if (description || enter) {
+        currentIntro.fromTo([description, enter].filter(Boolean), {
+          y: 14,
+          autoAlpha: 0
+        }, {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.52,
+          stagger: 0.06
+        }, 0.34);
+      }
+
+      if (bottom) {
+        currentIntro.fromTo(bottom, {
+          y: 12,
+          autoAlpha: 0
+        }, {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.42
+        }, 0.48);
+      }
+
+      if (printTargets.length) {
+        currentIntro.fromTo(printTargets, {
+          y: 18,
+          autoAlpha: 0
+        }, {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.46,
+          stagger: 0.07
+        }, 0.5);
+      }
+
+      const addParallax = (tween) => {
+        if (tween?.scrollTrigger) parallax.push({ tween, trigger: tween.scrollTrigger });
+      };
+
+      if (window.ScrollTrigger) {
+        gsap.registerPlugin(window.ScrollTrigger);
+        if (title) {
+          addParallax(gsap.to(title, {
+            yPercent: -3.5,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: hero,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: 0.65,
+              invalidateOnRefresh: true
+            }
+          }));
+        }
+        if (stage) {
+          addParallax(gsap.fromTo(stage, {
+            yPercent: 0
+          }, {
+            yPercent: 6,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: hero,
+              start: 'top top',
+              end: 'bottom top',
+              scrub: 0.8,
+              invalidateOnRefresh: true
+            }
+          }));
+        }
+      }
+
+      applyMotionState();
+
+      return () => {
+        currentIntro.kill();
+        parallax.forEach(({ tween, trigger }) => {
+          trigger.kill();
+          tween.kill();
+        });
+        if (intro === currentIntro) intro = null;
+        parallax = [];
+        gsap.set([...revealTargets, ...titleTargets, ...printTargets, stage].filter(Boolean), {
+          clearProps: 'transform,opacity,visibility'
+        });
+      };
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMotion, { once: true });
+  } else {
+    initMotion();
+  }
 })();

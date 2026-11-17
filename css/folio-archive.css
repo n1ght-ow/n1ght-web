@@ -1,0 +1,2024 @@
+/* Hallmark custom: personal photographic folio; content-led composition, original media. */
+:root {
+  --folio-archive-tone-1: #93a28f;
+  --folio-archive-tone-2: #657862;
+  --folio-archive-tone-3: #fbfcf8;
+  --folio-archive-tone-4: #dce3d9;
+  --folio-archive-tone-5: rgba(38, 59, 50, 0.035);
+  --folio-archive-tone-6: rgba(249, 250, 246, 0.45);
+  --folio-archive-tone-7: rgba(38, 59, 50, 0.13);
+  --folio-archive-tone-8: rgba(38, 59, 50, 0.10);
+  --folio-archive-tone-9: rgba(38, 59, 50, 0.22);
+  --folio-archive-tone-10: rgba(38, 59, 50, 0.16);
+  --folio-archive-tone-11: rgba(38, 59, 50, 0.94);
+  --folio-archive-tone-12: rgba(38, 59, 50, 0.42);
+  --folio-archive-tone-13: rgba(93, 38, 56, 0.20);
+  --folio-archive-tone-14: rgba(249, 250, 246, 0.76);
+  --folio-archive-tone-15: rgba(249, 250, 246, 0.52);
+  --folio-archive-tone-16: rgba(38, 59, 50, 0.88);
+  --folio-archive-tone-17: rgba(38, 59, 50, 0.36);
+}
+
+/* Private image folio: a compact catalogue and eight distinct collection rooms. */
+:root {
+  --folio-bg: #dce5d5;
+  --folio-ink: #263b32;
+  --folio-accent: #5d2638;
+  --folio-paper: #f9faf6;
+  --folio-muted: #56645b;
+  --folio-line: rgba(38, 59, 50, 0.20);
+}
+
+#archive,
+.painting-viewer {
+  --folio-control-radius: 6px;
+  --folio-media-radius: 2px;
+  --font-sans: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-editorial: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: Georgia, "Songti SC", "STSong", SimSun, serif;
+  --color-text: var(--folio-ink);
+  --color-text-muted: var(--folio-muted);
+  --color-accent: var(--folio-accent);
+  --color-accent-text: var(--folio-accent);
+  --color-line: var(--folio-line);
+  color: var(--folio-ink);
+}
+
+#archive {
+  --collection-paper: var(--folio-paper);
+  --collection-ink: var(--folio-ink);
+  --collection-muted: var(--folio-muted);
+  --collection-bronze: var(--folio-accent);
+  --collection-line: var(--folio-line);
+  overflow: clip;
+  padding-block: clamp(42px, 5vw, 72px) clamp(28px, 3vw, 44px);
+  border-radius: 0;
+  background: var(--folio-paper);
+  color: var(--folio-ink);
+  font-family: var(--font-sans);
+}
+
+#archive .sec-head {
+  margin-block-end: 18px;
+  padding-block-end: 0;
+}
+
+#archive .sec-title {
+  margin: 0;
+  color: var(--folio-ink);
+  font-family: var(--font-editorial);
+  font-size: clamp(42px, 5.2vw, 76px);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+
+#archive :focus-visible {
+  outline: 2px solid var(--folio-accent);
+  outline-offset: 3px;
+}
+
+#archive ::selection {
+  background: var(--folio-accent);
+  color: var(--folio-paper);
+}
+
+/* The eight rooms read as a flat contents line. */
+#archive .tabbar {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  align-items: stretch;
+  width: 100%;
+  max-width: none;
+  margin-block-end: clamp(22px, 2.6vw, 34px);
+  padding: 0;
+  gap: 0;
+  overflow: visible;
+  border: 0;
+  border-block-end: 1px solid var(--folio-line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#archive .tabbar > .glass__body,
+#archive .tabbar > .glass__edge,
+#archive .tabbar > .glass__press,
+#archive .tabbar > .glass-pill {
+  display: none;
+}
+
+#archive .tab-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  text-align: center;
+  transition: color 160ms ease;
+}
+
+#archive .tab-btn:hover {
+  color: var(--folio-ink);
+}
+
+#archive .tab-btn.is-active,
+#archive .tab-btn.is-active:hover {
+  background: transparent;
+  color: var(--folio-accent);
+}
+
+#archive .tab-btn::after {
+  content: "";
+  position: absolute;
+  inset-inline: 8px;
+  inset-block-end: -1px;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 160ms ease;
+}
+
+#archive .tab-btn.is-active::after {
+  transform: scaleX(1);
+}
+
+#archive .tab-btn .no {
+  display: none;
+}
+
+#archive .collection-tab-name {
+  min-width: 0;
+  font-family: var(--font-editorial);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+}
+
+/* The current room says one fact only; the selected tab already names it. */
+#archive .collection-room {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  min-height: 44px;
+  margin-block: 0 clamp(16px, 1.8vw, 22px);
+  padding: 0;
+  color: var(--folio-muted);
+}
+
+#archive .collection-room-count {
+  margin: 0;
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+#archive .collection-room-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  border-block-end: 1px solid var(--folio-line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+#archive .collection-room-action:hover {
+  color: var(--folio-accent);
+  border-color: var(--folio-accent);
+}
+
+#archive .collection-room-action span {
+  transition: transform 160ms ease;
+}
+
+#archive .collection-room-action:hover span {
+  transform: translate(2px, -2px);
+}
+
+#archive .tab-panels {
+  padding-block-end: 0;
+}
+
+#archive .tab-panels.is-changing-room {
+  overflow: clip;
+  overflow-anchor: none;
+}
+
+#archive .tab-panels .tab-panel.is-leaving {
+  display: block;
+  pointer-events: none;
+}
+
+#archive [data-panel] {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#archive [data-panel]:focus-visible {
+  outline: 2px solid var(--folio-accent);
+  outline-offset: 8px;
+}
+
+#archive [data-panel]::after {
+  display: none;
+}
+
+/* 01 · BOOKS — a low, level shelf with the original 3D books intact. */
+#archive .book-shelf {
+  --bs-stage: 520px;
+  --bs-base: 460px;
+  --bs-centre: 260px;
+  --bs-board-top: var(--folio-archive-tone-1);
+  --bs-board-face: var(--folio-archive-tone-2);
+  --bs-page-leaf: var(--folio-archive-tone-3);
+  --bs-page-edge: var(--folio-archive-tone-4);
+  overflow: clip;
+  height: var(--bs-stage);
+  border: 2px solid var(--folio-line);
+  border-radius: 0;
+  background:
+    linear-gradient(to bottom, transparent calc(100% - 74px), var(--folio-archive-tone-5) calc(100% - 73px), transparent calc(100% - 71px)),
+    var(--folio-bg);
+  box-shadow: none;
+}
+
+#archive .bs-board {
+  height: 6px;
+  border-radius: 0;
+  box-shadow: inset 0 1px 0 var(--folio-archive-tone-6);
+}
+
+#archive .bs-cast {
+  height: 6px;
+  border-radius: 0;
+  background: var(--folio-archive-tone-7);
+}
+
+#archive .bs-row::before,
+#archive .bs-row::after {
+  display: none;
+}
+
+#archive .bs-spine {
+  outline: 1px solid var(--folio-archive-tone-8);
+  outline-offset: -1px;
+}
+
+#archive .bs-round {
+  opacity: 0.76;
+}
+
+#archive .bs-grain {
+  opacity: 0.12;
+}
+
+#archive .bs-band {
+  opacity: 0.72;
+}
+
+#archive .bs-title {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  text-shadow: none;
+}
+
+#archive .bs-cover,
+#archive .bs-label {
+  border-radius: var(--folio-media-radius);
+}
+
+#archive .bs-cover {
+  box-shadow: inset 0 0 0 1px var(--folio-archive-tone-9);
+}
+
+#archive .book-shelf[data-picked] .bs-book[data-picked="true"] .bs-cover {
+  box-shadow: inset 0 0 0 1px var(--folio-archive-tone-9), 4px 4px 0 var(--folio-archive-tone-10);
+}
+
+#archive .bs-label {
+  background: var(--folio-paper);
+  color: var(--folio-ink);
+  box-shadow: inset 0 0 0 1px var(--folio-line);
+}
+
+#archive .bs-label-title {
+  color: var(--folio-ink);
+  font-family: var(--font-sans);
+  font-weight: 500;
+}
+
+#archive .bs-label-author {
+  color: var(--folio-muted);
+}
+
+#archive .bs-scrim {
+  background: color-mix(in srgb, var(--folio-accent) 24%, transparent);
+}
+
+#archive .bs-blurb {
+  color: var(--folio-accent);
+  font-family: var(--font-editorial);
+  font-size: 13px;
+  letter-spacing: 0;
+  text-shadow: none;
+}
+
+/* 02 · POEMS — a usable anthology, not a floating card. */
+#archive .poem-library {
+  --folio-inset: clamp(20px, 3vw, 40px);
+  overflow: clip;
+  border: 2px solid var(--folio-line);
+  border-radius: 0;
+  background: var(--folio-paper);
+  color: var(--folio-ink);
+}
+
+#archive .poem-library-label {
+  padding: 12px var(--folio-inset);
+  border-block-end: 1px solid var(--folio-line);
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+#archive .poem-selection-grid {
+  gap: 0;
+  padding: 0 calc(var(--folio-inset) - 12px);
+  border-block-end: 2px solid var(--folio-line);
+}
+
+#archive .poem-choice {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) minmax(110px, 150px) 20px;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  padding: 10px 12px;
+  border-block-end: 1px solid var(--folio-line);
+  border-radius: var(--folio-control-radius);
+  background: transparent;
+  color: var(--folio-ink);
+}
+
+#archive .poem-choice:last-child {
+  border-block-end: 0;
+}
+
+#archive .poem-choice::after {
+  inset: 12px auto 12px 0;
+  width: 2px;
+  border-radius: 0;
+  background: var(--folio-accent);
+}
+
+#archive .poem-choice:hover {
+  background: color-mix(in srgb, var(--folio-bg) 54%, var(--folio-paper));
+}
+
+#archive .poem-choice:active {
+  background: var(--folio-bg);
+}
+
+#archive .poem-choice[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--folio-bg) 68%, var(--folio-paper));
+  color: var(--folio-accent);
+}
+
+#archive .poem-choice-index {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+#archive .poem-choice-title {
+  color: inherit;
+  font-family: var(--font-editorial);
+  font-size: clamp(19px, 1.8vw, 25px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+#archive .poem-choice-author {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive .poem-choice-mark {
+  color: var(--folio-muted);
+}
+
+#archive .poem-choice[aria-pressed="true"] .poem-choice-mark {
+  color: var(--folio-accent);
+}
+
+#archive #about.poem-reading {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+#archive #poem {
+  padding: 0;
+}
+
+#archive #poem .poem-head {
+  grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+  gap: 22px clamp(28px, 4vw, 64px);
+  padding: clamp(26px, 3vw, 38px) var(--folio-inset) 28px;
+}
+
+#archive #poem .poem-title {
+  max-width: 18ch;
+  color: var(--folio-ink);
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 3.6vw, 52px);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+#archive #poem .poem-credit {
+  margin-block-start: 12px;
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive #poem .poem-credit a {
+  color: var(--folio-accent);
+}
+
+#archive #poem .poem-standfirst {
+  max-width: 36ch;
+  padding-inline-start: 16px;
+  border-inline-start: 2px solid var(--folio-line);
+  color: var(--folio-muted);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-style: italic;
+  line-height: 1.62;
+}
+
+#archive #poem .poem-verse {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  border-block: 2px solid var(--folio-line);
+  color: var(--folio-ink);
+  font-family: var(--font-serif);
+  font-size: clamp(18px, 1.7vw, 22px);
+  font-weight: 400;
+  line-height: 1.72;
+  letter-spacing: 0;
+}
+
+#archive #poem .poem-col {
+  gap: 22px;
+  padding: 28px var(--folio-inset) 30px;
+}
+
+#archive #poem .poem-col + .poem-col {
+  border-inline-start: 1px solid var(--folio-line);
+  background: color-mix(in srgb, var(--folio-bg) 38%, var(--folio-paper));
+}
+
+#archive #poem .poem-leaf-label {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive #poem .refrain {
+  color: var(--folio-accent);
+}
+
+#archive #poem .poem-stanza::before {
+  background: var(--folio-accent);
+}
+
+#archive #poem .poem-foot {
+  gap: 8px 18px;
+  padding: 14px var(--folio-inset);
+  border-block-start: 1px solid var(--folio-line);
+}
+
+#archive #poem .poem-source {
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive #poem .poem-source-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--folio-accent);
+}
+
+#archive #poem .poem-sign {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive .poem-pagination {
+  gap: 8px;
+  padding: 8px max(8px, calc(var(--folio-inset) - 10px));
+  border-block-start: 1px solid var(--folio-line);
+}
+
+#archive .poem-turn {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--folio-control-radius);
+  color: var(--folio-ink);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive .poem-turn:hover {
+  border-color: var(--folio-line);
+  background: var(--folio-bg);
+}
+
+#archive .poem-position {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+/* 03 · PAINTINGS — one work, one label, one quiet catalogue rail. */
+#archive .painting-gallery {
+  color: var(--folio-ink);
+  font-family: var(--font-sans);
+}
+
+#archive .painting-stage {
+  grid-template-columns: minmax(0, 1.62fr) minmax(250px, 0.88fr);
+  gap: clamp(22px, 3vw, 42px);
+}
+
+#archive .painting-wall {
+  height: clamp(340px, 32vw, 490px);
+  padding: clamp(20px, 3vw, 38px);
+  border: 2px solid var(--folio-line);
+  border-radius: 0;
+  background: var(--folio-bg);
+}
+
+#archive .painting-open {
+  cursor: zoom-in;
+}
+
+#archive .painting-image {
+  max-width: 100%;
+  max-height: 100%;
+  border: 2px solid var(--folio-paper);
+  border-radius: var(--folio-media-radius);
+  outline: 1px solid var(--folio-line);
+  box-shadow: none;
+}
+
+#archive .painting-wall-mark {
+  display: none;
+}
+
+#archive .painting-label {
+  padding-block: 8px;
+}
+
+#archive .painting-title {
+  color: var(--folio-ink);
+  font-family: var(--font-serif);
+  font-size: clamp(30px, 3.2vw, 46px);
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+}
+
+#archive .painting-english {
+  margin: 7px 0 18px;
+  color: var(--folio-ink);
+  font-family: var(--font-editorial);
+  font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: 500;
+  line-height: 1.18;
+}
+
+#archive .painting-artist {
+  margin-block-end: 4px;
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#archive .painting-medium {
+  margin-block-end: 14px;
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+#archive .painting-note {
+  max-width: 42em;
+  margin-block-end: 14px;
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+#archive .painting-museum,
+#archive .painting-source {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive .painting-navigation {
+  gap: 8px;
+  padding-block-start: 14px;
+}
+
+#archive .painting-counter {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive .painting-arrow {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--folio-line);
+  border-radius: var(--folio-control-radius);
+  color: var(--folio-ink);
+}
+
+#archive .painting-arrow:hover {
+  border-color: var(--folio-accent);
+  background: var(--folio-accent);
+  color: var(--folio-paper);
+}
+
+#archive .painting-catalogue {
+  grid-template-columns: repeat(12, minmax(72px, 1fr));
+  gap: clamp(7px, 1vw, 14px);
+  margin-block-start: 22px;
+  padding: 4px 0 10px;
+  scrollbar-color: var(--folio-accent) transparent;
+}
+
+#archive .painting-choice {
+  min-height: 112px;
+  gap: 7px;
+  padding: 6px 0 9px;
+  border-block-end: 2px solid transparent;
+  border-radius: 0;
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive .painting-thumb {
+  height: 78px;
+}
+
+#archive .painting-thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  border: 2px solid var(--folio-paper);
+  outline: 1px solid var(--folio-line);
+  box-shadow: none;
+}
+
+#archive .painting-choice:hover img,
+#archive .painting-choice[aria-pressed="true"] img {
+  transform: translateY(-3px);
+}
+
+#archive .painting-choice[aria-pressed="true"] {
+  border-block-end-color: var(--folio-accent);
+  color: var(--folio-accent);
+}
+
+#archive .painting-footnote {
+  margin-block-start: 4px;
+  padding-block-start: 10px;
+  border-block-start: 1px solid var(--folio-line);
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive .painting-gallery :focus-visible {
+  outline: 2px solid var(--folio-accent);
+}
+
+#archive .painting-gallery ::selection {
+  background: var(--folio-accent);
+  color: var(--folio-paper);
+}
+
+#archive .painting-retry {
+  min-height: 44px;
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+}
+
+/* 04 · MUSIC — a dense white record catalogue with a small counter bar. */
+#archive .music-drawer {
+  color: var(--folio-ink);
+}
+
+#archive .music-bar {
+  margin-block-end: 0;
+}
+
+#archive .music-search {
+  min-height: 56px;
+  padding: 4px 10px;
+  border: 2px solid var(--folio-line);
+  border-radius: var(--folio-control-radius);
+  background: var(--folio-bg);
+  box-shadow: none;
+}
+
+#archive .music-search > .glass__body,
+#archive .music-search > .glass__edge,
+#archive .music-search > .glass__press,
+#archive .genre-filter > .glass__body,
+#archive .genre-filter > .glass__edge,
+#archive .genre-filter > .glass__press {
+  display: none;
+}
+
+#archive .music-search > .glass__content {
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+#archive .music-search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--folio-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  letter-spacing: 0;
+  caret-color: var(--folio-accent);
+}
+
+#archive .music-search-input:focus,
+#archive .music-search-input:focus-visible {
+  outline: none;
+  border: 0;
+}
+
+#archive .music-search-input::placeholder {
+  color: var(--folio-muted);
+  text-transform: none;
+}
+
+#archive .music-search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: var(--folio-control-radius);
+  color: var(--folio-accent);
+}
+
+#archive .music-search-clear:hover {
+  background: color-mix(in srgb, var(--folio-accent) 10%, transparent);
+}
+
+#archive .music-search-count {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive .music-random {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 2px solid var(--folio-accent);
+  border-radius: var(--folio-control-radius);
+  background: var(--folio-paper);
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+#archive .music-random::after,
+#archive .genre-chip.is-active::after {
+  display: none;
+}
+
+#archive .music-random:hover {
+  background: var(--folio-accent);
+  color: var(--folio-paper);
+  box-shadow: none;
+}
+
+#archive .music-random:hover svg {
+  transform: rotate(-7deg);
+}
+
+#archive .music-random svg {
+  width: 17px;
+  height: 17px;
+}
+
+#archive .music-search-empty {
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+}
+
+#archive .genre-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 60px;
+  padding: 8px 0;
+  border: 0;
+  border-block-end: 2px solid var(--folio-line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#archive .genre-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 11px;
+  border: 1px solid var(--folio-line);
+  border-radius: var(--folio-control-radius);
+  background: transparent;
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  box-shadow: none;
+}
+
+#archive .genre-chip::before {
+  display: none;
+}
+
+#archive .genre-chip:hover {
+  border-color: var(--folio-ink);
+  background: color-mix(in srgb, var(--folio-bg) 58%, var(--folio-paper));
+  color: var(--folio-ink);
+}
+
+#archive .genre-chip.is-active,
+#archive .genre-chip.is-active:hover {
+  border-color: var(--folio-accent);
+  background: color-mix(in srgb, var(--folio-accent) 8%, var(--folio-paper));
+  color: var(--folio-accent);
+  box-shadow: none;
+}
+
+#archive .playlist {
+  gap: 30px;
+}
+
+#archive .genre {
+  color: var(--folio-ink);
+}
+
+#archive .genre-head {
+  align-items: center;
+  padding-block: 14px 10px;
+  border-block-end: 2px solid var(--folio-accent);
+}
+
+#archive .genre-title {
+  color: var(--folio-ink);
+  font-family: var(--font-editorial);
+  font-size: clamp(24px, 2.5vw, 34px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+#archive .genre-meta {
+  gap: 20px;
+}
+
+#archive .genre-count {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive .genre-playlist {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-decoration-color: var(--folio-accent);
+}
+
+#archive .genre-playlist:hover,
+#archive .genre-playlist:focus-visible {
+  color: var(--folio-ink);
+  text-decoration-color: var(--folio-ink);
+}
+
+#archive .artist-row {
+  border: 0;
+}
+
+#archive .artist-tracks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: clamp(18px, 2.3vw, 30px);
+}
+
+#archive .idx-card {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: center;
+  min-height: 72px;
+  padding: 9px 0;
+  gap: 2px 12px;
+  border-block-end: 1px solid var(--folio-line);
+  border-radius: 0;
+  background: transparent;
+}
+
+#archive .idx-card:hover {
+  background: transparent;
+}
+
+#archive .idx-cover {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  align-self: center;
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--folio-line);
+  border-radius: var(--folio-media-radius);
+  background: var(--folio-bg);
+  box-shadow: none;
+}
+
+#archive .idx-card:hover .idx-cover,
+#archive .idx-card:focus-within .idx-cover {
+  border-color: var(--folio-accent);
+  transform: none;
+  box-shadow: none;
+}
+
+#archive .idx-card .idx-title {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  display: block;
+  min-width: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--folio-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#archive .idx-card:hover .idx-title {
+  color: var(--folio-accent);
+}
+
+#archive .idx-artist {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  min-width: 0;
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.35;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 05 · SPORT — a compact five-channel media strip. */
+#archive .sport {
+  --sport-pad: clamp(18px, 2.2vw, 28px);
+  --sport-closed-w: 58px;
+  --sport-h: clamp(236px, 24vw, 310px);
+  overflow: clip;
+  padding: 0;
+  border: 2px solid var(--folio-line);
+  border-radius: 0;
+  background: var(--folio-ink);
+  box-shadow: none;
+}
+
+#archive .sport-row {
+  gap: 2px;
+  height: var(--sport-h);
+}
+
+#archive .sport-card {
+  min-width: var(--sport-closed-w);
+  border-radius: 0;
+}
+
+#archive .sport-item {
+  border-radius: 0;
+  background-image: linear-gradient(var(--folio-ink), var(--folio-ink));
+}
+
+#archive .sport-photo {
+  filter: saturate(0.72);
+  opacity: 0.58;
+}
+
+#archive .sport-item[aria-pressed="true"] .sport-photo {
+  opacity: 1;
+}
+
+#archive .sport-item:hover .sport-photo {
+  transform: scale(1.018);
+}
+
+#archive .sport-crest {
+  width: 34px;
+  height: 34px;
+  filter: drop-shadow(0 1px 0 var(--folio-archive-tone-9));
+}
+
+#archive .sport-wash {
+  background:
+    linear-gradient(to top, var(--folio-archive-tone-11) 0%, var(--folio-archive-tone-12) 45%, transparent 78%),
+    linear-gradient(110deg, var(--folio-archive-tone-13), transparent 58%);
+}
+
+#archive .sport-cap {
+  max-width: min(100%, 42rem);
+  gap: 7px;
+  padding: var(--sport-pad);
+  color: var(--folio-paper);
+}
+
+#archive .sport-body {
+  gap: 7px;
+}
+
+#archive .sport-name {
+  color: var(--folio-archive-tone-14);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+#archive .sport-hon {
+  color: var(--folio-paper);
+  font-family: var(--font-editorial);
+  font-size: clamp(19px, 2.2vw, 30px);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+#archive .sport-link {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 44px;
+  color: var(--folio-paper);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration-color: var(--folio-archive-tone-15);
+}
+
+#archive .sport-link:hover,
+#archive .sport-link:focus-visible {
+  color: var(--folio-paper);
+  text-decoration-color: var(--folio-paper);
+}
+
+#archive .sport-item[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--folio-accent);
+}
+
+/* 06 · SERIES + 07 · FILMS — a single pale stage with wine details. */
+#archive .series-stage,
+#archive .film-stage {
+  color: var(--folio-ink);
+  font-family: var(--font-sans);
+}
+
+#archive .series-stage-head,
+#archive .film-stage-head {
+  align-items: center;
+  margin-block-end: 0;
+  padding: 12px 16px;
+  border: 2px solid var(--folio-line);
+  border-block-end: 0;
+  background: var(--folio-bg);
+}
+
+#archive .series-stage-head-left,
+#archive .film-stage-head-left {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 7px 14px;
+}
+
+#archive .series-stage-title,
+#archive .film-stage-title {
+  color: var(--folio-accent);
+  font-family: var(--font-editorial);
+  font-size: clamp(17px, 1.6vw, 21px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+#archive .series-stage-sub,
+#archive .series-stage-count,
+#archive .film-stage-sub,
+#archive .film-stage-count {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+#archive .series-stage-viewport,
+#archive .film-stage-viewport {
+  border-inline: 2px solid var(--folio-line);
+  background: var(--folio-paper);
+}
+
+#archive .series-stage-strip,
+#archive .film-stage-strip {
+  gap: 14px;
+  padding: 36px 14px 12px;
+}
+
+#archive .series-card,
+#archive .film-card {
+  border-radius: 0;
+  color: var(--folio-ink);
+}
+
+#archive .series-card.is-active,
+#archive .film-card.is-active {
+  transform: translateY(-12px);
+}
+
+#archive .series-card-img,
+#archive .film-card-img {
+  border: 2px solid var(--folio-paper);
+  border-radius: var(--folio-media-radius);
+  outline: 1px solid var(--folio-line);
+  outline-offset: 0;
+  box-shadow: none;
+  filter: saturate(0.82);
+}
+
+#archive .series-card:hover .series-card-img,
+#archive .series-card:focus-visible .series-card-img,
+#archive .film-card:hover .film-card-img,
+#archive .film-card:focus-visible .film-card-img {
+  outline-color: var(--folio-ink);
+  transform: translateY(-3px);
+  box-shadow: none;
+}
+
+#archive .series-card.is-active .series-card-img,
+#archive .film-card.is-active .film-card-img {
+  outline: 2px solid var(--folio-accent);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+#archive .series-card-meta,
+#archive .film-card-meta {
+  padding-block-start: 8px;
+}
+
+#archive .series-card-title,
+#archive .film-card-title {
+  color: var(--folio-ink);
+  font-family: var(--font-editorial);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+#archive .series-stage-detail,
+#archive .film-stage-detail {
+  margin: 0;
+}
+
+#archive .series-detail-copy,
+#archive .film-detail-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "facts action"
+    "line action"
+    "quote quote";
+  align-items: center;
+  width: 100%;
+  max-width: none;
+  padding: 16px;
+  border: 2px solid var(--folio-line);
+  background: var(--folio-bg);
+}
+
+#archive .series-detail-kicker,
+#archive .film-detail-kicker {
+  grid-area: facts;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  min-width: 0;
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+#archive .series-detail-index,
+#archive .film-detail-index {
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+}
+
+#archive .series-detail-category,
+#archive .series-detail-years,
+#archive .film-detail-genre,
+#archive .film-detail-year,
+#archive .series-detail-seasons,
+#archive .film-detail-director {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+#archive .series-detail-seasons,
+#archive .film-detail-director {
+  grid-area: line;
+  display: block;
+  margin: 4px 0 0;
+  color: var(--folio-ink);
+}
+
+#archive .series-detail-quote,
+#archive .film-detail-quote {
+  grid-area: quote;
+  max-width: 74ch;
+  margin: 10px 0 0;
+  color: var(--folio-ink);
+  font-family: var(--font-editorial);
+  font-size: clamp(19px, 2vw, 27px);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.028em;
+}
+
+#archive .series-detail-link,
+#archive .film-detail-link {
+  grid-area: action;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin: 0 0 0 18px;
+  padding: 8px 13px;
+  border: 2px solid var(--folio-accent);
+  border-radius: var(--folio-control-radius);
+  background: transparent;
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  box-shadow: none;
+}
+
+#archive .series-detail-link .glass__body,
+#archive .film-detail-link .glass__body,
+#archive .series-detail-link .glass__edge,
+#archive .film-detail-link .glass__edge,
+#archive .series-detail-link .glass__press,
+#archive .film-detail-link .glass__press {
+  display: none;
+}
+
+#archive .series-detail-link:hover,
+#archive .film-detail-link:hover {
+  background: var(--folio-accent);
+  color: var(--folio-paper);
+  transform: none;
+}
+
+/* 08 · GAMES — the existing detent remains, on a quieter editorial stage. */
+#archive .hof {
+  color: var(--folio-ink);
+  font-family: var(--font-sans);
+}
+
+#archive .hof.is-live {
+  --hof-gap: 24px;
+  --hof-pad: 14px;
+  max-width: 1120px;
+  margin-inline: auto;
+  border: 2px solid var(--folio-line);
+  border-radius: 0;
+  background: var(--folio-bg);
+}
+
+#archive .hof.is-live .hof-img-wrap {
+  border-radius: var(--folio-media-radius);
+  background: var(--folio-ink);
+  box-shadow: none;
+}
+
+#archive .hof.is-live .hof-img-wrap img {
+  border: 2px solid var(--folio-paper);
+  border-radius: var(--folio-media-radius);
+  box-shadow: none;
+  filter: saturate(0.58);
+}
+
+#archive .hof.is-live .hof-item.is-centre .hof-img-wrap img {
+  border-color: var(--folio-paper);
+  outline: 2px solid var(--folio-accent);
+  outline-offset: 2px;
+  filter: saturate(1);
+  box-shadow: none;
+}
+
+#archive .hof.is-live .hof-item:focus-visible {
+  outline: 2px solid var(--folio-accent);
+}
+
+#archive .hof.is-live .hof-rank {
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-shadow: none;
+}
+
+#archive .hof.is-live .hof-now {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#archive .hof.is-live .hof-now-name {
+  color: var(--folio-ink);
+  font-family: var(--font-editorial);
+  font-size: clamp(19px, 1.8vw, 25px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  text-shadow: none;
+}
+
+#archive .hof.is-live .hof-now-release {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+#archive .hof.is-live .hof-cue {
+  color: var(--folio-accent);
+}
+
+#archive .hof:not(.is-live) {
+  gap: 22px 18px;
+}
+
+#archive .hof:not(.is-live) .hof-img-wrap {
+  border: 2px solid var(--folio-line);
+}
+
+#archive .hof-name {
+  color: var(--folio-ink);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+#archive .hof-release {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+/* The painting viewer is the one native dialog attached to Archive. */
+.painting-viewer {
+  padding: clamp(12px, 2.4vw, 30px);
+  border: 2px solid var(--folio-accent);
+  background: var(--folio-paper);
+  color: var(--folio-ink);
+  font-family: var(--font-sans);
+  box-shadow: none;
+}
+
+.painting-viewer[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.painting-viewer::backdrop {
+  background: var(--folio-archive-tone-16);
+}
+
+.painting-viewer-head,
+.painting-viewer-foot {
+  gap: 12px;
+}
+
+.painting-viewer-head {
+  padding-block-end: 10px;
+  border-block-end: 1px solid var(--folio-line);
+}
+
+.painting-viewer-title {
+  color: var(--folio-ink);
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2vw, 30px);
+  line-height: 1.15;
+}
+
+.painting-viewer-credit {
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+.painting-viewer-control {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--folio-line);
+  border-radius: var(--folio-control-radius);
+  color: var(--folio-ink);
+}
+
+.painting-viewer-control:hover,
+.painting-viewer-control[aria-pressed="true"] {
+  border-color: var(--folio-accent);
+  background: var(--folio-accent);
+  color: var(--folio-paper);
+}
+
+.painting-viewer-canvas {
+  border: 2px solid var(--folio-line);
+  background: var(--folio-ink);
+  scrollbar-color: var(--folio-accent) var(--folio-ink);
+}
+
+.painting-viewer :focus-visible {
+  outline: 2px solid var(--folio-accent);
+  outline-offset: 3px;
+}
+
+.painting-viewer-foot {
+  padding-block-start: 10px;
+  border-block-start: 1px solid var(--folio-line);
+  color: var(--folio-muted);
+  font-family: var(--font-sans);
+}
+
+.painting-viewer-position {
+  color: var(--folio-accent);
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+.painting-viewer-hint {
+  color: var(--folio-muted);
+}
+
+.painting-viewer-tools {
+  gap: 8px;
+}
+
+@media (min-width: 1400px) {
+  #archive .artist-tracks {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1180px) {
+  #archive .artist-tracks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  #archive .tabbar {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--folio-accent) transparent;
+  }
+
+  #archive .tab-btn {
+    flex: 0 0 128px;
+  }
+
+  #archive .collection-tab-name {
+    font-size: 16px;
+  }
+
+  #archive .painting-stage {
+    grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.8fr);
+    gap: 24px;
+  }
+
+  #archive .painting-wall {
+    height: 370px;
+  }
+
+  #archive .sport {
+    --sport-strip-h: 56px;
+    --sport-open-h: 290px;
+    max-height: none;
+  }
+
+  #archive .sport-row {
+    height: calc(var(--sport-open-h) + 4 * var(--sport-strip-h) + 8px);
+    flex-direction: column;
+  }
+
+  #archive .sport-card {
+    width: 100%;
+    min-width: 0;
+    flex-basis: var(--sport-strip-h);
+    flex-grow: 0;
+  }
+
+  #archive .sport-card:has(> .sport-item[aria-pressed="true"]) {
+    flex-grow: 1;
+  }
+
+  #archive .sport-wash {
+    background: linear-gradient(to top, var(--folio-archive-tone-11) 0%, var(--folio-archive-tone-17) 42%, transparent 72%);
+  }
+}
+
+@media (max-width: 760px) {
+  #archive #poem .poem-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    padding-block: 26px 24px;
+  }
+
+  #archive #poem .poem-title {
+    font-size: clamp(30px, 8vw, 42px);
+  }
+
+  #archive #poem .poem-verse {
+    grid-template-columns: minmax(0, 1fr);
+    font-size: 18px;
+    line-height: 1.72;
+  }
+
+  #archive #poem .poem-col {
+    padding-block: 24px;
+  }
+
+  #archive #poem .poem-col + .poem-col {
+    padding-block-start: 0;
+    border-inline-start: 0;
+    background: transparent;
+  }
+
+  #archive #poem .poem-col + .poem-col .poem-leaf-label {
+    display: none;
+  }
+
+  #archive .painting-stage {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  #archive .painting-wall {
+    height: clamp(270px, 78vw, 390px);
+    padding: 20px;
+  }
+
+  #archive .painting-title {
+    font-size: clamp(29px, 8vw, 39px);
+  }
+
+  #archive .painting-catalogue {
+    grid-template-columns: repeat(12, 76px);
+    gap: 11px;
+  }
+}
+
+@media (max-width: 720px) {
+  #archive {
+    padding-block-start: 34px;
+  }
+
+  #archive .sec-title {
+    font-size: clamp(40px, 12vw, 54px);
+  }
+
+  #archive .tabbar {
+    margin-block-end: 20px;
+  }
+
+  #archive .tab-btn {
+    flex-basis: 118px;
+    min-height: 58px;
+    padding: 9px 11px;
+  }
+
+  #archive .collection-room {
+    gap: 8px 16px;
+    margin-block-end: 18px;
+  }
+
+  #archive .collection-room-action {
+    font-size: 12px;
+  }
+
+  #archive .book-shelf {
+    --bs-stage: 420px;
+    --bs-base: 364px;
+    --bs-centre: 210px;
+  }
+
+  #archive .bs-blurb {
+    padding-inline: 18px;
+    white-space: normal;
+  }
+
+  #archive .poem-library {
+    --folio-inset: 18px;
+  }
+
+  #archive .poem-library-label {
+    padding-block: 10px;
+    font-size: 12px;
+  }
+
+  #archive .poem-selection-grid {
+    padding-inline: 8px;
+  }
+
+  #archive .poem-choice {
+    grid-template-columns: 24px minmax(0, 1fr) 16px;
+    gap: 4px 9px;
+    min-height: 62px;
+    padding: 9px 10px;
+  }
+
+  #archive .poem-choice-title {
+    font-size: 19px;
+  }
+
+  #archive .poem-choice-author {
+    grid-column: 2;
+    font-size: 12px;
+  }
+
+  #archive .poem-choice-mark {
+    grid-column: 3;
+    grid-row: 1 / 3;
+  }
+
+  #archive #poem .poem-standfirst {
+    padding-inline-start: 12px;
+    font-size: 15px;
+  }
+
+  #archive #poem .poem-foot {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  #archive .poem-turn {
+    padding-inline: 8px;
+    font-size: 12px;
+  }
+
+  #archive .music-search {
+    padding-inline: 8px;
+  }
+
+  #archive .music-search > .glass__content {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  #archive .music-search-input {
+    flex-basis: calc(100% - 54px);
+    font-size: 16px;
+  }
+
+  #archive .music-search-count {
+    flex-basis: 100%;
+    padding-inline: 2px;
+  }
+
+  #archive .music-random {
+    margin-inline-start: auto;
+  }
+
+  #archive .genre-filter {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    padding-inline-end: 20px;
+  }
+
+  #archive .genre-filter::-webkit-scrollbar {
+    display: none;
+  }
+
+  #archive .genre-chip {
+    flex: 0 0 auto;
+  }
+
+  #archive .artist-tracks {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #archive .genre-head {
+    flex-wrap: wrap;
+    gap: 6px 12px;
+  }
+
+  #archive .genre-meta {
+    gap: 14px;
+  }
+
+  #archive .idx-card {
+    grid-template-columns: 50px minmax(0, 1fr);
+    min-height: 68px;
+  }
+
+  #archive .idx-cover {
+    width: 50px;
+    height: 50px;
+  }
+
+  #archive .sport {
+    --sport-pad: 16px;
+    --sport-strip-h: 52px;
+    --sport-open-h: 250px;
+  }
+
+  #archive .sport-crest {
+    width: 30px;
+    height: 30px;
+  }
+
+  #archive .sport-hon {
+    font-size: clamp(18px, 5.5vw, 24px);
+  }
+
+  #archive .series-stage-head,
+  #archive .film-stage-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  #archive .series-stage-head-right,
+  #archive .film-stage-head-right {
+    width: 100%;
+  }
+
+  #archive .series-stage-strip,
+  #archive .film-stage-strip {
+    gap: 11px;
+    padding: 30px 10px 10px;
+  }
+
+  #archive .series-detail-copy,
+  #archive .film-detail-copy {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "facts"
+      "line"
+      "quote"
+      "action";
+    padding: 13px;
+  }
+
+  #archive .series-detail-link,
+  #archive .film-detail-link {
+    justify-self: start;
+    margin: 12px 0 0;
+  }
+
+  #archive .series-detail-quote,
+  #archive .film-detail-quote {
+    font-size: 19px;
+    line-height: 1.24;
+  }
+
+  #archive .hof.is-live {
+    --hof-gap: 20px;
+    --hof-pad: 10px;
+  }
+
+  #archive .hof:not(.is-live) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .painting-viewer {
+    padding: 10px;
+  }
+
+  .painting-viewer-title {
+    font-size: 20px;
+  }
+
+  .painting-viewer-credit {
+    font-size: 12px;
+  }
+
+  .painting-viewer-hint {
+    display: none;
+  }
+
+  .painting-viewer-foot {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 390px) {
+  #archive .book-shelf {
+    --bs-stage: 300px;
+    --bs-base: 260px;
+    --bs-centre: 150px;
+    height: var(--bs-stage);
+  }
+  #archive .sec-title {
+    font-size: 40px;
+  }
+
+  #archive .tab-btn {
+    flex-basis: 112px;
+  }
+
+  #archive .collection-room-action {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  #archive .poem-choice-title {
+    font-size: 18px;
+  }
+
+  #archive #poem .poem-title {
+    font-size: 30px;
+  }
+
+  #archive #poem .poem-verse {
+    font-size: 17px;
+  }
+
+  #archive .painting-wall {
+    height: 250px;
+    padding: 14px;
+  }
+
+  #archive .painting-catalogue {
+    grid-template-columns: repeat(12, 70px);
+  }
+
+  #archive .music-random {
+    padding-inline: 10px;
+  }
+
+  #archive .genre-title {
+    font-size: 24px;
+  }
+
+  #archive .genre-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .painting-viewer {
+    padding: 8px;
+  }
+
+  .painting-viewer-tools {
+    gap: 5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #archive .tab-btn,
+  #archive .tab-btn::after,
+  #archive .collection-room-action span,
+  #archive .poem-choice,
+  #archive .poem-choice-mark,
+  #archive .poem-turn,
+  #archive .painting-thumb img,
+  #archive .painting-choice,
+  #archive .music-random svg,
+  #archive .idx-cover,
+  #archive .series-card,
+  #archive .film-card,
+  #archive .series-card-img,
+  #archive .film-card-img {
+    transition: none;
+  }
+
+  #archive .poem-choice:hover .poem-choice-mark,
+  #archive .painting-choice:hover img,
+  #archive .painting-choice[aria-pressed="true"] img,
+  #archive .music-random:hover svg,
+  #archive .sport-item:hover .sport-photo,
+  #archive .series-card:hover .series-card-img,
+  #archive .series-card:focus-visible .series-card-img,
+  #archive .film-card:hover .film-card-img,
+  #archive .film-card:focus-visible .film-card-img {
+    transform: none;
+  }
+}
