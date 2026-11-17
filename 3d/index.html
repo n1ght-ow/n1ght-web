@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-type="software" data-world="overview">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f1eee5">
+  <meta name="page-type" content="software">
+  <meta name="site-kind" content="software">
+  <title>N1GHT CHXN9 · 万象游乐场</title>
+  <meta name="description" content="十件可以直接操纵的空间装置。调光圈、翻书页、拨弦、拼画、投球、剪辑胶片，在收藏构成的世界里亲手打开想象。">
+  <meta property="og:title" content="N1GHT CHXN9 · 万象游乐场">
+  <meta property="og:description" content="把生活里值得留下的，建成一个可以漫游的世界。">
+  <link rel="icon" href="../assets/icons/night-enamel-32.png?v=1" type="image/png">
+  <link rel="preload" href="../fonts/SpaceGrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/fonts.css?v=15">
+  <link rel="stylesheet" href="../css/world.css?v=11">
+</head>
+<body>
+  <a class="skip-link" href="#room-nav">跳到十件收藏装置</a>
+  <header class="world-header">
+    <a class="brand" href="#world" aria-label="N1GHT CHXN9，返回装置全景"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3v34M3 20h34M8 8l24 24M8 32 32 8"/><circle cx="20" cy="20" r="13"/></svg><span>N1GHT CHXN9<small>A PERSONAL WORLD</small></span></a>
+    <nav class="header-nav" aria-label="全站导航"><a class="back-home" href="../">← 返回普通版</a><button class="text-button" id="map-toggle" type="button">装置地图 <span aria-hidden="true">↗</span></button><a href="../myscore/">MyScore <span aria-hidden="true">↗</span></a></nav>
+    <button class="day-button" id="day-toggle" type="button" aria-label="切换为月光" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><span>日光</span></button>
+  </header>
+  <main id="world" aria-label="万象游乐场，十件可直接操纵的收藏装置">
+    <section class="world-intro" aria-labelledby="world-title">
+      <p class="eyebrow"><span class="live-dot"></span> THE CABINET OF IMPOSSIBILITIES</p>
+      <h1 id="world-title">A little<br>impossible<span class="title-dot">.</span></h1>
+      <div class="intro-line"></div>
+      <p class="intro-cn">万象游乐场</p>
+      <p class="intro-description">把收藏交给想象，<br>让双手改变这个世界。</p>
+      <button class="primary-button" id="start-explore" type="button">先转动一道光 <span aria-hidden="true">↗</span></button>
+      <p class="intro-note"><span>10</span> 件装置，亲手打开想象。</p>
+    </section>
+    <div class="world-stage" id="world-stage"><canvas id="world-canvas" tabindex="0" aria-label="三维收藏装置。按住机关拖动；拖空白处旋转。底部类别进入装置，方向键环顾，Escape 返回全景。"></canvas><div id="model-pins" class="model-pins" aria-label="模型机关位置提示"></div><div class="model-scene-status" id="model-scene-status" aria-hidden="true">在模型上寻找可拖动的部件</div><div id="island-labels" class="island-labels" aria-label="三维场景中的岛屿入口"></div><div class="world-loading" id="world-loading" role="status"><span class="loading-mark">✳</span><span>正在组装十件奇想装置</span><a href="../">返回普通版 ↗</a></div></div>
+    <div class="world-coordinates" aria-hidden="true"><span>EST. IN EVERYDAY LIFE</span><span id="view-coordinates">十件装置 · 由你亲手改变</span></div>
+    <div class="compass" aria-hidden="true"><span>N</span><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="22"/><path d="m30 10 6 20-6 20-6-20Z"/><path d="M3 30h12m30 0h12M30 3v7m0 40v7"/></svg></div>
+    <div class="world-tools" aria-label="场景视角"><button id="zoom-in" type="button" aria-label="放大场景">＋</button><button id="zoom-out" type="button" aria-label="缩小场景">−</button><span></span><button id="reset-view" type="button" aria-label="返回装置全景">⌂</button></div>
+    <div class="world-gesture" id="world-gesture"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10V5a2 2 0 0 1 4 0v6-3a2 2 0 0 1 4 0v3-1a2 2 0 0 1 4 0v6c0 4-3 6-6 6h-2c-3 0-5-2-7-5l-2-3a2 2 0 0 1 3-2l2 2"/></svg>拖动环顾 <i>·</i> <span id="gesture-zoom">滚轮靠近</span> <i>·</i> 选一件装置，动手试试</div>
+    <aside class="room-panel" id="room-panel" aria-labelledby="room-title" hidden>
+      <button class="back-button" id="room-back" type="button">← 返回全景</button>
+      <div class="room-heading"><p class="eyebrow" id="room-english"></p><h2 id="room-title"></h2><p id="room-description"></p></div>
+      <div id="room-actions" class="room-actions"></div>
+      <p class="room-hint" id="room-hint"></p><details class="model-console" open><summary>装置操作 <span>也可用键盘方向键</span></summary><p class="model-status" id="model-status" role="status">拖动模型上的机关，观察结构的变化。</p><div id="model-controls" class="model-controls"></div></details>
+      <div class="room-catalogue"><div class="catalogue-heading"><span id="catalogue-count"></span><button id="random-item" class="text-button" type="button">偶遇一件 ↗</button></div><label class="search-wrap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" id="collection-search" placeholder="在这座岛上找一找" aria-label="搜索当前收藏"></label><div id="catalogue-items" class="catalogue-items" aria-label="馆藏目录"></div></div>
+      <form id="curation-form" class="curation-form" hidden><label>展览名字<input id="exhibition-title" maxlength="36" placeholder="给这一刻起个名字" value="我的小展览"></label><label>写一句话<input id="exhibition-subtitle" maxlength="100" placeholder="把相遇留在这里"></label><button class="primary-button" id="export-png" type="submit">保存展览海报 <span aria-hidden="true">↓</span></button><p id="curation-note">在各件装置中选择作品，最多七件。</p></form>
+    </aside>
+    <nav class="room-dock" id="room-nav" aria-label="十件收藏装置"><div class="dock-caption"><span>EXPLORE</span><span>随心靠岸</span></div><div class="dock-items" id="dock-items"></div><button class="collection-counter" id="curation-toggle" type="button" aria-label="查看我的展览"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v15l-7-4-7 4Z"/></svg><span id="saved-count">0</span><small>/ 7</small></button></nav>
+  </main>
+  <dialog id="atlas-dialog" class="atlas-dialog" aria-labelledby="atlas-title"><div class="dialog-top"><p class="eyebrow">YOUR FIELD GUIDE</p><button class="close-button" type="button" data-close="atlas-dialog" aria-label="关闭装置地图">×</button></div><h2 id="atlas-title">想让哪一件装置，<br>开始发生变化？</h2><div class="atlas-list" id="atlas-list"></div><div class="atlas-foot"><span>每一处收藏，都有它自己的风景。</span><nav aria-label="更多入口"><a href="../">返回普通版 ↗</a><a href="../myscore/">MyScore ↗</a></nav></div></dialog>
+  <dialog id="detail-dialog" class="detail-dialog" aria-labelledby="detail-title"><button class="close-button detail-close" type="button" data-close="detail-dialog" aria-label="关闭藏品详情">×</button><div class="detail-visual" id="detail-visual"></div><div class="detail-copy"><p class="eyebrow" id="detail-category"></p><h2 id="detail-title"></h2><p class="detail-meta" id="detail-meta"></p><div class="detail-description" id="detail-description"></div><div class="detail-actions"><button id="save-item" class="primary-button" type="button">收入我的展览 <span aria-hidden="true">＋</span></button><a id="detail-source" target="_blank" rel="noopener noreferrer">前往作品来源 ↗</a></div><div class="detail-pagination"><button id="detail-prev" class="text-button" type="button">← 上一件</button><span id="detail-position"></span><button id="detail-next" class="text-button" type="button">下一件 →</button></div></div></dialog>
+  <div class="model-tooltip" id="model-tooltip" hidden aria-hidden="true"><strong id="model-tooltip-title"></strong><span id="model-tooltip-hint"></span></div><div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <noscript><div class="noscript-notice">三维群岛需要 JavaScript。<a href="../">前往普通版 ↗</a></div></noscript>
+  <script src="../js/film-data.js?v=4"></script><script src="../js/series-data.js?v=4"></script><script src="../js/book-shelf-data.js?v=6"></script><script src="../js/music-data.js?v=7"></script><script src="../js/poems-data.js?v=2"></script><script src="../js/paintings-data.js?v=1"></script><script src="../js/music-covers.js?v=6"></script>
+  <script type="module" src="../js/world/app.js?v=16"></script>
+</body>
+</html>

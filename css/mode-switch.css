@@ -1,0 +1,52 @@
+/* The Folio navigation owns this link; the world loads its own controls. */
+#nav .mode-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--folio-line);
+  border-radius: 6px;
+  color: var(--folio-ink);
+  font: 450 13px/1.4 var(--font-sans);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color .18s, border-color .18s, background-color .18s;
+}
+
+#nav .mode-link svg { width: 16px; height: 16px; }
+#nav .mode-link:hover {
+  color: var(--folio-accent);
+  border-color: currentColor;
+  background: var(--folio-accent-soft);
+}
+#nav .mode-link:focus-visible { outline: 2px solid var(--folio-accent); outline-offset: 4px; }
+
+@media (max-width: 1050px) {
+  #nav .glass__content { gap: 16px; }
+  #nav .nav-description { display: none; }
+}
+
+@media (max-width: 720px) {
+  #nav .glass__content { gap: 10px; }
+  #nav .nav-links { gap: 10px; }
+  #nav .mode-link { gap: 6px; padding-inline: 10px; font-size: 12px; }
+}
+
+@media (max-width: 620px) {
+  #nav.nav, #nav.nav.is-scrolled { height: 102px; min-height: 102px; padding-block: 6px; }
+  #nav .glass__content { flex-wrap: wrap; gap: 0; }
+  #nav .nav-brand { order: 0; width: auto; flex: 1 1 auto; min-height: 44px; font-size: 13px; }
+  #nav .mode-link { order: 1; }
+  #nav .nav-links { order: 2; flex: 1 0 100%; width: 100%; justify-content: space-between; gap: 8px; }
+  #nav .nav-links a { min-height: 44px; font-size: 13px; }
+  #nav .nav-description { display: none; }
+  #hero.liminal-hero { --liminal-header: 102px; }
+  html { scroll-padding-top: 118px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #nav .mode-link { transition: none; }
+}

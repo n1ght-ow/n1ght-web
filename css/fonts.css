@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('../fonts/BricolageGrotesque-latin.woff2') format('woff2');
+}
+
 /* Self-hosted latin subsets (content is English-only).
    Paper/ink type system: Space Grotesk carries display + UI; IBM Plex Mono covers labels; Instrument Serif
    italic is the editorial accent; Diplomata SC carries one string, the hero

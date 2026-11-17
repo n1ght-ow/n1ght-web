@@ -12,7 +12,9 @@
 
 ## 项目与实时预览
 
-这是纯静态单页网站：index.html + css/ + js/，没有 npm 构建流程。
+这是纯静态网站：index.html + 3d/index.html + css/ + js/，没有 npm 构建流程。
+
+网站现有两种独立文档模式：根 `index.html` 是默认 Folio／Liminal 普通版，`3d/index.html` 是完整万象游乐场。导航使用相对链接 `3d/` 与 `../`；不要把 3D 引擎接到普通版。路径和预览说明见 [BROWSING_MODES.md](BROWSING_MODES.md)。
 
 - 涉及页面、样式或交互时，修改前先确认实时预览运行。
 - 优先复用现有服务。本项目用 node serve.mjs，默认地址 http://127.0.0.1:3100/，保存后自动刷新。
@@ -24,6 +26,8 @@
 | 范围 | 主要文件 |
 | --- | --- |
 | 页面结构、资源加载与缓存版本 | index.html |
+| 3D 页面、样式与入口 | 3d/index.html、css/world.css、js/world/app.js |
+| 3D 引擎、装置与资源路径 | js/world/engine.js、experiences/、paths.js；遵循 js/world/EXPERIENCE_CONTRACT.md |
 | 基础排版、字体与组件样式 | css/style.css、fonts.css、glass.css 及各组件 CSS |
 | 当前共享视觉层 | css/atelier.css |
 | 当前章节视觉与增强交互 | css/atelier-hero.css、atelier-photo.css、atelier-archive.css、atelier-poem.css，以及 js/ 中对应文件 |
@@ -34,6 +38,7 @@
 | 本地运行库 | js/vendor/ |
 
 atelier 层在基础组件之后加载。先判断属性最终由哪一层决定，避免修改被后面的规则覆盖。
+普通版现行外观由后置的 `folio*.css`、`liminal*.css` 定义，模式入口使用 `mode-switch.css`。3D 独立加载 `world.css`，共用根目录的馆藏数据和媒体；文档相对路径使用 `../`，模块中的站点资源通过 `js/world/paths.js` 解析，兼容部署子路径。
 加载顺序以 index.html 为准：运行库先于数据和渲染器，main 先于 atelier 增强脚本。
 修改带 ?v= 的 CSS/JS 后递增对应版本；新增或修改数据资源也应有缓存版本。
 

@@ -1,355 +1,529 @@
-/* The wandering room shares its three photograph selections with the exhibition desk. */
+/* A private photographic contact sheet. Original frame nodes stay intact for
+   the shared lightbox and the curator desk. */
 (function () {
   'use strict';
+
   const host = document.getElementById('photo-deck');
   if (!host) return;
+
   const frames = Array.from(host.querySelectorAll('.photo-frame'));
   if (!frames.length) return;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const groups = { CITY: 'City', LAND: 'Nature', NIGHT: 'Night', WINTER: 'Winter' };
-  const category = frame => groups[frame.dataset.act] ? frame.dataset.act : 'LAND';
+
+  const groups = {
+    CITY: 'City',
+    LAND: 'Nature',
+    NIGHT: 'Night',
+    WINTER: 'Winter',
+  };
+  const categoryOf = frame => groups[frame.dataset.act] ? frame.dataset.act : 'LAND';
   const data = frames.map((frame, index) => {
     const image = frame.querySelector('img');
-    image.dataset.rail = image.getAttribute('src');
+    const caption = frame.querySelector('.photo-frame-text');
+    const cap = frame.querySelector('.photo-frame-cap');
+    if (!image || !caption || !cap) return null;
+
+    const category = categoryOf(frame);
+    image.dataset.rail = image.getAttribute('src') || '';
     image.draggable = false;
-    frame.querySelector('.photo-frame-cap').classList.remove('sr-only');
-    return { index, title: frame.querySelector('.photo-frame-text').textContent.trim(), alt: image.alt,
-      thumb: image.getAttribute('src'), src: image.dataset.full || image.getAttribute('src'),
-      ratio: Number(image.getAttribute('width')) / Number(image.getAttribute('height')) };
+    cap.classList.remove('sr-only');
+    frame.dataset.folioCategory = groups[category];
+
+    return {
+      index,
+      id: frame.dataset.photoIndex,
+      title: caption.textContent.trim(),
+      alt: image.alt,
+      thumb: image.getAttribute('src'),
+      src: image.dataset.full || image.getAttribute('src'),
+      width: Number(image.getAttribute('width')) || image.naturalWidth || 1600,
+      height: Number(image.getAttribute('height')) || image.naturalHeight || 1067,
+      category,
+      categoryLabel: groups[category],
+      fresh: Boolean(frame.dataset.new),
+    };
   });
-  let active = Math.max(0, data.findIndex(item => item.title === 'The last red light'));
-  let filter = 'ALL', mode = 'wander', drag = null, suppressUntil = 0;
-  let panMotion = null, dragPaintFrame = 0;
-  const kept = () => window.CuratorDesk?.photoIds() || [];
-  let positions = new Map(), worldWidth = 0, worldHeight = 0;
-  // Mix near and far, day and night: neighbouring prints suggest unexpected connections.
-  const opening = [38, 35, 37, 2, 4, 26, 45, 43, 21, 10, 39, 24, 22, 36].filter(i => data[i]);
-  const initialOrder = [...opening, ...frames.map((_, i) => i).filter(i => !opening.includes(i))];
-  host.classList.add('atelier-photo');
+
+  if (data.some(item => !item)) return;
+
+  let active = data.findIndex(item => item.title === 'The last red light');
+  if (active < 0) active = 0;
+  let filter = 'ALL';
+  let mode = 'contact';
+  let refreshFrame = 0;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const kept = () => (window.CuratorDesk?.photoIds() || []).map(String);
+
+  host.classList.add('atelier-photo', 'folio-photo');
   host.dataset.view = mode;
-  host.setAttribute('aria-label', 'The wandering room, ' + frames.length + ' photographs');
+  host.setAttribute('aria-label', 'Photography, ' + frames.length + ' photographs');
   host.innerHTML = `
     <div class="photo-room-bar">
       <div class="photo-room-tabs" role="group" aria-label="Photo viewing mode">
-        <button type="button" data-view="wander" aria-pressed="true">Wander <span aria-hidden="true">↗</span></button>
-        <button type="button" data-view="index" aria-pressed="false">All frames <span class="mono">${frames.length}</span></button>
+        <button type="button" data-view="contact" aria-pressed="true">Contact sheet</button>
+        <button type="button" data-view="all" aria-pressed="false">All frames <span data-total>${frames.length}</span></button>
       </div>
-      <button type="button" class="photo-surprise" data-surprise>Somewhere unexpected <span aria-hidden="true">↗</span></button>
+      <button type="button" class="photo-surprise" data-surprise>Random frame <span aria-hidden="true">↗</span></button>
     </div>
-    <div class="photo-routes" role="group" aria-label="Choose a photographic journey"></div>
-    <div class="photo-map-shell">
-      <div class="photo-map" tabindex="0" role="region" aria-label="Draggable photo map. Drag to explore, or use the arrow keys to choose a photograph." aria-describedby="photo-map-help" data-lenis-prevent>
-        <div class="photo-world"></div>
+    <div class="photo-routes" role="group" aria-label="Filter photographs"></div>
+    <div class="photo-contact" data-photo-contact>
+      <div class="photo-feature">
+        <div class="photo-feature__stage" data-photo-feature></div>
+        <div class="photo-feature__panel">
+          <div class="photo-feature__identity">
+            <p class="photo-current-category"></p>
+            <h3 class="photo-current-title" id="photo-current-title"></h3>
+          </div>
+          <div class="photo-feature__controls">
+            <div class="photo-turns">
+              <button type="button" data-step="-1" aria-label="Previous photograph">←</button>
+              <span class="photo-position" aria-hidden="true"></span>
+              <button type="button" data-step="1" aria-label="Next photograph">→</button>
+            </div>
+            <div class="photo-feature__actions">
+              <button type="button" class="photo-look" data-open>View full frame</button>
+              <button type="button" class="photo-keep" data-keep>Add photo</button>
+              <a class="curator-collect-link" href="#curate">Visit desk →</a>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="photo-map-tools">
-        <p id="photo-map-help" class="sr-only">Drag to explore. Click a photograph to open it.</p>
-        <button type="button" class="photo-room-map" aria-label="Photo room map. Click a place to travel there; Enter returns to the current frame."><canvas width="240" height="150" aria-hidden="true"></canvas><span>Room map</span></button>
-        <button type="button" data-recenter aria-label="Center the current photograph">Back to this frame <span aria-hidden="true">↖</span></button>
-      </div>
+      <section class="photo-contact-directory" aria-labelledby="photo-directory-title">
+        <div class="photo-directory-head">
+          <p id="photo-directory-title">Contact sheet <span data-directory-count></span></p>
+          <div class="photo-directory-scroll" role="group" aria-label="Scroll contact sheet">
+            <button type="button" data-scroll="-1" aria-label="Previous contact prints">←</button>
+            <button type="button" data-scroll="1" aria-label="Next contact prints">→</button>
+          </div>
+        </div>
+        <div class="photo-contact-rail" data-contact-rail aria-label="Photograph contact prints"></div>
+      </section>
     </div>
-    <div class="photo-navigator">
-      <div class="photo-feature__label"><p class="photo-location mono"></p><h3 class="photo-current-title"></h3></div>
-      <div class="photo-nav-actions">
-        <div class="photo-turns"><button type="button" data-step="-1" aria-label="Previous photograph">←</button><span class="photo-position mono"></span><button type="button" data-step="1" aria-label="Next photograph">→</button></div>
-        <button type="button" class="photo-look" data-look>Look closer ↗</button>
-        <button type="button" class="photo-keep" data-keep>Keep this frame +</button>
+    <div class="photo-index" data-photo-index-view hidden>
+      <div class="photo-index-heading">
+        <p>All frames</p>
+        <p data-index-summary></p>
       </div>
+      <div class="photo-index-grid" data-photo-grid aria-label="Complete photograph index"></div>
     </div>
     <p class="sr-only photo-live" role="status" aria-live="polite"></p>`;
-  const world = host.querySelector('.photo-world'), map = host.querySelector('.photo-map');
-  const routes = host.querySelector('.photo-routes'), live = host.querySelector('.photo-live');
+
+  const contact = host.querySelector('[data-photo-contact]');
+  const indexView = host.querySelector('[data-photo-index-view]');
+  const featureStage = host.querySelector('[data-photo-feature]');
+  const frameGrid = host.querySelector('[data-photo-grid]');
+  const contactRail = host.querySelector('[data-contact-rail]');
+  const routeBar = host.querySelector('.photo-routes');
+  const live = host.querySelector('.photo-live');
   const keepButton = host.querySelector('[data-keep]');
-  const visit = document.createElement('a');
-  visit.className = 'curator-collect-link'; visit.href = '#curate'; visit.textContent = 'Visit the desk →';
-  keepButton.after(visit);
-  const roomMap = host.querySelector('.photo-room-map'), mini = roomMap.querySelector('canvas');
+  const currentCategory = host.querySelector('.photo-current-category');
+  const currentTitle = host.querySelector('.photo-current-title');
+  const position = host.querySelector('.photo-position');
+  const directoryCount = host.querySelector('[data-directory-count]');
+  const indexSummary = host.querySelector('[data-index-summary]');
+  const scrollBack = host.querySelector('[data-scroll="-1"]');
+  const scrollForward = host.querySelector('[data-scroll="1"]');
+  const visit = host.querySelector('.curator-collect-link');
+
   const detailInfo = document.getElementById('lb-photo-info');
+  detailInfo?.querySelectorAll(':scope > .photo-detail-keep, :scope > .photo-detail-story-status')
+    .forEach(node => node.remove());
   const detailKeep = detailInfo ? document.createElement('button') : null;
-  const detailStoryStatus = document.createElement('p');
-  detailStoryStatus.className = 'photo-detail-story-status';
-  detailStoryStatus.setAttribute('role', 'status');
+  const detailStatus = document.createElement('p');
+  detailStatus.className = 'photo-detail-story-status';
+  detailStatus.setAttribute('role', 'status');
   if (detailKeep) {
     detailKeep.type = 'button';
     detailKeep.className = 'photo-keep photo-detail-keep';
-    detailInfo.append(detailKeep, detailStoryStatus);
+    detailInfo.append(detailKeep, detailStatus);
   }
-  let mapPaintFrame = 0;
-  initialOrder.forEach(index => world.append(frames[index]));
-  // Native image lazy-loading can retain the pre-reparenting geometry after
-  // the spatial map becomes a multi-column index. Load the small contact
-  // prints together when the room approaches; originals remain click-only.
-  function loadRoomPrints() {
-    frames.forEach(frame => { frame.querySelector('img').loading = 'eager'; });
-  }
-  if ('IntersectionObserver' in window) {
-    const roomLoader = new IntersectionObserver(entries => {
-      if (!entries.some(entry => entry.isIntersecting)) return;
-      loadRoomPrints(); roomLoader.disconnect();
-    }, { rootMargin: '700px 0px' });
-    roomLoader.observe(host);
-  } else loadRoomPrints();
-  const matching = () => initialOrder.filter(index => filter === 'ALL' || (filter === 'NEW' ? !!frames[index].dataset.new : category(frames[index]) === filter));
+
+  const contactButtons = new Map();
+  const filterButtons = new Map();
+  frameGrid.setAttribute('role', 'list');
+  frames.forEach(frame => frame.setAttribute('role', 'listitem'));
   const announce = value => { live.textContent = value; };
-  const button = (label, name, cls) => {
-    const node = document.createElement('button'); node.type = 'button'; node.textContent = label;
-    if (name) node.setAttribute('aria-label', name);
-    if (cls) node.className = cls;
+  const behavior = () => reduced.matches ? 'auto' : 'smooth';
+  const schedule = delay => window.scheduleRefresh?.(delay);
+  const matching = () => data
+    .filter(item => filter === 'ALL' || (filter === 'NEW' ? item.fresh : item.category === filter))
+    .map(item => item.index);
+
+  function makeButton(label, className) {
+    const node = document.createElement('button');
+    node.type = 'button';
+    node.textContent = label;
+    if (className) node.className = className;
     return node;
-  };
-  function stopPan() {
-    panMotion?.kill(); panMotion = null;
-    // Cancel a pending native smooth scroll before a gesture or mode change.
-    map.scrollTo({ left: map.scrollLeft, top: map.scrollTop, behavior: 'instant' });
   }
-  function paintRoomMap() {
-    const ctx = mini.getContext('2d');
-    if (!ctx || mode !== 'wander' || !worldWidth || !worldHeight) return;
-    ctx.clearRect(0, 0, mini.width, mini.height);
-    const sx = mini.width / worldWidth, sy = mini.height / worldHeight;
-    positions.forEach((pos, index) => {
-      ctx.fillStyle = index === active ? '#1c3154' : '#aebbd6';
-      ctx.fillRect(pos.x * sx, pos.y * sy, pos.w * sx, pos.h * sy);
-    });
-    ctx.strokeStyle = '#1c3154'; ctx.lineWidth = 2;
-    ctx.strokeRect(map.scrollLeft * sx + 1, map.scrollTop * sy + 1, map.clientWidth * sx - 2, map.clientHeight * sy - 2);
-  }
-  map.addEventListener('scroll', () => {
-    if (!mapPaintFrame) mapPaintFrame = requestAnimationFrame(() => { mapPaintFrame = 0; paintRoomMap(); });
-  }, { passive: true });
-  roomMap.addEventListener('click', event => {
-    const box = mini.getBoundingClientRect();
-    if (!event.detail || event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) { center(active); return; }
-    const x = (event.clientX - box.left) / box.width * worldWidth, y = (event.clientY - box.top) / box.height * worldHeight;
-    let target = active, distance = Infinity;
-    positions.forEach((pos, index) => {
-      const d = Math.hypot(pos.x + pos.w / 2 - x, pos.y + pos.h / 2 - y);
-      if (d < distance) { distance = d; target = index; }
-    });
-    select(target);
-  });
-  function center(index, animate = true) {
-    if (mode !== 'wander') return;
-    const pos = positions.get(index);
-    if (!pos) return;
-    stopPan();
-    const left = Math.max(0, Math.min(worldWidth - map.clientWidth, pos.x + pos.w / 2 - map.clientWidth / 2));
-    const top = Math.max(0, Math.min(worldHeight - map.clientHeight, pos.y + pos.h / 2 - map.clientHeight / 2));
-    if (animate && !reduced.matches && window.gsap) {
-      panMotion = gsap.to(map, { scrollLeft: left, scrollTop: top, duration: .65, ease: 'power3.inOut', onComplete: () => { panMotion = null; } });
-    } else map.scrollTo({ left, top, behavior: 'instant' });
-  }
-  function renderSelection(announceChange) {
-    const indices = matching(), position = indices.indexOf(active);
-    frames.forEach((frame, index) => {
-      frame.classList.toggle('is-featured', index === active);
-      frame.classList.toggle('is-kept', kept().includes(String(index)));
-      const b = frame.querySelector('button');
-      if (index === active) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
-    });
-    host.querySelector('.photo-location').textContent = 'Frame ' + String(active + 1).padStart(2, '0');
-    host.querySelector('.photo-current-title').textContent = data[active].title;
-    host.querySelector('.photo-position').textContent = String(position + 1).padStart(2, '0') + ' / ' + String(indices.length).padStart(2, '0');
-    renderKeepButton(keepButton, active);
-    syncDetailKeep();
-    paintRoomMap();
-    if (announceChange) announce('Frame ' + (active + 1) + ': ' + data[active].title);
-  }
-  function select(index, animate = true, move = true) {
-    if (!data[index]) return;
-    active = index;
-    renderSelection(animate);
-    if (move) center(index, animate);
-  }
-  function layout() {
-    const indices = matching();
-    frames.forEach((frame, index) => { frame.hidden = !indices.includes(index); });
-    positions = new Map();
-    if (mode === 'index') {
-      world.style.removeProperty('width'); world.style.removeProperty('height');
-      frames.forEach(frame => { frame.style.cssText = ''; });
-      map.scrollTo({ left: 0, top: 0, behavior: 'instant' });
-      return;
-    }
-    const narrow = map.clientWidth < 600, pitchX = narrow ? 270 : 380, pitchY = narrow ? 245 : 320;
-    const columns = Math.min(7, Math.max(1, Math.ceil(Math.sqrt(indices.length * 1.4))));
-    worldWidth = Math.max(map.clientWidth, columns * pitchX + 160);
-    worldHeight = Math.max(map.clientHeight, Math.ceil(indices.length / columns) * pitchY + 180);
-    world.style.width = worldWidth + 'px'; world.style.height = worldHeight + 'px';
-    indices.forEach((index, slot) => {
-      const col = slot % columns, row = Math.floor(slot / columns);
-      const n = (index * 17) % 13;
-      const w = (narrow ? 188 : 264) + n * (narrow ? 3 : 4);
-      const imageHeight = Math.min(narrow ? 192 : 245, (w - 20) / data[index].ratio);
-      const h = imageHeight + 56;
-      const x = 80 + col * pitchX + (n % 3) * 13;
-      const y = 80 + row * pitchY + (col % 2 ? 35 : 0) + (n % 4) * 7;
-      positions.set(index, { x, y, w, h });
-      frames[index].style.cssText = '--print-x:' + x + 'px;--print-y:' + y + 'px;--print-w:' + w + 'px;--print-h:' + imageHeight + 'px;--print-tilt:' + ((n % 7) - 3) * 1.2 + 'deg;';
-    });
-    center(active, false);
-    paintRoomMap();
-  }
-  function filterTo(key) {
-    cancelDrag(); stopPan(); filter = key;
-    routes.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.route === filter)));
-    const indices = matching();
-    if (!indices.includes(active)) active = indices[0];
-    layout(); renderSelection(true); window.scheduleRefresh?.(100);
-  }
+
   [['ALL', 'All'], ...Object.entries(groups), ['NEW', 'New']].forEach(([key, label]) => {
-    const count = initialOrder.filter(index => key === 'ALL' || (key === 'NEW' ? !!frames[index].dataset.new : category(frames[index]) === key)).length;
+    const count = data.filter(item => key === 'ALL' || (key === 'NEW' ? item.fresh : item.category === key)).length;
     if (!count) return;
-    const b = button('', null, 'photo-route'); b.dataset.route = key;
-    b.setAttribute('aria-pressed', String(key === filter));
-    const name = document.createElement('span'); name.textContent = label;
-    const total = document.createElement('small'); total.textContent = String(count).padStart(2, '0');
-    b.append(name, total); b.addEventListener('click', () => filterTo(key)); routes.append(b);
+
+    const node = makeButton('', 'photo-route');
+    node.dataset.route = key;
+    node.setAttribute('aria-pressed', String(key === filter));
+    const name = document.createElement('span');
+    name.textContent = label;
+    const total = document.createElement('small');
+    total.textContent = String(count);
+    node.append(name, total);
+    node.addEventListener('click', () => setFilter(key));
+    routeBar.append(node);
+    filterButtons.set(key, node);
   });
-  host.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => {
-    cancelDrag(); stopPan(); mode = b.dataset.view; host.dataset.view = mode;
-    loadRoomPrints();
-    host.querySelectorAll('[data-view]').forEach(item => item.setAttribute('aria-pressed', String(item === b)));
-    map.tabIndex = mode === 'wander' ? 0 : -1;
-    map.setAttribute('aria-label', mode === 'wander' ? 'Draggable photo map. Drag to explore, or use the arrow keys to choose a photograph.' : 'Photograph index');
-    layout(); window.scheduleRefresh?.(120);
-    announce(mode === 'wander' ? 'Photo map. Drag or use the arrow keys to explore.' : matching().length + ' photographs in the index.');
-  }));
-  function step(direction) {
-    const indices = matching(); select(indices[(indices.indexOf(active) + direction + indices.length) % indices.length]);
-  }
-  host.querySelectorAll('[data-step]').forEach(b => b.addEventListener('click', () => step(Number(b.dataset.step))));
-  host.querySelector('[data-recenter]').addEventListener('click', () => center(active));
-  host.querySelector('[data-surprise]').addEventListener('click', () => {
-    const indices = matching().filter(i => i !== active);
-    select(indices[Math.floor(Math.random() * indices.length)] ?? active);
-  });
-  host.querySelector('[data-look]').addEventListener('click', event => {
-    center(active, false); openDetail('photo', active, event.currentTarget);
-  });
-  map.addEventListener('keydown', event => {
-    if (event.target !== map || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Enter', ' '].includes(event.key)) return;
-    event.preventDefault();
-    if (event.key === 'Enter' || event.key === ' ') { openDetail('photo', active, map); return; }
-    const indices = matching();
-    if (event.key === 'Home' || event.key === 'End') select(indices[event.key === 'Home' ? 0 : indices.length - 1]);
-    else step(event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1);
-  });
-  host.addEventListener('click', event => {
-    if (performance.now() < suppressUntil) { event.preventDefault(); event.stopImmediatePropagation(); return; }
-    const frame = event.target.closest('.photo-frame');
-    if (frame) select(Number(frame.dataset.photoIndex), false, false);
-  }, true);
-  world.addEventListener('focusin', event => {
-    const frame = event.target.closest('.photo-frame');
-    if (frame) {
-      const index = Number(frame.dataset.photoIndex);
-      select(index, false, !drag && index !== active);
+
+  data.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'photo-contact-item';
+    card.setAttribute('role', 'listitem');
+    const node = makeButton('', 'photo-contact-thumb');
+    node.dataset.photoSelect = String(item.index);
+    node.setAttribute('aria-label', item.title);
+    node.title = item.alt;
+
+    const image = document.createElement('img');
+    image.src = item.thumb;
+    image.alt = '';
+    image.width = item.width;
+    image.height = item.height;
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    image.draggable = false;
+
+    const caption = document.createElement('span');
+    caption.className = 'photo-contact-thumb__title';
+    caption.textContent = item.title;
+    node.append(image, caption);
+    if (item.fresh) {
+      const mark = document.createElement('small');
+      mark.textContent = 'New';
+      node.append(mark);
     }
+
+    card.append(node);
+    contactRail.append(card);
+    contactButtons.set(item.index, { card, node });
   });
-  function cancelDrag(event) {
-    if (!drag || (event?.pointerId !== undefined && event.pointerId !== drag.id)) return;
-    if (dragPaintFrame) {
-      cancelAnimationFrame(dragPaintFrame); dragPaintFrame = 0;
-      // Commit the last queued position on release; cancellation keeps the painted view.
-      if (event?.type === 'pointerup') paintDrag();
+  contactRail.setAttribute('role', 'list');
+
+  function mountActiveFrame() {
+    const frame = frames[active];
+    if (!frame) return;
+    const previous = featureStage.firstElementChild;
+    if (previous && previous !== frame) {
+      frameGrid.append(previous);
+      previous.hidden = !matching().includes(Number(previous.dataset.photoIndex));
     }
-    const previous = drag; drag = null; map.classList.remove('is-dragging');
-    if (previous.moved) suppressUntil = performance.now() + 160;
-    if (map.hasPointerCapture(previous.id)) map.releasePointerCapture(previous.id);
-    window.removeEventListener('pointermove', moveDrag);
-    window.removeEventListener('pointerup', cancelDrag);
-    window.removeEventListener('pointercancel', cancelDrag);
+    if (frame.parentElement !== featureStage) featureStage.append(frame);
+    frame.hidden = false;
+    frame.querySelector('img').loading = 'eager';
   }
-  function paintDrag() {
-    dragPaintFrame = 0;
-    if (!drag?.moved) return;
-    map.scrollLeft = drag.targetLeft;
-    map.scrollTop = drag.targetTop;
+
+  function restoreFrameGrid() {
+    frameGrid.append(...data.map(item => frames[item.index]));
   }
-  function moveDrag(event) {
-    if (!drag || event.pointerId !== drag.id) return;
-    const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
-    if (!drag.moved && Math.hypot(dx, dy) < 6) return;
-    if (!drag.moved) { drag.moved = true; map.setPointerCapture(event.pointerId); map.classList.add('is-dragging'); }
-    event.preventDefault();
-    drag.targetLeft = drag.left - dx; drag.targetTop = drag.top - dy;
-    if (!dragPaintFrame) dragPaintFrame = requestAnimationFrame(paintDrag);
+
+  function updateRailButtons() {
+    const max = contactRail.scrollWidth - contactRail.clientWidth;
+    scrollBack.disabled = max <= 1 || contactRail.scrollLeft <= 1;
+    scrollForward.disabled = max <= 1 || contactRail.scrollLeft >= max - 1;
   }
-  map.addEventListener('pointerdown', event => {
-    // Touch keeps native two-axis scrolling. Vertical scrolling elsewhere stays native.
-    if (mode !== 'wander' || event.pointerType === 'touch' || !event.isPrimary || event.button !== 0) return;
-    cancelDrag(); stopPan();
-    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, left: map.scrollLeft, top: map.scrollTop, moved: false };
-    window.addEventListener('pointermove', moveDrag, { passive: false });
-    window.addEventListener('pointerup', cancelDrag); window.addEventListener('pointercancel', cancelDrag);
-  });
-  map.addEventListener('lostpointercapture', cancelDrag);
-  window.addEventListener('blur', () => cancelDrag());
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) return;
-    cancelDrag(); stopPan();
-    if (mapPaintFrame) { cancelAnimationFrame(mapPaintFrame); mapPaintFrame = 0; }
-  });
-  map.addEventListener('wheel', stopPan, { passive: true });
-  map.addEventListener('touchstart', stopPan, { passive: true });
+
+  function revealContact(index, focus) {
+    const entry = contactButtons.get(index);
+    if (!entry) return;
+    requestAnimationFrame(() => {
+      const railBox = contactRail.getBoundingClientRect();
+      const itemBox = entry.card.getBoundingClientRect();
+      if (itemBox.left < railBox.left || itemBox.right > railBox.right) {
+        const left = itemBox.left - railBox.left - (railBox.width - itemBox.width) / 2;
+        contactRail.scrollBy({ left, behavior: behavior() });
+      }
+      if (focus === 'contact') entry.node.focus({ preventScroll: true });
+      updateRailButtons();
+    });
+  }
+
   function renderKeepButton(control, index) {
     if (!control) return;
-    const added = kept().includes(String(index));
-    const label = added ? 'Added' : kept().length === 3 ? 'Photos full' : 'Add photo';
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', '0 0 24 24');
-    svg.setAttribute('class', 'gallery-icon');
-    svg.setAttribute('aria-hidden', 'true');
-    const path = document.createElementNS(svg.namespaceURI, 'path');
-    path.setAttribute('d', added ? 'm5 12 4 4L19 6' : 'M6 4h12v17l-6-4-6 4Z');
-    path.setAttribute('fill', 'none'); path.setAttribute('stroke', 'currentColor');
-    path.setAttribute('stroke-width', '1.6'); path.setAttribute('stroke-linecap', 'round'); path.setAttribute('stroke-linejoin', 'round');
-    svg.append(path);
-    const text = document.createElement('span'); text.textContent = label;
-    const count = document.createElement('small'); count.textContent = kept().length + '/3';
-    control.replaceChildren(svg, text, count);
-    control.disabled = !window.CuratorDesk || window.CuratorDesk.busy() || added || kept().length === 3;
-    control.setAttribute('aria-label', label + ' (' + kept().length + ' of 3 photographs)');
-    control.title = added ? 'This photograph is in your exhibition' : kept().length === 3 ? 'Change a photograph at the desk' : 'Add this photograph to your exhibition';
+    const selected = kept();
+    const added = selected.includes(String(index));
+    const full = selected.length === 3;
+    const ready = Boolean(window.CuratorDesk);
+    const label = added ? 'Added' : full ? 'Photos full' : 'Add photo';
+
+    const text = document.createElement('span');
+    text.textContent = label;
+    const count = document.createElement('small');
+    count.textContent = selected.length + '/3';
+    control.replaceChildren(text, count);
+    control.disabled = !ready || window.CuratorDesk.busy() || added || full;
+    control.setAttribute('aria-label', label + ' (' + selected.length + ' of 3 photographs)');
+    control.title = added
+      ? 'This photograph is in your exhibition'
+      : full
+        ? 'Change a photograph at the desk'
+        : 'Add this photograph to your exhibition';
   }
+
   function syncDetailKeep() {
     if (!detailKeep) return;
-    renderKeepButton(detailKeep, typeof detailType !== 'undefined' && detailType === 'photo' ? lbIndex : active);
+    const index = typeof detailType !== 'undefined' && detailType === 'photo' ? lbIndex : active;
+    renderKeepButton(detailKeep, index);
   }
+
+  function renderSelection(announceChange) {
+    const indices = matching();
+    if (!indices.length) return;
+    if (!indices.includes(active)) active = indices[0];
+
+    if (mode === 'contact') mountActiveFrame();
+    const selected = new Set(kept());
+    data.forEach(item => {
+      const frame = frames[item.index];
+      const button = frame.querySelector('.photo-frame-btn');
+      const isActive = item.index === active;
+      frame.classList.toggle('is-featured', isActive);
+      frame.classList.toggle('is-kept', selected.has(String(item.index)));
+      button.classList.toggle('photo-feature__button', mode === 'contact' && isActive);
+      if (isActive) button.setAttribute('aria-current', 'true');
+      else button.removeAttribute('aria-current');
+
+      const entry = contactButtons.get(item.index);
+      if (isActive) entry.node.setAttribute('aria-current', 'true');
+      else entry.node.removeAttribute('aria-current');
+    });
+
+    const item = data[active];
+    currentCategory.textContent = item.categoryLabel;
+    currentTitle.textContent = item.title;
+    position.textContent = String(indices.indexOf(active) + 1) + ' / ' + String(indices.length);
+    directoryCount.textContent = String(indices.length);
+    indexSummary.textContent = String(indices.length) + (indices.length === 1 ? ' photograph' : ' photographs');
+    renderKeepButton(keepButton, active);
+    syncDetailKeep();
+    updateRailButtons();
+    if (announceChange) announce(item.title + '. Photograph ' + (indices.indexOf(active) + 1) + ' of ' + indices.length + '.');
+  }
+
+  function layout() {
+    const indices = matching();
+    const matched = new Set(indices);
+    if (!indices.includes(active)) active = indices[0];
+
+    contact.hidden = mode !== 'contact';
+    indexView.hidden = mode !== 'all';
+    host.dataset.view = mode;
+    host.querySelectorAll('[data-view]').forEach(node => {
+      node.setAttribute('aria-pressed', String(node.dataset.view === mode));
+    });
+    data.forEach(item => {
+      frames[item.index].hidden = !matched.has(item.index);
+      contactButtons.get(item.index).card.hidden = !matched.has(item.index);
+    });
+
+    restoreFrameGrid();
+    if (mode === 'contact') mountActiveFrame();
+
+    Object.entries({ ALL: 'All', ...groups, NEW: 'New' }).forEach(([key, label]) => {
+      filterButtons.get(key)?.setAttribute('aria-pressed', String(filter === key));
+    });
+    renderSelection(false);
+    requestAnimationFrame(updateRailButtons);
+    schedule(140);
+  }
+
+  function select(index, options) {
+    const next = Number(index);
+    if (!data[next]) return;
+    const indices = matching();
+    if (!indices.includes(next)) return;
+
+    const settings = options || {};
+    active = next;
+    if (mode === 'contact') mountActiveFrame();
+    renderSelection(settings.announce !== false);
+    if (mode === 'contact' && settings.reveal !== false) revealContact(active, settings.focus);
+    if (settings.focus === 'feature') {
+      requestAnimationFrame(() => featureStage.querySelector('.photo-frame-btn')?.focus({ preventScroll: true }));
+    }
+    schedule(120);
+  }
+
+  function step(direction, focus) {
+    const indices = matching();
+    if (!indices.length) return;
+    const current = Math.max(0, indices.indexOf(active));
+    const next = indices[(current + direction + indices.length) % indices.length];
+    select(next, { focus });
+  }
+
+  function setFilter(key) {
+    if (!filterButtons.has(key)) return;
+    filter = key;
+    const indices = matching();
+    if (!indices.includes(active)) active = indices[0];
+    filterButtons.forEach((node, value) => node.setAttribute('aria-pressed', String(value === filter)));
+    layout();
+    announce((filter === 'ALL' ? 'All photographs' : filterButtons.get(filter).querySelector('span').textContent) + '. ' + indices.length + ' visible.');
+  }
+
+  function setMode(next) {
+    if (next !== 'contact' && next !== 'all') return;
+    mode = next;
+    layout();
+    announce(mode === 'contact' ? 'Contact sheet view.' : 'All frames view. ' + matching().length + ' photographs visible.');
+  }
+
+  host.querySelectorAll('[data-view]').forEach(node => {
+    node.addEventListener('click', () => setMode(node.dataset.view));
+  });
+  host.querySelector('[data-surprise]').addEventListener('click', () => {
+    const indices = matching().filter(index => index !== active);
+    const next = indices[Math.floor(Math.random() * indices.length)];
+    select(next == null ? active : next);
+  });
+  host.querySelectorAll('[data-step]').forEach(node => {
+    node.addEventListener('click', () => step(Number(node.dataset.step)));
+  });
+  host.querySelector('[data-open]').addEventListener('click', event => {
+    if (typeof openDetail === 'function') openDetail('photo', active, event.currentTarget);
+  });
+  [scrollBack, scrollForward].forEach(node => {
+    node.addEventListener('click', () => {
+      const width = Math.max(180, contactRail.clientWidth * .72);
+      contactRail.scrollBy({ left: Number(node.dataset.scroll) * width, behavior: behavior() });
+    });
+  });
+  contactRail.addEventListener('scroll', updateRailButtons, { passive: true });
+
+  contactRail.addEventListener('click', event => {
+    const node = event.target.closest('[data-photo-select]');
+    if (!node) return;
+    const index = Number(node.dataset.photoSelect);
+    if (event.detail === 0 || index === active) {
+      if (typeof openDetail === 'function') openDetail('photo', index, node);
+      return;
+    }
+    select(index);
+  });
+
+  contactRail.addEventListener('keydown', event => {
+    const node = event.target.closest('[data-photo-select]');
+    if (!node) return;
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const indices = matching();
+    const current = indices.indexOf(Number(node.dataset.photoSelect));
+    const next = event.key === 'Home'
+      ? indices[0]
+      : event.key === 'End'
+        ? indices[indices.length - 1]
+        : indices[(current + (event.key === 'ArrowLeft' ? -1 : 1) + indices.length) % indices.length];
+    select(next, { focus: 'contact' });
+  });
+
+  featureStage.addEventListener('keydown', event => {
+    if (!event.target.closest('.photo-frame-btn')) return;
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const indices = matching();
+    const next = event.key === 'Home'
+      ? indices[0]
+      : event.key === 'End'
+        ? indices[indices.length - 1]
+        : indices[(indices.indexOf(active) + (event.key === 'ArrowLeft' ? -1 : 1) + indices.length) % indices.length];
+    select(next, { focus: 'feature' });
+  });
+
+  host.addEventListener('click', event => {
+    const frame = event.target.closest('.photo-frame');
+    if (!frame || !host.contains(frame)) return;
+    const index = Number(frame.dataset.photoIndex);
+    if (!data[index] || index === active) return;
+    active = index;
+    renderSelection(false);
+  }, true);
+
   function addToExhibition(index) {
     if (!data[index] || !window.CuratorDesk?.addPhoto(index)) return;
     const message = 'Photograph added to your exhibition. ' + kept().length + '/3 photographs.';
     announce(message);
-    if (detailKeep && typeof detailType !== 'undefined' && detailType === 'photo') detailStoryStatus.textContent = message;
+    if (detailKeep && typeof detailType !== 'undefined' && detailType === 'photo') {
+      detailStatus.textContent = message;
+    }
+    renderSelection(false);
   }
-  visit.addEventListener('click', event => { event.preventDefault(); window.CuratorDesk?.visit(); });
-  window.addEventListener('night:creation-change', () => renderSelection(false));
+
+  visit.addEventListener('click', event => {
+    event.preventDefault();
+    if (window.CuratorDesk?.visit) window.CuratorDesk.visit();
+    else document.getElementById('curate')?.scrollIntoView({ block: 'start', behavior: behavior() });
+  });
   keepButton.addEventListener('click', () => addToExhibition(active));
   if (detailKeep) {
-    detailKeep.addEventListener('click', () => { if (detailType === 'photo') addToExhibition(lbIndex); });
+    detailKeep.addEventListener('click', () => {
+      if (typeof detailType !== 'undefined' && detailType === 'photo') addToExhibition(lbIndex);
+    });
     const detailCount = document.getElementById('lb-count');
-    if (detailCount) new MutationObserver(() => { syncDetailKeep(); detailStoryStatus.textContent = ''; }).observe(detailCount, { childList: true, characterData: true, subtree: true });
-  }
-  const resize = new ResizeObserver(() => { cancelDrag(); stopPan(); layout(); });
-  resize.observe(map);
-  // Caption wrapping changes the room height without changing the map itself.
-  // Refresh only after an actual size change, through the shared scheduler.
-  let roomHeight = null;
-  const roomResize = new ResizeObserver(([entry]) => {
-    const height = entry.contentRect.height;
-    if (roomHeight !== null && Math.abs(height - roomHeight) > .5) scheduleRefresh(120);
-    roomHeight = height;
-  });
-  roomResize.observe(host);
-  reduced.addEventListener('change', () => { cancelDrag(); stopPan(); center(active, false); });
-  window.AtelierPhoto = {
-    select, count: () => frames.length,
-    returnTarget(index, origin) {
-      if (!matching().includes(index)) filterTo('ALL');
-      select(index, false, index !== active);
-      // Map prints are tilted. Use a fade in the shared viewer instead of a distorted flight.
-      return { image: frames[index].querySelector('img'), button: world.contains(origin) ? frames[index].querySelector('button') : origin || map };
+    if (detailCount) {
+      new MutationObserver(() => {
+        syncDetailKeep();
+        detailStatus.textContent = '';
+      }).observe(detailCount, { childList: true, characterData: true, subtree: true });
     }
+  }
+
+  ['night:creation-change', 'night:curator-change'].forEach(name => {
+    window.addEventListener(name, () => renderSelection(false));
+  });
+
+  host.addEventListener('load', event => {
+    if (event.target instanceof HTMLImageElement) schedule(180);
+  }, true);
+
+  if ('ResizeObserver' in window) {
+    const resize = new ResizeObserver(() => {
+      cancelAnimationFrame(refreshFrame);
+      refreshFrame = requestAnimationFrame(() => {
+        updateRailButtons();
+        schedule(180);
+      });
+    });
+    resize.observe(host);
+    resize.observe(contactRail);
+  }
+
+  window.AtelierPhoto = {
+    select,
+    count: () => frames.length,
+    filter: key => setFilter(key),
+    view: next => setMode(next),
+    returnTarget(index, origin) {
+      const next = Number(index);
+      if (!matching().includes(next) && data[next]) {
+        filter = 'ALL';
+        filterButtons.forEach((node, value) => node.setAttribute('aria-pressed', String(value === filter)));
+        layout();
+      }
+      select(next, { announce: false, reveal: false });
+      const frame = data[next] ? frames[next] : null;
+      const returnedOrigin = origin instanceof Element
+        && document.contains(origin)
+        && origin.getClientRects().length
+        && getComputedStyle(origin).visibility !== 'hidden'
+        ? origin
+        : null;
+      const originImage = returnedOrigin
+        ? returnedOrigin.matches('img') ? returnedOrigin : returnedOrigin.querySelector('img')
+        : null;
+      return {
+        image: originImage || frame?.querySelector('img') || null,
+        button: returnedOrigin || frame?.querySelector('.photo-frame-btn') || null,
+      };
+    },
   };
-  layout(); renderSelection(false);
+
+  layout();
 })();

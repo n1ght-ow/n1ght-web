@@ -3,19 +3,23 @@
   "use strict";
   const root = document.getElementById("curate");
   if (!root) return;
+  root.classList.add("folio-curate");
   const $ = (id) => document.getElementById(id);
   const PHOTOS = ["photo", "photo2", "photo3"];
   const TYPES = [...PHOTOS, "book", "film", "series", "music"];
   const LABELS = { photo: "Photo 1", photo2: "Photo 2", photo3: "Photo 3", book: "Book", film: "Film", series: "Series", music: "Song" };
   const INVITES = { photo: "Choose a photograph", photo2: "Choose a photograph", photo3: "Choose a photograph", book: "Choose a book", film: "Choose a film", series: "Choose a series", music: "Choose a song" };
   const KEY = "night:creation-desk:v1";
-  const paper = "#ffffff", ink = "#1c3154", muted = "#4b5d7a";
+  const paper = "#f9faf6", ink = "#263b32", accent = "#5d2638", muted = "#56645b", nightPaper = "#ffffff";
+  const posterFontFamily = '"Bricolage Grotesque", "Microsoft YaHei", sans-serif';
+  const posterFontSpecs = ['400 26px "Bricolage Grotesque"', '600 84px "Bricolage Grotesque"'];
   const canvas = $("curator-poster"), ctx = canvas.getContext("2d");
   if (!ctx) return;
   const slots = $("curator-slots"), picker = $("curator-picker");
+  picker.classList.add("folio-curate-picker");
   const enlargeButton = $("curator-enlarge");
   const viewer = document.createElement('dialog');
-  viewer.className = 'curator-poster-viewer'; viewer.id = 'curator-poster-viewer';
+  viewer.className = 'curator-poster-viewer folio-curate-viewer'; viewer.id = 'curator-poster-viewer';
   viewer.setAttribute('aria-labelledby', 'curator-poster-viewer-title'); viewer.setAttribute('data-lenis-prevent', '');
   viewer.innerHTML = '<div class="curator-poster-viewer-head"><h2 id="curator-poster-viewer-title">Poster preview</h2><button type="button" class="curator-poster-close" aria-label="Close poster preview"><svg class="gallery-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div><canvas width="1200" height="1800" role="img"></canvas>';
   document.body.append(viewer);
@@ -119,7 +123,7 @@
     if (!item) { box.append(el("span", "curator-empty", "+")); return box; }
     if (item.type === "book") {
       const book = el("div", "curator-book"); book.style.background = item.cloth; book.style.color = item.ink;
-      book.append(el("small", "", "N1GHT LIBRARY"), el("strong", "", item.title), el("small", "", item.author)); box.append(book);
+      book.append(el("small", "", "N1ght Library"), el("strong", "", item.title), el("small", "", item.author)); box.append(book);
     } else if (item.src) {
       const img = el("img"); img.src = thumbnail ? item.thumb || item.src : item.src; img.alt = "";
       img.loading = "lazy"; img.decoding = "async";
@@ -149,7 +153,7 @@
       if (!card) {
         card = el("li", "curator-slot"); card.dataset.type = type;
         const handle = button("curator-handle", "", "Move " + LABELS[type] + "; use the left and right arrow keys to rearrange");
-        handle.dataset.action = "handle"; handle.append(el("span", "", String(index + 1).padStart(2, "0") + " / " + LABELS[type]), el("span", "", "⠿"));
+        handle.dataset.action = "handle"; handle.append(el("span", "", LABELS[type]), el("span", "", "⠿"));
         const pick = button("curator-pick", "", item ? "Change " + LABELS[type] + ": " + item.title : INVITES[type]); pick.dataset.action = "pick";
         pick.append(art(item, true), el("span", "curator-piece-title", item ? item.title : INVITES[type]));
         if (item) pick.title = item.title + " · " + item.meta;
@@ -161,7 +165,7 @@
         });
         card.append(handle, pick, tools);
       } else {
-        card.querySelector('.curator-handle span').textContent = String(index + 1).padStart(2, '0') + ' / ' + LABELS[type];
+        card.querySelector('.curator-handle span').textContent = LABELS[type];
         const pick = card.querySelector('.curator-pick');
         if (card.dataset.pickId !== String(item?.id ?? '')) {
           if (window.gsap) gsap.killTweensOf(pick.children);
@@ -427,20 +431,24 @@
     previewTimer = setTimeout(() => drawPreview(), 100);
   }
   async function waitForPosterFonts() {
-    if (!document.fonts?.ready) return;
+    if (!document.fonts?.ready || !document.fonts?.load) return;
     let timer;
     try {
       await Promise.race([
-        document.fonts.ready,
+        (async () => {
+          const matches = await Promise.all(posterFontSpecs.map((spec) => document.fonts.load(spec)));
+          await document.fonts.ready;
+          if (matches.some((faces) => !faces.length)) throw new Error('The poster typeface is still loading. Try saving again in a moment.');
+        })(),
         new Promise((_, reject) => {
           timer = setTimeout(() => reject(new Error('Fonts are still loading. Try saving again in a moment.')), 8000);
         })
       ]);
     } finally { clearTimeout(timer); }
   }
-  const font = (size, serif) => size + 'px ' + (serif ? '"Calistoga", Georgia, "Songti SC", serif' : '"Space Grotesk", "Microsoft YaHei", sans-serif');
-  function linesFor(value, width, size, serif) {
-    ctx.font = font(size, serif);
+  const font = (size, display) => (display ? '600 ' : '400 ') + size + 'px ' + posterFontFamily;
+  function linesFor(value, width, size, display) {
+    ctx.font = font(size, display);
     const lines = []; let line = "";
     // Keep Latin words together, while allowing CJK text to wrap between characters.
     const tokens = value.replace(/\s+/g, " ").trim().match(/[ \t]+|[A-Za-z0-9\u00c0-\u024f]+(?:['’][A-Za-z0-9]+)*|./gu) || [];
@@ -455,10 +463,10 @@
     if (line) lines.push(line);
     return lines;
   }
-  function write(value, x, y, width, size, maxLines, color, serif, minSize) {
-    let lines = linesFor(value, width, size, serif);
-    while (lines.length > maxLines && size > (minSize || 14)) { size -= 1; lines = linesFor(value, width, size, serif); }
-    ctx.fillStyle = color; ctx.font = font(size, serif); ctx.textBaseline = "top";
+  function write(value, x, y, width, size, maxLines, color, display, minSize) {
+    let lines = linesFor(value, width, size, display);
+    while (lines.length > maxLines && size > (minSize || 14)) { size -= 1; lines = linesFor(value, width, size, display); }
+    ctx.fillStyle = color; ctx.font = font(size, display); ctx.textBaseline = "top";
     lines.forEach((line, i) => ctx.fillText(line, x, y + i * size * 1.35));
     return lines.length * size * 1.35;
   }
@@ -480,9 +488,9 @@
       return;
     }
     ctx.save();
-    ctx.strokeStyle = dark ? '#7e94bc' : '#c5cddd'; ctx.lineWidth = 1.5;
+    ctx.strokeStyle = dark ? 'rgba(255,255,255,.55)' : 'rgba(38,59,50,.32)'; ctx.lineWidth = 1.5;
     ctx.setLineDash([7, 7]); ctx.strokeRect(x + 1, y + 1, w - 2, h - 2); ctx.setLineDash([]);
-    if (item) write('Artwork unavailable', x + 16, y + h / 2 - 10, w - 32, 20, 2, dark ? paper : muted);
+    if (item) write('Artwork unavailable', x + 16, y + h / 2 - 10, w - 32, 20, 2, dark ? nightPaper : muted);
     else {
       const cx = x + w / 2, cy = y + h / 2;
       ctx.beginPath(); ctx.moveTo(cx - 10, cy); ctx.lineTo(cx + 10, cy); ctx.moveTo(cx, cy - 10); ctx.lineTo(cx, cy + 10); ctx.stroke();
@@ -490,8 +498,8 @@
     ctx.restore();
   }
   function caption(item, type, index, x, y, width, dark, showMeta) {
-    const color = dark ? paper : ink, secondary = dark ? '#b9c9e8' : muted;
-    write(String(index + 1).padStart(2, '0'), x, y + 3, 30, 18, 1, secondary);
+    const color = dark ? nightPaper : ink, secondary = dark ? '#f1e5e9' : muted;
+    write(String(index + 1).padStart(2, '0'), x, y + 3, 30, 18, 1, dark ? secondary : accent);
     const used = write(item?.title || LABELS[type], x + 36, y, width - 36, 26, 2, color, false, 14);
     if (showMeta && item?.meta && item.meta !== item.title) write(item.meta, x + 36, y + used + 8, width - 36, 18, 2, secondary, false, 12);
   }
@@ -500,10 +508,12 @@
     const items = draft.order.map((type) => catalog[type].find((item) => String(item.id) === String(draft.picks[type])));
     const artImages = await Promise.all(items.map(loadImage));
     if (ticket !== renderTicket) return null;
-    const dark = draft.layout === "night", color = dark ? paper : ink, secondary = dark ? "#dbe5ff" : muted;
-    rect(0, 0, 1200, 1800, dark ? "#102348" : paper);
-    const titleHeight = write(draft.name.trim() || 'Your exhibition', 72, 74, 1056, 84, 2, color, true, 42);
-    const noteY = 74 + titleHeight + 20;
+    const dark = draft.layout === "night", color = dark ? nightPaper : ink, secondary = dark ? "#f1e5e9" : muted;
+    const rule = dark ? "rgba(255,255,255,.28)" : "rgba(38,59,50,.2)";
+    rect(0, 0, 1200, 1800, dark ? accent : paper);
+    rect(72, 54, 48, 4, dark ? nightPaper : accent);
+    const titleHeight = write(draft.name.trim() || 'Your exhibition', 72, 82, 1056, 84, 2, color, true, 42);
+    const noteY = 82 + titleHeight + 20;
     const noteHeight = draft.note.trim() ? write(draft.note.trim(), 72, noteY, 1056, 25, 4, secondary, false, 20) : 0;
     const top = noteY + noteHeight + (noteHeight ? 36 : 20);
     if (draft.layout === 'contact') {
@@ -512,7 +522,7 @@
         const y = top + i * band;
         drawArt(item, artImages[i], 72, y, 222, band - 20, false);
         caption(item, draft.order[i], i, 330, y + 10, 798, false, true);
-        if (i < TYPES.length - 1) line(330, y + band - 10, 798, '#d4dceb');
+        if (i < TYPES.length - 1) line(330, y + band - 10, 798, rule);
       });
     } else {
       // One leading work, a pair of companions, and four collected pieces share a single sheet.
@@ -527,14 +537,14 @@
         caption(item, draft.order[j + 1], j + 1, x, pairY + pairHeight + 12, 516, dark, false);
       });
       const collectionY = pairY + pairHeight + 96;
-      line(72, collectionY - 18, 1056, dark ? '#617ca9' : '#d4dceb');
+      line(72, collectionY - 18, 1056, rule);
       items.slice(3).forEach((item, j) => {
         const x = 72 + j * 270;
         drawArt(item, artImages[j + 3], x, collectionY, 246, collectionHeight, dark);
         caption(item, draft.order[j + 3], j + 3, x, collectionY + collectionHeight + 16, 246, dark, true);
       });
     }
-    line(72, 1704, 1056, dark ? '#617ca9' : '#d4dceb');
+    line(72, 1704, 1056, rule);
     write('N1GHT CHXN9', 72, 1727, 480, 22, 1, color);
     if (draft.by.trim()) {
       const signature = 'Curated by ' + draft.by.trim();
@@ -652,7 +662,7 @@
   restore(); syncFields(); renderSlots();
   $("curator-workspace").hidden = false;
   if (TYPES.some((type) => itemFor(type))) announce("Draft restored.");
-  document.fonts.ready.then(() => schedulePreview());
+  waitForPosterFonts().catch(() => {}).finally(schedulePreview);
   if (typeof scheduleRefresh === "function") scheduleRefresh(250);
   window.addEventListener("pagehide", () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (_) {} });
 })();
