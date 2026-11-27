@@ -30,8 +30,8 @@ const SPORT_PROFILES = [
     key: "basketball",
     label: "篮球",
     targetLabel: "篮筐",
-    color: 0x315b4f,
-    accent: 0xd9c18d,
+    color: 0x304b40,
+    accent: 0xc8aa76,
     standX: 4.0,
     standZ: 2.72,
   },
@@ -39,8 +39,8 @@ const SPORT_PROFILES = [
     key: "football",
     label: "足球",
     targetLabel: "球门",
-    color: 0x6d3d35,
-    accent: 0xe7d9bc,
+    color: 0x51413a,
+    accent: 0xc5b18c,
     standX: 4.2,
     standZ: 3.04,
   },
@@ -48,8 +48,8 @@ const SPORT_PROFILES = [
     key: "formula-1",
     label: "一级方程式",
     targetLabel: "计时门",
-    color: 0x263f58,
-    accent: 0xd7a45a,
+    color: 0x33404a,
+    accent: 0xc49a62,
     standX: 4.34,
     standZ: 2.48,
   },
@@ -57,8 +57,8 @@ const SPORT_PROFILES = [
     key: "american-football",
     label: "美式橄榄球",
     targetLabel: "球门柱",
-    color: 0x6d5730,
-    accent: 0xe3d5b0,
+    color: 0x484233,
+    accent: 0xc1af8a,
     standX: 4.22,
     standZ: 2.84,
   },
@@ -66,8 +66,8 @@ const SPORT_PROFILES = [
     key: "esports",
     label: "电子竞技",
     targetLabel: "六边环",
-    color: 0x4e355c,
-    accent: 0x9ce1dd,
+    color: 0x433a4a,
+    accent: 0xb3c6bd,
     standX: 4.28,
     standZ: 2.64,
   },
@@ -187,6 +187,7 @@ export function buildExperience(kit) {
   const localMaterial = (options) => ownMaterial(new THREE.MeshStandardMaterial(options));
   const stone = resolveMaterial(kit.stone, 0xaaa397, 0.92, 0.01);
   const porcelain = resolveMaterial(kit.cream, 0xeee8dc, 0.78, 0.02);
+  const walnut = resolveMaterial(kit.walnut, 0x49372e, 0.72, 0.03);
   const steel = resolveMaterial(0x4a5a57, 0x4a5a57, 0.34, 0.78);
   const dark = resolveMaterial(kit.dark, 0x1b2624, 0.36, 0.42);
   const brass = resolveMaterial(kit.brass, 0xa57f47, 0.28, 0.72);
@@ -194,27 +195,27 @@ export function buildExperience(kit) {
   const darkCopper = localMaterial({ color: 0x5b4032, roughness: 0.46, metalness: 0.56 });
   const rubber = localMaterial({ color: 0x17201f, roughness: 0.62, metalness: 0.04 });
   const courtMaterial = localMaterial({
-    color: 0x315b4f,
-    roughness: 0.68,
+    color: 0x304b40,
+    roughness: 0.74,
     metalness: 0.04,
-    emissive: 0x102820,
-    emissiveIntensity: 0.18,
+    emissive: 0x14241e,
+    emissiveIntensity: 0.12,
   });
   const teamMaterial = localMaterial({
     color: SPORT_PROFILES[0].color,
-    roughness: 0.6,
+    roughness: 0.68,
     metalness: 0.08,
     emissive: SPORT_PROFILES[0].color,
-    emissiveIntensity: 0.12,
+    emissiveIntensity: 0.08,
   });
   const standMaterial = localMaterial({
-    color: 0x777f78,
-    roughness: 0.72,
-    metalness: 0.18,
+    color: 0x4b554f,
+    roughness: 0.86,
+    metalness: 0.06,
     side: THREE.DoubleSide,
   });
   const glowMaterial = ownMaterial(new THREE.MeshBasicMaterial({
-    color: 0x9ff2ed,
+    color: 0xc9a26c,
     transparent: true,
     opacity: 0.82,
     blending: THREE.AdditiveBlending,
@@ -222,7 +223,7 @@ export function buildExperience(kit) {
     toneMapped: false,
   }));
   const amberGlow = ownMaterial(new THREE.MeshBasicMaterial({
-    color: 0xe7b65e,
+    color: 0xd6aa68,
     transparent: true,
     opacity: 0.72,
     blending: THREE.AdditiveBlending,
@@ -230,9 +231,9 @@ export function buildExperience(kit) {
     toneMapped: false,
   }));
   const netMaterial = ownMaterial(new THREE.LineBasicMaterial({
-    color: 0xd9e5dc,
+    color: 0x9da49a,
     transparent: true,
-    opacity: 0.46,
+    opacity: 0.24,
     depthWrite: false,
   }));
   const proxyMaterial = ownMaterial(new THREE.MeshBasicMaterial({
@@ -380,9 +381,9 @@ export function buildExperience(kit) {
       magnitude: 9.8,
       angle: 0,
     },
-    ballPosition: new THREE.Vector3(0, 2.56, 2.72),
+    ballPosition: new THREE.Vector3(0, 2.68, 2.92),
   };
-  const ballStart = new THREE.Vector3(0, 2.56, 2.72);
+  const ballStart = new THREE.Vector3(0, 2.68, 2.92);
   const gravityVector = new THREE.Vector3();
   let activeNow = true;
   let disposed = false;
@@ -414,8 +415,8 @@ export function buildExperience(kit) {
     foot.position.set(spec.x, spec.y, spec.z);
     foot.rotation.y = spec.rotation;
     foundation.add(foot);
-    addRounded(spec.width, 0.42, 1.0 - index * 0.08, stone, foot, [0, 0, 0], 0.11);
-    addRounded(spec.width * 0.72, 0.14, 0.68, index === 1 ? porcelain : brass, foot, [0, 0.26, 0], 0.06);
+    addRounded(spec.width, 0.42, 1.0 - index * 0.08, walnut, foot, [0, 0, 0], 0.11);
+    addRounded(spec.width * 0.72, 0.14, 0.68, index === 1 ? brass : dark, foot, [0, 0.26, 0], 0.06);
     addCylinder(0.12, 0.54, steel, 0, 0.5, 0, foot);
     for (const side of [-1, 1]) {
       addBox(steel, 0.06, 0.48, 0.06, side * spec.width * 0.32, 0.46, -0.28, foot, [0, 0, side * 0.13]);
@@ -454,8 +455,8 @@ export function buildExperience(kit) {
   }
   const courtUnderRibGeometry = new THREE.CylinderGeometry(1, 1, 1, 7);
   const underRibPlacements = [];
-  for (let index = 0; index < 27; index += 1) {
-    const angle = index / 27 * TAU;
+  for (let index = 0; index < 12; index += 1) {
+    const angle = index / 12 * TAU;
     const radius = 1.5 + (index % 5) * 0.27;
     underRibPlacements.push({
       position: [Math.sin(angle) * radius, -0.19, Math.cos(angle) * radius * 0.67],
@@ -521,7 +522,7 @@ export function buildExperience(kit) {
     const ring = addTube(
       rearArcPoints(1, 0.68, 3.02 + tier * 0.39),
       0.025,
-      tier % 2 ? brass : steel,
+      tier % 2 ? darkCopper : steel,
       standRoot,
       96,
       6,
@@ -554,7 +555,7 @@ export function buildExperience(kit) {
   const trackPods = [];
   for (let index = 0; index < 6; index += 1) {
     const angle = REAR_STAND_START + (index + 0.5) / 6 * REAR_STAND_ARC;
-    const pod = addRounded(0.34, 0.1, 0.18, index % 2 ? porcelain : brass, trackLow, [
+    const pod = addRounded(0.34, 0.1, 0.18, index % 2 ? darkCopper : brass, trackLow, [
       Math.sin(angle) * 4.3,
       3.09,
       Math.cos(angle) * 3.0,
@@ -564,7 +565,7 @@ export function buildExperience(kit) {
   }
   for (let index = 0; index < 4; index += 1) {
     const angle = REAR_STAND_START + (index + 0.5) / 4 * REAR_STAND_ARC;
-    const pod = addRounded(0.28, 0.08, 0.14, porcelain, trackHigh, [
+    const pod = addRounded(0.28, 0.08, 0.14, darkCopper, trackHigh, [
       Math.sin(angle) * 4.06,
       5.57,
       Math.cos(angle) * 2.78,
@@ -582,15 +583,14 @@ export function buildExperience(kit) {
   };
   const domeRings = [
     { y: 5.02, rx: 4.15, rz: 2.92 },
-    { y: 5.52, rx: 3.84, rz: 2.55 },
-    { y: 6.02, rx: 3.26, rz: 2.04 },
-    { y: 6.42, rx: 2.28, rz: 1.28 },
+    { y: 5.7, rx: 3.58, rz: 2.32 },
+    { y: 6.32, rx: 2.42, rz: 1.42 },
   ];
   for (let ringIndex = 0; ringIndex < domeRings.length; ringIndex += 1) {
     const current = domeRings[ringIndex];
-    for (let index = 0; index < 24; index += 1) {
-      const a0 = REAR_DOME_START + index / 24 * REAR_DOME_ARC;
-      const a1 = REAR_DOME_START + (index + 1) / 24 * REAR_DOME_ARC;
+    for (let index = 0; index < 16; index += 1) {
+      const a0 = REAR_DOME_START + index / 16 * REAR_DOME_ARC;
+      const a1 = REAR_DOME_START + (index + 1) / 16 * REAR_DOME_ARC;
       pushSegment(
         domePositions,
         new THREE.Vector3(Math.sin(a0) * current.rx, current.y, Math.cos(a0) * current.rz),
@@ -630,7 +630,7 @@ export function buildExperience(kit) {
       scale: [1, 1, 1],
     });
   }
-  addInstances(new THREE.BoxGeometry(0.56, 0.2, 0.3), porcelain, lightHeadPlacements, group);
+  addInstances(new THREE.BoxGeometry(0.56, 0.2, 0.3), steel, lightHeadPlacements, group);
   const lightLenses = addInstances(new THREE.BoxGeometry(0.38, 0.07, 0.08), amberGlow, lightLensPlacements, group);
   if (lightLenses) lightLenses.castShadow = false;
 
@@ -868,16 +868,16 @@ export function buildExperience(kit) {
       emissiveIntensity: index === state.selected ? 0.2 : 0,
     });
     const holder = new THREE.Group();
-    const x = (index - 2) * 0.84;
-    holder.position.set(x, 0.72, 2.56 - Math.abs(x) * 0.035);
+    const x = (index - 2) * 0.78;
+    holder.position.set(x, 0.56, 1.96 - Math.abs(x) * 0.025);
     holder.rotation.y = -x * 0.08;
     selectorRoot.add(holder);
-    addRounded(0.7, 0.34, 0.1, plaqueMaterial, holder, [0, 0, 0], 0.05);
+    addRounded(0.64, 0.3, 0.1, plaqueMaterial, holder, [0, 0, 0], 0.05);
     const plaqueLabel = addText(profile.label, 0.62, 0.15, holder, [0, 0.035, 0.061], {
       color: index === state.selected ? "#224038" : "#d7cbaa",
       fontSize: 34,
     });
-    addCylinder(0.04, 0.55, brass, 0, -0.43, -0.05, holder);
+    addCylinder(0.035, 0.38, brass, 0, -0.34, -0.05, holder);
     const hit = addRounded(0.82, 0.52, 0.18, proxyMaterial, holder, [0, 0, 0.03], 0.05);
     hit.castShadow = false;
     hit.receiveShadow = false;
@@ -899,11 +899,11 @@ export function buildExperience(kit) {
 
   const dossier = new THREE.Group();
   dossier.name = "sport-collection-dossier";
-  dossier.position.set(-4.28, 2.72, 0.22);
-  dossier.rotation.y = 0.46;
+  dossier.position.set(-4.25, 2.82, 1.9);
+  dossier.rotation.y = 0.28;
   group.add(dossier);
-  addRounded(1.52, 1.16, 0.14, dark, dossier, [0, 0, 0], 0.08);
-  addRounded(1.32, 0.84, 0.055, porcelain, dossier, [0, 0.09, 0.095], 0.04);
+  addRounded(1.52, 1.16, 0.14, walnut, dossier, [0, 0, 0], 0.08);
+  addRounded(1.32, 0.84, 0.055, stone, dossier, [0, 0.09, 0.095], 0.04);
   const firstImage = currentItem()?.image || "";
   if (firstImage && typeof kit.image === "function") {
     dossierImage = kit.image(firstImage, 1.2, 0.72, dossier);
@@ -942,13 +942,19 @@ export function buildExperience(kit) {
   ballRoot.position.copy(ballStart);
   group.add(ballRoot);
   const ballGeometry = ownGeometry(new THREE.SphereGeometry(0.2, 24, 16));
-  const ballMesh = addMesh(ballGeometry, porcelain, 0, 0, 0, ballRoot);
+  const ballMesh = addMesh(ballGeometry, brass, 0, 0, 0, ballRoot);
   ballMesh.castShadow = true;
   const seamGeometry = ownGeometry(new THREE.TorusGeometry(0.202, 0.009, 5, 28));
   const seamA = addMesh(seamGeometry, rubber, 0, 0, 0, ballRoot);
   seamA.rotation.x = Math.PI / 2;
   const seamB = addMesh(seamGeometry, rubber, 0, 0, 0, ballRoot);
   seamB.rotation.y = Math.PI / 2;
+  const launchZone = new THREE.Group();
+  launchZone.name = "launch-zone";
+  group.add(launchZone);
+  addCylinder(0.52, 0.055, dark, 0, 2.17, 2.92, launchZone);
+  const launchRing = addRing(0.46, 0.018, amberGlow, launchZone, [0, 2.205, 2.92]);
+  launchRing.rotation.x = Math.PI / 2;
   const ballProxy = addMesh(
     ownGeometry(new THREE.SphereGeometry(0.42, 12, 9)),
     proxyMaterial,
@@ -1011,7 +1017,7 @@ export function buildExperience(kit) {
 
   const gravityMount = new THREE.Group();
   gravityMount.name = "draggable-gravity-ring";
-  gravityMount.position.set(-2.62, 1.34, 2.38);
+  gravityMount.position.set(-3.28, 1.2, 2.94);
   gravityMount.rotation.y = -0.18;
   group.add(gravityMount);
   const gravityTilt = new THREE.Group();
@@ -1047,11 +1053,11 @@ export function buildExperience(kit) {
   gravityDirectionLever.position.z = 0.26;
   gravityTilt.add(gravityDirectionLever);
   addRounded(0.055, 0.6, 0.06, brass, gravityDirectionLever, [0, 0.28, 0], 0.02);
-  addCylinder(0.12, 0.3, porcelain, 0, 0.6, 0.08, gravityDirectionLever, [Math.PI / 2, 0, 0]);
+  addCylinder(0.12, 0.3, stone, 0, 0.6, 0.08, gravityDirectionLever, [Math.PI / 2, 0, 0]);
   addCylinder(0.072, 0.1, amberGlow, 0, 0.6, 0.24, gravityDirectionLever, [Math.PI / 2, 0, 0]);
   addCylinder(0.1, 0.16, darkCopper, 0, 0, 0, gravityDirectionLever, [Math.PI / 2, 0, 0]);
 
-  const gravityGrip = addCylinder(0.17, 0.38, porcelain, 0.78, -0.34, 0.34, gravityTilt, [Math.PI / 2, 0, 0]);
+  const gravityGrip = addCylinder(0.17, 0.38, brass, 0.78, -0.34, 0.34, gravityTilt, [Math.PI / 2, 0, 0]);
   addCylinder(0.09, 0.1, amberGlow, 0.78, -0.34, 0.53, gravityTilt, [Math.PI / 2, 0, 0]);
   addRing(0.21, 0.025, brass, gravityTilt, [0.78, -0.34, 0.3]);
   gravityGrip.userData.interactionId = "gravity-ring";
@@ -1100,11 +1106,11 @@ export function buildExperience(kit) {
 
   const pressRoot = new THREE.Group();
   pressRoot.name = "pressure-pulse";
-  pressRoot.position.set(2.62, 1.1, 2.38);
+  pressRoot.position.set(3.28, 1.03, 2.94);
   pressRoot.rotation.y = 0.18;
   group.add(pressRoot);
   addRounded(0.9, 0.24, 0.72, dark, pressRoot, [0, 0, 0], 0.07);
-  const pressCap = addRounded(0.62, 0.26, 0.52, porcelain, pressRoot, [0, 0.17, 0], 0.06);
+  const pressCap = addRounded(0.62, 0.26, 0.52, brass, pressRoot, [0, 0.17, 0], 0.06);
   addCylinder(0.06, 0.62, brass, 0, 0.56, -0.16, pressRoot);
   addCylinder(0.2, 0.12, amberGlow, 0, 0.9, -0.16, pressRoot);
   addRounded(0.24, 0.09, 0.34, darkCopper, pressCap, [0, 0.17, 0], 0.03);
@@ -1317,13 +1323,13 @@ export function buildExperience(kit) {
   function updateSelectorStyles(index) {
     selectorRecords.forEach((record, recordIndex) => {
       const selected = recordIndex === index;
-      record.holder.position.y = 0.72 + (selected ? 0.09 : 0);
-      record.holder.scale.setScalar(selected ? 1.08 : 1);
-      record.plaqueMaterial.color.setHex(selected ? 0xeee8dc : 0x1b2624);
+      record.holder.position.y = 0.56 + (selected ? 0.08 : 0);
+      record.holder.scale.setScalar(selected ? 1.07 : 1);
+      record.plaqueMaterial.color.setHex(selected ? 0xb59a69 : 0x202824);
       record.plaqueMaterial.emissive.setHex(selected ? SPORT_PROFILES[recordIndex].color : 0x000000);
       record.plaqueMaterial.emissiveIntensity = selected ? 0.22 : 0;
       if (record.plaqueLabel?.material) {
-        record.plaqueLabel.material.color.set(selected ? "#224038" : "#d7cbaa");
+        record.plaqueLabel.material.color.set(selected ? "#1c2a25" : "#c8bda3");
       }
     });
   }
@@ -1656,7 +1662,7 @@ export function buildExperience(kit) {
       });
       gravityTilt.rotation.z = state.gravity.angle * 0.08;
       gravityDirectionLever.rotation.z = -state.gravity.angle * 0.42;
-      gravityMount.position.set(-2.62, 1.34 + chargePulse * 0.06, 2.38);
+      gravityMount.position.set(-3.28, 1.2 + chargePulse * 0.06, 2.94);
       gravityRingMesh.scale.setScalar(1 + targetPulse * 0.035 + chargePulse * 0.025);
       gravityRingInner.scale.setScalar(1 + targetPulse * 0.025);
       glowMaterial.opacity = 0.68 + targetPulse * 0.28;

@@ -87,14 +87,14 @@ export function buildExperience(kit) {
     ownMaterial(new THREE.MeshStandardMaterial({ color, roughness, metalness }));
 
   const materials = {
-    porcelain: kit.cream || kit.material("#f2ede2", 0.48, 0.02),
-    porcelainBlue: rawMaterial("#dce6df", 0.52, 0.02),
+    porcelain: kit.stone || kit.material("#c8c2b3", 0.82, 0.02),
+    porcelainBlue: rawMaterial("#85887b", 0.76, 0.04),
     jade: kit.green || kit.material("#1f6658", 0.5, 0.08),
-    deepGreen: rawMaterial("#173b35", 0.55, 0.16),
+    deepGreen: kit.dark || kit.material("#263c37", 0.68, 0.16),
     ink: kit.dark || kit.material("#14201d", 0.46, 0.18),
     walnut: kit.walnut || kit.material("#4b3327", 0.64, 0.02),
-    brass: kit.brass || kit.material("#b68b4c", 0.27, 0.72),
-    copper: rawMaterial("#b66445", 0.32, 0.7),
+    brass: kit.brass || kit.material("#b59a69", 0.27, 0.72),
+    copper: rawMaterial("#9a704d", 0.4, 0.56),
     ruby: rawMaterial("#a72d45", 0.24, 0.32),
     sapphire: rawMaterial("#285a7d", 0.26, 0.42),
     opal: rawMaterial("#d9c79f", 0.32, 0.16),
@@ -185,22 +185,22 @@ export function buildExperience(kit) {
   });
 
   function materialForStrata(index) {
-    return index === 1 ? materials.jade : materials.porcelain;
+    return index === 1 ? materials.deepGreen : materials.walnut;
   }
 
   const suspendedFoundation = new THREE.Group();
   suspendedFoundation.name = "floating-foundations";
   group.add(suspendedFoundation);
-  for (let index = 0; index < 6; index += 1) {
+  for (let index = 0; index < 4; index += 1) {
     const angle = -1.12 + index * 0.9;
     const radius = 2.6 + (index % 2) * 0.58;
     const panel = sculpt.rounded(
-      1.0 + (index % 3) * 0.18,
-      0.07,
-      0.54,
-      index % 2 ? materials.glass : materials.porcelainBlue,
+      1.16 + (index % 3) * 0.12,
+      0.1,
+      0.5,
+      index % 2 ? materials.deepGreen : materials.walnut,
       suspendedFoundation,
-      [Math.cos(angle) * radius, 0.56 + index * 0.08, Math.sin(angle) * radius],
+      [Math.cos(angle) * radius, 0.42 + index * 0.07, Math.sin(angle) * radius],
       0.05,
     );
     panel.rotation.set(0.04 * (index % 2), -angle + HALF_PI, 0.1 * Math.sin(index));
@@ -209,7 +209,7 @@ export function buildExperience(kit) {
         new THREE.Vector3(panel.position.x - 0.25, panel.position.y + 0.05, panel.position.z),
         new THREE.Vector3(panel.position.x + 0.25, panel.position.y + 0.05, panel.position.z),
       ],
-      "#b58b53",
+      "#9a704d",
       suspendedFoundation,
     );
   }
@@ -217,7 +217,7 @@ export function buildExperience(kit) {
   const rearMechanism = new THREE.Group();
   rearMechanism.name = "rear-fold-mechanism";
   rearMechanism.position.set(0, 0.2, -3.95);
-  rearMechanism.scale.setScalar(0.38);
+  rearMechanism.scale.setScalar(0.31);
   group.add(rearMechanism);
 
   const core = new THREE.Group();
@@ -275,7 +275,7 @@ export function buildExperience(kit) {
       });
     }
   }
-  const stairSteps = sculpt.instances(stepGeometry, materials.porcelain, stairStepPlacements, gravityShell);
+  const stairSteps = sculpt.instances(stepGeometry, materials.deepGreen, stairStepPlacements, gravityShell);
   stairSteps.castShadow = true;
   stairSteps.receiveShadow = true;
 
@@ -288,7 +288,7 @@ export function buildExperience(kit) {
     rotation: placement.rotation,
     scale: [1, 1, 1 + (index % 3) * 0.18],
   }));
-  const stairRibs = sculpt.instances(stepGeometry, materials.jade, stairRibPlacements, gravityShell);
+  const stairRibs = sculpt.instances(stepGeometry, materials.copper, stairRibPlacements, gravityShell);
   stairRibs.castShadow = true;
 
   const stairRailPointsA = [];
@@ -344,9 +344,9 @@ export function buildExperience(kit) {
   ownGeometry(shardGeometry);
 
   const shardGroups = [];
-  for (let index = 0; index < 7; index += 1) {
+  for (let index = 0; index < 3; index += 1) {
     const holder = new THREE.Group();
-    const angle = (index / 7) * TAU + 0.2;
+    const angle = (index / 3) * TAU + 0.2;
     const radius = 2.35 + (index % 3) * 0.38;
     holder.position.set(Math.cos(angle) * radius, 3.25 + index * 0.48, Math.sin(angle) * radius);
     holder.rotation.set(0.04 * Math.sin(index), -angle, 0.08 * Math.cos(index * 1.7));
@@ -363,7 +363,7 @@ export function buildExperience(kit) {
         new THREE.Vector3(-0.72, -0.46, 0.02),
       ],
       0.018,
-      index % 2 ? materials.brass : materials.copper,
+      materials.copper,
       holder,
       36,
       6,
@@ -371,8 +371,8 @@ export function buildExperience(kit) {
     shardGroups.push({ holder, baseY: holder.position.y, phase: index * 0.68 });
   }
 
-  const gravityCenter = new THREE.Vector3(-1.25, 4.7, 2.2);
-  const gravityRadius = 1.45;
+  const gravityCenter = new THREE.Vector3(-2.3, 3.58, 1.34);
+  const gravityRadius = 1.08;
   const gravityRotor = new THREE.Group();
   gravityRotor.name = "gravity-ring-rotor";
   gravityRotor.position.copy(gravityCenter);
@@ -380,15 +380,15 @@ export function buildExperience(kit) {
   const gravityRing = sculpt.ring(
     gravityRadius,
     0.075,
-    materials.brass,
+    materials.copper,
     gravityRotor,
     [0, 0, 0],
     TAU * 0.92,
   );
   gravityRing.name = "gravity-ring";
   const gravityTeeth = [];
-  for (let index = 0; index < 24; index += 1) {
-    const angle = (index / 24) * TAU;
+  for (let index = 0; index < 14; index += 1) {
+    const angle = (index / 14) * TAU;
     gravityTeeth.push({
       position: [
         Math.cos(angle) * gravityRadius,
@@ -399,17 +399,17 @@ export function buildExperience(kit) {
       scale: [1, 1, 1],
     });
   }
-  sculpt.instances(rivetGeometry, materials.copper, gravityTeeth, gravityRotor);
+  sculpt.instances(rivetGeometry, materials.brass, gravityTeeth, gravityRotor);
   const gravityGlowMaterial = ownMaterial(new THREE.MeshBasicMaterial({
     color: "#d8b772",
     transparent: true,
-    opacity: 0.14,
+    opacity: 0.08,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
   }));
   const gravityGlowRing = sculpt.ring(
     gravityRadius,
-    0.24,
+    0.16,
     gravityGlowMaterial,
     gravityRotor,
     [0, 0, 0],
@@ -420,7 +420,7 @@ export function buildExperience(kit) {
     0.34,
     0.16,
     20,
-    materials.brass,
+    materials.copper,
     gravityRotor,
     [0, 0, 0.02],
   );
@@ -435,7 +435,7 @@ export function buildExperience(kit) {
       new THREE.Vector3(0.28, 0.04, 0.14),
     ],
     0.035,
-    materials.copper,
+    materials.brass,
     gravityHandle,
     16,
     7,
@@ -514,6 +514,27 @@ export function buildExperience(kit) {
     { name: "传送门", position: new THREE.Vector3(0.21, 3.26, -3.82), kind: "portal" },
   ];
 
+  const guideMaterial = ownMaterial(new THREE.MeshBasicMaterial({
+    color: "#9a704d",
+    transparent: true,
+    opacity: 0.42,
+    depthWrite: false,
+  }));
+  const routeGuide = sculpt.tube(
+    routeNodes.map((node, index) => {
+      const point = node.position.clone();
+      point.y += index === 0 || index === routeNodes.length - 1 ? 0.02 : 0.16;
+      return point;
+    }),
+    0.014,
+    guideMaterial,
+    group,
+    96,
+    6,
+  );
+  routeGuide.name = "continuous-route-guide";
+  routeGuide.renderOrder = 1;
+
   const startPad = sculpt.lathe(
     [
       [0.0, 0.0],
@@ -556,9 +577,9 @@ export function buildExperience(kit) {
     spin.name = "road-rotor-" + index;
     root.add(spin);
 
-    sculpt.rounded(0.88, 0.13, 0.88, materials.porcelain, spin, [0, 0, 0], 0.1);
-    sculpt.rounded(0.72, 0.045, 0.72, materials.deepGreen, spin, [0, 0.085, 0], 0.068);
-    const roadMat = index === 2 ? materials.jade : materials.porcelainBlue;
+    sculpt.rounded(0.96, 0.15, 0.96, materials.deepGreen, spin, [0, 0, 0], 0.1);
+    sculpt.rounded(0.76, 0.045, 0.76, materials.walnut, spin, [0, 0.09, 0], 0.068);
+    const roadMat = materials.copper;
     if (index === 2) {
       sculpt.rounded(0.68, 0.035, 0.17, roadMat, spin, [0.06, 0.12, 0], 0.038);
       sculpt.rounded(0.17, 0.035, 0.68, roadMat, spin, [0, 0.12, 0.26], 0.038);
@@ -567,14 +588,14 @@ export function buildExperience(kit) {
     }
 
     const ribPlacements = [];
-    for (let rib = 0; rib < 7; rib += 1) {
+    for (let rib = 0; rib < 3; rib += 1) {
       ribPlacements.push({
-        position: [-0.27 + rib * 0.09, -0.085, 0],
+        position: [-0.2 + rib * 0.2, -0.095, 0],
         rotation: [0, 0, 0],
         scale: [0.72, 1, 0.72],
       });
     }
-    sculpt.instances(ribGeometry, materials.brass, ribPlacements, spin);
+    sculpt.instances(ribGeometry, materials.copper, ribPlacements, spin);
 
     sculpt.tube(
       [
@@ -611,24 +632,24 @@ export function buildExperience(kit) {
     gearPivot.position.set(0, 0.28, 0);
     gearPivot.rotation.x = HALF_PI;
     spin.add(gearPivot);
-    const gear = sculpt.gear(0.25, 0.08, 18, materials.copper, gearPivot, [0, 0, 0]);
+    const gear = sculpt.gear(0.29, 0.09, 18, materials.brass, gearPivot, [0, 0, 0]);
     gear.castShadow = true;
 
     const glowMaterial = ownMaterial(new THREE.MeshBasicMaterial({
-      color: "#c68c48",
+      color: "#c99a62",
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.68,
       side: THREE.DoubleSide,
       depthWrite: false,
     }));
-    const glowRing = sculpt.ring(0.31, 0.025, glowMaterial, spin, [0, 0.24, 0]);
+    const glowRing = sculpt.ring(0.35, 0.03, glowMaterial, spin, [0, 0.26, 0]);
     glowRing.rotation.x = HALF_PI;
     glowRing.renderOrder = 2;
 
     const envelopeMaterial = ownMaterial(new THREE.MeshBasicMaterial({
-      color: "#84b4a3",
+      color: "#9d8d72",
       transparent: true,
-      opacity: 0.18,
+      opacity: 0.12,
       side: THREE.DoubleSide,
       depthWrite: false,
     }));
@@ -784,7 +805,7 @@ export function buildExperience(kit) {
     const material = ownMaterial(new THREE.MeshBasicMaterial({
       color: "#9b6544",
       transparent: true,
-      opacity: 0.42,
+      opacity: 0.62,
       depthWrite: false,
     }));
     connectionMaterials.push(material);
@@ -834,11 +855,12 @@ export function buildExperience(kit) {
 
   const portal = new THREE.Group();
   portal.name = "multi-petal-gate";
-  portal.position.set(routeNodes[6].position.x, 3.42, routeNodes[6].position.z);
+  portal.position.set(routeNodes[6].position.x, 3.22, routeNodes[6].position.z);
+  portal.scale.setScalar(0.88);
   group.add(portal);
 
-  sculpt.ring(1.52, 0.13, materials.porcelainBlue, portal, [0, 0, 0], TAU * 0.94);
-  sculpt.ring(1.34, 0.035, materials.brass, portal, [0, 0, 0.08], TAU);
+  sculpt.ring(1.52, 0.13, materials.deepGreen, portal, [0, 0, 0], TAU * 0.94);
+  sculpt.ring(1.34, 0.035, materials.copper, portal, [0, 0, 0.08], TAU);
   sculpt.ring(1.72, 0.025, materials.copper, portal, [0, 0, -0.08], TAU * 0.7);
   for (let index = 0; index < 22; index += 1) {
     const angle = (index / 22) * TAU * 0.94;
@@ -1068,18 +1090,18 @@ export function buildExperience(kit) {
     const connections = connectionDefinitions.map(connectionOpen);
     connectionMaterials.forEach((material, index) => {
       const connected = connections[index];
-      material.color.set(connected ? "#5ea98f" : "#a45645");
-      material.opacity = connected ? 0.95 : 0.38;
+      material.color.set(connected ? "#9fcbb7" : "#9a704d");
+      material.opacity = connected ? 1 : 0.58;
     });
     connectionGems.forEach((gem, index) => {
       gem.scale.setScalar(connections[index] ? 1.25 : 0.78);
     });
     routePlatforms.forEach((platform, index) => {
       const touching = connections[index] || connections[index + 1] || false;
-      platform.glowMaterial.color.set(touching ? "#69c4a5" : "#b26b4f");
-      platform.glowMaterial.opacity = touching ? 0.82 : 0.36;
-      platform.envelopeMaterial.color.set(touching ? "#76c5ae" : "#87a89e");
-      platform.envelopeMaterial.opacity = touching ? 0.28 : 0.14;
+      platform.glowMaterial.color.set(touching ? "#c8b47d" : "#9a704d");
+      platform.glowMaterial.opacity = touching ? 0.92 : 0.48;
+      platform.envelopeMaterial.color.set(touching ? "#a8c8b8" : "#837b62");
+      platform.envelopeMaterial.opacity = touching ? 0.24 : 0.1;
       platform.destinationMaterial.opacity = touching ? 1 : 0.34;
     });
     solved = connections.every(Boolean);
@@ -1129,6 +1151,7 @@ export function buildExperience(kit) {
     const platform = routePlatforms[index];
     let downAngle = platform.spin.rotation.y;
     let dragAngle = downAngle;
+    let dragMoved = false;
     const descriptor = {
       id: `road-joint-${index}`,
       label: `道路关节 ${index + 1}`,
@@ -1136,6 +1159,7 @@ export function buildExperience(kit) {
       hint: "左右拖动让道路旋转并吸附到 90°；也可点击或用方向键旋转",
       onDown() {
         platform.dragging = true;
+        dragMoved = false;
         downAngle = platform.spin.rotation.y;
         dragAngle = downAngle;
         platform.glowMaterial.opacity = 1;
@@ -1144,6 +1168,7 @@ export function buildExperience(kit) {
       onDrag(context) {
         const horizontal = Number(context.dx) || 0;
         const vertical = Number(context.dy) || 0;
+        dragMoved = true;
         dragAngle += (horizontal - vertical) * 0.014;
         platform.spin.rotation.y = dragAngle;
         platform.gear.rotation.z += (horizontal - vertical) * 0.032;
@@ -1152,6 +1177,7 @@ export function buildExperience(kit) {
       },
       onUp() {
         platform.dragging = false;
+        if (!dragMoved) return;
         const quarter = Math.round(normalizeAngle(platform.spin.rotation.y) / HALF_PI);
         setPlatformQuarter(index, quarter, true);
       },
@@ -1293,6 +1319,7 @@ export function buildExperience(kit) {
   });
 
   let gravityDragAngle = 0;
+  let gravityMoved = false;
   kit.register(gravityHandleHit, {
     id: "gravity-ring",
     label: "重力环握柄",
@@ -1300,13 +1327,15 @@ export function buildExperience(kit) {
     hint: "上下拖动改变局部重力方向与阶梯朝向；点击每次转 45°",
     onDown() {
       gravityDragging = true;
+      gravityMoved = false;
       gravityDragAngle = gravityTarget;
-      gravityGlowMaterial.opacity = 0.42;
+      gravityGlowMaterial.opacity = 0.3;
       kit.status?.("重力环：拖动以折叠局部方向");
     },
     onDrag(context) {
       const horizontal = Number(context.dx) || 0;
       const vertical = Number(context.dy) || 0;
+      gravityMoved = true;
       gravityDragAngle += horizontal * 0.006 - vertical * 0.012;
       gravityAngle = gravityDragAngle;
       gravityShell.rotation.z = gravityAngle;
@@ -1315,9 +1344,13 @@ export function buildExperience(kit) {
     },
     onUp() {
       gravityDragging = false;
+      if (!gravityMoved) {
+        gravityGlowMaterial.opacity = 0.08;
+        return;
+      }
       gravityTarget = Math.round(gravityDragAngle / QUARTER_PI) * QUARTER_PI;
       gravityAngle = gravityTarget;
-      gravityGlowMaterial.opacity = 0.14;
+      gravityGlowMaterial.opacity = 0.08;
       const degrees = Math.round(normalizeAngle(gravityTarget) * 180 / Math.PI);
       kit.status?.(`局部重力已折叠至 ${degrees}°`);
       kit.invalidate?.();
@@ -1568,7 +1601,7 @@ export function buildExperience(kit) {
     }
     gravityGlowMaterial.opacity = damp(
       gravityGlowMaterial.opacity,
-      gravityDragging ? 0.38 : 0.1 + Math.sin(lastTime * 0.8) * 0.025,
+      gravityDragging ? 0.26 : 0.06 + Math.sin(lastTime * 0.8) * 0.012,
       4,
       dt,
     );

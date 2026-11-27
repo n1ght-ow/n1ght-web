@@ -1,21 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" class="atelier folio">
+<html lang="en" class="atelier folio tide">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>N1GHT CHXN9 — A personal collection</title>
-  <meta name="description" content="46 photographs, a bookshelf, poems, paintings, music, films and games. Browse the personal collection of N1GHT CHXN9 and make a collection of your own.">
-  <meta name="theme-color" content="#f5f4f0">
+  <title>N1GHT CHXN9 — The Night Archive</title>
+  <meta name="description" content="A personal archive of 46 photographs, books, poems, paintings, music, sport, films, series and games. Browse the shelves or make a poster from the collection.">
+  <meta name="theme-color" content="#090a0c">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="N1GHT CHXN9">
-  <meta property="og:title" content="N1GHT CHXN9 — A personal collection">
+  <meta property="og:title" content="N1GHT CHXN9 — The Night Archive">
   <meta property="og:description" content="Photographs, books, music and things to come back to. A personal collection, open to browse.">
-  <link rel="icon" href="assets/icons/folio-mark.svg?v=1" type="image/svg+xml">
+  <link rel="icon" href="assets/icons/night-enamel-32.png?v=1" type="image/png">
   <link rel="apple-touch-icon" href="assets/icons/night-enamel-apple-180.png?v=1" sizes="180x180">
-  <!-- The refraction gate that used to live here is gone with the
-       refraction: there is no url() inside backdrop-filter any more, so there
-       is no engine to test for and nothing to gate. css/glass.css's header
-       lists everything that was deleted with it. -->
   <script>document.documentElement.classList.add("js");</script>
   <link rel="preload" href="fonts/BricolageGrotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=16">
@@ -39,58 +35,67 @@
   <link rel="stylesheet" href="css/folio-photo.css?v=1">
   <link rel="stylesheet" href="css/folio-archive.css?v=1">
   <link rel="stylesheet" href="css/folio-curate.css?v=1">
-  <link rel="stylesheet" href="css/liminal-hero.css?v=1">
-  <link rel="stylesheet" href="css/liminal-footer.css?v=1">
-  <link rel="stylesheet" href="css/mode-switch.css?v=1">
+  <link rel="stylesheet" href="css/tide.css?v=1">
+  <link rel="stylesheet" href="css/tide-library.css?v=1">
+  <link rel="stylesheet" href="css/tide-collections.css?v=1">
 </head>
-<body>
+<body class="tide-site">
 
 
   <a class="skip-link" href="#hero">Skip to content</a>
 
-  <!-- ============ NAV : a printed tray floating over the hero ============
-       The class names are the print-surface contract (AGENTS.md "印刷面"):
-       .glass--spot draws nothing any more - it walked two steps (pointer
-       crosshair, then retired) and its four properties are still here only
-       so the rename can happen once, for every element at the same time. -->
-  <header class="nav glass glass--pill glass--spot" id="nav">
-    <div class="glass__body" aria-hidden="true"></div>
-    <div class="glass__edge" aria-hidden="true"></div>
-    <span class="glass__press" aria-hidden="true"></span>
-    <div class="glass__content">
-      <a class="nav-brand" href="#hero"><span>N1GHT CHXN9</span><span class="nav-description">A personal collection</span></a>
-      <!-- No selected indicator: the active link is marked by colour alone.
-           See the note in css/style.css. -->
-      <nav class="nav-links" aria-label="Primary">
-        <a href="#photo">Photography</a>
-        <a href="#archive">Archive</a>
-        <a href="#curate">Curate</a>
-        <a href="myscore/">MyScore</a>
+  <aside class="tide-ribbon" aria-label="Curator’s desk">
+    <a href="#curate"><span class="tide-ribbon__dot" aria-hidden="true"></span><strong>THE CURATOR’S DESK</strong><span class="tide-ribbon__copy">Turn seven pieces into a poster</span><span class="tide-ribbon__action">Try it <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span></a>
+  </aside>
+  <header class="tide-nav">
+    <div class="tide-shell tide-nav__inner">
+      <a class="tide-brand" href="#hero"><img src="assets/icons/night-enamel-32.png?v=1" width="32" height="32" alt="">N1GHT CHXN9</a>
+      <nav class="tide-nav__links" aria-label="Collection">
+        <a href="#library">Discover</a><a href="#archive">Shelves</a><a href="#photo">Photography</a><a href="#curate">Curate</a>
       </nav>
-      <a class="mode-link" href="3d/" lang="zh-CN">进入 3D 世界<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <div class="tide-nav__right">
+        <a class="tide-nav__score" href="myscore/">MyScore</a>
+        <a class="tide-button tide-button--solid" href="3d/">Enter 3D <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M7 5h12v12"/></svg></a>
+        <details class="tide-menu" id="tide-menu">
+          <summary aria-label="Site menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></summary>
+          <nav aria-label="Site menu">
+            <a href="#library">Discover</a><a href="#archive">Shelves</a><a href="#photo">Photography</a><a href="#curate">Curate</a><a href="myscore/">MyScore</a>
+          </nav>
+        </details>
+      </div>
     </div>
   </header>
 
   <main>
 
-    <!-- Daylight opening: the sculpture is decorative; the collection is directly browseable. -->
-    <section class="hero atelier-hero liminal-hero" id="hero" aria-labelledby="hero-title">
-      <div class="liminal-hero__stage" data-light-scene="day" aria-hidden="true"><canvas class="liminal-canvas"></canvas></div>
-      <div class="hero-inner shell liminal-hero__content">
-        <div class="liminal-hero__lead">
-          <h1 class="hero-wordmark" id="hero-title"><span class="liminal-word"><span>N1GHT</span></span> <span class="liminal-word"><span>CHXN9</span></span></h1>
-          <p class="liminal-hero__description">Photographs, books, music<br>and things I come back to.</p>
-          <a class="liminal-enter" href="#photo"><span>Step inside</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M5 19h14V5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <section class="tide-hero" id="hero" tabindex="-1" aria-labelledby="hero-title">
+      <div class="tide-hero__scene" aria-hidden="true"><div class="tide-hero__light"></div></div>
+      <div class="tide-shell tide-hero__content" data-enter>
+        <h1 id="hero-title">Things I keep<br>coming <em>back to.</em></h1>
+        <p>A personal archive of photographs, books, music and the worlds I return to.</p>
+        <div class="tide-hero__actions">
+          <a class="tide-button tide-button--solid" href="#library">Browse the collection <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a>
+          <a class="tide-button tide-button--outline" href="#curate">Make a poster</a>
         </div>
-        <div class="liminal-hero__bottom">
-          <div class="liminal-hero__prints" role="group" aria-label="A few photographs from the collection">
-            <button type="button" data-cover-frame="8" aria-label="Open photograph: clouds above green hills"><img src="photo/wall/1789470372631.webp" alt="White cumulus towers above green hills and wind turbines" width="1600" height="1067" decoding="async"></button>
-            <button type="button" data-cover-frame="32" aria-label="Open photograph: sunset between buildings"><img src="photo/wall/1791482278864.webp?v=1" alt="Sunset seen between tall buildings on a narrow street" width="3072" height="4080" decoding="async"></button>
-            <button type="button" data-cover-frame="35" aria-label="Open photograph: a red pagoda at night"><img src="photo/wall/1791482278899.webp?v=1" alt="An illuminated red pagoda framed by trees at night" width="3072" height="4096" decoding="async"></button>
-          </div>
-          <p class="liminal-hero__note">46 photographs.<br>A world of things to keep.</p>
-          <button class="liminal-motion-toggle" data-motion-toggle type="button" aria-pressed="false" aria-label="Pause decorative animation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Pause motion</span></button>
-        </div>
+        <a class="tide-darkroom" href="#photo">
+          <img src="photo/wall/1791482278923.webp?v=1" width="42" height="42" alt="">
+          <span><strong>Photography</strong><small>46 frames in the darkroom</small></span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="tide-shell tide-hero__edge">
+        <span>THE NIGHT ARCHIVE</span>
+        <button class="tide-motion" type="button" id="tide-motion" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6v12m6-12v12"/></svg><span>Pause motion</span></button>
+      </div>
+    </section>
+    <nav class="tide-index" aria-label="Quick links to the shelves">
+      <div class="tide-shell tide-index__inner">
+        <a href="#photo">Photography</a><a href="#books">Books</a><a href="#poems">Poems</a><a href="#paintings">Paintings</a><a href="#music">Music</a><a href="#sport">Sport</a><a href="#series">Series</a><a href="#films">Films</a><a href="#games">Games</a>
+      </div>
+    </nav>
+    <section id="library" class="tide-section" aria-labelledby="library-title">
+      <div class="tide-shell" id="tide-library"><h2 id="library-title">The collection, at a glance.</h2>
+        <noscript><p>Use the links above to jump to a category. Enable JavaScript to filter the selections and open details.</p></noscript>
       </div>
     </section>
     <!-- ============ PHOTOGRAPHY ============ -->
@@ -98,10 +103,11 @@
       <div class="shell">
         <div class="sec-head">
           <div>
-            <h2 class="sec-title">Out there.</h2>
+            <h2 class="sec-title">The darkroom.</h2>
           </div>
-          <p class="folio-section-note">Cities, open skies and the view along the way.<br>Choose a frame to see it in full.</p>
+          <p class="folio-section-note">Cities, open skies and the view along the way. Open any frame to see the whole photograph.</p>
         </div>
+        <div id="tide-photo-controls" class="tide-photo-tools" hidden></div>
       </div>
 
       <!-- Original frame IDs remain stable for saved curator selections. -->
@@ -545,28 +551,22 @@
                 </figure>
             </div>
           </div>
+        <div id="tide-photo-more" class="tide-photo-more" hidden></div>
       </div>
 
     </section>
 
     <!-- ============ THE ARCHIVE ============ -->
-    <section class="section archive" id="archive">
+    <section class="section archive" id="archive" aria-labelledby="shelves-title">
       <div class="shell">
         <div class="sec-head">
           <div>
-            <h2 class="sec-title">The collection.</h2>
+            <h2 class="sec-title" id="shelves-title">The shelves.</h2>
           </div>
           <p class="folio-section-note">On the shelf, on repeat, on my mind.</p>
         </div>
 
-        <div class="tabbar glass glass--pill glass--spot" role="tablist" aria-label="Archive shelves" id="archive-tabbar">
-          <div class="glass__body" aria-hidden="true"></div>
-          <div class="glass__edge" aria-hidden="true"></div>
-          <span class="glass__press" aria-hidden="true"></span>
-          <!-- The selected indicator. Draggable: grab it and pull it onto
-               another shelf. Decorative - the buttons below are the control,
-               so keyboard and screen-reader behaviour is untouched. -->
-          <span class="glass-pill" id="tab-pill" aria-hidden="true"><span class="glass-pill__body"></span></span>
+        <div class="tabbar" role="tablist" aria-label="Archive shelves" id="archive-tabbar">
           <button class="tab-btn is-active" id="tab-books" type="button" role="tab" aria-selected="true" aria-controls="panel-books" data-tab="books"><span class="no" aria-hidden="true">01</span>Books</button>
           <button class="tab-btn" id="tab-poems" type="button" role="tab" aria-selected="false" aria-controls="panel-poems" data-tab="poems" tabindex="-1"><span class="no" aria-hidden="true">02</span>Poems</button>
           <button class="tab-btn" id="tab-paintings" type="button" role="tab" aria-selected="false" aria-controls="panel-paintings" data-tab="paintings" tabindex="-1">Paintings</button>
@@ -935,7 +935,7 @@
     <section class="section curator-section" id="curate" lang="en" aria-labelledby="curator-title">
       <div class="shell">
         <header class="curator-head">
-          <h2 id="curator-title">Your own collection.</h2>
+          <h2 id="curator-title">Make it yours.</h2>
           <p class="folio-section-note">Pick three photographs and four favourites.<br>Arrange them, add a title, save a poster.</p>
         </header>
         <div id="curator-workspace" hidden>
@@ -990,24 +990,19 @@
 
   </main>
 
-  <!-- Blue-hour closing: the opening sculpture returns in another light. -->
-  <footer class="footer liminal-footer" id="closing">
-    <div class="liminal-footer__stage" data-light-scene="night" aria-hidden="true"><canvas class="liminal-canvas"></canvas></div>
-    <div class="shell liminal-footer__inner">
-      <a class="liminal-return" href="#hero" aria-label="Back to the beginning">
-        <span class="liminal-return__words"><span>Once more,</span><span>from the top.</span></span>
-        <span class="liminal-return__arrow" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M10 30 30 10H10m20 0v20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      </a>
-      <div class="liminal-footer__base">
-        <a class="liminal-footer__brand" href="#hero">N1GHT CHXN9</a>
-        <nav class="footer-links" aria-label="Footer">
-          <a href="#photo">Photography</a>
-          <a href="#archive">Collection</a>
-          <a href="#curate">Curate</a>
-          <a href="myscore/">MyScore</a>
-        </nav>
-        <button class="liminal-motion-toggle" data-motion-toggle type="button" aria-pressed="false" aria-label="Pause decorative animation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Pause motion</span></button>
+  <footer class="tide-footer" id="closing">
+    <div class="tide-footer__scene">
+      <div class="tide-shell tide-footer__lead">
+        <h2>See you <em>after dark.</em></h2>
+        <p>There’s always another shelf to open.</p>
+        <a class="tide-button tide-button--solid" href="#hero">Back to the top <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V4m-6 6 6-6 6 6"/></svg></a>
       </div>
+    </div>
+    <div class="tide-shell tide-footer__base">
+      <a class="tide-brand" href="#hero"><img src="assets/icons/night-enamel-32.png?v=1" width="32" height="32" alt="">N1GHT CHXN9</a>
+      <nav aria-label="Footer">
+        <a href="#library">Discover</a><a href="#photo">Photography</a><a href="#archive">Shelves</a><a href="#curate">Curate</a><a href="3d/">3D world</a><a href="myscore/">MyScore</a>
+      </nav>
     </div>
   </footer>
   <!-- ============ UNIFIED DETAIL LAYER ============ -->
@@ -1090,16 +1085,13 @@
   <script src="js/music-stage.js?v=12"></script>
   <script src="js/book-shelf.js?v=13"></script>
   <script src="js/games-stage.js?v=9"></script>
-  <script src="js/glass-pill.js?v=5"></script>
-  <script src="js/main.js?v=103"></script>
+  <script src="js/main.js?v=104"></script>
   <script src="js/paintings-stage.js?v=1"></script>
   <script src="js/atelier.js?v=12"></script>
-  <script src="js/liminal-light.js?v=1"></script>
-  <script src="js/atelier-hero.js?v=10"></script>
-  <script src="js/atelier-photo.js?v=18"></script>
   <script src="js/atelier-archive.js?v=6"></script>
   <script src="js/atelier-poem.js?v=8"></script>
-  <script src="js/curator-desk.js?v=22"></script>
-  <script src="js/liminal-footer.js?v=1"></script>
+  <script src="js/curator-desk.js?v=23"></script>
+  <script src="js/tide-library.js?v=1"></script>
+  <script src="js/tide-page.js?v=1"></script>
 </body>
 </html>

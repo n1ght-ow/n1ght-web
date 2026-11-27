@@ -20,6 +20,7 @@ export function buildExperience(kit) {
   let lastStatus = "";
   let rippleSerial = 0;
   let lastInkAdvance = -Infinity;
+  let pageSection = -1;
 
   const visual = {
     moonAngle,
@@ -57,18 +58,18 @@ export function buildExperience(kit) {
   );
 
   const materials = {
-    porcelain: kitMaterial(0xf2eee4, 0.28, 0.02),
-    porcelainShade: kitMaterial(0xd9d3c6, 0.42, 0.02),
+    porcelain: kitMaterial(0xe6e0d4, 0.48, 0.02),
+    porcelainShade: kitMaterial(0xaaa49a, 0.58, 0.02),
     paper: ownMaterial({
-      color: 0xeee5d2,
+      color: 0xe9ddc5,
       roughness: 0.96,
       metalness: 0,
       side: THREE.DoubleSide,
     }),
-    copper: kitMaterial(0x80613f, 0.34, 0.72),
-    verdigris: kitMaterial(0x4f8172, 0.38, 0.48),
+    copper: kitMaterial(0x956b43, 0.36, 0.66),
+    verdigris: kitMaterial(0x65726b, 0.5, 0.2),
     ink: kitMaterial(0x172a28, 0.4, 0.08),
-    charcoal: kitMaterial(0x263432, 0.56, 0.18),
+    charcoal: kitMaterial(0x292723, 0.64, 0.08),
     moon: ownMaterial({
       color: 0xf4f2e9,
       roughness: 0.16,
@@ -254,7 +255,7 @@ export function buildExperience(kit) {
     } = options;
     const safeLines = lines.filter(Boolean);
     if (!safeLines.length) return;
-    let fontSize = Math.min(canvas.height * 0.115, 74);
+    let fontSize = Math.min(canvas.height * 0.14, 86);
     let rows = [];
     do {
       context.font = `${weight} ${fontSize}px ${fontFamily}`;
@@ -305,7 +306,7 @@ export function buildExperience(kit) {
 
   function makePageTexture(item, lines, index, complete = false) {
     const lineCount = lines.length;
-    return createCanvasTexture(768, Math.max(360, Math.min(1024, 280 + lineCount * 74)), (context, canvas) => {
+    return createCanvasTexture(896, Math.max(420, Math.min(960, 310 + lineCount * 86)), (context, canvas) => {
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.fillStyle = complete ? "rgba(239, 231, 213, 0.97)" : "rgba(239, 231, 213, 0.9)";
       context.fillRect(0, 0, canvas.width, canvas.height);
@@ -313,21 +314,21 @@ export function buildExperience(kit) {
       context.lineWidth = 2;
       context.strokeRect(18, 18, canvas.width - 36, canvas.height - 36);
       context.fillStyle = "#465b54";
-      context.font = "600 24px \"Songti SC\", \"Times New Roman\", serif";
-      context.fillText(`${String(index + 1).padStart(2, "0")}  /  ${item.displayTitle || item.title}`, 58, 66, canvas.width - 116);
+      context.font = "600 30px \"Songti SC\", \"Times New Roman\", serif";
+      context.fillText(`${String(index + 1).padStart(2, "0")}  /  ${item.displayTitle || item.title}`, 64, 78, canvas.width - 128);
       drawFitLines(context, canvas, lines, {
-        x: 58,
-        y: 94,
-        width: canvas.width - 116,
-        height: canvas.height - 142,
+        x: 64,
+        y: 112,
+        width: canvas.width - 128,
+        height: canvas.height - 168,
         color: "#203532",
         weight: 400,
-        lineGap: 1.42,
+        lineGap: 1.48,
       });
       if (complete) {
         context.fillStyle = "rgba(58, 88, 79, 0.84)";
-        context.font = "500 19px \"Songti SC\", serif";
-        context.fillText(`${item.author || ""}  ·  ${item.form || ""}  ·  ${item.year || ""}`, 58, canvas.height - 42, canvas.width - 116);
+        context.font = "500 23px \"Songti SC\", serif";
+        context.fillText(`${item.author || ""}  ·  ${item.form || ""}  ·  ${item.year || ""}`, 64, canvas.height - 46, canvas.width - 128);
       }
     });
   }
@@ -407,101 +408,34 @@ export function buildExperience(kit) {
     };
   }
 
-  // Three split porcelain strata replace the old circular display tray.
+  // One broad stone deck and a dark timber shadow keep the page grounded.
   const foundation = new THREE.Group();
-  foundation.name = "split-strata-foundation";
+  foundation.name = "paper-table-foundation";
   group.add(foundation);
-  [
-    [-1.58, 0.28, 0.22, 2.8, 0.42, 1.62, -0.07],
-    [0.18, 0.42, -0.48, 2.45, 0.64, 1.38, 0.12],
-    [1.58, 0.26, 0.5, 2.18, 0.36, 1.08, -0.17],
-  ].forEach(([x, y, z, width, height, depth, rotation], index) => {
-    const slab = rounded(width, height, depth, index === 1 ? materials.porcelainShade : materials.porcelain, foundation, [x, y, z], 0.16);
-    slab.rotation.y = rotation;
-    slab.rotation.z = (index - 1) * 0.018;
-  });
+  rounded(7.25, 0.26, 1.9, materials.charcoal, foundation, [0, 0.14, 0], 0.1);
+  rounded(6.78, 0.34, 1.42, materials.porcelainShade, foundation, [0, 0.42, 0.08], 0.12);
 
-  const lowerFoot = new THREE.Group();
-  lowerFoot.position.set(0, 0.52, 0);
-  foundation.add(lowerFoot);
-  for (let index = 0; index < 7; index += 1) {
-    const angle = -1.05 + index * 0.34;
-    const foot = lathe([
-      [0.16, 0],
-      [0.34, 0.08],
-      [0.27, 0.23],
-      [0.19, 0.7],
-      [0.08, 0.76],
-    ], materials.verdigris, lowerFoot, [Math.cos(angle) * 2.15, 0, Math.sin(angle) * 1.45], 28);
-    foot.scale.y = 0.72 + (index % 3) * 0.16;
-  }
-
-  // Three nested, open arch systems keep the poem visible while adding structural density.
+  // A low, quiet arch remains behind the paper as a room-scale depth cue.
   const archSystem = new THREE.Group();
-  archSystem.name = "three-layer-open-rib-arches";
+  archSystem.name = "single-shadow-arch";
+  archSystem.visible = false;
   group.add(archSystem);
-  const archHeights = [4.25, 5.55, 6.75];
-  archHeights.forEach((height, layer) => {
-    const archRadius = 2.15 + layer * 0.42;
-    const arch = ring(archRadius, 0.045, layer === 1 ? materials.copper : materials.porcelain, archSystem, [0, height - archRadius, -0.1 - layer * 0.22], Math.PI * 1.25);
-    arch.rotation.y = -0.72 + layer * 0.19;
-    arch.rotation.z = -0.08 + layer * 0.06;
-    for (const side of [-1, 1]) {
-      const x = side * (2.15 - layer * 0.18);
-      tube([
-        [x, 0.65, 0.1 + layer * 0.14],
-        [x * 1.1, 1.8 + layer * 0.18, -0.2],
-        [x * 0.92, 3.2 + layer * 0.42, -0.1],
-        [x * 0.72, height, -0.16 - layer * 0.18],
-      ], 0.055 - layer * 0.006, layer === 2 ? materials.copper : materials.porcelainShade, archSystem, 54, 7);
-    }
-  });
-
-  const filigreePlacements = [];
-  for (let index = 0; index < 144; index += 1) {
-    const layer = index % 3;
-    const t = (index * 0.61803398875 + layer * 0.17) % 1;
-    const angle = -1.35 + t * Math.PI * 2.7;
-    const radiusValue = 2.12 + layer * 0.39;
-    filigreePlacements.push({
-      position: [
-        Math.cos(angle) * radiusValue,
-        archHeights[layer] + Math.sin(angle) * 0.5,
-        Math.sin(angle) * radiusValue * 0.62 - 0.1 - layer * 0.18,
-      ],
-      rotation: [angle, angle * 0.37, angle * 0.83],
-      scale: 0.7 + (index % 5) * 0.08,
-    });
+  const rearArch = ring(4.15, 0.035, materials.verdigris, archSystem, [0, 3.6, -1.08], Math.PI * 1.2);
+  rearArch.rotation.z = -0.08;
+  for (const side of [-1, 1]) {
+    tube([
+      [side * 4.0, 0.55, -1.02],
+      [side * 3.88, 2.16, -1.12],
+      [side * 3.72, 3.52, -1.14],
+    ], 0.045, materials.porcelainShade, archSystem, 28, 7);
   }
-  instances(
-    ownGeometry(new THREE.OctahedronGeometry(0.055, 0)),
-    materials.copper,
-    filigreePlacements,
-    archSystem,
-  );
-
-  const railPlacements = [];
-  for (let index = 0; index < 72; index += 1) {
-    const angle = index / 72 * Math.PI * 2;
-    railPlacements.push({
-      position: [Math.cos(angle) * 2.48, 2.62 + Math.sin(angle * 2) * 0.11, Math.sin(angle) * 1.2],
-      rotation: [Math.PI / 2, 0, angle],
-      scale: [1, 0.44, 1],
-    });
-  }
-  instances(
-    ownGeometry(new THREE.TorusGeometry(0.075, 0.012, 5, 12)),
-    materials.verdigris,
-    railPlacements,
-    group,
-  );
 
   const moonTrackPoints = [];
-  for (let index = 0; index < 72; index += 1) {
-    const angle = index / 72 * Math.PI * 2;
+  for (let index = 0; index < 36; index += 1) {
+    const angle = index / 36 * Math.PI * 2;
     moonTrackPoints.push([
       Math.cos(angle) * 3.02,
-      6.08 + Math.sin(angle * 2) * 0.13,
+      7.45 + Math.sin(angle * 2) * 0.1,
       -1.48 + Math.sin(angle) * 0.27,
     ]);
   }
@@ -554,7 +488,7 @@ export function buildExperience(kit) {
   register(moonHit, {
     id: "moon",
     label: "月引轮",
-    hint: "拖动月牙，改变字带方向并抬起悬浮纸页",
+    hint: "拖动月牙，改变月光方向并抬起诗页",
     anchor: [0, 0, 0.36],
     onDown() {
       status("月引轮已解除制动");
@@ -602,7 +536,8 @@ export function buildExperience(kit) {
       roughness: 0.72,
       metalness: 0.02,
       transparent: true,
-      alphaTest: 0.06,
+      opacity: 0.08,
+      alphaTest: 0.03,
       side: THREE.DoubleSide,
       depthWrite: false,
     });
@@ -619,13 +554,15 @@ export function buildExperience(kit) {
     const node = addMesh(geometry, material, group);
     node.name = `mobius-text-band-${index + 1}`;
     node.castShadow = false;
+    node.visible = false;
     const edgeGeometry = ownGeometry(new THREE.BufferGeometry());
     edgeGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array((segments + 1) * 3), 3));
     const edge = new THREE.Line(
       edgeGeometry,
-      new THREE.LineBasicMaterial({ color: index === 1 ? 0x8a6741 : 0x57766c, transparent: true, opacity: 0.74 }),
+      new THREE.LineBasicMaterial({ color: index === 1 ? 0x8a6741 : 0x57766c, transparent: true, opacity: 0.08 }),
     );
     edge.name = `mobius-text-edge-${index + 1}`;
+    edge.visible = false;
     ownedMaterials.add(edge.material);
     group.add(edge);
     ribbons.push({ node, edge, geometry, edgeGeometry, segments, index, material });
@@ -672,9 +609,10 @@ export function buildExperience(kit) {
   // Six paper leaves ride the orbit rails and carry the selected poem's complete lines.
   const floatingPages = new THREE.Group();
   floatingPages.name = "gravity-paper-orbit";
+  floatingPages.visible = false;
   group.add(floatingPages);
   const pageLeaves = [];
-  for (let index = 0; index < 6; index += 1) {
+  for (let index = 0; index < 3; index += 1) {
     const texture = items.length ? makePageTexture(items[index % items.length], [], index) : makePageTexture({
       displayTitle: "Poetry",
       title: "Poetry",
@@ -683,8 +621,8 @@ export function buildExperience(kit) {
       year: "",
     }, [], index);
     const page = addMesh(
-      ownGeometry(new THREE.PlaneGeometry(0.86, 1.06, 8, 10)),
-      makeTextMaterial(texture, 0.96),
+      ownGeometry(new THREE.PlaneGeometry(0.52, 0.68, 6, 8)),
+      makeTextMaterial(texture, 0.44),
       floatingPages,
     );
     page.name = `floating-poem-page-${index + 1}`;
@@ -714,29 +652,29 @@ export function buildExperience(kit) {
   }
 
   const readingBackingMaterial = ownMaterial({
-    color: 0xb9a782,
-    roughness: 0.78,
+    color: 0x9b7d58,
+    roughness: 0.84,
     metalness: 0,
     transparent: true,
     opacity: 0.9,
   });
-  const readingBacking = rounded(1.34, 1.68, 0.055, readingBackingMaterial, group, [3.16, 5.72, 3.55], 0.04);
+  const readingBacking = rounded(6.72, 6.72, 0.08, readingBackingMaterial, group, [0, 3.78, 1.56], 0.055);
   readingBacking.name = "complete-poem-backing";
-  readingBacking.rotation.y = -0.24;
+  readingBacking.rotation.y = -0.035;
   const readingPageMaterial = makeTextMaterial(items.length
     ? makePageTexture(items[0], items[0].stanzas.flat().slice(0, 8), 0, true)
     : makePageTexture({ displayTitle: "Poetry", title: "Poetry", author: "", form: "", year: "" }, [], 0, true));
   const readingPage = addMesh(
-    ownGeometry(new THREE.PlaneGeometry(1.18, 1.5, 6, 8)),
+    ownGeometry(new THREE.PlaneGeometry(6.36, 6.36, 8, 12)),
     readingPageMaterial,
     group,
-    [3.16, 5.72, 3.61],
+    [0, 3.78, 1.66],
   );
   readingPage.name = "complete-poem-page";
-  readingPage.rotation.y = -0.24;
-  const readingHit = transparentHit(1.32, 1.66, 0, "reading-page", group, [3.16, 5.72, 3.76]);
+  readingPage.rotation.y = -0.035;
+  const readingHit = transparentHit(6.46, 6.46, 0, "reading-page", group, [0, 3.78, 1.82]);
   readingHit.name = "reading-page-hit";
-  readingHit.rotation.y = -0.24;
+  readingHit.rotation.y = -0.035;
   register(readingHit, {
     id: "reading-page",
     label: "展开诗页",
@@ -754,12 +692,12 @@ export function buildExperience(kit) {
 
   // A black lacquer well follows a serpentine centerline; its shader carries eight live ripples.
   const inkCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-2.28, 0.79, 1.15),
-    new THREE.Vector3(-1.28, 0.83, 1.36),
-    new THREE.Vector3(-0.28, 0.78, 0.92),
-    new THREE.Vector3(0.68, 0.84, 0.44),
-    new THREE.Vector3(1.5, 0.8, 0.74),
-    new THREE.Vector3(2.26, 0.86, 1.22),
+    new THREE.Vector3(-2.42, 0.82, 2.2),
+    new THREE.Vector3(-1.28, 0.86, 2.44),
+    new THREE.Vector3(-0.28, 0.8, 1.98),
+    new THREE.Vector3(0.68, 0.87, 1.5),
+    new THREE.Vector3(1.5, 0.82, 1.8),
+    new THREE.Vector3(2.42, 0.88, 2.28),
   ]);
   tube(inkCurve.getPoints(64), 0.11, materials.porcelainShade, group, 96, 8).name = "continuous-ink-trough-rim";
   const rippleUniforms = Array.from({ length: 8 }, () => new THREE.Vector4(0.5, 0.5, -1000, 0));
@@ -859,7 +797,7 @@ export function buildExperience(kit) {
   }
 
   const inkSurface = createInkSurface();
-  const inkHit = transparentHit(5.0, 1.42, 0, "ink-pool", group, [0, 0.92, 1.02]);
+  const inkHit = transparentHit(6.25, 1.42, 0, "ink-pool", group, [0, 0.92, 2.1]);
   inkHit.rotation.x = -Math.PI / 2;
   register(inkHit, {
     id: "ink-pool",
@@ -888,7 +826,7 @@ export function buildExperience(kit) {
     },
     onKey(key) {
       if (key === "Enter" || key === " ") {
-        addInkRipple([0, 0.92, 1.02], 0.9);
+        addInkRipple([0, 0.92, 2.1], 0.9);
         advanceVerse();
         invalidate();
       }
@@ -907,7 +845,7 @@ export function buildExperience(kit) {
     }
     return {
       u: clamp((x + 2.4) / 4.8, 0.03, 0.97),
-      v: clamp((-z + 1.85) / 1.55, 0.08, 0.92),
+      v: clamp((z - 1.4) / 1.2, 0.08, 0.92),
     };
   }
 
@@ -950,7 +888,7 @@ export function buildExperience(kit) {
       ownGeometry(new THREE.PlaneGeometry(2.8, 0.31, 18, 2)),
       material,
       risingLines,
-      [0, 1.08 + index * 0.25, 1.08],
+      [0, 1.08 + index * 0.25, 2.58],
     );
     line.rotation.x = -0.08;
     line.castShadow = false;
@@ -980,56 +918,45 @@ export function buildExperience(kit) {
     });
   }
 
-  // The scroll carries a separate true stanza surface for every stanza in the selected poem.
+  // Two broad rollers turn the central paper into a scroll without covering its text.
   const scrollRig = new THREE.Group();
   scrollRig.name = "parameter-paper-scroll";
-  scrollRig.position.set(3.16, 3.28, 3.66);
-  scrollRig.rotation.y = -0.24;
+  scrollRig.position.set(0, 3.78, 2.16);
+  scrollRig.rotation.y = -0.035;
   group.add(scrollRig);
   const scrollSupports = new THREE.Group();
   scrollSupports.name = "fixed-scroll-guides";
   scrollRig.add(scrollSupports);
   for (const side of [-1, 1]) {
     tube([
-      [side * 1.24, 1.58, -0.015],
-      [side * 1.24, 0.94, -0.015],
-    ], 0.025, materials.porcelainShade, scrollSupports, 18, 6);
-    for (const y of [1.69, 0.83]) {
-      const cap = addMesh(
-        ownGeometry(new THREE.SphereGeometry(0.07, 14, 10)),
-        y > 0 ? materials.copper : materials.verdigris,
-        scrollSupports,
-        [side * 1.24, y, -0.015],
-      );
-      cap.castShadow = false;
-    }
-    rounded(0.62, 0.1, 0.2, materials.blackLacquer, scrollSupports, [side * 1.24, 1.52, -0.04], 0.035);
-    rounded(0.3, 0.08, 0.16, materials.copper, scrollSupports, [side * 1.24, 0.9, -0.04], 0.025);
+      [side * 3.35, 3.18, -0.08],
+      [side * 3.35, -3.18, -0.08],
+    ], 0.022, materials.copper, scrollSupports, 28, 6);
   }
   const topRoller = addMesh(
-    ownGeometry(new THREE.CylinderGeometry(0.09, 0.09, 2.24, 20, 1)),
+    ownGeometry(new THREE.CylinderGeometry(0.08, 0.08, 6.62, 20, 1)),
     materials.copper,
     scrollRig,
-    [0, 1.48, 0],
+    [0, 3.18, 0.12],
   );
   topRoller.name = "paper-scroll-top-roller";
   topRoller.rotation.z = Math.PI / 2;
   for (const side of [-1, 1]) {
     lathe([
-      [0.1, 0],
-      [0.24, 0.06],
-      [0.2, 0.17],
-      [0.08, 0.22],
-    ], materials.porcelain, scrollRig, [side * 1.16, 1.48, 0], 24).rotation.z = Math.PI / 2;
+      [0.08, 0],
+      [0.26, 0.06],
+      [0.21, 0.18],
+      [0, 0.23],
+    ], materials.porcelain, scrollRig, [side * 3.33, 3.18, 0.12], 24).rotation.z = Math.PI / 2;
   }
   const scrollPull = new THREE.Group();
   scrollPull.name = "paper-scroll-pull";
-  scrollPull.position.set(0, 1.04, 0.08);
+  scrollPull.position.set(0, 3.08, 0.15);
   scrollRig.add(scrollPull);
   const bottomRollerSpin = new THREE.Group();
   scrollPull.add(bottomRollerSpin);
   const bottomRoller = addMesh(
-    ownGeometry(new THREE.CylinderGeometry(0.08, 0.08, 2.2, 20, 1)),
+    ownGeometry(new THREE.CylinderGeometry(0.075, 0.075, 6.6, 20, 1)),
     materials.verdigris,
     bottomRollerSpin,
   );
@@ -1037,111 +964,29 @@ export function buildExperience(kit) {
   for (const side of [-1, 1]) {
     const cap = lathe([
       [0.06, -0.08],
-      [0.14, -0.045],
-      [0.16, 0.04],
-      [0.1, 0.09],
-      [0, 0.11],
-    ], materials.porcelain, bottomRollerSpin, [side * 1.13, 0, 0], 20);
+      [0.17, -0.045],
+      [0.19, 0.04],
+      [0.11, 0.1],
+      [0, 0.12],
+    ], materials.porcelain, bottomRollerSpin, [side * 3.32, 0, 0], 20);
     cap.rotation.z = Math.PI / 2;
   }
-  for (const side of [-1, 1]) {
-    rounded(0.055, 0.25, 0.065, materials.verdigris, scrollPull, [side * 0.38, -0.17, 0.18], 0.018);
-  }
-  const pullGrip = rounded(0.94, 0.075, 0.085, materials.porcelain, scrollPull, [0, -0.31, 0.18], 0.03);
+  const pullGrip = rounded(1.18, 0.09, 0.1, materials.porcelain, scrollPull, [0, -0.2, 0.22], 0.03);
   pullGrip.castShadow = true;
-  rounded(0.58, 0.04, 0.09, materials.copper, scrollPull, [0, -0.31, 0.225], 0.018);
-  const scrollGearA = gear(0.19, 0.06, 12, materials.copper, scrollRig, [-1.24, 1.44, 0]);
-  scrollGearA.rotation.x = 0.2;
-  const scrollGearB = gear(0.13, 0.055, 10, materials.verdigris, scrollRig, [1.24, 1.44, 0]);
-  scrollGearB.rotation.x = 0.2;
+  rounded(0.64, 0.045, 0.11, materials.copper, scrollPull, [0, -0.2, 0.275], 0.016);
 
-  const stanzaSurfaces = [];
-  for (let index = 0; index < 6; index += 1) {
-    const segmentsU = 18;
-    const segmentsV = 5;
-    const geometry = ownGeometry(new THREE.BufferGeometry());
-    const vertexCount = (segmentsU + 1) * (segmentsV + 1);
-    geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vertexCount * 3), 3));
-    geometry.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(vertexCount * 2), 2));
-    const indices = [];
-    for (let row = 0; row < segmentsV; row += 1) {
-      for (let column = 0; column < segmentsU; column += 1) {
-        const a = row * (segmentsU + 1) + column;
-        const b = a + 1;
-        const c = a + segmentsU + 1;
-        const d = c + 1;
-        indices.push(a, b, c, b, d, c);
-      }
-    }
-    geometry.setIndex(indices);
-    const uv = geometry.attributes.uv;
-    for (let row = 0; row <= segmentsV; row += 1) {
-      for (let column = 0; column <= segmentsU; column += 1) {
-        const pointer = row * (segmentsU + 1) + column;
-        uv.setXY(pointer, column / segmentsU, row / segmentsV);
-      }
-    }
-    uv.needsUpdate = true;
-    const material = makeTextMaterial(makePageTexture(items[0] || {
-      displayTitle: "Poetry",
-      title: "Poetry",
-      author: "",
-      form: "",
-      year: "",
-    }, [], index), 0.98);
-    const mesh = addMesh(geometry, material, scrollRig);
-    mesh.name = `scroll-stanza-surface-${index + 1}`;
-    mesh.castShadow = true;
-    mesh.userData.segmentsU = segmentsU;
-    mesh.userData.segmentsV = segmentsV;
-    stanzaSurfaces.push({ mesh, material, geometry, segmentsU, segmentsV, index });
-  }
-
-  function updateStanzaGeometry(surface, unroll, curl) {
-    const { geometry, segmentsU, segmentsV } = surface;
-    const positions = geometry.attributes.position;
-    const width = 2.12;
-    const height = 0.72;
-    for (let row = 0; row <= segmentsV; row += 1) {
-      const v = row / segmentsV;
-      for (let column = 0; column <= segmentsU; column += 1) {
-        const u = column / segmentsU;
-        const x = (u - 0.5) * width;
-        const y = (v - 0.5) * height;
-        const rolledRadius = lerp(0.28, 4.5, unroll);
-        const angle = (u - 0.5) * width / rolledRadius;
-        const rolledX = Math.sin(angle) * rolledRadius;
-        const rolledZ = Math.cos(angle) * rolledRadius - rolledRadius;
-        const wave = Math.sin(u * Math.PI * 2 + surface.index * 0.7) * 0.035 * curl;
-        const pointer = row * (segmentsU + 1) + column;
-        positions.setXYZ(
-          pointer,
-          lerp(rolledX, x, unroll),
-          y,
-          lerp(rolledZ, wave, unroll),
-        );
-      }
-    }
-    positions.needsUpdate = true;
-    geometry.computeVertexNormals();
-    geometry.computeBoundingBox();
-    geometry.computeBoundingSphere();
-  }
-
-  function refreshScrollTextures() {
+  function refreshScrollTextures(force = false) {
     const item = currentItem();
     if (!item) return;
-    stanzaSurfaces.forEach(({ material, index }) => {
-      const lines = item.stanzas[index];
-      if (lines) {
-        replaceTextureMaterial(material, makePageTexture(item, lines, index));
-      }
-    });
-    const fullLines = item.stanzas.flat();
-    replaceTextureMaterial(readingPageMaterial, makePageTexture(item, fullLines, selected, true));
+    const sectionCount = Math.max(1, item.stanzas.length);
+    const section = Math.min(sectionCount - 1, Math.floor(scroll * sectionCount + 0.0001));
+    if (!force && section === pageSection) return;
+    pageSection = section;
+    const lines = item.stanzas[section] || [];
+    replaceTextureMaterial(readingPageMaterial, makePageTexture(item, lines, section, true));
   }
 
-  const scrollHandle = transparentHit(2.34, 0.5, 0, "scroll", scrollPull, [0, -0.2, 0.36]);
+  const scrollHandle = transparentHit(6.62, 0.62, 0, "scroll", scrollPull, [0, -0.16, 0.38]);
   register(scrollHandle, {
     id: "scroll",
     label: "诗卷展开轮",
@@ -1173,29 +1018,28 @@ export function buildExperience(kit) {
 
   const selector = new THREE.Group();
   selector.name = "poem-selector-dial";
-  selector.position.set(-2.32, 0.78, 2.2);
+  selector.position.set(3.9, 1.58, 2.42);
   group.add(selector);
   const selectorDiscs = [];
   items.slice(0, 3).forEach((item, index) => {
-    const angle = -0.55 + index * 0.55;
     const discGroup = new THREE.Group();
-    discGroup.position.set(Math.cos(angle) * 0.74, 0.68 + index * 0.14, Math.sin(angle) * 0.36);
+    discGroup.position.set(index % 2 ? 0.12 : 0, index * 0.86, 0);
     selector.add(discGroup);
     const disc = lathe([
-      [0, -0.08],
-      [0.27, -0.06],
-      [0.3, 0],
-      [0.27, 0.07],
-      [0, 0.08],
+      [0, -0.09],
+      [0.31, -0.065],
+      [0.34, 0],
+      [0.3, 0.08],
+      [0, 0.09],
     ], index === 0 ? materials.verdigris : materials.porcelain, discGroup, [0, 0, 0], 36);
     disc.rotation.x = Math.PI / 2;
-    const inner = ring(0.18, 0.018, materials.copper, discGroup, [0, 0, 0.09], Math.PI * 1.82);
+    const inner = ring(0.21, 0.019, materials.copper, discGroup, [0, 0, 0.1], Math.PI * 1.82);
     inner.rotation.z = index * 0.65;
-    const hit = transparentHit(0, 0, 0.37, `poem-${index}`, discGroup, [0, 0, 0.07]);
+    const hit = transparentHit(0, 0, 0.48, `poem-${index}`, discGroup, [0, 0, 0.08]);
     register(hit, {
       id: `poem-${index}`,
       label: `选择《${item.title}》`,
-      hint: "点击诗轮，将这份完整诗作送上字带与纸页",
+      hint: "点击诗轮，将这份完整诗作送上纸页",
       anchor: [0, 0, 0.07],
       onClick() {
         setPoem(index);
@@ -1213,7 +1057,7 @@ export function buildExperience(kit) {
     scroll = 0.08;
     refreshPageLeaves();
     refreshRisingLines(true);
-    refreshScrollTextures();
+    refreshScrollTextures(true);
     selectorDiscs.forEach((entry, discIndex) => {
       entry.group.rotation.z = discIndex === selected ? 0.28 : 0;
       entry.disc.scale.setScalar(discIndex === selected ? 1.16 : 1);
@@ -1236,6 +1080,7 @@ export function buildExperience(kit) {
       }),
     );
     ownedMaterials.add(line.material);
+    line.visible = false;
     group.add(line);
     gravityLines.push({ line, geometry });
   }
@@ -1263,7 +1108,7 @@ export function buildExperience(kit) {
     const angle = visual.moonAngle;
     moonRig.position.set(
       Math.cos(angle) * 3.02,
-      6.08 + visual.moonLift * 0.58 + Math.sin(angle * 2) * 0.12,
+      7.45 + visual.moonLift * 0.58 + Math.sin(angle * 2) * 0.12,
       -1.48 + Math.sin(angle) * 0.27,
     );
     moonRig.rotation.set(0.02, 0.36 - angle * 0.08, Math.sin(angle * 0.7) * 0.12);
@@ -1290,31 +1135,11 @@ export function buildExperience(kit) {
   function applyScroll() {
     if (kit.reducedMotion?.()) visual.scroll = scroll;
     else visual.scroll = THREE.MathUtils.damp(visual.scroll, scroll, 10, 0.1);
-    const sectionCount = Math.max(1, currentItem()?.stanzas.length || 1);
-    let lowestPageBottom = Infinity;
-    stanzaSurfaces.forEach((surface, index) => {
-      const progress = clamp(visual.scroll * sectionCount - index, 0, 1);
-      const eased = smoothstep(0, 1, progress);
-      surface.mesh.visible = progress > 0.001;
-      surface.mesh.position.set(
-        0,
-        1.1 - index * 0.68 + (1 - eased) * 0.08,
-        0.035 - index * 0.004,
-      );
-      surface.mesh.rotation.x = (1 - eased) * -0.16;
-      updateStanzaGeometry(surface, eased, 1 - eased);
-      surface.mesh.material.opacity = 0.15 + eased * 0.83;
-      if (surface.mesh.visible) {
-        surface.mesh.updateMatrix();
-        const localBounds = surface.geometry.boundingBox.clone().applyMatrix4(surface.mesh.matrix);
-        lowestPageBottom = Math.min(lowestPageBottom, localBounds.min.y);
-      }
-    });
-    scrollPull.position.y = Number.isFinite(lowestPageBottom) ? lowestPageBottom - 0.16 : 1.04;
+    const eased = smoothstep(0, 1, visual.scroll);
+    scrollPull.position.y = lerp(-3.18, 3.18, eased);
     bottomRollerSpin.rotation.y = visual.scroll * Math.PI * 4.2;
-    scrollGearA.rotation.z = -visual.scroll * Math.PI * 5.5;
-    scrollGearB.rotation.z = visual.scroll * Math.PI * 6.8;
-    readingBackingMaterial.opacity = visual.scroll > 0.93 ? 1 : 0.35 + visual.scroll * 0.6;
+    readingBackingMaterial.opacity = 0.86 + visual.scroll * 0.14;
+    refreshScrollTextures();
   }
 
   function updateRisingLines(time, dt) {
@@ -1328,7 +1153,7 @@ export function buildExperience(kit) {
       mesh.position.set(
         Math.sin(time * 0.22 + index * 0.85) * 0.045,
         lerp(startY, endY, next),
-        1.02 + index * 0.012,
+        2.56 + index * 0.012,
       );
       mesh.scale.setScalar(0.68 + next * 0.32);
       mesh.rotation.z = (1 - next) * (index % 2 ? -0.04 : 0.04);
@@ -1341,7 +1166,7 @@ export function buildExperience(kit) {
     setPoem(selected);
     refreshPageLeaves();
     refreshRisingLines(immediate);
-    refreshScrollTextures();
+    refreshScrollTextures(true);
     applyMoon();
     applyScroll();
   }
@@ -1357,7 +1182,7 @@ export function buildExperience(kit) {
       applyMoon();
       status("月引轮转过一格");
     } else if (action === "ink") {
-      addInkRipple([0, 0.92, 1.02], 1);
+      addInkRipple([0, 0.92, 2.1], 1);
       advanceVerse();
       status("墨潮推进一行诗文");
     } else if (action === "scroll") {
@@ -1462,7 +1287,7 @@ export function buildExperience(kit) {
 
   return {
     group,
-    focus: new THREE.Vector3(0, 3.35, 0),
+    focus: new THREE.Vector3(0, 3.72, 0),
     update,
     interact,
     getState,

@@ -1,14 +1,12 @@
 import { loadCollection } from './collection.js?v=2';
-import { createCuration } from './curation.js?v=3';
-import { EXPERIENCE_GUIDE } from './experience-guide.js?v=2';
+import { createCuration, NON_PHOTO_LIMIT, PHOTO_LIMIT } from './curation.js?v=3';
+import { FEATURED_PHOTO, PRIMARY_CONTROLS, ROOMS, WINGS } from './gallery.js?v=1';
 import { resolveSiteAsset } from './paths.js?v=1';
 
 const $ = id => document.getElementById(id);
-const shortNames = { photo: '摄影', books: '书籍', poems: '诗歌', paintings: '绘画', music: '音乐', sport: '体育', series: '剧集', films: '电影', games: '游戏', curate: '策展' };
+const shortNames = Object.fromEntries(Object.entries(ROOMS).map(([id, room]) => [id, room.name]));
 let collections = [], world = null, current = null, selected = null, detailTrigger = null, toastTimer;
-let catalogueLimit = 40, night = false;
-const visited = new Set();
-const actionState = new Map();
+let catalogueLimit = 40;
 const details = $('detail-dialog');
 const atlas = $('atlas-dialog');
 const curation = createCuration({ onChange: updateSaved });
@@ -38,67 +36,116 @@ function imageNode(item, full = false) {
   }, { once: true });
   return image;
 }
-function showRoom(id, updateHash = true) {
+function linkedRoom(event, id) {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  showRoom(id, true, true);
+}
+function showRoom(id, updateHash = true, moveFocus = false) {
   if (id && !roomOf(id)) return;
   if (updateHash) {
-    const hash = id ? `#${id}` : '#';
-    if (location.hash !== hash) history.pushState(null, '', hash);
+    const hash = id ? `#${id}` : '';
+    if (location.hash !== hash) history.pushState(null, '', hash || location.pathname + location.search);
   }
+  if (current?.id === id || (!current && !id && document.documentElement.dataset.world === 'overview')) return;
+  if (world && document.documentElement.dataset.scene === 'fallback') {
+    delete document.documentElement.dataset.scene;
+    $('world-loading').hidden = true;
+  }
+  renderRoom(id);
   if (world) world.focus(id);
-  else renderRoom(id);
+  if (moveFocus) {
+    window.scrollTo(0, 0);
+    $(id ? 'room-title' : 'start-explore').focus({ preventScroll: true });
+  }
+}
+function roomTab(name, focus = false) {
+  for (const id of ['operate', 'catalogue']) {
+    const active = id === name;
+    const tab = $(id + '-tab');
+    tab.setAttribute('aria-selected', String(active));
+    tab.tabIndex = active ? 0 : -1;
+    $(id + '-panel').hidden = !active;
+    if (active && focus) tab.focus();
+  }
+}
+function updatePoster(room) {
+  const photos = roomOf('photo').items;
+  const featured = photos.find(item => item.id === FEATURED_PHOTO);
+  const items = room?.id === 'curate' ? curation.getItems() : room?.items;
+  const item = !room || room.id === 'photo' ? featured : items.find(entry => entry.image) || items[0];
+  const poster = $('stage-poster');
+  const text = $('stage-text');
+  poster.hidden = !item?.image;
+  text.hidden = !poster.hidden;
+  if (!poster.hidden) {
+    const url = resolveSiteAsset(item.image);
+    if (poster.src !== url) poster.src = url;
+    poster.alt = item.alt || item.title;
+  } else {
+    text.querySelector('strong').textContent = item?.title || ROOMS.curate.title;
+    const stanza = item?.stanzas?.[0];
+    text.querySelector('p').textContent = Array.isArray(stanza) ? stanza.join('\n') : stanza || item?.meta || '打开馆藏作品，把它收入你的展览。';
+  }
 }
 function renderRoom(id) {
   current = id ? roomOf(id) : null;
   document.documentElement.dataset.world = current ? 'room' : 'overview';
-  $('room-panel').hidden = !current;
-  document.querySelectorAll('.dock-item').forEach(button => {
-    if (button.dataset.room === id) button.setAttribute('aria-current', 'location');
-    else button.removeAttribute('aria-current');
-  });
-  if (!current) { $('view-coordinates').textContent = '十件装置 · 由你亲手改变'; showControlHover(null); return; }
-  visited.add(id);
-  document.querySelector(`[data-room="${id}"]`)?.classList.add('is-visited');
-  $('room-english').textContent = `${String(collections.indexOf(current) + 1).padStart(2, '0')} / ${current.subtitle || current.english}`;
-  $('room-title').textContent = current.title;
-  $('room-description').textContent = current.description;
-  $('room-hint').textContent = current.interaction;
-  $('view-coordinates').textContent = `${current.title} · ${visited.size} / 10 件已探索`;
+  $('room-heading').hidden = $('room-panel').hidden = !current;
+  for (const link of document.querySelectorAll('[data-room]')) {
+    if (link.dataset.room === id) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  }
+  updatePoster(current);
+  showControlHover(null);
+  $('model-pins').replaceChildren();
+  $('model-controls').replaceChildren();
+  pinNodes.clear();
+  controlSignature = '';
+  if (!current) return;
+  const profile = ROOMS[id];
+  $('world-stage').style.setProperty('--stage', profile.color);
+  $('room-english').textContent = current.english;
+  $('room-title').textContent = profile.title;
+  $('room-description').textContent = profile.intro;
+  $('room-hint').textContent = profile.hint;
+  $('model-status').textContent = '';
   $('collection-search').value = ''; catalogueLimit = 40;
   $('room-panel').scrollTop = 0;
   $('curation-form').hidden = id !== 'curate';
   $('random-item').hidden = id === 'curate';
   document.querySelector('.search-wrap').hidden = id === 'curate';
+  roomTab(id === 'curate' || document.documentElement.dataset.scene === 'fallback' ? 'catalogue' : 'operate');
   renderActions(); renderCatalogue();
-  controlSignature = ''; refreshModelControls();
-  if (id === 'curate') world?.interact('refresh', curation.getItems());
 }
 function buildNavigation() {
-  collections.forEach((room, index) => {
-    const number = String(index + 1).padStart(2, '0');
-    const dock = el('button', 'dock-item'); dock.type = 'button'; dock.dataset.room = room.id;
-    dock.setAttribute('aria-label', `${shortNames[room.id]} · ${room.title}`);
-    dock.append(el('span', 'dock-number', number), el('span', '', shortNames[room.id]));
-    dock.addEventListener('click', () => showRoom(room.id)); $('dock-items').append(dock);
-    const button = el('button', 'atlas-item'); button.type = 'button';
-    const copy = el('span'); copy.append(el('strong', '', room.title), el('small', '', room.english));
-    button.append(el('span', '', number), copy, el('span', '', '↗'));
-    button.addEventListener('click', () => { atlas.close(); showRoom(room.id); });
-    $('atlas-list').append(button);
-  });
-}
-function action(text, callback, toggle = false) {
-  const button = el('button', 'room-action', text); button.type = 'button';
-  const key = `${current.id}:${text}`;
-  if (toggle) {
-    const pressed = actionState.get(key) === true;
-    button.setAttribute('aria-pressed', String(pressed));
-    if (pressed && text === '落下唱针') button.textContent = '抬起唱针';
-    if (pressed && text === '启动放映机') button.textContent = '暂停放映机';
+  for (const wing of [...WINGS, { name: '策展', rooms: ['curate'] }]) {
+    const isCuration = wing.rooms[0] === 'curate';
+    const dock = el('div', 'dock-group');
+    const dockLinks = el('div', 'dock-links');
+    dock.append(el('span', 'wing-name', wing.name), dockLinks);
+    const group = el('section', 'atlas-wing');
+    group.append(el('h3', 'wing-name', wing.name));
+    for (const id of wing.rooms) {
+      const profile = ROOMS[id];
+      const link = el('a', 'dock-item', profile.name); link.href = '#' + id; link.dataset.room = id;
+      link.addEventListener('click', event => linkedRoom(event, id));
+      dockLinks.append(link);
+      const atlasLink = el('a', 'atlas-item'); atlasLink.href = '#' + id; atlasLink.dataset.room = id;
+      atlasLink.append(el('span', '', profile.title), el('small', '', roomOf(id).english));
+      atlasLink.addEventListener('click', event => {
+        if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) atlas.close();
+        linkedRoom(event, id);
+      });
+      group.append(atlasLink);
+    }
+    if (!isCuration) $('dock-items').append(dock);
+    $('atlas-list').append(group);
   }
-  button.addEventListener('click', () => {
-    callback(button);
-    if (toggle) actionState.set(key, button.getAttribute('aria-pressed') === 'true');
-  });
+}
+function action(text, callback) {
+  const button = el('button', 'room-action', text); button.type = 'button';
+  button.addEventListener('click', () => callback(button));
   $('room-actions').append(button); return button;
 }
 function randomIndex() { return Math.floor(Math.random() * (current?.items.length || 1)); }
@@ -116,15 +163,22 @@ function renderActions() {
     projectControls(world?.getControls?.() || []);
   });
   pins.setAttribute('aria-pressed', String(pinsVisible));
-  if (current.id === 'curate') action('填入七件作品', surpriseExhibition);
+  if (current.id === 'curate') action('随机补齐展品', fillExhibition);
 }
 function refreshModelControls() {
   const container = $('model-controls'); if (!container || !current) return;
-  const controls = (world?.getControls?.() || []).sort((a, b) => Number(b.draggable) - Number(a.draggable));
+  const controls = world?.getControls() || [];
   const signature = current.id + ':' + controls.map(c => c.id).join('|');
   if (signature === controlSignature) return;
+  const expanded = container.querySelector('details')?.open || false;
   controlSignature = signature; container.replaceChildren(); $('model-pins').replaceChildren(); pinNodes.clear();
-  controls.forEach((control, index) => {
+  const preferred = PRIMARY_CONTROLS[current.id];
+  const primary = preferred ? preferred.map(key => controls.find(control => control.id === current.id + ':' + key)).filter(Boolean) : controls;
+  const extra = controls.filter(control => !primary.includes(control));
+  const options = el('details', 'extra-controls');
+  options.open = expanded;
+  options.append(el('summary', '', '更多机关'));
+  [...primary, ...extra].forEach((control, index) => {
     const row = el('div', 'mechanism-row'); row.dataset.modelControl = control.id;
     const trigger = el('button', 'mechanism-trigger'); trigger.type = 'button';
     trigger.setAttribute('aria-label', control.label + '，' + control.hint);
@@ -142,14 +196,15 @@ function refreshModelControls() {
       step.setAttribute('aria-label', ((key === 'ArrowLeft' || key === 'ArrowDown') ? '反向调整' : '正向调整') + control.label);
       step.addEventListener('click', () => world?.activateControl(control.id, key)); row.append(step);
     }
-    container.append(row);
+    (index < primary.length ? container : options).append(row);
     const pin = el('button', 'mechanism-pin'); pin.type = 'button';
     pin.setAttribute('aria-label', '操作' + control.label);
     pin.append(el('span', '', String(index + 1).padStart(2, '0')), el('small', '', control.label));
     pin.addEventListener('click', () => world?.activateControl(control.id));
     $('model-pins').append(pin); pinNodes.set(control.id, { row, pin });
   });
-  if (!controls.length) container.append(el('p', 'model-controls-empty', '先把指针移到模型上，寻找可以拖动的部件。'));
+  if (extra.length) container.append(options);
+  if (!controls.length) container.append(el('p', 'model-controls-empty', '展品正在就位。也可以先浏览馆藏。'));
   projectControls(controls);
 }
 function projectControls(controls) {
@@ -163,7 +218,7 @@ function projectControls(controls) {
 }
 function showModelStatus({ id, message }) {
   if (!current || current.id !== id || !$('model-status')) return;
-  $('model-status').textContent = message; $('model-scene-status').textContent = message;
+  if ($('model-status').textContent !== message) $('model-status').textContent = message;
   refreshModelControls();
 }
 function showControlHover(control) {
@@ -181,7 +236,7 @@ function itemButton(item, category, index) {
   const img = imageNode(item); button.append(img || el('span', 'item-initial', item.title.slice(0, 1)));
   const copy = el('span', 'item-copy'); copy.append(el('strong', '', item.title), el('small', '', item.meta || shortNames[category]));
   button.append(copy, el('span', 'item-arrow', '↗'));
-  button.addEventListener('click', () => { world?.interact('select', index); openDetail(category, index); });
+  button.addEventListener('click', () => { if (current?.id === category) world?.interact('select', index); openDetail(category, index); });
   return button;
 }
 function renderCatalogue() {
@@ -189,7 +244,7 @@ function renderCatalogue() {
   const container = $('catalogue-items'); container.replaceChildren();
   if (current.id === 'curate') {
     const items = curation.getItems(); $('catalogue-count').textContent = `已收集 ${items.length} / 7 件`;
-    if (!items.length) container.append(el('p', 'empty-message', '展亭正等着你的第一件作品。走进任意一座岛，把喜欢的照片、文字或声音收入展览。'));
+    if (!items.length) container.append(el('p', 'empty-message', '还没有作品。打开任意一件藏品的详情，就可以把它收入展览。'));
     items.forEach((item, itemIndex) => {
       const room = roomOf(item.category); const index = room?.items.findIndex(i => i.id === item.id) ?? -1;
       const row = el('div', 'saved-row'); row.append(itemButton(item, item.category, index));
@@ -209,9 +264,9 @@ function renderCatalogue() {
   const query = $('collection-search').value.trim().toLocaleLowerCase();
   const filtered = current.items.map((item, index) => ({ item, index })).filter(({ item }) =>
     !query || [item.title, item.meta, item.description, item.artist, item.author, item.genre].filter(Boolean).join(' ').toLocaleLowerCase().includes(query));
-  $('catalogue-count').textContent = query ? `找到 ${filtered.length} / ${current.items.length} 件` : `${current.items.length} 件真实馆藏`;
+  $('catalogue-count').textContent = query ? `找到 ${filtered.length} / ${current.items.length} 件` : `${current.items.length} 件馆藏`;
   filtered.slice(0, catalogueLimit).forEach(({ item, index }) => container.append(itemButton(item, current.id, index)));
-  if (!filtered.length) container.append(el('p', 'empty-message', '这座岛上暂时没有找到这件作品，试试作品名或作者。'));
+  if (!filtered.length) container.append(el('p', 'empty-message', '这里没有匹配的作品。可以试试作品名或作者。'));
   if (filtered.length > catalogueLimit) {
     const more = el('button', 'text-button', `继续看 ${Math.min(40, filtered.length - catalogueLimit)} 件 ↓`); more.type = 'button';
     more.addEventListener('click', () => { const top = container.scrollTop; catalogueLimit += 40; renderCatalogue(); container.scrollTop = top; }); container.append(more);
@@ -233,10 +288,19 @@ function openDetail(category, index) {
   const visual = $('detail-visual'); visual.replaceChildren(); visual.classList.remove('is-zoomed');
   const image = imageNode(item, true);
   if (image) {
-    image.tabIndex = 0; image.setAttribute('role', 'button'); image.setAttribute('aria-label', '放大或还原作品图像');
-    const toggle = () => { const zoomed = visual.classList.toggle('is-zoomed'); image.setAttribute('aria-pressed', String(zoomed)); };
-    image.addEventListener('click', toggle); image.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(); } });
-    visual.append(image);
+    const zoom = el('button', 'detail-image-button');
+    zoom.type = 'button';
+    zoom.setAttribute('aria-label', '放大作品图像');
+    zoom.setAttribute('aria-pressed', 'false');
+    zoom.addEventListener('click', () => {
+      const zoomed = visual.classList.toggle('is-zoomed');
+      zoom.setAttribute('aria-pressed', String(zoomed));
+      zoom.setAttribute('aria-label', zoomed ? '还原作品图像' : '放大作品图像');
+      if (!zoomed) visual.scrollTo(0, 0);
+    });
+    zoom.append(image);
+    image.addEventListener('error', () => zoom.replaceWith(...zoom.childNodes), { once: true });
+    visual.append(zoom);
   } else visual.append(el('div', 'typographic-work', item.title));
   const description = $('detail-description'); description.replaceChildren();
   if (item.description) description.append(el('p', '', item.description));
@@ -246,7 +310,10 @@ function openDetail(category, index) {
   $('detail-source').hidden = !url; if (url) $('detail-source').href = url;
   $('detail-source').textContent = category === 'music' ? '在网易云音乐聆听 ↗' : category === 'sport' ? '访问球队或赛事官网 ↗' : category === 'poems' ? '阅读原始来源 ↗' : '前往作品来源 ↗';
   updateSaveButton();
-  if (!details.open) { detailTrigger = document.activeElement; details.showModal(); }
+  if (!details.open) {
+    detailTrigger = document.activeElement === document.body ? $('world-canvas') : document.activeElement;
+    details.showModal();
+  }
 }
 function updateSaveButton() {
   if (!selected) return;
@@ -258,22 +325,28 @@ function updateSaved() {
   if (!$('saved-count')) return;
   const items = curation.getItems(); $('saved-count').textContent = items.length;
   $('curation-toggle').setAttribute('aria-label', `查看我的展览，已收集${items.length}件`);
-  updateSaveButton(); if (current?.id === 'curate') renderCatalogue();
+  updateSaveButton();
+  if (current?.id === 'curate') {
+    renderCatalogue();
+    updatePoster(current);
+  }
   if (world && current?.id === 'curate') world.interact('refresh', items);
 }
-function surpriseExhibition() {
-  curation.clear();
-  const photo = roomOf('photo'); const shuffled = [...photo.items].sort(() => Math.random() - 0.5).slice(0, 3);
-  shuffled.forEach(item => curation.toggle(item, 'photo'));
-  for (const id of ['books', 'paintings', 'films', 'music']) {
-    const room = roomOf(id); if (room.items.length) curation.toggle(room.items[Math.floor(Math.random() * room.items.length)], id);
+function fillExhibition() {
+  const saved = curation.getItems();
+  const photoCount = saved.filter(item => item.category === 'photo').length;
+  const otherRooms = collections.filter(room => room.id !== 'photo' && room.id !== 'curate');
+  for (const [rooms, count] of [[[roomOf('photo')], PHOTO_LIMIT - photoCount], [otherRooms, NON_PHOTO_LIMIT - (saved.length - photoCount)]]) {
+    const available = rooms.flatMap(room => room.items.filter(item => !curation.has(item.id, room.id)));
+    for (let index = 0; index < count && available.length > 0; index++) {
+      const [item] = available.splice(Math.floor(Math.random() * available.length), 1);
+      curation.toggle(item, item.category);
+    }
   }
-  world?.interact('refresh', curation.getItems()); toast('七件作品已经就位。这场展览属于你。');
+  roomTab('catalogue', true);
+  toast(saved.length === curation.getItems().length ? '展览已满。' : '已补齐展品。');
 }
 function setupEvents() {
-  const touchLayout = matchMedia('(max-width: 760px)');
-  const updateGesture = () => { $('gesture-zoom').textContent = touchLayout.matches ? '点按 ＋/− 缩放' : '滚轮靠近'; };
-  touchLayout.addEventListener('change', updateGesture); updateGesture();
   try {
     const draft = JSON.parse(localStorage.getItem('night-world-label') || '{}');
     if (typeof draft.title === 'string') $('exhibition-title').value = draft.title;
@@ -283,26 +356,38 @@ function setupEvents() {
     try { localStorage.setItem('night-world-label', JSON.stringify({ title: $('exhibition-title').value, subtitle: $('exhibition-subtitle').value })); } catch { /* In-memory editing remains available. */ }
   });
   $('map-toggle').addEventListener('click', () => atlas.showModal());
-  $('start-explore').addEventListener('click', () => showRoom('photo'));
-  $('room-back').addEventListener('click', () => showRoom(null));
-  $('reset-view').addEventListener('click', () => showRoom(null));
-  document.querySelector('.brand').addEventListener('click', event => { event.preventDefault(); showRoom(null); });
-  $('curation-toggle').addEventListener('click', () => showRoom('curate'));
-  $('zoom-in').addEventListener('click', () => world?.zoom(0.85)); $('zoom-out').addEventListener('click', () => world?.zoom(1.18));
+  document.querySelector('.skip-link').addEventListener('click', event => {
+    event.preventDefault();
+    $('room-nav').focus();
+  });
+  $('curation-toggle').addEventListener('click', () => showRoom('curate', true, true));
+  for (const id of ['start-explore', 'featured-link']) $(id).addEventListener('click', event => linkedRoom(event, 'photo'));
+  for (const link of [$('room-back'), document.querySelector('.brand')]) link.addEventListener('click', event => linkedRoom(event, null));
+  $('reset-view').addEventListener('click', () => world?.focus(current?.id || null));
+  $('zoom-in').addEventListener('click', () => world?.zoom(0.85));
+  $('zoom-out').addEventListener('click', () => world?.zoom(1.18));
+  const tabs = ['operate', 'catalogue'];
+  for (const name of tabs) {
+    const tab = $(name + '-tab');
+    tab.addEventListener('click', () => roomTab(name));
+    tab.addEventListener('keydown', event => {
+      if (document.documentElement.dataset.scene === 'fallback' || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      roomTab(event.key === 'Home' ? 'operate' : event.key === 'End' ? 'catalogue' : tabs.find(id => id !== name), true);
+    });
+  }
   $('collection-search').addEventListener('input', () => { catalogueLimit = 40; renderCatalogue(); });
   $('random-item').addEventListener('click', () => reveal(randomIndex()));
-  $('day-toggle').addEventListener('click', () => {
-    night = !night; document.documentElement.dataset.light = night ? 'moon' : 'day'; world?.setNight(night);
-    $('day-toggle').setAttribute('aria-pressed', String(night)); $('day-toggle').setAttribute('aria-label', night ? '切换为日光' : '切换为月光');
-    $('day-toggle').querySelector('span').textContent = night ? '月光' : '日光';
-  });
   document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => $(button.dataset.close).close()));
   [atlas, details].forEach(dialog => dialog.addEventListener('click', event => {
     if (event.target !== dialog) return;
     const r = dialog.getBoundingClientRect();
     if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close();
   }));
-  details.addEventListener('close', () => { if (detailTrigger?.isConnected) detailTrigger.focus({ preventScroll: true }); });
+  details.addEventListener('close', () => {
+    const trigger = detailTrigger?.isConnected ? detailTrigger : $(current ? 'room-title' : 'start-explore');
+    trigger.focus({ preventScroll: true });
+  });
   $('detail-prev').addEventListener('click', () => paginateDetail(-1)); $('detail-next').addEventListener('click', () => paginateDetail(1));
   $('save-item').addEventListener('click', () => {
     if (!selected) return;
@@ -310,7 +395,7 @@ function setupEvents() {
     const result = curation.toggle(selected.item, selected.category);
     const after = curation.has(selected.item.id);
     if (before === after) toast(result?.message || result?.error || '展览最多七件，其中照片最多三张，其他作品最多四件。');
-    else toast(after ? '已收入展览，继续在群岛寻找下一件。' : '已从这场展览移除。');
+    else toast(after ? '已收入展览。' : '已从这场展览移除。');
     updateSaved();
   });
   $('curation-form').addEventListener('submit', async event => {
@@ -334,52 +419,80 @@ function setupEvents() {
       if (event.key === 'ArrowRight') { event.preventDefault(); paginateDetail(1); }
     }
   });
-  window.addEventListener('popstate', () => showRoom(roomOf(location.hash.slice(1))?.id || null, false));
+  const syncRoute = () => {
+    const id = location.hash.slice(1);
+    if (!id || id === 'world') showRoom(null, false);
+    else if (roomOf(id)) showRoom(id, false);
+  };
+  window.addEventListener('popstate', syncRoute);
+  window.addEventListener('hashchange', syncRoute);
   window.addEventListener('pagehide', event => { if (!event.persisted) world?.dispose(); });
-  document.addEventListener('world:context-lost', () => {
-    $('world-loading').hidden = false; $('world-loading').querySelector('span:last-of-type').textContent = '三维画面暂时休息了，请刷新页面或返回普通版。';
-  });
+  document.addEventListener('world:context-lost', () => useFallback('三维画面已中断。馆藏仍可浏览。'));
+  document.addEventListener('world:room-error', () => useFallback('这处展品暂时无法在三维场景中打开。馆藏仍可浏览。', true));
+}
+function useFallback(message, keepWorld = false) {
+  if (!keepWorld) {
+    world?.dispose();
+    world = null;
+  }
+  const root = document.documentElement;
+  root.classList.remove('scene-visible');
+  root.dataset.scene = 'fallback';
+  $('world-canvas').tabIndex = -1;
+  $('world-loading').textContent = message;
+  $('world-loading').hidden = false;
+  if (current) roomTab('catalogue');
 }
 function paginateDetail(direction) {
   if (!selected) return;
   const room = roomOf(selected.category); const next = (selected.index + direction + room.items.length) % room.items.length;
-  world?.interact('select', next); openDetail(room.id, next);
+  if (current?.id === room.id) world?.interact('select', next);
+  openDetail(room.id, next);
 }
 
 async function start() {
   collections = await loadCollection();
-  collections.forEach(room => Object.assign(room, EXPERIENCE_GUIDE[room.id] || {}));
   buildNavigation(); setupEvents(); updateSaved();
+  $('world-canvas').tabIndex = -1;
+  const id = location.hash.slice(1);
+  if (roomOf(id)) showRoom(id, false);
   try {
-    const { createWorld } = await import('./engine.js?v=16');
-    world = createWorld({ canvas: $('world-canvas'), labelRoot: $('island-labels'), collections,
-      onRoom: id => {
-        renderRoom(id);
-        const target = id ? `#${id}` : '#';
-        if (location.hash !== target) history.replaceState(null, '', target);
-      },
+    const { createWorld } = await import('./engine.js?v=17');
+    world = createWorld({ canvas: $('world-canvas'), collections,
+      onRoom: id => showRoom(id, true, true),
       onSelect: (id, index) => openDetail(id, index),
       onStatus: showModelStatus,
       onControlHover: showControlHover,
       onControlPositions: projectControls,
+      shouldProjectControls: () => pinsVisible,
       getCuratedItems: () => curation.getItems(),
       onMoveCurated: (id, target) => {
         const index = curation.getItems().findIndex(item => item.id === id);
         return index >= 0 && curation.move(id, target - index);
       },
       onCurationRequest: () => { if (!atlas.open) atlas.showModal(); },
-      onReady: () => { $('world-loading').hidden = true; document.documentElement.classList.add('world-ready'); },
+      onPending: () => {
+        $('world-canvas').tabIndex = -1;
+        document.documentElement.classList.remove('scene-visible');
+      },
+      onReady: () => {
+        $('world-loading').hidden = true;
+        $('world-canvas').tabIndex = 0;
+        document.documentElement.classList.add('scene-visible');
+        refreshModelControls();
+      },
     });
-    // Read-only diagnostics are useful when verifying rendering budgets in the browser.
-    window.worldDiagnostics = () => ({ ...world.getStats(), controls: world.getControls(), categories: collections.map(r => ({ id: r.id, count: r.items.length })), visited: [...visited] });
+    if (current) {
+      world.focus(current.id, true);
+      if (details.open && selected?.category === current.id) world.interact('select', selected.index);
+    }
+    window.worldDiagnostics = () => world && ({ ...world.getStats(), controls: world.getControls(), categories: collections.map(room => ({ id: room.id, count: room.items.length })) });
   } catch (error) {
-    console.error('The 3D collection could not start:', error);
-    $('world-loading').querySelector('span:last-of-type').textContent = '当前设备未能展开三维画面。仍可从下方目录浏览全部收藏。';
-    $('world-loading').classList.add('has-error');
+    console.warn('The gallery is using its catalogue view:', error.message);
+    useFallback('当前设备无法展开三维画面。请选择展区浏览馆藏。');
   }
-  const id = location.hash.slice(1); if (roomOf(id)) showRoom(id, false);
 }
 start().catch(error => {
   console.error('Collection startup:', error);
-  $('world-loading').querySelector('span:last-of-type').textContent = '馆藏暂时没有展开，可以先返回普通版。';
+  useFallback('馆藏暂时无法读取。可以先返回普通版。');
 });

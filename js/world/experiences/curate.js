@@ -91,21 +91,21 @@ export function buildExperience(kit) {
     ownMaterial(new THREE.MeshStandardMaterial({ color, roughness, metalness }));
 
   const materials = {
-    porcelain: kit.cream || kit.material("#f1ebe0", 0.46, 0.02),
-    stone: kit.stone || kit.material("#d3c9b8", 0.82, 0),
-    jade: kit.green || kit.material("#265c4d", 0.56, 0.1),
-    forest: rawMaterial("#173b34", 0.48, 0.18),
-    ink: kit.dark || kit.material("#171d1b", 0.42, 0.2),
-    walnut: kit.walnut || kit.material("#5b3927", 0.6, 0.03),
-    brass: kit.brass || kit.material("#b68d50", 0.27, 0.72),
-    copper: rawMaterial("#a95d3f", 0.32, 0.64),
-    coral: rawMaterial("#aa4d55", 0.34, 0.2),
-    sapphire: rawMaterial("#295b78", 0.3, 0.36),
-    paper: rawMaterial("#e7dcc5", 0.88, 0),
+    porcelain: kit.material("#b8b0a1", 0.84, 0.01),
+    stone: kit.material("#918d83", 0.92, 0.01),
+    jade: kit.material("#40534a", 0.68, 0.06),
+    forest: rawMaterial("#26352f", 0.64, 0.08),
+    ink: kit.dark || kit.material("#1b1d1b", 0.56, 0.12),
+    walnut: kit.walnut || kit.material("#3b2b23", 0.76, 0.02),
+    brass: kit.brass || kit.material("#a38355", 0.42, 0.58),
+    copper: rawMaterial("#806047", 0.52, 0.46),
+    coral: rawMaterial("#8e5851", 0.58, 0.12),
+    sapphire: rawMaterial("#435867", 0.5, 0.18),
+    paper: rawMaterial("#d8cdb9", 0.9, 0),
     glass: ownMaterial(new THREE.MeshStandardMaterial({
-      color: "#c8dfd8",
+      color: "#aeb5aa",
       transparent: true,
-      opacity: 0.2,
+      opacity: 0.1,
       roughness: 0.14,
       metalness: 0.05,
       side: THREE.DoubleSide,
@@ -122,8 +122,6 @@ export function buildExperience(kit) {
   };
 
   const beamGeometry = ownGeometry(new THREE.BoxGeometry(1, 1, 1));
-  const rivetGeometry = ownGeometry(new THREE.SphereGeometry(0.04, 10, 8));
-
   function makeText(width, height, text, position, parent = group, options = {}) {
     const mesh = sculpt.text(text, width, height, parent, {
       background: options.background ?? null,
@@ -183,9 +181,9 @@ export function buildExperience(kit) {
   splitStage.name = "split-stage-decks";
   group.add(splitStage);
   const deckPieces = [
-    [-2.7, 0.2, 0.42, 3.05, 0.24, 1.62, -0.07, materials.porcelain],
+    [-2.7, 0.2, 0.42, 3.05, 0.24, 1.62, -0.07, materials.stone],
     [0.08, 0.13, -1.18, 2.52, 0.18, 1.36, 0.04, materials.jade],
-    [2.82, 0.24, 0.72, 2.62, 0.26, 1.5, 0.11, materials.porcelain],
+    [2.82, 0.24, 0.72, 2.62, 0.26, 1.5, 0.11, materials.stone],
   ];
   deckPieces.forEach(([x, y, z, width, height, depth, rotation, material], index) => {
     const deck = sculpt.rounded(width, height, depth, material, splitStage, [x, y, z], 0.12);
@@ -329,12 +327,12 @@ export function buildExperience(kit) {
         [0.42, 6.08],
         [0, 6.14],
       ],
-      materials.porcelain,
+      materials.walnut,
       proscenium,
       [side * 3.94, 0.2, -0.62],
       48,
     );
-    column.scale.z = 0.74;
+    column.scale.set(0.78, 1, 0.58);
     const flutes = [];
     for (let flute = 0; flute < 13; flute += 1) {
       const angle = flute / 13 * TAU;
@@ -446,6 +444,10 @@ export function buildExperience(kit) {
     armB.add(beam);
     foldingLamps.push({ side, pivot, armA, armB, beam });
   }
+  proscenium.scale.set(0.94, 0.76, 0.84);
+  proscenium.position.z = -0.82;
+  stageLights.scale.set(0.86, 0.78, 0.82);
+  stageLights.position.z = -0.34;
 
   const veilGeometryA = (() => {
     const helper = new THREE.Group();
@@ -487,8 +489,8 @@ export function buildExperience(kit) {
 
   for (let row = 0; row < 3; row += 1) {
     const root = new THREE.Group();
-    root.position.set((row - 1) * 1.5, 0.2, 4.2);
-    root.scale.setScalar(0.65);
+    root.position.set([-3.36, 3.36, 3.36][row], 0.16, [3.28, 3.28, 4.38][row]);
+    root.scale.setScalar(0.48);
     root.rotation.y = -0.08 + row * 0.08;
     liftConsole.add(root);
     sculpt.lathe(
@@ -690,15 +692,28 @@ export function buildExperience(kit) {
   function slotPose(index) {
     const record = slotRecords[index];
     const lift = rowLift[record.row];
+    if (layoutName() === "ring") {
+      const positions = [
+        [-2.62, 2.24, 0.34],
+        [-1.34, 2.35, 0.58],
+        [1.34, 2.35, 0.58],
+        [2.62, 2.24, 0.34],
+        [-1.92, 4.56, -0.28],
+        [0, 4.76, -0.5],
+        [1.92, 4.56, -0.28],
+      ];
+      const position = positions[index];
+      return {
+        position: new THREE.Vector3(position[0], position[1] + lift, position[2]),
+        yaw: -position[0] * 0.025,
+      };
+    }
     if (layoutName() === "spiral") {
       const t = index / 6;
-      const angle = -1.1 + t * Math.PI * 2.15;
-      const radius = 3.76 - t * 2.05;
-      const x = Math.cos(angle) * radius;
-      const z = Math.sin(angle) * radius;
+      const x = -2.55 + t * 5.1;
       return {
-        position: new THREE.Vector3(x, 1.55 + t * 2.8 + lift, z),
-        yaw: Math.atan2(-x, -z),
+        position: new THREE.Vector3(x, 1.92 + t * 3.26 + lift, 1.08 - t * 1.52),
+        yaw: -x * 0.026,
       };
     }
     if (layoutName() === "linear") {
@@ -709,20 +724,16 @@ export function buildExperience(kit) {
       const spread = count === 1 ? 0 : column - (count - 1) / 2;
       return {
         position: new THREE.Vector3(
-          spread * 1.55,
-          [1.55, 3.65, 5.75][row] + lift,
-          1.4 - row * 0.6,
+          spread * 1.66,
+          [2.12, 3.88, 5.64][row] + lift,
+          0.46 - row * 0.38,
         ),
-        yaw: 0,
+        yaw: -spread * 0.025,
       };
     }
-    const angle = -Math.PI * 0.5 + index / 7 * TAU;
-    const radius = 3.36 + (index % 2) * 0.13;
-    const x = Math.cos(angle) * radius;
-    const z = Math.sin(angle) * radius;
     return {
-      position: new THREE.Vector3(x, 1.72 + (index % 3) * 0.18 + lift, z),
-      yaw: Math.atan2(-x, -z),
+      position: new THREE.Vector3(0, 2.2, 0),
+      yaw: 0,
     };
   }
 
@@ -846,47 +857,24 @@ export function buildExperience(kit) {
     const frame = new THREE.Group();
     root.add(frame);
     record.frame = frame;
-    sculpt.rounded(1.34, 1.78, 0.11, materials.porcelain, frame, [0, 0, 0], 0.075);
-    sculpt.rounded(1.16, 1.58, 0.04, materials.ink, frame, [0, 0, 0.075], 0.035);
+    sculpt.rounded(1.54, 2.04, 0.11, materials.walnut, frame, [0, 0, 0], 0.075);
+    sculpt.rounded(1.34, 1.82, 0.04, materials.paper, frame, [0, 0, 0.075], 0.035);
     sculpt.tube(
       [
-        new THREE.Vector3(-0.62, -0.82, 0.13),
-        new THREE.Vector3(0.62, -0.82, 0.13),
-        new THREE.Vector3(0.62, 0.82, 0.13),
-        new THREE.Vector3(-0.62, 0.82, 0.13),
-        new THREE.Vector3(-0.62, -0.82, 0.13),
+        new THREE.Vector3(-0.7, -0.92, 0.13),
+        new THREE.Vector3(0.7, -0.92, 0.13),
+        new THREE.Vector3(0.7, 0.92, 0.13),
+        new THREE.Vector3(-0.7, 0.92, 0.13),
+        new THREE.Vector3(-0.7, -0.92, 0.13),
       ],
-      0.027,
+      0.021,
       materials.brass,
       frame,
       36,
       7,
     );
-    sculpt.tube(
-      [
-        new THREE.Vector3(-0.55, -0.74, 0.16),
-        new THREE.Vector3(0.55, -0.74, 0.16),
-        new THREE.Vector3(0.55, 0.74, 0.16),
-        new THREE.Vector3(-0.55, 0.74, 0.16),
-        new THREE.Vector3(-0.55, -0.74, 0.16),
-      ],
-      0.012,
-      materials.copper,
-      frame,
-      32,
-      6,
-    );
-    const finPlacements = [];
-    for (let fin = 0; fin < 7; fin += 1) {
-      finPlacements.push({
-        position: [-0.5 + fin * 0.167, 0, -0.09],
-        rotation: [0, 0, 0],
-        scale: [0.018, 1.38 - Math.abs(3 - fin) * 0.025, 0.08],
-      });
-    }
-    sculpt.instances(beamGeometry, materials.jade, finPlacements, frame);
 
-    const image = kit.image("", 1.02, 1.46, frame);
+    const image = kit.image("", 1.2, 1.68, frame);
     record.image = image;
     if (image) {
       image.position.set(0, 0, 0.115);
@@ -907,11 +895,11 @@ export function buildExperience(kit) {
 
       sculpt.tube(
         [
-          new THREE.Vector3(-0.58, -0.78, -0.175),
-          new THREE.Vector3(0.58, -0.78, -0.175),
-          new THREE.Vector3(0.58, 0.78, -0.175),
-          new THREE.Vector3(-0.58, 0.78, -0.175),
-          new THREE.Vector3(-0.58, -0.78, -0.175),
+          new THREE.Vector3(-0.66, -0.88, -0.175),
+          new THREE.Vector3(0.66, -0.88, -0.175),
+          new THREE.Vector3(0.66, 0.88, -0.175),
+          new THREE.Vector3(-0.66, 0.88, -0.175),
+          new THREE.Vector3(-0.66, -0.88, -0.175),
         ],
         0.014,
         materials.copper,
@@ -922,7 +910,7 @@ export function buildExperience(kit) {
     }
 
     record.fallbackText = makeText(
-      0.9,
+      1.04,
       0.3,
       `空展位 ${String(index + 1).padStart(2, "0")}`,
       [0, 0, 0.19],
@@ -940,29 +928,29 @@ export function buildExperience(kit) {
       colorWrite: false,
       side: THREE.DoubleSide,
     }));
-    const hit = new THREE.Mesh(ownGeometry(new THREE.BoxGeometry(1.52, 1.96, 0.34)), hitMaterial);
+    const hit = new THREE.Mesh(ownGeometry(new THREE.BoxGeometry(1.72, 2.2, 0.34)), hitMaterial);
     hit.position.z = 0.04;
     frame.add(hit);
     record.hit = hit;
 
-    const plaque = sculpt.rounded(0.82, 0.12, 0.045, materials.ink, root, [0, -0.8, 0.235], 0.025);
-    const plaqueBack = sculpt.rounded(0.82, 0.12, 0.045, materials.ink, root, [0, -0.8, -0.235], 0.025);
+    const plaque = sculpt.rounded(0.94, 0.12, 0.045, materials.walnut, root, [0, -0.96, 0.235], 0.025);
+    const plaqueBack = sculpt.rounded(0.94, 0.12, 0.045, materials.walnut, root, [0, -0.96, -0.235], 0.025);
     plaqueBack.rotation.y = Math.PI;
     record.plaque = plaque;
     record.plaqueBack = plaqueBack;
     record.plaqueLabel = makeText(
-      0.72,
+      0.86,
       0.08,
       `EMPTY ${String(index + 1).padStart(2, "0")}`,
-      [0, -0.8, 0.265],
+      [0, -0.96, 0.265],
       root,
       { color: "#e8dfca", fontSize: 48 },
     );
     record.plaqueBackLabel = makeText(
-      0.72,
+      0.86,
       0.08,
       `EMPTY ${String(index + 1).padStart(2, "0")}`,
-      [0, -0.8, -0.265],
+      [0, -0.96, -0.265],
       root,
       { color: "#e8dfca", fontSize: 48, rotation: [0, Math.PI, 0] },
     );
@@ -974,10 +962,10 @@ export function buildExperience(kit) {
       colorWrite: false,
     }));
     const plaqueHit = new THREE.Mesh(
-      ownGeometry(new THREE.BoxGeometry(1.0, 0.24, 0.62)),
+      ownGeometry(new THREE.BoxGeometry(1.12, 0.24, 0.62)),
       plaqueHitMaterial,
     );
-    plaqueHit.position.set(0, -0.8, 0);
+    plaqueHit.position.set(0, -0.96, 0);
     root.add(plaqueHit);
 
     const cable = makeCable();
@@ -1118,9 +1106,11 @@ export function buildExperience(kit) {
     })),
     artRig,
   );
+  weights.scale.set(0.76, 0.7, 0.76);
+  weights.visible = false;
 
   const layoutDialGroup = new THREE.Group();
-  layoutDialGroup.position.set(2.82, 1.24, 3.74);
+  layoutDialGroup.position.set(3.05, 1.18, 4.04);
   group.add(layoutDialGroup);
   sculpt.lathe(
     [
@@ -1145,10 +1135,10 @@ export function buildExperience(kit) {
   }));
   const dialHalo = sculpt.ring(0.73, 0.035, dialHaloMaterial, layoutDialGroup, [0, 0, 0.05]);
   dialHalo.renderOrder = 2;
-  const layoutDial = sculpt.gear(0.58, 0.12, 28, materials.brass, layoutDialGroup, [0, 0, 0]);
+  const layoutDial = sculpt.gear(0.58, 0.12, 14, materials.brass, layoutDialGroup, [0, 0, 0]);
   const dialSpokes = [];
-  for (let index = 0; index < 9; index += 1) {
-    const angle = index / 9 * TAU;
+  for (let index = 0; index < 6; index += 1) {
+    const angle = index / 6 * TAU;
     dialSpokes.push({
       position: [Math.cos(angle) * 0.34, Math.sin(angle) * 0.34, 0.1],
       rotation: [0, 0, angle],
@@ -1191,7 +1181,8 @@ export function buildExperience(kit) {
   });
 
   const requestStand = new THREE.Group();
-  requestStand.position.set(-2.95, 0.5, 3.7);
+  requestStand.position.set(0, 0.3, 4.28);
+  requestStand.scale.setScalar(1.08);
   group.add(requestStand);
   sculpt.lathe(
     [
@@ -1207,7 +1198,7 @@ export function buildExperience(kit) {
     [0, 0, 0],
     44,
   );
-  const requestPlate = sculpt.rounded(1.62, 0.56, 0.09, materials.porcelain, requestStand, [0, 1.04, 0.08], 0.065);
+  const requestPlate = sculpt.rounded(2.55, 0.72, 0.1, materials.walnut, requestStand, [0, 1.04, 0.08], 0.075);
   requestPlate.rotation.x = -0.1;
   const requestHaloMaterial = ownMaterial(new THREE.MeshBasicMaterial({
     color: "#d7b169",
@@ -1219,12 +1210,12 @@ export function buildExperience(kit) {
   const requestHalo = sculpt.ring(0.62, 0.03, requestHaloMaterial, requestStand, [0, 1.06, 0], TAU * 0.86);
   requestHalo.rotation.x = -0.1;
   const requestLabel = makeText(
-    1.4,
-    0.32,
+    2.26,
+    0.46,
     "＋ 选择真实藏品",
     [0, 1.05, 0.15],
     requestStand,
-    { color: "#29433b", fontSize: 58, background: "#e9dfcb", rotation: [-0.1, 0, 0] },
+    { color: "#eee4d2", fontSize: 64, background: "#263730", rotation: [-0.1, 0, 0] },
   );
   requestLabel.renderOrder = 3;
   kit.register(requestPlate, {
@@ -1544,7 +1535,9 @@ export function buildExperience(kit) {
 
   function updateStageStatus(announce = false) {
     const layoutLabel = layoutName() === "ring" ? "环形" : layoutName() === "spiral" ? "螺旋" : "线性";
-    const message = `记忆编排剧院 · ${layoutLabel === "环形" ? "环形舞台" : layoutLabel === "螺旋" ? "螺旋高台" : "线性叠层"} · ${actualItems.length}/7 件`;
+    const message = actualItems.length
+      ? `记忆编排剧院 · ${layoutLabel === "环形" ? "环形舞台" : layoutLabel === "螺旋" ? "螺旋高台" : "线性叠层"} · ${actualItems.length}/7 件`
+      : "空展览 · 点击前景选择真实藏品";
     if (message === statusText) return;
     statusText = message;
     stageStatusLabel = replaceText(

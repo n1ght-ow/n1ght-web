@@ -58,17 +58,14 @@ export function buildExperience(kit) {
     toneMapped: false,
   });
   const filmCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-2.18, 4.4, -0.92),
-    new THREE.Vector3(-2.24, 3.86, -0.18),
-    new THREE.Vector3(-2.72, 3.16, 0.54),
-    new THREE.Vector3(-1.42, 2.78, 0.92),
-    new THREE.Vector3(0, 3.16, 1.04),
-    new THREE.Vector3(1.42, 2.78, 0.92),
-    new THREE.Vector3(2.72, 3.16, 0.54),
-    new THREE.Vector3(2.24, 3.86, -0.18),
-    new THREE.Vector3(2.18, 4.4, -0.92),
+    new THREE.Vector3(-2.42, 0.82, 2.66),
+    new THREE.Vector3(-1.72, 0.74, 2.72),
+    new THREE.Vector3(-0.58, 0.7, 2.74),
+    new THREE.Vector3(0.58, 0.7, 2.74),
+    new THREE.Vector3(1.72, 0.74, 2.72),
+    new THREE.Vector3(2.42, 0.82, 2.66),
   ], false, "centripetal", 0.42);
-  const LENS_HOME = Object.freeze([2.55, 2.3, 0.94]);
+  const LENS_HOME = Object.freeze([2.38, 2.28, 0.92]);
   const slotGlassMaterial = new THREE.MeshPhysicalMaterial({
     color: 0x8d6a4a,
     roughness: 0.16,
@@ -133,7 +130,7 @@ export function buildExperience(kit) {
 
   return {
     group,
-    focus: new THREE.Vector3(0, 2.8, 0),
+    focus: new THREE.Vector3(0, 2.95, 0.1),
     update,
     interact,
     getState,
@@ -142,96 +139,43 @@ export function buildExperience(kit) {
   };
 
   function buildFragmentaryFloor() {
-    rounded(4.2, 0.46, 2.75, materials.porcelain, group, [0, 0.23, -0.02], [0, 0.03, 0], 0.12);
-    rounded(2.2, 0.34, 3.1, materials.ivory, group, [-2.35, 0.17, 0.66], [0, -0.24, 0], 0.1);
-    rounded(2.0, 0.28, 2.45, materials.walnut, group, [2.5, 0.14, 0.92], [0, 0.22, 0], 0.08);
-    rounded(2.45, 0.18, 0.52, materials.brass, group, [0.12, 0.48, 1.18], [0, -0.04, 0], 0.045);
-    for (const x of [-1.16, 1.4]) {
-      rounded(0.18, 0.28, 0.6, materials.walnut, group, [x, 0.43, 1.18], [0, -0.04, 0], 0.035);
-    }
-
-    const foundationRibs = [];
-    for (let index = 0; index < 22; index += 1) {
-      const x = -2.9 + index * 0.275;
-      foundationRibs.push({
-        position: [x, 0.42 + (index % 3) * 0.035, -0.82 + Math.sin(index * 0.8) * 0.16],
-        rotation: [0.12, -0.2 + index * 0.02, (index % 2 ? -1 : 1) * 0.18],
-        scale: [0.65 + (index % 4) * 0.1, 1, 1],
-      });
-    }
-    sculpt.instances(new THREE.BoxGeometry(0.04, 0.54, 0.045), materials.brass, foundationRibs, group);
-
-    for (const side of [-1, 1]) {
-      tube([
-        [side * 2.9, 0.42, 1.28],
-        [side * 2.75, 1.42, 1.52],
-        [side * 2.3, 2.34, 1.2],
-        [side * 1.75, 3.06, 0.48],
-      ], 0.045, materials.goldDark, group, 36, 6);
-    }
+    rounded(5.55, 0.14, 3.45, materials.walnut, group, [0, 0.07, 0.12], [0, 0, 0], 0.09);
+    rounded(5.15, 0.16, 2.95, materials.porcelain, group, [0, 0.2, 0.04], [0, 0, 0], 0.11);
+    rounded(4.72, 0.1, 2.42, materials.green, group, [0, 0.31, 0.02], [0, 0, 0], 0.08);
+    rounded(4.4, 0.08, 0.38, materials.copper, group, [0, 0.38, 1.26], [0, 0, 0], 0.035);
   }
 
   function buildOpticalBays() {
-    const bays = [
-      { x: -2.85, y: 2.65, z: -0.82, width: 0.16, height: 3.6, twist: -0.2 },
-      { x: 2.82, y: 3.12, z: -0.48, width: 0.14, height: 4.45, twist: 0.18 },
-      { x: -0.34, y: 4.68, z: -1.28, width: 0.12, height: 3.1, twist: 0.04 },
-    ];
-    bays.forEach((bay, index) => {
-      rounded(bay.width, bay.height, bay.width, materials.walnut, group, [bay.x, bay.y, bay.z], [0, bay.twist, index === 1 ? -0.08 : 0.07], 0.035);
-      rounded(0.5, 0.12, 0.46, materials.brass, group, [bay.x, bay.y + bay.height / 2, bay.z], [0, bay.twist, 0], 0.035);
-      rounded(0.68, 0.1, 0.58, materials.porcelain, group, [bay.x, bay.y - bay.height / 2, bay.z], [0, bay.twist, 0], 0.05);
-    });
-
-    tube([
-      [-2.85, 4.45, -0.82],
-      [-1.78, 5.18, -1.04],
-      [-0.34, 5.72, -1.28],
-      [1.22, 5.24, -1.02],
-      [2.82, 4.56, -0.48],
-    ], 0.055, materials.brass, group, 54, 7);
-    tube([
-      [-2.85, 2.2, -0.82],
-      [-1.2, 2.62, 0.22],
-      [0, 2.94, 0.62],
-      [1.28, 2.58, 0.2],
-      [2.82, 2.16, -0.48],
-    ], 0.032, materials.copper, group, 54, 6);
-
-    const hangers = [];
-    for (let index = 0; index < 16; index += 1) {
-      const t = index / 15;
-      const x = lerp(-2.75, 2.72, t);
-      hangers.push({
-        position: [x, 5.38 + Math.sin(t * Math.PI) * 0.16, -1.04],
-        rotation: [0, 0, (index % 2 ? -1 : 1) * 0.08],
-        scale: [1, 0.72 + (index % 4) * 0.12, 1],
-      });
+    rounded(6.15, 3.75, 0.2, materials.walnut, group, [0, 3.35, -1.56], [0, 0, 0], 0.045);
+    rounded(5.72, 3.38, 0.08, materials.porcelain, group, [0, 3.35, -1.43], [0, 0, 0], 0.035);
+    for (const x of [-2.72, 2.72]) {
+      rounded(0.13, 4.2, 0.22, materials.walnut, group, [x, 2.88, -1.36], [0, 0, 0], 0.035);
+      rounded(0.055, 3.72, 0.05, materials.copper, group, [x * 0.988, 2.95, -1.22], [0, 0, 0], 0.018);
     }
-    sculpt.instances(new THREE.BoxGeometry(0.035, 0.52, 0.045), materials.brass, hangers, group);
+    rounded(5.78, 0.1, 0.36, materials.brass, group, [0, 5.33, -1.34], [0, 0, 0], 0.035);
   }
 
   function buildFilmLoop() {
     stripMesh = sculpt.surface((u, v) => {
       const point = stripPoint(u);
-      return [point[0], point[1] + (v - 0.5) * 0.58, point[2]];
-    }, 112, 2, stripMaterial, group);
+      return [point[0], point[1] + (v - 0.5) * 0.38, point[2]];
+    }, 96, 2, stripMaterial, group);
     stripMesh.castShadow = true;
     stripMesh.receiveShadow = false;
 
     const lowEdge = [];
     const highEdge = [];
     const markerPlacements = [];
-    for (let index = 0; index <= 72; index += 1) {
-      const u = index / 72;
+    for (let index = 0; index <= 56; index += 1) {
+      const u = index / 56;
       const point = stripPoint(u);
       const ahead = stripPoint(Math.min(1, u + 0.0025));
       const angle = -Math.atan2(ahead[2] - point[2], ahead[0] - point[0]);
-      lowEdge.push([point[0], point[1] - 0.275, point[2]]);
-      highEdge.push([point[0], point[1] + 0.275, point[2]]);
+      lowEdge.push([point[0], point[1] - 0.18, point[2]]);
+      highEdge.push([point[0], point[1] + 0.18, point[2]]);
     }
-    tube(lowEdge, 0.018, materials.goldDark, group, 96, 5);
-    tube(highEdge, 0.018, materials.goldDark, group, 96, 5);
+    tube(lowEdge, 0.014, materials.goldDark, group, 72, 5);
+    tube(highEdge, 0.014, materials.goldDark, group, 72, 5);
 
     for (let index = 0; index < Math.max(24, items.length); index += 1) {
       const u = (index + 0.5) / Math.max(24, items.length);
@@ -245,31 +189,32 @@ export function buildExperience(kit) {
       });
     }
     const markerMaterial = kit.material(0xffffff, 0.42, 0.14);
-    stripMarkers = sculpt.instances(new THREE.BoxGeometry(0.18, 0.29, 0.018), markerMaterial, markerPlacements, group);
+    stripMarkers = sculpt.instances(new THREE.BoxGeometry(0.14, 0.2, 0.018), markerMaterial, markerPlacements, group);
     stripMarkers.castShadow = false;
     updateMarkerColors();
 
     for (const endpoint of [0, 1]) {
       const point = filmCurve.getPointAt(endpoint);
       const tangent = filmCurve.getTangentAt(endpoint).normalize();
-      const collar = sculpt.ring(0.36, 0.035, materials.brass, group, point.toArray());
+      const collar = sculpt.ring(0.2, 0.025, materials.brass, group, point.toArray());
       collar.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
       for (const offset of [-0.045, 0.045]) {
-        const cheek = sculpt.ring(0.28, 0.014, materials.copper, group, point.toArray());
+        const cheek = sculpt.ring(0.14, 0.012, materials.copper, group, point.toArray());
         cheek.quaternion.copy(collar.quaternion);
         cheek.position.addScaledVector(tangent, offset);
       }
     }
 
-    kit.register(stripMesh, filmDragSpec("projection-film", "穿孔胶片", "左右拖动胶片逐帧浏览真实 24 部电影"));
+    const filmProxy = hitProxy(4.98, 0.5, 0.14, group, [0, 0.76, 2.82]);
+    kit.register(filmProxy, filmDragSpec("projection-film", "穿孔胶片", "左右拖动胶片逐帧浏览真实 24 部电影"));
 
     const frameProxy = sculpt.rounded(
-      2.1,
-      0.88,
+      1.02,
+      0.54,
       0.18,
       new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, colorWrite: false }),
       group,
-      [0, 3.18, 1.2],
+      [-1.82, 0.77, 2.84],
       0.03,
     );
     frameProxy.castShadow = false;
@@ -277,37 +222,37 @@ export function buildExperience(kit) {
   }
 
   function buildGuideTrain() {
-    const stations = [0.06, 0.2, 0.37, 0.55, 0.76, 0.91];
+    const stations = [0.08, 0.25, 0.42, 0.58, 0.75, 0.92];
     const up = new THREE.Vector3(0, 1, 0);
     stations.forEach((u, index) => {
       const point = filmCurve.getPointAt(u);
       const tangent = filmCurve.getTangentAt(u).normalize();
       const side = tangent.clone().cross(up).normalize();
       const normal = side.clone().cross(tangent).normalize();
-      const radius = index % 2 ? 0.34 : 0.46;
+      const radius = index % 2 ? 0.1 : 0.13;
       const center = point.clone().addScaledVector(normal, radius * 0.94);
       const holder = new THREE.Group();
       holder.position.copy(center);
       holder.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), side);
       group.add(holder);
-      sculpt.ring(radius, 0.045, materials.brass, holder, [0, 0, 0]);
-      sculpt.ring(index % 2 ? 0.2 : 0.27, 0.018, materials.goldDark, holder, [0, 0, 0.02]);
+      sculpt.ring(radius, 0.018, materials.brass, holder, [0, 0, 0]);
+      sculpt.ring(index % 2 ? 0.045 : 0.06, 0.01, materials.goldDark, holder, [0, 0, 0.012]);
       const spokes = [];
-      const count = index % 2 ? 10 : 14;
+      const count = index % 2 ? 6 : 8;
       for (let spoke = 0; spoke < count; spoke += 1) {
         const angle = spoke / count * TAU;
         spokes.push({
-          position: [Math.cos(angle) * (index % 2 ? 0.2 : 0.27), Math.sin(angle) * (index % 2 ? 0.2 : 0.27), 0.02],
+          position: [Math.cos(angle) * (index % 2 ? 0.045 : 0.06), Math.sin(angle) * (index % 2 ? 0.045 : 0.06), 0.012],
           rotation: [0, 0, angle],
-          scale: [1, index % 2 ? 0.84 : 0.98, 1],
+          scale: [1, index % 2 ? 0.68 : 0.8, 1],
         });
       }
-      sculpt.instances(new THREE.BoxGeometry(0.018, index % 2 ? 0.16 : 0.2, 0.02), materials.brass, spokes, holder);
-      const axle = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.3, 16), materials.ink);
+      sculpt.instances(new THREE.BoxGeometry(0.01, index % 2 ? 0.05 : 0.065, 0.012), materials.brass, spokes, holder);
+      const axle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.14, 12), materials.ink);
       axle.rotation.x = Math.PI / 2;
       holder.add(axle);
-      for (const offset of [-0.17, 0.17]) {
-        const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.08, 0.055, 14), materials.brass);
+      for (const offset of [-0.075, 0.075]) {
+        const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.032, 0.025, 12), materials.brass);
         cap.rotation.x = Math.PI / 2;
         cap.position.set(0, 0, offset);
         holder.add(cap);
@@ -319,90 +264,90 @@ export function buildExperience(kit) {
     });
 
     [
-      { x: -3.2, y: 5.16, z: -1.32, direction: 1 },
-      { x: 3.2, y: 5.16, z: -1.32, direction: -1 },
+      { x: -2.62, y: 3.12, z: -0.72, direction: 1 },
+      { x: 2.62, y: 3.12, z: -0.72, direction: -1 },
     ].forEach((spec, index) => {
       const reel = new THREE.Group();
       reel.position.set(spec.x, spec.y, spec.z);
       reel.rotation.y = index ? -0.22 : 0.18;
       group.add(reel);
       const wound = new THREE.Mesh(
-        new THREE.CylinderGeometry(index ? 0.9 : 1.04, index ? 0.9 : 1.04, 0.42, 56),
+        new THREE.CylinderGeometry(index ? 0.34 : 0.4, index ? 0.34 : 0.4, 0.22, 40),
         stripMaterial,
       );
       wound.rotation.x = Math.PI / 2;
       reel.add(wound);
-      for (const z of [-0.24, -0.08, 0.08, 0.24]) {
-        sculpt.ring(index ? 1.18 : 1.34, 0.026, materials.brass, reel, [0, 0, z]);
+      for (const z of [-0.12, 0, 0.12]) {
+        sculpt.ring(index ? 0.45 : 0.52, 0.016, materials.brass, reel, [0, 0, z]);
       }
       const reelSpokes = [];
-      for (let spoke = 0; spoke < 20; spoke += 1) {
-        const angle = spoke / 20 * TAU;
+      for (let spoke = 0; spoke < 12; spoke += 1) {
+        const angle = spoke / 12 * TAU;
         reelSpokes.push({
-          position: [Math.cos(angle) * 0.66, Math.sin(angle) * 0.66, 0.29],
+          position: [Math.cos(angle) * 0.25, Math.sin(angle) * 0.25, 0.13],
           rotation: [0, 0, angle],
           scale: [1, index ? 0.85 : 1, 1],
         });
       }
-      sculpt.instances(new THREE.BoxGeometry(0.022, 0.64, 0.03), materials.brass, reelSpokes, reel);
-      const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.6, 24), materials.lens);
+      sculpt.instances(new THREE.BoxGeometry(0.014, 0.25, 0.02), materials.brass, reelSpokes, reel);
+      const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.28, 18), materials.lens);
       hub.rotation.x = Math.PI / 2;
       reel.add(hub);
-      for (const z of [-0.34, 0.34]) {
-        const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.14, 0.08, 20), materials.brass);
+      for (const z of [-0.16, 0.16]) {
+        const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.058, 0.035, 14), materials.brass);
         cap.rotation.x = Math.PI / 2;
         cap.position.z = z;
         reel.add(cap);
       }
-      const axleGuard = sculpt.ring(0.3, 0.024, materials.brass, reel, [0, 0, 0.32]);
+      const axleGuard = sculpt.ring(0.11, 0.012, materials.brass, reel, [0, 0, 0.15]);
       axleGuard.rotation.z = index * 0.14;
-      const grip = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 10), materials.wine);
-      grip.position.set(spec.direction * 1.48, 0, 0.1);
+      const grip = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 8), materials.wine);
+      grip.position.set(spec.direction * 0.58, 0, 0.06);
       reel.add(grip);
       tube([
-        [0, 0, 0.22],
-        [spec.direction * 0.8, 0, 0.18],
-        [spec.direction * 1.46, 0, 0.1],
-      ], 0.028, materials.brass, reel, 22, 5);
-      const frontHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.16, 24), materials.copper);
+        [0, 0, 0.1],
+        [spec.direction * 0.32, 0, 0.08],
+        [spec.direction * 0.57, 0, 0.05],
+      ], 0.014, materials.brass, reel, 18, 5);
+      const frontHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.08, 18), materials.copper);
       frontHandle.rotation.x = Math.PI / 2;
-      frontHandle.position.z = 0.44;
+      frontHandle.position.z = 0.2;
       reel.add(frontHandle);
-      const handleBar = rounded(0.5, 0.07, 0.08, materials.brass, reel, [0, 0, 0.52], [0, 0, index ? 0.55 : -0.55], 0.025);
+      const handleBar = rounded(0.22, 0.035, 0.04, materials.brass, reel, [0, 0, 0.24], [0, 0, index ? 0.55 : -0.55], 0.012);
       handleBar.castShadow = true;
       reelNodes.push({ reel, direction: spec.direction });
 
       const proxy = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.38, 0.38, 0.12, 24),
+        new THREE.CylinderGeometry(0.32, 0.32, 0.12, 22),
         new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, colorWrite: false }),
       );
       proxy.rotation.x = Math.PI / 2;
-      proxy.position.z = 0.62;
+      proxy.position.z = 0.3;
       reel.add(proxy);
       kit.register(proxy, filmDragSpec(`film-reel-${index + 1}`, `第 ${index + 1} 胶片卷盘`, "拖动大卷盘换片，胶带与导轮同步"));
     });
   }
 
   function buildEditingTable() {
-    rounded(4.1, 0.22, 1.62, materials.walnut, group, [0, 1.06, 1.72], [0, 0.02, 0], 0.07);
-    rounded(3.75, 0.08, 1.35, materials.brass, group, [0, 1.2, 1.72], [0, 0.02, 0], 0.04);
-    rounded(1.08, 0.2, 0.82, materials.ink, group, [0, 1.34, 1.82], [0, 0, 0], 0.06);
+    rounded(4.45, 0.25, 1.7, materials.walnut, group, [0, 1.14, 1.68], [0, 0.015, 0], 0.07);
+    rounded(4.12, 0.08, 1.46, materials.brass, group, [0, 1.3, 1.68], [0, 0.015, 0], 0.035);
+    rounded(1.36, 0.24, 1.02, materials.ink, group, [0, 1.4, 1.86], [0, 0, 0], 0.06);
 
     for (let index = 0; index < SLOT_COUNT; index += 1) {
-      const x = (index - 1) * 1.23;
+      const x = (index - 1) * 1.4;
       const holder = new THREE.Group();
-      holder.position.set(x, 1.34, 2.24);
+      holder.position.set(x, 1.56, 2.38);
       holder.userData.baseY = holder.position.y;
       group.add(holder);
-      rounded(0.98, 0.14, 0.92, materials.frameBlack, holder, [0, -0.11, 0], [0, 0, 0], 0.055);
-      rounded(0.88, 0.055, 0.78, materials.goldDark, holder, [0, -0.02, 0.01], [0, 0, 0], 0.035);
-      rounded(0.76, 0.05, 0.64, slotGlassMaterial, holder, [0, 0.04, 0.04], [0, 0, 0], 0.03);
-      const image = makeImage(items[index] || items[0], 0.52, 0.33, holder, [0, 0.08, 0.085]);
-      const proxy = hitProxy(1.03, 0.5, 0.94, holder, [0, 0.02, 0.02]);
-      const digit = makeText(`SLOT ${index + 1}`, 0.66, 0.12, holder, [0, -0.22, 0.18], {
+      rounded(0.92, 1.2, 0.11, materials.frameBlack, holder, [0, 0, 0], [0, 0, 0], 0.045);
+      rounded(0.82, 1.1, 0.035, materials.goldDark, holder, [0, 0.02, 0.065], [0, 0, 0], 0.03);
+      rounded(0.76, 1.02, 0.025, slotGlassMaterial, holder, [0, 0.04, 0.09], [0, 0, 0], 0.025);
+      const image = makeImage(items[index] || items[0], 0.7, 0.93, holder, [0, 0.04, 0.112]);
+      const proxy = hitProxy(0.96, 1.24, 0.2, holder, [0, 0, 0.1]);
+      const digit = makeText(`SLOT ${index + 1}`, 0.62, 0.13, holder, [0, -0.68, 0.13], {
         background: null,
         color: "#dbc69d",
-        fontSize: 15,
+        fontSize: 16,
         align: "center",
         serif: false,
       });
@@ -468,28 +413,28 @@ export function buildExperience(kit) {
     }
 
     const spliceRoot = new THREE.Group();
-    spliceRoot.position.set(0, 1.38, 2.78);
+    spliceRoot.position.set(0, 1.54, 2.76);
     spliceRoot.rotation.x = -0.18;
     group.add(spliceRoot);
-    rounded(0.92, 0.11, 0.42, materials.ink, spliceRoot, [0, -0.13, 0], [0, 0, 0], 0.045);
-    rounded(0.18, 0.13, 0.2, materials.brass, spliceRoot, [-0.25, -0.18, -0.06], [0, 0, 0.12], 0.03);
-    rounded(0.18, 0.13, 0.2, materials.copper, spliceRoot, [0.25, -0.25, -0.16], [0, 0, -0.18], 0.03);
+    rounded(0.82, 0.1, 0.38, materials.ink, spliceRoot, [0, -0.13, 0], [0, 0, 0], 0.04);
+    rounded(0.16, 0.11, 0.18, materials.brass, spliceRoot, [-0.22, -0.18, -0.06], [0, 0, 0.12], 0.025);
+    rounded(0.16, 0.11, 0.18, materials.copper, spliceRoot, [0.22, -0.25, -0.16], [0, 0, -0.18], 0.025);
     spliceLever = new THREE.Group();
     spliceLever.position.set(0, 0, 0);
     spliceRoot.add(spliceLever);
     tube([
       [0, 0, 0],
-      [0, 0.52, -0.04],
-      [0, 0.9, -0.18],
-    ], 0.045, materials.brass, spliceLever, 20, 7);
-    const grip = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 10), materials.wine);
-    grip.position.set(0, 0.92, -0.19);
+      [0, 0.42, -0.04],
+      [0, 0.72, -0.14],
+    ], 0.036, materials.brass, spliceLever, 18, 7);
+    const grip = new THREE.Mesh(new THREE.SphereGeometry(0.105, 14, 10), materials.wine);
+    grip.position.set(0, 0.74, -0.15);
     spliceLever.add(grip);
     const spliceProxy = new THREE.Mesh(
-      new THREE.SphereGeometry(0.3, 18, 12),
+      new THREE.SphereGeometry(0.27, 18, 12),
       new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, colorWrite: false }),
     );
-    spliceProxy.position.set(0, 0.92, -0.07);
+    spliceProxy.position.set(0, 0.74, -0.05);
     spliceLever.add(spliceProxy);
     kit.register(spliceProxy, {
       id: "splice-lever",
@@ -506,17 +451,18 @@ export function buildExperience(kit) {
 
   function buildProjectionScreens() {
     const screenRoot = new THREE.Group();
-    screenRoot.position.set(0, 3.5, -2.92);
-    screenRoot.rotation.x = -0.025;
+    screenRoot.position.set(0, 3.45, -1.28);
+    screenRoot.rotation.x = -0.015;
     group.add(screenRoot);
     for (let index = 0; index < SLOT_COUNT; index += 1) {
       const holder = new THREE.Group();
-      holder.position.set((index - 1) * 1.18, index === 1 ? 0.18 : 0, index === 1 ? 0.08 : 0);
+      holder.position.set((index - 1) * 1.45, index === 1 ? 0.1 : 0, index === 1 ? 0.16 : 0.04);
       screenRoot.add(holder);
-      rounded(1.04, 1.56, 0.1, materials.frameBlack, holder, [0, 0, 0], [0, 0, 0], 0.04);
-      rounded(0.9, 1.4, 0.025, materials.ink, holder, [0, 0, 0.065], [0, 0, 0], 0.03);
-      const image = makeImage(items[index] || items[0], 0.82, 1.27, holder, [0, 0, 0.088]);
-      const proxy = hitProxy(0.9, 1.38, 0.14, holder, [0, 0, 0.1]);
+      rounded(1.34, 1.98, 0.11, materials.frameBlack, holder, [0, 0, 0], [0, 0, 0], 0.035);
+      rounded(1.26, 1.89, 0.02, materials.goldDark, holder, [0, 0, 0.066], [0, 0, 0], 0.028);
+      rounded(1.19, 1.8, 0.018, materials.ink, holder, [0, 0, 0.082], [0, 0, 0], 0.022);
+      const image = makeImage(items[index] || items[0], 1.15, 1.74, holder, [0, 0.015, 0.096]);
+      const proxy = hitProxy(1.2, 1.86, 0.16, holder, [0, 0, 0.11]);
       kit.register(proxy, {
         id: `projection-frame-${index + 1}`,
         label: "已投映电影画面",
@@ -542,28 +488,18 @@ export function buildExperience(kit) {
       });
     }
 
-    const gantry = [];
-    for (let index = 0; index < 7; index += 1) {
-      gantry.push({
-        position: [0, 4.39 + index * 0.02, -2.98 - index * 0.035],
-        rotation: [0, 0, 0],
-        scale: [1 - index * 0.08, 1, 1],
-      });
-    }
-    sculpt.instances(new THREE.BoxGeometry(3.82, 0.035, 0.045), materials.brass, gantry, group);
-    for (const x of [-1.95, 1.95]) {
-      rounded(0.12, 0.46, 0.18, materials.walnut, group, [x, 4.28, -2.95], [0, 0, 0], 0.03);
-    }
+    rounded(5.62, 0.07, 0.32, materials.brass, group, [0, 4.72, -1.35], [0, 0, 0], 0.028);
+    rounded(5.3, 0.08, 0.42, materials.walnut, group, [0, 2.08, -1.34], [0, 0, 0], 0.03);
 
     beamPosition = new Float32Array([
-      -0.11, 2.05, 1.66,
-      0.11, 2.05, 1.66,
-      1.72, 2.55, -2.8,
-      -1.72, 2.55, -2.8,
-      -0.11, 2.05, 1.66,
-      0.11, 2.05, 1.66,
-      1.72, 4.1, -2.8,
-      -1.72, 4.1, -2.8,
+      -0.08, 2.28, 1.12,
+      0.08, 2.28, 1.12,
+      1.88, 2.55, -1.16,
+      -1.88, 2.55, -1.16,
+      -0.08, 2.28, 1.12,
+      0.08, 2.28, 1.12,
+      1.88, 4.24, -1.16,
+      -1.88, 4.24, -1.16,
     ]);
     const beamGeometry = new THREE.BufferGeometry();
     beamGeometry.setAttribute("position", new THREE.BufferAttribute(beamPosition, 3));
@@ -579,23 +515,23 @@ export function buildExperience(kit) {
     lensRig.position.set(...LENS_HOME);
     group.add(lensRig);
     lensHousing = sculpt.lathe([
-      [0.16, 0],
-      [0.26, 0.08],
-      [0.5, 0.22],
-      [0.58, 0.38],
-      [0.34, 0.54],
-      [0.24, 0.7],
-      [0.29, 0.82],
-      [0.14, 0.92],
+      [0.1, 0],
+      [0.17, 0.06],
+      [0.32, 0.16],
+      [0.37, 0.28],
+      [0.23, 0.4],
+      [0.16, 0.52],
+      [0.2, 0.61],
+      [0.1, 0.7],
     ], materials.brass, lensRig, [0, 0, 0], 64);
     lensHousing.rotation.x = Math.PI / 2;
-    lensHousing.position.set(0, 0, -0.22);
-    for (let index = 0; index < 5; index += 1) {
-      const ring = sculpt.ring(0.28 + (index % 2) * 0.07, 0.018, materials.lens, lensRig, [0, 0, -0.42 + index * 0.15]);
+    lensHousing.position.set(0, 0, -0.16);
+    for (let index = 0; index < 4; index += 1) {
+      const ring = sculpt.ring(0.16 + (index % 2) * 0.04, 0.012, materials.lens, lensRig, [0, 0, -0.31 + index * 0.1]);
       ring.rotation.z = index * 0.2;
     }
     const lensGlass = new THREE.Mesh(
-      new THREE.CircleGeometry(0.19, 32),
+      new THREE.CircleGeometry(0.12, 28),
       new THREE.MeshPhysicalMaterial({
         color: 0xe7cc92,
         roughness: 0.04,
@@ -608,35 +544,35 @@ export function buildExperience(kit) {
         depthWrite: false,
       }),
     );
-    lensGlass.position.set(0, 0, -0.67);
+    lensGlass.position.set(0, 0, -0.46);
     lensRig.add(lensGlass);
-    const lensTrack = rounded(1.3, 0.16, 0.42, materials.ink, group, [2.55, 1.72, 0.94], [0, 0, 0], 0.06);
+    const lensTrack = rounded(1.08, 0.14, 0.38, materials.ink, group, [2.38, 1.71, 0.92], [0, 0, 0], 0.055);
     lensTrack.castShadow = true;
     const lensTicks = [];
-    for (let index = 0; index < 9; index += 1) {
+    for (let index = 0; index < 8; index += 1) {
       lensTicks.push({
-        position: [2.07 + index * 0.12, 1.81, 1.16],
+        position: [1.98 + index * 0.115, 1.79, 1.12],
         rotation: [0, 0, 0],
         scale: [index % 4 === 0 ? 1.3 : 0.75, index % 4 === 0 ? 1.25 : 0.72, 1],
       });
     }
-    sculpt.instances(new THREE.BoxGeometry(0.018, 0.11, 0.025), materials.brass, lensTicks, group);
-    for (const x of [1.91, 3.19]) {
-      rounded(0.13, 0.34, 0.3, materials.brass, group, [x, 2.05, 0.94], [0, 0, 0], 0.035);
+    sculpt.instances(new THREE.BoxGeometry(0.016, 0.09, 0.022), materials.brass, lensTicks, group);
+    for (const x of [1.84, 2.92]) {
+      rounded(0.11, 0.28, 0.26, materials.brass, group, [x, 2.02, 0.92], [0, 0, 0], 0.03);
     }
     tube([
-      [2.07, 2.3, 0.94],
-      [2.23, 1.98, 0.94],
-      [2.55, 1.82, 0.96],
-      [2.87, 1.98, 0.94],
-      [3.03, 2.3, 0.94],
-    ], 0.026, materials.brass, group, 28, 5);
-    const frontCollar = sculpt.ring(0.34, 0.035, materials.brass, lensRig, [0, 0, 0.94]);
+      [1.98, 2.28, 0.92],
+      [2.13, 1.98, 0.92],
+      [2.38, 1.84, 0.94],
+      [2.63, 1.98, 0.92],
+      [2.78, 2.28, 0.92],
+    ], 0.022, materials.brass, group, 24, 5);
+    const frontCollar = sculpt.ring(0.23, 0.025, materials.brass, lensRig, [0, 0, 0.7]);
     frontCollar.rotation.z = 0.16;
-    const frontBar = rounded(0.48, 0.045, 0.06, materials.copper, lensRig, [0, 0, 1], [0, 0, 0.24], 0.018);
+    const frontBar = rounded(0.34, 0.035, 0.05, materials.copper, lensRig, [0, 0, 0.74], [0, 0, 0.24], 0.015);
     frontBar.castShadow = true;
 
-    lensProxy = hitProxy(0.92, 0.82, 0.18, lensRig, [0, 0, 1.08]);
+    lensProxy = hitProxy(0.7, 0.62, 0.16, lensRig, [0, 0, 0.78]);
     kit.register(lensProxy, {
       id: "projection-lens",
       label: "投影镜头组件",
@@ -645,8 +581,8 @@ export function buildExperience(kit) {
         state.lensDragStart = state.lensPosition.slice();
       },
       onDrag({ totalX, totalY }) {
-        const x = clamp(state.lensDragStart[0] + totalX / 135, 2.03, 3.08);
-        const y = clamp(state.lensDragStart[1] - totalY / 150, 2.06, 2.72);
+        const x = clamp(state.lensDragStart[0] + totalX / 145, 1.92, 2.9);
+        const y = clamp(state.lensDragStart[1] - totalY / 155, 1.98, 2.72);
         const z = state.lensDragStart[2] + totalY * 0.0007;
         state.lensPosition = [x, y, clamp(z, 0.72, 1.2)];
         applyLensPosition();
@@ -682,8 +618,8 @@ export function buildExperience(kit) {
       },
       onKey(key) {
         if (key === "ArrowLeft" || key === "ArrowRight" || key === "ArrowUp" || key === "ArrowDown") {
-          const x = clamp(state.lensPosition[0] + (key === "ArrowLeft" ? -0.08 : key === "ArrowRight" ? 0.08 : 0), 2.03, 3.08);
-          const y = clamp(state.lensPosition[1] + (key === "ArrowUp" ? 0.08 : key === "ArrowDown" ? -0.08 : 0), 2.06, 2.72);
+          const x = clamp(state.lensPosition[0] + (key === "ArrowLeft" ? -0.08 : key === "ArrowRight" ? 0.08 : 0), 1.92, 2.9);
+          const y = clamp(state.lensPosition[1] + (key === "ArrowUp" ? 0.08 : key === "ArrowDown" ? -0.08 : 0), 1.98, 2.72);
           state.lensPosition = [x, y, state.lensPosition[2]];
           applyLensPosition();
         }
@@ -694,14 +630,13 @@ export function buildExperience(kit) {
 
   function buildGearBank() {
     const bank = new THREE.Group();
-    bank.position.set(-2.48, 1.76, -0.22);
+    bank.position.set(-2.5, 1.62, 0.34);
     bank.rotation.y = 0.28;
     group.add(bank);
     [
-      [0.58, 20, -0.48, 0],
-      [0.38, 14, 0.12, 0.42],
-      [0.31, 12, 0.56, -0.18],
-      [0.23, 10, 0.78, 0.36],
+      [0.28, 14, -0.28, 0],
+      [0.18, 10, 0.08, 0.22],
+      [0.14, 8, 0.32, -0.08],
     ].forEach(([radius, teeth, x, y], index) => {
       gearNodes.push({
         mesh: sculpt.gear(radius, 0.11, teeth, index % 2 ? materials.copper : materials.brass, bank, [x, y, 0]),
@@ -710,48 +645,48 @@ export function buildExperience(kit) {
       });
     });
     tube([
-      [-0.93, 0, 0],
-      [-0.52, 0.12, 0],
-      [-0.18, 0.1, 0],
-      [0.72, 0.02, 0],
-      [1.02, 0.08, 0],
-    ], 0.025, materials.brass, bank, 36, 5);
+      [-0.46, 0, 0],
+      [-0.26, 0.06, 0],
+      [-0.08, 0.05, 0],
+      [0.28, 0.01, 0],
+      [0.46, 0.04, 0],
+    ], 0.014, materials.brass, bank, 28, 5);
 
     const winch = new THREE.Group();
-    winch.position.set(-3.46, 1.44, 1.72);
+    winch.position.set(-2.72, 1.17, 2.52);
     winch.rotation.y = 0.08;
     group.add(winch);
-    rounded(0.96, 0.16, 0.64, materials.walnut, winch, [0, -0.25, -0.04], [0, 0, 0], 0.055);
-    const drum = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.84, 32), materials.ink);
+    rounded(0.74, 0.12, 0.5, materials.walnut, winch, [0, -0.2, -0.04], [0, 0, 0], 0.045);
+    const drum = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.58, 26), materials.ink);
     drum.rotation.z = Math.PI / 2;
     winch.add(drum);
-    for (const x of [-0.36, 0.36]) {
-      const flange = sculpt.ring(0.4, 0.038, materials.brass, winch, [x, 0, 0]);
+    for (const x of [-0.25, 0.25]) {
+      const flange = sculpt.ring(0.25, 0.025, materials.brass, winch, [x, 0, 0]);
       flange.rotation.y = Math.PI / 2;
-      const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 0.08, 18), materials.brass);
+      const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.075, 0.06, 14), materials.brass);
       cap.rotation.z = Math.PI / 2;
       cap.position.x = x * 1.08;
       winch.add(cap);
     }
     tube([
-      [0.42, 0, 0],
-      [0.78, 0.18, 0],
-      [0.92, 0.48, 0.04],
-      [0.86, 0.78, 0.09],
-    ], 0.026, materials.brass, winch, 24, 6);
-    const winchGrip = new THREE.Mesh(new THREE.SphereGeometry(0.1, 15, 10), materials.wine);
-    winchGrip.position.set(0.86, 0.8, 0.09);
+      [0.28, 0, 0],
+      [0.52, 0.13, 0],
+      [0.61, 0.34, 0.04],
+      [0.57, 0.55, 0.07],
+    ], 0.018, materials.brass, winch, 20, 6);
+    const winchGrip = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 8), materials.wine);
+    winchGrip.position.set(0.57, 0.57, 0.07);
     winch.add(winchGrip);
-    const gripCap = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.16, 14), materials.brass);
+    const gripCap = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.12, 12), materials.brass);
     gripCap.rotation.x = Math.PI / 2;
-    gripCap.position.set(0.86, 0.8, 0.18);
+    gripCap.position.set(0.57, 0.57, 0.14);
     winch.add(gripCap);
     tube([
-      [-0.36, -0.18, 0],
-      [-0.62, 0.34, 0.1],
-      [-0.92, 0.8, 0.2],
-    ], 0.014, materials.goldDark, winch, 28, 5);
-    const winchProxy = hitProxy(0.52, 0.52, 0.2, winch, [0.86, 0.8, 0.23]);
+      [-0.25, -0.14, 0],
+      [-0.43, 0.24, 0.08],
+      [-0.63, 0.56, 0.16],
+    ], 0.01, materials.goldDark, winch, 24, 5);
+    const winchProxy = hitProxy(0.38, 0.38, 0.17, winch, [0.57, 0.57, 0.18]);
     kit.register(winchProxy, filmDragSpec("film-winch", "胶片绞盘", "拖动绞盘，胶片、导轮和目录帧一起移动"));
   }
 
@@ -765,21 +700,21 @@ export function buildExperience(kit) {
     });
     if (title) title.rotation.x = -0.04;
 
-    currentCaption = makeText("", 2.35, 0.44, group, [0, 0.48, 2.72], {
+    currentCaption = makeText("", 2.2, 0.36, group, [0, 0.32, 2.92], {
       background: null,
       color: "#e8d7b8",
       fontSize: 19,
       align: "center",
       serif: false,
     });
-    clipCaption = makeText("", 2.8, 0.34, group, [0, 1.73, 2.4], {
+    clipCaption = makeText("", 3.2, 0.32, group, [0, 2.34, 2.5], {
       background: null,
       color: "#d2ba8c",
       fontSize: 17,
       align: "center",
       serif: false,
     });
-    makeText("FRAME INDEX", 1.1, 0.16, group, [2.62, 1.72, 2.38], {
+    makeText("FRAME INDEX", 1.02, 0.14, group, [2.45, 1.68, 2.3], {
       background: null,
       color: "#d6c39e",
       fontSize: 14,
@@ -787,25 +722,25 @@ export function buildExperience(kit) {
       serif: false,
     });
     const gauge = new THREE.Group();
-    gauge.position.set(2.62, 1.34, 2.12);
+    gauge.position.set(2.48, 1.36, 2.18);
     group.add(gauge);
-    rounded(1.05, 0.24, 0.34, materials.ink, gauge, [0, 0, 0], [0, 0, 0], 0.045);
+    rounded(0.88, 0.2, 0.3, materials.ink, gauge, [0, 0, 0], [0, 0, 0], 0.04);
     const gaugeTicks = [];
     for (let index = 0; index < 13; index += 1) {
       gaugeTicks.push({
-        position: [-0.43 + index * 0.0717, 0.015, 0.19],
+        position: [-0.36 + index * 0.06, 0.012, 0.17],
         rotation: [0, 0, 0],
         scale: [index % 3 === 0 ? 1.3 : 0.7, index % 3 === 0 ? 1.2 : 0.7, 1],
       });
     }
-    sculpt.instances(new THREE.BoxGeometry(0.014, 0.1, 0.02), materials.brass, gaugeTicks, gauge);
-    for (const x of [-0.48, 0.48]) {
-      rounded(0.06, 0.18, 0.08, materials.copper, gauge, [x, 0, 0.04], [0, 0, 0], 0.015);
+    sculpt.instances(new THREE.BoxGeometry(0.012, 0.085, 0.018), materials.brass, gaugeTicks, gauge);
+    for (const x of [-0.4, 0.4]) {
+      rounded(0.05, 0.15, 0.07, materials.copper, gauge, [x, 0, 0.04], [0, 0, 0], 0.012);
     }
     frameGaugeNeedle = new THREE.Group();
-    frameGaugeNeedle.position.z = 0.22;
+    frameGaugeNeedle.position.z = 0.19;
     gauge.add(frameGaugeNeedle);
-    rounded(0.025, 0.19, 0.03, materials.glow, frameGaugeNeedle, [0, 0, 0], [0, 0, 0], 0.008);
+    rounded(0.022, 0.16, 0.026, materials.glow, frameGaugeNeedle, [0, 0, 0], [0, 0, 0], 0.007);
     updateFrameCaption();
     updateClipCaption();
   }
@@ -949,20 +884,22 @@ export function buildExperience(kit) {
     if (!lensRig) return;
     const [x, y, z] = state.lensPosition;
     lensRig.position.set(x, y, z);
-    const scale = 1 + z * 0.34 + Math.abs(x) * 0.08;
+    const scale = 1
+      + (z - LENS_HOME[2]) * 0.18
+      + Math.abs(x - LENS_HOME[0]) * 0.025;
     screenNodes.forEach((screen, index) => {
-      const spread = state.spliced ? 1.18 : 0.52;
+      const spread = state.spliced ? 1.43 : 0.48;
       screen.holder.position.x = (index - 1) * spread * scale;
-      screen.holder.scale.setScalar(0.9 + scale * 0.08);
+      screen.holder.scale.setScalar(0.96 + scale * 0.04);
     });
     if (beamMesh?.geometry?.attributes?.position) {
       const attribute = beamMesh.geometry.attributes.position;
       const startY = lensRig.position.y;
       const startZ = lensRig.position.z - 0.12;
       const startHalf = 0.09 + Math.abs(x) * 0.05;
-      const endHalf = 1.58 + z * 0.42 + Math.abs(x) * 0.12;
-      const endY = 3.27;
-      const endZ = -2.78;
+      const endHalf = 1.5 + scale * 0.12;
+      const endY = 3.36;
+      const endZ = -1.18;
       attribute.setXYZ(0, -startHalf, startY, startZ);
       attribute.setXYZ(1, startHalf, startY, startZ);
       attribute.setXYZ(2, endHalf, endY - 0.78, endZ);
@@ -995,7 +932,7 @@ export function buildExperience(kit) {
     const text = item
       ? `${String(state.frame + 1).padStart(2, "0")} / ${items.length}   ${filmTitle(item)}   ${filmMeta(item)}`
       : "等待真实电影目录";
-    currentCaption = replaceText(currentCaption, text, 2.35, 0.44, group, [0, 0.48, 2.72], {
+    currentCaption = replaceText(currentCaption, text, 2.2, 0.36, group, [0, 0.32, 2.92], {
       background: null,
       color: "#e8d7b8",
       fontSize: 19,
@@ -1015,7 +952,7 @@ export function buildExperience(kit) {
     gearNodes.forEach((node) => {
       node.mesh.rotation.z = progress * TAU * node.ratio * node.direction;
     });
-    if (frameGaugeNeedle) frameGaugeNeedle.position.x = lerp(-0.43, 0.43, items.length > 1 ? progress : 0);
+    if (frameGaugeNeedle) frameGaugeNeedle.position.x = lerp(-0.36, 0.36, items.length > 1 ? progress : 0);
   }
 
   function updateClipCaption() {
@@ -1026,10 +963,10 @@ export function buildExperience(kit) {
     clipCaption = replaceText(
       clipCaption,
       `${labels.join("  ·  ")}   ${state.spliced ? "SPLICED" : "UNSPLICED"}`,
-      2.8,
-      0.34,
+      3.2,
+      0.32,
       group,
-      [0, 1.73, 2.4],
+      [0, 2.34, 2.5],
       {
         background: null,
         color: "#d2ba8c",

@@ -63,23 +63,24 @@ export function buildExperience(kit) {
   };
 
   const localMaterial = (options) => ownMaterial(new THREE.MeshStandardMaterial(options));
-  const brass = resolveMaterial(kit.brass, 0xa98143, 0.28, 0.76);
-  const copper = resolveMaterial(0x9a6040, 0x9a6040, 0.34, 0.72);
-  const darkCopper = resolveMaterial(0x5d4637, 0x5d4637, 0.48, 0.54);
-  const porcelain = resolveMaterial(kit.cream, 0xeee8db, 0.72, 0.02);
-  const stone = resolveMaterial(kit.stone, 0xa8a397, 0.9, 0.02);
-  const blackLacquer = localMaterial({ color: 0x101716, roughness: 0.2, metalness: 0.24 });
+  const brass = resolveMaterial(kit.brass, 0x9a794a, 0.42, 0.58);
+  const copper = resolveMaterial(0x7b5a3f, 0x7b5a3f, 0.5, 0.48);
+  const darkCopper = resolveMaterial(0x4d3d31, 0x4d3d31, 0.64, 0.34);
+  const porcelain = resolveMaterial(0xb6ad9c, 0xb6ad9c, 0.86, 0.01);
+  const mutedStone = resolveMaterial(0x6f6a61, 0x6f6a61, 0.94, 0.01);
+  const walnut = resolveMaterial(kit.walnut, 0x3d2b22, 0.78, 0.02);
+  const blackLacquer = localMaterial({ color: 0x151514, roughness: 0.36, metalness: 0.14 });
   const lake = localMaterial({
-    color: 0x075269,
-    roughness: 0.28,
-    metalness: 0.3,
-    emissive: 0x063d50,
-    emissiveIntensity: 0.75,
+    color: 0x352a24,
+    roughness: 0.62,
+    metalness: 0.12,
+    emissive: 0x241b17,
+    emissiveIntensity: 0.12,
   });
   const lakeGlow = ownMaterial(new THREE.MeshBasicMaterial({
-    color: 0x55d9e7,
+    color: 0xb8895d,
     transparent: true,
-    opacity: 0.82,
+    opacity: 0.24,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     toneMapped: false,
@@ -95,7 +96,6 @@ export function buildExperience(kit) {
 
   const unitBox = ownGeometry(new THREE.BoxGeometry(1, 1, 1));
   const unitCylinder = ownGeometry(new THREE.CylinderGeometry(1, 1, 1, 24));
-  const rivetGeometry = ownGeometry(new THREE.SphereGeometry(0.035, 8, 6));
 
   const addMesh = (geometry, material, x, y, z, parent = group) => {
     const node = kit.mesh(geometry, material, x, y, z, parent);
@@ -152,12 +152,6 @@ export function buildExperience(kit) {
     }
     return node;
   };
-  const addGear = (radius, depth, teeth, material, parent, position) => {
-    const node = sculpt.gear(radius, depth, teeth, material, parent, position);
-    ownObjectResources(node);
-    if (node) node.castShadow = true;
-    return node;
-  };
   const addInstances = (geometry, material, placements, parent) => {
     ownGeometry(geometry);
     const node = sculpt.instances(geometry, material, placements, parent);
@@ -210,7 +204,6 @@ export function buildExperience(kit) {
   let selectedCover = null;
   const stringImpulses = new Float32Array(STRING_SCALE.length);
   const stringBases = [];
-  const gears = [];
   const waveBases = [];
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, Number(value) || 0));
@@ -230,134 +223,20 @@ export function buildExperience(kit) {
   const reducedMotion = () =>
     typeof kit.reducedMotion === "function" ? Boolean(kit.reducedMotion()) : false;
 
-  // Three separated footings replace the old circular tray and carry a visible
-  // cam train into the suspended rotor.
+  // A quiet walnut display table replaces the exposed cam train. The record and
+  // its cover art now carry the room; the mechanism only supports their motion.
   const foundation = new THREE.Group();
-  foundation.name = "split-seismic-footings";
+  foundation.name = "walnut-listening-table";
   group.add(foundation);
-  const footAnchors = [];
-  for (let index = 0; index < 3; index += 1) {
-    const angle = index / 3 * TAU + Math.PI / 6;
-    const foot = new THREE.Group();
-    foot.position.set(Math.sin(angle) * 2.95, 0.28, Math.cos(angle) * 2.2);
-    foot.rotation.y = angle;
-    foundation.add(foot);
-    addRounded(1.24, 0.38, 0.92, stone, foot, [0, 0, 0], 0.1);
-    addRounded(0.92, 0.2, 0.72, porcelain, foot, [0.04, 0.27, 0], 0.08);
-    addCylinder(0.14, 0.34, brass, 0, 0.48, 0, foot);
-    for (const side of [-1, 1]) {
-      addBox(copper, 0.08, 0.44, 0.08, side * 0.42, 0.43, -0.24, foot, [0, 0, side * 0.15]);
-    }
-    footAnchors.push(new THREE.Vector3(foot.position.x, 0.58, foot.position.z));
-  }
-  addTube(
-    [footAnchors[0], new THREE.Vector3(-1.3, 0.82, -0.2), new THREE.Vector3(0, 1.18, 0)],
-    0.055,
-    brass,
-    foundation,
-    48,
-    7,
-  );
-  addTube(
-    [footAnchors[1], new THREE.Vector3(1.6, 0.98, -0.5), new THREE.Vector3(0.35, 1.36, 0)],
-    0.046,
-    darkCopper,
-    foundation,
-    48,
-    7,
-  );
-  addTube(
-    [footAnchors[2], new THREE.Vector3(0.1, 0.74, 1.8), new THREE.Vector3(0, 1.1, 0.45)],
-    0.04,
-    brass,
-    foundation,
-    48,
-    7,
-  );
-
-  const drive = new THREE.Group();
-  drive.name = "compound-cam-drive";
-  drive.position.set(0, 1.24, 0);
-  group.add(drive);
-  const gearSpecs = [
-    [-1.38, 0.4, 0.48, 18, copper],
-    [1.42, 0.22, 0.56, 22, brass],
-    [0.2, -0.42, 0.34, 14, darkCopper],
-  ];
-  for (const [x, z, radius, teeth, material] of gearSpecs) {
-    const gear = addGear(radius, 0.1, teeth, material, drive, [x, 0, z]);
-    if (gear) gears.push(gear);
-    addCylinder(0.12, 0.22, blackLacquer, x, 0, z, drive, [Math.PI / 2, 0, 0]);
-    addRing(radius * 0.53, 0.018, lakeGlow, drive, [x, 0, z + 0.065]);
-  }
-  const couplingPlacements = [];
-  for (let index = 0; index < 3; index += 1) {
-    for (let ridge = 0; ridge < 8; ridge += 1) {
-      const angle = ridge / 8 * TAU + index * 0.17;
-      const radius = 0.55 + index * 0.08;
-      couplingPlacements.push({
-        position: [Math.sin(angle) * radius - 0.4 + index * 0.35, Math.cos(angle) * radius * 0.5, 0.18],
-        rotation: [0, 0, angle],
-        scale: [1, 1, 1],
-      });
-    }
-  }
-  addInstances(rivetGeometry, lakeGlow, couplingPlacements, drive);
-
-  const frame = new THREE.Group();
-  frame.name = "string-and-pipe-frame";
-  frame.position.z = -0.92;
-  group.add(frame);
-  for (const side of [-1, 1]) {
-    addTube(
-      [
-        [side * 2.62, 0.55, 0.28],
-        [side * 3.02, 2.18, 0.48],
-        [side * 2.46, 5.72, 0.18],
-        [side * 1.46, 7.25, 0],
-      ],
-      0.055,
-      side > 0 ? brass : copper,
-      frame,
-      56,
-      7,
-    );
-  }
-  addTube(
-    [
-      [-2.92, 6.76, 0.26],
-      [-1.38, 7.42, 0.08],
-      [0.18, 7.2, 0],
-      [1.62, 7.42, 0.1],
-      [2.86, 6.68, 0.28],
-    ],
-    0.05,
-    brass,
-    frame,
-    64,
-    7,
-  );
-  const ribPlacements = [];
-  for (let index = 0; index < 22; index += 1) {
-    const t = index / 21;
-    const x = -2.72 + t * 5.44;
-    const y = 6.88 + Math.sin(t * Math.PI) * 0.38;
-    ribPlacements.push({
-      position: [x, y, 0.22],
-      rotation: [0, 0, -0.8 + t * 1.6],
-      scale: [1, 0.52 + (index % 4) * 0.08, 1],
-    });
-  }
-  addInstances(
-    new THREE.CylinderGeometry(0.014, 0.014, 1, 5),
-    porcelain,
-    ribPlacements,
-    frame,
-  );
+  addRounded(8.35, 0.34, 2.9, walnut, foundation, [0, 0.27, 0.08], 0.14);
+  addRounded(7.7, 0.1, 2.34, mutedStone, foundation, [0, 0.49, 0.02], 0.08);
+  addBox(copper, 5.7, 0.035, 0.06, 0, 0.18, 1.48, foundation);
+  addBox(darkCopper, 7.2, 0.055, 0.06, 0, 0.14, -1.48, foundation);
 
   const rotorRoot = new THREE.Group();
   rotorRoot.name = "giant-resonance-wheel";
-  rotorRoot.position.set(0.05, 3.32, 0.12);
+  rotorRoot.position.set(-0.7, 3.45, 0.22);
+  rotorRoot.scale.setScalar(1.04);
   group.add(rotorRoot);
   const rotor = new THREE.Group();
   rotorRoot.add(rotor);
@@ -388,15 +267,14 @@ export function buildExperience(kit) {
     48,
   );
   if (hub) hub.rotation.x = Math.PI / 2;
-  for (let index = 0; index < 4; index += 1) {
-    addRing(0.66 + index * 0.27, 0.014 + index * 0.002, index % 2 ? brass : lakeGlow, rotor, [0, 0, 0.17]);
+  for (let index = 0; index < 2; index += 1) {
+    addRing(0.72 + index * 0.52, 0.018, index ? brass : lakeGlow, rotor, [0, 0, 0.17]);
   }
   addRing(1.82, 0.055, brass, rotor, [0, 0, 0.12]);
-  addRing(1.56, 0.018, lakeGlow, rotor, [0, 0, 0.19]);
 
   const spokePlacements = [];
-  for (let index = 0; index < 16; index += 1) {
-    const angle = index / 16 * TAU;
+  for (let index = 0; index < 6; index += 1) {
+    const angle = index / 6 * TAU;
     spokePlacements.push({
       position: [0, 0, 0.15],
       rotation: [0, 0, angle],
@@ -411,8 +289,8 @@ export function buildExperience(kit) {
       uTime: { value: 0 },
       uEnergy: { value: state.energy },
       uFrequency: { value: state.frequency },
-      uColorA: { value: new THREE.Color(0x043b53) },
-      uColorB: { value: new THREE.Color(0x4fe3eb) },
+      uColorA: { value: new THREE.Color(0x201b19) },
+      uColorB: { value: new THREE.Color(0xb98b5b) },
     },
     vertexShader: `
       uniform float uTime;
@@ -446,7 +324,7 @@ export function buildExperience(kit) {
         float rings = 0.5 + 0.5 * sin(radial * 94.0 - uTime * 3.5);
         float crest = smoothstep(0.22, 1.0, rings * (0.55 + uEnergy * 0.65) + vWave * 0.12);
         vec3 color = mix(uColorA, uColorB, crest);
-        float alpha = (0.22 + uEnergy * 0.56) * (1.0 - smoothstep(0.82, 1.0, radial));
+        float alpha = (0.06 + uEnergy * 0.24) * (1.0 - smoothstep(0.82, 1.0, radial));
         gl_FragColor = vec4(color, alpha);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
@@ -482,6 +360,7 @@ export function buildExperience(kit) {
   if (waveFins) {
     waveFins.frustumCulled = false;
     waveFins.renderOrder = 3;
+    waveFins.visible = false;
   }
 
   const rotorProxy = addMesh(
@@ -606,12 +485,13 @@ export function buildExperience(kit) {
   // outside the disc so no control cuts across the resonance wheel.
   const frequencyArm = new THREE.Group();
   frequencyArm.name = "frequency-short-arm";
-  frequencyArm.position.set(-1.28, 2.2, 1.16);
-  frequencyArm.rotation.y = -0.08;
+  frequencyArm.position.set(3.28, 1.22, 2.38);
+  frequencyArm.rotation.y = 0.06;
+  frequencyArm.scale.setScalar(0.88);
   group.add(frequencyArm);
   addCylinder(0.69, 0.14, blackLacquer, 0, 0, 0, frequencyArm, [Math.PI / 2, 0, 0]);
   addRing(0.64, 0.045, brass, frequencyArm, [0, 0, 0.09]);
-  addRing(0.47, 0.014, lakeGlow, frequencyArm, [0, 0, 0.11]);
+  addRing(0.47, 0.014, brass, frequencyArm, [0, 0, 0.11]);
   addCylinder(0.14, 0.22, darkCopper, 0, 0, 0.14, frequencyArm, [Math.PI / 2, 0, 0]);
   addCylinder(0.075, 0.1, porcelain, 0, 0, 0.26, frequencyArm, [Math.PI / 2, 0, 0]);
 
@@ -627,16 +507,16 @@ export function buildExperience(kit) {
   }
   addInstances(
     new THREE.BoxGeometry(0.022, 0.1, 0.018),
-    lakeGlow,
+    brass,
     frequencyTickPlacements,
     frequencyArm,
   );
   addText("110", 0.24, 0.075, frequencyArm, [-0.55, -0.5, 0.12], {
-    color: "#8fdce1",
+    color: "#d3c3a7",
     fontSize: 26,
   });
   addText("880", 0.24, 0.075, frequencyArm, [0.55, -0.5, 0.12], {
-    color: "#8fdce1",
+    color: "#d3c3a7",
     fontSize: 26,
   });
 
@@ -646,9 +526,9 @@ export function buildExperience(kit) {
   addRounded(0.075, 0.47, 0.07, brass, frequencyLever, [0, 0.23, 0], 0.025);
   addCylinder(0.095, 0.35, brass, 0, 0.47, 0.1, frequencyLever, [Math.PI / 2, 0, 0]);
   addCylinder(0.125, 0.24, porcelain, 0, 0.47, 0.24, frequencyLever, [Math.PI / 2, 0, 0]);
-  addCylinder(0.08, 0.09, lakeGlow, 0, 0.47, 0.38, frequencyLever, [Math.PI / 2, 0, 0]);
+  addCylinder(0.08, 0.09, copper, 0, 0.47, 0.38, frequencyLever, [Math.PI / 2, 0, 0]);
   addRing(0.15, 0.022, brass, frequencyLever, [0, 0.47, 0.08]);
-  addRing(0.15, 0.018, lakeGlow, frequencyLever, [0, 0.47, 0.35]);
+  addRing(0.15, 0.018, darkCopper, frequencyLever, [0, 0.47, 0.35]);
 
   const frequencyProxy = addMesh(
     ownGeometry(new THREE.SphereGeometry(0.29, 12, 9)),
@@ -703,8 +583,9 @@ export function buildExperience(kit) {
 
   const stringBank = new THREE.Group();
   stringBank.name = "left-rear-resonant-harp";
-  stringBank.position.set(-2.74, 0, -0.76);
+  stringBank.position.set(-3.25, 0.62, -0.72);
   stringBank.rotation.y = 0.18;
+  stringBank.scale.setScalar(0.76);
   group.add(stringBank);
   addTube(
     [
@@ -785,7 +666,7 @@ export function buildExperience(kit) {
   const bridges = [];
   for (let index = 0; index < STRING_SCALE.length; index += 1) {
     const base = stringBases[index];
-    const bridge = addMesh(bridgeGeometry, index % 3 === 0 ? lakeGlow : brass, base.bottom.x, base.bottom.y, base.bottom.z, stringBank);
+    const bridge = addMesh(bridgeGeometry, index % 3 === 0 ? copper : brass, base.bottom.x, base.bottom.y, base.bottom.z, stringBank);
     bridge.rotation.z = index * 0.11;
     bridges.push(bridge);
 
@@ -835,6 +716,7 @@ export function buildExperience(kit) {
   organBank.name = "eleven-organ-pipes";
   organBank.position.set(2.62, 1.36, -1.22);
   organBank.rotation.y = -0.1;
+  organBank.visible = false;
   group.add(organBank);
   const pipeGeometry = new THREE.CylinderGeometry(0.13, 0.19, 1, 16, 1, true);
   const pipeMaterial = localMaterial({
@@ -864,6 +746,7 @@ export function buildExperience(kit) {
   const columns = new THREE.Group();
   columns.name = "acoustic-columns";
   columns.position.set(0, 0.58, -0.82);
+  columns.visible = false;
   group.add(columns);
   const columnPlacements = [];
   for (let index = 0; index < 9; index += 1) {
@@ -886,7 +769,8 @@ export function buildExperience(kit) {
   // detail button. Its impact is reflected by rotor energy and the frame.
   const strikeRoot = new THREE.Group();
   strikeRoot.name = "pressure-key";
-  strikeRoot.position.set(0.22, 0.68, 2.02);
+  strikeRoot.position.set(0.3, 0.6, 2.36);
+  strikeRoot.scale.setScalar(0.76);
   group.add(strikeRoot);
   const keyWell = addRounded(1.05, 0.18, 0.7, blackLacquer, strikeRoot, [0, 0, 0], 0.06);
   const keyCap = addRounded(0.8, 0.22, 0.54, porcelain, strikeRoot, [0, 0.16, 0.02], 0.06);
@@ -921,21 +805,20 @@ export function buildExperience(kit) {
     });
   }
 
-  // The sleeve library is a compact two-shelf rack on the far left. It no
-  // longer crosses the pressure key or the swinging crank.
+  // The real sleeve library sits low and wide in front. Its covers read as
+  // collection objects instead of tiny decorative indicators.
   const rack = new THREE.Group();
   rack.name = "left-album-sleeve-rack";
-  rack.position.set(-3.45, 1.06, 0.98);
-  rack.rotation.y = 0.3;
+  rack.position.set(-2.35, 1.58, 2.05);
   group.add(rack);
   addTube(
     [
-      [-1.02, 0.34, 0],
-      [-0.84, 0.45, 0.02],
-      [0.84, 0.45, 0.02],
-      [1.02, 0.34, 0],
+      [-1.52, 0.58, 0],
+      [-1.34, 0.64, 0.02],
+      [1.34, 0.64, 0.02],
+      [1.52, 0.58, 0],
     ],
-    0.038,
+    0.035,
     brass,
     rack,
     42,
@@ -943,20 +826,24 @@ export function buildExperience(kit) {
   );
   addTube(
     [
-      [-1.02, -0.42, 0],
-      [-0.84, -0.33, 0.02],
-      [0.84, -0.33, 0.02],
-      [1.02, -0.42, 0],
+      [-1.52, -0.54, 0],
+      [-1.34, -0.46, 0.02],
+      [1.34, -0.46, 0.02],
+      [1.52, -0.54, 0],
     ],
-    0.038,
+    0.035,
     copper,
     rack,
     42,
     7,
   );
   for (const side of [-1, 1]) {
-    addCylinder(0.034, 1.08, brass, side * 1.0, -0.02, -0.02, rack);
+    addCylinder(0.03, 1.18, brass, side * 1.48, 0, -0.02, rack);
   }
+  addText("真实封面 · 点击选择", 1.8, 0.13, rack, [0, 0.88, 0.08], {
+    color: "#d8c9ae",
+    fontSize: 34,
+  });
   const coverCount = Math.min(7, items.length);
   for (let index = 0; index < coverCount; index += 1) {
     const sourceIndex = Math.floor(index / Math.max(1, coverCount) * items.length);
@@ -965,26 +852,20 @@ export function buildExperience(kit) {
     const topRow = index < 4;
     const rowIndex = topRow ? index : index - 4;
     const rowCount = topRow ? 4 : Math.max(1, coverCount - 4);
-    const x = (rowIndex - (rowCount - 1) / 2) * 0.48;
-    holder.position.set(x, topRow ? 0.58 : -0.18, 0.08 + rowIndex * 0.008);
+    const x = (rowIndex - (rowCount - 1) / 2) * 0.72;
+    holder.position.set(x, topRow ? 0.24 : -0.34, 0.08 + rowIndex * 0.008);
     holder.rotation.y = -x * 0.08;
     holder.rotation.z = x * 0.018;
     rack.add(holder);
-    addRounded(0.41, 0.41, 0.055, blackLacquer, holder, [0, 0, 0], 0.03);
+    addRounded(0.62, 0.62, 0.055, blackLacquer, holder, [0, 0, 0], 0.035);
     if (item?.image && typeof kit.image === "function") {
-      const picture = kit.image(item.image, 0.35, 0.35, holder);
+      const picture = kit.image(item.image, 0.54, 0.54, holder);
       if (picture) {
         picture.position.z = 0.035;
         picture.castShadow = false;
       }
     }
-    addText(shortText(item?.title, 11), 0.42, 0.055, holder, [0, -0.26, 0.05], {
-      color: "#c8b98f",
-      fontSize: 30,
-    });
-    addCylinder(0.018, 0.2, brass, -0.14, -0.27, -0.02, holder);
-    addCylinder(0.018, 0.2, brass, 0.14, -0.27, -0.02, holder);
-    const hit = addRounded(0.44, 0.48, 0.13, proxyMaterial, holder, [0, 0, 0.055], 0.035);
+    const hit = addRounded(0.66, 0.7, 0.14, proxyMaterial, holder, [0, 0, 0.055], 0.035);
     if (hit) {
       hit.castShadow = false;
       hit.receiveShadow = false;
@@ -1004,16 +885,54 @@ export function buildExperience(kit) {
     }
   }
 
-  addText("共振潮汐机", 2.6, 0.44, group, [0, 7.64, 0.35], {
-    color: "#e8d8aa",
+  const featured = items[0];
+  const featuredCover = new THREE.Group();
+  featuredCover.name = "featured-album-cover";
+  featuredCover.position.set(2.62, 3.34, 0.5);
+  featuredCover.rotation.y = -0.18;
+  group.add(featuredCover);
+  addRounded(2.82, 2.82, 0.14, walnut, featuredCover, [0, 0, 0], 0.08);
+  addRounded(2.54, 2.54, 0.055, blackLacquer, featuredCover, [0, 0, 0.08], 0.045);
+  if (featured?.image && typeof kit.image === "function") {
+    const featuredImage = kit.image(featured.image, 2.36, 2.36, featuredCover);
+    if (featuredImage) {
+      featuredImage.position.z = 0.125;
+      featuredImage.castShadow = false;
+    }
+  }
+  addText(shortText(featured?.title, 18), 2.6, 0.18, featuredCover, [0, -1.62, 0.13], {
+    color: "#e4d6c0",
+    fontSize: 44,
+  });
+  const featuredHit = addRounded(2.9, 3.02, 0.2, proxyMaterial, featuredCover, [0, -0.18, 0.11], 0.04);
+  if (featuredHit && featured) {
+    featuredHit.castShadow = false;
+    featuredHit.receiveShadow = false;
+    featuredHit.userData.interactionId = "featured-album-cover";
+    kit.register(featuredHit, {
+      id: "featured-album-cover",
+      label: shortText(featured.title, 20) || "真实唱片封面",
+      hint: "首次点击选中；再次点击打开这首歌的实际馆藏入口",
+      anchor: [0, 0, 0],
+      onClick() {
+        selectCover(0, featuredCover);
+      },
+      onKey(key) {
+        if (key === "Enter" || key === " ") selectCover(0, featuredCover);
+      },
+    });
+  }
+
+  addText("共振唱片室", 2.8, 0.44, group, [0, 7.28, 0.35], {
+    color: "#e4d5ba",
     fontSize: 62,
   });
-  addText("装置音色 · 非馆藏歌曲播放", 3.2, 0.2, group, [0, 7.22, 0.35], {
-    color: "#7fd8df",
+  addText("真实封面 · 装置音色", 3.2, 0.2, group, [0, 6.92, 0.35], {
+    color: "#b99b70",
     fontSize: 34,
   });
-  addText("搓盘 / 移臂 / 拨弦 / 压键", 2.5, 0.18, group, [0, 0.18, 2.54], {
-    color: "#b99a62",
+  addText("拨弦 / 移频 / 点击真实封面", 2.9, 0.18, group, [0, 0.12, 2.58], {
+    color: "#b99a6d",
     fontSize: 30,
   });
 
@@ -1248,11 +1167,6 @@ export function buildExperience(kit) {
       waveMaterial.uniforms.uFrequency.value = state.frequency;
     }
     if (lakeGlow) lakeGlow.opacity = 0.6 + energy * 0.35;
-    gearSpecs.forEach((entry, index) => {
-      const gear = gears[index];
-      if (!gear) return;
-      gear.rotation.z += delta * (index % 2 ? -1 : 1) * (0.18 + Math.abs(state.spinVelocity) * 0.65);
-    });
     frequencyLever.rotation.z = damp(
       frequencyLever.rotation.z,
       -0.58 + frequencyNormalized() * 1.16,

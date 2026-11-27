@@ -62,15 +62,15 @@ export function buildExperience(kit) {
   }
 
   const materials = {
-    porcelain: kitMaterial(0xf1ede3, 0.27, 0.02),
-    porcelainShadow: kitMaterial(0xd6d1c7, 0.48, 0.02),
-    paper: kitMaterial(0xe8dfcc, 0.92, 0),
+    porcelain: kitMaterial(0xe5dfd3, 0.46, 0.02),
+    porcelainShadow: kitMaterial(0xa9a49b, 0.58, 0.02),
+    paper: kitMaterial(0xdfd4c1, 0.94, 0),
     ink: kitMaterial(0x17211f, 0.34, 0.12),
-    blackLacquer: kitMaterial(0x202a28, 0.24, 0.18),
-    walnut: resolveKitMaterial(kit.walnut, 0x553b2a, 0.58, 0),
-    copper: kitMaterial(0x8a6340, 0.28, 0.76),
-    verdigris: kitMaterial(0x4a8174, 0.36, 0.52),
-    brass: resolveKitMaterial(kit.brass, 0xa98248, 0.27, 0.72),
+    blackLacquer: kitMaterial(0x211b17, 0.34, 0.12),
+    walnut: resolveKitMaterial(kit.walnut, 0x3c2b21, 0.7, 0),
+    copper: kitMaterial(0x9b7047, 0.32, 0.68),
+    verdigris: kitMaterial(0x66736c, 0.48, 0.24),
+    brass: resolveKitMaterial(kit.brass, 0xa78150, 0.35, 0.62),
     glass: ownMaterial({
       color: 0xa9cfc5,
       roughness: 0.1,
@@ -417,67 +417,39 @@ export function buildExperience(kit) {
     if (image.complete) applyLoadedImage();
   }
 
-  // The machine sits on split mineral bearings rather than a round display tray.
+  // The painting rests on one low stone deck and a walnut shadow line.
   const foundation = new THREE.Group();
-  foundation.name = "split-mineral-bearing";
+  foundation.name = "painting-timber-and-stone-plinth";
   foundation.position.y = 0.12;
   group.add(foundation);
-  [
-    [-2.25, 0.22, 0.12, 2.8, 0.44, 1.28, 0.12],
-    [0.22, 0.3, -0.36, 3.35, 0.58, 1.54, -0.08],
-    [2.72, 0.18, 0.24, 2.1, 0.36, 1.18, 0.2],
-    [-3.72, 0.16, -0.55, 1.32, 0.32, 0.93, -0.25],
-    [3.88, 0.13, -0.72, 1.18, 0.26, 0.82, 0.31],
-  ].forEach(([x, y, z, width, height, depth, rotation], index) => {
-    const slab = rounded(
-      width,
-      height,
-      depth,
-      index === 1 ? materials.blackLacquer : materials.porcelainShadow,
-      foundation,
-      [x, y, z],
-      0.14,
-    );
-    slab.rotation.y = rotation;
-    slab.rotation.z = (index - 2) * 0.018;
-  });
+  rounded(6.4, 0.28, 1.9, materials.walnut, foundation, [0, 0.16, 0], 0.12);
+  rounded(5.65, 0.38, 1.4, materials.porcelainShadow, foundation, [0, 0.46, 0.08], 0.12);
 
   const counterweight = lathe([
     [0, 0],
-    [0.62, 0.08],
-    [0.76, 0.34],
-    [0.62, 0.78],
-    [0.4, 1.16],
-    [0.21, 1.42],
-    [0, 1.46],
-  ], materials.blackLacquer, foundation, [0, 0.42, -0.1], 48);
-  counterweight.scale.set(1.3, 0.72, 1.05);
-  const coreRing = ring(0.76, 0.045, materials.copper, foundation, [0, 1.42, -0.1], Math.PI * 1.9);
-  coreRing.rotation.x = Math.PI / 2;
+    [0.72, 0.08],
+    [0.8, 0.22],
+    [0.62, 0.42],
+    [0, 0.48],
+  ], materials.blackLacquer, foundation, [0, 0.48, -0.38], 40);
+  counterweight.scale.set(2.1, 0.7, 0.78);
   const coreGem = addMesh(
-    ownGeometry(new THREE.IcosahedronGeometry(0.2, 2)),
+    ownGeometry(new THREE.IcosahedronGeometry(0.11, 2)),
     materials.verdigris,
     foundation,
-    [0, 1.45, -0.1],
+    [0, 0.96, -0.38],
   );
 
   const tripod = new THREE.Group();
-  tripod.name = "reverse-cantilever-bearing";
+  tripod.name = "low-cantilever-supports";
   group.add(tripod);
-  [
-    [[-0.2, 1.4, -0.2], [-3.45, 2.4, -1.05], [-4.7, 1.05, 0.12], [-3.95, 0.45, 0.32]],
-    [[0.2, 1.4, -0.2], [3.55, 2.25, -1.18], [4.82, 0.92, 0.3], [4.02, 0.4, 0.48]],
-    [[0, 1.48, -0.28], [0.15, 4.6, -1.7], [0.72, 7.18, -0.78], [0, 7.52, -0.52]],
-  ].forEach((points, index) => {
-    tube(points, index === 2 ? 0.07 : 0.08, index === 1 ? materials.verdigris : materials.copper, tripod, 84, 8);
-  });
-  for (let index = 0; index < 36; index += 1) {
-    const angle = index / 36 * Math.PI * 2;
-    const pivot = new THREE.Group();
-    pivot.position.set(Math.cos(angle) * 2.0, 0.92 + Math.sin(angle * 2) * 0.16, -0.35 + Math.sin(angle) * 0.72);
-    pivot.rotation.set(0.2, angle, 0);
-    tripod.add(pivot);
-    rounded(0.28, 0.07, 0.12, index % 2 ? materials.porcelain : materials.copper, pivot, [0, 0, 0], 0.025);
+  for (const side of [-1, 1]) {
+    tube([
+      [side * 2.14, 0.5, -0.22],
+      [side * 1.55, 2.1, -0.52],
+      [side * 0.5, 3.32, -0.76],
+    ], 0.065, materials.walnut, tripod, 32, 8);
+    rounded(0.42, 0.16, 0.28, materials.copper, tripod, [side * 0.82, 3.23, -0.64], 0.05);
   }
 
   const artworkRig = new THREE.Group();
@@ -485,7 +457,7 @@ export function buildExperience(kit) {
   artworkRig.position.set(0, 4.03, 0);
   group.add(artworkRig);
   const initialAspect = metadataAspect(artworks[0]);
-  let paintingWidth = Math.min(4.52, 4.72 * initialAspect);
+  let paintingWidth = Math.min(5.1, 5.15 * initialAspect);
   let paintingHeight = paintingWidth / initialAspect;
   const cols = 6;
   const rows = 4;
@@ -707,9 +679,9 @@ export function buildExperience(kit) {
     }
   }
 
-  // Four nested, telescoping frames sit behind the picture and unfold with the fragments.
+  // A single shadow frame gives the assembled picture a clear boundary.
   const nestedFrames = [];
-  for (let layer = 0; layer < 4; layer += 1) {
+  for (let layer = 0; layer < 1; layer += 1) {
     const frame = new THREE.Group();
     frame.name = `telescoping-frame-layer-${layer + 1}`;
     frame.position.z = -0.18 - layer * 0.24;
@@ -736,7 +708,7 @@ export function buildExperience(kit) {
   }
 
   const ornamentPlacements = [];
-  for (let index = 0; index < 128; index += 1) {
+  for (let index = 0; index < 24; index += 1) {
     const perimeter = index % 4;
     const progress = ((index * 0.61803398875) % 1) - 0.5;
     let x;
@@ -772,15 +744,6 @@ export function buildExperience(kit) {
     const copperInlay = rounded(vertical ? 0.22 : 0.92, vertical ? 0.92 : 0.15, 0.28, materials.copper, rail, [0, 0, 0.025], 0.035);
     const porcelainInlay = rounded(vertical ? 0.15 : 0.74, vertical ? 0.74 : 0.07, 0.3, materials.porcelain, rail, [0, 0, 0.045], 0.022);
     const rosettes = [];
-    for (let index = 0; index < 13; index += 1) {
-      const rosette = ring(0.06, 0.009, index % 2 ? materials.verdigris : materials.brass, rail, [
-        0,
-        0,
-        0.08,
-      ]);
-      rosette.rotation.z = index * 0.4;
-      rosettes.push(rosette);
-    }
     frameRails.push({
       rail,
       bar,
@@ -800,102 +763,29 @@ export function buildExperience(kit) {
   createFrameRail("frame-top", "horizontal", 0.04, 0.7, -0.08);
   createFrameRail("frame-bottom", "horizontal", -0.04, -0.66, 0.09);
 
-  // Four hinge rows carry bearings, gears and folding ribs that follow the explosion.
+  // Only four recessed timber hinges remain, keeping the assembled picture quiet.
   const hingeRows = [];
   for (let row = 0; row < rows; row += 1) {
     const rowGroup = new THREE.Group();
-    rowGroup.name = `multi-axis-hinge-row-${row + 1}`;
+    rowGroup.name = `recessed-timber-hinge-${row + 1}`;
     artworkRig.add(rowGroup);
-    const shaft = addMesh(
-      ownGeometry(new THREE.CylinderGeometry(0.045, 0.045, 1, 16, 1)),
-      materials.porcelainShadow,
-      rowGroup,
-    );
+    const shaft = rounded(1, 0.045, 0.055, materials.walnut, rowGroup);
     shaft.name = `hinge-row-${row + 1}-contained-shaft`;
-    shaft.rotation.z = Math.PI / 2;
-    const rowBearings = [];
     const endCaps = [];
-    const endHousings = [];
     for (const side of [-1, 1]) {
-      const rowGear = gear(0.22, 0.08, 14, side < 0 ? materials.copper : materials.verdigris, rowGroup);
-      rowGear.userData.side = side;
-      rowGroup.userData[side < 0 ? "leftGear" : "rightGear"] = rowGear;
-      const bearing = ring(0.14, 0.025, materials.porcelain, rowGroup, [0, 0, 0.015]);
-      bearing.rotation.x = Math.PI / 2;
-      bearing.userData.side = side;
-      rowBearings.push(bearing);
-      const housing = rounded(0.34, 0.34, 0.28, materials.blackLacquer, rowGroup, [0, 0, 0.01], 0.07);
-      housing.name = `hinge-row-${row + 1}-${side < 0 ? "left" : "right"}-transmission-box`;
-      const endCap = addMesh(
-        ownGeometry(new THREE.CylinderGeometry(0.11, 0.145, 0.12, 18, 1)),
-        side < 0 ? materials.copper : materials.verdigris,
-        rowGroup,
-      );
+      const endCap = rounded(0.16, 0.16, 0.12, materials.copper, rowGroup, [0, 0, 0.03], 0.035);
       endCap.name = `hinge-row-${row + 1}-${side < 0 ? "left" : "right"}-axle-cap`;
-      endCap.rotation.z = Math.PI / 2;
       endCap.userData.side = side;
-      endHousings.push(housing);
       endCaps.push(endCap);
     }
-    const bearingPlacements = [];
-    for (let index = 0; index < 9; index += 1) {
-      bearingPlacements.push({
-        position: [-1.62 + index * 0.405, 0, 0.02],
-        rotation: [Math.PI / 2, 0, 0],
-        scale: 0.64,
-      });
-    }
-    const bearingField = instances(
-      ownGeometry(new THREE.TorusGeometry(0.075, 0.014, 5, 14)),
-      materials.brass,
-      bearingPlacements,
-      rowGroup,
-    );
-    const rib = tube([
-      [0, 0, -0.05],
-      [(row % 2 ? -1 : 1) * 0.8, 0.42, -0.25],
-      [(row % 2 ? -1 : 1) * 1.62, 0.2, -0.55],
-    ], 0.035, materials.porcelain, rowGroup, 32, 6);
-    rib.name = `folding-rib-${row + 1}`;
-    hingeRows.push({ rowGroup, shaft, rib, rowBearings, bearingField, endCaps, endHousings });
-  }
-
-  const spine = new THREE.Group();
-  spine.name = "central-telescoping-spine";
-  artworkRig.add(spine);
-  for (let index = 0; index < 5; index += 1) {
-    const segment = new THREE.Group();
-    segment.position.set(0, 0, -0.68 - index * 0.3);
-    spine.add(segment);
-    rounded(0.48 - index * 0.038, 3.9 - index * 0.18, 0.16, index % 2 ? materials.porcelainShadow : materials.blackLacquer, segment, [0, 0, 0], 0.055);
-    const segmentRing = ring(0.27 - index * 0.02, 0.024, index % 2 ? materials.verdigris : materials.copper, segment, [0, 0, 0.09]);
-    segmentRing.rotation.x = Math.PI / 2;
+    hingeRows.push({ rowGroup, shaft, rib: null, endCaps });
   }
 
   const sideMechanisms = [];
-  for (const side of [-1, 1]) {
-    const mechanism = new THREE.Group();
-    mechanism.name = side < 0 ? "left-spine-gimbal" : "right-spine-gimbal";
-    mechanism.position.set(side * 2.72, 0, -0.2);
-    artworkRig.add(mechanism);
-    const gimbalA = ring(0.38, 0.045, materials.copper, mechanism);
-    gimbalA.rotation.y = Math.PI / 2;
-    const gimbalB = ring(0.29, 0.032, materials.verdigris, mechanism);
-    gimbalB.rotation.x = Math.PI / 2;
-    const gimbalC = ring(0.2, 0.026, materials.porcelain, mechanism);
-    gimbalC.rotation.z = Math.PI / 2;
-    const mechanismGear = gear(0.3, 0.08, 16, materials.brass, mechanism, [0, 0, 0.17]);
-    mechanismGear.rotation.z = side * 0.3;
-    sideMechanisms.push({ mechanism, gimbalA, gimbalB, gimbalC, mechanismGear, side });
-  }
 
-  // Three offset open frames and staggered side fins make the exploded silhouette read as architecture.
+  // During deconstruction one restrained shadow frame steps behind the slices.
   const escapeFrames = [];
-  [
-    { material: materials.porcelainShadow, scale: 1.12, side: -1, lift: 0.14 },
-    { material: materials.verdigris, scale: 1.2, side: 1, lift: -0.12 },
-    { material: materials.blackLacquer, scale: 1.06, side: 0.34, lift: 0.66 },
-  ].forEach((spec, index) => {
+  [{ material: materials.blackLacquer, scale: 1.08, side: 0, lift: 0.2 }].forEach((spec, index) => {
     const frame = new THREE.Group();
     frame.name = `reverse-floating-frame-${index + 1}`;
     artworkRig.add(frame);
@@ -920,78 +810,24 @@ export function buildExperience(kit) {
   });
 
   const foldingFins = [];
-  for (const side of [-1, 1]) {
-    for (let index = 0; index < 4; index += 1) {
-      const pivot = new THREE.Group();
-      pivot.name = `side-folding-fin-${side < 0 ? "left" : "right"}-${index + 1}`;
-      artworkRig.add(pivot);
-      const blade = rounded(1, 0.18 + index * 0.018, 0.12, index % 2 ? materials.verdigris : materials.porcelainShadow, pivot, [0, 0, 0], 0.025);
-      const inlay = rounded(0.74, 0.055, 0.14, index % 2 ? materials.porcelain : materials.blackLacquer, pivot, [0, 0, 0.035], 0.012);
-      const edge = tube([
-        [-0.47, -0.06, -0.06],
-        [0, 0, -0.08],
-        [0.47, 0.06, -0.06],
-      ], 0.018, materials.copper, pivot, 24, 5);
-      const endCap = rounded(0.08, 0.2 + index * 0.018, 0.14, materials.blackLacquer, pivot, [0, 0, 0], 0.022);
-      const hingeCap = ring(0.09, 0.018, materials.brass, pivot, [0, 0, 0.09]);
-      foldingFins.push({ pivot, blade, inlay, edge, endCap, hingeCap, side, index });
-    }
-  }
 
-  // A faceted skylight and suspended louver structure project the light mechanism above the frame.
+  // A single brass arc marks the moving light without competing with the picture.
   const skylight = new THREE.Group();
-  skylight.name = "faceted-skylight";
-  skylight.position.set(0, 6.55, -0.42);
+  skylight.name = "light-arc";
+  skylight.position.set(0, 6.22, -0.64);
   group.add(skylight);
   const skylightRibs = [];
-  for (let index = 0; index < 7; index += 1) {
-    const x = -3 + index;
-    const rib = tube([
-      [x, -0.6, -0.4],
-      [x * 0.88, 0.3, -0.9],
-      [x * 0.68, 0.82, -0.58],
-    ], 0.028, index % 2 ? materials.copper : materials.verdigris, skylight, 32, 6);
-    skylightRibs.push(rib);
-  }
-  const glassPlacements = [];
-  for (let index = 0; index < 12; index += 1) {
-    const angle = index / 12 * Math.PI * 2;
-    glassPlacements.push({
-      position: [Math.cos(angle) * 2.15, 0.06 + (index % 3) * 0.12, Math.sin(angle) * 0.95],
-      rotation: [-0.25 + Math.sin(angle) * 0.16, angle, Math.cos(angle) * 0.2],
-      scale: [1.1, 1, 0.7],
-    });
-  }
-  instances(
-    ownGeometry(new THREE.BoxGeometry(0.78, 0.025, 1.0)),
-    materials.glass,
-    glassPlacements,
-    skylight,
-  ).name = "instanced-skylight-facets";
-  for (let index = 0; index < 3; index += 1) {
-    const halo = ring(2.68 - index * 0.27, 0.025 + index * 0.006, index === 0 ? materials.copper : materials.porcelain, skylight, [0, -0.05 + index * 0.1, -0.1], Math.PI * (1.3 + index * 0.16));
-    halo.rotation.x = Math.PI / 2;
-    halo.rotation.z = index * 0.53;
-  }
+  const lightArc = ring(2.78, 0.025, materials.copper, skylight, [0, 0, 0], Math.PI * 1.18);
+  lightArc.rotation.x = Math.PI / 2;
+  lightArc.rotation.z = 0.18;
+  skylightRibs.push(lightArc);
 
   const louvers = new THREE.Group();
-  louvers.name = "rear-louver-guide-boxes";
+  louvers.name = "retired-louver-guides";
   louvers.position.set(0, 0, 0);
+  louvers.visible = false;
   group.add(louvers);
   const louverSlats = [];
-  for (const side of [-1, 1]) {
-    for (let index = 0; index < 4; index += 1) {
-      const unit = new THREE.Group();
-      unit.name = `louver-guide-${side < 0 ? "left" : "right"}-${index + 1}`;
-      louvers.add(unit);
-      const housing = rounded(0.82, 0.14, 0.2, index % 2 ? materials.verdigris : materials.porcelainShadow, unit, [0, 0, 0], 0.035);
-      const capA = rounded(0.075, 0.19, 0.23, materials.blackLacquer, unit, [-0.39, 0, 0], 0.02);
-      const capB = rounded(0.075, 0.19, 0.23, materials.blackLacquer, unit, [0.39, 0, 0], 0.02);
-      const vane = rounded(0.48, 0.036, 0.13, index % 2 ? materials.porcelain : materials.blackLacquer, unit, [0, 0, 0.12], 0.014);
-      vane.name = `louver-vane-${side < 0 ? "left" : "right"}-${index + 1}`;
-      louverSlats.push({ unit, housing, capA, capB, slat: vane, index, side, restY: 0 });
-    }
-  }
 
   const lightTrackGroup = new THREE.Group();
   lightTrackGroup.name = "outer-frame-light-orbit";
@@ -1089,7 +925,7 @@ export function buildExperience(kit) {
   register(lightHit, {
     id: "light-orb",
     label: "实体光球",
-    hint: "拖动光球，实际移动聚光灯与光轨并摆动百叶",
+    hint: "拖动铜灯，实际移动聚光灯与光轨",
     anchor: [0, 0, 0.38],
     onDown() {
       status("实体光球与聚光灯制动解除");
@@ -1102,7 +938,7 @@ export function buildExperience(kit) {
       invalidate();
     },
     onUp() {
-      status("实体光球锁定，阴影与百叶保持新的联动");
+      status("实体光球锁定，聚光灯与光轨保持新的位置");
     },
     onClick() {
       lightX = lightX > 0.55 ? -0.72 : 0.72;
@@ -1125,7 +961,7 @@ export function buildExperience(kit) {
 
   const deconstructRig = new THREE.Group();
   deconstructRig.name = "deconstruction-control";
-  deconstructRig.position.set(-3.05, 3.58, 2.34);
+  deconstructRig.position.set(-3.05, 2.42, 1.92);
   group.add(deconstructRig);
   const deconstructRotor = new THREE.Group();
   deconstructRotor.name = "indexed-deconstruction-rotor";
@@ -1138,12 +974,19 @@ export function buildExperience(kit) {
     [0, 0.15],
   ], materials.blackLacquer, deconstructRig, [0, 0, -0.04], 40);
   deconstructBack.rotation.x = Math.PI / 2;
-  const deconstructRing = ring(0.46, 0.045, materials.copper, deconstructRotor, [0, 0, 0.08]);
-  const deconstructGear = gear(0.31, 0.075, 15, materials.verdigris, deconstructRotor, [0, 0, 0.015]);
+  const deconstructRing = ring(0.44, 0.042, materials.copper, deconstructRotor, [0, 0, 0.08]);
+  const deconstructGear = lathe([
+    [0, -0.08],
+    [0.31, -0.06],
+    [0.35, 0.02],
+    [0.28, 0.1],
+    [0, 0.12],
+  ], materials.verdigris, deconstructRotor, [0, 0, 0.02], 36);
+  deconstructGear.rotation.x = Math.PI / 2;
   const deconstructTicks = [];
-  for (let index = 0; index < 16; index += 1) {
-    const angle = index / 16 * Math.PI * 2;
-    const tick = rounded(0.024, index % 4 === 0 ? 0.14 : 0.09, 0.035, index % 4 === 0 ? materials.brass : materials.porcelain, deconstructRotor, [
+  for (let index = 0; index < 4; index += 1) {
+    const angle = index / 4 * Math.PI * 2;
+    const tick = rounded(0.028, 0.16, 0.04, materials.brass, deconstructRotor, [
       Math.cos(angle) * 0.56,
       Math.sin(angle) * 0.56,
       0.08,
@@ -1224,7 +1067,7 @@ export function buildExperience(kit) {
 
   const dial = new THREE.Group();
   dial.name = "painting-catalogue-wheel";
-  dial.position.set(0, 1.02, 1.12);
+  dial.position.set(2.85, 1.82, 1.72);
   group.add(dial);
   const dialBack = lathe([
     [0, -0.08],
@@ -1234,13 +1077,20 @@ export function buildExperience(kit) {
     [0, 0.23],
   ], materials.blackLacquer, dial, [0, 0, 0], 48);
   dialBack.rotation.x = Math.PI / 2;
-  const dialRing = ring(0.62, 0.055, materials.brass, dial, [0, 0, 0.13]);
-  const dialInner = ring(0.47, 0.026, materials.verdigris, dial, [0, 0, 0.17], Math.PI * 1.72);
-  const dialGear = gear(0.33, 0.07, 16, materials.copper, dial, [0, 0, 0.2]);
+  const dialRing = ring(0.62, 0.045, materials.brass, dial, [0, 0, 0.13]);
+  const dialInner = ring(0.47, 0.022, materials.verdigris, dial, [0, 0, 0.17], Math.PI * 1.72);
+  const dialGear = lathe([
+    [0, -0.06],
+    [0.3, -0.045],
+    [0.34, 0.02],
+    [0.25, 0.08],
+    [0, 0.1],
+  ], materials.copper, dial, [0, 0, 0.19], 32);
+  dialGear.rotation.x = Math.PI / 2;
   const dialMarkers = [];
-  for (let index = 0; index < 12; index += 1) {
-    const angle = index / 12 * Math.PI * 2;
-    const marker = ring(0.035, 0.009, index % 3 ? materials.porcelain : materials.brass, dial, [
+  for (let index = 0; index < 3; index += 1) {
+    const angle = index / 3 * Math.PI * 2 - Math.PI / 2;
+    const marker = ring(0.032, 0.008, materials.porcelain, dial, [
       Math.cos(angle) * 0.52,
       Math.sin(angle) * 0.52,
       0.18,
@@ -1256,7 +1106,7 @@ export function buildExperience(kit) {
     onDown() {
       dialStart = selected;
       dialTravel = 0;
-      status("画轮齿轮已咬合");
+      status("画轮已解锁");
     },
     onDrag({ dx }) {
       dialTravel += dx;
@@ -1314,18 +1164,14 @@ export function buildExperience(kit) {
   }
 
   function lightRoutePoints() {
-    const horizontalSpread = Math.max(0.2, paintingWidth / cols) * 0.9 + 0.18;
-    const outerX = Math.min(5.32, paintingWidth / 2 + horizontalSpread * 2.5 + 0.75);
     const centerY = 4.03;
     const top = centerY + paintingHeight / 2;
     return [
-      new THREE.Vector3(-outerX, centerY - paintingHeight * 0.1, 2.5),
-      new THREE.Vector3(-outerX - 0.04, centerY + paintingHeight * 0.28, 2.58),
-      new THREE.Vector3(-paintingWidth / 2 - 0.5, top + 0.54, 2.66),
-      new THREE.Vector3(0, top + 0.8, 2.78),
-      new THREE.Vector3(paintingWidth / 2 + 0.5, top + 0.54, 2.66),
-      new THREE.Vector3(outerX + 0.04, centerY + paintingHeight * 0.28, 2.58),
-      new THREE.Vector3(outerX, centerY - paintingHeight * 0.1, 2.5),
+      new THREE.Vector3(-paintingWidth / 2 - 0.38, top + 0.38, 1.92),
+      new THREE.Vector3(-paintingWidth * 0.24, top + 0.62, 2.02),
+      new THREE.Vector3(0, top + 0.68, 2.08),
+      new THREE.Vector3(paintingWidth * 0.24, top + 0.62, 2.02),
+      new THREE.Vector3(paintingWidth / 2 + 0.38, top + 0.38, 1.92),
     ];
   }
 
@@ -1373,8 +1219,8 @@ export function buildExperience(kit) {
       piece.edgeGeometry.computeBoundingSphere();
       piece.baseX = center.x;
       piece.baseY = center.y;
-      piece.directionX = (piece.column - (cols - 1) / 2) * (Math.max(0.2, paintingWidth / cols) * 0.9 + 0.18) + Math.sin(index * 1.91) * 0.035;
-      piece.directionY = (piece.row - (rows - 1) / 2) * Math.max(0.2, paintingHeight / rows * 0.58) + Math.cos(index * 1.37) * 0.1;
+      piece.directionX = (piece.column - (cols - 1) / 2) * (Math.max(0.2, paintingWidth / cols) * 0.5 + 0.08) + Math.sin(index * 1.91) * 0.025;
+      piece.directionY = (piece.row - (rows - 1) / 2) * Math.max(0.2, paintingHeight / rows * 0.44) + Math.cos(index * 1.37) * 0.07;
       alignmentPins[index].position = [center.x, center.y, -0.13];
     });
     writeInstancePlacements(alignmentField, alignmentPins);
@@ -1383,10 +1229,10 @@ export function buildExperience(kit) {
       const spread = 0.12 + layer * 0.1;
       const width = paintingWidth + 0.3 + spread * 2;
       const height = paintingHeight + 0.3 + spread * 2;
-      top.scale.set(width, 1, 1);
-      bottom.scale.set(width, 1, 1);
-      left.scale.set(1, height, 1);
-      right.scale.set(1, height, 1);
+      top.scale.set(width, 1.2, 1);
+      bottom.scale.set(width, 1.2, 1);
+      left.scale.set(1.2, height, 1);
+      right.scale.set(1.2, height, 1);
       top.position.y = height / 2;
       bottom.position.y = -height / 2;
       left.position.x = -width / 2;
@@ -1432,49 +1278,25 @@ export function buildExperience(kit) {
         entry.closed.set(0, entry.rail.name === "frame-top" ? paintingHeight / 2 + 0.36 : -(paintingHeight / 2 + 0.36), 0.22);
       }
       entry.open.copy(entry.closed).add(entry.openOffset);
-      const count = Math.min(13, Math.max(3, Math.round(length / 0.44)));
-      entry.rosettes.forEach((rosette, index) => {
-        const activeRosette = index < count;
-        rosette.visible = activeRosette;
-        if (!activeRosette) return;
-        const progress = count === 1 ? 0 : index / (count - 1) - 0.5;
-        rosette.position.set(vertical ? 0 : progress * length * 0.82, vertical ? progress * length * 0.82 : 0, 0.08);
+      entry.rosettes.forEach((rosette) => {
+        rosette.visible = false;
       });
     });
 
-    hingeRows.forEach(({ rowGroup, shaft, rib, rowBearings, bearingField, endCaps, endHousings }, row) => {
+    hingeRows.forEach(({ rowGroup, shaft, endCaps }, row) => {
       rowGroup.position.set(0, (row - (rows - 1) / 2) * (paintingHeight / rows) * 0.92, -0.24 - row * 0.035);
-      shaft.scale.set(1, paintingWidth + 0.84, 1);
-      const leftGear = rowGroup.userData.leftGear;
-      const rightGear = rowGroup.userData.rightGear;
-      if (leftGear) leftGear.position.x = -(paintingWidth / 2 + 0.66);
-      if (rightGear) rightGear.position.x = paintingWidth / 2 + 0.66;
-      rowBearings.forEach((bearing) => {
-        bearing.position.x = bearing.userData.side * (paintingWidth / 2 + 0.2);
-      });
+      shaft.scale.set(paintingWidth + 0.58, 1, 1);
       endCaps.forEach((cap) => {
-        cap.position.x = cap.userData.side * (paintingWidth / 2 + 0.42);
+        cap.position.x = cap.userData.side * (paintingWidth / 2 + 0.24);
       });
-      endHousings.forEach((housing, index) => {
-        housing.position.x = (index === 0 ? -1 : 1) * (paintingWidth / 2 + 0.42);
-      });
-      const bearingPlacements = [];
-      for (let index = 0; index < 9; index += 1) {
-        bearingPlacements.push({
-          position: [lerp(-paintingWidth * 0.44, paintingWidth * 0.44, index / 8), 0, 0.02],
-          rotation: [Math.PI / 2, 0, 0],
-          scale: 0.64,
-        });
-      }
-      writeInstancePlacements(bearingField, bearingPlacements);
-      rib.scale.x = clamp(paintingWidth / 3.42, 0.66, 1.5);
     });
 
     sideMechanisms.forEach(({ mechanism, side }) => {
       mechanism.position.x = side * (paintingWidth / 2 + 0.84);
     });
 
-    deconstructRig.position.set(-(paintingWidth / 2 + 1.08), 3.58, 2.34);
+    deconstructRig.position.set(-(paintingWidth / 2 + 0.58), 2.4, 1.92);
+    dial.position.set(paintingWidth / 2 + 0.58, 1.88, 1.72);
     updateLightTrackLayout();
 
     escapeFrames.forEach((entry) => {
@@ -1526,7 +1348,7 @@ export function buildExperience(kit) {
 
   function applyArtworkAspect(ratio, source = "metadata") {
     const safeRatio = clamp(Number(ratio) || metadataAspect(currentItem()), 0.45, 2.4);
-    const nextHeight = Math.min(4.72, 4.52 / safeRatio);
+    const nextHeight = Math.min(5.18, 5.1 / safeRatio);
     const nextWidth = nextHeight * safeRatio;
     if (Math.abs(nextWidth - paintingWidth) < 0.0005 && Math.abs(nextHeight - paintingHeight) < 0.0005) {
       imageAspect = safeRatio;
@@ -1574,6 +1396,7 @@ export function buildExperience(kit) {
       );
       piece.root.scale.setScalar(1 + 0.035 * amount * Math.sin(piece.layer + piece.column));
       piece.back.position.z = -0.035 - amount * 0.11;
+      piece.edge.material.opacity = 0.1 + amount * 0.64;
     });
     frameRails.forEach((entry, index) => {
       entry.rail.position.lerpVectors(entry.closed, entry.open, amount);
@@ -1589,12 +1412,8 @@ export function buildExperience(kit) {
     hingeRows.forEach(({ rowGroup, shaft, rib }, row) => {
       rowGroup.position.z = -0.24 - row * 0.035 - amount * (0.3 + row * 0.08);
       rowGroup.rotation.x = amount * (row - 1.5) * 0.035;
-      const leftGear = rowGroup.userData.leftGear;
-      const rightGear = rowGroup.userData.rightGear;
-      if (leftGear) leftGear.rotation.z = amount * (row + 1) * 0.42;
-      if (rightGear) rightGear.rotation.z = -amount * (row + 1) * 0.42;
       shaft.rotation.y = amount * row * 0.06;
-      rib.rotation.y = amount * (row % 2 ? -0.36 : 0.36);
+      if (rib) rib.rotation.y = amount * (row % 2 ? -0.36 : 0.36);
     });
     sideMechanisms.forEach(({ mechanism, gimbalA, gimbalB, gimbalC, mechanismGear, side }) => {
       mechanism.position.x = side * (paintingWidth / 2 + 0.84 + amount * 0.42);
@@ -1611,16 +1430,7 @@ export function buildExperience(kit) {
       entry.frame.rotation.set(0, 0, 0);
     });
     foldingFins.forEach((entry) => {
-      entry.pivot.position.set(
-        entry.side * (paintingWidth / 2 - 0.12 + amount * 0.22),
-        entry.restY + amount * entry.side * (0.06 + entry.index * 0.025),
-        -0.5 + amount * 0.24,
-      );
-      entry.pivot.rotation.set(
-        amount * entry.side * (0.08 + entry.index * 0.025),
-        entry.side * (1.18 - amount * 0.98),
-        amount * entry.side * (0.12 - entry.index * 0.055),
-      );
+      entry.pivot.visible = false;
     });
     deconstructRotor.rotation.z = amount * Math.PI * 1.2;
     deconstructRing.rotation.z = amount * Math.PI * 0.24;
@@ -1706,7 +1516,7 @@ export function buildExperience(kit) {
         lightY = 0.1;
       }
       applyLight();
-      status("实体光球移动，聚光灯、阴影与百叶同步转向");
+      status("实体光球移动，聚光灯与阴影同步转向");
     } else if (action === "cycle") {
       setArtwork(selected + 1, false);
       status(`画轮转到《${currentItem()?.title || "作品"}》`);
@@ -1809,7 +1619,7 @@ export function buildExperience(kit) {
 
   return {
     group,
-    focus: new THREE.Vector3(0, 3.9, 0),
+    focus: new THREE.Vector3(0, 3.75, 0),
     update,
     interact,
     getState,
