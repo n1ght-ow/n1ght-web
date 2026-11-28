@@ -31,13 +31,6 @@ const SPACES = [
     interaction: "走近一幅画，查看作者、年代、馆藏与作品说明。"
   },
   {
-    id: "music",
-    title: "回声唱片室",
-    english: "Music",
-    description: "十五组共五百三十四首歌，保存封面、歌手、流派与每一首网易云歌曲入口。",
-    interaction: "选择一张唱片，查看曲目并打开精确的网易云歌曲页。"
-  },
-  {
     id: "sport",
     title: "绿茵剧场",
     english: "Sport",
@@ -69,7 +62,7 @@ const SPACES = [
     id: "curate",
     title: "我的小展览",
     english: "Collection",
-    description: "从十类藏品中挑选最多七件作品，组成一张可以保存和导出的私人展览。",
+    description: "从八类藏品中挑选最多七件作品，组成一张可以保存和导出的私人展览。",
     interaction: "选择藏品、调整顺序、填写标题，并导出 PNG 海报。"
   }
 ];
@@ -157,11 +150,6 @@ const SPORT_ROWS = [
 function arrayFrom(globalName) {
   const value = globalThis[globalName];
   return Array.isArray(value) ? value : [];
-}
-
-function objectFrom(globalName) {
-  const value = globalThis[globalName];
-  return value && typeof value === "object" ? value : {};
 }
 
 function photoItems() {
@@ -256,41 +244,6 @@ function paintingItems() {
       originalFields: painting,
       interaction: "走近画作，查看作者、年代、馆藏与作品说明。"
     };
-  });
-}
-
-function musicItems() {
-  const covers = objectFrom("MUSIC_COVERS");
-  return arrayFrom("MUSIC_DATA").flatMap((group, groupIndex) => {
-    const tracks = Array.isArray(group.tracks) ? group.tracks : [];
-    return tracks.map((track, trackIndex) => {
-      const coverFile = typeof covers[track.id] === "string" ? covers[track.id] : "";
-      const image = coverFile ? "album-covers/" + coverFile : "";
-      const source = {
-        ...track,
-        groupId: group.id,
-        groupZh: group.zh,
-        groupEn: group.en,
-        playlist: group.playlist,
-        groupIndex,
-        trackIndex
-      };
-      return {
-        ...source,
-        id: String(track.id),
-        category: "music",
-        title: track.title || "",
-        meta: track.artist || "",
-        description: "收录于" + (group.zh || group.en || "音乐") + "。",
-        image,
-        fullImage: image,
-        url: "https://music.163.com/#/song?id=" + encodeURIComponent(String(track.id)),
-        original: image,
-        originalFields: source,
-        tag: group.en || group.zh || "",
-        interaction: "播放歌曲，或打开精确的网易云歌曲页。"
-      };
-    });
   });
 }
 
@@ -403,7 +356,6 @@ const BUILDERS = {
   books: bookItems,
   poems: poemItems,
   paintings: paintingItems,
-  music: musicItems,
   sport: sportItems,
   series: seriesItems,
   films: filmItems,

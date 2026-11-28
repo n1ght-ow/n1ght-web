@@ -83,10 +83,10 @@
   color: var(--folio-paper);
 }
 
-/* The eight rooms read as a flat contents line. */
+/* The seven rooms read as a flat contents line. */
 #archive .tabbar {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   align-items: stretch;
   width: 100%;
   max-width: none;
@@ -764,307 +764,6 @@
   font-family: var(--font-sans);
 }
 
-/* 04 · MUSIC — a dense white record catalogue with a small counter bar. */
-#archive .music-drawer {
-  color: var(--folio-ink);
-}
-
-#archive .music-bar {
-  margin-block-end: 0;
-}
-
-#archive .music-search {
-  min-height: 56px;
-  padding: 4px 10px;
-  border: 2px solid var(--folio-line);
-  border-radius: var(--folio-control-radius);
-  background: var(--folio-bg);
-  box-shadow: none;
-}
-
-#archive .music-search > .glass__body,
-#archive .music-search > .glass__edge,
-#archive .music-search > .glass__press,
-#archive .genre-filter > .glass__body,
-#archive .genre-filter > .glass__edge,
-#archive .genre-filter > .glass__press {
-  display: none;
-}
-
-#archive .music-search > .glass__content {
-  gap: 10px;
-  flex-wrap: nowrap;
-}
-
-#archive .music-search-input {
-  flex: 1 1 auto;
-  min-width: 0;
-  min-height: 44px;
-  padding: 8px 2px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--folio-ink);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  letter-spacing: 0;
-  caret-color: var(--folio-accent);
-}
-
-#archive .music-search-input:focus,
-#archive .music-search-input:focus-visible {
-  outline: none;
-  border: 0;
-}
-
-#archive .music-search-input::placeholder {
-  color: var(--folio-muted);
-  text-transform: none;
-}
-
-#archive .music-search-clear {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border-radius: var(--folio-control-radius);
-  color: var(--folio-accent);
-}
-
-#archive .music-search-clear:hover {
-  background: color-mix(in srgb, var(--folio-accent) 10%, transparent);
-}
-
-#archive .music-search-count {
-  color: var(--folio-muted);
-  font-family: var(--font-sans);
-  font-size: 12px;
-}
-
-#archive .music-random {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 8px 14px;
-  border: 2px solid var(--folio-accent);
-  border-radius: var(--folio-control-radius);
-  background: var(--folio-paper);
-  color: var(--folio-accent);
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0;
-}
-
-#archive .music-random::after,
-#archive .genre-chip.is-active::after {
-  display: none;
-}
-
-#archive .music-random:hover {
-  background: var(--folio-accent);
-  color: var(--folio-paper);
-  box-shadow: none;
-}
-
-#archive .music-random:hover svg {
-  transform: rotate(-7deg);
-}
-
-#archive .music-random svg {
-  width: 17px;
-  height: 17px;
-}
-
-#archive .music-search-empty {
-  color: var(--folio-accent);
-  font-family: var(--font-sans);
-}
-
-#archive .genre-filter {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  min-height: 60px;
-  padding: 8px 0;
-  border: 0;
-  border-block-end: 2px solid var(--folio-line);
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-#archive .genre-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 8px 11px;
-  border: 1px solid var(--folio-line);
-  border-radius: var(--folio-control-radius);
-  background: transparent;
-  color: var(--folio-muted);
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0;
-  box-shadow: none;
-}
-
-#archive .genre-chip::before {
-  display: none;
-}
-
-#archive .genre-chip:hover {
-  border-color: var(--folio-ink);
-  background: color-mix(in srgb, var(--folio-bg) 58%, var(--folio-paper));
-  color: var(--folio-ink);
-}
-
-#archive .genre-chip.is-active,
-#archive .genre-chip.is-active:hover {
-  border-color: var(--folio-accent);
-  background: color-mix(in srgb, var(--folio-accent) 8%, var(--folio-paper));
-  color: var(--folio-accent);
-  box-shadow: none;
-}
-
-#archive .playlist {
-  gap: 30px;
-}
-
-#archive .genre {
-  color: var(--folio-ink);
-}
-
-#archive .genre-head {
-  align-items: center;
-  padding-block: 14px 10px;
-  border-block-end: 2px solid var(--folio-accent);
-}
-
-#archive .genre-title {
-  color: var(--folio-ink);
-  font-family: var(--font-editorial);
-  font-size: clamp(24px, 2.5vw, 34px);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.035em;
-}
-
-#archive .genre-meta {
-  gap: 20px;
-}
-
-#archive .genre-count {
-  color: var(--folio-muted);
-  font-family: var(--font-sans);
-  font-size: 12px;
-}
-
-#archive .genre-playlist {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  color: var(--folio-accent);
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0;
-  text-decoration-color: var(--folio-accent);
-}
-
-#archive .genre-playlist:hover,
-#archive .genre-playlist:focus-visible {
-  color: var(--folio-ink);
-  text-decoration-color: var(--folio-ink);
-}
-
-#archive .artist-row {
-  border: 0;
-}
-
-#archive .artist-tracks {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: clamp(18px, 2.3vw, 30px);
-}
-
-#archive .idx-card {
-  display: grid;
-  grid-template-columns: 52px minmax(0, 1fr);
-  grid-template-rows: auto auto;
-  align-content: center;
-  min-height: 72px;
-  padding: 9px 0;
-  gap: 2px 12px;
-  border-block-end: 1px solid var(--folio-line);
-  border-radius: 0;
-  background: transparent;
-}
-
-#archive .idx-card:hover {
-  background: transparent;
-}
-
-#archive .idx-cover {
-  grid-column: 1;
-  grid-row: 1 / 3;
-  align-self: center;
-  width: 52px;
-  height: 52px;
-  border: 2px solid var(--folio-line);
-  border-radius: var(--folio-media-radius);
-  background: var(--folio-bg);
-  box-shadow: none;
-}
-
-#archive .idx-card:hover .idx-cover,
-#archive .idx-card:focus-within .idx-cover {
-  border-color: var(--folio-accent);
-  transform: none;
-  box-shadow: none;
-}
-
-#archive .idx-card .idx-title {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: end;
-  display: block;
-  min-width: 0;
-  padding: 0;
-  overflow: hidden;
-  color: var(--folio-ink);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-#archive .idx-card:hover .idx-title {
-  color: var(--folio-accent);
-}
-
-#archive .idx-artist {
-  grid-column: 2;
-  grid-row: 2;
-  align-self: start;
-  min-width: 0;
-  color: var(--folio-muted);
-  font-family: var(--font-sans);
-  font-size: 12px;
-  line-height: 1.35;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 /* 05 · SPORT — a compact five-channel media strip. */
 #archive .sport {
   --sport-pad: clamp(18px, 2.2vw, 28px);
@@ -1574,18 +1273,6 @@
   gap: 8px;
 }
 
-@media (min-width: 1400px) {
-  #archive .artist-tracks {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 1180px) {
-  #archive .artist-tracks {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 900px) {
   #archive .tabbar {
     display: flex;
@@ -1780,68 +1467,6 @@
     font-size: 12px;
   }
 
-  #archive .music-search {
-    padding-inline: 8px;
-  }
-
-  #archive .music-search > .glass__content {
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  #archive .music-search-input {
-    flex-basis: calc(100% - 54px);
-    font-size: 16px;
-  }
-
-  #archive .music-search-count {
-    flex-basis: 100%;
-    padding-inline: 2px;
-  }
-
-  #archive .music-random {
-    margin-inline-start: auto;
-  }
-
-  #archive .genre-filter {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    scrollbar-width: none;
-    padding-inline-end: 20px;
-  }
-
-  #archive .genre-filter::-webkit-scrollbar {
-    display: none;
-  }
-
-  #archive .genre-chip {
-    flex: 0 0 auto;
-  }
-
-  #archive .artist-tracks {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  #archive .genre-head {
-    flex-wrap: wrap;
-    gap: 6px 12px;
-  }
-
-  #archive .genre-meta {
-    gap: 14px;
-  }
-
-  #archive .idx-card {
-    grid-template-columns: 50px minmax(0, 1fr);
-    min-height: 68px;
-  }
-
-  #archive .idx-cover {
-    width: 50px;
-    height: 50px;
-  }
-
   #archive .sport {
     --sport-pad: 16px;
     --sport-strip-h: 52px;
@@ -1970,19 +1595,6 @@
     grid-template-columns: repeat(12, 70px);
   }
 
-  #archive .music-random {
-    padding-inline: 10px;
-  }
-
-  #archive .genre-title {
-    font-size: 24px;
-  }
-
-  #archive .genre-meta {
-    width: 100%;
-    justify-content: space-between;
-  }
-
   .painting-viewer {
     padding: 8px;
   }
@@ -2001,8 +1613,6 @@
   #archive .poem-turn,
   #archive .painting-thumb img,
   #archive .painting-choice,
-  #archive .music-random svg,
-  #archive .idx-cover,
   #archive .series-card,
   #archive .film-card,
   #archive .series-card-img,
@@ -2013,7 +1623,6 @@
   #archive .poem-choice:hover .poem-choice-mark,
   #archive .painting-choice:hover img,
   #archive .painting-choice[aria-pressed="true"] img,
-  #archive .music-random:hover svg,
   #archive .sport-item:hover .sport-photo,
   #archive .series-card:hover .series-card-img,
   #archive .series-card:focus-visible .series-card-img,

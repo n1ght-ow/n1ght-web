@@ -33,8 +33,8 @@
 | 当前章节视觉与增强交互 | css/atelier-hero.css、atelier-photo.css、atelier-archive.css、atelier-poem.css，以及 js/ 中对应文件 |
 | 全站交互、标签页、搜索、详情与刷新 | js/main.js |
 | 影视共享条带 | js/reel-stage.js；film-stage.js、series-stage.js 配置 |
-| 书架、音乐、游戏 | js/book-shelf.js、music-stage.js、games-stage.js |
-| 收藏数据 | js/*-data.js、music-covers.js |
+| 书架、游戏 | js/book-shelf.js、games-stage.js |
+| 收藏数据 | js/*-data.js |
 | 本地运行库 | js/vendor/ |
 
 atelier 层在基础组件之后加载。先判断属性最终由哪一层决定，避免修改被后面的规则覆盖。
@@ -56,7 +56,7 @@ atelier 层在基础组件之后加载。先判断属性最终由哪一层决定
 ## 设计与交互的判断
 
 - 当前方向是典雅、精致、有趣的私人艺术馆，具体做法见 DESIGN.md；后续可以整体换方向。
-- 让图片、书名、歌曲和文字读得清楚，比例与留白服务内容。不要为了“高级”制造大段空场。
+- 让图片、书名和文字读得清楚，比例与留白服务内容。不要为了“高级”制造大段空场。
 - 动效应帮助定位、切换、阅读或表达内容。可以探索新形式，同时照顾响应速度与滚动体验。
 - 优先复用已有 GSAP、ScrollTrigger 和 Lenis；锚点与布局刷新沿用共享机制。
 - 动画实例及时清理，空闲循环尽量停止，图片加载后合并刷新。避免同一元素被多套动画抢写。

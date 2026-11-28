@@ -60,11 +60,10 @@ function scheduleRefresh(delay) {
 
 /* Gallery entrances and scroll gestures live in atelier modules. */
 
-/* ---------- unified detail layer: photo / film / series / game / music ----------
+/* ---------- unified detail layer: photo / film / series / game ----------
    One #lightbox serves every archive type. The photo viewer keeps its frame
-   rail; films/series add poster + meta + a Douban link; games add cover + hours + quote;
-   music adds the NetEase link. Opening, closing, inert, focus trap and swipe
-   are shared. */
+   rail; films/series add poster + meta + a Douban link; games add cover + hours
+   + quote. Opening, closing, inert, focus trap and swipe are shared. */
 
 const lightbox = document.getElementById("lightbox");
 const lbStage = document.getElementById("lb-stage");
@@ -72,14 +71,6 @@ const lbImg = document.getElementById("lb-img");
 const lbPhotoInfo = document.getElementById("lb-photo-info");
 const lbPhotoTitle = document.getElementById("lb-photo-title");
 const lbPhotoDescription = document.getElementById("lb-photo-description");
-const lbMusic = document.getElementById("lb-music");
-const lbMusicCover = document.getElementById("lb-music-cover");
-const lbMusicGlyph = lbMusic ? lbMusic.querySelector(".lb-music-glyph") : null;
-/* Media occupies the stage; identity and actions share the adjacent label. */
-const lbMusicHead = document.getElementById("lb-music-head");
-const lbMusicTitle = document.getElementById("lb-music-title");
-const lbMusicLines = document.getElementById("lb-music-lines");
-const lbMusicLink = document.getElementById("lb-music-link");
 const lbMeta = document.getElementById("lb-meta");
 const lbKicker = document.getElementById("lb-kicker");
 const lbTitle = document.getElementById("lb-title");
@@ -102,8 +93,6 @@ let lbTrigger = null;
 let lbThumbs = [];
 let detailType = "photo";
 let detailItems = [];
-let openNetEaseSong = null;
-let openNetEasePlaylist = null;
 let detailMotion = null;
 let detailFlight = null;
 let detailArrival = null;
@@ -140,7 +129,6 @@ function stopDetailMotion() {
   detailSource?.classList.remove('is-viewer-source');
   detailSource = null;
   lbImg?.classList.remove('is-shared-hidden');
-  lbMusicCover?.classList.remove('is-shared-hidden');
   if (lightbox) {
     const layers = [lightbox, detailBackdrop, lightbox.querySelector('.lb-dialog'), lightbox.querySelector('.lb-info')];
     gsap.killTweensOf(layers);
@@ -151,7 +139,6 @@ function stopDetailMotion() {
 function makeDetailFlight(image, box, preparedCopy) {
   const flight = document.createElement('div');
   flight.className = 'lb-flight';
-  if (detailType === 'music') flight.classList.add('is-sleeve');
   flight.setAttribute('aria-hidden', 'true');
   const copy = preparedCopy || document.createElement('img');
   if (!preparedCopy) copy.src = image.currentSrc || image.src;
@@ -203,13 +190,7 @@ function hideDetailSource(image) {
 }
 
 function detailMedia() {
-  return detailType === 'music' ? lbMusicCover : lbImg;
-}
-
-function musicSourceCard() {
-  const id = detailItems[lbIndex]?.id;
-  return Array.from(document.querySelectorAll('#panel-music .idx-card[data-song-id]'))
-    .find(card => card.dataset.songId === String(id) && card.offsetParent !== null);
+  return lbImg;
 }
 
 async function arriveDetailMedia() {
@@ -230,7 +211,6 @@ async function arriveDetailMedia() {
   if (detailArrival !== arrival || detailClosing || !isLbOpen || REDUCED) return;
   detailArrival = null;
   const media = detailMedia();
-  const music = detailType === 'music';
   const dialog = lightbox.querySelector('.lb-dialog');
   const info = lightbox.querySelector('.lb-info');
   const box = media.getBoundingClientRect();
@@ -263,10 +243,9 @@ async function arriveDetailMedia() {
     };
     reveal();
   } })
-    .to(detailFlightState, { x: 0, y: 0, sx: 1, sy: 1, zoom: 1, duration: music ? .56 : .42, ease: 'power2.inOut', onUpdate: paintDetailFlight }, 0)
-    .fromTo(detailBackdrop, { opacity: 0 }, { opacity: 1, duration: music ? .4 : .3, ease: 'power1.out' }, 0)
-    .fromTo(dialog, { opacity: 0, y: music ? 14 : 0, scale: music ? .985 : 1 }, { opacity: 1, y: 0, scale: 1, duration: music ? .46 : .3, ease: 'power2.out' }, .06);
-  if (music) detailMotion.fromTo(info, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: .34, ease: 'power2.out' }, .18);
+    .to(detailFlightState, { x: 0, y: 0, sx: 1, sy: 1, zoom: 1, duration: .42, ease: 'power2.inOut', onUpdate: paintDetailFlight }, 0)
+    .fromTo(detailBackdrop, { opacity: 0 }, { opacity: 1, duration: .3, ease: 'power1.out' }, 0)
+    .fromTo(dialog, { opacity: 0, y: 0, scale: 1 }, { opacity: 1, y: 0, scale: 1, duration: .3, ease: 'power2.out' }, .06);
 }
 
 function fadeDetailPhoto() {
@@ -342,52 +321,26 @@ function gameItemData(item) {
   };
 }
 
-function musicItemData(card) {
-  const genre = card.closest(".genre");
-  const id = card.getAttribute("data-song-id");
-  /* No playlist fields. The detail layer used to mirror the group header's
-     NetEase playlist into a second link, which duplicated the header's own
-     OPEN PLAYLIST and was removed (asked for). The header link owns that
-     mapping now, so there is nothing to read off it here. */
-  return {
-    type: "music",
-    id: id,
-    title: detailText(card, ".idx-title"),
-    artist: detailText(card, ".idx-artist"),
-    genre: genre ? detailText(genre, ".genre-title") : "",
-    cover: window.MUSIC_COVERS && window.MUSIC_COVERS[id] ? "album-covers/" + window.MUSIC_COVERS[id] : "",
-  };
-}
-
-/* photo / game / music only. Film and series had branches here that returned
+/* photo / game only. Film and series had branches here that returned
    a copy of FILM_DATA / SERIES_DATA; they were unreachable, because the only
-   three openDetail() calls in this file pass those three strings. See the
+   two openDetail() calls in this file pass those two strings. See the
    comment in renderDetail and AGENTS.md:144. */
 function detailItemsFor(type) {
   if (type === "photo") return photoFrames.map(photoFrameData);
   if (type === "game") {
     return Array.from(document.querySelectorAll("#panel-games .hof-item")).map(gameItemData);
   }
-  if (type === "music") {
-    const panel = document.getElementById("panel-music");
-    if (!panel) return [];
-    return Array.from(panel.querySelectorAll(".idx-card[data-song-id]"))
-      .filter((card) => card.offsetParent !== null)
-      .map(musicItemData);
-  }
   return [];
 }
 
 function detailLabel(type) {
   if (type === "game") return "GAME";
-  if (type === "music") return "TRACK";
   return "FRAME";
 }
 
 function detailAct(type, item) {
   if (type === "photo") return item.act;
   if (type === "game") return "GAME";
-  if (type === "music") return item.genre || "TRACK";
   return "";
 }
 
@@ -436,9 +389,6 @@ function lbBuildRail() {
 function setDetailVisibility(show) {
   if (lbImg) lbImg.hidden = !show.image;
   if (lbPhotoInfo) lbPhotoInfo.hidden = !show.photo;
-  if (lbMusic) lbMusic.hidden = !show.music;
-  if (lbMusicHead) lbMusicHead.hidden = !show.music;
-  if (lbMusicLink) lbMusicLink.hidden = !show.music;
   if (lbMeta) lbMeta.hidden = !show.meta;
   if (lbRail) lbRail.hidden = !show.rail;
 }
@@ -457,7 +407,7 @@ function renderDetail(sourceImage) {
   if (lbNextBtn) lbNextBtn.setAttribute("aria-label", "Next " + label.toLowerCase());
 
   if (detailType === "photo") {
-    setDetailVisibility({ image: true, photo: true, music: false, meta: false, rail: true });
+    setDetailVisibility({ image: true, photo: true, meta: false, rail: true });
     if (lbImg) {
       lbImg.alt = item.alt;
       lbImg.width = item.width;
@@ -487,36 +437,7 @@ function renderDetail(sourceImage) {
     return;
   }
 
-  if (detailType === "music") {
-    setDetailVisibility({ image: false, photo: false, music: true, meta: false, rail: false });
-    // real sleeve when the archive has artwork for this song, otherwise the
-    // placeholder sleeve keeps the layer honest instead of showing a broken img
-    if (lbMusicCover) {
-      if (item.cover) {
-        lbMusicCover.src = item.cover;
-        lbMusicCover.alt = item.title + " album cover";
-        lbMusicCover.hidden = false;
-      } else {
-        lbMusicCover.hidden = true;
-        lbMusicCover.removeAttribute("src");
-        lbMusicCover.removeAttribute("alt");
-      }
-    }
-    if (lbMusicGlyph) lbMusicGlyph.hidden = Boolean(item.cover);
-    if (lbMusicTitle) lbMusicTitle.textContent = item.title;
-    if (lbMusicLines) lbMusicLines.textContent = item.artist;
-    if (lbMusicLink) {
-      lbMusicLink.textContent = "Open in NetEase ↗";
-      lbMusicLink.href = "https://music.163.com/#/song?id=" + item.id;
-      lbMusicLink.dataset.songId = item.id;
-    }
-    if (lbLive) {
-      lbLive.textContent = "Track " + String(lbIndex + 1).padStart(2, "0") + " of " + total + ", " + item.title + " by " + item.artist + ". " + item.genre;
-    }
-    return;
-  }
-
-  setDetailVisibility({ image: true, photo: false, music: false, meta: true, rail: false });
+  setDetailVisibility({ image: true, photo: false, meta: true, rail: false });
   if (lbImg) {
     lbImg.classList.remove("is-loaded");
     lbImg.removeAttribute('width');
@@ -524,7 +445,6 @@ function renderDetail(sourceImage) {
     lbImg.alt = item.alt;
     lbImg.src = item.src;
   }
-  if (lbLink) lbLink.dataset.songId = "";
   // Film and series use their own inline details. Games show the original release date.
   if (detailType === "game") {
     if (lbKicker) lbKicker.textContent = "GAME " + String(item.rank).padStart(2, "0") + " / " + String(total).padStart(2, "0");
@@ -564,7 +484,7 @@ function openDetail(type, index, origin) {
   detailItems = items;
   lbIndex = Math.max(0, Math.min(Number(index) || 0, items.length - 1));
   lbTrigger = origin || (document.activeElement instanceof HTMLElement ? document.activeElement : null);
-  const sourceImage = type === 'photo' ? photoFrames[lbIndex]?.querySelector('img') : type === 'music' ? musicSourceCard()?.querySelector('img.idx-cover') : null;
+  const sourceImage = type === 'photo' ? photoFrames[lbIndex]?.querySelector('img') : null;
   const sourceBox = photoPrintBox(sourceImage);
   if (type === "photo" && !lbThumbs.length) lbBuildRail();
   renderDetail(sourceImage);
@@ -589,10 +509,6 @@ function openDetail(type, index, origin) {
       arriveDetailMedia();
     } else if (type === 'photo') {
       fadeDetailPhoto();
-    } else if (type === 'music') {
-      detailMotion = gsap.timeline({ onComplete: () => { detailMotion = null; } })
-        .fromTo(detailBackdrop, { opacity: 0 }, { opacity: 1, duration: .38, ease: 'power1.out', clearProps: 'opacity' }, 0)
-        .fromTo(viewerDialog, { y: 16, scale: .985, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: .5, ease: 'power2.out', clearProps: 'transform,opacity' }, .04);
     } else gsap.fromTo([detailBackdrop, viewerDialog], { opacity: 0 }, { opacity: 1, duration: .24, ease: 'power1.out', clearProps: 'opacity' });
   }
 }
@@ -616,10 +532,6 @@ async function closeDetail(afterClose) {
     destination = target?.image || frame?.querySelector('img');
     if (target?.button) lbTrigger = target.button;
     else if (frame) lbTrigger = frame.querySelector('button');
-  } else if (detailType === 'music') {
-    const card = musicSourceCard();
-    destination = card?.querySelector('img.idx-cover');
-    if (card) lbTrigger = card;
   }
   const finish = () => {
     stopDetailMotion();
@@ -655,7 +567,7 @@ async function closeDetail(afterClose) {
   if (!from?.width || !to?.width || to.bottom <= 0 || to.top >= innerHeight || (!media.naturalWidth && !detailFlight)) {
     detailMotion = gsap.timeline({ onComplete: finish })
       .to(detailBackdrop, { opacity: 0, duration: .28, ease: 'power1.inOut' }, 0)
-      .to(lightbox.querySelector('.lb-dialog'), { opacity: 0, y: detailType === 'photo' || detailType === 'music' ? 8 : 0, duration: .28, ease: 'power2.in' }, 0);
+      .to(lightbox.querySelector('.lb-dialog'), { opacity: 0, y: detailType === 'photo' ? 8 : 0, duration: .28, ease: 'power2.in' }, 0);
     return;
   }
   if (!detailFlight) makeDetailFlight(media, from, copy);
@@ -666,13 +578,13 @@ async function closeDetail(afterClose) {
   detailMotion = gsap.timeline({ onComplete: finish })
     .to(lightbox.querySelector('.lb-dialog'), { opacity: 0, duration: .22, ease: 'power1.out' }, 0)
     .to(detailBackdrop, { opacity: 0, duration: .36, ease: 'power1.inOut' }, 0)
-    .to(base, { x: to.left - base.left, y: to.top - base.top, sx, sy, zoom: Math.max(sx, sy), duration: detailType === 'music' ? .42 : .38, ease: 'power2.inOut', onUpdate: paintDetailFlight }, 0);
+    .to(base, { x: to.left - base.left, y: to.top - base.top, sx, sy, zoom: Math.max(sx, sy), duration: .38, ease: 'power2.inOut', onUpdate: paintDetailFlight }, 0);
 }
 
 function initUnifiedDetail() {
   if (!lightbox) return;
   // Build the thumbnail rail only when the viewer first opens.
-  // Frame IDs match the sequence captured before the album visually reorders it.
+  // Frame IDs match the sequence captured before the gallery visually reorders it.
   const photoDeck = document.getElementById("photo-deck");
   if (photoDeck) {
     photoDeck.addEventListener("click", (e) => {
@@ -690,8 +602,8 @@ function initUnifiedDetail() {
      worse: a 250px poster floating in a dark field with the copy stranded off
      to one side. Clicking a poster now just selects it, which is the same
      thing hovering and tabbing already do. The layer is still the detail
-     mechanism for photo, game and music, which have no inline detail block of
-     their own. */
+     mechanism for photo and game, which have no inline detail block of their
+     own. */
 
   const gamePanel = document.getElementById("panel-games");
   if (gamePanel) {
@@ -718,36 +630,10 @@ function initUnifiedDetail() {
     });
   }
 
-  const musicPanel = document.getElementById("panel-music");
-  if (musicPanel) {
-    Array.from(musicPanel.querySelectorAll(".idx-card[data-song-id]")).forEach((card) => {
-      card.setAttribute("role", "button");
-      card.setAttribute("tabindex", "0");
-      card.setAttribute("aria-label", "Open details for " + detailText(card, ".idx-title") + " by " + detailText(card, ".idx-artist"));
-    });
-    const openMusic = (card) => {
-      const visible = Array.from(musicPanel.querySelectorAll(".idx-card[data-song-id]")).filter((c) => c.offsetParent !== null);
-      const index = visible.indexOf(card);
-      if (index >= 0) openDetail("music", index, card);
-    };
-    musicPanel.addEventListener("click", (e) => {
-      const card = e.target.closest(".idx-card[data-song-id]");
-      if (card) openMusic(card);
-    });
-    musicPanel.addEventListener("keydown", (e) => {
-      if (e.key !== "Enter" && e.key !== " ") return;
-      const card = e.target.closest(".idx-card[data-song-id]");
-      if (!card) return;
-      e.preventDefault();
-      openMusic(card);
-    });
-  }
-
   /* Every listener below is guarded. initUnifiedDetail() is called from the
      middle of this file, so a single missing id used to throw a TypeError that
-     aborted EVERYTHING after it: initMusicSearch, initNetEaseLinks, the whole
-     GSAP block and the nav ScrollTrigger never ran. That is a lot of damage for
-     a renamed id. */
+     aborted everything after it: the whole GSAP block and the nav ScrollTrigger
+     never ran. That is a lot of damage for a renamed id. */
   if (lbCloseBtn) lbCloseBtn.addEventListener("click", closeDetail);
   if (lbPrevBtn) lbPrevBtn.addEventListener("click", () => lbLoad(lbIndex - 1));
   if (lbNextBtn) lbNextBtn.addEventListener("click", () => lbLoad(lbIndex + 1));
@@ -761,21 +647,6 @@ function initUnifiedDetail() {
   };
   motionPreference.addEventListener('change', settleDetailMotion);
   window.addEventListener('resize', settleDetailMotion);
-  /* Both links funnel into the same opener: #lb-link carries the film / series
-     Douban href, #lb-music-link the song deep link. Only the latter ever has a
-     songId, so the guard keeps the two from cross-firing. The playlist branch
-     that used to sit here went with the detail layer's copy of that link; the
-     genre head's own links are handled further down. */
-  [lbLink, lbMusicLink].forEach((link) => {
-    if (!link) return;
-    link.addEventListener("click", (e) => {
-      const songId = link.dataset.songId;
-      if (!songId) return;
-      e.preventDefault();
-      if (typeof openNetEaseSong === "function") openNetEaseSong(songId);
-    });
-  });
-
   // clicking the dark backdrop closes
   lightbox.addEventListener("click", (e) => {
     if (e.target === lightbox) closeDetail();
@@ -783,10 +654,10 @@ function initUnifiedDetail() {
 
   // Escape / arrows / Tab while the viewer is open.
   //
-  // Capture phase on window, not bubble phase on document: js/book-shelf.js and
-  // the music search below also listen for Escape on document, and they were
-  // loaded first, so a bubble-phase listener here could not take the key back -
-  // one Escape closed the viewer AND deselected the book shelf hidden behind it.
+  // Capture phase on window, not bubble phase on document: js/book-shelf.js also
+  // listens for Escape on document and was loaded first, so a bubble-phase
+  // listener here could not take the key back - one Escape closed the viewer AND
+  // deselected the book shelf hidden behind it.
   // Claiming only the keys this viewer owns keeps the two paths separate.
   window.addEventListener("keydown", (e) => {
     if (!isLbOpen) return;
@@ -931,7 +802,7 @@ function initArchiveTabs() {
       tabPanels.style.height = groupBox.height + 'px';
       tabPanels.classList.add('is-changing-room');
       const token = tabs[idx].dataset.tab;
-      const horizontal = ['music', 'films', 'series', 'games'].includes(token);
+      const horizontal = ['films', 'series', 'games'].includes(token);
       gsap.set([old, panels[idx]], { willChange: 'transform,opacity' });
       roomMotion = gsap.timeline({ onComplete: settleRoom })
         .to(old, { x: -direction * 26, y: -8, opacity: 0, duration: .24, ease: 'power2.in' }, 0)
@@ -1019,418 +890,6 @@ function initSportStage() {
 }
 
 initSportStage();
-
-/* ---------- music panel: genre filter + search + random pick ----------
-   The playlist renders fully expanded (no accordion); the chip row filters
-   by genre, the search filters within the visible genres, and the random
-   button plays one card from whatever is currently browsable. */
-
-function initMusicSearch() {
-  const panel = document.getElementById("panel-music");
-  const input = document.getElementById("music-search-input");
-  const clear = document.getElementById("music-search-clear");
-  const count = document.getElementById("music-search-count");
-  const empty = document.getElementById("music-search-empty");
-  const emptyText = document.getElementById("music-search-empty-text");
-  const filterMount = document.getElementById("genre-filter");
-  const randomBtn = document.getElementById("music-random");
-  if (!panel || !input || !clear || !count || !empty || !emptyText) return;
-
-  const cards = Array.from(panel.querySelectorAll(".idx-card[data-song-id]"));
-  const genres = Array.from(panel.querySelectorAll(".genre"));
-  const cardGenres = cards.map((card) => card.closest(".genre"));
-  const genreIndexOf = cardGenres.map((genre) => genres.indexOf(genre));
-  // the chips are rendered by music-stage.js before this file runs and carry
-  // their own totals ("HIP-HOP · 100")
-  const chips = filterMount ? Array.from(filterMount.querySelectorAll(".genre-chip")) : [];
-  // Each group head and its size, captured once: a search repaints the head as
-  // "matches / total", and clearing the field puts the original wording back.
-  const genreCounts = genres.map((genre) => genre.querySelector(".genre-count"));
-  const genreTotals = genres.map((genre) => genre.querySelectorAll(".idx-card[data-song-id]").length);
-  // Active genre index. While BROWSING exactly one group is on screen
-  // (music-stage.js hides every group except index 0 on first render); while
-  // SEARCHING the query owns visibility instead.
-  let activeGenre = 0;
-
-  // NFD first, so a diacritic is FOLDED rather than turned into a separator:
-  // "Señorita" -> "senorita" instead of "se orita", which no query could ever
-  // match (the tolerance below needs a 4+ character token). Then the filter
-  // keeps the four scripts the collection actually uses: Latin, digits, CJK,
-  // Kana and Hangul. Kana and Hangul were missing here, and a query written
-  // only in them normalized to "" - see applySearch below.
-  function normalize(value) {
-    return String(value || "")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      // NFD also splits Hangul into Jamo. Recompose before the script filter.
-      .normalize("NFC")
-      .toLowerCase()
-      .replace(/[^a-z0-9\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]+/g, " ")
-      .trim();
-  }
-
-  // Normalized per-card haystack, built once at init: matchCard then only
-  // compares precomputed strings instead of re-querying and re-normalizing
-  // all 534 cards on every keystroke.
-  const cardHaystacks = cards.map((card) => {
-    const title = card.querySelector(".idx-title");
-    const artist = card.querySelector(".idx-artist");
-    const hay = normalize((title ? title.textContent : "") + " " + (artist ? artist.textContent : ""));
-    return { hay, compact: hay.replace(/\s+/g, ""), tokens: hay.split(" ").filter(Boolean) };
-  });
-
-  function levenshtein(a, b) {
-    const m = a.length;
-    const n = b.length;
-    if (!m) return n;
-    if (!n) return m;
-    const dp = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]);
-    for (let j = 1; j <= n; j++) dp[0][j] = j;
-    for (let i = 1; i <= m; i++) {
-      for (let j = 1; j <= n; j++) {
-        dp[i][j] = Math.min(
-          dp[i - 1][j] + 1,
-          dp[i][j - 1] + 1,
-          dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
-        );
-      }
-    }
-    return dp[m][n];
-  }
-
-  function matchCard(haystack, qNorm) {
-    if (!qNorm) return true;
-
-    const { hay, compact, tokens } = haystack;
-    const qCompact = qNorm.replace(/\s+/g, "");
-
-    // Partial substring match: "lose" -> Lose Yourself, "kend" -> Kendrick Lamar.
-    if (compact.includes(qCompact)) return true;
-
-    // Multi-token fuzzy match: "god plan" can find "God's Plan".
-    const qTokens = qNorm.split(" ").filter(Boolean);
-    if (qTokens.every((token) => hay.includes(token))) return true;
-
-    // Single-word typo/suffix tolerance for short inputs like "emine" -> Eminem.
-    if (qTokens.length === 1 && qTokens[0].length >= 5) {
-      const target = qTokens[0];
-      return tokens.some((token) => {
-        if (token.length < 4 || Math.abs(token.length - target.length) > 2) return false;
-        const limit = target.length >= 6 ? 2 : 1;
-        return levenshtein(token.slice(0, target.length), target) <= limit;
-      });
-    }
-
-    return false;
-  }
-
-  // Global ScrollTrigger.refresh() walks the page's triggers — routed
-  // through the shared debounced scheduler so keystroke bursts settle
-  // into a single refresh.
-  function refreshScroll() {
-    scheduleRefresh();
-  }
-
-  // One visibility pass. BROWSING: the chip filter owns which group is on
-  // screen and every card is visible. SEARCHING: the query owns visibility
-  // ACROSS THE WHOLE COLLECTION - each group with a hit is revealed, each head
-  // reads "matches / total", and the readout counts every song. That is why the
-  // old "no match in this genre, try that one instead" jump button is gone: a
-  // query now covers every genre, so there is no elsewhere to send anyone to.
-  function applySearch() {
-    const trimmed = input.value.trim();
-    const qNorm = normalize(trimmed);
-    // qNorm and NOT trimmed, and the difference was a silent wrong answer: a
-    // query in a script normalize() dropped came out as the empty string, but
-    // `searching` was still true, and matchCard's `if (!qNorm) return true`
-    // then called every one of the 534 cards a hit. The readout said
-    // "534 / 534" and all fifteen groups expanded, as though the query had
-    // matched the entire collection.
-    const searching = Boolean(qNorm);
-    const hitsByGenre = new Array(genres.length).fill(0);
-    let total = 0;
-
-    cards.forEach((card, i) => {
-      const hit = searching ? matchCard(cardHaystacks[i], qNorm) : true;
-      const gi = genreIndexOf[i];
-      if (hit) {
-        total++;
-        if (gi >= 0) hitsByGenre[gi]++;
-      }
-      card.classList.toggle("is-search-hidden", searching && !hit);
-    });
-
-    genres.forEach((genre, gi) => {
-      const hits = hitsByGenre[gi];
-      genre.hidden = searching ? hits === 0 : gi !== activeGenre;
-      genre.classList.toggle("is-search-empty", searching && hits === 0);
-      if (genreCounts[gi]) {
-        genreCounts[gi].textContent = searching
-          ? hits + " / " + genreTotals[gi]
-          : genreTotals[gi] + " tracks";
-      }
-    });
-
-    // the counter is a search readout: hidden while browsing, and a cross-genre
-    // total while searching
-    count.hidden = !searching;
-    count.textContent = total + " / " + cards.length;
-    clear.hidden = !searching;
-    empty.hidden = !searching || total > 0;
-    refreshScroll();
-  }
-
-  function clearSearch() {
-    input.value = "";
-    applySearch();
-  }
-
-  // Switching genre used to inherit the previous group's scroll depth, so a
-  // position deep in a long group landed at (or past) the end of a shorter
-  // one. Bring the new group's head back under the sticky bar instead. Only
-  // ever scrolls up: near the top of the panel the group is already in view
-  // and moving the page there would just be noise.
-  function alignGenreTop(genre, always) {
-    // Nothing in this toolbar is pinned any more (asked for): the tab strip, the
-    // search row and the genre rail all scroll away with the list, so what the
-    // swapped-in group has to clear is the FIXED nav bar - the only thing still
-    // on screen at the top of the viewport.
-    if (!genre) return;
-    // Off the nav's own rect, which is honest at every scroll position because
-    // the nav is position: fixed. The old read was the rail's pinned geometry
-    // out of CSS (computed top + offsetHeight): a sticky bar that is momentarily
-    // un-pinned - the document shrank under the scroll position - reports a rect
-    // above the viewport and lands the group hundreds of pixels short. That trap
-    // left with the pinning; do not reintroduce a sticky read.
-    const nav = document.querySelector("header.nav");
-    const clear = (nav ? nav.getBoundingClientRect().bottom : 0) + 16;
-
-    if (always) {
-      // A search jump can travel thousands of pixels, and .genre blocks are
-      // content-visibility: auto - so any delta computed from live rects is
-      // measured against 60rem ESTIMATES for every block in between. Measured:
-      // a POP -> HIP-HOP jump landed 359px off, and a "correct it once" pass
-      // made it 834px off, because each re-measure materialises another block
-      // and moves the target again. Hand it to the engine: scroll-margin-top
-      // parks the group head under the fixed nav bar, and the browser's scroll
-      // anchoring is exactly the mechanism that absorbs blocks materialising
-      // mid-flight.
-      genre.style.scrollMarginTop = Math.round(clear) + "px";
-      genre.scrollIntoView({ block: "start", behavior: "instant" });
-      if (lenis) lenis.scrollTo(window.scrollY, { immediate: true, force: true });
-      return;
-    }
-
-    // Browsing only ever nudges UP: the swapped-in group is normally already in
-    // view and moving the page would be noise. It travels a few pixels inside
-    // blocks that are already materialised, so live rects are honest here.
-    const delta = genre.getBoundingClientRect().top - clear;
-    if (delta > -2) return;
-    const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-    const target = Math.min(Math.max(window.scrollY + delta, 0), max);
-    // Jump instead of tweening: the swap has already re-laid out the page, so
-    // an animation would have to start from the clamped near-bottom position
-    // and would flash unrelated content on its way back up. An instant cut
-    // also matches the "replaced the list" reading of a chip click.
-    //
-    // Lenis first, so an in-flight momentum scroll is cancelled. Then verify,
-    // because scrollTo() early-returns when the target equals the target it
-    // last committed - and this target is the SAME document position for every
-    // group (the playlist start), so a switch after one that already landed
-    // there would silently do nothing. Its cached limit can also be a resize
-    // behind, clamping the jump short. The native fallback covers both, and
-    // Lenis re-syncs itself from the resulting scroll event.
-    if (lenis) lenis.scrollTo(target, { immediate: true, force: true });
-    if (Math.abs(window.scrollY - target) > 1) window.scrollTo(0, target);
-  }
-
-  // ---- genre filter chips (rendered by music-stage.js) ----
-  function selectGenre(index) {
-    if (!Number.isFinite(index) || index < 0 || index >= genres.length) return;
-    activeGenre = index;
-    chips.forEach((chip, i) => {
-      const on = i === index;
-      chip.classList.toggle("is-active", on);
-      chip.setAttribute("aria-pressed", on ? "true" : "false");
-    });
-    applySearch();
-    // While searching, a chip is "take me to that group's results" - and a group
-    // with no hits has nothing to travel to.
-    const searching = Boolean(input.value.trim());
-    if (!searching || !genres[index].hidden) alignGenreTop(genres[index], searching);
-  }
-
-  if (filterMount) {
-    chips.forEach((chip) => {
-      chip.addEventListener("click", () => {
-        selectGenre(parseInt(chip.getAttribute("data-genre"), 10));
-      });
-    });
-    // the chip row scrolls horizontally on phones; Chromium does not always
-    // bring a keyboard-focused chip fully into view, so do it explicitly
-    filterMount.addEventListener("focusin", (e) => {
-      const chip = e.target.closest(".genre-chip");
-      if (chip) chip.scrollIntoView({ block: "nearest", inline: "nearest" });
-    });
-  }
-
-  // ---- random pick: play one card from whatever is currently browsable ----
-  if (randomBtn) {
-    randomBtn.addEventListener("click", () => {
-      const pool = cards.filter((card, i) => {
-        return !(cardGenres[i] && cardGenres[i].hidden) &&
-          !card.classList.contains("is-search-hidden");
-      });
-      if (!pool.length) return;
-      pool[Math.floor(Math.random() * pool.length)].click();
-    });
-  }
-
-  // Coalesce keystroke bursts: each frame applies at most one search pass
-  // over the 534 cards instead of one per input event.
-  let searchFrame = 0;
-  function requestApply() {
-    if (searchFrame) return;
-    searchFrame = requestAnimationFrame(() => {
-      searchFrame = 0;
-      applySearch();
-    });
-  }
-
-  // IME safety: skip filtering during pinyin/IME composition — every
-  // intermediate keystroke would otherwise run a full panel filter.
-  let composing = false;
-  input.addEventListener("compositionstart", () => { composing = true; });
-  input.addEventListener("compositionend", () => {
-    composing = false;
-    requestApply();
-  });
-  input.addEventListener("input", () => {
-    if (!composing) requestApply();
-  });
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") clearSearch();
-  });
-  clear.addEventListener("click", () => {
-    clearSearch();
-    input.focus();
-  });
-}
-
-function initNetEaseLinks() {
-  const drawer = document.getElementById("music-drawer");
-  if (!drawer) return;
-
-  // desktop platform check: only try the orpheus:// app scheme on Win/Mac/Linux
-  // (belt-and-braces: check platform AND user agent so mobile browsers never
-  // get the desktop scheme even when the platform string is unreliable)
-  const ua = navigator.userAgent || "";
-  const looksMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua);
-  const isDesktop = /Win|Mac|Linux/.test(navigator.platform || "") && !looksMobile;
-
-  // Launch the desktop app via the OFFICIAL orpheus:// deep-link format, read
-  // off NetEase's own web player (s3.music.126.net/web/s/core_*.js):
-  //   location.href = "orpheus://" + btoa(JSON.stringify(hrefParam))
-  // where hrefParam starts as {type, id, cmd:"play", channel:"webset"} and its
-  // TYPE_MAP case 13 is the playlist. The song branch keeps the payload this
-  // site has always shipped (no channel field) because that one is known to
-  // land; the playlist branch copies the official call verbatim.
-  function buildAppUrl(type, id) {
-    const payload = type === "playlist"
-      ? { type: "playlist", id: id, cmd: "play", channel: "webset" }
-      : { type: "song", id: id, cmd: "play" };
-    const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-    return "orpheus://" + b64;
-  }
-
-  function tryAppLaunch(type, id) {
-    const url = buildAppUrl(type, id);
-    try {
-      const a = document.createElement("a");
-      a.href = url;
-      a.style.display = "none";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      return true;
-    } catch (err) {
-      return false;
-    }
-  }
-
-  // Dual strategy: prefer the desktop app; fall back to the web player.
-  // `type` is the app's own vocabulary: "song" or "playlist".
-  function openInApp(type, id) {
-    const webUrl = "https://music.163.com/#/" + type + "?id=" + id;
-
-    // ---- mobile: launch the phone app directly ----
-    if (looksMobile) {
-      if (/Android/i.test(ua)) {
-        // Android: intent:// lets Chrome launch the app and auto-fall back to
-        // the web player when the app isn't installed (no timer needed).
-        const fallback = encodeURIComponent(webUrl);
-        location.href =
-          "intent://" + type + "/" + id + "/#Intent;scheme=orpheus;package=com.netease.cloudmusic;S.browser_fallback_url=" + fallback + ";end";
-        return;
-      }
-      // iOS / other mobile: orpheus:// scheme pulls the app and plays;
-      // if nothing handles it, fall back to the web player after a beat.
-      location.href = "orpheus://" + type + "/" + id;
-      setTimeout(() => {
-        if (!document.hidden) window.open(webUrl, "_blank", "noopener");
-      }, 1500);
-      return;
-    }
-
-    // ---- desktop: unchanged dual strategy ----
-    if (!isDesktop) {
-      window.open(webUrl, "_blank", "noopener");
-      return;
-    }
-    const launched = tryAppLaunch(type, id);
-    if (!launched) {
-      window.open(webUrl, "_blank", "noopener");
-      return;
-    }
-    let stillVisible = true;
-    const onHide = () => { stillVisible = false; };
-    document.addEventListener("visibilitychange", onHide, { once: true });
-    window.addEventListener("blur", onHide, { once: true });
-    setTimeout(() => {
-      document.removeEventListener("visibilitychange", onHide);
-      window.removeEventListener("blur", onHide);
-      if (stillVisible) {
-        window.open(webUrl, "_blank", "noopener");
-      }
-    }, 1200);
-  }
-
-  // The music cards now open the unified detail layer; these two keep the
-  // NetEase deep-link strategy for the two external actions the page still
-  // renders: the song detail's OPEN IN NETEASE and the genre head's own
-  // OPEN PLAYLIST.
-  openNetEaseSong = (id) => openInApp("song", id);
-  openNetEasePlaylist = (id) => openInApp("playlist", id);
-
-  /* The genre-head links are rendered by js/music-stage.js (fifteen of them, one
-     per group), so this is delegated rather than bound per element - a re-render
-     cannot orphan it. Modified clicks are left alone so "open in new tab" still
-     reaches the web player. */
-  const genreLinks = document.getElementById("panel-music");
-  if (genreLinks) {
-    genreLinks.addEventListener("click", (e) => {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const link = e.target.closest(".genre-playlist");
-      if (!link || !link.dataset.playlistId) return;
-      e.preventDefault();
-      openNetEasePlaylist(link.dataset.playlistId);
-    });
-  }
-}
-
-initNetEaseLinks();
-
-initMusicSearch();
 
 /* ---------- nav active section ---------- */
 

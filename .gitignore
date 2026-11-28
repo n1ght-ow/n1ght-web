@@ -11,19 +11,4 @@ js/main.preview.js
 .zcode/
 .commandcode/
 
-# archive/music-refresh: bulk binaries from the D:\fw audit. The screenshots
-# live on the owner's machine and every image here is regenerable from the
-# scripts + JSON that ARE tracked, so only the text artifacts go in the repo.
-archive/music-refresh/covers/
-archive/music-refresh/review-assets/
-archive/music-refresh/shots/
-archive/music-refresh/imgcache/
-archive/music-refresh/*.png
-archive/music-refresh/mock.html
-archive/music-refresh/probe.html
-archive/music-refresh/probe-long.html
-archive/music-refresh/books-preview.html
-archive/music-refresh/shelf-*.html
-archive/music-refresh/spine-font-probe.html
-archive/music-refresh/cjk-spine-probe.html
-archive/music-refresh/*.txt
+archive/books-refresh/books-preview.html

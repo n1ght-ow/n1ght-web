@@ -11,8 +11,8 @@
      1  tokens        2  reset        3  type roles   4  layout
      5  focus/skip    6  nav          7  hero         8  section head
      9  photography  10  poem        11  archive     12  ledgers
-    13  music        14  games       15  about       16  footer
-    17  lightbox     18  responsive  19  reduced motion
+    13  games        14  about       15  footer      16  lightbox
+    17  responsive   18  reduced motion
 
    Type is a TWO-REGISTER system, not a continuous ramp: a tight UI
    register (11/13/15/16) and a display register that is now UNMODULAR
@@ -124,7 +124,6 @@
   --ground-books: linear-gradient(180deg, #F6F9EA 0%, #EDF2D8 100%);
   --ground-films: linear-gradient(180deg, #EFF1FF 0%, #E3E8FF 100%);
   --ground-series: linear-gradient(180deg, #FEF1E9 0%, #FBE3D4 100%);
-  --ground-music: linear-gradient(180deg, #F8F2FF 0%, #EDE3FF 100%);
   --ground-games: linear-gradient(180deg, #F4FAE4 0%, #E7F2CB 100%);
   --ground-poem: linear-gradient(180deg, #FAF6EE 0%, #F1EEE8 100%);
 
@@ -177,9 +176,7 @@
   --sp-5: 1.5rem;   --sp-6: 2rem;     --sp-8: 4rem;
   --sp-9: 5rem;
   --section-y: clamp(5rem, 9vw, 7.5rem);
-  /* The one gap between the three archive/music bars and the list. Every bar
-     measures its spacing from this, so the stack stays even (measured 24 / 24 /
-     24). It is also the tab strip's distance to all seven panels. */
+  /* The archive bar's fixed distance to its panels. */
   --bar-gap: var(--sp-5);
   /* ONE gutter for every chapter head AND for the poem's two columns: the
      masthead's two cells, the verse's columns and the colophon all read it, so
@@ -882,19 +879,9 @@ h1, h2 { text-wrap: balance; }
   border-radius: var(--radius-pill);
   width: max-content;
   max-width: 100%;
-  /* the gap to every panel, and the first of the three even gaps of the bar
-     stack (search row, genre rail): 24 / 24 / 24, all from one token. */
+  /* the gap from the archive tab strip to every panel */
   margin-block-end: var(--bar-gap);
 }
-
-/* A block of three bars used to sit here, all of it about matching one
-   colour across three layers that no longer exist: the lens rim's
-   brightening (which clipped to pure white over paper and read as a halo
-   around the selected pill), the two music bars' --glass-blur, and the
-   parity note explaining why. All three questions were questions ABOUT
-   the material, so when the material went they went with it. The three
-   bars are now the same sheet with the same frame, which is why there is
-   nothing left to equalise. */
 
 .tab-btn {
   /* the glass layers are absolutely positioned siblings, so an unpositioned
@@ -966,10 +953,9 @@ h1, h2 { text-wrap: balance; }
 /* ============ 11b. THE SHELF NOTE (one per panel, seven in all) ============
    Each of the seven shelves opens with one sentence saying what was kept and how
    it was chosen. They are not decoration and they are not a second title: the
-   panel already has a head (TWENTY-FOUR FILMS, a genre name, the shelf itself),
-   and this is the one line in the panel that speaks in the first person, which
-   is what the chapter was missing - a reader could see WHAT was kept and never
-   WHY, and the seven shelves therefore read as one undifferentiated pile.
+   panel already has its own head, and this is the one line in the panel that
+   speaks in the first person, which is what the chapter was missing - a reader
+   could see WHAT was kept and never WHY.
 
 /* ONE ELEMENT, SEVEN PLACES, ONE MEASURE. The panels have seven completely
    different internal heads, so the note is finished by one rule and lets each
@@ -982,12 +968,8 @@ h1, h2 { text-wrap: balance; }
    the accent hue means "you can click this" everywhere on this site, and this
    sentence cannot be clicked.
 
-   THE DISTANCE IS ONE VALUE FOR ALL SEVEN: --bar-gap, the token the archive's own
-   stack is already built from (tab strip -> panel, and inside the music drawer,
-   search row -> genre row -> list). The first version gave five of the six
-   --sp-6 and the music note --bar-gap, which put two different gaps under the
-   same sentence depending on which tab was open - and the tab strip is the
-   thing all seven hang off.
+   THE DISTANCE IS ONE VALUE FOR ALL SEVEN: --bar-gap keeps each panel note on
+   the same spacing system as the archive tab strip all seven hang off.
 
    WHY THERE IS A WRAPPER. .panel-note is not decoration: js/reel-stage.js
    renders with `stage.innerHTML = ""`, and for films and series the stage
@@ -1029,67 +1011,6 @@ h1, h2 { text-wrap: balance; }
    The second level is now carried by weight and colour on the SAME line
    rather than by a smaller size on its own line - the move desengs uses on
    96 rows, and the one that scales from 6 to 96 without changing anything. */
-.idx-list { display: grid; }
-
-.idx-row {
-  display: grid;
-  grid-template-columns: 2.75rem minmax(0, 1fr);
-  column-gap: var(--sp-4);
-  align-items: start;
-  padding-block: clamp(1.5rem, 3vw, 2.75rem);
-  transition: opacity 0.2s var(--ease-out);
-}
-
-/* Hover dims the siblings and snaps the row under the cursor. Two moves, no
-   new elements, and it works the same at 5 rows and at 96. */
-@media (hover: hover) and (pointer: fine) {
-  .idx-list:has(.idx-row:hover) .idx-row:not(:hover) { opacity: 0.5; }
-  .idx-row:hover { transition-duration: 0s; }
-}
-
-.idx-mid {
-  grid-column: 2;
-  grid-row: 1;
-  display: block;
-  min-width: 0;
-}
-
-/* The rank rule that used to live here (.idx-no) went with the last list that
-   had one. What is left of the idiom is the mono role itself; a rank is a
-   label, not a cell, and it is deliberately not tabular. */
-
-.idx-title {
-  display: inline;
-  font-size: var(--fs-h4);
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  line-height: 1.25;
-  color: var(--color-text);
-}
-
-.idx-title a {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-decoration-color: transparent;
-  text-underline-offset: 4px;
-  transition: text-decoration-color 0.2s var(--ease-out);
-}
-
-.idx-title a:hover,
-.idx-title a:focus-visible { text-decoration-color: var(--color-accent); }
-
-/* inline, on the title's own line, a step down in weight and colour but NOT
-   in size - no cliff */
-.idx-meta {
-  display: inline;
-  margin-inline-start: var(--sp-3);
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-
 /* ============ 12b. SPORT (five-slide accordion) ============
    Ported from Framer's "image animation"
    (framer.com/m/image-animation-HJJB.js@ga1htqyg5UFN9eq91lZh). Upstream is five
@@ -1329,431 +1250,6 @@ html:not(.js) .sport-card:first-child .sport-cap {
    guarantees the caption's contrast even if every photo is missing. */
 .sport-item { background-image: linear-gradient(var(--ink-950), var(--ink-950)); }
 
-/* ============ 12. MUSIC ============ */
-
-/* NOTHING in this toolbar is pinned any more (asked for): the tab strip, the
-   search row and the genre rail all scroll away with the list. That is also why
-   the rail could stop being a hand-rolled 16% plate - with no list sliding
-   under it, it is just the third glass tray, so all three are real .glass
-   elements and glass.css's three fallback blocks cover them at once. The
-   hand-rolled fallback block that used to sit here is gone with the plate. */
-.music-bar { margin-block: 0; }
-
-/* ---------------------------------------------------------------------
-   The music toolbar: two printed trays, the same object as the tab strip above
-   them (AGENTS.md, "三条 bar" - that section counts all three bars on the
-   page, of which these are the two in the music panel). Nothing here is pinned.
-
-   #genre-filter is a SIBLING of .music-bar, not a child (see index.html): they
-   are the two bars of one toolbar, so the nesting buys layout only.
-
-   The geometry is the tab strip's, NOT the Blur Navigation reference's: 6px of
-   tray around 40px items, 4px between them. The WIDTHS are deliberately left
-   un-unified (measured 577 / 1275 / 1180): the three read as one family through
-   the material and stay three separate things through their width and their
-   level in the page, which is what "don't make it one toolbar" asks for.
-   --------------------------------------------------------------------- */
-.music-search {
-  /* the tray. The layers are absolute; .glass__content below is the row. */
-  padding: 6px;
-}
-
-/* The live controls have to ride above the two backdrop layers, exactly like
-   .tab-btn does in the tab strip. */
-.music-search > .glass__content {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: nowrap;
-}
-
-.genre-filter {
-  /* Third glass tray, the same material as the tab strip and the search row.
-     The hand-rolled Blur Navigation plate is retired together with the pinning
-     (16% paper / blur(26px) / sticky / ink-12% ring): at 72% paper the muted
-     chip labels clear 4.5:1 over anything that used to slide under it, so that
-     material's acknowledged contrast failure is gone with it. */
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
-  /* A PHONE CORNER, NOT A CAPSULE, AND THE SEARCH ROW'S WIDTH (asked for,
-     third revision): this plate is now exactly as wide as the search row above
-     it - it is a plain block in .music-drawer, so 100% IS that column - and its
-     corners are quarter circles. The shape lock only has four radii, so 22px
-     (--radius-lg) is the one legal "big rounded rectangle": measured against a
-     96px tall plate it still reads as a rectangle, where --radius-pill gave a
-     48px stadium end.
-     The frame keeps the 2px of the other two bars. It used to be 9px here, on
-     the reasoning that a lens rim has to be thick; a printed trim line has the
-     opposite requirement, and 9px of cobalt on a 96px plate is a frame, not a
-     rule. The nav-width maths (--rail-w) is retired - do not copy it back. */
-  --glass-radius: var(--radius-lg);
-  /* The tab strip's tray geometry: 6px around 40px items, and the same single
-     gap above and below. Tint, blur, rim and elevation come from .glass -
-     do not re-declare them here. */
-  padding: 6px;
-  margin-block: var(--bar-gap);
-}
-
-/* The field keeps no box of its own: the caret and the placeholder are the
-   whole affordance until it is focused, when the underline appears. */
-.music-search-input {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  color: var(--color-text);
-  /* inset from the tray rim, like the chips and the tab items */
-  padding: 0.7em 0.95em;
-  border: 0;
-  /* the focus cue rides this edge - see the focus rules below */
-  border-block-end: 1px solid transparent;
-  border-radius: var(--radius-pill);
-  background: none;
-  box-shadow: none;
-}
-
-.music-search-input::placeholder { color: var(--color-text-muted); text-transform: uppercase; }
-
-/* 320px is the narrow end and the placeholder is the only thing that has to
-   give: the field's content box is 148px down there (input 178 minus the two
-   15.2px insets) and the label measures 239px, so it was cut mid-word at
-   "SEARCH TITLE OR ART". The field keeps its own box and its label is now
-   ellipsised instead of sliced. The real fix is that the row is a search box:
-   what it needs to say is that you can type here, and the label is only an
-   example - AGENTS.md's own rule for placeholders. */
-.music-search-input {
-  text-overflow: ellipsis;
-}
-
-/* The focus cue is this underline, not a ring around the row. The row has no
-   box of its own, so a 2px gold rectangle drawn 3px outside it read as a
-   picture frame (user: the gold frame had to go). A text
-   field matches :focus-visible on click as well as on Tab, so the underline
-   plus the caret is the visible replacement for the input's own outline -
-   this is not an outline removed without one. The small buttons inside the row
-   (clear / SHUFFLE) keep the global focus ring; they are controls, not the row. */
-.music-search-input:focus,
-.music-search-input:focus-visible {
-  outline: none;
-  border-block-end-color: var(--color-text-muted);
-}
-
-.music-random,
-.music-search-clear {
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.7em 1.15em;
-  min-height: 40px;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out), box-shadow 0.18s var(--ease-out), transform 0.15s var(--ease-out);
-}
-
-/* The single solid primary action of this view, kept solid ink on paper:
-   the reference parks its one CTA pill at the right end of the bar and this
-   is the same slot, inverted for a paper tray. */
-.music-random { flex: none; }
-.music-random:active { transform: scale(0.96); }
-
-/* A bare item inside the tray: no box, no hairline. The pill on hover is the
-   whole affordance, exactly like a nav item in the reference. */
-.music-search-clear {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-  padding-inline: 0.9em;
-  color: var(--color-text-secondary);
-  background: none;
-}
-.music-search-clear:hover { color: var(--color-text); background: var(--color-hover-wash); }
-.music-search-clear:active { transform: scale(0.96); }
-
-.music-search-count {
-  flex: none;
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-.music-search-empty {
-  display: flex;
-  margin-block-start: var(--sp-2);
-  align-items: center;
-  gap: var(--sp-3);
-  flex-wrap: wrap;
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-}
-
-/* the "no match here, try that genre" jump button is gone with the cross-genre
-   search: a query now covers every genre, so there is no elsewhere to send
-   anyone to. */
-
-/* These live IN the tray (see the toolbar block above) and carry no box of
-   their own: the pill on hover and the filled pill when active are the whole
-   state language. That is what makes the row read as one bar with an item
-   lit, instead of a field of separately outlined chips. */
-.genre-chip {
-  /* the glass layers are absolutely positioned siblings, so a static button
-     would be painted underneath them and its label would vanish - the same
-     4 as .tab-btn, for the same reason. */
-  position: relative;
-  z-index: 4;
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: 0.06em;
-  color: var(--color-text-secondary);
-  padding: 0.7em 0.95em;
-  min-height: 40px;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  background: none;
-  transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out);
-}
-
-.genre-chip:hover { color: var(--color-text); background: var(--color-hover-wash); }
-
-.genre-chip.is-active { background: var(--glass-pill); color: var(--color-on-accent); }
-
-/* There is deliberately no tick marker on the active chip: it added width, so
-   the whole chip rail reflowed on every genre change. The filled pill carries
-   the state, and aria-pressed carries it for AT. The ::before this selector
-   does get below is the glass bead - inset: 0, so it adds no layout. */
-
-/* ---- the ink pill, as a PRINTED PLATE -------------------------------------
-   The music CTA and the active genre chip share one material: a solid sky fill,
-   one hard offset shadow in ink, and nothing else. They are written here rather
-   than as a shared class because the chips are generated by js/music-stage.js
-   and their state is an is-active toggle, so a markup-applied variant would
-   need JS plumbing for no gain.
-
-   This block used to carry the tab pill's whole liquid-glass recipe - a +-1px
-   bevel, two elevation shadows, a blur(6px) saturate(1.4) backdrop layer and an
-   axial bead - pasted in while the rest of the page moved to V3. A 24px
-   viewport-wide blur on every chip is not a print surface, and the recipe it
-   left behind is the reason this file still had the page's last backdrop read.
-   The pill's foreground is --color-on-accent because its background is an
-   accent: --glass-pill resolves to --sky-400. That said --color-on-dark here,
-   which is the same colour with the wrong name, and meant the two rules above
-   disagreed about why. */
-.music-random,
-.genre-chip.is-active {
-  position: relative;
-  isolation: isolate;
-  z-index: 4;
-  background: var(--glass-pill);
-  color: var(--color-on-accent);
-  box-shadow: 4px 4px 0 0 color-mix(in oklab, var(--ink-950) 34%, transparent);
-}
-
-/* The frame on these two plates is a 1px orange outline offset 1px
-   outward: the same mis-registered second pass every other surface gets,
-   and it costs no element. The old recipe drew a masked axial bead for the
-   same purpose and described a glass rim. */
-.music-random::after,
-.genre-chip.is-active::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  pointer-events: none;
-  outline: 1px solid color-mix(in oklab, var(--accent-2) 62%, transparent);
-  outline-offset: 1px;
-}
-
-/* Hover PUSHES THE PLATE INSTEAD OF LIFTING IT. The old recipe
-   deepened a four-layer shadow, which was the right move while these were a
-   tint over a blur. A printed plate has ONE shadow, so hover shortens that
-   one offset and adds a wash: the button reads as pressed rather than as
-   raised, which is the only hover a sheet of paper can do. */
-.music-random:hover,
-.genre-chip.is-active:hover {
-  box-shadow: 2px 2px 0 0 color-mix(in oklab, var(--ink-950) 34%, transparent);
-  background: color-mix(in oklab, var(--sky-400) 92%, var(--paper-000));
-}
-
-/* The three fallbacks that stood here are gone with the backdrop they
-   existed for. What replaces them is one line and it is a different
-   concern: where shadows are suppressed, a chip that separates itself only
-   by an offset would lose its edge, so it gets a rule. Same residue as
-   glass.css section 5, applied to the one surface on the page that is not
-   a .glass element and so cannot be reached from there. */
-@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  .music-random,
-  .genre-chip.is-active { box-shadow: none; outline: 2px solid var(--ink-950); }
-}
-
-.playlist { display: flex; flex-direction: column; gap: var(--sp-6); }
-
-/* 763 cards are built at boot and 15/16 of the genres are hidden with
-   display:none. Containment on the 16 top-level blocks captures the layout
-   and paint win without making each focusable row its own containment unit
-   (which would let a keyboard jump land on a row that was never rendered). */
-.genre {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 60rem;
-}
-
-.genre-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--sp-4);
-  padding-block-end: var(--sp-3);
-}
-
-.genre-title { font-size: var(--fs-h3); font-weight: 500; letter-spacing: var(--track-h3); line-height: 1.15; }
-
-.genre-count {
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-/* Right-hand cell of the genre head: the count, then the group's NetEase
-   playlist. That link is a quiet text action, not a pill - the music view's
-   one solid primary action is still SHUFFLE up in the search tray, and the
-   accent quota does not need a fifteenth accent thing. Auto margin keeps the
-   cell hard right even when the head wraps at 720px. */
-.genre-meta {
-  display: flex;
-  align-items: baseline;
-  gap: var(--sp-4);
-  margin-inline-start: auto;
-}
-
-.genre-playlist {
-  font-size: var(--fs-meta);
-  letter-spacing: var(--track-meta);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  /* accent hue = interactive (AGENTS.md, 色彩). The count sitting next to it
-     stays plain muted, so the one accent underline in this row is what says
-     "this one is a link". Only one genre is on screen at a time, so it is one
-     accent hit at a time. */
-  text-decoration-color: var(--color-accent-text);
-  transition: color 0.2s var(--ease-out), text-decoration-color 0.2s var(--ease-out);
-}
-
-.genre-playlist:hover,
-.genre-playlist:focus-visible {
-  color: var(--color-text);
-  text-decoration-color: var(--color-accent);
-}
-
-/* It is a 19px-tall text link, under the 40px desktop target floor. The
-   pseudo-element grows the hit area to 41px without changing the row's height
-   or the underline's position (the row is a flex item, so this box is
-   block-level and the inset resolves against it cleanly). */
-.genre-playlist { position: relative; }
-
-.genre-playlist::after {
-  content: "";
-  position: absolute;
-  inset: -11px -8px;
-}
-
-.artist-row { border-block-start: 0; }
-
-.artist-tracks {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: clamp(1.5rem, 4vw, 3.5rem);
-}
-
-/* ---------------------------------------------------------------------
-   The track row.
-
-   It used to be three text columns - a 2.6rem mono counter, the title, the
-   artist - with a hairline under every one of 108 rows, no artwork, and a
-   hover that tinted the row by 2.5% black (below the perceptual threshold of
-   most panels). That is a spreadsheet, not a shelf.
-
-   Now: the real cover, title and artist on ONE line separated by weight and
-   colour rather than by column, no rule between rows (Hardwax separates 700+
-   records with margin and spends its only hairline above the tracklist), and
-   no numbering at all - a personal collection is not a chart, and the
-   counter was a chart device.
-   --------------------------------------------------------------------- */
-.idx-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 64px minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: var(--sp-3);
-  align-items: center;
-  padding-block: var(--sp-2);
-  cursor: pointer;
-}
-
-.idx-cover {
-  display: block;
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-  background: var(--color-media-void);
-  box-shadow: inset 0 0 0 1px var(--color-media-ring);
-}
-
-.idx-cover-empty { display: block; }
-
-/* Hover lights the TEXT, not the row: the row tint was invisible, and
-   lighting two spans reads as a response rather than as a rendering
-   artifact. */
-.idx-card .idx-title,
-.idx-artist { transition: color 0.16s var(--ease-out); }
-
-.idx-card:hover .idx-title { color: var(--color-accent-text); }
-
-.idx-card .idx-title {
-  font-size: var(--fs-small);
-  font-weight: 400;
-  letter-spacing: -0.005em;
-  /* the row truncates with an ellipsis, so overflow is hidden; the padding
-     keeps the descenders inside the clip box or the 'y' tail gets cut and
-     "Maybe" reads as "Maube" */
-  line-height: 1.4;
-  padding-block: 0.12em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Sentence case, not uppercase mono. Caps + muted + tracked, repeated 108
-   times, turns the byline into texture; the project's own V2 notes already
-   retired decorative uppercase labels. */
-.idx-artist {
-  font-size: var(--fs-caption);
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--color-text-secondary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-
-.is-search-hidden { display: none !important; }
-
 /* ============ 13. GAMES ============
    The roster became a dial: one centred cover with the rest of the deck behind
    it, ported from Framer's Detent. Markup stays in index.html (#hof-grid,
@@ -1840,7 +1336,6 @@ html:not(.js) .sport-card:first-child .sport-cap {
 }
 
 @media (max-width: 900px) {
-  .artist-tracks { grid-template-columns: 1fr; }
   .footer-top { align-items: flex-start; flex-direction: column; }
 }
 
@@ -1958,41 +1453,6 @@ html:not(.js) .sport-card:first-child .sport-cap {
   .tabbar::-webkit-scrollbar { display: none; }
   .tab-btn { flex: 0 0 auto; }
   .tab-btn .no { display: none; }
-
-  /* THE TRACK ROW'S FIRST COLUMN IS THE COVER (asked for: the music list was
-     the densest thing on the page and it was densest in the wrong way). This
-     said 2.2rem - 35.2px - against a 64px .idx-cover, so the artwork overflowed
-     its own track by 29px and the title started 16px INSIDE it. Two columns of
-     that per row, 534 times, is the crowding: covers touching their titles and
-     nothing lining up down the list.
-     The column is now the cover's own width, which is the number the cover
-     already declares, and the title and the byline both start at 64 + 12 = 76px
-     - the same edge the genre title above them starts on. Nothing about the row
-     changes but its left edge. */
-  .idx-card { grid-template-columns: 64px minmax(0, 1fr); row-gap: 0.15rem; }
-  .idx-card .idx-artist { grid-column: 2; }
-
-  .music-search-input { font-size: 16px; } /* iOS zooms a focused input under 16px */
-
-  /* Same as the tab strip above: the rail is a scroller at this width,
-     and in a printed palette that changes nothing about the bar itself. */
-  .genre-filter { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: none; padding-inline-end: var(--sp-5); }
-  .genre-filter::-webkit-scrollbar { display: none; }
-  .genre-chip { flex: 0 0 auto; }
-
-  /* The selected chip carries its OWN ink layer as a backdrop pseudo
-     (see .genre-chip.is-active::after), and that pseudo is not inside
-     .genre-filter's hide list above - so at this width the chip would still
-     sample a moving backdrop inside a scroller, which is the one thing the
-     glass rules forbid. It gets the same treatment as the solid fallback:
-     real ink, no sampling. */
-  .genre-chip.is-active { background: var(--ink-950); }
-  .genre-chip.is-active::after { display: none; }
-
-  /* At this width "136 首 / OPEN PLAYLIST" no longer fits beside a two-line
-     genre title, so the head wraps and the meta cell keeps the right edge. */
-  .genre-head { flex-wrap: wrap; }
-
 
 }
 

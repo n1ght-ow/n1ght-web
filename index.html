@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>N1GHT CHXN9 — A personal collection</title>
-  <meta name="description" content="46 photographs, a bookshelf, poems, paintings, music, films and games. Browse the personal collection of N1GHT CHXN9 and make a collection of your own.">
+  <meta name="description" content="46 photographs, a bookshelf, poems, paintings, films and games. Browse the personal collection of N1GHT CHXN9 and make a collection of your own.">
   <meta name="theme-color" content="#f5f4f0">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="N1GHT CHXN9">
   <meta property="og:title" content="N1GHT CHXN9 — A personal collection">
-  <meta property="og:description" content="Photographs, books, music and things to come back to. A personal collection, open to browse.">
+  <meta property="og:description" content="Photographs, books, paintings and things to come back to. A personal collection, open to browse.">
   <link rel="icon" href="assets/icons/folio-mark.svg?v=1" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/icons/night-enamel-apple-180.png?v=1" sizes="180x180">
   <!-- The refraction gate that used to live here is gone with the
@@ -19,7 +19,7 @@
   <script>document.documentElement.classList.add("js");</script>
   <link rel="preload" href="fonts/BricolageGrotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/fonts.css?v=16">
-  <link rel="stylesheet" href="css/style.css?v=110">
+  <link rel="stylesheet" href="css/style.css?v=111">
   <link rel="stylesheet" href="css/glass.css?v=13">
   <link rel="stylesheet" href="css/reel-stage.css?v=18">
   <link rel="stylesheet" href="css/film-stage.css?v=18">
@@ -27,21 +27,22 @@
   <link rel="stylesheet" href="css/book-shelf.css?v=13">
   <link rel="stylesheet" href="css/games-stage.css?v=9">
   <!-- Atelier is the new gallery layer, after the existing component geometry. -->
-  <link rel="stylesheet" href="css/atelier.css?v=9">
+  <link rel="stylesheet" href="css/atelier.css?v=10">
   <link rel="stylesheet" href="css/atelier-photo.css?v=10">
-  <link rel="stylesheet" href="css/atelier-archive.css?v=15">
+  <link rel="stylesheet" href="css/atelier-archive.css?v=16">
   <link rel="stylesheet" href="css/atelier-poem.css?v=6">
   <link rel="stylesheet" href="css/curator-desk.css?v=12">
-  <link rel="stylesheet" href="css/atelier-viewer.css?v=6">
-  <link rel="stylesheet" href="css/gallery.css?v=9">
+  <link rel="stylesheet" href="css/atelier-viewer.css?v=7">
+  <link rel="stylesheet" href="css/gallery.css?v=10">
   <link rel="stylesheet" href="css/paintings-stage.css?v=1">
-  <link rel="stylesheet" href="css/folio.css?v=2">
+  <link rel="stylesheet" href="css/folio.css?v=3">
   <link rel="stylesheet" href="css/folio-photo.css?v=1">
-  <link rel="stylesheet" href="css/folio-archive.css?v=1">
+  <link rel="stylesheet" href="css/folio-archive.css?v=2">
   <link rel="stylesheet" href="css/folio-curate.css?v=1">
   <link rel="stylesheet" href="css/liminal-hero.css?v=1">
   <link rel="stylesheet" href="css/liminal-footer.css?v=1">
   <link rel="stylesheet" href="css/mode-switch.css?v=1">
+  <link rel="stylesheet" href="css/apps.css?v=1">
 </head>
 <body>
 
@@ -65,7 +66,7 @@
         <a href="#photo">Photography</a>
         <a href="#archive">Archive</a>
         <a href="#curate">Curate</a>
-        <a href="myscore/">MyScore</a>
+        <a href="#apps">Apps</a>
       </nav>
       <a class="mode-link" href="3d/" lang="zh-CN">进入 3D 世界<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
@@ -79,7 +80,7 @@
       <div class="hero-inner shell liminal-hero__content">
         <div class="liminal-hero__lead">
           <h1 class="hero-wordmark" id="hero-title"><span class="liminal-word"><span>N1GHT</span></span> <span class="liminal-word"><span>CHXN9</span></span></h1>
-          <p class="liminal-hero__description">Photographs, books, music<br>and things I come back to.</p>
+          <p class="liminal-hero__description">Photographs, books, paintings<br>and things I come back to.</p>
           <a class="liminal-enter" href="#photo"><span>Step inside</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M5 19h14V5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
         <div class="liminal-hero__bottom">
@@ -569,8 +570,7 @@
           <span class="glass-pill" id="tab-pill" aria-hidden="true"><span class="glass-pill__body"></span></span>
           <button class="tab-btn is-active" id="tab-books" type="button" role="tab" aria-selected="true" aria-controls="panel-books" data-tab="books"><span class="no" aria-hidden="true">01</span>Books</button>
           <button class="tab-btn" id="tab-poems" type="button" role="tab" aria-selected="false" aria-controls="panel-poems" data-tab="poems" tabindex="-1"><span class="no" aria-hidden="true">02</span>Poems</button>
-          <button class="tab-btn" id="tab-paintings" type="button" role="tab" aria-selected="false" aria-controls="panel-paintings" data-tab="paintings" tabindex="-1">Paintings</button>
-          <button class="tab-btn" id="tab-music" type="button" role="tab" aria-selected="false" aria-controls="panel-music" data-tab="music" tabindex="-1"><span class="no" aria-hidden="true">03</span>Music</button>
+          <button class="tab-btn" id="tab-paintings" type="button" role="tab" aria-selected="false" aria-controls="panel-paintings" data-tab="paintings" tabindex="-1"><span class="no" aria-hidden="true">03</span>Paintings</button>
           <button class="tab-btn" id="tab-sport" type="button" role="tab" aria-selected="false" aria-controls="panel-sport" data-tab="sport" tabindex="-1"><span class="no" aria-hidden="true">04</span>Sport</button>
           <button class="tab-btn" id="tab-series" type="button" role="tab" aria-selected="false" aria-controls="panel-series" data-tab="series" tabindex="-1"><span class="no" aria-hidden="true">05</span>Series</button>
           <button class="tab-btn" id="tab-films" type="button" role="tab" aria-selected="false" aria-controls="panel-films" data-tab="films" tabindex="-1"><span class="no" aria-hidden="true">06</span>Films</button>
@@ -609,56 +609,6 @@
           <!-- PANEL: SERIES -->
           <div class="tab-panel" id="panel-series" role="tabpanel" aria-labelledby="tab-series" data-panel="series" tabindex="0">
             <div data-series-stage="auto"></div>
-          </div>
-
-          <!-- PANEL: MUSIC -->
-          <div class="tab-panel" id="panel-music" role="tabpanel" aria-labelledby="tab-music" data-panel="music" tabindex="0">
-            <div class="music-drawer" id="music-drawer">
-              <div class="music-bar">
-                <!-- The search row is a printed tray: the same object as the tab
-                     strip above it and the genre rail below it (AGENTS.md,
-                     "三条 bar"). .glass__body is the paper, .glass__edge is the
-                     cobalt crop line, and .glass__content lifts the live
-                     controls above both of them - statically positioned children
-                     would be painted underneath their own tray. No .glass__press
-                     here on purpose: a text field is not a button, and a rim
-                     flash on every focus-click is noise. -->
-                <div class="music-search glass glass--pill glass--spot" id="music-search">
-                  <div class="glass__body" aria-hidden="true"></div>
-                  <div class="glass__edge" aria-hidden="true"></div>
-                  <div class="glass__content">
-                    <label class="sr-only" for="music-search-input">Search songs by title or artist</label>
-                    <input class="music-search-input" id="music-search-input" type="search" placeholder="Search title or artist" autocomplete="off" spellcheck="false">
-                    <button class="music-search-clear" id="music-search-clear" type="button" aria-label="Clear search" hidden>&times;</button>
-                    <!-- aria-live because main.js rewrites this on every keystroke
-                         and the sibling empty-state below already announces; a
-                         search that returns "39 / 534" was the one half of this
-                         interaction a screen reader never heard. -->
-                    <span class="music-search-count" id="music-search-count" role="status" aria-live="polite" aria-atomic="true" hidden></span>
-                    <!-- The one action pill of this tray sits at its right end,
-                         the way the reference bars park their CTA. It is last in
-                         the DOM as well as on screen, so nothing is reordered
-                         out from under the Tab key. -->
-                    <button class="music-random" id="music-random" type="button" aria-label="Pick a song at random"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h2c5 0 9 12 14 12h2M17 14l4 4-4 4M3 18h2c2 0 4-3 5-5m4-2c2-3 3-5 5-5h2M17 2l4 4-4 4"/></svg><span>Pick a song</span></button>
-                  </div>
-                </div>
-                <p class="music-search-empty" id="music-search-empty" role="status" aria-live="polite" hidden>
-                  <span id="music-search-empty-text">No match</span>
-                </p>
-              </div>
-              <!-- The genre rail is a SIBLING of the search row, not a child:
-                   they are the two bars of one toolbar and BOTH scroll away
-                   with the list (nothing in this panel is pinned - the pinned
-                   rail was retired by request), so the nesting buys layout
-                   only. The chips are appended by js/music-stage.js, which
-                   only ever appends, so the tray layers stay put. -->
-              <div class="genre-filter glass glass--spot" id="genre-filter" role="group" aria-label="Filter by genre">
-                <div class="glass__body" aria-hidden="true"></div>
-                <div class="glass__edge" aria-hidden="true"></div>
-                <span class="glass__press" aria-hidden="true"></span>
-              </div>
-              <div class="playlist" data-music-stage="auto"></div>
-            </div>
           </div>
 
           <!-- PANEL: SPORT - five slides, not a ledger.
@@ -988,6 +938,42 @@
 
 
 
+    <section class="section app-collection" id="apps" lang="zh-CN" aria-labelledby="apps-title">
+      <div class="shell">
+        <header class="app-collection__header">
+          <h2 id="apps-title">应用作品</h2>
+          <p>我为看比赛和写字做的两款 Android 应用。</p>
+        </header>
+        <div class="app-collection__grid">
+          <article class="app-exhibit" aria-labelledby="exhibit-score">
+            <div class="app-exhibit__copy">
+              <p class="app-kicker">体育赛程与比分</p>
+              <h3 id="exhibit-score" lang="en">N1ghtScore</h3>
+              <p class="app-exhibit__description">关注足球、NBA、NFL、F1 和 CS2。从单场比分、阵容和统计，看到积分榜与赛事签表，也能把想看的比赛加进日历。</p>
+              <div class="app-exhibit__links">
+                <a class="app-button app-button--primary" href="apps/n1ghtscore/" aria-label="了解 N1ghtScore">应用介绍 <span aria-hidden="true">→</span></a>
+                <a class="app-text-link" href="https://github.com/n1ght-ow/myscore" aria-label="N1ghtScore 的 GitHub 源码">GitHub <span aria-hidden="true">↗</span></a>
+                <a class="app-text-link" href="myscore/" aria-label="打开 MyScore 网页版">网页版 <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+            <div class="app-exhibit__visual"><img src="assets/apps/n1ghtscore-phone.webp" width="720" height="1600" alt="N1ghtScore 的赛程列表和比分" loading="lazy" decoding="async"></div>
+          </article>
+          <article class="app-exhibit app-exhibit--key" aria-labelledby="exhibit-key">
+            <div class="app-exhibit__copy">
+              <p class="app-kicker">中英文输入法</p>
+              <h3 id="exhibit-key" lang="en">N1ghtKey</h3>
+              <p class="app-exhibit__description">在手机上用拼音、英文和诗词候选写字。常用短语、剪贴板与手势编辑随手可用，日常输入在设备上处理。</p>
+              <div class="app-exhibit__links">
+                <a class="app-button app-button--primary" href="apps/n1ghtkey/" aria-label="了解 N1ghtKey">应用介绍 <span aria-hidden="true">→</span></a>
+                <a class="app-text-link" href="https://github.com/n1ght-ow/myboard" aria-label="N1ghtKey 的 GitHub 源码">GitHub <span aria-hidden="true">↗</span></a>
+              </div>
+            </div>
+            <div class="app-exhibit__visual"><img src="assets/apps/n1ghtkey-phone.webp" width="720" height="1600" alt="N1ghtKey 的拼音候选和键盘布局" loading="lazy" decoding="async"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Blue-hour closing: the opening sculpture returns in another light. -->
@@ -1004,7 +990,7 @@
           <a href="#photo">Photography</a>
           <a href="#archive">Collection</a>
           <a href="#curate">Curate</a>
-          <a href="myscore/">MyScore</a>
+          <a href="#apps">Apps</a>
         </nav>
         <button class="liminal-motion-toggle" data-motion-toggle type="button" aria-pressed="false" aria-label="Pause decorative animation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Pause motion</span></button>
       </div>
@@ -1023,21 +1009,12 @@
       <div class="lb-body">
         <figure class="lb-stage" id="lb-stage">
           <img id="lb-img" alt="" loading="eager" decoding="async">
-          <div class="lb-music" id="lb-music" hidden>
-            <img class="lb-music-cover" id="lb-music-cover" alt="" decoding="async" hidden>
-            <span class="lb-music-glyph" aria-hidden="true">♪</span>
-          </div>
         </figure>
         <div class="lb-info">
           <div class="lb-photo-info" id="lb-photo-info" hidden>
             <p class="lb-info-label">From the contact sheet</p>
             <h3 class="lb-meta-title" id="lb-photo-title"></h3>
             <p class="lb-photo-description" id="lb-photo-description"></p>
-          </div>
-          <div class="lb-music-head" id="lb-music-head" hidden>
-            <p class="lb-info-label">On repeat</p>
-            <h3 class="lb-meta-title" id="lb-music-title"></h3>
-            <p class="lb-meta-lines" id="lb-music-lines"></p>
           </div>
           <div class="lb-meta" id="lb-meta" hidden>
             <p class="lb-meta-kicker" id="lb-kicker"></p>
@@ -1046,9 +1023,7 @@
             <p class="lb-meta-quote" id="lb-quote"></p>
             <a class="lb-meta-link" id="lb-link" href="#" target="_blank" rel="noopener" hidden>Open</a>
           </div>
-          <div class="lb-actions" id="lb-actions">
-            <a class="lb-meta-link lb-music-link" id="lb-music-link" href="#" target="_blank" rel="noopener" hidden>Open in NetEase ↗</a>
-          </div>
+          <div class="lb-actions" id="lb-actions"></div>
         </div>
       </div>
       <footer class="lb-bottom">
@@ -1080,26 +1055,23 @@
   <script src="js/film-data.js?v=4"></script>
   <script src="js/series-data.js?v=4"></script>
   <script src="js/book-shelf-data.js?v=6"></script>
-  <script src="js/music-data.js?v=7"></script>
   <script src="js/poems-data.js?v=2"></script>
   <script src="js/paintings-data.js?v=1"></script>
-  <script src="js/music-covers.js?v=6"></script>
   <script src="js/reel-stage.js?v=35"></script>
   <script src="js/film-stage.js?v=8"></script>
   <script src="js/series-stage.js?v=8"></script>
-  <script src="js/music-stage.js?v=12"></script>
   <script src="js/book-shelf.js?v=13"></script>
   <script src="js/games-stage.js?v=9"></script>
   <script src="js/glass-pill.js?v=5"></script>
-  <script src="js/main.js?v=103"></script>
+  <script src="js/main.js?v=104"></script>
   <script src="js/paintings-stage.js?v=1"></script>
   <script src="js/atelier.js?v=12"></script>
   <script src="js/liminal-light.js?v=1"></script>
   <script src="js/atelier-hero.js?v=10"></script>
   <script src="js/atelier-photo.js?v=18"></script>
-  <script src="js/atelier-archive.js?v=6"></script>
+  <script src="js/atelier-archive.js?v=7"></script>
   <script src="js/atelier-poem.js?v=8"></script>
-  <script src="js/curator-desk.js?v=22"></script>
+  <script src="js/curator-desk.js?v=23"></script>
   <script src="js/liminal-footer.js?v=1"></script>
 </body>
 </html>

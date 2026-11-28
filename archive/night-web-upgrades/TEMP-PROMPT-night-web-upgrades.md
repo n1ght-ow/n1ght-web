@@ -33,7 +33,7 @@
 - 不新增紫色、霓虹、grain 噪点、硬边阴影、方角体系。
 - 只使用项目内相对路径；不引入外部图床、CDN、外部字体或 iframe。
 - 不修改 `photo/` 原图、`js/vendor/`、`js/sig-data.js`。
-- 不跨面板搬移内容；六个归档面板的 token 保持 `books / films / series / music / sport / games`。
+- 不跨面板搬移内容；归档面板沿用各自的分类 token。
 - 不新增第三条 ticker；当前两条是品牌特例。
 - 不自动播放音频或视频。
 - 所有新增交互必须支持键盘、可见焦点、reduced-motion。
@@ -289,13 +289,13 @@ Reading this as: personal photography chapter for a design-aware visitor, with a
 
 - 深色首屏 → Trending/Recent 切换 → 视频预览卡片网格 → 点击卡片打开全屏预览浮层 → 浮层内提供 Share / Favorite / Copy Prompt → 底部一行描述与互动数。
 - 关键机制：卡片是可预览媒体；预览浮层保留上下文；`Copy Prompt` 是唯一实心主操作；Trending/Recent 与类型筛选构成两级发现路径。
-- 对本站的启示：照片 lightbox 已接近这个模式，但缺少收藏/分享/信息层级；游戏、影视、音乐没有统一详情层。优先把已有 lightbox 升级成通用详情层。
+- 对本站的启示：照片 lightbox 已接近这个模式，但缺少收藏/分享/信息层级；游戏和影视没有统一详情层。优先把已有 lightbox 升级成通用详情层。
 
 ### `recent.design`
 
 - 左侧固定分类导航，顶部标签筛选，右侧自适应瀑布卡片，底部插入 jobs 与 sponsor 模块。
 - 关键机制：左侧分类 + 顶部标签两级过滤；卡片以媒体为主；排序控件独立。
-- 对本站的启示：ARCHIVE 已有 tab，但每个 tab 内部缺少“筛选 + 排序 + 密度”的二级工具条。音乐已有 genre chips + 搜索 + 随机，影视/游戏/照片仍偏“只能一路看下去”。
+- 对本站的启示：ARCHIVE 已有 tab，但每个 tab 内部缺少“筛选 + 排序 + 密度”的二级工具条，影视、游戏和照片仍偏“只能一路看下去”。
 
 ### `styles.refero.design`
 
@@ -317,13 +317,13 @@ Reading this as: personal photography chapter for a design-aware visitor, with a
 - 在 `#archive .tab-panels` 上方或每个 panel 内部增加共享工具条，只在当前 tab 可见。
 - 工具条结构：
   - 左侧：当前分类 / 类型筛选 chips，复用现有 `.genre-chip` 视觉语言，但不要复用 `#genre-filter` 的 id。
-  - 中间：结果计数，`tabular-nums`，例如 `18 GAMES` / `763 SONGS`。
+  - 中间：结果计数，`tabular-nums`，例如 `18 GAMES`。
   - 右侧：排序 `<select>` 或分段按钮，例如 `CURATED / A-Z / HOURS`，影视用 `CURATED / YEAR / TITLE`。
   - 可选：密度切换 `COMFORT / COMPACT`，只影响卡片间距与尺寸，不改字体。
 - 归属：
   - 通用工具条与状态管理放 `js/main.js` 的 `initArchiveTabs()` 附近，或新增 `initArchiveToolbar()`。
   - 样式放 `css/style.css` 的 THE ARCHIVE 段，语义 token 沿用现有 `--color-*`。
-  - 数据筛选优先基于现有 DOM 的 `data-*` 与文本，不重写数据层；音乐渲染时输出稳定 `data-*`。
+  - 数据筛选优先基于现有 DOM 的 `data-*` 与文本，不重写数据层。
 - 验收：
   - 纯键盘可操作筛选与排序；状态变化有文字 / 图标反馈，不只靠颜色。
   - 320px 下工具条换行不裁剪；200% 缩放可用。
@@ -331,7 +331,7 @@ Reading this as: personal photography chapter for a design-aware visitor, with a
 
 ## B2. 统一详情层
 
-目标：照片、游戏、影视、音乐都能“打开一条”，但保持各自内容语义。
+目标：照片、游戏和影视都能“打开一条”，但保持各自内容语义。
 
 落地：
 
@@ -340,7 +340,6 @@ Reading this as: personal photography chapter for a design-aware visitor, with a
   - 照片：低分辨率图 + caption + 前后导航。
   - 游戏：封面 + 名称 + 游玩时长 + 原 quote；可加当前排名与所属类型。
   - 影视：海报 + 标题 + 导演/年份/类型 + quote + IMDb 外链。
-  - 音乐：歌名 + 艺人 + 所属流派 + 网易云外链；不嵌 iframe、不自动播放。
 - 交互：
   - 卡片 / 行本身仍是触发源；`role="button"` 或原生 `<button>` 二选一，不要叠加冲突语义。
   - 打开后焦点进入详情层，Esc 关闭，焦点返回触发源；背景 `inert`。
@@ -362,7 +361,7 @@ Reading this as: personal photography chapter for a design-aware visitor, with a
 落地：
 
 - 用 `localStorage` 保存轻量状态，不引入后端：
-  - `night:favorites`：收藏条目 id（照片用文件名，游戏用 `data-game`，影视用 `data-film-id` / `data-series-id`，音乐用 `data-song-id`）。
+  - `night:favorites`：收藏条目 id（照片用文件名，游戏用 `data-game`，影视用 `data-film-id` / `data-series-id`）。
   - `night:view`：归档区密度 / 排序偏好。
 - UI：
   - 卡片 / 行上的收藏按钮使用图标按钮，必须有 `aria-label` 与 `aria-pressed`。
@@ -454,7 +453,7 @@ ARCHIVE 专项验收：
 - `fix(photo): rewrite captions around the actual natural subjects`
 - `refactor(photo): unify lightbox and remove dead drag code`
 - `feat(archive): add shared filter and sort toolbar`
-- `feat(detail): unify photo game film series music detail layer`
+- `feat(detail): unify photo game film series detail layer`
 - `feat(archive): persist favorites and view preferences`
 - `docs(design): add machine-readable design system reference`
 

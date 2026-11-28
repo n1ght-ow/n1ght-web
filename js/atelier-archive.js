@@ -11,7 +11,6 @@
     books: { count: (window.BOOK_SHELF || []).length, unit: "books" },
     films: { count: (window.FILM_DATA || []).length, unit: "films" },
     series: { count: (window.SERIES_DATA || []).length, unit: "series" },
-    music: { count: (window.MUSIC_DATA || []).reduce((sum, group) => sum + group.tracks.length, 0), unit: "tracks" },
     sport: { count: archive.querySelectorAll(".sport-card").length, unit: "teams" },
     games: { count: archive.querySelectorAll(".hof-item").length, unit: "games" },
     poems: { count: (window.POEM_DATA || []).length, unit: "poems" },

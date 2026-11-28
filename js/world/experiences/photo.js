@@ -1,4 +1,4 @@
-import { FEATURED_PHOTO } from '../gallery.js?v=1';
+import { FEATURED_PHOTO } from '../gallery.js?v=2';
 
 export function buildExperience(kit) {
   const { THREE, collection, mesh, box, material, texture, image, sculpt, register, status, invalidate } = kit;

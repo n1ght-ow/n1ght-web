@@ -54,7 +54,6 @@
   --ground-books: var(--folio-paper);
   --ground-films: var(--folio-paper);
   --ground-series: var(--folio-paper);
-  --ground-music: var(--folio-paper);
   --ground-games: var(--folio-paper);
   --ground-poem: var(--folio-paper);
 }
@@ -120,15 +119,13 @@ button:not(:disabled):active { transform: translateY(1px); }
 .lightbox .lb-dialog { background: var(--folio-paper); color: var(--folio-ink); border: 0; border-radius: 6px; box-shadow: var(--folio-shadow); }
 .lightbox .lb-backdrop { background: var(--folio-backdrop); }
 .lightbox .lb-top { background: var(--folio-paper); }
-.lightbox :is(.lb-act, .lb-title, .lb-music-title) { font-family: var(--font-sans); color: var(--folio-ink); }
+.lightbox :is(.lb-act, .lb-title) { font-family: var(--font-sans); color: var(--folio-ink); }
 .lightbox :is(.lb-act, .lb-title) { font-weight: 550; }
 .lightbox :is(.lb-count, .lb-kicker) { font: 400 13px/1.5 var(--font-sans); letter-spacing: 0; text-transform: none; }
 .lightbox :is(.lb-meta-link, .lb-close, .lb-nav) { color: var(--folio-accent); border-color: var(--folio-line); border-radius: 6px; font-size: 14px; }
 .lightbox .lb-meta-link { background: var(--folio-accent); color: var(--folio-paper); }
-.lightbox :is(.lb-photo-title, .lb-music-head) { font-family: var(--font-sans); font-weight: 500; }
+.lightbox .lb-photo-title { font-family: var(--font-sans); font-weight: 500; }
 .lightbox .lb-stage { border-radius: 2px; background: var(--folio-soft); }
-.lb-music-glyph { color: var(--folio-accent); }
-.music-drawer { background: var(--folio-paper); color: var(--folio-ink); border-radius: 6px; }
 @media (max-width: 1050px) {
   #nav .nav-description { display: none; }
   #nav .nav-links { gap: 22px; }

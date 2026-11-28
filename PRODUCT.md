@@ -8,7 +8,7 @@ web
 
 ## Product Purpose
 
-A personal collection of photographs, books, poems, paintings, music, sport, films, series and games. Visitors browse the owner's collection and make a personal exhibition from three photographs and four collection pieces.
+A personal collection of photographs, books, poems, paintings, sport, films, series and games. Visitors browse the owner's collection and make a personal exhibition from three photographs and four collection pieces.
 
 ## Users
 
@@ -16,7 +16,7 @@ Inferred from the existing site: curious visitors exploring a personal collectio
 
 ## Capabilities and Constraints
 
-46 photographs with stable IDs, spatial exploration and a complete index, three photo slots shared with the exhibition desk, eight archive tabs, searchable music, book and media details, and a unified seven-piece curator with one set of visitor text, three poster layouts and PNG export. Paintings, the added archive category after Poems, presents twelve real public-domain masterworks with complete reproductions, bilingual titles, artist/date/medium, museum and image-source links, a thumbnail catalogue and a zoomable full-screen viewer. Browser-local drafts. Static HTML, CSS and JavaScript with local GSAP, ScrollTrigger and Lenis. No build dependency.
+46 photographs with stable IDs, spatial exploration and a complete index, three photo slots shared with the exhibition desk, seven archive tabs with book, painting and media details, and a unified seven-piece curator with one set of visitor text, three poster layouts and PNG export. Paintings, the added archive category after Poems, presents twelve real public-domain masterworks with complete reproductions, bilingual titles, artist/date/medium, museum and image-source links, a thumbnail catalogue and a zoomable full-screen viewer. Browser-local drafts. Static HTML, CSS and JavaScript with local GSAP, ScrollTrigger and Lenis. No build dependency.
 
 ## Brand Commitments
 
@@ -28,10 +28,10 @@ The existing index.html, js/*-data.js, photo/, hero/, posters/, covers/ and spor
 
 ## Product Principles
 
-MyScore is a separate Chinese sports surface at `/myscore/`, entered from the global navigation. It preserves the original gallery and uses full-width match programmes, standalone match/team reading views, source-backed statistics and broadcaster links. Browser-direct data is supplemented by an optional bounded Node service for non-CORS sources. It has no subscriptions, calendar reminders or Android installer. See `myscore/README.md` for supported sources, setup and deployment boundaries.
+MyScore is a separate Chinese sports surface at `/myscore/`, linked from the Apps section. It preserves the original gallery and uses full-width match programmes, standalone match/team reading views, source-backed statistics and broadcaster links. Browser-direct data is supplemented by an optional bounded Node service for non-CORS sources. It has no subscriptions, calendar reminders or Android installer. See `myscore/README.md` for supported sources, setup and deployment boundaries.
 
 Let the original collection lead. Make browsing and creating enjoyable. Keep original media intact. Preserve keyboard operation and reduced-motion access. Evaluate the built page in a browser.
 
 ## Browsing Modes
 
-The default `/` document preserves the Folio/Liminal collection. The independent `/3d/` document preserves the ten interactive sculptures of the Cabinet of Impossibilities. Visitors switch through ordinary relative navigation links and can open or refresh either URL. Both modes share existing catalogue scripts and media; Three.js and the world renderer load only in `/3d/`. MyScore remains at `/myscore/`. See `BROWSING_MODES.md` for preview, project-path deployment and integration verification.
+The default `/` document preserves the Folio/Liminal collection. The independent `/3d/` night gallery presents eight collection rooms and a curation workspace. Visitors switch through ordinary relative navigation links and can open or refresh either URL. Both modes share existing catalogue scripts and media; Three.js and the world renderer load only in `/3d/`. MyScore remains at `/myscore/`. See `BROWSING_MODES.md` for preview, project-path deployment and integration verification.

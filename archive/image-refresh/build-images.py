@@ -3,11 +3,10 @@ r"""Rebuild the site's image renditions at the size they are actually painted.
 
 Every image on this site is served larger than the box it lands in. This script
 writes the smaller renditions, and only the smaller renditions - the sources it
-reads are either left alone (photo/, album-covers/) or replaced by the same
+reads are either left alone (photo/) or replaced by the same
 picture at the right size (covers/, sport/, hero/).
 
   covers/                1920-2560px  ->  1280px   the dial's centre is ~520 CSS px
-  album-covers/thumbs/   (new) 160px            a row's cover is 64 CSS px
   photo/wall/            (new) 560px            a board cell is at most 280 CSS px
   sport/                 1500-4489px  ->  1600px  the open panel is ~812 CSS px
   hero/                  same sizes, webp, plus the 1600w a dpr1 desktop needs
@@ -17,12 +16,8 @@ size, and every file keeps its own aspect ratio.
 
 QUALITY IS MEASURED AT THE SIZE THE PICTURE IS PAINTED, not at the file size.
 Each output is compared against the source taken down to the same DISPLAY
-pixels - the worst case is a dpr2 screen, so a cover is judged at 1040px and a
-thumbnail at 128px - and the mean and p99.9 absolute error are reported. This
-is the honest question: does the smaller file look different in its box? An
-encode of a 160px thumbnail judged at 160px instead would fail on chroma
-subsampling alone, which no one can see at 64 CSS px. Anything over the
-threshold is re-encoded at a higher quality before it is written.
+pixels at a 2× device density. The mean and p99.9 absolute error are
+reported. Anything over the threshold is re-encoded at a higher quality.
 
 USAGE (Pillow is a build tool here; the site does not load it, and .venv is not
 touched - see archive/fonts-subset/README.md for the same pattern):
@@ -43,13 +38,6 @@ from PIL import Image, ImageChops, ImageOps
 ROOT = Path(__file__).resolve().parents[2]
 
 QUALITY = [82, 88, 92]
-# The gate is set where a difference stops being visible, and that was checked
-# by eye as well as by number: the worst album thumbnail reports a mean of 7.6
-# and is indistinguishable from its source at 128px (both panes, magnified 4x,
-# are in the review that produced this file). Edge-heavy graphic art - a cover
-# that is a logo on flat colour - puts a few levels of difference on a large
-# share of its pixels, which a mean cannot tell apart from a real artifact. The
-# tail is the sharper signal, so it carries the tighter limit.
 MEAN_LIMIT = 3.0        # mean absolute error per channel, 0-255
 TAIL_LIMIT = 48.0       # p99.9 absolute error, 0-255
 
@@ -136,17 +124,12 @@ def convert(src, dst, target_w, display_w, dry, fmt="webp"):
                   len(data), q, m, t))
 
 
-def report(title, brief=0):
+def report(title):
     print("")
     print("== %s" % title)
     print("  %-42s %-42s %-11s %-11s %9s %9s %3s %5s %5s"
           % ("source", "output", "src px", "out px", "before", "after", "q", "mean", "p999"))
-    rows = stats
-    if brief and len(stats) > brief:
-        # worst offenders first, then the totals - 417 lines of thumbnails is noise
-        rows = sorted(stats, key=lambda r: -r[7])[:brief]
-        print("  (showing the %d worst of %d by mean error)" % (brief, len(stats)))
-    for s, d, sp, op, b, a, q, m, t in rows:
+    for s, d, sp, op, b, a, q, m, t in stats:
         print("  %-42s %-42s %-11s %-11s %8.1fK %8.1fK %3d %5.2f %5.1f"
               % (s, d, sp, op, b / 1024, a / 1024, q, m, t))
     tb = sum(r[4] for r in stats)
@@ -174,11 +157,6 @@ def main():
             if src.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp", ".avif"):
                 convert(src, src.with_suffix(".webp"), 1280, 1040, dry)
         report("covers/ -> 1280px webp (judged at 1040, the dial's centre on dpr2)")
-
-    if wanted("albums", only):
-        for src in sorted((ROOT / "album-covers").glob("*.jpg")):
-            convert(src, ROOT / "album-covers" / "thumbs" / (src.stem + ".webp"), 160, 128, dry)
-        report("album-covers/thumbs/ -> 160px webp (judged at 128, the row on dpr2)", brief=6)
 
     if wanted("wall", only):
         for src in sorted((ROOT / "photo").glob("*.jpg")):

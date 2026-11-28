@@ -25,7 +25,6 @@
   --ground-books: var(--paper-000);
   --ground-films: var(--paper-000);
   --ground-series: var(--paper-000);
-  --ground-music: var(--paper-000);
   --ground-games: var(--paper-000);
   --ground-poem: var(--paper-050);
   --font-editorial: Georgia, 'Times New Roman', 'Songti SC', serif;
@@ -58,9 +57,9 @@ html { scroll-padding-top: 110px; }
 /* Continuous curves on UI surfaces; book binding retains its own geometry. */
 :where(.glass, .glass-pill, .atelier-frame, .atelier-image-window,
   .atelier-enter, .photo-frame-btn, .atelier-photo__thumb img,
-  .tabbar, .tab-btn, .book-shelf, .idx-card, .idx-cover,
+  .tabbar, .tab-btn, .book-shelf,
   .film-card, .series-card, .film-card-img, .series-card-img,
-  .film-detail-link, .series-detail-link, .genre-chip, .music-random,
+  .film-detail-link, .series-detail-link,
   .sport, .sport-card, .hof-item, .hof-img-wrap,
   .poem-library, .poem-choice, .poem-turn,
   .curator-slots, .curator-slot, .curator-art, .curator-handle,
@@ -68,13 +67,13 @@ html { scroll-padding-top: 110px; }
   .curator-preview canvas, .curator-picker, .curator-result,
   .curator-text-btn, .curator-primary, .curator-collect,
   .curator-fields input:focus-visible, .curator-fields textarea:focus-visible,
-  .curator-search input:focus-visible, .music-search-input:focus-visible,
-  .lb-dialog, .lb-close, .lb-nav, .lb-music, .lb-stage > img,
+  .curator-search input:focus-visible,
+  .lb-dialog, .lb-close, .lb-nav, .lb-stage > img,
   .lb-meta-link, .lb-thumb) {
   corner-shape: var(--corner-frame);
 }
 /* One media mask per surface, avoiding two rounded edges over the same pixels. */
-:where(.atelier-frame, .lb-music, .curator-art) {
+:where(.atelier-frame, .curator-art) {
   -webkit-mask-image: linear-gradient(#fff, #fff);
   mask-image: linear-gradient(#fff, #fff);
 }

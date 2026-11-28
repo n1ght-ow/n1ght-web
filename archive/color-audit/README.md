@@ -30,8 +30,8 @@ node archive/color-audit/capture.mjs \
 | `--sel` | element whose rect to report, in screenshot pixels |
 | `--hide` | comma-separated selectors set to `visibility: hidden` first |
 | `--scroll` | scroll to this y before shooting |
-| `--eval` | JS body to run after load and before the shot — `document.querySelector('#tab-music').click()` to open a tab, for instance |
-| `--settle` | ms to wait after load (default 4500 — the page builds 534 music rows) |
+| `--eval` | JS body to run after load and before the shot — `document.querySelector('#tab-books').click()` to open a tab, for instance |
+| `--settle` | ms to wait after load (default 4500) |
 | `--out` | PNG path |
 
 It prints `{"out":…,"viewport":…,"rect":{…}}` on one line.

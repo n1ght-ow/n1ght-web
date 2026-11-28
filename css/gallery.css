@@ -47,7 +47,6 @@
   --ground-books: #eae6f5;
   --ground-films: #eae6f5;
   --ground-series: #eae6f5;
-  --ground-music: #eae6f5;
   --ground-games: #eae6f5;
   --ground-poem: #eae6f5;
 }
@@ -167,10 +166,6 @@ a { text-underline-offset: .25em; }
 .collection-room-name { font: 13px/1.5 var(--font-sans); color: var(--ink-600); }
 .collection-room-action { padding: 10px 17px; border: 1px solid #bcb3d2; border-radius: 999px; color: var(--ink-900); }
 #archive .book-shelf { --bs-board-top: #cac2dd; --bs-board-face: #b5abc9; border-radius: 22px; background: #ded8ee; box-shadow: none; }
-#archive .music-search-input { background: rgb(255 255 255 / 65%); border-radius: 999px; padding-inline: 18px; }
-#archive .genre-chip { border-radius: 999px; }
-#archive .genre-chip:hover { background: #dcd5ed; }
-#archive .genre-chip.is-active, #archive .genre-chip.is-active:hover { background: var(--sky-400); border-color: transparent; color: white; }
 #archive .poem-library { background: #ded8ee; border-radius: 20px; border: 0; }
 #archive .poem-choice { border-radius: 12px; }
 #archive .poem-title { font-family: var(--font-editorial); }

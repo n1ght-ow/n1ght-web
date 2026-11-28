@@ -1,6 +1,6 @@
-import { loadCollection } from './collection.js?v=2';
-import { createCuration, NON_PHOTO_LIMIT, PHOTO_LIMIT } from './curation.js?v=3';
-import { FEATURED_PHOTO, PRIMARY_CONTROLS, ROOMS, WINGS } from './gallery.js?v=1';
+import { loadCollection } from './collection.js?v=3';
+import { createCuration, NON_PHOTO_LIMIT, PHOTO_LIMIT } from './curation.js?v=4';
+import { FEATURED_PHOTO, PRIMARY_CONTROLS, ROOMS, WINGS } from './gallery.js?v=2';
 import { resolveSiteAsset } from './paths.js?v=1';
 
 const $ = id => document.getElementById(id);
@@ -308,7 +308,7 @@ function openDetail(category, index) {
   if (item.note && item.note !== item.description) description.append(el('p', '', item.note));
   const url = safeURL(item.url || item.sourceUrl || item.museumUrl || item.authorUrl);
   $('detail-source').hidden = !url; if (url) $('detail-source').href = url;
-  $('detail-source').textContent = category === 'music' ? '在网易云音乐聆听 ↗' : category === 'sport' ? '访问球队或赛事官网 ↗' : category === 'poems' ? '阅读原始来源 ↗' : '前往作品来源 ↗';
+  $('detail-source').textContent = category === 'sport' ? '访问球队或赛事官网 ↗' : category === 'poems' ? '阅读原始来源 ↗' : '前往作品来源 ↗';
   updateSaveButton();
   if (!details.open) {
     detailTrigger = document.activeElement === document.body ? $('world-canvas') : document.activeElement;
@@ -423,6 +423,7 @@ function setupEvents() {
     const id = location.hash.slice(1);
     if (!id || id === 'world') showRoom(null, false);
     else if (roomOf(id)) showRoom(id, false);
+    else showRoom(null, false);
   };
   window.addEventListener('popstate', syncRoute);
   window.addEventListener('hashchange', syncRoute);
@@ -457,7 +458,7 @@ async function start() {
   const id = location.hash.slice(1);
   if (roomOf(id)) showRoom(id, false);
   try {
-    const { createWorld } = await import('./engine.js?v=17');
+    const { createWorld } = await import('./engine.js?v=18');
     world = createWorld({ canvas: $('world-canvas'), collections,
       onRoom: id => showRoom(id, true, true),
       onSelect: (id, index) => openDetail(id, index),

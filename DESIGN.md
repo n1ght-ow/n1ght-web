@@ -62,14 +62,14 @@ engine:
 
 # Design System: N1GHT CHXN9
 
-本站同时提供两种浏览模式。本文描述根首页的 Folio／Liminal 普通版；`3d/index.html` 保留独立的万象游乐场，视觉与玩法沿用 [3d/DESIGN.md](3d/DESIGN.md)、[WORLD_INTERACTION_PLAN.md](WORLD_INTERACTION_PLAN.md)。普通版导航中的「进入 3D 世界」与 3D 顶部的「返回普通版」使用真实页面链接。普通版的本地银色 WebGL 雕塑继续保留；Three.js、十件装置和相应纹理仅在 3D 文档加载。路由、来源与验证见 [BROWSING_MODES.md](BROWSING_MODES.md)。
+本站同时提供两种浏览模式。本文描述根首页的 Folio／Liminal 普通版；`3d/index.html` 保留独立的万象游乐场，视觉与玩法沿用 [3d/DESIGN.md](3d/DESIGN.md)、[WORLD_INTERACTION_PLAN.md](WORLD_INTERACTION_PLAN.md)。普通版导航中的「进入 3D 世界」与 3D 顶部的「返回普通版」使用真实页面链接。普通版的本地银色 WebGL 雕塑继续保留；Three.js、九件装置和相应纹理仅在 3D 文档加载。路由、来源与验证见 [BROWSING_MODES.md](BROWSING_MODES.md)。
 
 ## 01 · Current World
 
-站点有两条明确边界。中段仍是私人影像志：真实照片、书、诗、画、音乐、影视、体育和游戏决定内容结构。进入页面与离开页面时，视觉暂时离开鼠尾草绿／酒红的 folio 世界，进入独立制作的 liminal 动画空间。
+站点有两条明确边界。中段仍是私人影像志：真实照片、书、诗、画、影视、体育和游戏决定内容结构。进入页面与离开页面时，视觉暂时离开鼠尾草绿／酒红的 folio 世界，进入独立制作的 liminal 动画空间。
 
 - **开场**：日光珍珠纸上，`N1GHT`／`CHXN9` 分两行，右侧大型扭转银色闭环由原生 WebGL1 SDF/shader 现场生成。
-- **中段**：摄影、收藏和策展继续使用既有 folio 系统与真实内容。
+- **中段**：摄影、收藏、策展和应用作品使用 Folio 的排版、纸色与真实内容。
 - **页尾**：同一闭环在饱和蓝 `#173be5` 的蓝时环境中返回，右侧两行大字 `Once more, from the top.` 链接回 `#hero`。
 
 首尾是世界边界的例外，不是全站换色。`css/folio.css` 继续提供全局 folio token、导航和中段共享几何；`css/liminal-hero.css` 与 `css/liminal-footer.css` 最后加载，只在 `#hero.liminal-hero` 和 `.footer.liminal-footer` 内覆盖。
@@ -77,6 +77,12 @@ engine:
 前一版的“双照片封面／Another pair”和酒红大 footer 已过期，不再定义当前首尾。旧规则若仍作为组件兼容层存在，也被后加载的 liminal 样式覆盖，不能写进现行视觉说明。
 
 当前辅助色 `#f5f4f0` 也是浏览器 `theme-color`。原始照片、字体现有文件和中段收藏系统保持原路径。
+
+## 应用作品
+
+首页在策展之后展示 N1ghtScore 和 N1ghtKey，导航和页脚的 Apps 都指向 `#apps`。两件作品用鼠尾草绿和淡酒红衬底呈现 Android 界面截图，桌面并排，窄屏逐件阅读。
+
+`apps/n1ghtscore/` 和 `apps/n1ghtkey/` 使用同一套纸色、墨绿、酒红和 Bricolage Grotesque，首屏提供 APK 发布页和源码仓库，后续按功能、安装与数据边界展开。3D 版的展区索引也提供「应用作品」入口。N1ghtScore 另有独立的网页版 `myscore/`。
 
 ## 02 · Liminal Color Tokens
 
@@ -131,7 +137,7 @@ Shader 在银色金属主调上加入冰蓝环境反射和少量 restrained peac
 - 左侧 stage 占 `43%`、最小 `360px`，展示蓝时银环。
 - 右侧返回链接宽 `min(61%, 900px)`，两行大字与一个 84px 圆形箭头组成；整个链接返回 `#hero`。
 - 底部规则线上方是 `N1GHT CHXN9` 品牌、四个导航链接和共享 motion 按钮。
-- 四个 navigation 为 Photography、Collection、Curate、MyScore，常用控件保持至少 44px 高。
+- 四个导航项为 Photography、Collection、Curate、Apps，常用控件保持至少 44px 高。
 
 `≤900px` 时页尾也改为纵向：环景先占满宽度的 `280–320px`，文字与返回按钮随后排列，品牌和 motion 同排，footer links 变成四等分列。
 
@@ -139,12 +145,12 @@ Shader 在银色金属主调上加入冰蓝环境反射和少量 restrained peac
 
 ## 06 · Middle-Site Continuity
 
-本轮不改中段摄影、收藏和策展，也不改 `/myscore/`：
+中段馆藏、策展和赛事入口：
 
 - 46 个原始 `.photo-frame` 及 `data-photo-index=0–45` 继续服务摄影区和策展。
 - 摄影仍有 Contact sheet／All frames、路线筛选、键盘切换和共享详情。
-- Archive 仍有 Books、Poems、Paintings、Music、Sport、Series、Films、Games 八室，`.tab-panels` 保持 `#archive` 直属子元素。
-- Curator 仍是三张不同照片加 Book／Film／Series／Song 四件收藏，三种布局导出 `1200 × 1800` PNG。
+- Archive 有 Books、Poems、Paintings、Sport、Series、Films、Games 七室，`.tab-panels` 保持 `#archive` 直属子元素。
+- Curator 由三张不同照片加 Book／Film／Series／Painting 四件收藏组成，三种布局导出 `1200 × 1800` PNG。
 - `/myscore/` 仍是独立中文赛事操作面与深浅主题。
 
 hero 的三张小照片是同一批 46 张收藏的前三个入口，不制造新的封面图片集；它们分别使用稳定 frame 索引 `8`、`32`、`35`。

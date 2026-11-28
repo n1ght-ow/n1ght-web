@@ -14,4 +14,4 @@ kit 提供 THREE、collection、mesh、box、cylinder、material、texture、ima
 - onDrag 的 dx/dy 是 CSS 像素增量，totalX/totalY 是本次拖动累计量。localPoint 和 delta 位于操作物父级坐标系。应让键盘步进、触摸和拖拽获得相同的操作结果。
 - 引擎会检查实体遮挡。机关前留足操作空间。透明命中辅助体可以扩大小把手的点击范围，材质保持透明且不写深度。
 - interact('select', index) 同步馆藏位置，interact('reset') 复位装置。kit.status(message) 提供简短状态，kit.invalidate() 请求重绘。getState() 返回可验证的纯数据。kit.reducedMotion() 开启时，主要结果直接呈现。
-- kit.onSelect(category, index) 打开实际作品。策展还可以使用 getCuratedItems、moveCurated、onItemSelect、requestCuration。合成音色在主动操作后播放，在 setActive(false) 中暂停或停止。
+- kit.onSelect(category, index) 打开实际作品。策展还可以使用 getCuratedItems、moveCurated、onItemSelect、requestCuration。

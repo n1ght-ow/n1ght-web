@@ -88,6 +88,7 @@ watchDir(join(root, "css"), { recursive: true });
 watchDir(join(root, "js"), { recursive: true });
 watchDir(join(root, "myscore"), { recursive: true });
 watchDir(join(root, "3d"), { recursive: true });
+watchDir(join(root, "apps"), { recursive: true });
 
 /* ---------- server ---------- */
 
@@ -154,5 +155,5 @@ const server = createServer(async (req, res) => {
 
 server.listen(port, "127.0.0.1", () => {
   console.log("N1GHT CHXN9 preview  ->  http://127.0.0.1:" + port + basePrefix);
-  console.log("live reload: on (watching index.html, 3d/, css/, js/, myscore/)");
+  console.log("live reload: on (watching index.html, 3d/, apps/, css/, js/, myscore/)");
 });

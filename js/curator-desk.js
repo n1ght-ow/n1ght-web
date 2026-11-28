@@ -6,9 +6,9 @@
   root.classList.add("folio-curate");
   const $ = (id) => document.getElementById(id);
   const PHOTOS = ["photo", "photo2", "photo3"];
-  const TYPES = [...PHOTOS, "book", "film", "series", "music"];
-  const LABELS = { photo: "Photo 1", photo2: "Photo 2", photo3: "Photo 3", book: "Book", film: "Film", series: "Series", music: "Song" };
-  const INVITES = { photo: "Choose a photograph", photo2: "Choose a photograph", photo3: "Choose a photograph", book: "Choose a book", film: "Choose a film", series: "Choose a series", music: "Choose a song" };
+  const TYPES = [...PHOTOS, "book", "film", "series", "painting"];
+  const LABELS = { photo: "Photo 1", photo2: "Photo 2", photo3: "Photo 3", book: "Book", film: "Film", series: "Series", painting: "Painting" };
+  const INVITES = { photo: "Choose a photograph", photo2: "Choose a photograph", photo3: "Choose a photograph", book: "Choose a book", film: "Choose a film", series: "Choose a series", painting: "Choose a painting" };
   const KEY = "night:creation-desk:v1";
   const paper = "#f9faf6", ink = "#263b32", accent = "#5d2638", muted = "#56645b", nightPaper = "#ffffff";
   const posterFontFamily = '"Bricolage Grotesque", "Microsoft YaHei", sans-serif';
@@ -50,14 +50,14 @@
     book: (window.BOOK_SHELF || []).map((b) => ({ ...b, type: "book", meta: b.author, src: "" })),
     film: (window.FILM_DATA || []).map((f) => ({ ...f, type: "film", meta: f.director + " / " + f.year, src: f.poster })),
     series: (window.SERIES_DATA || []).map((s) => ({ ...s, type: "series", meta: s.years + " / " + s.seasons, src: s.poster })),
-    music: (window.MUSIC_DATA || []).flatMap((g) => g.tracks.map((t) => ({ ...t, type: "music", meta: t.artist, tag: g.en,
-      src: window.MUSIC_COVERS[t.id] ? "album-covers/" + window.MUSIC_COVERS[t.id] : "",
-      thumb: window.MUSIC_COVERS[t.id] ? "album-covers/thumbs/" + window.MUSIC_COVERS[t.id].replace(/\.[^.]+$/, ".webp") : "" })))
+    painting: (window.PAINTING_DATA || []).map((work) => ({
+      ...work, type: "painting", meta: work.artist, src: work.image, thumb: work.thumbnail
+    }))
   };
   catalog.photo2 = catalog.photo; catalog.photo3 = catalog.photo;
   const searchIndex = new Map();
   TYPES.forEach((type) => catalog[type].forEach((item) => {
-    searchIndex.set(item, [item.title, item.meta, item.alt, item.tag, item.spine].filter(Boolean).join(" ").toLocaleLowerCase());
+    searchIndex.set(item, [item.title, item.english, item.meta, item.alt, item.tag, item.spine].filter(Boolean).join(" ").toLocaleLowerCase());
   }));
   // Store only IDs and visitor text. Collection metadata stays in the original sources.
   const blank = () => ({ order: TYPES.slice(), picks: {}, name: "", by: "", note: "", layout: "gallery" });
@@ -91,7 +91,10 @@
         }
       }
       if (!stored || typeof stored !== "object") return;
-      if (Array.isArray(stored.order) && stored.order.length === TYPES.length && new Set(stored.order).size === TYPES.length && stored.order.every((t) => TYPES.includes(t))) state.order = stored.order;
+      if (Array.isArray(stored.order)) {
+        const migratedOrder = stored.order.map((type) => type === "music" ? "painting" : type);
+        if (migratedOrder.length === TYPES.length && new Set(migratedOrder).size === TYPES.length && migratedOrder.every((type) => TYPES.includes(type))) state.order = migratedOrder;
+      }
       TYPES.forEach((type) => {
         const id = stored.picks && stored.picks[type];
         if (catalog[type].some((item) => String(item.id) === String(id)) && (!PHOTOS.includes(type) || !photoIds().includes(String(id)))) state.picks[type] = String(id);
@@ -130,10 +133,10 @@
       img.addEventListener("error", () => {
         // A missing derived thumbnail gets one attempt at the original artwork.
         if (img.dataset.fallback !== "1") { img.dataset.fallback = "1"; img.src = item.src; }
-        else { img.replaceWith(el("span", "curator-empty", item.type === "music" ? "♪" : "—")); }
+        else { img.replaceWith(el("span", "curator-empty", "—")); }
       });
       box.append(img);
-    } else box.append(el("span", "curator-empty", "♪"));
+    } else box.append(el("span", "curator-empty", "—"));
     return box;
   }
   function announce(message) { $("curator-status").textContent = message; }
@@ -630,17 +633,6 @@
   attachReelCollectors();
   // main.js initializes the two reels on DOMContentLoaded; attach after that mount exists.
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", attachReelCollectors, { once: true });
-  const lbTray = collector(document.getElementById("lb-actions"), () => {
-    if (typeof detailType === "undefined" || typeof detailItems === "undefined") return null;
-    const data = detailItems[lbIndex];
-    if (detailType === "music") return catalog.music.find((item) => String(item.id) === String(data?.id));
-    if (detailType === "photo") return catalog.photo.find((item) => item.id === String(lbIndex));
-    return null;
-  }, "Add the current piece to the desk");
-  if (lbTray) {
-    const update = () => { lbTray.hidden = typeof detailType === "undefined" || detailType !== "music"; lbTray.querySelector(".curator-collect-status").textContent = ""; };
-    const observer = new MutationObserver(update); observer.observe($("lb-count"), { childList: true, characterData: true, subtree: true }); update();
-  }
   function addPhoto(id) {
     if (exporting) return false;
     if (photoIds().includes(String(id))) { announce('This photograph is already selected.'); return false; }

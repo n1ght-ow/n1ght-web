@@ -1,14 +1,13 @@
 import * as THREE from '../vendor/three/three.module.js';
 import { resolveSiteAsset } from './paths.js?v=1';
 import { createSculptTools, createSurfaceLibrary } from './sculpt.js?v=5';
-import { FEATURED_PHOTO, ROOMS } from './gallery.js?v=1';
+import { FEATURED_PHOTO, ROOMS } from './gallery.js?v=2';
 
 const LOADERS = {
-  photo: () => import('./experiences/photo.js?v=6'),
+  photo: () => import('./experiences/photo.js?v=7'),
   books: () => import('./experiences/books.js?v=7'),
   poems: () => import('./experiences/poems.js?v=6'),
   paintings: () => import('./experiences/paintings.js?v=8'),
-  music: () => import('./experiences/music.js?v=6'),
   sport: () => import('./experiences/sport.js?v=6'),
   series: () => import('./experiences/series.js?v=6'),
   films: () => import('./experiences/films.js?v=6'),
