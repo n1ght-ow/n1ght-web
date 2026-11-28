@@ -3,26 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#dce5d5">
+  <meta name="theme-color" content="#0b0c0e">
   <meta name="description" content="MyScore · N1GHT CHXN9 的赛程与比分。足球、NBA、NFL、F1、CS2 与英雄联盟全球总决赛。">
   <title>MyScore · N1GHT CHXN9</title>
   <link rel="icon" href="../assets/icons/folio-mark.svg?v=1" type="image/svg+xml">
   <link rel="preload" href="../fonts/BricolageGrotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/IBMPlexMono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css?v=4">
   <link rel="stylesheet" href="reading.css?v=3">
-  <link rel="stylesheet" href="folio.css?v=1">
-  <script type="module" src="app.mjs?v=10"></script>
+  <link rel="stylesheet" href="folio.css?v=2">
+  <script type="module" src="app.mjs?v=11"></script>
 </head>
 <body class="myscore-folio">
   <a class="skip-link" href="#main">跳到比赛内容</a>
   <header class="site-header">
     <a class="brand" href="../" aria-label="N1GHT CHXN9 首页"><span>N1GHT CHXN9</span></a>
-    <nav aria-label="全站导航"><a href="../#photo">Photography</a><a href="../#archive">Archive</a><a href="../#curate">Curate</a><a class="current" href="./" aria-current="page">MyScore</a></nav>
+    <nav aria-label="全站导航">
+      <a href="../#photo">摄影</a>
+      <a href="../#sport">体育</a>
+      <a href="../#apps">应用</a>
+      <a class="current" href="./" aria-current="page">MyScore</a>
+    </nav>
+    <a class="world-entry" href="../3d/">3D 世界 <span aria-hidden="true">↗</span></a>
   </header>
   <main id="main" class="shell" tabindex="-1">
     <section id="schedule-view" aria-labelledby="page-title">
       <div class="calendar-toolbar">
-        <h1 id="page-title">赛事日历</h1>
+        <div class="toolbar-heading">
+          <span class="toolbar-eyebrow">LIVE SCOREBOARD</span>
+          <h1 id="page-title">赛事日历</h1>
+        </div>
         <div class="date-nav" aria-label="日期切换">
           <button class="icon-button" id="previous-day" type="button" aria-label="前一天"></button>
           <div class="date-edition"><div class="date-display"><button class="date-number" id="open-date" type="button" aria-label="选择比赛日期"><span id="date-large">—</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><input id="date-input" type="date" aria-label="比赛日期"></div><div class="date-context"><span id="date-month"></span><span id="date-weekday"></span></div></div>

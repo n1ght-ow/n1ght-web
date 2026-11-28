@@ -3,34 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#171914">
-  <title>N1GHT CHXN9 · 夜间陈列室</title>
-  <meta name="description" content="N1GHT CHXN9 的私人艺术馆。走近一张照片、翻开一本书，从八类馆藏里编排自己的展览。">
-  <meta property="og:title" content="N1GHT CHXN9 · 夜间陈列室">
-  <meta property="og:description" content="浏览私人馆藏，动手操作展品，编排你的展览。">
-  <link rel="icon" href="../assets/icons/night-enamel-32.png?v=1" type="image/png">
+  <meta name="theme-color" content="#0b0c0e">
+  <title>N1GHT CHXN9 · 3D 夜间陈列室</title>
+  <meta name="description" content="N1GHT CHXN9 的三维私人艺术馆。走近照片、书页与银幕，在八座沉浸式展厅中与馆藏交互。">
+  <meta property="og:title" content="N1GHT CHXN9 · 3D 夜间陈列室">
+  <meta property="og:description" content="探索 N1GHT CHXN9 的三维私人展厅，动手操作八类馆藏装置。">
+  <link rel="icon" href="../assets/icons/folio-mark.svg?v=1" type="image/svg+xml">
+  <link rel="preload" href="../fonts/BricolageGrotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../fonts/IBMPlexMono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/fonts.css?v=15">
-  <link rel="stylesheet" href="../css/world.css?v=12">
+  <link rel="stylesheet" href="../css/world.css?v=14">
 </head>
 <body>
   <a class="skip-link" href="#room-nav">跳到展区索引</a>
   <header class="world-header">
-    <a class="brand" href="#world" aria-label="N1GHT CHXN9，返回入口"><span class="brand-mark" aria-hidden="true">✳</span>N1GHT CHXN9</a>
+    <a class="brand" href="#world" aria-label="N1GHT CHXN9，返回三维入口">
+      <span class="brand-mark" aria-hidden="true">✦</span>
+      <span>N1GHT CHXN9</span>
+    </a>
     <nav aria-label="浏览选项">
       <button id="map-toggle" type="button">展区索引 <span aria-hidden="true">↗</span></button>
-      <button id="curation-toggle" type="button">我的展览 <span id="saved-count">0</span></button>
-      <a class="back-home" href="../">普通版 <span aria-hidden="true">↗</span></a>
+      <a href="../myscore/">MyScore <span aria-hidden="true">↗</span></a>
+      <a class="back-home" href="../">返回首页 <span aria-hidden="true">↗</span></a>
     </nav>
   </header>
   <main id="world">
     <section class="world-intro" aria-labelledby="world-title">
-      <div class="intro-kicker">NIGHT GALLERY <span aria-hidden="true"></span></div>
+      <div class="intro-kicker">NIGHT GALLERY · 3D PAVILION</div>
       <h1 id="world-title">夜间<br>陈列室</h1>
-      <p class="intro-description">照片、书页和银幕里，<br>留着我反复回看的东西。</p>
+      <p class="intro-description">照片、书页、银幕与赛场，<br>在三维空间里反复回看的私人馆藏。</p>
       <a class="primary-button" id="start-explore" href="#photo">走进摄影展区 <span aria-hidden="true">→</span></a>
+      <p class="intro-meta">拖动画面旋转视角 · 滚轮缩放 · 点击展品操作机关</p>
     </section>
     <header class="room-heading" id="room-heading" hidden>
-      <a class="back-button" id="room-back" href="#world">← 入口</a>
+      <a class="back-button" id="room-back" href="#world">← 返回入口</a>
       <p id="room-english" class="eyebrow"></p>
       <h1 id="room-title" tabindex="-1"></h1>
       <p id="room-description"></p>
@@ -65,22 +71,23 @@
         <div class="catalogue-heading"><span id="catalogue-count"></span><button id="random-item" class="text-button" type="button">随机看一件 ↗</button></div>
         <label class="search-wrap"><span class="sr-only">搜索本展区</span><input type="search" id="collection-search" placeholder="搜索作品或作者"></label>
         <div id="catalogue-items" class="catalogue-items" aria-label="馆藏目录"></div>
-        <form id="curation-form" class="curation-form" hidden>
-          <label>展览名称<input id="exhibition-title" maxlength="36" value="我的小展览"></label>
-          <label>展览题签<input id="exhibition-subtitle" maxlength="100"></label>
-          <button class="primary-button" id="export-png" type="submit">保存展览海报 <span aria-hidden="true">↓</span></button>
-        </form>
       </section>
     </aside>
     <nav class="room-dock" id="room-nav" aria-label="展区索引" tabindex="-1">
-      <div class="dock-caption"><span>展区</span><span>GALLERIES</span></div>
+      <div class="dock-caption"><span>展区索引</span><span>EIGHT PAVILIONS</span></div>
       <div class="dock-items" id="dock-items"></div>
     </nav>
   </main>
   <dialog id="atlas-dialog" class="atlas-dialog" aria-labelledby="atlas-title">
-    <div class="dialog-top"><h2 id="atlas-title">展区索引</h2><button class="close-button" type="button" data-close="atlas-dialog" aria-label="关闭展区索引">×</button></div>
+    <div class="dialog-top">
+      <div>
+        <p class="eyebrow">DIRECTORY · 3D PAVILIONS</p>
+        <h2 id="atlas-title">展区索引</h2>
+      </div>
+      <button class="close-button" type="button" data-close="atlas-dialog" aria-label="关闭展区索引">×</button>
+    </div>
     <div id="atlas-list" class="atlas-list"></div>
-    <nav class="atlas-foot" aria-label="更多入口"><a href="../">返回普通版 ↗</a><a href="../#apps">应用作品 ↗</a><a href="../myscore/">MyScore ↗</a></nav>
+    <nav class="atlas-foot" aria-label="更多入口"><a href="../">返回主站首页 ↗</a><a href="../#apps">应用作品 ↗</a><a href="../myscore/">MyScore ↗</a></nav>
   </dialog>
   <dialog id="detail-dialog" class="detail-dialog" aria-labelledby="detail-title">
     <button class="close-button detail-close" type="button" data-close="detail-dialog" aria-label="关闭藏品详情">×</button>
@@ -88,14 +95,14 @@
     <div class="detail-copy">
       <p class="eyebrow" id="detail-category"></p><h2 id="detail-title"></h2><p class="detail-meta" id="detail-meta"></p>
       <div class="detail-description" id="detail-description"></div>
-      <div class="detail-actions"><button id="save-item" class="primary-button" type="button">收入我的展览 <span aria-hidden="true">＋</span></button><a id="detail-source" target="_blank" rel="noopener noreferrer">前往作品来源 ↗</a></div>
+      <div class="detail-actions"><a id="detail-source" class="primary-button" target="_blank" rel="noopener noreferrer">前往作品来源 ↗</a></div>
       <div class="detail-pagination"><button id="detail-prev" class="text-button" type="button">← 上一件</button><span id="detail-position"></span><button id="detail-next" class="text-button" type="button">下一件 →</button></div>
     </div>
   </dialog>
   <div class="model-tooltip" id="model-tooltip" hidden aria-hidden="true"><strong id="model-tooltip-title"></strong><span id="model-tooltip-hint"></span></div>
   <div class="toast" id="toast" role="status"></div>
-  <noscript><p class="noscript-notice">启用 JavaScript 后可操作展品。<a href="../">前往普通版</a></p></noscript>
+  <noscript><p class="noscript-notice">启用 JavaScript 后可操作展品。<a href="../">返回首页</a></p></noscript>
   <script src="../js/film-data.js?v=4"></script><script src="../js/series-data.js?v=4"></script><script src="../js/book-shelf-data.js?v=6"></script><script src="../js/poems-data.js?v=2"></script><script src="../js/paintings-data.js?v=1"></script>
-  <script type="module" src="../js/world/app.js?v=18"></script>
+  <script type="module" src="../js/world/app.js?v=19"></script>
 </body>
 </html>

@@ -1,20 +1,4 @@
-/* Hallmark custom: personal photographic folio; content-led composition, original media. */
-:root {
-  --folio-score-tone-1: rgba(249, 250, 246, 0.42);
-  --folio-score-tone-3: #c7a6b1;
-  --folio-score-tone-4: #263b32;
-  --folio-score-tone-5: rgba(38, 59, 50, 0.18);
-  --folio-score-tone-6: rgba(249, 250, 246, 0.18);
-  --folio-score-tone-7: rgba(38, 59, 50, 0.07);
-  --folio-score-tone-8: rgba(38, 59, 50, 0.08);
-  --folio-score-tone-9: rgba(38, 59, 50, 0.05);
-  --folio-score-tone-10: #c9d8c4;
-  --folio-score-tone-11: rgba(249, 250, 246, 0.44);
-  --folio-score-tone-12: #2d4636;
-  --folio-score-tone-13: rgba(244, 247, 241, 0.13);
-  --folio-score-tone-14: rgba(13, 22, 17, 0.32);
-}
-
+/* Unified N1GHT CHXN9 Obsidian & Champagne-Brass Design System for MyScore */
 @font-face {
   font-family: "Bricolage Grotesque";
   src: url("../fonts/BricolageGrotesque-latin.woff2") format("woff2");
@@ -23,82 +7,104 @@
   font-display: swap;
 }
 
-:root {
-  color-scheme: light;
-  --ground: #dce5d5;
-  --surface: #f9faf6;
-  --paper: #f9faf6;
-  --ink: #263b32;
-  --deep: #263b32;
-  --muted: #56645b;
-  --blue: #5d2638;
-  --link: #5d2638;
-  --wash: #edf1e9;
-  --violet: #e8ede4;
-  --line: #bcc8b9;
-  --live: #7a2f45;
-  --comparison-better: #2d6b45;
-  --comparison-worse: #992f46;
-  --accent: #5d2638;
-  --accent-strong: #713247;
-  --accent-soft: #eadde1;
-  --on-accent: #f9faf6;
-  --header: #263b32;
-  --header-ink: #f9faf6;
-  --header-link: #dbe4dc;
-  --header-current: #e3b8c5;
-  --focus: #8f4560;
-  --table-head: #e8ede4;
-  --row-alt: #f3f5f1;
-  --warning-surface: #f1e7e5;
-  --warning-line: #bc8a91;
-  --dialog-backdrop: rgba(22, 35, 28, 0.68);
-  --sans: "Bricolage Grotesque", "PingFang SC", "Microsoft YaHei", sans-serif;
-  --gutter: 32px;
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("../fonts/IBMPlexMono-400-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
 }
 
+/* Default: Architectural Obsidian (matches landing page) */
+:root,
 html[data-theme="dark"] {
   color-scheme: dark;
-  --ground: #17241d;
-  --surface: #1d2c24;
-  --paper: #1d2c24;
-  --ink: #edf1ec;
-  --deep: #f4f7f1;
-  --muted: #aebbb2;
-  --blue: #c98fa2;
-  --link: #e1a8b8;
-  --wash: #2b3c32;
-  --violet: #2b3c32;
-  --line: #45594b;
-  --live: #f0b0c2;
-  --comparison-better: #82d9a4;
-  --comparison-worse: #ff9faf;
-  --accent: #c98fa2;
-  --accent-strong: #dda4b5;
-  --accent-soft: #433039;
-  --on-accent: #17241d;
-  --header: #101a15;
-  --header-ink: #f4f7f1;
-  --header-link: #c5d2c9;
-  --header-current: #e5b3c1;
-  --focus: #e5b3c1;
-  --table-head: #26372d;
-  --row-alt: #223229;
-  --warning-surface: #38282c;
-  --warning-line: #7d4e5b;
-  --dialog-backdrop: rgba(5, 10, 7, 0.78);
+  --ground: #0b0c0e;
+  --surface: #12141a;
+  --paper: #12141a;
+  --elevated: #171b23;
+  --ink: #dedbd4;
+  --deep: #f5f2ec;
+  --muted: #8f95a0;
+  --dim: #6f7582;
+  --blue: #d4a853;
+  --link: #d4a853;
+  --wash: #181c24;
+  --violet: #161921;
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --live: #e56b5d;
+  --comparison-better: #6dd49b;
+  --comparison-worse: #f08686;
+  --accent: #d4a853;
+  --accent-strong: #e3bc6e;
+  --accent-soft: rgba(212, 168, 83, 0.14);
+  --on-accent: #0b0c0e;
+  --header: rgba(11, 12, 14, 0.94);
+  --header-ink: #f5f2ec;
+  --header-link: #9da3ae;
+  --header-current: #d4a853;
+  --focus: #d4a853;
+  --table-head: #151820;
+  --row-alt: #101218;
+  --warning-surface: rgba(212, 168, 83, 0.08);
+  --warning-line: rgba(212, 168, 83, 0.34);
+  --dialog-backdrop: rgba(4, 5, 8, 0.8);
+  --pitch-bg: #121c18;
+  --pitch-grid: rgba(212, 168, 83, 0.12);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --sans: "Bricolage Grotesque", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --gutter: 40px;
+}
+
+/* Optional Light Appearance: Warm Alabaster Paper (matches Books Reading Folio) */
+html[data-theme="light"] {
+  color-scheme: light;
+  --ground: #f4f1ea;
+  --surface: #fbf9f4;
+  --paper: #fbf9f4;
+  --elevated: #eee9de;
+  --ink: #242730;
+  --deep: #111318;
+  --muted: #606570;
+  --dim: #7b808c;
+  --blue: #9e7524;
+  --link: #9e7524;
+  --wash: #efeae0;
+  --violet: #f3efe6;
+  --line: rgba(17, 19, 24, 0.12);
+  --line-strong: rgba(17, 19, 24, 0.22);
+  --live: #c94638;
+  --comparison-better: #1d7448;
+  --comparison-worse: #b93848;
+  --accent: #9e7524;
+  --accent-strong: #b6882e;
+  --accent-soft: rgba(158, 117, 36, 0.12);
+  --on-accent: #fbf9f4;
+  --header: rgba(11, 12, 14, 0.96);
+  --header-ink: #f5f2ec;
+  --header-link: #a3a8b3;
+  --header-current: #d4a853;
+  --focus: #9e7524;
+  --table-head: #efeae0;
+  --row-alt: #f7f4ed;
+  --warning-surface: #f4ede0;
+  --warning-line: rgba(158, 117, 36, 0.38);
+  --dialog-backdrop: rgba(11, 12, 14, 0.72);
+  --pitch-bg: #e7ebe4;
+  --pitch-grid: rgba(17, 19, 24, 0.08);
+  --shadow-soft: 0 8px 26px rgba(17, 19, 24, 0.07);
 }
 
 html {
-  scroll-padding-top: 20px;
+  scroll-padding-top: 80px;
   background: var(--ground);
 }
 
 body.myscore-folio {
   min-width: 0;
-  background:
-    
-    var(--ground);
+  background: var(--ground);
   color: var(--ink);
   font-family: var(--sans);
   font-size: 14px;
@@ -107,16 +113,10 @@ body.myscore-folio {
   -webkit-font-smoothing: antialiased;
 }
 
-html[data-theme="dark"] body.myscore-folio {
-  background:
-    
-    var(--ground);
-}
-
 body.myscore-folio a {
   color: var(--link);
-  text-decoration-color: color-mix(in srgb, currentColor 48%, transparent);
-  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, currentColor 42%, transparent);
+  text-underline-offset: 4px;
 }
 
 body.myscore-folio a:hover {
@@ -124,72 +124,83 @@ body.myscore-folio a:hover {
 }
 
 body.myscore-folio ::selection {
-  background: var(--folio-score-tone-3);
-  color: var(--folio-score-tone-4);
+  background: rgba(212, 168, 83, 0.28);
+  color: var(--deep);
 }
 
 body.myscore-folio :focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 3px;
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
-body.myscore-folio button {
-  min-height: 44px;
-  border-radius: 9px;
-}
-
+body.myscore-folio button,
 body.myscore-folio select {
-  min-height: 44px;
-  border-radius: 9px;
+  min-height: 40px;
+  border-radius: 6px;
 }
 
 body.myscore-folio button:disabled {
-  color: var(--muted);
-  background: var(--wash);
+  color: var(--dim);
+  background: transparent;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
 body.myscore-folio .skip-link {
-  padding: 11px 16px;
+  padding: 10px 16px;
   border: 1px solid var(--accent);
-  border-radius: 8px;
-  background: var(--paper);
+  border-radius: 6px;
+  background: var(--surface);
   color: var(--accent);
-  box-shadow: 0 8px 28px var(--folio-score-tone-5);
 }
 
+/* Unified 3-Zone Top Bar matching Landing Page */
 .myscore-folio .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
   min-height: 64px;
-  padding-inline: max(var(--gutter), calc((100vw - 1440px) / 2));
-  border-bottom: 1px solid var(--folio-score-tone-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-inline: max(var(--gutter), calc((100vw - 1360px) / 2));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: var(--header);
   color: var(--header-ink);
+  backdrop-filter: blur(12px);
 }
 
 .myscore-folio .brand {
   gap: 10px;
   color: var(--header-ink);
-  font-size: 12px;
-  font-weight: 650;
-  letter-spacing: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.myscore-folio .brand svg {
-  width: 22px;
-  height: 22px;
-  stroke-width: 2.4;
+.myscore-folio .brand:hover {
+  color: #d4a853;
+  text-decoration: none;
 }
 
 .myscore-folio .site-header nav {
-  gap: 22px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 
 .myscore-folio .site-header nav a {
   position: relative;
+  display: inline-flex;
+  align-items: center;
   min-height: 64px;
   padding-inline: 2px;
   color: var(--header-link);
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 160ms ease;
 }
 
 .myscore-folio .site-header nav a:hover {
@@ -198,155 +209,210 @@ body.myscore-folio .skip-link {
 }
 
 .myscore-folio .site-header nav .current {
-  color: var(--header-ink);
+  color: var(--header-current);
   box-shadow: none;
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .myscore-folio .site-header nav .current::after {
   position: absolute;
   right: 0;
-  bottom: 13px;
+  bottom: 0;
   left: 0;
-  height: 3px;
-  border-radius: 3px;
+  height: 2px;
   background: var(--header-current);
   content: "";
 }
 
-.myscore-folio main {
-  min-height: calc(100vh - 64px);
-  padding-block: 20px 42px;
+.myscore-folio .world-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid rgba(212, 168, 83, 0.42);
+  border-radius: 6px;
+  background: rgba(212, 168, 83, 0.08);
+  color: #e8cf97;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
+.myscore-folio .world-entry:hover {
+  border-color: #d4a853;
+  background: rgba(212, 168, 83, 0.18);
+  color: #f5f2ec;
+  text-decoration: none;
+}
+
+/* Main Shell */
+.myscore-folio main {
+  min-height: calc(100vh - 64px);
+  padding-block: 32px 64px;
+}
+
+/* Architectural Calendar Toolbar */
 .myscore-folio .calendar-toolbar {
   display: grid;
   grid-template-columns: auto minmax(320px, 1fr) auto;
-  gap: 18px;
+  gap: 20px;
   align-items: center;
-  margin-bottom: 14px;
-  padding: 10px 12px;
+  margin-bottom: 20px;
+  padding: 16px 20px;
   border: 1px solid var(--line);
-  border-radius: 15px;
+  border-radius: 8px;
   background: var(--paper);
-  box-shadow: 0 3px 18px var(--folio-score-tone-7);
+}
+
+.myscore-folio .toolbar-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.myscore-folio .toolbar-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--accent);
 }
 
 .myscore-folio .calendar-toolbar h1 {
   color: var(--deep);
-  font-size: 19px;
-  font-weight: 680;
-  letter-spacing: -0.02em;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
   white-space: nowrap;
 }
 
 .myscore-folio .date-nav {
   justify-self: center;
-  gap: 2px;
-  padding: 2px;
+  gap: 4px;
+  padding: 4px;
   border: 1px solid var(--line);
-  border-radius: 11px;
-  background: var(--wash);
+  border-radius: 8px;
+  background: var(--ground);
 }
 
 .myscore-folio .date-edition {
-  min-width: 150px;
+  min-width: 158px;
 }
 
 .myscore-folio .date-number {
-  min-height: 44px;
-  padding-inline: 10px;
-  border-radius: 7px;
+  min-height: 40px;
+  padding-inline: 12px;
+  border-radius: 6px;
   color: var(--deep);
-  font-size: 20px;
-  font-weight: 660;
-  letter-spacing: -0.025em;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
 .myscore-folio .date-number:hover {
-  background: var(--paper);
+  background: var(--wash);
 }
 
 .myscore-folio .date-number svg {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
 }
 
 .myscore-folio .date-context {
   color: var(--muted);
+  font-family: var(--mono);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .myscore-folio .date-display input:focus-visible {
-  min-height: 44px;
-  border: 1px solid var(--line);
-  border-radius: 7px;
+  min-height: 40px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
   background: var(--paper);
   color: var(--ink);
-  outline: 2px solid var(--focus);
-  outline-offset: 3px;
 }
 
-.myscore-folio button:not(:disabled):active { transform: translateY(1px); }
+.myscore-folio button:not(:disabled):active {
+  transform: translateY(1px);
+}
 
 .myscore-folio .icon-button,
 .myscore-folio .text-button {
-  min-width: 44px;
-  min-height: 44px;
-  padding: 8px 11px;
-  border: 1px solid transparent;
-  color: var(--link);
+  min-width: 40px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
 }
 
 .myscore-folio .icon-button:hover,
 .myscore-folio .text-button:hover {
+  border-color: var(--accent);
+  background: var(--wash);
+  color: var(--deep);
+}
+
+.myscore-folio .date-nav .text-button {
+  border-color: transparent;
+  background: transparent;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.myscore-folio .date-nav .text-button:hover {
   border-color: var(--line);
   background: var(--wash);
 }
 
-.myscore-folio .date-nav .text-button {
-  color: var(--accent);
-}
-
 .myscore-folio .schedule-tools {
-  gap: 6px;
-}
-
-.myscore-folio .schedule-tools .icon-button,
-.myscore-folio .date-nav .icon-button {
-  border-color: var(--line);
-  background: var(--paper);
+  gap: 8px;
 }
 
 .myscore-folio .team-filter select {
-  max-width: 190px;
-  padding: 7px 31px 7px 12px;
-  border-color: var(--line);
-  background-color: var(--paper);
+  max-width: 200px;
+  min-height: 40px;
+  padding: 7px 32px 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background-color: var(--ground);
   color: var(--ink);
   font-size: 13px;
+  transition: border-color 150ms ease;
 }
 
+.myscore-folio .team-filter select:hover {
+  border-color: var(--line-strong);
+}
+
+/* Sport Tabs */
 .myscore-folio .sport-nav {
-  gap: 7px;
-  padding: 10px 0;
+  gap: 8px;
+  padding: 4px 0 14px;
   border-bottom: 1px solid var(--line);
-  scrollbar-color: var(--line) transparent;
+  scrollbar-color: var(--line-strong) transparent;
 }
 
 .myscore-folio .sport-nav a {
-  min-height: 44px;
-  padding: 7px 13px;
+  min-height: 40px;
+  padding: 7px 14px;
   border: 1px solid var(--line);
-  border-radius: 7px;
-  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  border-radius: 6px;
+  background: var(--paper);
   color: var(--muted);
   font-size: 13px;
+  font-weight: 500;
+  transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease;
 }
 
 .myscore-folio .sport-nav a:hover {
-  background: var(--paper);
+  border-color: var(--line-strong);
+  background: var(--elevated);
   color: var(--deep);
 }
 
@@ -354,7 +420,7 @@ body.myscore-folio .skip-link {
   border-color: var(--accent);
   background: var(--accent);
   color: var(--on-accent);
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .myscore-folio .sport-nav small {
@@ -362,43 +428,49 @@ body.myscore-folio .skip-link {
   padding-left: 8px;
   border-left: 1px solid currentColor;
   color: inherit;
+  font-family: var(--mono);
   font-size: 11px;
-  opacity: 0.8;
+  opacity: 0.78;
 }
 
 .myscore-folio .league-nav {
-  gap: 4px;
-  padding: 6px 0 2px;
+  gap: 6px;
+  padding: 10px 0 4px;
 }
 
 .myscore-folio .league-nav a {
-  min-height: 44px;
-  padding: 7px 12px;
-  border-radius: 7px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
   color: var(--muted);
   font-size: 12px;
 }
 
 .myscore-folio .league-nav a:hover {
   background: var(--wash);
+  color: var(--deep);
   text-decoration: none;
 }
 
 .myscore-folio .league-nav a[aria-current] {
+  border-color: rgba(212, 168, 83, 0.38);
   background: var(--accent-soft);
   color: var(--accent);
   text-decoration: none;
 }
 
 .myscore-folio .schedule-caption {
-  min-height: 32px;
-  color: var(--muted);
+  min-height: 34px;
+  color: var(--dim);
+  font-family: var(--mono);
   font-size: 11px;
-  font-weight: 500;
+  letter-spacing: 0.06em;
 }
 
+/* Score Groups & Match Rows */
 .myscore-folio .score-groups {
-  min-height: 180px;
+  min-height: 220px;
   overflow: visible;
   border: 0;
   border-radius: 0;
@@ -408,19 +480,18 @@ body.myscore-folio .skip-link {
 .myscore-folio .score-group {
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 8px;
   background: var(--paper);
-  box-shadow: 0 4px 20px var(--folio-score-tone-7);
 }
 
 .myscore-folio .score-group + .score-group {
-  margin-top: 14px;
+  margin-top: 16px;
   border-top: 1px solid var(--line);
 }
 
 .myscore-folio .group-heading {
-  min-height: 45px;
-  padding: 8px 16px;
+  min-height: 46px;
+  padding: 10px 18px;
   border-bottom: 1px solid var(--line);
   background: var(--table-head);
 }
@@ -428,20 +499,20 @@ body.myscore-folio .skip-link {
 .myscore-folio .group-heading h2 {
   color: var(--deep);
   font-size: 14px;
-  font-weight: 680;
+  font-weight: 600;
   letter-spacing: -0.01em;
 }
 
 .myscore-folio .single-group .group-heading {
-  background: var(--paper);
+  background: var(--table-head);
 }
 
 .myscore-folio .single-group.has-events .group-heading {
   position: relative;
   z-index: 1;
   height: auto;
-  min-height: 45px;
-  padding: 1px 16px;
+  min-height: 44px;
+  padding: 6px 18px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -450,34 +521,34 @@ body.myscore-folio .skip-link {
 }
 
 .myscore-folio .single-group.has-events .programme-event:first-child {
-  padding-right: 16px;
+  padding-right: 18px;
 }
 
 .myscore-folio .group-source {
-  gap: 9px;
+  gap: 10px;
   color: var(--muted);
+  font-family: var(--mono);
   font-size: 11px;
 }
 
-.myscore-folio .group-source span {
-  font-variant-numeric: tabular-nums;
-}
-
 .myscore-folio .group-source button {
-  min-height: 44px;
-  padding: 6px 10px;
+  min-height: 32px;
+  padding: 4px 10px;
   border: 1px solid var(--warning-line);
   background: var(--warning-surface);
   color: var(--accent);
+  font-family: var(--sans);
   font-size: 12px;
 }
 
 .myscore-folio .programme-event {
-  padding: 8px 16px;
+  padding: 9px 18px;
   border-color: var(--line);
   background: var(--violet);
-  color: var(--deep);
+  color: var(--accent);
   font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 .myscore-folio .match-list {
@@ -486,32 +557,34 @@ body.myscore-folio .skip-link {
 
 .myscore-folio .match-row {
   min-height: 76px;
-  gap: 14px;
-  padding: 10px 16px;
-  border-bottom-color: var(--line);
+  gap: 16px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--line);
   background: transparent;
   transition: background-color 140ms ease, box-shadow 140ms ease;
 }
 
 .myscore-folio .match-row:hover {
   background: var(--wash);
-  box-shadow: inset 3px 0 var(--accent);
+  box-shadow: inset 2px 0 var(--accent);
 }
 
 .myscore-folio .match-row[data-state="live"] {
-  background: color-mix(in srgb, var(--accent-soft) 30%, var(--paper));
-  box-shadow: inset 3px 0 var(--live);
+  background: rgba(229, 107, 93, 0.06);
+  box-shadow: inset 2px 0 var(--live);
 }
 
 .myscore-folio .match-time {
   color: var(--muted);
+  font-family: var(--mono);
   font-size: 11px;
 }
 
 .myscore-folio .match-time time {
   color: var(--ink);
+  font-family: var(--mono);
   font-size: 14px;
-  font-weight: 620;
+  font-weight: 500;
 }
 
 .myscore-folio .match-row[data-state="live"] .match-time,
@@ -520,48 +593,50 @@ body.myscore-folio .skip-link {
 }
 
 .myscore-folio .live-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   background: var(--live);
 }
 
 .myscore-folio .team {
-  gap: 11px;
+  gap: 12px;
   color: var(--deep);
   font-size: 14px;
-  font-weight: 560;
+  font-weight: 500;
 }
 
 .myscore-folio .team-link {
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 40px;
+  min-height: 40px;
 }
 
 .myscore-folio .crest,
 .myscore-folio .crest-fallback {
-  width: 31px;
-  height: 31px;
+  width: 30px;
+  height: 30px;
 }
 
 .myscore-folio .crest-fallback {
   border: 1px solid var(--line);
-  border-radius: 7px;
+  border-radius: 6px;
   background: var(--wash);
   color: var(--muted);
+  font-family: var(--mono);
 }
 
 .myscore-folio .result-link {
-  min-height: 44px;
+  min-height: 42px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 6px;
   color: var(--deep);
-  font-size: 21px;
-  font-weight: 650;
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .myscore-folio .result-link:hover {
-  border-color: var(--line);
-  background: var(--paper);
+  border-color: var(--line-strong);
+  background: var(--elevated);
   text-decoration: none;
 }
 
@@ -576,22 +651,22 @@ body.myscore-folio .skip-link {
 
 .myscore-folio .result-link .separator,
 .myscore-folio .score-divider {
-  color: var(--muted);
+  color: var(--dim);
 }
 
 .myscore-folio .watch-button {
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 40px;
+  min-height: 40px;
   padding: 8px;
-  border-color: var(--accent);
-  border-radius: 9px;
-  background: var(--accent);
-  color: var(--on-accent);
+  border: 1px solid rgba(212, 168, 83, 0.45);
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .myscore-folio .watch-button:hover {
-  border-color: var(--accent-strong);
-  background: var(--accent-strong);
+  border-color: var(--accent);
+  background: var(--accent);
   color: var(--on-accent);
 }
 
@@ -602,9 +677,9 @@ body.myscore-folio .skip-link {
 .myscore-folio .race-title {
   display: flex;
   align-items: center;
-  min-height: 44px;
+  min-height: 40px;
   color: var(--deep);
-  font-weight: 620;
+  font-weight: 600;
 }
 
 .myscore-folio .race-leaders {
@@ -616,7 +691,7 @@ body.myscore-folio .skip-link {
 }
 
 .myscore-folio .group-warning {
-  padding: 10px 16px;
+  padding: 10px 18px;
   border-top: 1px solid var(--warning-line);
   background: var(--warning-surface);
   color: var(--ink);
@@ -624,9 +699,9 @@ body.myscore-folio .skip-link {
 }
 
 .myscore-folio .empty-state {
-  padding: 30px 18px;
-  border: 1px dashed var(--line);
-  border-radius: 10px;
+  padding: 36px 20px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 8px;
   background: var(--paper);
   color: var(--muted);
   font-size: 13px;
@@ -638,31 +713,35 @@ body.myscore-folio .skip-link {
 }
 
 .myscore-folio .empty-state p {
-  color: var(--ink);
-  font-weight: 620;
+  color: var(--deep);
+  font-weight: 500;
 }
 
 .myscore-folio .loading-row {
   background: var(--paper);
+  padding: 24px 18px;
 }
 
 .myscore-folio .loading-row span {
-  background: var(--wash);
-  animation: folio-pulse 1.4s ease-in-out infinite;
+  height: 12px;
+  border-radius: 4px;
+  background: var(--elevated);
+  animation: folio-pulse 1.5s ease-in-out infinite;
 }
 
 @keyframes folio-pulse {
   50% {
-    opacity: 0.52;
+    opacity: 0.42;
   }
 }
 
+/* Reading / Match Detail View */
 .myscore-folio .back-link {
-  min-height: 44px;
-  padding: 7px 10px;
-  border-radius: 8px;
+  min-height: 40px;
+  padding: 7px 12px;
+  border-radius: 6px;
   color: var(--accent);
-  font-weight: 620;
+  font-weight: 500;
 }
 
 .myscore-folio .back-link:hover {
@@ -671,7 +750,7 @@ body.myscore-folio .skip-link {
 }
 
 .myscore-folio .reading-top {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .myscore-folio .reading-meta {
@@ -679,47 +758,35 @@ body.myscore-folio .skip-link {
   border-bottom: 1px solid var(--line);
 }
 
-.myscore-folio .reading-meta h1 {
-  color: var(--deep);
-  font-size: 15px;
-  font-weight: 660;
-}
-
-.myscore-folio .reading-meta p,
-.myscore-folio .reading-heading p {
-  color: var(--muted);
-}
-
+.myscore-folio .reading-meta h1,
 .myscore-folio .reading-heading h1 {
   color: var(--deep);
 }
 
-.myscore-folio .match-hero {
-  margin-bottom: 14px;
-  border-color: var(--line);
-  border-top: 4px solid var(--accent);
-  border-radius: 14px;
-  background: var(--paper);
-  box-shadow: 0 4px 24px var(--folio-score-tone-8);
-}
-
-.myscore-folio .hero-team {
-  color: var(--deep);
-}
-
-.myscore-folio .hero-team .crest,
-.myscore-folio .hero-team .crest-fallback {
-  width: 50px;
-  height: 50px;
-}
-
+.myscore-folio .reading-meta p,
+.myscore-folio .reading-heading p,
+.myscore-folio .race-state,
 .myscore-folio .hero-score .state {
   color: var(--muted);
 }
 
+.myscore-folio .match-hero {
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.myscore-folio .hero-team,
 .myscore-folio .hero-score strong {
   color: var(--deep);
-  font-weight: 660;
+}
+
+.myscore-folio .hero-score strong {
+  font-family: var(--mono);
+  font-weight: 600;
 }
 
 .myscore-folio .shootout-score {
@@ -732,29 +799,25 @@ body.myscore-folio .skip-link {
   color: var(--on-accent);
 }
 
-.myscore-folio .race-state {
-  color: var(--muted);
-}
-
 .myscore-folio .detail-tabs {
-  gap: 22px;
-  margin-bottom: 18px;
-  padding-inline: 4px;
+  gap: 24px;
+  margin-bottom: 20px;
+  padding-inline: 2px;
   border-color: var(--line);
 }
 
 .myscore-folio .detail-tabs a {
-  min-height: 48px;
+  min-height: 46px;
   color: var(--muted);
 }
 
 .myscore-folio .detail-tabs a[aria-current] {
   color: var(--accent);
-  box-shadow: inset 0 -3px var(--accent);
+  box-shadow: inset 0 -2px var(--accent);
 }
 
 .myscore-folio .detail-tabs a:hover {
-  color: var(--accent);
+  color: var(--deep);
 }
 
 .myscore-folio .team-view-list,
@@ -762,26 +825,27 @@ body.myscore-folio .skip-link {
 .myscore-folio .table-scroll,
 .myscore-folio .lol-team {
   border-color: var(--line);
-  border-radius: 11px;
+  border-radius: 8px;
   background: var(--paper);
-}
-
-.myscore-folio .table-scroll {
-  box-shadow: 0 2px 14px var(--folio-score-tone-9);
 }
 
 .myscore-folio .table-heading h2,
 .myscore-folio .section-heading h2,
 .myscore-folio .section-title,
 .myscore-folio .pitch-section h2,
-.myscore-folio .team-rankings h3 {
+.myscore-folio .team-rankings h3,
+.myscore-folio .series-game-name,
+.myscore-folio .performer-person strong,
+.myscore-folio .lol-identity strong,
+.myscore-folio .lol-kda strong,
+.myscore-folio .profile-head h2 {
   color: var(--deep);
 }
 
 .myscore-folio .section-heading > a {
-  min-height: 44px;
-  padding: 6px 8px;
-  border-radius: 7px;
+  min-height: 40px;
+  padding: 6px 10px;
+  border-radius: 6px;
   color: var(--accent);
 }
 
@@ -790,36 +854,16 @@ body.myscore-folio .skip-link {
   text-decoration: none;
 }
 
-.myscore-folio .series-column-headings {
+.myscore-folio .series-column-headings,
+.myscore-folio .lol-team > .table-heading,
+.myscore-folio .lol-column-labels {
   background: var(--table-head);
   color: var(--muted);
 }
 
-.myscore-folio .series-game {
-  color: var(--ink);
-  border-bottom-color: var(--line);
-}
-
-.myscore-folio .series-game:hover {
-  background: var(--wash);
-}
-
-.myscore-folio .series-game-name,
-.myscore-folio .performer-person strong {
-  color: var(--deep);
-}
-
-.myscore-folio .performer {
-  border-bottom-color: var(--line);
-}
-
-.myscore-folio .performer-person small,
-.myscore-folio .performer-value > span,
-.myscore-folio .series-duration,
-.myscore-folio .live-label {
-  color: var(--muted);
-}
-
+.myscore-folio .series-game,
+.myscore-folio .performer,
+.myscore-folio .lol-player,
 .myscore-folio .match-facts > div,
 .myscore-folio .rankings-row,
 .myscore-folio .deep-analysis,
@@ -832,6 +876,19 @@ body.myscore-folio .skip-link {
   border-color: var(--line);
 }
 
+.myscore-folio .series-game {
+  color: var(--ink);
+}
+
+.myscore-folio .series-game:hover,
+.myscore-folio .lol-player:hover {
+  background: var(--wash);
+}
+
+.myscore-folio .performer-person small,
+.myscore-folio .performer-value > span,
+.myscore-folio .series-duration,
+.myscore-folio .live-label,
 .myscore-folio .match-facts dt,
 .myscore-folio .rankings-labels,
 .myscore-folio .facts dt,
@@ -840,7 +897,13 @@ body.myscore-folio .skip-link {
 .myscore-folio .profile-bio dt,
 .myscore-folio .profile-key-stats dt,
 .myscore-folio .timeline time,
-.myscore-folio .stat-row > span {
+.myscore-folio .stat-row > span,
+.myscore-folio .lol-identity small,
+.myscore-folio .lol-resources dd,
+.myscore-folio .context-note,
+.myscore-folio .timeline p,
+.myscore-folio .source-note,
+.myscore-folio .profile-source {
   color: var(--muted);
 }
 
@@ -852,17 +915,13 @@ body.myscore-folio .skip-link {
   color: var(--ink);
 }
 
-.myscore-folio details > summary {
-  min-height: 48px;
+.myscore-folio details > summary,
+.myscore-folio .person-button {
   color: var(--accent);
 }
 
-.myscore-folio .segmented {
-  gap: 7px;
-}
-
 .myscore-folio .segmented a {
-  min-height: 44px;
+  min-height: 40px;
   border-color: var(--line);
   color: var(--muted);
 }
@@ -881,7 +940,6 @@ body.myscore-folio .skip-link {
   background: var(--paper);
   color: var(--ink);
   font-size: 13px;
-  font-variant-numeric: tabular-nums;
 }
 
 .myscore-folio .data-table th,
@@ -889,13 +947,10 @@ body.myscore-folio .skip-link {
   border-bottom-color: var(--line);
 }
 
-.myscore-folio .data-table th {
-  background: var(--table-head);
-  color: var(--muted);
-}
-
+.myscore-folio .data-table th,
 .myscore-folio .data-table th:first-child {
   background: var(--table-head);
+  color: var(--muted);
 }
 
 .myscore-folio .data-table td:first-child {
@@ -910,28 +965,12 @@ body.myscore-folio .skip-link {
   background: var(--wash);
 }
 
-.myscore-folio .data-table th button {
-  min-height: 44px;
-  color: inherit;
-}
-
 .myscore-folio .data-table th[aria-sort] button {
   color: var(--accent);
 }
 
-.myscore-folio .person-button {
-  min-height: 44px;
-  color: var(--accent);
-}
-
 .myscore-folio .roster-sort button {
-  min-height: 44px;
-  padding: 5px 9px;
   color: var(--muted);
-}
-
-.myscore-folio .roster-sort button:hover {
-  background: var(--paper);
 }
 
 .myscore-folio .roster-sort button[aria-pressed="true"] {
@@ -939,69 +978,24 @@ body.myscore-folio .skip-link {
   color: var(--accent);
 }
 
-.myscore-folio .lol-team > .table-heading,
-.myscore-folio .lol-column-labels {
-  background: var(--table-head);
-}
-
-.myscore-folio .lol-player {
-  border-bottom-color: var(--line);
-}
-
-.myscore-folio .lol-player:hover {
-  background: var(--wash);
-}
-
-.myscore-folio .lol-identity {
-  min-height: 44px;
-}
-
-.myscore-folio .lol-identity strong,
-.myscore-folio .lol-kda strong {
-  color: var(--deep);
-}
-
-.myscore-folio .lol-identity small,
-.myscore-folio .lol-column-labels,
-.myscore-folio .lol-resources dd {
-  color: var(--muted);
-}
-
-.myscore-folio .stat-row strong {
-  font-variant-numeric: tabular-nums;
-}
-
 .myscore-folio .pitch {
   border-color: var(--line);
-  background-color: var(--folio-score-tone-10);
+  background-color: var(--pitch-bg);
   background-image:
-    linear-gradient(var(--folio-score-tone-11) 1px, transparent 1px),
-    linear-gradient(90deg, var(--folio-score-tone-11) 1px, transparent 1px);
+    linear-gradient(var(--pitch-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--pitch-grid) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
-html[data-theme="dark"] .myscore-folio .pitch {
-  background-color: var(--folio-score-tone-12);
-  background-image:
-    linear-gradient(var(--folio-score-tone-13) 1px, transparent 1px),
-    linear-gradient(90deg, var(--folio-score-tone-13) 1px, transparent 1px);
-}
-
 .myscore-folio .pitch-player {
-  min-height: 44px;
-  color: var(--ink);
+  color: var(--deep);
 }
 
 .myscore-folio .pitch-player b {
+  border: 1px solid var(--line-strong);
   background: var(--paper);
   color: var(--accent);
-}
-
-.myscore-folio .context-note,
-.myscore-folio .timeline p,
-.myscore-folio .source-note,
-.myscore-folio .profile-source {
-  color: var(--muted);
+  font-family: var(--mono);
 }
 
 .myscore-folio .media-image {
@@ -1015,16 +1009,18 @@ html[data-theme="dark"] .myscore-folio .pitch {
   color: var(--accent);
 }
 
+/* Dialogs */
 .myscore-folio dialog {
-  border-color: var(--accent);
-  border-radius: 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
   background: var(--paper);
   color: var(--ink);
-  box-shadow: 0 24px 80px var(--folio-score-tone-14);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
 }
 
 .myscore-folio dialog::backdrop {
   background: var(--dialog-backdrop);
+  backdrop-filter: blur(6px);
 }
 
 .myscore-folio dialog h2 {
@@ -1037,15 +1033,22 @@ html[data-theme="dark"] .myscore-folio .pitch {
 
 .myscore-folio .dialog-close {
   border-color: var(--line);
-  background: var(--paper);
+  background: var(--elevated);
+  color: var(--ink);
+}
+
+.myscore-folio .dialog-close:hover {
+  border-color: var(--accent);
   color: var(--accent);
 }
 
 .myscore-folio .primary-link {
   min-height: 44px;
   border: 1px solid var(--accent);
+  border-radius: 6px;
   background: var(--accent);
   color: var(--on-accent);
+  font-weight: 600;
 }
 
 .myscore-folio .primary-link:hover {
@@ -1055,16 +1058,7 @@ html[data-theme="dark"] .myscore-folio .pitch {
   text-decoration: none;
 }
 
-.myscore-folio .profile-head h2 {
-  color: var(--deep);
-}
-
-.myscore-folio #person-content > p > a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-}
-
+/* Responsive */
 @media (max-width: 1000px) {
   :root {
     --gutter: 24px;
@@ -1072,12 +1066,8 @@ html[data-theme="dark"] .myscore-folio .pitch {
 
   .myscore-folio .calendar-toolbar {
     grid-template-columns: auto 1fr;
-    gap: 10px 14px;
-    padding: 10px;
-  }
-
-  .myscore-folio .calendar-toolbar h1 {
-    font-size: 19px;
+    gap: 12px 16px;
+    padding: 14px;
   }
 
   .myscore-folio .date-nav {
@@ -1093,73 +1083,57 @@ html[data-theme="dark"] .myscore-folio .pitch {
   .myscore-folio .team-filter {
     margin-right: auto;
   }
-
-  .myscore-folio .match-row {
-    gap: 12px;
-  }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   :root {
     --gutter: 16px;
   }
 
   .myscore-folio .site-header {
-    min-height: 56px;
+    min-height: 58px;
     gap: 12px;
   }
 
   .myscore-folio .brand {
-    gap: 7px;
-    font-size: 11px;
-  }
-
-  .myscore-folio .brand svg {
-    width: 19px;
-    height: 19px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
   }
 
   .myscore-folio .site-header nav {
-    gap: 15px;
+    gap: 14px;
   }
 
   .myscore-folio .site-header nav a {
-    min-height: 56px;
-    font-size: 11px;
+    min-height: 58px;
+    font-size: 12px;
   }
 
   .myscore-folio .site-header nav a:first-child,
-  .myscore-folio .site-header nav a:nth-child(3) {
+  .myscore-folio .site-header nav a:nth-child(2) {
     display: none;
   }
 
-  .myscore-folio .site-header nav .current::after {
-    bottom: 10px;
+  .myscore-folio .world-entry {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 11px;
   }
 
   .myscore-folio main {
-    padding-block: 14px 28px;
+    padding-block: 18px 40px;
   }
 
   .myscore-folio .calendar-toolbar {
     grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
-    margin-bottom: 10px;
-    padding: 9px;
-    border-radius: 12px;
-  }
-
-  .myscore-folio .calendar-toolbar h1 {
-    font-size: 17px;
-    padding-inline: 3px;
+    gap: 12px;
+    padding: 12px;
   }
 
   .myscore-folio .date-nav {
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) 44px 44px;
-    gap: 2px;
+    grid-template-columns: 40px minmax(0, 1fr) 40px 44px;
     width: 100%;
-    padding: 2px;
   }
 
   .myscore-folio .date-edition {
@@ -1168,186 +1142,36 @@ html[data-theme="dark"] .myscore-folio .pitch {
 
   .myscore-folio .date-number {
     width: 100%;
-    padding-inline: 4px;
     font-size: 17px;
-  }
-
-  .myscore-folio .date-context {
-    gap: 6px;
-    font-size: 10px;
-  }
-
-  .myscore-folio .date-nav .icon-button,
-  .myscore-folio .date-nav .text-button {
-    width: 44px;
-    min-width: 44px;
-    padding-inline: 5px;
   }
 
   .myscore-folio .schedule-tools {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 44px 44px;
-    gap: 5px;
-  }
-
-  .myscore-folio .team-filter {
-    min-width: 0;
+    grid-template-columns: minmax(0, 1fr) 40px 40px;
+    gap: 6px;
   }
 
   .myscore-folio .team-filter select {
     width: 100%;
-    min-width: 0;
     max-width: none;
   }
 
   .myscore-folio .sport-nav {
-    gap: 5px;
+    gap: 6px;
     margin-right: calc(-1 * var(--gutter));
-    padding: 9px var(--gutter) 9px 0;
-  }
-
-  .myscore-folio .sport-nav a {
-    padding-inline: 11px;
-    font-size: 12px;
-  }
-
-  .myscore-folio .league-nav {
-    gap: 2px;
-  }
-
-  .myscore-folio .schedule-caption {
-    min-height: 30px;
-  }
-
-  .myscore-folio .score-group {
-    border-radius: 11px;
-  }
-
-  .myscore-folio .group-heading {
-    padding-inline: 12px;
-  }
-
-  .myscore-folio .programme-event {
-    padding-inline: 12px;
+    padding: 4px var(--gutter) 12px 0;
   }
 
   .myscore-folio .match-row {
-    grid-template-columns: 49px minmax(0, 1fr) 44px 44px;
+    grid-template-columns: 49px minmax(0, 1fr) 44px 42px;
     grid-template-rows: 1fr 1fr;
     gap: 4px 8px;
-    min-height: 98px;
-    padding: 10px 9px;
-  }
-
-  .myscore-folio .match-time {
-    font-size: 10px;
-  }
-
-  .myscore-folio .match-time time {
-    font-size: 12px;
-  }
-
-  .myscore-folio .team {
-    font-size: 12px;
-    gap: 6px;
-  }
-
-  .myscore-folio .team-link {
-    min-width: 44px;
-  }
-
-  .myscore-folio .crest,
-  .myscore-folio .crest-fallback {
-    width: 24px;
-    height: 24px;
-  }
-
-  .myscore-folio .result-link {
-    font-size: 16px;
-  }
-
-  .myscore-folio .watch-button {
-    min-width: 44px;
-    min-height: 48px;
+    min-height: 94px;
+    padding: 10px 10px;
   }
 
   .myscore-folio .race-row {
-    grid-template-columns: 49px minmax(0, 1fr) 28px;
-  }
-
-  .myscore-folio .empty-state {
-    padding: 26px 15px;
-  }
-
-  .myscore-folio .reading-top .text-button {
-    min-width: 44px;
-  }
-
-  .myscore-folio .reading-meta h1 {
-    font-size: 14px;
-  }
-
-  .myscore-folio .match-hero {
-    border-top-width: 3px;
-    border-radius: 11px;
-  }
-
-  .myscore-folio .hero-team .crest,
-  .myscore-folio .hero-team .crest-fallback {
-    width: 38px;
-    height: 38px;
-  }
-
-  .myscore-folio .data-table th button {
-    min-height: 44px;
-  }
-
-  .myscore-folio .roster-sort button {
-    min-height: 44px;
-  }
-
-  .myscore-folio .profile-head {
-    padding-right: 40px;
-  }
-
-  .myscore-folio dialog {
-    padding: 24px 18px;
-  }
-
-  .myscore-folio .pitch {
-    background-size: 28px 28px;
-  }
-}
-
-@media (max-width: 360px) {
-  :root {
-    --gutter: 12px;
-  }
-
-  .myscore-folio .calendar-toolbar {
-    padding-inline: 7px;
-  }
-
-  .myscore-folio .date-nav {
-    grid-template-columns: 44px minmax(0, 1fr) 44px 44px;
-  }
-
-  .myscore-folio .date-number {
-    font-size: 16px;
-  }
-
-  .myscore-folio .match-row {
-    grid-template-columns: 44px minmax(0, 1fr) 44px 44px;
-    gap: 4px 7px;
-    padding-inline: 8px;
-  }
-
-  .myscore-folio .race-row {
-    grid-template-columns: 44px minmax(0, 1fr) 24px;
-  }
-
-  .myscore-folio .team {
-    font-size: 11px;
+    grid-template-columns: 49px minmax(0, 1fr) 26px;
   }
 }
 

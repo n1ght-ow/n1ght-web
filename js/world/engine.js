@@ -1,7 +1,7 @@
 import * as THREE from '../vendor/three/three.module.js';
 import { resolveSiteAsset } from './paths.js?v=1';
 import { createSculptTools, createSurfaceLibrary } from './sculpt.js?v=5';
-import { FEATURED_PHOTO, ROOMS } from './gallery.js?v=2';
+import { FEATURED_PHOTO, ROOMS } from './gallery.js?v=3';
 
 const LOADERS = {
   photo: () => import('./experiences/photo.js?v=7'),
@@ -21,10 +21,10 @@ export function createWorld({ canvas, collections, onRoom, onSelect, onReady, on
   let dirty = true, activeId = null, requestedId = null, readyFrame = true, disposed = false;
   let pendingSelection = null;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 700 ? 1.35 : 1.65));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.12;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.shadowMap.autoUpdate = false;
@@ -32,12 +32,12 @@ export function createWorld({ canvas, collections, onRoom, onSelect, onReady, on
   const scene = new THREE.Scene();
   const surfaces = createSurfaceLibrary(THREE);
   scene.environment = surfaces.environment;
-  scene.environmentIntensity = 0.7;
-  scene.background = new THREE.Color('#343a31');
+  scene.environmentIntensity = 0.78;
+  scene.background = new THREE.Color('#111318');
   const camera = new THREE.OrthographicCamera(-30, 30, 20, -20, 0.1, 180);
-  const hemisphere = new THREE.HemisphereLight('#eae4d1', '#666c4f', 1.52);
+  const hemisphere = new THREE.HemisphereLight('#d6e2f5', '#252320', 1.48);
   scene.add(hemisphere);
-  const sunlight = new THREE.DirectionalLight('#fff0d4', 2.45);
+  const sunlight = new THREE.DirectionalLight('#fff2d9', 2.55);
   sunlight.position.set(-18, 36, 25);
   sunlight.castShadow = true;
   sunlight.shadow.mapSize.set(1024, 1024);
@@ -46,7 +46,7 @@ export function createWorld({ canvas, collections, onRoom, onSelect, onReady, on
   sunlight.shadow.bias = -0.00015;
   scene.add(sunlight);
   scene.add(sunlight.target);
-  const fill = new THREE.DirectionalLight('#bac4b7', 0.6);
+  const fill = new THREE.DirectionalLight('#8ca7ce', 0.85);
   fill.position.set(20, 10, -25);
   scene.add(fill);
 
@@ -63,12 +63,12 @@ export function createWorld({ canvas, collections, onRoom, onSelect, onReady, on
     if (!materials.has(key)) materials.set(key, new THREE.MeshStandardMaterial({ color, roughness, metalness }));
     return materials.get(key);
   };
-  const stone = surfaces.decorate(mat('#ded9ce', 0.82));
-  const cream = surfaces.decorate(mat('#f0eee5', 0.45));
-  const brass = mat('#b59a69', 0.27, 0.85);
-  const walnut = surfaces.decorate(mat('#49372e', 0.57), 'wood');
-  const green = mat('#637761', 0.83);
-  const dark = mat('#263c37', 0.68);
+  const stone = surfaces.decorate(mat('#d8d4cb', 0.82));
+  const cream = surfaces.decorate(mat('#f4f1ea', 0.44));
+  const brass = mat('#d4a853', 0.22, 0.90);
+  const walnut = surfaces.decorate(mat('#3e3129', 0.54), 'wood');
+  const green = mat('#364945', 0.80);
+  const dark = mat('#1a1f28', 0.62);
   function mesh(geometry, material, x = 0, y = 0, z = 0, parent = scene) {
     const object = new THREE.Mesh(geometry, material);
     object.position.set(x, y, z);
@@ -136,10 +136,11 @@ export function createWorld({ canvas, collections, onRoom, onSelect, onReady, on
 
   const entrance = new THREE.Group();
   scene.add(entrance);
-  const limestone = surfaces.decorate(mat('#969079', 0.92));
-  const darkPlaster = surfaces.decorate(mat('#414639', 0.86));
-  const metal = mat('#3b3b2e', 0.48, 0.48);
-  const lightStrip = new THREE.MeshBasicMaterial({ color: '#e2c795', toneMapped: false });
+  const limestone = surfaces.decorate(mat('#2d323e', 0.86));
+  const runnerStone = surfaces.decorate(mat('#20242d', 0.82));
+  const darkPlaster = surfaces.decorate(mat('#14171f', 0.84));
+  const metal = mat('#0d0f14', 0.36, 0.78);
+  const lightStrip = new THREE.MeshBasicMaterial({ color: '#e6c37a', toneMapped: false });
   const entryPhoto = collections.find(room => room.id === 'photo').items.find(item => item.id === FEATURED_PHOTO);
 
   box(22, 0.35, 29, darkPlaster, 0, -0.195, 3, entrance);
@@ -156,15 +157,15 @@ export function createWorld({ canvas, collections, onRoom, onSelect, onReady, on
   }
   box(14.2, 1.5, 4.2, darkPlaster, 0, 7.23, -1.55, entrance);
   box(9.3, 0.045, 0.08, lightStrip, -0.12, 6.49, -0.3, entrance).castShadow = false;
-  box(8.35, 0.045, 10.8, limestone, -0.08, 0.0, 3.2, entrance);
-  box(0.025, 0.014, 10.1, brass, 3.94, 0.032, 3.4, entrance);
-  box(0.025, 0.014, 10.1, brass, -4.1, 0.032, 3.4, entrance);
+  box(8.35, 0.045, 10.8, runnerStone, -0.08, 0.0, 3.2, entrance);
+  box(0.032, 0.016, 10.1, brass, 3.94, 0.032, 3.4, entrance);
+  box(0.032, 0.016, 10.1, brass, -4.1, 0.032, 3.4, entrance);
 
   const roomArchitecture = new THREE.Group();
   scene.add(roomArchitecture);
   roomArchitecture.visible = false;
-  const roomWall = surfaces.decorate(new THREE.MeshStandardMaterial({ color: '#525344', roughness: 0.9 }));
-  const roomFloor = surfaces.decorate(new THREE.MeshStandardMaterial({ color: '#5a5d4d', roughness: 0.93 }));
+  const roomWall = surfaces.decorate(new THREE.MeshStandardMaterial({ color: '#1b1f27', roughness: 0.88 }));
+  const roomFloor = surfaces.decorate(new THREE.MeshStandardMaterial({ color: '#14171e', roughness: 0.90 }));
   box(48, 0.18, 42, roomFloor, 0, -0.12, 5, roomArchitecture).castShadow = false;
   box(42, 13, 0.3, roomWall, 0, 6, -9, roomArchitecture);
   box(42, 0.035, 0.06, lightStrip, 0, 0.4, -8.82, roomArchitecture).castShadow = false;
@@ -289,10 +290,10 @@ export function createWorld({ canvas, collections, onRoom, onSelect, onReady, on
     onControlHover?.(null);
     const profile = ROOMS[id];
     const target = pavilion?.focus || new THREE.Vector3(0, 3, 0);
-    scene.background.set(profile?.color || '#343a31');
+    scene.background.set(profile?.color || '#111318');
     if (profile) {
       roomWall.color.set(profile.color);
-      roomFloor.color.set(profile.color).multiplyScalar(0.84);
+      roomFloor.color.set(profile.color).multiplyScalar(0.82);
     }
     sunlight.target.position.copy(target);
     sunlight.position.copy(target).add(new THREE.Vector3(-7, 19, 12));

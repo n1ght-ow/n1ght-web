@@ -49,9 +49,9 @@ function cellHTML(cell) {
   return escape(show(cell));
 }
 let route, controller, timer, headerTimer, detail, teamResult, generation = 0, personFocus, activeTasks = 0, lastRefresh = 0, restoreScroll = null;
-let theme; try { theme = localStorage.getItem('myscore:theme') || 'light'; } catch { theme = 'light'; }
+let theme; try { theme = localStorage.getItem('myscore:theme:v2') || 'dark'; } catch { theme = 'dark'; }
 document.documentElement.dataset.theme = theme;
-function syncTheme() { $('theme').setAttribute('aria-label', theme === 'dark' ? '切换浅色外观' : '切换深色外观'); $('theme').setAttribute('aria-pressed', String(theme === 'dark')); }
+function syncTheme() { $('theme').setAttribute('aria-label', theme === 'dark' ? '切换浅色纸面外观' : '切换深色暗调外观'); $('theme').setAttribute('aria-pressed', String(theme === 'light')); }
 function url(changes = {}, reset = false) {
   const u = new URL(reset ? pageURL : location.href);
   for (const [key, value] of Object.entries(changes)) { if (value == null || value === '') u.searchParams.delete(key); else u.searchParams.set(key, value); }
@@ -418,7 +418,7 @@ async function openPerson(button) {
 }
 for (const [id, name] of [['previous-day', 'left'], ['next-day', 'right'], ['theme', 'moon'], ['close-dialog', 'close'], ['close-watch', 'close']]) $(id).innerHTML = icon(name);
 for (const id of ['refresh', 'reading-refresh']) $(id).innerHTML = icon('refresh') + '<span class="refresh-label">刷新</span>';
-$('theme').addEventListener('click', () => { theme = theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = theme; syncTheme(); try { localStorage.setItem('myscore:theme', theme); } catch {} }); syncTheme();
+$('theme').addEventListener('click', () => { theme = theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = theme; syncTheme(); try { localStorage.setItem('myscore:theme:v2', theme); } catch {} }); syncTheme();
 $('previous-day').onclick = () => navigate(url({ date: shiftDay(route.date, -1), teamFilter: null }));
 $('next-day').onclick = () => navigate(url({ date: shiftDay(route.date, 1), teamFilter: null }));
 $('today').onclick = () => navigate(url({ date: null, teamFilter: null }));

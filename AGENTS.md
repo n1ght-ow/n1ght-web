@@ -12,12 +12,14 @@
 
 ## 项目与实时预览
 
-这是纯静态网站：index.html + 3d/index.html + css/ + js/，没有 npm 构建流程。
+根入口现在是 React + Vite：`index.html`、`src/`、`package.json`。`3d/index.html` 和 `myscore/index.html` 仍是独立静态文档；三处共享根目录的照片、字体、海报和馆藏媒体。
 
-网站现有两种独立文档模式：根 `index.html` 是默认 Folio／Liminal 普通版，`3d/index.html` 是完整万象游乐场。导航使用相对链接 `3d/` 与 `../`；不要把 3D 引擎接到普通版。路径和预览说明见 [BROWSING_MODES.md](BROWSING_MODES.md)。
+根页面使用 hash 路由，`3d/` 是独立三维陈列室，`myscore/` 是独立赛事页面。导航使用相对链接 `3d/`、`myscore/` 与 `../`。路径和预览说明见 [BROWSING_MODES.md](BROWSING_MODES.md)。
 
 - 涉及页面、样式或交互时，修改前先确认实时预览运行。
-- 优先复用现有服务。本项目用 node serve.mjs，默认地址 http://127.0.0.1:3100/，保存后自动刷新。
+- 根页面使用 `npm run dev`，默认地址 http://127.0.0.1:3000/，保存后自动刷新；首次或依赖变更后先运行 `npm ci`。
+- 需要 MyScore 实时数据时，另开 `node --max-old-space-size=128 myscore/server/index.mjs`，本地跨域环境通过 `ALLOWED_ORIGINS` 配置。
+- `node serve.mjs` 只用于静态目录预览，不再编译 TSX；构建后可预览 `dist/`。
 - 如果端口被占用，先确认是否就是本项目服务；需要换端口时说明新地址。
 - 保持预览运行。完成后验证页面加载、控制台和受影响的交互，并告诉用户预览地址。
 
@@ -25,37 +27,35 @@
 
 | 范围 | 主要文件 |
 | --- | --- |
-| 页面结构、资源加载与缓存版本 | index.html |
+| 根页面入口、构建与路由 | index.html、package.json、vite.config.ts、src/App.tsx、src/main.tsx |
+| 根页面展区与共享组件 | src/views/、src/components/ |
+| 根页面馆藏数据与样式 | src/data/collections.ts、src/index.css |
 | 3D 页面、样式与入口 | 3d/index.html、css/world.css、js/world/app.js |
 | 3D 引擎、装置与资源路径 | js/world/engine.js、experiences/、paths.js；遵循 js/world/EXPERIENCE_CONTRACT.md |
-| 基础排版、字体与组件样式 | css/style.css、fonts.css、glass.css 及各组件 CSS |
-| 当前共享视觉层 | css/atelier.css |
-| 当前章节视觉与增强交互 | css/atelier-hero.css、atelier-photo.css、atelier-archive.css、atelier-poem.css，以及 js/ 中对应文件 |
-| 全站交互、标签页、搜索、详情与刷新 | js/main.js |
-| 影视共享条带 | js/reel-stage.js；film-stage.js、series-stage.js 配置 |
-| 书架、游戏 | js/book-shelf.js、games-stage.js |
-| 收藏数据 | js/*-data.js |
+| 3D 共享馆藏数据 | js/*-data.js、js/world/collection.js |
+| MyScore 页面与数据服务 | myscore/、myscore/server/ |
+| 旧 Folio／Liminal 静态层 | css/folio*.css、liminal*.css、js/main.js、各 *-stage.js；根入口已不加载，修改前先确认仍有引用 |
+| 共享媒体与字体 | photo/、posters/、covers/、assets/、fonts/ |
 | 本地运行库 | js/vendor/ |
+| Pages 发布 | .github/workflows/deploy.yml |
 
-atelier 层在基础组件之后加载。先判断属性最终由哪一层决定，避免修改被后面的规则覆盖。
-普通版现行外观由后置的 `folio*.css`、`liminal*.css` 定义，模式入口使用 `mode-switch.css`。3D 独立加载 `world.css`，共用根目录的馆藏数据和媒体；文档相对路径使用 `../`，模块中的站点资源通过 `js/world/paths.js` 解析，兼容部署子路径。
-加载顺序以 index.html 为准：运行库先于数据和渲染器，main 先于 atelier 增强脚本。
-修改带 ?v= 的 CSS/JS 后递增对应版本；新增或修改数据资源也应有缓存版本。
+根页面由 React 组件与 `src/index.css` 决定，不再加载旧 `css/folio*.css`、`liminal*.css`、`js/main.js` 或 atelier 层。3D 独立加载 `world.css`，共用根目录媒体；文档相对路径使用 `../`，模块中的站点资源通过 `js/world/paths.js` 解析。
+Vite 构建会为 `src/` 资源生成哈希文件名；静态目录中的带 `?v=` 文件修改后仍要递增版本。构建前 Vite 会把静态目录复制进 `dist/`。
 
 ## 改动与文件保护
 
 - 保持文件为 UTF-8。用编辑工具或明确指定 UTF-8 的 Node/Python 写入；不要用 PowerShell 默认编码重写文件。
 - 不把原始照片、.venv/ 或压缩 vendor 库当作普通改版文件。需要处理媒体时优先生成新文件，保留原图。
 - 图片和字体优先使用仓库内相对路径。第三方内容链接与运行时加载外部资源是两件事。
-- 当前没有新增依赖的需要；确实有收益时可以调整技术方案，说明维护、体积与性能代价即可。
+- 运行依赖集中在 `package.json` 与 `package-lock.json`。新增生产依赖前先确认必要性，并说明维护、体积与性能代价。
 - 保留数据字段和现有功能，除非任务本身要求调整。重构 DOM 时同步选择器、事件委托和 ARIA。
-- 当前 .tab-panels 是 #archive 的直接子元素，main.js 通过 :scope > .tab-panels 查找；改结构时一起改查找方式。
+- 根页面由 React 状态切换视图，不再使用 `.tab-panels` 或旧 `main.js` 的 DOM 查找；只在维护仍被 3D／归档引用的旧静态脚本时处理这些结构。
 - .glass 和 --sky-* 是兼容名称，当前分别表示纸面控件与墨绿强调色，不代表必须使用玻璃或天蓝。
 - 避免留下没有调用点的脚本、无效规则与临时调试代码。
 
 ## 设计与交互的判断
 
-- 当前方向是典雅、精致、有趣的私人艺术馆，具体做法见 DESIGN.md；后续可以整体换方向。
+- 当前方向是黑曜石／香槟金的夜间私人艺术馆，具体做法见 [DESIGN.md](DESIGN.md)；后续可以整体换方向。
 - 让图片、书名和文字读得清楚，比例与留白服务内容。不要为了“高级”制造大段空场。
 - 动效应帮助定位、切换、阅读或表达内容。可以探索新形式，同时照顾响应速度与滚动体验。
 - 优先复用已有 GSAP、ScrollTrigger 和 Lenis；锚点与布局刷新沿用共享机制。
@@ -68,6 +68,7 @@ atelier 层在基础组件之后加载。先判断属性最终由哪一层决定
 按影响范围验证，不为简单可逆样式修改堆砌测试。
 
 - 检查修改过的 JS 语法、资源路径和 git diff。
+- 根页面改动依次运行 `npm test`、`npm run lint`、`npm run build`；静态 3D 或 MyScore 改动按对应模块补测。
 - 在桌面与窄屏检查比例、换行、裁切和横向溢出；必要时检查 320px 与放大显示。
 - 受影响的控件测试点击与键盘：可见焦点、Enter/Space、方向键、Escape，以及关闭后焦点返回。
 - 标签页、搜索、照片和藏品详情应继续可用；隐藏内容不应覆盖当前内容。

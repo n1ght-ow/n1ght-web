@@ -1,6 +1,6 @@
 import { loadCollection } from './collection.js?v=3';
 import { createCuration, NON_PHOTO_LIMIT, PHOTO_LIMIT } from './curation.js?v=4';
-import { FEATURED_PHOTO, PRIMARY_CONTROLS, ROOMS, WINGS } from './gallery.js?v=2';
+import { FEATURED_PHOTO, PRIMARY_CONTROLS, ROOMS, WINGS } from './gallery.js?v=3';
 import { resolveSiteAsset } from './paths.js?v=1';
 
 const $ = id => document.getElementById(id);
@@ -42,6 +42,7 @@ function linkedRoom(event, id) {
   showRoom(id, true, true);
 }
 function showRoom(id, updateHash = true, moveFocus = false) {
+  if (id === 'curate') id = null;
   if (id && !roomOf(id)) return;
   if (updateHash) {
     const hash = id ? `#${id}` : '';
@@ -112,15 +113,15 @@ function renderRoom(id) {
   $('model-status').textContent = '';
   $('collection-search').value = ''; catalogueLimit = 40;
   $('room-panel').scrollTop = 0;
-  $('curation-form').hidden = id !== 'curate';
+  if ($('curation-form')) $('curation-form').hidden = id !== 'curate';
   $('random-item').hidden = id === 'curate';
   document.querySelector('.search-wrap').hidden = id === 'curate';
-  roomTab(id === 'curate' || document.documentElement.dataset.scene === 'fallback' ? 'catalogue' : 'operate');
+  roomTab(document.documentElement.dataset.scene === 'fallback' ? 'catalogue' : 'operate');
   renderActions(); renderCatalogue();
 }
 function buildNavigation() {
-  for (const wing of [...WINGS, { name: '策展', rooms: ['curate'] }]) {
-    const isCuration = wing.rooms[0] === 'curate';
+  for (const wing of WINGS) {
+    const isCuration = false;
     const dock = el('div', 'dock-group');
     const dockLinks = el('div', 'dock-links');
     dock.append(el('span', 'wing-name', wing.name), dockLinks);
@@ -316,13 +317,13 @@ function openDetail(category, index) {
   }
 }
 function updateSaveButton() {
-  if (!selected) return;
+  if (!selected || !$('save-item')) return;
   const saved = curation.has(selected.item.id);
   $('save-item').textContent = saved ? '已收入展览 · 移除 −' : '收入我的展览 ＋';
   $('save-item').setAttribute('aria-pressed', String(saved));
 }
 function updateSaved() {
-  if (!$('saved-count')) return;
+  if (!$('saved-count') || !$('curation-toggle')) return;
   const items = curation.getItems(); $('saved-count').textContent = items.length;
   $('curation-toggle').setAttribute('aria-label', `查看我的展览，已收集${items.length}件`);
   updateSaveButton();
@@ -347,20 +348,22 @@ function fillExhibition() {
   toast(saved.length === curation.getItems().length ? '展览已满。' : '已补齐展品。');
 }
 function setupEvents() {
-  try {
-    const draft = JSON.parse(localStorage.getItem('night-world-label') || '{}');
-    if (typeof draft.title === 'string') $('exhibition-title').value = draft.title;
-    if (typeof draft.subtitle === 'string') $('exhibition-subtitle').value = draft.subtitle;
-  } catch { /* The exhibition stays usable when storage is unavailable. */ }
-  for (const field of ['exhibition-title', 'exhibition-subtitle']) $(field).addEventListener('input', () => {
-    try { localStorage.setItem('night-world-label', JSON.stringify({ title: $('exhibition-title').value, subtitle: $('exhibition-subtitle').value })); } catch { /* In-memory editing remains available. */ }
-  });
+  if ($('exhibition-title') && $('exhibition-subtitle')) {
+    try {
+      const draft = JSON.parse(localStorage.getItem('night-world-label') || '{}');
+      if (typeof draft.title === 'string') $('exhibition-title').value = draft.title;
+      if (typeof draft.subtitle === 'string') $('exhibition-subtitle').value = draft.subtitle;
+    } catch { /* The exhibition stays usable when storage is unavailable. */ }
+    for (const field of ['exhibition-title', 'exhibition-subtitle']) $(field).addEventListener('input', () => {
+      try { localStorage.setItem('night-world-label', JSON.stringify({ title: $('exhibition-title').value, subtitle: $('exhibition-subtitle').value })); } catch { /* In-memory editing remains available. */ }
+    });
+  }
   $('map-toggle').addEventListener('click', () => atlas.showModal());
   document.querySelector('.skip-link').addEventListener('click', event => {
     event.preventDefault();
     $('room-nav').focus();
   });
-  $('curation-toggle').addEventListener('click', () => showRoom('curate', true, true));
+  $('curation-toggle')?.addEventListener('click', () => showRoom('curate', true, true));
   for (const id of ['start-explore', 'featured-link']) $(id).addEventListener('click', event => linkedRoom(event, 'photo'));
   for (const link of [$('room-back'), document.querySelector('.brand')]) link.addEventListener('click', event => linkedRoom(event, null));
   $('reset-view').addEventListener('click', () => world?.focus(current?.id || null));
@@ -389,7 +392,7 @@ function setupEvents() {
     trigger.focus({ preventScroll: true });
   });
   $('detail-prev').addEventListener('click', () => paginateDetail(-1)); $('detail-next').addEventListener('click', () => paginateDetail(1));
-  $('save-item').addEventListener('click', () => {
+  $('save-item')?.addEventListener('click', () => {
     if (!selected) return;
     const before = curation.has(selected.item.id);
     const result = curation.toggle(selected.item, selected.category);
@@ -398,7 +401,7 @@ function setupEvents() {
     else toast(after ? '已收入展览。' : '已从这场展览移除。');
     updateSaved();
   });
-  $('curation-form').addEventListener('submit', async event => {
+  $('curation-form')?.addEventListener('submit', async event => {
     event.preventDefault(); const button = $('export-png'); button.disabled = true; button.textContent = '正在装裱这场展览…';
     try {
       const result = await curation.exportPNG({ title: $('exhibition-title').value.trim() || '我的小展览', subtitle: $('exhibition-subtitle').value.trim() });
@@ -458,7 +461,7 @@ async function start() {
   const id = location.hash.slice(1);
   if (roomOf(id)) showRoom(id, false);
   try {
-    const { createWorld } = await import('./engine.js?v=18');
+    const { createWorld } = await import('./engine.js?v=19');
     world = createWorld({ canvas: $('world-canvas'), collections,
       onRoom: id => showRoom(id, true, true),
       onSelect: (id, index) => openDetail(id, index),
